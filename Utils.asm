@@ -1,4 +1,11 @@
-;;; getDistanceSquared(Vector* pos1, Vector* pos2)
+/*
+  Parameter:
+    a0: pointer to first position
+    a1: pointer to second position
+
+  Returns:
+    v0: squared distance between both positions
+*/
 .func getDistanceSquared
   lw v0,0x00(a0)
   lw v1,0x00(a1)
@@ -14,7 +21,13 @@
   add v0,v0,a2
 .endfunc
 
-;;; getDigimonRadius(int type)
+/*
+  Parameter:
+    a0: digimon Type ID
+
+  Returns:
+    v0: radius field from the Digimon Parameter
+*/
 .func getDigimonRadius
   li v0,DIGIMON_PARA
   sll v1,a0,0x01
@@ -27,8 +40,6 @@
   jr ra
   nop
 .endfunc
-
-
 
 /*
   void jis_concat_glyph(char* str, char* glyph) {
