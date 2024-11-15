@@ -1,0 +1,1 @@
+tools\windows\dumpsxiso.exe -x work\DIGIMON -s work\BUILD.XML %1
