@@ -142,8 +142,70 @@ b 0x80100ddc
 .word NAMING_PAGE1_RIGHT8
 .word NAMING_PAGE1_RIGHT9
 
+; use non-bugged strncpy
+.org 0x80112cf4
+  j strncpy
+  nop
 
-; TODO save/load menu
+;;; take savegame display names from save data instead of frame header
+; increase stack size
+.org 0x80112720
+  addiu sp,sp,-0x550
+.org 0x80112968
+  addiu sp,sp,0x550
+; data size read from memory card
+.org 0x8011284c
+  li v0,0x380
+; data offset read from memory card
+.org 0x80112864
+  li a3,0x380
+; new string offsets in read buffer
+.org 0x80112800
+  addiu s7,sp,0x50+0x67+0x280
+  addiu s6,sp,0x50+0x38
+; copy all 20 bytes of player name
+.org 0x801128d0
+  li a2,0x14
+  .skip 4
+  sb zero,0x17(v0)
+; copy all 20 bytes of digimon type
+.org 0x801128dc
+li a1,DIGIMON_PARA
+lbu v1,0x00(s6)
+li a0,0x34
+mult v1,a0
+addiu a0,s1,0x18
+mflo v1
+add a1,a1,v1
+jal strncpy
+li a2,0x14
+; terminate area name
+.org 0x8011290c
+  sb zero,0x2c(v0)
+;;;
+;;; adjust rendering, to put Digimon name on new line
+; dont render name behind player
+.org 0x8010fb3c
+nop
+.org 0x8010f050
+nop
+; render partner type below player name
+.org 0x8010fb50
+addiu a0,s0,0x18
+.org 0x8010f080
+addiu a0,v0,0x18
+; draw more of the player name
+.org 0x8010d974
+li v0,0x80
+.org 0x8010dcfc
+li v0,0x80
+; dont draw behind player name
+.org 0x8010d9c4
+nop
+.org 0x8010dd48
+nop
+;;;
+
 ; TODO enlarge name boxes in tamer menu
 ; TODO check "is sick" dialogue
 ; TODO check arena
