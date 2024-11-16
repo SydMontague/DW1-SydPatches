@@ -116,9 +116,11 @@ naming_buffer_length equ 20
 .org 0x80113980
   li a2,0x0d
 
-; fix square not clearing the whole text area
-.org 0x80100dac
-  b 0x80100ddc
+; fix square not clearing the whole text area, also tournament schedule
+.org 0x80100dc0
+  li s6,0x0C
+  sh s6,0x40(sp)
+  sh s6,0x42(sp)
 
 .org 0x801306cc
   .word NAMING_PAGE1_LEFT1
@@ -206,11 +208,58 @@ naming_buffer_length equ 20
   nop
 ;;;
 
-; TODO check "is sick" dialogue
-; TODO check arena
-; TODO check speaker name
-; TODO crop name on registration properly
+;;; fix savegame related name stuff
+.org 0x8011397c
+  jal jis_strncpy
+.org 0x8011369c
+  jal jis_strncpy
+.org 0x80111428
+  addiu a0,a0,0x1930
+  jal strcat
+.org 0x8011143c
+  addiu a0,a0,0x1930
+  .skip 4
+  jal strcat
+.org 0x80111478
+  addiu a0,a0,0x1930
+  jal strcat
+.org 0x80111fe4
+  addiu a0,a0,0x1930
+  jal strcat
+.org 0x80111ff8
+  addiu a0,a0,0x1930
+  .skip 4
+  jal strcat
+.org 0x80112034
+  addiu a0,a0,0x1930
+  jal strcat
+.org 0x801108a4
+  addiu a0,a0,0x1930
+  jal strcat
+.org 0x801108b8
+  addiu a0,a0,0x1930
+  .skip 4
+  jal strcat
+.org 0x801108f4
+  addiu a0,a0,0x1930
+  jal strcat
+;;;
 
+;;; fix "is sick" dialogue
+.org 0x800a8954
+  jal jis_len
+.org 0x800a8960
+  move t9,v0
+  .skip 4
+  nop
+;;;
+
+;;; a bit more space in the battle registration
+.org 0x8010fd48
+  li a1,0x04
+.org 0x8010fd94
+  li a1,0x04
+;;;
 
 ; Partner View: Enlarge name box
 .org 0x800bb7c4
@@ -265,15 +314,6 @@ naming_buffer_length equ 20
 ; Moves View: enlarge "selected" red overlay width by 1 pixel
 .org 0x800bfe34
   addiu a2,a3,0x1
-
-.macro buildLine,x1,y1,x2,y2,clut
-  .halfword x1
-  .halfword y1
-  .halfword x2
-  .halfword y2
-  .byte clut
-  .byte 0
-.endmacro
 
 ; Moves View: fix info box being too large
 .org 0x800bf778

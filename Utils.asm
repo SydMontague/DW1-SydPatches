@@ -165,3 +165,34 @@
   nop
 .endfunc
 
+/*
+  void jis_strncpy(char* dest, char* src, int32_t byte_cnt) {
+    strncpy(dest, src, byte_cnt);
+    dest[byte_cnt-1] = 0;
+    if(!isAsciiEncoded(dest[byte_cnt-2])
+      dest[byte_cnt-2] = 0;
+  }
+*/
+/*
+  Parameter: 
+    a0: destination pointer
+    a1: source pointer
+    a2: max number of bytes
+*/
+.func jis_strncpy
+  addiu sp,sp,-0x18
+  sw ra,0x10(sp)
+  sw s0,0x14(sp)
+  jal strncpy
+  add s0,a0,a2
+  lbu a0,-0x02(s0)
+  sgtu a0,v0,0x7F ; greater 0x7F -> two bytes
+  beq a0,zero,@@_jis_strncpy_terminate
+  sb zero,-0x01(s0)
+  sb zero,-0x02(s0)
+@@_jis_strncpy_terminate:
+  lw ra,0x10(sp)
+  lw s0,0x14(sp)
+  jr ra
+  addiu sp,sp,0x18
+.endfunc
