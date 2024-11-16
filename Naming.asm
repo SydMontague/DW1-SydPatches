@@ -116,11 +116,13 @@ naming_buffer_length equ 20
 .org 0x80113980
   li a2,0x0d
 
-; fix square not clearing the whole text area, also tournament schedule
-.org 0x80100dc0
-  li s6,0x0C
-  sh s6,0x40(sp)
-  sh s6,0x42(sp)
+; fix square not clearing the whole text area
+.org 0x8010aaf0
+  li a0,0
+  li a1,0
+  li a2,256
+  jal clearTextSubArea2
+  li a3,32 
 
 .org 0x801306cc
   .word NAMING_PAGE1_LEFT1

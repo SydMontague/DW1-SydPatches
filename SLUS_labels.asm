@@ -13,5 +13,6 @@
 .definelabel unsetObject, 0x800a3008
 .definelabel updateNamingPreview, 0x8010aa60
 .definelabel playSound, 0x800c6374
+.definelabel clearTextSubArea, 0x8010cbc4
 
 .definelabel DIGIMON_PARA, 0x8012ceb4

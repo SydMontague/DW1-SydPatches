@@ -196,3 +196,18 @@
   jr ra
   addiu sp,sp,0x18
 .endfunc
+
+.func clearTextSubArea2
+  addiu sp,sp,-0x20
+  sw ra,0x10(sp)
+  sh a0,0x18(sp)
+  sh a1,0x1a(sp)
+  sh a2,0x1c(sp)
+  sh a3,0x1e(sp)
+  jal clearTextSubArea
+  addiu a0,sp,0x18
+  lw ra,0x10(sp)
+  nop
+  jr ra
+  addiu sp,sp,0x20
+.endfunc
