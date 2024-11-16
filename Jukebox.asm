@@ -9,7 +9,7 @@
   li v1,0x20
 
 @@loopBody:
-  sw v1,0x00(a0)
+  sb v1,0x00(a0)
   addiu a0,a0,0x01
 
 @@loopCondition:
@@ -18,7 +18,6 @@
   addiu a2,a2,0x01
   jr r31
   move v0,a0
-
 .endarea
 
 ; Changes the track names to be accurate and shorter
