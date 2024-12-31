@@ -1,4 +1,4 @@
-<iso_project image_name="mkpsxiso.bin" cue_sheet="mkpsxiso.cue">
+<iso_project image_name="DigimonWorldPatched.bin" cue_sheet="DigimonWorldPatched.cue">
     <track type="data">
         <identifiers system="PLAYSTATION" application="PLAYSTATION" volume="DIGIMON" publisher="BANDAI AMERICA INC." data_preparer="JOHN BRANDSTETTER" copyright="BANDAI" creation_date="0000061304304000+36"/>
         <license file="DIGIMON/license_data.dat"/>
@@ -256,7 +256,6 @@
                 <file name="SEA.TMD" source="DIGIMON/ETCDAT/SEA.TMD" type="data"/>
                 <file name="SLOT.TIM" source="DIGIMON/ETCDAT/SLOT.TIM" type="data"/>
                 <file name="SPOT256.TIM" source="DIGIMON/ETCDAT/SPOT256.TIM" type="data"/>
-                <file name="SYSTEM_W.TIM" source="DIGIMON/ETCDAT/SYSTEM_W.TIM" type="data"/>
                 <file name="TAMA.TIM" source="DIGIMON/ETCDAT/TAMA.TIM" type="data"/>
                 <file name="TAMA.TMD" source="DIGIMON/ETCDAT/TAMA.TMD" type="data"/>
             </dir>
@@ -842,6 +841,7 @@
                 <file name="E_TOGI.TIM" source="DIGIMON/STDDAT/E_TOGI.TIM" type="data"/>
                 <file name="E_TOGI.TMD" source="DIGIMON/STDDAT/E_TOGI.TMD" type="data"/>
                 <file name="STDTIM.BIN" source="DIGIMON/STDDAT/STDTIM.BIN" type="data"/>
+                <file name="SYSTEM_W.TIM" source="DIGIMON/STDDAT/SYSTEM_W.TIM" type="data"/>
                 <file name="TAISEN1.TIM" source="DIGIMON/STDDAT/TAISEN1.TIM" type="data"/>
                 <file name="TAISEN2.TIM" source="DIGIMON/STDDAT/TAISEN2.TIM" type="data"/>
                 <file name="TAISEN_F.TIM" source="DIGIMON/STDDAT/TAISEN_F.TIM" type="data"/>

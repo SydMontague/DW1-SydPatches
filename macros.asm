@@ -18,3 +18,11 @@
   .byte clut
   .byte 0
 .endmacro
+
+.macro addObjectMacro,type,index,tickFunction,renderFunction
+  li a2,tickFunction
+  li a3,renderFunction
+  li a1,index
+  jal addObject
+  li a0,type
+.endmacro

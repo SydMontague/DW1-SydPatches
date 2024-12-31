@@ -143,7 +143,7 @@
 
   Returns:
     v0: the number of sjift-jis glypths in the string
-    v0: the number of bytes in the string
+    v1: the number of bytes in the string
 */
 .func jis_len
   li v0,0x00
@@ -197,6 +197,15 @@
   addiu sp,sp,0x18
 .endfunc
 
+/*
+  Clears a rect in the text area
+
+  Parameter:
+    a0: posX
+    a1: posY
+    a2: width
+    a3: height
+*/
 .func clearTextSubArea2
   addiu sp,sp,-0x20
   sw ra,0x10(sp)

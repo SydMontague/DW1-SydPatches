@@ -1,6 +1,18 @@
 #!/bin/bash
 
+# Setup work directory
+rm -r ./work/
+rm -r ./compiled/
+cp -r ./extract/ ./work/
+cp BUILD.XML ./work/BUILD.XML
+
+# Apply filesystem changes
+mv ./work/DIGIMON/ETCDAT/SYSTEM_W.TIM ./work/DIGIMON/STDDAT/SYSTEM_W.TIM
+
+sh ./src/compile.sh
+
+# Apply patches
 ./tools/linux/armips patches.asm
-./tools/linux/mkpsxiso work/BUILD.XML -o DigimonWorldPatched.bin -y -q
-rm DigimonWorldPatched.cue
-mv mkpsxiso.cue DigimonWorldPatched.cue
+
+# create ISO
+./tools/linux/mkpsxiso ./work/BUILD.XML -y -q

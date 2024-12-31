@@ -1,5 +1,12 @@
-/work/
+work/
+extract/
+compiled/
+tools/
+
 *.bin
 *.cue
 *.iso
 *.zip
+*.out
+*.in
+*.o

@@ -14,5 +14,19 @@
 .definelabel updateNamingPreview, 0x8010aa60
 .definelabel playSound, 0x800c6374
 .definelabel clearTextSubArea, 0x8010cbc4
+.definelabel addObject, 0x800a2f64
+.definelabel initializeStatusObjects, 0x800a435c
+.definelabel renderNumber, 0x800e5444
+.definelabel drawString, 0x8010cf24
+.definelabel libgpu_LoadImage, 0x800948a8
+.definelabel convertAsciiToGameChar, 0x800f18c8
+.definelabel swapShortBytes, 0x800f1ab0
+.definelabel memset, 0x8009125c
+.definelabel convertAsciiToJis, 0x800f18c8
 
+.definelabel CHAR_TO_GLYPH_TABLE, 0x801307e0
+.definelabel GLYPH_DATA, 0x80130880
+.definelabel COLORCODE_HIGHBITS, 0x8013465d
+.definelabel COLORCODE_LOWBITS, 0x8013465c
 .definelabel DIGIMON_PARA, 0x8012ceb4
+.definelabel PARTNER_PARA, 0x80138460
