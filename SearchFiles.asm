@@ -1,7 +1,7 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-;; patch lookupFileTable function to use CdSearchFile instead, allowing for arbitrary LBAs and file sizes
+;; patch lookupFileTable function to use libcd_CdSearchFile instead, allowing for arbitrary LBAs and file sizes
 .org lookupFileTable
 .area lookupFileTable_end-.
   addiu sp,sp,-0x128
@@ -16,7 +16,7 @@
   jal strcat
   addiu a1,gp,-0x790c
   addiu a1,sp,0x00
-  jal CdSearchFile
+  jal libcd_CdSearchFile
   addiu a0,sp,0x100
   lw a1,0x11C(sp)
   lw at,0x100(sp)

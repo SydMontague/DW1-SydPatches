@@ -1,7 +1,7 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-; relocate sin? lookup table
+; relocate sin() lookup table
 .org 0x800a3720
   li.u v0,SIN_LOOKUP_TABLE
   .skip 4
@@ -13,7 +13,7 @@
 .org 0x800a37d4
   li v0,SIN_LOOKUP_TABLE
 
-; relocate atan lookup table
+; relocate atan() lookup table
 .org 0x800a3888
   li v1,ATAN_LOOKUP_TABLE
 .org 0x800a38d0
@@ -45,19 +45,23 @@ NAMING_DATA:
 .align 4
   .importobj "compiled/utils.lib"
   .importobj "compiled/font.lib"
-
+  .importobj "compiled/CustomUI.lib"
+  
   .notice "Empty space left: " + (0x80122584-.) + " bytes"
   .fill 0x80122584-.
 .endarea
+
+.org 0x800ee8d4
+  jal customInit
 
 .org drawString
   sra a1,a1,2
   addiu a3,a2,256
   addiu a2,a1,704
   move a1,a0
-  li.u a0,myFont5px
+  li.u a0,vanillaFont
   j drawStringNew
-  li.l a0,myFont5px
+  li.l a0,vanillaFont
 
 ; override vanilla raise data
 .org 0x801225bc

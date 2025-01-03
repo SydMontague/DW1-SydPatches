@@ -1,0 +1,6 @@
+Diagnostics:
+  UnusedIncludes: None
+
+CompileFlags:
+  Add: [-mabi=32, -march=mips1]
+  Compiler: mips-elf-g++
