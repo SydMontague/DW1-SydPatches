@@ -126,9 +126,42 @@ extern "C"
         uint8_t padding;
     };
 
+    struct RaisePara
+    {
+        int8_t hungerTimes[8];
+        int8_t energyCap;
+        int8_t energyThreshold;
+        int8_t energyUsage;
+        int16_t poopTimer;
+        int16_t unk2;
+        int8_t poopSize;
+        int8_t favoriteFood;
+        int8_t sleepCycle;
+        int8_t favoredRegion;
+        int8_t trainingType;
+        int8_t defaultWeight;
+        int16_t viewX;
+        int16_t viewY;
+        int16_t viewZ;
+    };
+
+    struct Condition
+    {
+        bool isSleepy  : 1;
+        bool isTired   : 1;
+        bool isHungry  : 1;
+        bool isPoopy   : 1;
+        bool isUnhappy : 1;
+        bool isInjured : 1;
+        bool isSick    : 1;
+        uint32_t pad   : 1;
+    };
+
+    static_assert(sizeof(Condition) == 4);
+
     struct PartnerPara
     {
-        int32_t condition;
+        Condition condition;
         int16_t sleepyHour;
         int16_t sleepyMinute;
         int16_t wakeupHour;
@@ -202,12 +235,411 @@ extern "C"
         uint8_t blue;
     };
 
+    enum class DigimonType : uint32_t
+    {
+        TAMER               = 0,
+        BOTAMON             = 1,
+        KOROMON             = 2,
+        AGUMON              = 3,
+        BETAMON             = 4,
+        GREYMON             = 5,
+        DEVIMON             = 6,
+        AIRDRAMON           = 7,
+        TYRANNOMON          = 8,
+        MERAMON             = 9,
+        SEADRAMON           = 10,
+        NUMEMON             = 11,
+        METALGREYMON        = 12,
+        MAMEMON             = 13,
+        MONZAEMON           = 14,
+        PUNIMON             = 15,
+        TSUNOMON            = 16,
+        GABUMON             = 17,
+        ELECMON             = 18,
+        KABUTERIMON         = 19,
+        ANGEMON             = 20,
+        BIRDRAMON           = 21,
+        GARURUMON           = 22,
+        FRIGIMON            = 23,
+        WHAMON              = 24,
+        VEGIEMON            = 25,
+        SKULLGREYMON        = 26,
+        METALMAMEMON        = 27,
+        VADEMON             = 28,
+        POYOMON             = 29,
+        TOKOMON             = 30,
+        PATAMON             = 31,
+        KUNEMON             = 32,
+        UNIMON              = 33,
+        OGREMON             = 34,
+        SHELLMON            = 35,
+        CENTARUMON          = 36,
+        BAKEMON             = 37,
+        DRIMOGEMON          = 38,
+        SUKAMON             = 39,
+        ANDROMON            = 40,
+        GIROMON             = 41,
+        ETEMON              = 42,
+        YURAMON             = 43,
+        TANEMON             = 44,
+        BIYOMON             = 45,
+        PALMON              = 46,
+        MONOCHROMON         = 47,
+        LEOMON              = 48,
+        COELAMON            = 49,
+        KOKATORIMON         = 50,
+        KUWAGAMON           = 51,
+        MOJYAMON            = 52,
+        NANIMON             = 53,
+        MEGADRAMON          = 54,
+        PIXIMON             = 55,
+        DIGITAMAMON         = 56,
+        PENGUINMON          = 57,
+        NINJAMON            = 58,
+        PHOENIXMON          = 59,
+        HERCULESKABUTERIMON = 60,
+        MEGASEADRAMON       = 61,
+        WEREGARURUMON       = 62,
+        PANJYAMON           = 63,
+        GIGADRAMON          = 64,
+        METALETEMON         = 65,
+        MYOTISMON           = 66,
+        YANMAMON            = 67,
+        GOTSUMON            = 68,
+        FLAREIZAMON         = 69,
+        WARUMONZAEMON       = 70,
+        SNOWAGUMON          = 71,
+        HYOGAMON            = 72,
+        PLATINUMNUMEMON     = 73,
+        DOKUNEMON           = 74,
+        SHIMAUNIMON         = 75,
+        TANKMON             = 76,
+        REDVEGIMON          = 77,
+        JMOJYAMON           = 78,
+        NISEDRIMOGEMON      = 79,
+        GOBURIMON           = 80,
+        MUDFRIGIMON         = 81,
+        PSYCHEMON           = 82,
+        MODOKIBETAMON       = 83,
+        TOYAGUMON           = 84,
+        PIDDOMON            = 85,
+        ARURAUMON           = 86,
+        GEREMON             = 87,
+        VERMILIMON          = 88,
+        FUGAMON             = 89,
+        TEKKAMON            = 90,
+        MORISHELLMON        = 91,
+        GUARDROMON          = 92,
+        MUCHOMON            = 93,
+        ICEMON              = 94,
+        AKATORIMON          = 95,
+        TSUKAIMON           = 96,
+        SHARMAMON           = 97,
+        CLEARAGUMON         = 98,
+        WEEDMON             = 99,
+        ICEDEVIMON          = 100,
+        DARKRIZAMON         = 101,
+        SANDYANMAMON        = 102,
+        SNOWGOBURIMON       = 103,
+        BLUEMERAMON         = 104,
+        GURURUMON           = 105,
+        SABERDRAMON         = 106,
+        SOULDMON            = 107,
+        ROCKMON             = 108,
+        OTAMAMON            = 109,
+        GEKOMON             = 110,
+        TENTOMON            = 111,
+        WARUSEADRAMON       = 112,
+        METEORMON           = 113,
+        UNKNOWN             = 114,
+        MACHINEDRAMON       = 115,
+        ANALOGMAN           = 116,
+        JIJIMON             = 117,
+        MARKET_MANAGER      = 118,
+        SHOGUNGEKOMON       = 119,
+        KING_SUKAMON        = 120,
+        CHERRYMON           = 121,
+        HAGURUMON           = 122,
+        TINMON              = 123,
+        MASTER_TYRANNOMON   = 124,
+        NPC_GOBIROMON       = 125,
+        BRACHIOMON          = 126,
+        DEMIMERAMON         = 127,
+        NPC_BETAMON         = 128,
+        NPC_GREYMON         = 129,
+        NPC_DEVIMON         = 130,
+        NPC_AIRDRAMON       = 131,
+        NPC_TYRANNOMON      = 132,
+        NPC_MERAMON         = 133,
+        NPC_SEADRAMON       = 134,
+        NPC_NUMEMON         = 135,
+        NPC_METALGREYMON    = 136,
+        NPC_MAMEMON         = 137,
+        NPC_MONZAEMON       = 138,
+        NPC_GABUMON         = 139,
+        NPC_ELECMON         = 140,
+        NPC_kABUTERIMON     = 141,
+        NPC_ANGEMON         = 142,
+        NPC_BIDRAMON        = 143,
+        NPC_GARURUMON       = 144,
+        NPC_FRIGIMON        = 145,
+        NPC_WHAMON          = 146,
+        NPC_VEGIMON         = 147,
+        NPC_SKULLGREYMON    = 148,
+        NPC_METALMAMEMON    = 149,
+        NPC_VADEMON         = 150,
+        NPC_PATAMON         = 151,
+        NPC_KUNEMON         = 152,
+        NPC_UNIMON          = 153,
+        NPC_OGREMON         = 154,
+        NPC_SHELLMON        = 155,
+        NPC_CENTARUMON      = 156,
+        NPC_BAKEMON         = 157,
+        NPC_DRIMOGEMON      = 158,
+        NPC_SUKAMON         = 159,
+        NPC_ANDROMON        = 160,
+        NPC_GIROMON         = 161,
+        NPC_ETEMON          = 162,
+        NPC_BIYOMON         = 163,
+        NPC_PALMON          = 164,
+        NPC_MONOCHROMON     = 165,
+        NPC_LEOMON          = 166,
+        NPC_COELAMON        = 167,
+        NPC_KOKATORIMON     = 168,
+        NPC_KUWAGAMON       = 169,
+        NPC_MOJYAMON        = 170,
+        NPC_NANIMON         = 171,
+        NPC_MEGADRAMON      = 172,
+        NPC_PIXIMON         = 173,
+        NPC_DIGITAMAMON     = 174,
+        NPC_NINJAMON        = 175,
+        NPC_PENGUINMON      = 176,
+        NPC_MYOTISMON       = 177,
+        NPC2_GREYMON        = 178,
+        NPC2_METALGREYMON   = 179,
+    };
+
+    enum class ItemType
+    {
+        SMALL_RECOVERY,
+        MEDIUM_RECOVERY,
+        LARGE_RECOVERY,
+        SUPER_RECOVERY,
+        MP_FLOPPY,
+        MEDIUM_MP,
+        LARGE_MP,
+        DOUBLE_FLOPPY,
+        VARIOUS,
+        OMNIPOTENT,
+        PROTECTION,
+        RESTORE,
+        SUPER_RESTORE,
+        BANDAGE,
+        MEDICINE,
+        OFFENSE_DISK,
+        DEFENSE_DISK,
+        SPEED_DISK,
+        OMNI_DISK,
+        SUPER_OFFENSE_DISK,
+        SUPER_DEFENSE_DISK,
+        SUPER_SPEED_DISK,
+        AUTOPILOT,
+        OFFENSE_CHIP,
+        DEFENSE_CHIP,
+        BRAIN_SHIP,
+        SPEED_CHIP,
+        HP_CHIP,
+        MP_CHIP,
+        DV_CHIP_A,
+        DV_CHIP_D,
+        DV_CHIP_E,
+        PORTA_POTTY,
+        TRAINING_MANUAL,
+        REST_PILLOW,
+        ENEMY_REPEL,
+        ENEMY_BELL,
+        HEALTH_SHOE,
+        MEAT,
+        GIANT_MEAT,
+        SIRLOIN,
+        SUPERCARROT,
+        HAWK_RADISH,
+        SPINY_GREEN,
+        DIGIMUSHROOM,
+        ICE_MUSHROOM,
+        DELUXE_MUSHROOM,
+        DIGIPINE,
+        BLUE_APPLE,
+        RED_BERRY,
+        GOLD_ACORN,
+        BIG_BERRY,
+        SWEET_NUT,
+        SUPER_VEGGY,
+        PRICKLYPEAR,
+        ORANGE_BANANA,
+        POWER_FRUIT,
+        POWER_ICE,
+        SPEED_LEAF,
+        SAGE_FRUIT,
+        MUSCLE_YAM,
+        CALM_BERRY,
+        DIGIANCHOVY,
+        DIGISNAPPER,
+        DIGITROUT,
+        BLACK_TROUT,
+        DIGICATFISH,
+        DIGISEABASS,
+        MOLDY_MEAT,
+        HAPPYMUSHROOM,
+        CHAIN_MELON,
+        GREY_CLAWS,
+        FIREBALL,
+        FLAMEWING,
+        IRON_HOOF,
+        MONO_STONE,
+        STEEL_DRILL,
+        WHITE_FANG,
+        BLACK_WING,
+        SPIKE_CLUB,
+        FLAMEINGMANE,
+        WHITE_WING,
+        TORN_TATTER,
+        ELECTRO_RING,
+        RAINBOWHORN,
+        ROOSTER,
+        UNIHORN,
+        HORN_HELMET,
+        SCISSOR_JAW,
+        FERTILIZER,
+        KOGA_LAWS,
+        WATERBOTTLE,
+        NORTH_STAR,
+        RED_SHELL,
+        HARD_SCALE,
+        BLUECRYSTAL,
+        ICE_CRYSTAL,
+        HAIR_GROWER,
+        SUNGLASSES,
+        METAL_PART,
+        FATAL_BONE,
+        CYBER_PART,
+        MEGA_HAND,
+        SILVER_BALL,
+        METAL_ARMOR,
+        CHAINSAW,
+        SMALL_SPEAR,
+        X_BANDAGE,
+        RAY_GUN,
+        GOLD_BANANA,
+        MYSTY_EGG,
+        RED_RUBY,
+        BETTLEPEARL,
+        CORAL_CHARM,
+        MOON_MIRROR,
+        BLUE_FLUTE,
+        OLD_ROD,
+        AMAZING_ROD,
+        LEOMONSTONE,
+        MANSION_KEY,
+        GEAR,
+        RAIN_PLANT,
+        STEAK,
+        FRIDGE_KEY,
+        AS_DECODER,
+        GIGA_HAND,
+        NOBLE_MANE,
+        METAL_BANANA,
+
+        NONE = 0xFF,
+    };
+
+    struct PositionData
+    {
+        GsDOBJ2 obj;
+        GsCOORDINATE2 posMatrix;
+        Vector scale;
+        SVector rotation;
+        Vector location;
+    };
+
+    struct MomentumData
+    {
+        int16_t scale1[9];
+        int16_t subDelta[9];
+        int16_t delta[9];
+        int16_t subScale[9];
+        int8_t subValue[9];
+        uint8_t field5_0x51;
+    };
+
+    struct Entity
+    {
+        DigimonType type;
+        PositionData* posData;
+        void** animPtr;
+        MomentumData* momentum;
+        int32_t locX;
+        int32_t locY;
+        int32_t locZ;
+        int16_t animFrame;
+        int16_t frameCount;
+        int16_t* animInstrPtr;
+        void* loopStart;
+        int16_t loopEndFrame;
+        int16_t textureX;
+        int16_t textureY;
+        uint8_t animId;
+        uint8_t loopCount;
+        uint8_t animFlag;
+        uint8_t field17_0x31;
+        int16_t field18_0x32;
+        uint8_t isOnMap;
+        uint8_t isOnScreen;
+        uint8_t flatSprite;
+        uint8_t flatTimer;
+    };
+    struct Stats
+    {
+        int16_t off;
+        int16_t def;
+        int16_t speed;
+        int16_t brain;
+        uint8_t movesPrio[4];
+        uint8_t moves[4];
+        int16_t hp;
+        int16_t mp;
+        int16_t currentHP;
+        int16_t currentMP;
+    };
+
+    struct DigimonEntity : Entity
+    {
+        Stats stats;
+        int16_t unk1;
+        uint8_t unk2_1;
+        uint8_t unk2_2;
+        int16_t vabId;
+        uint8_t chargeMode;
+        uint8_t field7_0x57;
+    };
+
+    struct PartnerEntity : DigimonEntity
+    {
+        uint32_t learnedMoves[2];
+        uint32_t unk1;
+        uint32_t unk2;
+        uint8_t name[20];
+        int32_t lives;
+    };
+
     using TickFunction   = void (*)(int32_t instanceId);
     using RenderFunction = void (*)(int32_t instanceId);
+    using ItemFunction   = void (*)(int32_t itemId);
 
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonPara DIGIMON_PARA[1];
+    extern RaisePara RAISE_DATA[1];
 
     extern uint16_t CHAR_TO_GLYPH_TABLE[80];
     extern GlyphData GLYPH_DATA[79];
@@ -215,6 +647,9 @@ extern "C"
     extern uint8_t COLORCODE_LOWBITS;
     extern RGB8 TEXT_COLORS[17];
     extern GsOT* ACTIVE_ORDERING_TABLE;
+    extern PartnerEntity PARTNER_ENTITY;
+    extern ItemFunction ITEM_FUNCTIONS[128];
+    extern uint32_t IS_SCRIPT_PAUSED;
 
     extern uint8_t* jis_at_index(uint8_t* string, uint32_t index);
     extern uint16_t convertAsciiToJis(uint8_t input);
@@ -232,8 +667,25 @@ extern "C"
                              int32_t hasShadow);
     extern void setUVDataPolyFT4(POLY_FT4* prim, int16_t uvX, int16_t uvY, int16_t uvWidth, int16_t uvHeight);
     extern void setPosDataPolyFT4(POLY_FT4* prim, int16_t posX, int16_t posY, int16_t uvWidth, int16_t uvHeight);
-}
+    extern int32_t random(int32_t limit);
 
+    extern void Tamer_setState(int32_t state);
+    extern void clearTextArea();
+    extern void setTextColor(int32_t color);
+    extern void handlePoopWeightLoss(DigimonType type);
+    extern void addWithLimit(int16_t* valuePtr, int16_t value, int32_t limit);
+    extern void addHealingParticleEffect(Entity* entity, int32_t param);
+    extern void removeTamerItem();
+    extern void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
+    extern void addTamerLevel(int32_t chance, int32_t amount);
+}
+static_assert(sizeof(PositionData) == 0x88);
+static_assert(sizeof(MomentumData) == 0x52);
+static_assert(sizeof(Entity) == 0x38);
+static_assert(sizeof(Stats) == 0x18);
+static_assert(sizeof(DigimonEntity) == 0x58);
+static_assert(sizeof(PartnerEntity) == 0x80);
+static_assert(sizeof(RaisePara) == 0x1C);
 static_assert(sizeof(DigimonPara) == 0x34);
 static_assert(sizeof(PartnerPara) == 0x84);
 static_assert(sizeof(Position) == 16);

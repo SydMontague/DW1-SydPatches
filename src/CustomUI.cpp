@@ -17,6 +17,7 @@ extern "C"
             .height = 32,
         };
         uint8_t buffer[64];
+        setTextColor(1);
         sprintf(buffer, "%u", RNG_STATE);
         libgpu_ClearImage(&area, 0, 0, 0);
         drawStringNew(&myFont5px, buffer, 352, 224);
@@ -37,7 +38,7 @@ extern "C"
     using IRQCallback = void (*)();
     extern void libetc_InterruptCallback(uint32_t irq, IRQCallback callback);
 
-    void customInit()
+    void initCustomUI()
     {
         TIMER0.config.syncEnable        = 0;
         TIMER0.config.resetMode         = 1;
@@ -49,6 +50,7 @@ extern "C"
         TIMER0.targetValue              = 42336; // 33868800 Hz / 42336 -> 800 ticks per second
         libetc_InterruptCallback(4, timer0irq);
 
+        
         initializeStatusObjects();
         addObject(ObjectID::DEBUG_OVERLAY, 0, &debugOverlayTick, &debugOverlayRender);
     }

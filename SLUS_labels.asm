@@ -16,7 +16,20 @@
 .definelabel renderString, 0x800e5b50
 .definelabel setUVDataPolyFT4, 0x800e56b4
 .definelabel setPosDataPolyFT4, 0x800e56ec
+.definelabel random,                    0x800a36d4
+.definelabel handlePoopWeightLoss,      0x800a8100
+.definelabel Tamer_setState,            0x800aa188
+.definelabel clearTextArea,             0x8010cb90
+.definelabel setTextColor,              0x8010cc0c
+.definelabel callScriptSection,         0x80105b14
+.definelabel addWithLimit,              0x800c563c
+.definelabel addTamerLevel,             0x800acbf4
+.definelabel addHealingParticleEffect,  0x800c1560
+.definelabel removeTamerItem,           0x800c55fc
 
+.definelabel ITEM_FUNCTIONS, 0x80127c88
+.definelabel IS_SCRIPT_PAUSED, 0x80134ff4
+.definelabel PARTNER_ENTITY, 0x801557a8
 .definelabel CHAR_TO_GLYPH_TABLE, 0x801307e0
 .definelabel GLYPH_DATA, 0x80130880
 .definelabel COLORCODE_HIGHBITS, 0x8013465d
@@ -34,9 +47,10 @@
 .definelabel strcpy,  0x800911fc
 .definelabel strncpy, 0x8009120c
 .definelabel strlen,  0x8009121c
-.definelabel strrchr,  0x8009122c
-.definelabel memset, 0x8009125c
+.definelabel strrchr, 0x8009122c
+.definelabel memset,  0x8009125c
 .definelabel sprintf, 0x8009129c
+.definelabel printf,  0x8009128c
 
 // libcd
 .definelabel libcd_CdSearchFile, 0x800b23c0

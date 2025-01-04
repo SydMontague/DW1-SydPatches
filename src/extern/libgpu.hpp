@@ -40,6 +40,64 @@ extern "C"
         uint8_t v3;
         uint16_t pad2;
     };
+    struct Matrix
+    {
+        int16_t m00;
+        int16_t m01;
+        int16_t m02;
+        int16_t m10;
+        int16_t m11;
+        int16_t m12;
+        int16_t m20;
+        int16_t m21;
+        int16_t m22;
+        int16_t pad;
+        int32_t t[3];
+    };
+
+    struct SVector
+    {
+        int16_t x;
+        int16_t y;
+        int16_t z;
+        int16_t pad;
+    };
+
+    struct Vector
+    {
+        int32_t x;
+        int32_t y;
+        int32_t z;
+        int32_t pad;
+    };
+
+    struct GsCOORDINATE2
+    {
+        int32_t someValue;
+        Matrix modelMatrix;
+        Matrix work;
+        void* param;
+        GsCOORDINATE2* super;
+        GsCOORDINATE2* sub;
+    };
+
+    struct TMDObject
+    {
+        uint32_t* vert_top;
+        uint32_t n_vert;
+        uint32_t* normal_top;
+        uint32_t n_normal;
+        uint32_t* primitive_top;
+        uint32_t n_primitive;
+        int32_t scale;
+    };
+    struct GsDOBJ2
+    {
+        uint32_t attribute;
+        GsCOORDINATE2* coord2;
+        TMDObject* tmd;
+        uint32_t id;
+    };
 
     extern void libgpu_SetPolyFT4(POLY_FT4* prim);
     extern void libgpu_AddPrim(void* ot, void* prim);
