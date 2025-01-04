@@ -40,6 +40,7 @@ extern "C"
         uint8_t v3;
         uint16_t pad2;
     };
+    
     struct Matrix
     {
         int16_t m00;

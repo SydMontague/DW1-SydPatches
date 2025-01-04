@@ -27,7 +27,7 @@ extern "C"
 
     void debugOverlayRender(int32_t instanceId)
     {
-        renderStringNew(0, -159, -119, 127, 12, 352, 224, 5, 1);
+        renderStringNew(0, -159, -119, 127, 12, 352, 224, 1, 1);
     }
 
     void timer0irq()
