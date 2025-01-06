@@ -26,6 +26,12 @@
 .definelabel addTamerLevel,             0x800acbf4
 .definelabel addHealingParticleEffect,  0x800c1560
 .definelabel removeTamerItem,           0x800c55fc
+.definelabel hasDigimonRaised,          0x800ff824
+.definelabel Tamer_getState,            0x800ac050
+.definelabel Partner_setState,          0x800df4d0
+.definelabel renderSeperatorLines,      0x800b8360
+.definelabel renderRectPolyFT4,         0x800b8928
+
 
 .definelabel ITEM_FUNCTIONS, 0x80127c88
 .definelabel IS_SCRIPT_PAUSED, 0x80134ff4
@@ -39,6 +45,9 @@
 .definelabel RNG_STATE, 0x80009010
 .definelabel TEXT_COLORS, 0x8012b918
 .definelabel ACTIVE_ORDERING_TABLE, 0x80134ed0
+.definelabel NANIMON_TRIGGER, 0x80134c64
+.definelabel EVOLUTION_TARGET, 0x80134e50
+.definelabel CURRENT_SCREEN, 0x80134da8
 
 // libc
 .definelabel strcat,  0x800911cc

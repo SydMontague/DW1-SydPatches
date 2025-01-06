@@ -1,3 +1,16 @@
+;;; #0 main character
+.byte          255 ; From #1
+.byte          255 ; From #2
+.byte          255 ; From #3
+.byte          255 ; From #4
+.byte          255 ; From #5
+.byte          255 ; To #1
+.byte          255 ; To #2
+.byte          255 ; To #3
+.byte          255 ; To #4
+.byte          255 ; To #5
+.byte          255 ; To #6
+
 ;;; #1 Botamon
 .byte          255 ; From #1
 .byte          255 ; From #2

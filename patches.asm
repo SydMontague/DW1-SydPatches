@@ -11,3 +11,5 @@
 .include "Softlocks.asm"
 .include "Naming.asm"
 .include "Items.asm"
+
+.include "statusBar.asm"

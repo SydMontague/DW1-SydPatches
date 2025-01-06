@@ -6,7 +6,6 @@ extern "C"
 {
     void customInit()
     {
-        printf("Custom Init\n");
         initializeStatusObjects();
 
         initCustomUI();

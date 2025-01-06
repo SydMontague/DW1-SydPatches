@@ -11,5 +11,6 @@ mips-elf-g++ ItemEffects.cpp -o ../compiled/ItemEffects.lib $FLAGS
 mips-elf-g++ ItemFunctions.cpp -o ../compiled/ItemFunctions.lib $FLAGS
 mips-elf-g++ CustomUI.cpp -o ../compiled/CustomUI.lib $FLAGS
 mips-elf-g++ CustomInit.cpp -o ../compiled/CustomInit.lib $FLAGS
+mips-elf-g++ Evolution.cpp -o ../compiled/Evolution.lib $FLAGS
 
 cd -

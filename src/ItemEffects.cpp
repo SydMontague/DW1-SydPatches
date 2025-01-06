@@ -91,6 +91,7 @@ extern "C"
 
     void setTrainingBoost(uint16_t flag, uint16_t value, uint16_t duration)
     {
+        // FIX: prevent non-boost items from clearing the boost
         if (flag == 0) return;
 
         PARTNER_PARA.trainBoostFlag  = flag;

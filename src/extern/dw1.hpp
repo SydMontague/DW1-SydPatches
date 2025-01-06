@@ -235,7 +235,7 @@ extern "C"
         uint8_t blue;
     };
 
-    enum class DigimonType : uint32_t
+    enum class DigimonType : int32_t
     {
         TAMER               = 0,
         BOTAMON             = 1,
@@ -417,6 +417,8 @@ extern "C"
         NPC_MYOTISMON       = 177,
         NPC2_GREYMON        = 178,
         NPC2_METALGREYMON   = 179,
+
+        INVALID = -1,
     };
 
     enum class ItemType
@@ -632,6 +634,31 @@ extern "C"
         int32_t lives;
     };
 
+    struct EvolutionPath
+    {
+        uint8_t from[5];
+        uint8_t to[6];
+    };
+
+    struct EvoRequirements
+    {
+        int16_t digimon;
+        int16_t hp;
+        int16_t mp;
+        int16_t offense;
+        int16_t defense;
+        int16_t speed;
+        int16_t brain;
+        int16_t care;
+        int16_t weight;
+        int16_t discipline;
+        int16_t happiness;
+        int16_t battles;
+        int16_t techs;
+        uint8_t flags;
+        uint8_t padding;
+    };
+
     using TickFunction   = void (*)(int32_t instanceId);
     using RenderFunction = void (*)(int32_t instanceId);
     using ItemFunction   = void (*)(int32_t itemId);
@@ -640,6 +667,8 @@ extern "C"
     // dummy size, used for unbound memory access
     extern DigimonPara DIGIMON_PARA[1];
     extern RaisePara RAISE_DATA[1];
+    extern EvolutionPath EVO_PATHS_DATA[1];
+    extern EvoRequirements EVO_REQ_DATA[1];
 
     extern uint16_t CHAR_TO_GLYPH_TABLE[80];
     extern GlyphData GLYPH_DATA[79];
@@ -650,6 +679,9 @@ extern "C"
     extern PartnerEntity PARTNER_ENTITY;
     extern ItemFunction ITEM_FUNCTIONS[128];
     extern uint32_t IS_SCRIPT_PAUSED;
+    extern int32_t NANIMON_TRIGGER;
+    extern int16_t EVOLUTION_TARGET;
+    extern uint8_t CURRENT_SCREEN;
 
     extern uint8_t* jis_at_index(uint8_t* string, uint32_t index);
     extern uint16_t convertAsciiToJis(uint8_t input);
@@ -669,6 +701,8 @@ extern "C"
     extern void setPosDataPolyFT4(POLY_FT4* prim, int16_t posX, int16_t posY, int16_t uvWidth, int16_t uvHeight);
     extern int32_t random(int32_t limit);
 
+    extern void Partner_setState(int32_t state);
+    extern int32_t Tamer_getState();
     extern void Tamer_setState(int32_t state);
     extern void clearTextArea();
     extern void setTextColor(int32_t color);
@@ -678,6 +712,19 @@ extern "C"
     extern void removeTamerItem();
     extern void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
     extern void addTamerLevel(int32_t chance, int32_t amount);
+    extern bool hasDigimonRaised(DigimonType type);
+
+    struct Line
+    {
+        int16_t x1;
+        int16_t y1;
+        int16_t x2;
+        int16_t y2;
+        uint8_t clut;
+        uint8_t pad;
+    };
+    
+    extern void renderSeperatorLines(Line* linePtr, int32_t count, int32_t layer);
 }
 static_assert(sizeof(PositionData) == 0x88);
 static_assert(sizeof(MomentumData) == 0x52);
@@ -691,3 +738,4 @@ static_assert(sizeof(PartnerPara) == 0x84);
 static_assert(sizeof(Position) == 16);
 static_assert(sizeof(GlyphData) == 24);
 static_assert(sizeof(RGB8) == 3);
+static_assert(sizeof(EvolutionPath) == 11);
