@@ -21,7 +21,7 @@ extern "C"
         return DIGIMON_PARA[type].radius;
     }
 
-    void jis_concat_glyph(uint8_t* string, uint8_t* glyph)
+    void jis_concat_glyph(uint8_t* string, const uint8_t* glyph)
     {
         string    = string + strlen(string);
         string[0] = glyph[0];
@@ -35,7 +35,7 @@ extern "C"
         string[idx] = 0;
     }
 
-    uint8_t* jis_at_index(uint8_t* string, uint32_t index)
+    const uint8_t* jis_at_index(const uint8_t* string, uint32_t index)
     {
         for (int i = 0; i < index; i++)
         {
@@ -47,7 +47,7 @@ extern "C"
         return string;
     }
 
-    int32_t jis_len(uint8_t* str)
+    int32_t jis_len(const uint8_t* str)
     {
         int32_t glyphs = 0;
         int32_t bytes  = 0;

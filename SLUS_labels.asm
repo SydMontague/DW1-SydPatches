@@ -31,6 +31,10 @@
 .definelabel Partner_setState,          0x800df4d0
 .definelabel renderSeperatorLines,      0x800b8360
 .definelabel renderRectPolyFT4,         0x800b8928
+.definelabel renderInsetBox,            0x800be734
+.definelabel renderdigimonstatsbar,     0x800bec28
+.definelabel renderDigiviceEntity,      0x800beebc
+.definelabel renderBoxBar,              0x800be85c
 
 
 .definelabel ITEM_FUNCTIONS, 0x80127c88
@@ -48,6 +52,10 @@
 .definelabel NANIMON_TRIGGER, 0x80134c64
 .definelabel EVOLUTION_TARGET, 0x80134e50
 .definelabel CURRENT_SCREEN, 0x80134da8
+.definelabel MENU_STATE, 0x80134d34
+.definelabel SLEEP_PATTERN, 0x80122cf4
+.definelabel PLAYTIME_FRAMES, 0x80134f00
+.definelabel DIGIVICE_ENTITY_VIEW, 0x80123860
 
 // libc
 .definelabel strcat,  0x800911cc

@@ -1,15 +1,16 @@
 #include "Font.hpp"
 
+#include "Utils.hpp"
 #include "extern/dw1.hpp"
 
 extern "C"
 {
-    constexpr uint32_t RENDER_COLS        = 128;
-    constexpr uint32_t RENDER_ROWS        = 32;
-    constexpr uint32_t RENDER_AREA_SIZE   = RENDER_COLS * RENDER_ROWS;
-    
+    constexpr uint32_t RENDER_COLS      = 128;
+    constexpr uint32_t RENDER_ROWS      = 32;
+    constexpr uint32_t RENDER_AREA_SIZE = RENDER_COLS * RENDER_ROWS;
+
     uint32_t RENDER_AREA_POINTER          = 0;
-    uint8_t RENDER_AREA[RENDER_AREA_SIZE] = { 0 };
+    uint8_t RENDER_AREA[RENDER_AREA_SIZE] = {0};
 
     Font vanillaFont = {
         .height       = 11,
@@ -38,10 +39,10 @@ extern "C"
         return getGlyphVanilla(codepoint)->pixelData[row];
     }
 
-    uint16_t getCodePointVanilla(uint8_t* string, uint32_t index)
+    uint16_t getCodePointVanilla(const uint8_t* string, uint32_t index)
     {
-        uint8_t* ptr      = jis_at_index(string, index);
-        uint8_t firstByte = *ptr;
+        const uint8_t* ptr = jis_at_index(string, index);
+        uint8_t firstByte  = *ptr;
         if (firstByte >= 0x80)
         {
             uint16_t bla = firstByte << 8 | ptr[1];
@@ -65,18 +66,19 @@ extern "C"
         return ptr;
     }
 
-    uint32_t getStringWidth(Font* font, uint8_t* string)
+    uint32_t getStringWidth(Font* font, const uint8_t* string)
     {
         GetCodePointFn getCodePoint = font->getCodePoint;
         GetWidthFn getWidth         = font->getWidth;
         uint32_t index              = 0;
         uint32_t width              = 0;
-        uint16_t codepoint;
-        do
+        while (true)
         {
-            codepoint = getCodePoint(string, index++);
+            uint16_t codepoint = getCodePoint(string, index++);
+            if (codepoint == 0) break;
+
             width += getWidth(codepoint);
-        } while (codepoint != 0);
+        }
 
         return width;
     }
@@ -117,7 +119,7 @@ extern "C"
         return glyph_width;
     }
 
-    uint16_t drawStringNew(Font* font, uint8_t* string, int16_t start_x, int16_t start_y)
+    uint16_t drawStringNew(Font* font, const uint8_t* string, int16_t start_x, int16_t start_y)
     {
         uint32_t string_width = getStringWidth(font, string);
         uint16_t font_height  = font->height;
@@ -133,13 +135,13 @@ extern "C"
 
         uint32_t index = 0;
         uint32_t width = 0;
-        do
+        while (true)
         {
             uint16_t codepoint = font->getCodePoint(string, index++);
             if (codepoint == 0) break;
 
             width += drawGlyphNew(font, codepoint, render_area, width, string_width);
-        } while (true);
+        }
 
         libgpu_LoadImage(&rect, reinterpret_cast<uint32_t*>(render_area));
         return width;

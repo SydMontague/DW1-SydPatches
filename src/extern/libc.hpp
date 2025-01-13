@@ -10,5 +10,5 @@ extern "C"
     extern uint32_t strlen(uint8_t* string);
     extern uint8_t* strncpy(uint8_t* dest, uint8_t* src, uint32_t byte_cnt);
     extern uint8_t* sprintf(uint8_t* buffer, const char* format, ...);
-    extern void printf(const char* string);
+    extern void printf(const char* string, ...);
 }

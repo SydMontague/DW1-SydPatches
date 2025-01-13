@@ -1,9 +1,22 @@
 #pragma once
 
+#include "libgpu.hpp"
+#include "libgte.hpp"
 #include "stddef.hpp"
 
 extern "C"
 {
+    struct TMD_STRUCT
+    {
+        uint32_t* vert_top;
+        uint32_t n_vert;
+        uint32_t* normal_top;
+        uint32_t n_normal;
+        uint32_t* primitive_top;
+        uint32_t n_primitive;
+        int32_t scale;
+    };
+
     struct GsOT
     {
         uint32_t length;
@@ -11,6 +24,45 @@ extern "C"
         uint32_t offset;
         uint32_t point;
         uint32_t* current;
+    };
+
+    struct GsCOORD2PARAM
+    {
+        Vector scale;
+        SVector rotate;
+        Vector translation;
+    };
+
+    struct GsCOORDINATE2
+    {
+        int32_t someValue;
+        Matrix modelMatrix;
+        Matrix work;
+        GsCOORD2PARAM* param;
+        GsCOORDINATE2* super;
+        GsCOORDINATE2* sub;
+    };
+
+    struct GsDOBJ2
+    {
+        uint32_t attribute;
+        GsCOORDINATE2* coord2;
+        TMD_STRUCT* tmd;
+        uint32_t id;
+    };
+
+    struct GsRVIEW2
+    {
+        int32_t viewpointX;
+        int32_t viewpointY;
+        int32_t viewpointZ;
+
+        int32_t refpointX;
+        int32_t refpointY;
+        int32_t refpointZ;
+
+        int32_t viewpoint_twist;
+        GsCOORDINATE2* super;
     };
 
     extern void* libgs_GsGetWorkBase();

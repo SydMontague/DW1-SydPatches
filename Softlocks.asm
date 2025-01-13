@@ -27,9 +27,9 @@
   addiu a0,sp,0x28
   jal getDistanceSquared
   addiu a1,sp,0x38
-  sw v0,0x48(sp)
-  jal getDigimonRadius
   lw a0,0x00(s1)
+  jal getDigimonRadius
+  sw v0,0x48(sp)
   sw v0,0x4C(sp)
   nop
 .endarea

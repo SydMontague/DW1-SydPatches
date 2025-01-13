@@ -13,3 +13,4 @@
 .include "Items.asm"
 
 .include "statusBar.asm"
+.include "StatsView.asm"

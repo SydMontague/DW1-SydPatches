@@ -113,7 +113,7 @@ extern "C"
 
     struct DigimonPara
     {
-        char name[20];
+        uint8_t name[20];
         int32_t boneCount;
         int16_t radius;
         int16_t height;
@@ -659,6 +659,26 @@ extern "C"
         uint8_t padding;
     };
 
+    struct Line
+    {
+        int16_t x1;
+        int16_t y1;
+        int16_t x2;
+        int16_t y2;
+        uint8_t clut;
+        uint8_t pad;
+    };
+
+    struct SleepPattern
+    {
+        uint8_t sleepyHour;
+        uint8_t sleepyMinute;
+        uint8_t wakeupHour;
+        uint8_t wakeupMinute;
+        uint8_t wakeupDefault;
+        uint8_t sleepyDefault;
+    };
+
     using TickFunction   = void (*)(int32_t instanceId);
     using RenderFunction = void (*)(int32_t instanceId);
     using ItemFunction   = void (*)(int32_t itemId);
@@ -682,8 +702,10 @@ extern "C"
     extern int32_t NANIMON_TRIGGER;
     extern int16_t EVOLUTION_TARGET;
     extern uint8_t CURRENT_SCREEN;
+    extern SleepPattern SLEEP_PATTERN[8];
+    extern uint32_t MENU_STATE;
+    extern uint16_t PLAYTIME_FRAMES;
 
-    extern uint8_t* jis_at_index(uint8_t* string, uint32_t index);
     extern uint16_t convertAsciiToJis(uint8_t input);
     extern void clearTextSubArea(RECT* rect);
     extern void initializeStatusObjects();
@@ -700,6 +722,15 @@ extern "C"
     extern void setUVDataPolyFT4(POLY_FT4* prim, int16_t uvX, int16_t uvY, int16_t uvWidth, int16_t uvHeight);
     extern void setPosDataPolyFT4(POLY_FT4* prim, int16_t posX, int16_t posY, int16_t uvWidth, int16_t uvHeight);
     extern int32_t random(int32_t limit);
+    extern void renderBoxBar(int16_t posX,
+                             int16_t posY,
+                             uint16_t width,
+                             uint16_t height,
+                             uint8_t red,
+                             uint8_t green,
+                             uint8_t blue,
+                             uint8_t flag,
+                             int32_t layer);
 
     extern void Partner_setState(int32_t state);
     extern int32_t Tamer_getState();
@@ -713,18 +744,20 @@ extern "C"
     extern void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
     extern void addTamerLevel(int32_t chance, int32_t amount);
     extern bool hasDigimonRaised(DigimonType type);
-
-    struct Line
-    {
-        int16_t x1;
-        int16_t y1;
-        int16_t x2;
-        int16_t y2;
-        uint8_t clut;
-        uint8_t pad;
-    };
-    
+    extern void renderInsetBox(int32_t posX, int32_t posY, int32_t width, int32_t height, int32_t order);
+    extern void renderDigimonStatsBar(int32_t value, int32_t maxValue, int32_t width, int32_t posX, int32_t posY);
     extern void renderSeperatorLines(Line* linePtr, int32_t count, int32_t layer);
+    extern void renderRectPolyFT4(int16_t posX,
+                                  int16_t posY,
+                                  uint32_t width,
+                                  uint32_t height,
+                                  uint8_t texX,
+                                  uint8_t texY,
+                                  uint16_t texturePage,
+                                  uint16_t clut,
+                                  int zIndex,
+                                  char flag);
+    extern void renderDigiviceEntity(Entity* entity, int32_t entityId);
 }
 static_assert(sizeof(PositionData) == 0x88);
 static_assert(sizeof(MomentumData) == 0x52);

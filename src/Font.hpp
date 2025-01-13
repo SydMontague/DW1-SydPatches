@@ -5,7 +5,7 @@ extern "C"
 {
     using GetWidthFn     = uint8_t (*)(uint16_t);
     using GetRowFn       = uint16_t (*)(uint16_t, uint8_t);
-    using GetCodePointFn = uint16_t (*)(uint8_t*, uint32_t);
+    using GetCodePointFn = uint16_t (*)(const uint8_t*, uint32_t);
 
     struct CustomFont
     {
@@ -26,6 +26,12 @@ extern "C"
         uint8_t rows[6]; // height
     };
 
+    struct Glyph7PX
+    {
+        uint8_t width;
+        uint8_t rows[8]; // height
+    };
+    
     struct Font
     {
         uint8_t height;
@@ -36,13 +42,14 @@ extern "C"
 
     extern Font vanillaFont;
     extern Font myFont5px;
+    extern Font myFont7px;
 
     GlyphData* getGlyphVanilla(uint16_t codepoint);
     uint8_t getWidthVanilla(uint16_t codepoint);
     uint16_t getRowVanilla(uint16_t codepoint, uint8_t row);
-    uint16_t getCodePointVanilla(uint8_t* string, uint32_t index);
+    uint16_t getCodePointVanilla(const uint8_t* string, uint32_t index);
 
-    uint16_t drawStringNew(Font* font, uint8_t* string, int16_t start_x, int16_t start_y);
+    uint16_t drawStringNew(Font* font, const uint8_t* string, int16_t start_x, int16_t start_y);
 
     void renderStringNew(int32_t colorId,
                          int16_t posX,
