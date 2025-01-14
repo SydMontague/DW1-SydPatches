@@ -11,7 +11,7 @@ extern "C"
 {
     IconSprite sprites[] = {
         // type
-        {PROFILE_OFFSET_X + 263, PROFILE_OFFSET_X + 16, 12, 12, 0, 128, 0, 5, getClut(0x60, 0x1e8 + 0)},
+        {PROFILE_OFFSET_X + 263, PROFILE_OFFSET_Y + 16, 12, 12, 0, 128, 0, 5, getClut(0x60, 0x1e8 + 0)},
         // special 0
         {PROFILE_OFFSET_X + 224, PROFILE_OFFSET_Y + 31, 12, 12, 36, 128, 1, 5, getClut(0x60, 0x1e8 + 0)},
         // special 1
@@ -133,10 +133,10 @@ extern "C"
 
         {PROFILE_OFFSET_X + 32, PROFILE_OFFSET_Y + 14, 155, 14}, // Name
         {PROFILE_OFFSET_X + 32, PROFILE_OFFSET_Y + 30, 155, 14}, // Digimon
-        {PROFILE_OFFSET_X + 32, PROFILE_OFFSET_Y + 46, 30, 14},  // Age
-        {PROFILE_OFFSET_X + 100, PROFILE_OFFSET_Y + 46, 30, 14}, // Weight
-        {PROFILE_OFFSET_X + 168, PROFILE_OFFSET_Y + 46, 30, 14}, // Battle
-        {PROFILE_OFFSET_X + 246, PROFILE_OFFSET_Y + 46, 30, 14}, // Care
+        {PROFILE_OFFSET_X + 32, PROFILE_OFFSET_Y + 46, 28, 14},  // Age
+        {PROFILE_OFFSET_X + 104, PROFILE_OFFSET_Y + 46, 28, 14}, // Weight
+        {PROFILE_OFFSET_X + 176, PROFILE_OFFSET_Y + 46, 28, 14}, // Battle
+        {PROFILE_OFFSET_X + 248, PROFILE_OFFSET_Y + 46, 28, 14}, // Care
 
         {STATS_OFFSET_X + 32, STATS_OFFSET_Y + 22, 80, 5}, // HP
         {STATS_OFFSET_X + 32, STATS_OFFSET_Y + 37, 80, 5}, // MP
@@ -155,7 +155,7 @@ extern "C"
 
     void drawDigimonStatsViewStrings()
     {
-        // DIGIVICE_ENTITY_VIEW.refpointX = -350; // TODO activate once the Tamer view has been re-implemented
+        DIGIVICE_ENTITY_VIEW.refpointX = -350; // TODO activate once the Tamer view has been re-implemented
         auto& para      = DIGIMON_PARA[static_cast<uint32_t>(PARTNER_ENTITY.type)];
         auto& raisePara = RAISE_DATA[static_cast<uint32_t>(PARTNER_ENTITY.type)];
 
@@ -241,6 +241,19 @@ extern "C"
         sprintf(brain, "%d", PARTNER_ENTITY.stats.brain);
         values[ValueIndex::BRAINS].string = reinterpret_cast<const char*>(brain);
 
+        uint8_t happ[8];
+        sprintf(happ, "%d", PARTNER_PARA.happiness);
+        values[ValueIndex::HAPPINESS].string = reinterpret_cast<const char*>(happ);
+        uint8_t disc[8];
+        sprintf(disc, "%d", PARTNER_PARA.discipline);
+        values[ValueIndex::DISCIPLINE].string = reinterpret_cast<const char*>(disc);
+        uint8_t tired[8];
+        sprintf(tired, "%d", PARTNER_PARA.tiredness);
+        values[ValueIndex::TIREDNESS].string = reinterpret_cast<const char*>(tired);
+        uint8_t virus[8];
+        sprintf(virus, "%d", PARTNER_PARA.virusBar);
+        values[ValueIndex::VIRUS].string = reinterpret_cast<const char*>(virus);
+
         for (auto& entry : values)
             drawTextSprite(entry);
     }
@@ -270,14 +283,7 @@ extern "C"
             renderTextSprite(entry);
         for (auto& entry : values)
             renderTextSprite(entry);
-
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.hp, 9999, 75, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 24);
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.mp, 9999, 75, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 39);
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.off, 999, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 54);
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.def, 999, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 69);
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.speed, 999, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 84);
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.brain, 999, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 99);
-
+        
         for (auto& entry : sprites)
         {
             int16_t offsetX = 0;
@@ -287,6 +293,12 @@ extern "C"
             renderRectPolyFT4(entry.posX, entry.posY, entry.width, entry.height, entry.uvX + offsetX, entry.uvY, entry.texture_page, entry.clut, 5, 0);
         }
 
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.hp, 9999, 75, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 24);
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.mp, 9999, 75, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 39);
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.off, 999, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 54);
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.def, 999, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 69);
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.speed, 999, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 84);
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.brain, 999, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 99);
         renderBoxBar(CONDITION_OFFSET_X + 62, CONDITION_OFFSET_Y + 81, (PARTNER_PARA.tiredness * 48 / 100), 5, 50, 150, 255, 0, 5);
         renderBoxBar(CONDITION_OFFSET_X + 62, CONDITION_OFFSET_Y + 95, PARTNER_PARA.virusBar * 3, 5, 200, 200, 60, 0, 5);
         // clang-format on

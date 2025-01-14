@@ -20,6 +20,10 @@ extern "C"
             DEFENSE,
             SPEED,
             BRAINS,
+            HAPPINESS,
+            DISCIPLINE,
+            TIREDNESS,
+            VIRUS,
         };
     } // namespace ValueIndex
 
@@ -70,5 +74,5 @@ extern "C"
     extern Line lines[6];
     extern TextSprite badges[3];
     extern TextSprite labels[20];
-    extern TextSprite values[13];
+    extern TextSprite values[17];
 }
