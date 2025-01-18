@@ -1,5 +1,6 @@
 #include "Font.hpp"
 #include "extern/dw1.hpp"
+#include "Helper.hpp"
 
 extern "C"
 {
@@ -26,7 +27,7 @@ extern "C"
     {
         if (!PARTNER_PARA.condition.isPoopy) return;
 
-        PARTNER_PARA.poopLevel         = RAISE_DATA[static_cast<uint32_t>(PARTNER_ENTITY.type)].poopTimer;
+        PARTNER_PARA.poopLevel         = getRaiseData(PARTNER_ENTITY.type)->poopTimer;
         PARTNER_PARA.condition.isPoopy = false;
         handlePoopWeightLoss(PARTNER_ENTITY.type);
     }
@@ -40,7 +41,7 @@ extern "C"
 
     void addEnergy(int32_t amount)
     {
-        auto cap       = RAISE_DATA[static_cast<uint32_t>(PARTNER_ENTITY.type)].energyCap;
+        auto cap       = getRaiseData(PARTNER_ENTITY.type)->energyCap;
         auto new_value = PARTNER_PARA.energyLevel + amount;
         if (new_value < 0) new_value = 0;
         if (new_value > cap) new_value = cap;

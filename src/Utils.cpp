@@ -1,10 +1,11 @@
 #include "Utils.hpp"
 
 #include "extern/dw1.hpp"
+#include "Helper.hpp"
 
 extern "C"
 {
-    __attribute__((always_inline)) constexpr bool jis_is_two_byte(uint8_t first)
+    constexpr bool jis_is_two_byte(uint8_t first)
     {
         return (first & 0x80) != 0;
     }
@@ -16,9 +17,9 @@ extern "C"
         return diffX * diffX + diffZ * diffZ;
     }
 
-    int32_t getDigimonRadius(int32_t type)
+    int32_t getDigimonRadius(DigimonType type)
     {
-        return DIGIMON_PARA[type].radius;
+        return getDigimonPara(type)->radius;
     }
 
     void jis_concat_glyph(uint8_t* string, const uint8_t* glyph)

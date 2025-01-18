@@ -55,7 +55,7 @@ extern "C"
     {
         return in - 160;
     }
-    constexpr inline int32_t toRelativeY(int32_t in)
+    constexpr int32_t toRelativeY(int32_t in)
     {
         return in - 120;
     }

@@ -35,6 +35,9 @@
 .definelabel renderdigimonstatsbar,     0x800bec28
 .definelabel renderDigiviceEntity,      0x800beebc
 .definelabel renderBoxBar,              0x800be85c
+.definelabel updateConditionAnimation,  0x800df2d0
+.definelabel unsetButterfly,            0x800e9fb4
+.definelabel setSleepDisabled,          0x800ba40c
 
 
 .definelabel ITEM_FUNCTIONS, 0x80127c88
@@ -56,6 +59,14 @@
 .definelabel SLEEP_PATTERN, 0x80122cf4
 .definelabel PLAYTIME_FRAMES, 0x80134f00
 .definelabel DIGIVICE_ENTITY_VIEW, 0x80123860
+.definelabel CURRENT_FRAME, 0x80134f08
+.definelabel LAST_HANDLED_FRAME, 0x80134f06
+.definelabel HOUR, 0x80134ebc
+.definelabel MINUTE, 0x80134ebe
+.definelabel YEAR, 0x80134f02
+.definelabel DAY, 0x80134f04
+.definelabel BUTTERFLY_ID, 0x80134c60
+.definelabel HAS_BUTTERFLY, 0x80134c54
 
 // libc
 .definelabel strcat,  0x800911cc

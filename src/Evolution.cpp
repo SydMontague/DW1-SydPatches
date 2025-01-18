@@ -1,6 +1,7 @@
 #include "Evolution.hpp"
 
 #include "extern/dw1.hpp"
+#include "Helper.hpp"
 
 extern "C"
 {
@@ -116,7 +117,7 @@ extern "C"
         if (targetWeight - 5 <= ownWeight && ownWeight <= targetWeight + 5) reqPoints++;
 
         // stats
-        if (DIGIMON_PARA[static_cast<uint32_t>(target)].level == Level::ROOKIE)
+        if (getDigimonPara(target)->level == Level::ROOKIE)
         {
             if (highestStatFulfilled(data)) reqPoints++;
         }
@@ -212,7 +213,7 @@ extern "C"
             }
         }
 
-        if (DIGIMON_PARA[static_cast<uint32_t>(current)].level == Level::ROOKIE && best == DigimonType::INVALID &&
+        if (getDigimonPara(current)->level == Level::ROOKIE && best == DigimonType::INVALID &&
             PARTNER_PARA.evoTimer >= 96)
             return DigimonType::NUMEMON;
 
@@ -225,7 +226,7 @@ extern "C"
 
         DigimonType target = DigimonType::INVALID;
         DigimonType type   = entity->type;
-        auto level         = DIGIMON_PARA[static_cast<uint32_t>(type)].level;
+        auto level         = getDigimonPara(type)->level;
         auto evotimer      = PARTNER_PARA.evoTimer;
         auto rand          = random(100);
 
@@ -257,7 +258,7 @@ extern "C"
         auto happiness     = PARTNER_PARA.happiness;
         auto tiredness     = PARTNER_PARA.tiredness;
         auto battles       = PARTNER_PARA.battles;
-        auto level         = DIGIMON_PARA[static_cast<uint32_t>(type)].level;
+        auto level         = getDigimonPara(type)->level;
         auto def           = entity->stats.def;
 
         if (rand < 30)

@@ -53,6 +53,31 @@ NAMING_DATA:
   .fill 0x80122584-.
 .endarea
 
+; override vanilla raise data
+.org 0x801225bc
+.area 0x80122cf4-.
+
+  .notice "Empty space left: " + (0x80122cf4-.) + " bytes"
+  .fill 0x80122cf4-.
+.endarea
+
+
+; override vanilla raise data
+.org 0x8012abec
+.area 0x8012b918-.
+
+  .notice "Empty space left: " + (0x8012b918-.) + " bytes"
+  .fill 0x8012b918-.
+.endarea
+
+; unused libgs functions
+.org 0x800957c0
+.area 0x80096bcc-.
+  .notice "Empty space left: " + (0x80096bcc-.) + " bytes"
+  .fill 0x80096bcc-.
+.endarea
+
+
 .org 0x800ee8d4
   jal customInit
 
@@ -65,9 +90,6 @@ NAMING_DATA:
   j drawStringNew
   li.l a0,vanillaFont
 
-; override vanilla raise data
-.org 0x801225bc
-  .fill 1848
 
 ; override vanilla evo requirements
 .org 0x8012abec

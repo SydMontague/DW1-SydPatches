@@ -6,6 +6,7 @@
 #include "extern/libc.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
+#include "Helper.hpp"
 
 extern "C"
 {
@@ -151,18 +152,16 @@ extern "C"
         {CONDITION_OFFSET_X + 60, CONDITION_OFFSET_Y + 51, 51, 8},
     };
 
-    extern GsRVIEW2 DIGIVICE_ENTITY_VIEW;
-
     void drawDigimonStatsViewStrings()
     {
         DIGIVICE_ENTITY_VIEW.refpointX = -350; // TODO activate once the Tamer view has been re-implemented
-        auto& para      = DIGIMON_PARA[static_cast<uint32_t>(PARTNER_ENTITY.type)];
-        auto& raisePara = RAISE_DATA[static_cast<uint32_t>(PARTNER_ENTITY.type)];
+        auto* para      = getDigimonPara(PARTNER_ENTITY.type);
+        auto* raisePara = getRaiseData(PARTNER_ENTITY.type);
 
-        sprites[SpriteIndex::TYPE].uvX = static_cast<uint32_t>(para.type) * 12 - 12;
-        initSpecialSprite(sprites[SpriteIndex::SPECIAL1], para.special[0]);
-        initSpecialSprite(sprites[SpriteIndex::SPECIAL2], para.special[1]);
-        initSpecialSprite(sprites[SpriteIndex::SPECIAL3], para.special[2]);
+        sprites[SpriteIndex::TYPE].uvX = static_cast<uint32_t>(para->type) * 12 - 12;
+        initSpecialSprite(sprites[SpriteIndex::SPECIAL1], para->special[0]);
+        initSpecialSprite(sprites[SpriteIndex::SPECIAL2], para->special[1]);
+        initSpecialSprite(sprites[SpriteIndex::SPECIAL3], para->special[2]);
         sprites[SpriteIndex::HAPPINESS].uvX  = PARTNER_PARA.happiness < 0 ? 11 : 0;
         sprites[SpriteIndex::DISCIPLINE].uvX = PARTNER_PARA.discipline < 50 ? 33 : 22;
 
@@ -198,7 +197,7 @@ extern "C"
             drawTextSprite(entry);
 
         values[ValueIndex::NAME].string    = reinterpret_cast<const char*>(PARTNER_ENTITY.name);
-        values[ValueIndex::DIGIMON].string = reinterpret_cast<const char*>(para.name);
+        values[ValueIndex::DIGIMON].string = reinterpret_cast<const char*>(para->name);
         uint8_t buffer1[8];
         sprintf(buffer1, "%d", PARTNER_PARA.age);
         values[ValueIndex::AGE].string = reinterpret_cast<const char*>(buffer1);
@@ -212,7 +211,7 @@ extern "C"
         sprintf(buffer4, "%d", PARTNER_PARA.careMistakes);
         values[ValueIndex::CARE].string = reinterpret_cast<const char*>(buffer4);
 
-        SleepPattern& pattern = SLEEP_PATTERN[raisePara.sleepCycle];
+        SleepPattern& pattern = SLEEP_PATTERN[raisePara->sleepCycle];
         uint8_t activeTimes[32];
         sprintf(activeTimes,
                 "%02d:%02d - %02d:%02d",
@@ -223,10 +222,10 @@ extern "C"
         values[ValueIndex::ACTIVE_TIME].string = reinterpret_cast<const char*>(activeTimes);
 
         uint8_t hp[32];
-        sprintf(hp, "%4d  /  %4d", PARTNER_ENTITY.stats.hp, PARTNER_ENTITY.stats.currentHP);
+        sprintf(hp, "%4d  /  %4d", PARTNER_ENTITY.stats.currentHP, PARTNER_ENTITY.stats.hp);
         values[ValueIndex::HP].string = reinterpret_cast<const char*>(hp);
         uint8_t mp[32];
-        sprintf(mp, "%4d  /  %4d", PARTNER_ENTITY.stats.mp, PARTNER_ENTITY.stats.currentMP);
+        sprintf(mp, "%4d  /  %4d", PARTNER_ENTITY.stats.currentMP, PARTNER_ENTITY.stats.mp);
         values[ValueIndex::MP].string = reinterpret_cast<const char*>(mp);
         uint8_t off[8];
         sprintf(off, "%d", PARTNER_ENTITY.stats.off);

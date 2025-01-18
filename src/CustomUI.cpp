@@ -1,6 +1,7 @@
 #include "Font.hpp"
 #include "Utils.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libetc.hpp"
 #include "extern/psx.hpp"
 
 extern "C"
@@ -34,9 +35,6 @@ extern "C"
         irqCount++;
     }
 
-    using IRQCallback = void (*)();
-    extern void libetc_InterruptCallback(uint32_t irq, IRQCallback callback);
-
     void initCustomUI()
     {
         TIMER0.config.syncEnable        = 0;
@@ -49,7 +47,6 @@ extern "C"
         TIMER0.targetValue              = 42336; // 33868800 Hz / 42336 -> 800 ticks per second
         libetc_InterruptCallback(4, timer0irq);
 
-        
         initializeStatusObjects();
         addObject(ObjectID::DEBUG_OVERLAY, 0, &debugOverlayTick, &debugOverlayRender);
     }

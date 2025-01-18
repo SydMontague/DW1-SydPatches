@@ -14,3 +14,4 @@
 
 .include "statusBar.asm"
 .include "StatsView.asm"
+.include "Partner.asm"

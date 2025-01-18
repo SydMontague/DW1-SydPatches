@@ -2,6 +2,7 @@
 
 #include "extern/dw1.hpp"
 #include "ItemEffects.hpp"
+#include "Helper.hpp"
 
 extern "C"
 {
@@ -383,7 +384,7 @@ extern "C"
             if (ptr.itemId == itemId) data = ptr;
         }
 
-        if (RAISE_DATA[static_cast<uint32_t>(PARTNER_ENTITY.type)].favoriteFood == itemId)
+        if (getRaiseData(PARTNER_ENTITY.type)->favoriteFood == itemId)
         {
             data.energy = data.energy * 14 / 10;
             data.happiness += 2;

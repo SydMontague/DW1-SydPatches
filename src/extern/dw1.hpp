@@ -145,16 +145,20 @@ extern "C"
         int16_t viewZ;
     };
 
-    struct Condition
+    union Condition
     {
-        bool isSleepy  : 1;
-        bool isTired   : 1;
-        bool isHungry  : 1;
-        bool isPoopy   : 1;
-        bool isUnhappy : 1;
-        bool isInjured : 1;
-        bool isSick    : 1;
-        uint32_t pad   : 1;
+        struct
+        {
+            bool isSleepy  : 1;
+            bool isTired   : 1;
+            bool isHungry  : 1;
+            bool isPoopy   : 1;
+            bool isUnhappy : 1;
+            bool isInjured : 1;
+            bool isSick    : 1;
+            uint32_t pad   : 1;
+        };
+        uint32_t full;
     };
 
     static_assert(sizeof(Condition) == 4);
@@ -166,9 +170,9 @@ extern "C"
         int16_t sleepyMinute;
         int16_t wakeupHour;
         int16_t wakeupMinute;
-        int16_t wakeupDefault;
-        int16_t sleepyDefault;
-        int16_t awakeToday;
+        int16_t hoursAwakeDefault;
+        int16_t hoursAsleepDefault;
+        int16_t timeAwakeToday;
         int16_t sicknessCounter;
         int16_t missedSleepHours;
         int16_t tirednessSleepTimer;
@@ -705,6 +709,15 @@ extern "C"
     extern SleepPattern SLEEP_PATTERN[8];
     extern uint32_t MENU_STATE;
     extern uint16_t PLAYTIME_FRAMES;
+    extern uint16_t LAST_HANDLED_FRAME;
+    extern uint16_t CURRENT_FRAME;
+    extern uint16_t MINUTE;
+    extern uint16_t HOUR;
+    extern uint16_t DAY;
+    extern uint16_t YEAR;
+    extern int32_t HAS_BUTTERFLY;
+    extern uint32_t BUTTERFLY_ID;
+    extern GsRVIEW2 DIGIVICE_ENTITY_VIEW;
 
     extern uint16_t convertAsciiToJis(uint8_t input);
     extern void clearTextSubArea(RECT* rect);
@@ -758,6 +771,11 @@ extern "C"
                                   int zIndex,
                                   char flag);
     extern void renderDigiviceEntity(Entity* entity, int32_t entityId);
+
+    extern void updateConditionAnimation();
+    extern void setSleepDisabled(bool isDisabled);
+    extern void unsetButterfly(uint32_t id);
+
 }
 static_assert(sizeof(PositionData) == 0x88);
 static_assert(sizeof(MomentumData) == 0x52);
