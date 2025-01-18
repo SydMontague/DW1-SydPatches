@@ -117,7 +117,7 @@ extern "C"
         if (targetWeight - 5 <= ownWeight && ownWeight <= targetWeight + 5) reqPoints++;
 
         // stats
-        if (getDigimonPara(target)->level == Level::ROOKIE)
+        if (getDigimonData(target)->level == Level::ROOKIE)
         {
             if (highestStatFulfilled(data)) reqPoints++;
         }
@@ -213,7 +213,7 @@ extern "C"
             }
         }
 
-        if (getDigimonPara(current)->level == Level::ROOKIE && best == DigimonType::INVALID &&
+        if (getDigimonData(current)->level == Level::ROOKIE && best == DigimonType::INVALID &&
             PARTNER_PARA.evoTimer >= 96)
             return DigimonType::NUMEMON;
 
@@ -226,7 +226,7 @@ extern "C"
 
         DigimonType target = DigimonType::INVALID;
         DigimonType type   = entity->type;
-        auto level         = getDigimonPara(type)->level;
+        auto level         = getDigimonData(type)->level;
         auto evotimer      = PARTNER_PARA.evoTimer;
         auto rand          = random(100);
 
@@ -258,7 +258,7 @@ extern "C"
         auto happiness     = PARTNER_PARA.happiness;
         auto tiredness     = PARTNER_PARA.tiredness;
         auto battles       = PARTNER_PARA.battles;
-        auto level         = getDigimonPara(type)->level;
+        auto level         = getDigimonData(type)->level;
         auto def           = entity->stats.def;
 
         if (rand < 30)

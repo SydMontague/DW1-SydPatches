@@ -174,7 +174,7 @@ naming_buffer_length equ 20
   sb zero,0x17(v0)
 ; copy all 20 bytes of digimon type
 .org 0x801128dc
-  li a1,DIGIMON_PARA
+  li a1,DIGIMON_DATA
   lbu v1,0x00(s6)
   li a0,0x34
   mult v1,a0

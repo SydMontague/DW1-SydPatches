@@ -24,7 +24,7 @@ extern "C"
 
     inline void updateSleepingTimes()
     {
-        auto level = getDigimonPara(PARTNER_ENTITY.type)->level;
+        auto level = getDigimonData(PARTNER_ENTITY.type)->level;
         if (level < Level::ROOKIE)
         {
             PARTNER_PARA.sleepyHour   = (PARTNER_PARA.wakeupHour + PARTNER_PARA.hoursAwakeDefault) % 24;
@@ -45,7 +45,7 @@ extern "C"
     void tickSleepMechanics()
     {
         bool isSleepy = PARTNER_PARA.condition.isSleepy;
-        auto level    = getDigimonPara(PARTNER_ENTITY.type)->level;
+        auto level    = getDigimonData(PARTNER_ENTITY.type)->level;
         if (CURRENT_FRAME != LAST_HANDLED_FRAME)
         {
             // increase tiredness sleep timer
@@ -200,7 +200,7 @@ extern "C"
             HAS_BUTTERFLY = -1;
         }
 
-        if (getDigimonPara(PARTNER_ENTITY.type)->level != Level::ROOKIE) return;
+        if (getDigimonData(PARTNER_ENTITY.type)->level != Level::ROOKIE) return;
         if (PARTNER_PARA.happiness != -100) return;
         if (PARTNER_PARA.discipline == 0) return;
 
@@ -220,7 +220,7 @@ extern "C"
         auto type       = PARTNER_ENTITY.type;
         auto hoursSlept = getTimeDiff(HOUR, PARTNER_PARA.wakeupHour);
 
-        sleepSetTime(PARTNER_PARA.wakeupHour, PARTNER_PARA.wakeupMinute);
+        advanceToTime(PARTNER_PARA.wakeupHour, PARTNER_PARA.wakeupMinute);
 
         PARTNER_PARA.evoTimer += hoursSlept;
         PARTNER_PARA.remainingLifetime -= hoursSlept;

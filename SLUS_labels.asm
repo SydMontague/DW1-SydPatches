@@ -38,7 +38,7 @@
 .definelabel updateConditionAnimation,  0x800df2d0
 .definelabel unsetButterfly,            0x800e9fb4
 .definelabel setSleepDisabled,          0x800ba40c
-.definelabel sleepSetTime,              0x800dd678
+.definelabel advanceToTime,             0x800dd678
 .definelabel setFoodTimer,              0x800a4a08
 .definelabel getModelTile,              0x800c0f28
 .definelabel createPoopPile,            0x800a6848
@@ -52,7 +52,7 @@
 .definelabel GLYPH_DATA, 0x80130880
 .definelabel COLORCODE_HIGHBITS, 0x8013465d
 .definelabel COLORCODE_LOWBITS, 0x8013465c
-.definelabel DIGIMON_PARA, 0x8012ceb4
+.definelabel DIGIMON_DATA, 0x8012ceb4
 .definelabel PARTNER_PARA, 0x80138460
 .definelabel RNG_STATE, 0x80009010
 .definelabel TEXT_COLORS, 0x8012b918

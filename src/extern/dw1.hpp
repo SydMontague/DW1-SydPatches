@@ -111,7 +111,7 @@ extern "C"
         DEBUG_OVERLAY = 20000,
     };
 
-    struct DigimonPara
+    struct DigimonData
     {
         uint8_t name[20];
         int32_t boneCount;
@@ -126,7 +126,7 @@ extern "C"
         uint8_t padding;
     };
 
-    struct RaisePara
+    struct RaiseData
     {
         int8_t hungerTimes[8];
         int8_t energyCap;
@@ -689,8 +689,8 @@ extern "C"
 
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
-    extern DigimonPara DIGIMON_PARA[1];
-    extern RaisePara RAISE_DATA[1];
+    extern DigimonData DIGIMON_DATA[1];
+    extern RaiseData RAISE_DATA[1];
     extern EvolutionPath EVO_PATHS_DATA[1];
     extern EvoRequirements EVO_REQ_DATA[1];
 
@@ -778,7 +778,7 @@ extern "C"
     extern void updateConditionAnimation();
     extern void setSleepDisabled(bool isDisabled);
     extern void unsetButterfly(uint32_t id);
-    extern void sleepSetTime(uint32_t hour, uint32_t minute);
+    extern void advanceToTime(uint32_t hour, uint32_t minute);
     extern void setFoodTimer(DigimonType type);
     extern void getModelTile(Vector* location, int16_t* tileX, int16_t* tileY);
     extern void createPoopPile(int16_t tileX, int16_t tileY);
@@ -791,8 +791,8 @@ static_assert(sizeof(Entity) == 0x38);
 static_assert(sizeof(Stats) == 0x18);
 static_assert(sizeof(DigimonEntity) == 0x58);
 static_assert(sizeof(PartnerEntity) == 0x80);
-static_assert(sizeof(RaisePara) == 0x1C);
-static_assert(sizeof(DigimonPara) == 0x34);
+static_assert(sizeof(RaiseData) == 0x1C);
+static_assert(sizeof(DigimonData) == 0x34);
 static_assert(sizeof(PartnerPara) == 0x84);
 static_assert(sizeof(Position) == 16);
 static_assert(sizeof(GlyphData) == 24);

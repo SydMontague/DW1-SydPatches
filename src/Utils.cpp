@@ -19,7 +19,7 @@ extern "C"
 
     int32_t getDigimonRadius(DigimonType type)
     {
-        return getDigimonPara(type)->radius;
+        return getDigimonData(type)->radius;
     }
 
     void jis_concat_glyph(uint8_t* string, const uint8_t* glyph)

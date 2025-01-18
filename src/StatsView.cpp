@@ -155,7 +155,7 @@ extern "C"
     void drawDigimonStatsViewStrings()
     {
         DIGIVICE_ENTITY_VIEW.refpointX = -350; // TODO activate once the Tamer view has been re-implemented
-        auto* para      = getDigimonPara(PARTNER_ENTITY.type);
+        auto* para      = getDigimonData(PARTNER_ENTITY.type);
         auto* raisePara = getRaiseData(PARTNER_ENTITY.type);
 
         sprites[SpriteIndex::TYPE].uvX = static_cast<uint32_t>(para->type) * 12 - 12;

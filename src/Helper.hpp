@@ -9,12 +9,12 @@ extern "C"
         else { return !(currentTime >= end && currentTime < start); }
     }
 
-    constexpr DigimonPara* getDigimonPara(DigimonType type)
+    constexpr DigimonData* getDigimonData(DigimonType type)
     {
-        return &DIGIMON_PARA[static_cast<uint32_t>(type)];
+        return &DIGIMON_DATA[static_cast<uint32_t>(type)];
     }
 
-    constexpr RaisePara* getRaiseData(DigimonType type)
+    constexpr RaiseData* getRaiseData(DigimonType type)
     {
         return &RAISE_DATA[static_cast<uint32_t>(type)];
     }
