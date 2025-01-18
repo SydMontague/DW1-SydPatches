@@ -38,6 +38,11 @@
 .definelabel updateConditionAnimation,  0x800df2d0
 .definelabel unsetButterfly,            0x800e9fb4
 .definelabel setSleepDisabled,          0x800ba40c
+.definelabel sleepSetTime,              0x800dd678
+.definelabel setFoodTimer,              0x800a4a08
+.definelabel getModelTile,              0x800c0f28
+.definelabel createPoopPile,            0x800a6848
+.definelabel handleWildPoop,            0x800a8198
 
 
 .definelabel ITEM_FUNCTIONS, 0x80127c88
@@ -67,6 +72,9 @@
 .definelabel DAY, 0x80134f04
 .definelabel BUTTERFLY_ID, 0x80134c60
 .definelabel HAS_BUTTERFLY, 0x80134c54
+.definelabel ITEM_SCOLD_FLAG, 0x80134c59
+.definelabel HAS_IMMORTAL_HOUR, 0x80134ca0
+.definelabel IMMORTAL_HOUR, 0x80134ca4
 
 // libc
 .definelabel strcat,  0x800911cc

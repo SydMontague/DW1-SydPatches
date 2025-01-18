@@ -718,6 +718,9 @@ extern "C"
     extern int32_t HAS_BUTTERFLY;
     extern uint32_t BUTTERFLY_ID;
     extern GsRVIEW2 DIGIVICE_ENTITY_VIEW;
+    extern uint8_t ITEM_SCOLD_FLAG;
+    extern uint32_t HAS_IMMORTAL_HOUR;
+    extern uint8_t IMMORTAL_HOUR;
 
     extern uint16_t convertAsciiToJis(uint8_t input);
     extern void clearTextSubArea(RECT* rect);
@@ -775,8 +778,13 @@ extern "C"
     extern void updateConditionAnimation();
     extern void setSleepDisabled(bool isDisabled);
     extern void unsetButterfly(uint32_t id);
-
+    extern void sleepSetTime(uint32_t hour, uint32_t minute);
+    extern void setFoodTimer(DigimonType type);
+    extern void getModelTile(Vector* location, int16_t* tileX, int16_t* tileY);
+    extern void createPoopPile(int16_t tileX, int16_t tileY);
+    extern void handleWildPoop();
 }
+
 static_assert(sizeof(PositionData) == 0x88);
 static_assert(sizeof(MomentumData) == 0x52);
 static_assert(sizeof(Entity) == 0x38);

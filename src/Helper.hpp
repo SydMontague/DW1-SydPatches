@@ -13,12 +13,22 @@ extern "C"
     {
         return &DIGIMON_PARA[static_cast<uint32_t>(type)];
     }
-    
+
     constexpr RaisePara* getRaiseData(DigimonType type)
     {
         return &RAISE_DATA[static_cast<uint32_t>(type)];
     }
+
+    constexpr int32_t getTimeDiff(int32_t start, int32_t end)
+    {
+        if (start <= end) { return end - start; } // fixes day skip? // TODO decide if we actually want to fix that
+        else { return (24 - start) + end; }
+    }
 }
+
+static_assert(getTimeDiff(9, 18) == 9);
+static_assert(getTimeDiff(18, 18) == 0);
+static_assert(getTimeDiff(18, 3) == 9);
 
 static_assert(!isWithinTimeframe(8, 9, 18));
 static_assert(isWithinTimeframe(9, 9, 18));
