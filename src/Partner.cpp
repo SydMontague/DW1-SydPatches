@@ -1,3 +1,5 @@
+#include "Partner.hpp"
+
 #include "Helper.hpp"
 #include "extern/dw1.hpp"
 
@@ -269,5 +271,117 @@ extern "C"
             PARTNER_PARA.discipline -= 5;
             PARTNER_PARA.tiredness += 5;
         }
+    }
+
+    inline bool hasSpotPoop(int16_t tileX, int16_t tileY, uint8_t map)
+    {
+        for (auto& poop : WORLD_POOP)
+        {
+            if (poop.x == tileX && poop.y == tileY && poop.map == map) return true;
+        }
+
+        return false;
+    }
+
+    inline uint32_t countPoopsOnMap(uint8_t map)
+    {
+        uint32_t count = 0;
+        for (auto& poop : WORLD_POOP)
+            if (poop.map == map) count++;
+
+        return count;
+    }
+
+    inline PoopPile* getPoopSlotToFill()
+    {
+        auto countOnMap = countPoopsOnMap(CURRENT_SCREEN);
+        if (countOnMap >= 16)
+        {
+            for (int32_t i = 0; i < 100; i++)
+            {
+                auto& poop = WORLD_POOP[(CURRENT_POOP_ID + i) % 100];
+                if (poop.map == CURRENT_SCREEN) return &poop;
+            }
+        }
+
+        for (auto& poop : WORLD_POOP)
+            if (poop.size == 0) return &poop;
+
+        auto* val       = &WORLD_POOP[CURRENT_POOP_ID];
+        CURRENT_POOP_ID = (CURRENT_POOP_ID + 1) % 100;
+        return val;
+    }
+
+    void createPoopPile(int16_t tileX, int16_t tileY)
+    {
+        auto rotation = PARTNER_ENTITY.posData->rotation.y;
+        if (rotation <= 0x300 || rotation >= 0xD00) tileY -= 1;
+        if (rotation <= 0xB00 && rotation >= 0x500) tileY += 1;
+        if (rotation <= 0xF00 && rotation >= 0x900) tileX -= 1;
+        if (rotation < 0x700 && rotation >= 0x100) tileX += 1;
+
+        while (hasSpotPoop(tileX, tileY, CURRENT_SCREEN))
+        {
+            switch (random(4))
+            {
+                case 0: tileX -= 1; break;
+                case 1: tileX += 1; break;
+                case 2: tileY -= 1; break;
+                case 3: tileY += 1; break;
+            }
+        }
+
+        auto* poop = getPoopSlotToFill();
+        poop->map  = CURRENT_SCREEN;
+        poop->x    = tileX;
+        poop->y    = tileY;
+        poop->size = getRaiseData(PARTNER_ENTITY.type)->poopSize;
+
+        if (PARTNER_ENTITY.type != DigimonType::SUKAMON) PARTNER_PARA.virusBar++;
+
+        SVector pos = {
+            .x = static_cast<int16_t>((tileX - 50) * 100 + 50),
+            .y = static_cast<int16_t>(PARTNER_ENTITY.posData->location.y),
+            .z = static_cast<int16_t>((50 - tileY) * 100 - 50),
+        };
+        createPoopFX(&pos);
+    }
+
+    extern uint8_t getItemCount(ItemType item);
+    extern uint8_t PARTNER_AREA_RESPONSE;
+
+    void sleepRegen() {
+        auto hoursSlept = getTimeDiff(HOUR, PARTNER_PARA.wakeupHour);
+        if(MINUTE > 0 && HOUR != PARTNER_PARA.sleepyHour)
+            hoursSlept++;
+
+        uint32_t sleepFactor = (hoursSlept * 100) / PARTNER_PARA.hoursAsleepDefault;
+        if(getItemCount(ItemType::REST_PILLOW) > 0)
+            sleepFactor = (sleepFactor * 12) / 10;
+        if(PARTNER_AREA_RESPONSE == 1)
+            sleepFactor = (sleepFactor * 12) / 10;
+        if(PARTNER_AREA_RESPONSE == 2)
+            sleepFactor = (sleepFactor * 8) / 10;
+
+        auto randomHealFactor = random(10) + 70;
+        auto healHP = (PARTNER_ENTITY.stats.hp * randomHealFactor * sleepFactor) / 10000;
+        auto healMP = (PARTNER_ENTITY.stats.mp * randomHealFactor * sleepFactor) / 10000;
+        PARTNER_ENTITY.stats.currentHP += healHP;
+        PARTNER_ENTITY.stats.currentMP += healMP;
+        if(PARTNER_ENTITY.stats.currentHP > PARTNER_ENTITY.stats.hp)
+            PARTNER_ENTITY.stats.currentHP = PARTNER_ENTITY.stats.hp;
+        if(PARTNER_ENTITY.stats.currentMP > PARTNER_ENTITY.stats.mp)
+            PARTNER_ENTITY.stats.currentMP = PARTNER_ENTITY.stats.mp;
+
+        auto randomTirednessFactor = random(20) + 80;
+        auto reduceTiredness = (sleepFactor * PARTNER_PARA.tiredness * randomTirednessFactor) / 10000;
+        PARTNER_PARA.tiredness -= reduceTiredness;
+        if(PARTNER_PARA.tiredness < 0)
+            PARTNER_PARA.tiredness = 0;
+
+        PARTNER_PARA.weight -= getRaiseData(PARTNER_ENTITY.type)->defaultWeight / 10;
+        if(PARTNER_PARA.weight < 1)
+            PARTNER_PARA.weight = 1;
+
     }
 }

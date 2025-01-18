@@ -41,8 +41,9 @@
 .definelabel advanceToTime,             0x800dd678
 .definelabel setFoodTimer,              0x800a4a08
 .definelabel getModelTile,              0x800c0f28
-.definelabel createPoopPile,            0x800a6848
 .definelabel handleWildPoop,            0x800a8198
+.definelabel createPoopFX,              0x800ae3c4
+.definelabel getItemCount,              0x800c51e0
 
 
 .definelabel ITEM_FUNCTIONS, 0x80127c88
@@ -75,6 +76,9 @@
 .definelabel ITEM_SCOLD_FLAG, 0x80134c59
 .definelabel HAS_IMMORTAL_HOUR, 0x80134ca0
 .definelabel IMMORTAL_HOUR, 0x80134ca4
+.definelabel WORLD_POOP, 0x80138504
+.definelabel CURRENT_POOP_ID, 0x80134c58
+.definelabel PARTNER_AREA_RESPONSE, 0x80150c3e
 
 // libc
 .definelabel strcat,  0x800911cc

@@ -683,6 +683,14 @@ extern "C"
         uint8_t sleepyDefault;
     };
 
+    struct PoopPile
+    {
+        uint8_t map;
+        uint8_t x;
+        uint8_t y;
+        uint8_t size;
+    };
+
     using TickFunction   = void (*)(int32_t instanceId);
     using RenderFunction = void (*)(int32_t instanceId);
     using ItemFunction   = void (*)(int32_t itemId);
@@ -721,7 +729,10 @@ extern "C"
     extern uint8_t ITEM_SCOLD_FLAG;
     extern uint32_t HAS_IMMORTAL_HOUR;
     extern uint8_t IMMORTAL_HOUR;
+    extern PoopPile WORLD_POOP[100];
+    extern uint8_t CURRENT_POOP_ID;
 
+    extern void createPoopFX(SVector* pos);
     extern uint16_t convertAsciiToJis(uint8_t input);
     extern void clearTextSubArea(RECT* rect);
     extern void initializeStatusObjects();
@@ -781,7 +792,6 @@ extern "C"
     extern void advanceToTime(uint32_t hour, uint32_t minute);
     extern void setFoodTimer(DigimonType type);
     extern void getModelTile(Vector* location, int16_t* tileX, int16_t* tileY);
-    extern void createPoopPile(int16_t tileX, int16_t tileY);
     extern void handleWildPoop();
 }
 
