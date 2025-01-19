@@ -467,8 +467,6 @@ extern "C"
         return false;
     }
 
-    extern void handleConditionBubble();
-
     void tickHungerMechanics()
     {
         auto type   = PARTNER_ENTITY.type;
@@ -490,7 +488,7 @@ extern "C"
         {
             PARTNER_PARA.starvationTimer    = 180; // 90 ingame minutes
             PARTNER_PARA.condition.isHungry = 1;
-            handleConditionBubble();
+            // handleConditionBubble(); // TODO does this even belong here?
         }
 
         // check if hungry condition timed out
@@ -518,5 +516,50 @@ extern "C"
 
         // set trigger 640 if energy level reaches threshold (used for Restaurant?)
         if (PARTNER_PARA.energyLevel >= raise->energyThreshold) setTrigger(640);
+    }
+
+    uint8_t conditionBubbleType   = -1;
+    uint8_t conditionBubbleId     = -1;
+    uint16_t conditionBubbleTimer = 0;
+
+    void handleConditionBubble()
+    {
+        // TODO rework, this sucks to begin with since only two bubbles are visible at most
+        if (PARTNER_STATE != 1 && PARTNER_STATE != 10) return;
+
+        int32_t bubbleType = -1;
+        if (PARTNER_PARA.condition.isSick && conditionBubbleType != 2) bubbleType = 2;
+        if (PARTNER_PARA.condition.isInjured && conditionBubbleType != 6) bubbleType = 6;
+        if (PARTNER_PARA.condition.isPoopy && conditionBubbleType != 1) bubbleType = 1;
+        if (PARTNER_PARA.condition.isHungry && conditionBubbleType != 0) bubbleType = 0;
+        if (PARTNER_PARA.condition.isTired && conditionBubbleType != 4) bubbleType = 4;
+        if (PARTNER_PARA.condition.isSleepy && conditionBubbleType != 3) bubbleType = 3;
+
+        // having this here saves like 150 bytes...
+        if (++conditionBubbleTimer >= 60) conditionBubbleType = -1;
+
+        if (bubbleType != -1)
+        {
+            if (HAS_BUTTERFLY == 0)
+            {
+                unsetButterfly(BUTTERFLY_ID);
+                HAS_BUTTERFLY                    = -1;
+                PARTNER_PARA.condition.isUnhappy = false;
+                PARTNER_ENTITY.loopCount         = 1;
+            }
+            if (bubbleType != conditionBubbleType && conditionBubbleTimer >= 50)
+            {
+                unsetBubble(conditionBubbleId);
+                conditionBubbleId    = addConditionBubble(bubbleType, &PARTNER_ENTITY);
+                conditionBubbleTimer = 0;
+                conditionBubbleType  = bubbleType;
+            }
+        }
+        else if (PARTNER_PARA.condition.isUnhappy && HAS_BUTTERFLY == -1)
+        {
+            unsetBubble(conditionBubbleId);
+            BUTTERFLY_ID  = setButterfly(&PARTNER_ENTITY);
+            HAS_BUTTERFLY = 0;
+        }
     }
 }

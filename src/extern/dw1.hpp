@@ -751,7 +751,11 @@ extern "C"
     extern uint8_t PARTNER_AREA_RESPONSE;
     extern TamerItem TAMER_ITEM;
     extern DigimonType EVOLUTION_ITEM_TARGET[44];
+    extern uint8_t PARTNER_STATE;
 
+    extern void unsetBubble(uint32_t id);
+    extern uint8_t addConditionBubble(uint32_t type, Entity* entity);
+    extern uint32_t setButterfly(Entity* entity);
     extern uint8_t getItemCount(ItemType item);
     extern void createPoopFX(SVector* pos);
     extern uint16_t convertAsciiToJis(uint8_t input);
