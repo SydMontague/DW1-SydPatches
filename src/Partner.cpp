@@ -451,7 +451,7 @@ extern "C"
         {
             auto roll1 = random(100);
             auto roll2 = random(10);
-            if (roll1 < 110 - PARTNER_PARA.discipline - roll2)
+            if (roll1 < (110 - PARTNER_PARA.discipline - roll2 - 10))
             {
                 ITEM_SCOLD_FLAG = 1;
                 return true;
