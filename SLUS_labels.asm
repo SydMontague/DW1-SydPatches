@@ -48,6 +48,7 @@
 .definelabel unsetBubble,               0x800ece20
 .definelabel addConditionBubble,        0x800ec538
 .definelabel setButterfly,              0x800e9d24
+.definelabel startAnimation,            0x800c1a04
 
 .definelabel ITEM_FUNCTIONS, 0x80127c88
 .definelabel IS_SCRIPT_PAUSED, 0x80134ff4
@@ -85,6 +86,7 @@
 .definelabel TAMER_ITEM, 0x8013d4d0
 .definelabel EVOLUTION_ITEM_TARGET, 0x80127c5c
 .definelabel PARTNER_STATE, 0x80134c5b
+.definelabel PARTNER_ANIMATION, 0x80134e2c
 
 // libc
 .definelabel strcat,  0x800911cc

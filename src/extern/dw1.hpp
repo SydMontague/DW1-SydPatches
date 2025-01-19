@@ -752,7 +752,9 @@ extern "C"
     extern TamerItem TAMER_ITEM;
     extern DigimonType EVOLUTION_ITEM_TARGET[44];
     extern uint8_t PARTNER_STATE;
+    extern uint8_t PARTNER_ANIMATION;
 
+    extern void startAnimation(Entity*, uint32_t animId); 
     extern void unsetBubble(uint32_t id);
     extern uint8_t addConditionBubble(uint32_t type, Entity* entity);
     extern uint32_t setButterfly(Entity* entity);

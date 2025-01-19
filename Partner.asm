@@ -2,11 +2,11 @@
 .psx
 
 .org 0x800a568c
-.area 0x800a7b94-.
+.area 0x800a7d68-.
   .importobj "compiled/Partner.lib"
 
-  .notice "Empty space left: " + (0x800a7b94-.) + " bytes"
-  .fill 0x800a7b94-.
+  .notice "Empty space left: " + (0x800a7d68-.) + " bytes"
+  .fill 0x800a7d68-.
 .endarea
 
 
@@ -48,6 +48,9 @@
   jal handleConditionBubble
 .org 0x800dd9f0
   jal handleConditionBubble
+
+.org 0x800de210
+  jal partnerHandleFoodFeed
 
 .close 
 

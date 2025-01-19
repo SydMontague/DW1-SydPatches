@@ -459,10 +459,10 @@ extern "C"
         }
 
         // 20% chance of refusing favorite food when not hungry
+        // vanilla would grant a justified scold if the Digimon were hungry, but as it can't refuse when hungry this
+        // could never happen
         if (!PARTNER_PARA.condition.isHungry && itemType == getRaiseData(type)->favoriteFood && random(10) < 2)
             return true;
-        // vanilla would grant a justified scold if the Digimon were hungry, but at it can't refuse when hungry this
-        // could never happen
 
         return false;
     }
@@ -560,6 +560,44 @@ extern "C"
             unsetBubble(conditionBubbleId);
             BUTTERFLY_ID  = setButterfly(&PARTNER_ENTITY);
             HAS_BUTTERFLY = 0;
+        }
+    }
+
+    constexpr bool isFoodItem(ItemType item)
+    {
+        if (item >= ItemType::MEAT && item <= ItemType::CHAIN_MELON) return true;
+        if (item == ItemType::STEAK) return true;
+        if (item == ItemType::RAIN_PLANT) return true;
+
+        return false;
+    }
+
+    void partnerHandleFoodFeed(ItemType item)
+    {
+        if (!isFoodItem(item)) return;
+
+        auto* raise = getRaiseData(PARTNER_ENTITY.type);
+
+        if (!PARTNER_PARA.condition.isHungry)
+        {
+            PARTNER_PARA.happiness -= 3;
+            PARTNER_PARA.discipline -= 2;
+        }
+        else
+        {
+            if (PARTNER_PARA.energyLevel >= raise->energyThreshold)
+            {
+                PARTNER_PARA.happiness += 5;
+                PARTNER_PARA.discipline += 1;
+                PARTNER_PARA.condition.isHungry = false;
+                setFoodTimer(PARTNER_ENTITY.type);
+                PARTNER_PARA.starvationTimer = 0;
+            }
+
+            if (PARTNER_PARA.energyLevel >= raise->energyThreshold || raise->favoriteFood == item){
+                PARTNER_ANIMATION = 11;
+                startAnimation(&PARTNER_ENTITY, 11);
+            }
         }
     }
 }
