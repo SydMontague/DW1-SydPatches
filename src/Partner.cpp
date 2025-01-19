@@ -193,9 +193,9 @@ extern "C"
             PARTNER_PARA.discipline += 2;
         }
 
-        PARTNER_PARA.refusedFavFood      = 0;
+        PARTNER_PARA.refusedFavFood      = 0; // TODO unused mechanic
         PARTNER_PARA.condition.isUnhappy = false;
-        NANIMON_TRIGGER                  = 1;
+        NANIMON_TRIGGER                  = 0;
         if (HAS_BUTTERFLY == 0)
         {
             unsetButterfly(BUTTERFLY_ID);
@@ -347,41 +347,176 @@ extern "C"
         createPoopFX(&pos);
     }
 
-    extern uint8_t getItemCount(ItemType item);
-    extern uint8_t PARTNER_AREA_RESPONSE;
-
-    void sleepRegen() {
+    void sleepRegen()
+    {
         auto hoursSlept = getTimeDiff(HOUR, PARTNER_PARA.wakeupHour);
-        if(MINUTE > 0 && HOUR != PARTNER_PARA.sleepyHour)
-            hoursSlept++;
+        if (MINUTE > 0 && HOUR != PARTNER_PARA.sleepyHour) hoursSlept++;
 
         uint32_t sleepFactor = (hoursSlept * 100) / PARTNER_PARA.hoursAsleepDefault;
-        if(getItemCount(ItemType::REST_PILLOW) > 0)
-            sleepFactor = (sleepFactor * 12) / 10;
-        if(PARTNER_AREA_RESPONSE == 1)
-            sleepFactor = (sleepFactor * 12) / 10;
-        if(PARTNER_AREA_RESPONSE == 2)
-            sleepFactor = (sleepFactor * 8) / 10;
+        if (getItemCount(ItemType::REST_PILLOW) > 0) sleepFactor = (sleepFactor * 12) / 10;
+        if (PARTNER_AREA_RESPONSE == 1) sleepFactor = (sleepFactor * 12) / 10;
+        if (PARTNER_AREA_RESPONSE == 2) sleepFactor = (sleepFactor * 8) / 10;
 
         auto randomHealFactor = random(10) + 70;
-        auto healHP = (PARTNER_ENTITY.stats.hp * randomHealFactor * sleepFactor) / 10000;
-        auto healMP = (PARTNER_ENTITY.stats.mp * randomHealFactor * sleepFactor) / 10000;
+        auto healHP           = (PARTNER_ENTITY.stats.hp * randomHealFactor * sleepFactor) / 10000;
+        auto healMP           = (PARTNER_ENTITY.stats.mp * randomHealFactor * sleepFactor) / 10000;
         PARTNER_ENTITY.stats.currentHP += healHP;
         PARTNER_ENTITY.stats.currentMP += healMP;
-        if(PARTNER_ENTITY.stats.currentHP > PARTNER_ENTITY.stats.hp)
+        if (PARTNER_ENTITY.stats.currentHP > PARTNER_ENTITY.stats.hp)
             PARTNER_ENTITY.stats.currentHP = PARTNER_ENTITY.stats.hp;
-        if(PARTNER_ENTITY.stats.currentMP > PARTNER_ENTITY.stats.mp)
+        if (PARTNER_ENTITY.stats.currentMP > PARTNER_ENTITY.stats.mp)
             PARTNER_ENTITY.stats.currentMP = PARTNER_ENTITY.stats.mp;
 
         auto randomTirednessFactor = random(20) + 80;
-        auto reduceTiredness = (sleepFactor * PARTNER_PARA.tiredness * randomTirednessFactor) / 10000;
+        auto reduceTiredness       = (sleepFactor * PARTNER_PARA.tiredness * randomTirednessFactor) / 10000;
         PARTNER_PARA.tiredness -= reduceTiredness;
-        if(PARTNER_PARA.tiredness < 0)
-            PARTNER_PARA.tiredness = 0;
+        if (PARTNER_PARA.tiredness < 0) PARTNER_PARA.tiredness = 0;
 
         PARTNER_PARA.weight -= getRaiseData(PARTNER_ENTITY.type)->defaultWeight / 10;
-        if(PARTNER_PARA.weight < 1)
-            PARTNER_PARA.weight = 1;
+        if (PARTNER_PARA.weight < 1) PARTNER_PARA.weight = 1;
+    }
 
+    void tickTirednessMechanics()
+    {
+        if (PARTNER_PARA.areaEffectTimer % 1200 == 0 && PARTNER_PARA.areaEffectTimer > 0)
+        {
+            if (PARTNER_AREA_RESPONSE == 1)
+            {
+                PARTNER_PARA.happiness += 1;
+                PARTNER_PARA.tiredness -= 2;
+            }
+            if (PARTNER_AREA_RESPONSE == 2)
+            {
+                PARTNER_PARA.happiness -= 1;
+                PARTNER_PARA.tiredness += 1;
+            }
+        }
+
+        // never used?
+        if (PARTNER_PARA.subTiredness >= 60)
+        {
+            PARTNER_PARA.tiredness += 1;
+            if (PARTNER_PARA.tiredness > 100) PARTNER_PARA.tiredness = 100;
+            PARTNER_PARA.subTiredness = 0;
+        }
+
+        if (PARTNER_PARA.tiredness < 50)
+            PARTNER_PARA.tirednessHungerTimer = 0;
+        else
+            PARTNER_PARA.tirednessHungerTimer += 1;
+
+        PARTNER_PARA.condition.isTired = PARTNER_PARA.tiredness >= 80;
+
+        if (CURRENT_FRAME % 100 && CURRENT_FRAME != LAST_HANDLED_FRAME && PARTNER_PARA.tiredness >= 80)
+            PARTNER_PARA.happiness -= 2;
+    }
+
+    uint32_t partnerWillRefuseItem()
+    {
+        auto type     = PARTNER_ENTITY.type;
+        auto itemType = TAMER_ITEM.type;
+
+        // key items
+        if (itemType >= ItemType::BLUE_FLUTE && itemType <= ItemType::GEAR) return true;
+        if (itemType == ItemType::FRIDGE_KEY || itemType == ItemType::AS_DECODER) return true;
+        // battle only items
+        if (itemType >= ItemType::OFFENSE_DISK && itemType <= ItemType::SUPER_SPEED_DISK) return true;
+        // tamer items
+        if (itemType >= ItemType::TRAINING_MANUAL && itemType <= ItemType::HEALTH_SHOE) return true;
+        // invalid item
+        if (itemType > ItemType::METAL_BANANA) return true;
+
+        // evolution items
+        auto level = getDigimonData(type)->level;
+        if (itemType == ItemType::METAL_BANANA && level != Level::CHAMPION) return true;
+        if (itemType == ItemType::GIGA_HAND && level != Level::CHAMPION) return true;
+        if (itemType == ItemType::NOBLE_MANE && level != Level::ROOKIE) return true;
+        if (itemType >= ItemType::GREY_CLAWS && itemType <= ItemType::MOON_MIRROR)
+        {
+            auto target =
+                EVOLUTION_ITEM_TARGET[static_cast<uint32_t>(itemType) - static_cast<uint32_t>(ItemType::GREY_CLAWS)];
+            auto targetLevel = getDigimonData(target)->level;
+            auto levelDiff   = static_cast<int32_t>(targetLevel) - static_cast<int32_t>(level);
+            if (levelDiff != 1) return true;
+        }
+
+        // take any item after successful scold
+        if (ITEM_SCOLD_FLAG == 2)
+        {
+            ITEM_SCOLD_FLAG = 0;
+            return false;
+        }
+
+        if (itemType < ItemType::MEAT)
+        {
+            auto roll1 = random(100);
+            auto roll2 = random(10);
+            if (roll1 < 110 - PARTNER_PARA.discipline - roll2)
+            {
+                ITEM_SCOLD_FLAG = 1;
+                return true;
+            }
+        }
+
+        // 20% chance of refusing favorite food when not hungry
+        if (!PARTNER_PARA.condition.isHungry && itemType == getRaiseData(type)->favoriteFood && random(10) < 2)
+            return true;
+        // vanilla would grant a justified scold if the Digimon were hungry, but at it can't refuse when hungry this
+        // could never happen
+
+        return false;
+    }
+
+    extern void handleConditionBubble();
+
+    void tickHungerMechanics()
+    {
+        auto type   = PARTNER_ENTITY.type;
+        auto* raise = getRaiseData(type);
+
+        // timers
+        if (!PARTNER_PARA.condition.isHungry && CURRENT_FRAME % 20 == 0) PARTNER_PARA.foodLevel -= 1;
+        if (PARTNER_PARA.condition.isHungry && CURRENT_FRAME % 10 == 0) PARTNER_PARA.starvationTimer -= 1;
+
+        // reduce energy level per hour
+        if (CURRENT_FRAME % 1200 == 0)
+        {
+            PARTNER_PARA.energyLevel -= raise->energyUsage;
+            if (PARTNER_PARA.energyLevel < 0) PARTNER_PARA.energyLevel = 0;
+        }
+
+        // check if hungry condition should be set
+        if (!PARTNER_PARA.condition.isHungry && PARTNER_PARA.foodLevel < 1)
+        {
+            PARTNER_PARA.starvationTimer    = 180; // 90 ingame minutes
+            PARTNER_PARA.condition.isHungry = 1;
+            handleConditionBubble();
+        }
+
+        // check if hungry condition timed out
+        if (PARTNER_PARA.condition.isHungry && PARTNER_PARA.starvationTimer < 1)
+        {
+            setFoodTimer(PARTNER_ENTITY.type);
+            PARTNER_PARA.starvationTimer    = 0;
+            PARTNER_PARA.condition.isHungry = false;
+            if (PARTNER_PARA.energyLevel < raise->energyThreshold) PARTNER_PARA.careMistakes++;
+        }
+
+        // perform empty stomach weight reduction
+        if (PARTNER_PARA.energyLevel < 1)
+        {
+            if (CURRENT_FRAME % 200)
+            {
+                PARTNER_PARA.weight -= 1;
+                if (PARTNER_PARA.weight < 1) PARTNER_PARA.weight = 1;
+                if (CURRENT_SCREEN % 20) PARTNER_PARA.emptyStomachTimer += 1; // unused
+            }
+        }
+
+        // do tiredness hunger reduction
+        if (CURRENT_SCREEN % 1200 == 0 && PARTNER_PARA.tirednessHungerTimer >= 50) PARTNER_PARA.foodLevel -= 3;
+
+        // set trigger 640 if energy level reaches threshold (used for Restaurant?)
+        if (PARTNER_PARA.energyLevel >= raise->energyThreshold) setTrigger(640);
     }
 }

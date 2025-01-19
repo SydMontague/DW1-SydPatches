@@ -44,7 +44,8 @@
 .definelabel handleWildPoop,            0x800a8198
 .definelabel createPoopFX,              0x800ae3c4
 .definelabel getItemCount,              0x800c51e0
-
+.definelabel setTrigger,                0x801065c0
+.definelabel handleConditionBubble,     0x800a7960
 
 .definelabel ITEM_FUNCTIONS, 0x80127c88
 .definelabel IS_SCRIPT_PAUSED, 0x80134ff4
@@ -79,6 +80,8 @@
 .definelabel WORLD_POOP, 0x80138504
 .definelabel CURRENT_POOP_ID, 0x80134c58
 .definelabel PARTNER_AREA_RESPONSE, 0x80150c3e
+.definelabel TAMER_ITEM, 0x8013d4d0
+.definelabel EVOLUTION_ITEM_TARGET, 0x80127c5c
 
 // libc
 .definelabel strcat,  0x800911cc

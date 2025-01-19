@@ -2,11 +2,11 @@
 .psx
 
 .org 0x800a568c
-.area 0x800a70e4-.
+.area 0x800a7960-.
   .importobj "compiled/Partner.lib"
 
-  .notice "Empty space left: " + (0x800a70e4-.) + " bytes"
-  .fill 0x800a70e4-.
+  .notice "Empty space left: " + (0x800a7960-.) + " bytes"
+  .fill 0x800a7960-.
 .endarea
 
 
@@ -34,6 +34,15 @@
 
 .org 0x800ddbcc
   jal sleepRegen
+
+.org 0x800a8fb0
+  jal tickTirednessMechanics
+
+.org 0x800de0b8
+  jal partnerWillRefuseItem
+
+.org 0x800a8fb8
+  jal tickHungerMechanics
 
 .close 
 

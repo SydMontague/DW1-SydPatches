@@ -52,6 +52,140 @@ extern "C"
         NONE    = 0xFF,
     };
 
+    enum class ItemType : uint8_t
+    {
+        SMALL_RECOVERY,
+        MEDIUM_RECOVERY,
+        LARGE_RECOVERY,
+        SUPER_RECOVERY,
+        MP_FLOPPY,
+        MEDIUM_MP,
+        LARGE_MP,
+        DOUBLE_FLOPPY,
+        VARIOUS,
+        OMNIPOTENT,
+        PROTECTION,
+        RESTORE,
+        SUPER_RESTORE,
+        BANDAGE,
+        MEDICINE,
+        OFFENSE_DISK,
+        DEFENSE_DISK,
+        SPEED_DISK,
+        OMNI_DISK,
+        SUPER_OFFENSE_DISK,
+        SUPER_DEFENSE_DISK,
+        SUPER_SPEED_DISK,
+        AUTOPILOT,
+        OFFENSE_CHIP,
+        DEFENSE_CHIP,
+        BRAIN_SHIP,
+        SPEED_CHIP,
+        HP_CHIP,
+        MP_CHIP,
+        DV_CHIP_A,
+        DV_CHIP_D,
+        DV_CHIP_E,
+        PORTA_POTTY,
+        TRAINING_MANUAL,
+        REST_PILLOW,
+        ENEMY_REPEL,
+        ENEMY_BELL,
+        HEALTH_SHOE,
+        MEAT,
+        GIANT_MEAT,
+        SIRLOIN,
+        SUPERCARROT,
+        HAWK_RADISH,
+        SPINY_GREEN,
+        DIGIMUSHROOM,
+        ICE_MUSHROOM,
+        DELUXE_MUSHROOM,
+        DIGIPINE,
+        BLUE_APPLE,
+        RED_BERRY,
+        GOLD_ACORN,
+        BIG_BERRY,
+        SWEET_NUT,
+        SUPER_VEGGY,
+        PRICKLYPEAR,
+        ORANGE_BANANA,
+        POWER_FRUIT,
+        POWER_ICE,
+        SPEED_LEAF,
+        SAGE_FRUIT,
+        MUSCLE_YAM,
+        CALM_BERRY,
+        DIGIANCHOVY,
+        DIGISNAPPER,
+        DIGITROUT,
+        BLACK_TROUT,
+        DIGICATFISH,
+        DIGISEABASS,
+        MOLDY_MEAT,
+        HAPPYMUSHROOM,
+        CHAIN_MELON,
+        GREY_CLAWS,
+        FIREBALL,
+        FLAMEWING,
+        IRON_HOOF,
+        MONO_STONE,
+        STEEL_DRILL,
+        WHITE_FANG,
+        BLACK_WING,
+        SPIKE_CLUB,
+        FLAMEINGMANE,
+        WHITE_WING,
+        TORN_TATTER,
+        ELECTRO_RING,
+        RAINBOWHORN,
+        ROOSTER,
+        UNIHORN,
+        HORN_HELMET,
+        SCISSOR_JAW,
+        FERTILIZER,
+        KOGA_LAWS,
+        WATERBOTTLE,
+        NORTH_STAR,
+        RED_SHELL,
+        HARD_SCALE,
+        BLUECRYSTAL,
+        ICE_CRYSTAL,
+        HAIR_GROWER,
+        SUNGLASSES,
+        METAL_PART,
+        FATAL_BONE,
+        CYBER_PART,
+        MEGA_HAND,
+        SILVER_BALL,
+        METAL_ARMOR,
+        CHAINSAW,
+        SMALL_SPEAR,
+        X_BANDAGE,
+        RAY_GUN,
+        GOLD_BANANA,
+        MYSTY_EGG,
+        RED_RUBY,
+        BETTLEPEARL,
+        CORAL_CHARM,
+        MOON_MIRROR,
+        BLUE_FLUTE,
+        OLD_ROD,
+        AMAZING_ROD,
+        LEOMONSTONE,
+        MANSION_KEY,
+        GEAR,
+        RAIN_PLANT,
+        STEAK,
+        FRIDGE_KEY,
+        AS_DECODER,
+        GIGA_HAND,
+        NOBLE_MANE,
+        METAL_BANANA,
+
+        NONE = 0xFF,
+    };
+
     enum class ObjectID
     {
         ENTITY_TEXT          = 402,
@@ -135,7 +269,7 @@ extern "C"
         int16_t poopTimer;
         int16_t unk2;
         int8_t poopSize;
-        int8_t favoriteFood;
+        ItemType favoriteFood;
         int8_t sleepCycle;
         int8_t favoredRegion;
         int8_t trainingType;
@@ -143,6 +277,23 @@ extern "C"
         int16_t viewX;
         int16_t viewY;
         int16_t viewZ;
+    };
+
+    struct WorldItem
+    {
+        SVector spriteLocation;
+        ItemType type;
+    };
+
+    struct TamerItem : public WorldItem
+    {
+        int32_t time;
+    };
+
+    struct DroppedItem : public WorldItem
+    {
+        int16_t tileX;
+        int16_t tileY;
     };
 
     union Condition
@@ -425,140 +576,6 @@ extern "C"
         INVALID = -1,
     };
 
-    enum class ItemType
-    {
-        SMALL_RECOVERY,
-        MEDIUM_RECOVERY,
-        LARGE_RECOVERY,
-        SUPER_RECOVERY,
-        MP_FLOPPY,
-        MEDIUM_MP,
-        LARGE_MP,
-        DOUBLE_FLOPPY,
-        VARIOUS,
-        OMNIPOTENT,
-        PROTECTION,
-        RESTORE,
-        SUPER_RESTORE,
-        BANDAGE,
-        MEDICINE,
-        OFFENSE_DISK,
-        DEFENSE_DISK,
-        SPEED_DISK,
-        OMNI_DISK,
-        SUPER_OFFENSE_DISK,
-        SUPER_DEFENSE_DISK,
-        SUPER_SPEED_DISK,
-        AUTOPILOT,
-        OFFENSE_CHIP,
-        DEFENSE_CHIP,
-        BRAIN_SHIP,
-        SPEED_CHIP,
-        HP_CHIP,
-        MP_CHIP,
-        DV_CHIP_A,
-        DV_CHIP_D,
-        DV_CHIP_E,
-        PORTA_POTTY,
-        TRAINING_MANUAL,
-        REST_PILLOW,
-        ENEMY_REPEL,
-        ENEMY_BELL,
-        HEALTH_SHOE,
-        MEAT,
-        GIANT_MEAT,
-        SIRLOIN,
-        SUPERCARROT,
-        HAWK_RADISH,
-        SPINY_GREEN,
-        DIGIMUSHROOM,
-        ICE_MUSHROOM,
-        DELUXE_MUSHROOM,
-        DIGIPINE,
-        BLUE_APPLE,
-        RED_BERRY,
-        GOLD_ACORN,
-        BIG_BERRY,
-        SWEET_NUT,
-        SUPER_VEGGY,
-        PRICKLYPEAR,
-        ORANGE_BANANA,
-        POWER_FRUIT,
-        POWER_ICE,
-        SPEED_LEAF,
-        SAGE_FRUIT,
-        MUSCLE_YAM,
-        CALM_BERRY,
-        DIGIANCHOVY,
-        DIGISNAPPER,
-        DIGITROUT,
-        BLACK_TROUT,
-        DIGICATFISH,
-        DIGISEABASS,
-        MOLDY_MEAT,
-        HAPPYMUSHROOM,
-        CHAIN_MELON,
-        GREY_CLAWS,
-        FIREBALL,
-        FLAMEWING,
-        IRON_HOOF,
-        MONO_STONE,
-        STEEL_DRILL,
-        WHITE_FANG,
-        BLACK_WING,
-        SPIKE_CLUB,
-        FLAMEINGMANE,
-        WHITE_WING,
-        TORN_TATTER,
-        ELECTRO_RING,
-        RAINBOWHORN,
-        ROOSTER,
-        UNIHORN,
-        HORN_HELMET,
-        SCISSOR_JAW,
-        FERTILIZER,
-        KOGA_LAWS,
-        WATERBOTTLE,
-        NORTH_STAR,
-        RED_SHELL,
-        HARD_SCALE,
-        BLUECRYSTAL,
-        ICE_CRYSTAL,
-        HAIR_GROWER,
-        SUNGLASSES,
-        METAL_PART,
-        FATAL_BONE,
-        CYBER_PART,
-        MEGA_HAND,
-        SILVER_BALL,
-        METAL_ARMOR,
-        CHAINSAW,
-        SMALL_SPEAR,
-        X_BANDAGE,
-        RAY_GUN,
-        GOLD_BANANA,
-        MYSTY_EGG,
-        RED_RUBY,
-        BETTLEPEARL,
-        CORAL_CHARM,
-        MOON_MIRROR,
-        BLUE_FLUTE,
-        OLD_ROD,
-        AMAZING_ROD,
-        LEOMONSTONE,
-        MANSION_KEY,
-        GEAR,
-        RAIN_PLANT,
-        STEAK,
-        FRIDGE_KEY,
-        AS_DECODER,
-        GIGA_HAND,
-        NOBLE_MANE,
-        METAL_BANANA,
-
-        NONE = 0xFF,
-    };
-
     struct PositionData
     {
         GsDOBJ2 obj;
@@ -693,7 +710,7 @@ extern "C"
 
     using TickFunction   = void (*)(int32_t instanceId);
     using RenderFunction = void (*)(int32_t instanceId);
-    using ItemFunction   = void (*)(int32_t itemId);
+    using ItemFunction   = void (*)(ItemType itemId);
 
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
@@ -731,7 +748,11 @@ extern "C"
     extern uint8_t IMMORTAL_HOUR;
     extern PoopPile WORLD_POOP[100];
     extern uint8_t CURRENT_POOP_ID;
+    extern uint8_t PARTNER_AREA_RESPONSE;
+    extern TamerItem TAMER_ITEM;
+    extern DigimonType EVOLUTION_ITEM_TARGET[44];
 
+    extern uint8_t getItemCount(ItemType item);
     extern void createPoopFX(SVector* pos);
     extern uint16_t convertAsciiToJis(uint8_t input);
     extern void clearTextSubArea(RECT* rect);
@@ -759,6 +780,7 @@ extern "C"
                              uint8_t flag,
                              int32_t layer);
 
+    extern void setTrigger(uint32_t triggerId);
     extern void Partner_setState(int32_t state);
     extern int32_t Tamer_getState();
     extern void Tamer_setState(int32_t state);

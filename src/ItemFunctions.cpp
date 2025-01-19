@@ -1,13 +1,12 @@
 #include "ItemFunctions.hpp"
 
-#include "extern/dw1.hpp"
-#include "ItemEffects.hpp"
 #include "Helper.hpp"
+#include "ItemEffects.hpp"
+#include "extern/dw1.hpp"
 
 extern "C"
 {
-
-    void handleAutopilot(int32_t itemId)
+    void handleAutopilot(ItemType itemId)
     {
         if (!IS_SCRIPT_PAUSED) return;
 
@@ -15,37 +14,37 @@ extern "C"
         callScriptSection(0, 1245, 0);
     }
 
-    void handleOffChip(int32_t itemId)
+    void handleOffChip(ItemType itemId)
     {
         addWithLimit(&PARTNER_ENTITY.stats.off, 50, 999);
     }
 
-    void handleDefChip(int32_t itemId)
+    void handleDefChip(ItemType itemId)
     {
         addWithLimit(&PARTNER_ENTITY.stats.def, 50, 999);
     }
 
-    void handleSpeedChip(int32_t itemId)
+    void handleSpeedChip(ItemType itemId)
     {
         addWithLimit(&PARTNER_ENTITY.stats.speed, 50, 999);
     }
 
-    void handleBrainChip(int32_t itemId)
+    void handleBrainChip(ItemType itemId)
     {
         addWithLimit(&PARTNER_ENTITY.stats.brain, 50, 999);
     }
 
-    void handleHPChip(int32_t itemId)
+    void handleHPChip(ItemType itemId)
     {
         addWithLimit(&PARTNER_ENTITY.stats.hp, 500, 9999);
     }
 
-    void handleMPChip(int32_t itemId)
+    void handleMPChip(ItemType itemId)
     {
         addWithLimit(&PARTNER_ENTITY.stats.mp, 500, 9999);
     }
 
-    void handleDVChipA(int32_t itemId)
+    void handleDVChipA(ItemType itemId)
     {
         addWithLimit(&PARTNER_ENTITY.stats.off, 100, 999);
         addWithLimit(&PARTNER_ENTITY.stats.brain, 100, 999);
@@ -53,7 +52,7 @@ extern "C"
         addTamerLevel(10, -1);
     }
 
-    void handleDVChipD(int32_t itemId)
+    void handleDVChipD(ItemType itemId)
     {
         addWithLimit(&PARTNER_ENTITY.stats.def, 100, 999);
         addWithLimit(&PARTNER_ENTITY.stats.speed, 100, 999);
@@ -61,7 +60,7 @@ extern "C"
         addTamerLevel(10, -1);
     }
 
-    void handleDVChipE(int32_t itemId)
+    void handleDVChipE(ItemType itemId)
     {
         addWithLimit(&PARTNER_ENTITY.stats.hp, 1000, 9999);
         addWithLimit(&PARTNER_ENTITY.stats.mp, 1000, 9999);
@@ -69,27 +68,27 @@ extern "C"
         addTamerLevel(10, -1);
     }
 
-    void handlePortaPottyItem(int32_t itemId)
+    void handlePortaPottyItem(ItemType itemId)
     {
         handlePortaPotty();
     }
 
-    void handleBandage(int32_t itemId)
+    void handleBandage(ItemType itemId)
     {
         if (handleMedicineHealing(3, 2)) addHealingParticleEffect(&PARTNER_ENTITY, 0);
     }
 
-    void handleMedicine(int32_t itemId)
+    void handleMedicine(ItemType itemId)
     {
         if (handleMedicineHealing(3, 10)) addHealingParticleEffect(&PARTNER_ENTITY, 0);
     }
 
     // TODO function for every item
-    void handleFood(int32_t itemId)
+    void handleFood(ItemType itemId)
     {
         struct FoodData
         {
-            uint8_t itemId;
+            ItemType itemId;
             int16_t energy;
             int16_t tiredness;
             int16_t happiness;
@@ -112,20 +111,17 @@ extern "C"
 
         FoodData foodData[36] = {
             {
-                // Steak
-                .itemId         = 0x7a,
+                .itemId         = ItemType::STEAK,
                 .energy         = 32,
                 .sicknessChance = 20,
                 .healedHP       = 1000,
             },
             {
-                // Rain Plant
-                .itemId   = 0x79,
+                .itemId   = ItemType::RAIN_PLANT,
                 .healedMP = 1000,
             },
             {
-                // Chain Melon
-                .itemId         = 0x46,
+                .itemId         = ItemType::CHAIN_MELON,
                 .energy         = 50,
                 .tiredness      = -50,
                 .happiness      = 50,
@@ -134,8 +130,7 @@ extern "C"
                 .lifetime       = 20,
             },
             {
-                // HappyMushroom
-                .itemId         = 0x45,
+                .itemId         = ItemType::HAPPYMUSHROOM,
                 .energy         = 15,
                 .tiredness      = -30,
                 .happiness      = 30,
@@ -143,15 +138,13 @@ extern "C"
                 .sicknessChance = 30,
             },
             {
-                // Moldy Meat
-                .itemId         = 0x44,
+                .itemId         = ItemType::MOLDY_MEAT,
                 .energy         = 30,
                 .weight         = 2,
                 .sicknessChance = 100,
             },
             {
-                // DigiSeabass
-                .itemId         = 0x43,
+                .itemId         = ItemType::DIGISEABASS,
                 .energy         = 35,
                 .weight         = 4,
                 .sicknessChance = 20,
@@ -160,14 +153,12 @@ extern "C"
                 .healedMP       = 9999,
             },
             {
-                // Digicatfish
-                .itemId = 0x42,
+                .itemId = ItemType::DIGICATFISH,
                 .energy = 49,
                 .weight = 5,
             },
             {
-                // Black Trout
-                .itemId       = 0x41,
+                .itemId       = ItemType::BLACK_TROUT,
                 .energy       = 27,
                 .weight       = -2,
                 .addedHP      = 10,
@@ -178,108 +169,92 @@ extern "C"
                 .addedBrain   = 1,
             },
             {
-                // DigiTrout
-                .itemId = 0x40,
+                .itemId = ItemType::DIGITROUT,
                 .energy = 22,
                 .weight = 2,
             },
             {
-                // Digisnapper
-                .itemId = 0x3f,
+                .itemId = ItemType::DIGISNAPPER,
                 .energy = 12,
                 .weight = 1,
             },
             {
-                // DigiAnchovy
-                .itemId = 0x3e,
+                .itemId = ItemType::DIGIANCHOVY,
                 .energy = 8,
                 .weight = 1,
             },
             {
-                // Calm Berry
-                .itemId  = 0x3d,
+                .itemId  = ItemType::CALM_BERRY,
                 .energy  = 20,
                 .weight  = 2,
                 .addedMP = 200,
             },
             {
-                // Muscle Yam
-                .itemId  = 0x3c,
+                .itemId  = ItemType::MUSCLE_YAM,
                 .energy  = 20,
                 .weight  = 2,
                 .addedHP = 200,
             },
             {
-                // Sage Fruit
-                .itemId     = 0x3b,
+                .itemId     = ItemType::SAGE_FRUIT,
                 .energy     = 20,
                 .weight     = 2,
                 .addedBrain = 20,
             },
             {
-                // Speed Leaf
-                .itemId     = 0x3a,
+                .itemId     = ItemType::SPEED_LEAF,
                 .energy     = 20,
                 .weight     = 2,
                 .addedSpeed = 20,
             },
             {
-                // Power Ice
-                .itemId       = 0x39,
+                .itemId       = ItemType::POWER_ICE,
                 .energy       = 20,
                 .weight       = 2,
                 .addedDefense = 20,
             },
             {
-                // Power Fruit
-                .itemId       = 0x38,
+                .itemId       = ItemType::POWER_FRUIT,
                 .energy       = 20,
                 .weight       = 2,
                 .addedOffense = 20,
             },
             {
-                // Orange bana
-                .itemId   = 0x37,
+                .itemId   = ItemType::ORANGE_BANANA,
                 .energy   = 24,
                 .weight   = 2,
                 .healedHP = 1000,
                 .healedMP = 1000,
             },
             {
-                // Pricklypear
-                .itemId = 0x36,
+                .itemId = ItemType::PRICKLYPEAR,
                 .energy = 33,
                 .weight = -5,
             },
             {
-                // Super veggy
-                .itemId   = 0x35,
+                .itemId   = ItemType::SUPER_VEGGY,
                 .energy   = 16,
                 .weight   = 2,
                 .healedMP = 9999,
             },
             {
-                // Sweet Nut
-                .itemId   = 0x34,
+                .itemId   = ItemType::SWEET_NUT,
                 .energy   = 20,
                 .weight   = 2,
                 .healedHP = 9999,
             },
             {
-                // Big Berry
-                .itemId = 0x33,
+                .itemId = ItemType::BIG_BERRY,
                 .energy = 100,
                 .weight = 10,
             },
             {
-                // Gold Acorn
-                .itemId = 0x32,
+                .itemId = ItemType::GOLD_ACORN,
                 .energy = 40,
                 .weight = 4,
             },
             {
-                // Red Berry
-                .itemId     = 0x31,
+                .itemId     = ItemType::RED_BERRY,
                 .energy     = 25,
                 .tiredness  = -20,
                 .happiness  = 20,
@@ -287,15 +262,13 @@ extern "C"
                 .weight     = 2,
             },
             {
-                // Blue Apple
-                .itemId    = 0x30,
+                .itemId    = ItemType::BLUE_APPLE,
                 .energy    = 30,
                 .happiness = 50,
                 .weight    = 3,
             },
             {
-                // Digipine
-                .itemId        = 0x2f,
+                .itemId        = ItemType::DIGIPINE,
                 .energy        = 22,
                 .weight        = 2,
                 .trainFlag     = 0x3F,
@@ -303,8 +276,7 @@ extern "C"
                 .trainDuration = 6,
             },
             {
-                // Black Trout
-                .itemId       = 0x2e,
+                .itemId       = ItemType::DELUXE_MUSHROOM,
                 .energy       = 38,
                 .weight       = 4,
                 .addedHP      = 100,
@@ -315,28 +287,24 @@ extern "C"
                 .addedBrain   = 10,
             },
             {
-                // Ice Mushroom
-                .itemId     = 0x2d,
+                .itemId     = ItemType::ICE_MUSHROOM,
                 .energy     = 19,
                 .discipline = 50,
                 .weight     = 2,
             },
             {
-                // Digimushroom
-                .itemId = 0x2c,
+                .itemId = ItemType::DIGIMUSHROOM,
                 .energy = 12,
                 .weight = 1,
             },
             {
-                // Spiny green
-                .itemId    = 0x2b,
+                .itemId    = ItemType::SPINY_GREEN,
                 .energy    = 9,
                 .tiredness = -50,
                 .weight    = 1,
             },
             {
-                // Hawk radish
-                .itemId        = 0x2a,
+                .itemId        = ItemType::HAWK_RADISH,
                 .energy        = 15,
                 .weight        = 3,
                 .trainFlag     = 0x16,
@@ -344,8 +312,7 @@ extern "C"
                 .trainDuration = 6,
             },
             {
-                // Supercarrot
-                .itemId        = 0x29,
+                .itemId        = ItemType::SUPERCARROT,
                 .energy        = 10,
                 .weight        = -2,
                 .trainFlag     = 0x29,
@@ -353,28 +320,24 @@ extern "C"
                 .trainDuration = 6,
             },
             {
-                // Sirloin
-                .itemId    = 0x28,
+                .itemId    = ItemType::SIRLOIN,
                 .energy    = 35,
                 .tiredness = -5,
                 .happiness = 3,
                 .weight    = 3,
             },
             {
-                // Giant Meat
-                .itemId = 0x27,
+                .itemId = ItemType::GIANT_MEAT,
                 .energy = 24,
                 .weight = 2,
             },
             {
-                // Meat
-                .itemId = 0x26,
+                .itemId = ItemType::MEAT,
                 .energy = 12,
                 .weight = 1,
             },
             {
-                // None
-                .itemId = 0xFF,
+                .itemId = ItemType::NONE,
             },
         };
 
