@@ -24,6 +24,17 @@ extern "C"
         if (start <= end) { return end - start; } // fixes day skip? // TODO decide if we actually want to fix that
         else { return (24 - start) + end; }
     }
+
+    constexpr bool isFoodItem(ItemType item)
+    {
+        if (item >= ItemType::MEAT && item <= ItemType::CHAIN_MELON) return true;
+        if (item == ItemType::STEAK) return true;
+        if (item == ItemType::RAIN_PLANT) return true;
+
+        return false;
+    }
+
+    
 }
 
 static_assert(getTimeDiff(9, 18) == 9);

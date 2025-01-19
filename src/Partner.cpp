@@ -503,7 +503,7 @@ extern "C"
         // perform empty stomach weight reduction
         if (PARTNER_PARA.energyLevel < 1)
         {
-            if (CURRENT_FRAME % 200)
+            if (CURRENT_FRAME % 200 == 0)
             {
                 PARTNER_PARA.weight -= 1;
                 if (PARTNER_PARA.weight < 1) PARTNER_PARA.weight = 1;
@@ -563,15 +563,6 @@ extern "C"
         }
     }
 
-    constexpr bool isFoodItem(ItemType item)
-    {
-        if (item >= ItemType::MEAT && item <= ItemType::CHAIN_MELON) return true;
-        if (item == ItemType::STEAK) return true;
-        if (item == ItemType::RAIN_PLANT) return true;
-
-        return false;
-    }
-
     void partnerHandleFoodFeed(ItemType item)
     {
         if (!isFoodItem(item)) return;
@@ -594,9 +585,37 @@ extern "C"
                 PARTNER_PARA.starvationTimer = 0;
             }
 
-            if (PARTNER_PARA.energyLevel >= raise->energyThreshold || raise->favoriteFood == item){
+            if (PARTNER_PARA.energyLevel >= raise->energyThreshold || raise->favoriteFood == item)
+            {
                 PARTNER_ANIMATION = 11;
                 startAnimation(&PARTNER_ENTITY, 11);
+            }
+        }
+    }
+
+    void tickPartnerPoopingMechanic()
+    {
+        if (Tamer_getState() != 0) return;
+
+        if (!PARTNER_PARA.condition.isPoopy)
+        {
+            if (CURRENT_FRAME % 200 == 0 && CURRENT_FRAME != LAST_HANDLED_FRAME) PARTNER_PARA.poopLevel -= 1;
+
+            if (PARTNER_PARA.poopLevel < 1)
+            {
+                PARTNER_PARA.condition.isPoopy = true;
+                PARTNER_PARA.poopingTimer      = ((PARTNER_PARA.discipline + 20) * 12);
+            }
+        }
+        else
+        {
+            if (CURRENT_FRAME != LAST_HANDLED_FRAME) PARTNER_PARA.poopingTimer -= 1;
+
+            if (PARTNER_PARA.poopingTimer < 1)
+            {
+                Partner_setState(7);
+                PARTNER_PARA.poopingTimer = -1;
+                ITEM_SCOLD_FLAG           = 1;
             }
         }
     }
