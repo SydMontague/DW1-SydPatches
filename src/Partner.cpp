@@ -2,6 +2,7 @@
 
 #include "Helper.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libgpu.hpp"
 
 extern "C"
 {
@@ -246,7 +247,7 @@ extern "C"
             getModelTile(&PARTNER_ENTITY.posData->location, &tileX, &tileY);
             createPoopPile(tileX, tileY);
             PARTNER_PARA.poopingTimer = -1;
-            // fixes lack of care mistakes and doubles the poop timer
+            // fixes lack of care mistakes and doubles the poop level
             handleWildPoop();
             addTamerLevel(1, -1);
         }
@@ -596,8 +597,8 @@ extern "C"
 
     void tickPartnerPoopingMechanic()
     {
-        // TODO: this stops the timer during transitions 
-        if (Tamer_getState() != 0) return; 
+        // TODO: this stops the timer during transitions
+        if (Tamer_getState() != 0) return;
 
         if (!PARTNER_PARA.condition.isPoopy)
         {
@@ -620,5 +621,52 @@ extern "C"
                 ITEM_SCOLD_FLAG           = 1;
             }
         }
+    }
+
+    void detectEdiblePoop()
+    {
+        if (PARTNER_ENTITY.type != DigimonType::NUMEMON && PARTNER_ENTITY.type != DigimonType::SUKAMON) return;
+
+        for (int32_t i = 0; i < 100; i++)
+        {
+            auto& poop = WORLD_POOP[i];
+            if (poop.size == 0) continue;
+
+            auto radius  = poop.size < 11 ? 200 : 300;
+            auto centerX = tileToPos(poop.x);
+            auto centerY = tileToPos(poop.y);
+
+            if (isWithinRect(centerX, centerY, radius, &PARTNER_ENTITY.posData->location))
+            {
+                Partner_setState(9);
+                POOP_TO_EAT = i;
+                return;
+            }
+        }
+    }
+
+    void handlePoopWeightLoss(DigimonType type)
+    {
+        PARTNER_PARA.weight -= (getRaiseData(type)->poopSize + random(4)) / 4;
+        if (PARTNER_PARA.weight < 1) PARTNER_PARA.weight = 1;
+    }
+
+    void handleToilet()
+    {
+        PARTNER_PARA.happiness += 2;
+        PARTNER_PARA.discipline += 2;
+        PARTNER_PARA.poopLevel         = getRaiseData(PARTNER_ENTITY.type)->poopTimer * 2;
+        PARTNER_PARA.condition.isPoopy = false;
+        handlePoopWeightLoss(PARTNER_ENTITY.type);
+    }
+
+    void handleWildPoop()
+    {
+        PARTNER_PARA.condition.isPoopy = false;
+        PARTNER_PARA.careMistakes += 1;
+        PARTNER_PARA.happiness -= 10;
+        PARTNER_PARA.discipline -= 5;
+        PARTNER_PARA.poopLevel = getRaiseData(PARTNER_ENTITY.type)->poopTimer * 2;
+        handlePoopWeightLoss(PARTNER_ENTITY.type);
     }
 }

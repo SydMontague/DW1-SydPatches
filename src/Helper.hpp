@@ -21,8 +21,11 @@ extern "C"
 
     constexpr int32_t getTimeDiff(int32_t start, int32_t end)
     {
-        if (start <= end) { return end - start; } // <= instead of < fixes day skip? // TODO decide if we actually want to fix that
-        else { return (24 - start) + end; }
+        // <= instead of < fixes day skip? // TODO decide if we actually want to fix that
+        if (start <= end)
+            return end - start;
+        else
+            return (24 - start) + end;
     }
 
     constexpr bool isFoodItem(ItemType item)
@@ -34,7 +37,23 @@ extern "C"
         return false;
     }
 
-    
+    constexpr int32_t tileToPos(int16_t tile)
+    {
+        return (tile - 50) * 100 + 50;
+    }
+
+    constexpr bool isWithinRect(int32_t centerX, int32_t centerZ, int32_t radius, Vector* pos)
+    {
+        auto x = pos->x;
+        auto z = pos->z;
+
+        if (centerX - radius > x) return false;
+        if (centerX + radius < x) return false;
+        if (centerZ - radius > z) return false;
+        if (centerZ + radius < z) return false;
+
+        return true;
+    }
 }
 
 static_assert(getTimeDiff(9, 18) == 9);

@@ -2,11 +2,11 @@
 .psx
 
 .org 0x800a568c
-.area 0x800a7ed0-.
+.area 0x800a8244-.
   .importobj "compiled/Partner.lib"
 
-  .notice "Empty space left: " + (0x800a7ed0-.) + " bytes"
-  .fill 0x800a7ed0-.
+  .notice "Empty space left: " + (0x800a8244-.) + " bytes"
+  .fill 0x800a8244-.
 .endarea
 
 
@@ -54,6 +54,12 @@
 
 .org 0x800dd9e0
   jal tickPartnerPoopingMechanic
+
+.org 0x800de4b4
+  jal handleToilet
+
+.org 0x800de648
+  jal handleWildPoop
 
 .close 
 

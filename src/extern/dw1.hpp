@@ -753,8 +753,9 @@ extern "C"
     extern DigimonType EVOLUTION_ITEM_TARGET[44];
     extern uint8_t PARTNER_STATE;
     extern uint8_t PARTNER_ANIMATION;
+    extern uint8_t POOP_TO_EAT;
 
-    extern void startAnimation(Entity*, uint32_t animId); 
+    extern void startAnimation(Entity*, uint32_t animId);
     extern void unsetBubble(uint32_t id);
     extern uint8_t addConditionBubble(uint32_t type, Entity* entity);
     extern uint32_t setButterfly(Entity* entity);
@@ -792,7 +793,6 @@ extern "C"
     extern void Tamer_setState(int32_t state);
     extern void clearTextArea();
     extern void setTextColor(int32_t color);
-    extern void handlePoopWeightLoss(DigimonType type);
     extern void addWithLimit(int16_t* valuePtr, int16_t value, int32_t limit);
     extern void addHealingParticleEffect(Entity* entity, int32_t param);
     extern void removeTamerItem();
@@ -820,7 +820,6 @@ extern "C"
     extern void advanceToTime(uint32_t hour, uint32_t minute);
     extern void setFoodTimer(DigimonType type);
     extern void getModelTile(Vector* location, int16_t* tileX, int16_t* tileY);
-    extern void handleWildPoop();
 }
 
 static_assert(sizeof(PositionData) == 0x88);

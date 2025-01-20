@@ -1,6 +1,7 @@
 #include "Font.hpp"
-#include "extern/dw1.hpp"
 #include "Helper.hpp"
+#include "Partner.hpp"
+#include "extern/dw1.hpp"
 
 extern "C"
 {

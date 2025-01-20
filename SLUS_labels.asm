@@ -17,7 +17,6 @@
 .definelabel setUVDataPolyFT4, 0x800e56b4
 .definelabel setPosDataPolyFT4, 0x800e56ec
 .definelabel random,                    0x800a36d4
-.definelabel handlePoopWeightLoss,      0x800a8100
 .definelabel Tamer_setState,            0x800aa188
 .definelabel clearTextArea,             0x8010cb90
 .definelabel setTextColor,              0x8010cc0c
@@ -41,7 +40,6 @@
 .definelabel advanceToTime,             0x800dd678
 .definelabel setFoodTimer,              0x800a4a08
 .definelabel getModelTile,              0x800c0f28
-.definelabel handleWildPoop,            0x800a8198
 .definelabel createPoopFX,              0x800ae3c4
 .definelabel getItemCount,              0x800c51e0
 .definelabel setTrigger,                0x801065c0
@@ -87,6 +85,7 @@
 .definelabel EVOLUTION_ITEM_TARGET, 0x80127c5c
 .definelabel PARTNER_STATE, 0x80134c5b
 .definelabel PARTNER_ANIMATION, 0x80134e2c
+.definelabel POOP_TO_EAT, 0x80134c68
 
 // libc
 .definelabel strcat,  0x800911cc
