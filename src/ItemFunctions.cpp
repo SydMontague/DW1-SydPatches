@@ -75,12 +75,12 @@ extern "C"
 
     void handleBandage(ItemType itemId)
     {
-        if (handleMedicineHealing(3, 2)) addHealingParticleEffect(&PARTNER_ENTITY, 0);
+        if (handleMedicineHealing(100, 20)) addHealingParticleEffect(&PARTNER_ENTITY, 0);
     }
 
     void handleMedicine(ItemType itemId)
     {
-        if (handleMedicineHealing(3, 10)) addHealingParticleEffect(&PARTNER_ENTITY, 0);
+        if (handleMedicineHealing(100, 100)) addHealingParticleEffect(&PARTNER_ENTITY, 0);
     }
 
     // TODO function for every item

@@ -7,13 +7,16 @@ extern "C"
 {
     bool handleMedicineHealing(int32_t injuryHealChance, int32_t sicknessHealChance)
     {
-        if (PARTNER_PARA.condition.isInjured && random(3) < injuryHealChance)
+        // vanilla does one roll for each condition and also uses 3 and 10 respectively instead of 100
+        // however, this change makes it compatible with poop eating healing
+        auto roll = random(100);
+        if (PARTNER_PARA.condition.isInjured && roll < injuryHealChance)
         {
             PARTNER_PARA.condition.isInjured = false;
             PARTNER_PARA.injuryTimer         = 0;
         }
 
-        if (PARTNER_PARA.condition.isSick && random(10) < sicknessHealChance)
+        if (PARTNER_PARA.condition.isSick && roll < sicknessHealChance)
         {
             PARTNER_PARA.condition.isSick = false;
             PARTNER_PARA.areaEffectTimer  = 0;

@@ -1,6 +1,7 @@
 #include "Partner.hpp"
 
 #include "Helper.hpp"
+#include "ItemEffects.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 
@@ -668,5 +669,43 @@ extern "C"
         PARTNER_PARA.discipline -= 5;
         PARTNER_PARA.poopLevel = getRaiseData(PARTNER_ENTITY.type)->poopTimer * 2;
         handlePoopWeightLoss(PARTNER_ENTITY.type);
+    }
+
+    void handleEatingPoop() {
+        auto& poop = WORLD_POOP[POOP_TO_EAT];
+        auto healingChance = 0;
+
+        if(poop.size < 11) {
+            PARTNER_ENTITY.stats.currentHP += (PARTNER_ENTITY.stats.currentHP * 5) / 100;
+            PARTNER_ENTITY.stats.currentMP += (PARTNER_ENTITY.stats.currentMP * 2) / 100;
+            PARTNER_PARA.weight += 1;
+            healingChance = 2;
+        }
+        else if(poop.size < 14) {
+            PARTNER_ENTITY.stats.currentHP += (PARTNER_ENTITY.stats.currentHP * 10) / 100;
+            PARTNER_ENTITY.stats.currentMP += (PARTNER_ENTITY.stats.currentMP * 5) / 100;
+            PARTNER_PARA.weight += 3;
+            healingChance = 7;
+        }
+        else {
+            PARTNER_ENTITY.stats.currentHP += (PARTNER_ENTITY.stats.currentHP * 50) / 100;
+            PARTNER_ENTITY.stats.currentMP += (PARTNER_ENTITY.stats.currentMP * 10) / 100;
+            PARTNER_PARA.weight += 10;
+            healingChance = 20;
+        }
+
+        if(PARTNER_ENTITY.stats.hp < PARTNER_ENTITY.stats.currentHP)
+            PARTNER_ENTITY.stats.currentHP = PARTNER_ENTITY.stats.hp;
+        if(PARTNER_ENTITY.stats.mp < PARTNER_ENTITY.stats.currentMP)
+            PARTNER_ENTITY.stats.currentMP = PARTNER_ENTITY.stats.mp;
+        if(PARTNER_PARA.weight > 99)
+            PARTNER_PARA.weight = 99;
+
+        handleMedicineHealing(healingChance, healingChance);
+
+        poop.map = 0xFF;
+        poop.x = -1;
+        poop.y = -1;
+        poop.size = 0;
     }
 }
