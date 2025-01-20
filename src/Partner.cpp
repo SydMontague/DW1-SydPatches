@@ -795,4 +795,63 @@ extern "C"
             }
         }
     }
+
+    void tickDeathCondition()
+    {
+        if (HAS_IMMORTAL_HOUR != 1 && IMMORTAL_HOUR == HOUR) return;
+        if (PARTNER_PARA.remainingLifetime > 0) return;
+        if (PARTNER_STATE == 8) return;
+        if (Tamer_getState() != 0) return;
+        if (IS_SCRIPT_PAUSED != 1) return;
+
+        IS_NATURAL_DEATH = 1;
+        writePStat(0xFF, 0);
+        PARTNER_PARA.remainingLifetime = 0;
+        callScriptSection(0, 1246, 0);
+    }
+
+    void skipHours(uint32_t amount)
+    {
+        PARTNER_PARA.evoTimer += amount;
+        PARTNER_PARA.remainingLifetime -= amount;
+        PARTNER_PARA.age += (HOUR + amount) / 24;
+
+        updateTimeOfDay();
+
+        if ((HOUR + amount % 4) == 0 && PARTNER_PARA.happiness < 80)
+        {
+            auto factor = 1 + PARTNER_PARA.happiness / 50;
+            PARTNER_PARA.remainingLifetime -= factor;
+        }
+
+        if (PARTNER_PARA.remainingLifetime < 0) PARTNER_PARA.remainingLifetime = 0;
+
+        if (PARTNER_PARA.condition.isSleepy)
+        {
+            PARTNER_PARA.sicknessCounter += amount;
+            PARTNER_PARA.missedSleepHours += amount;
+        }
+        if (!PARTNER_PARA.condition.isHungry) { PARTNER_PARA.foodLevel -= amount * 60; }
+        else
+        {
+            PARTNER_PARA.starvationTimer -= amount * 120;
+            // vanilla adds a care mistake here, but this causes the doubling of them
+        }
+
+        // vanilla doesn't multiply with hours
+        PARTNER_PARA.energyLevel -= getRaiseData(PARTNER_ENTITY.type)->energyUsage * amount;
+        if (PARTNER_PARA.energyLevel < 0) PARTNER_PARA.energyLevel = 0;
+
+        if (!PARTNER_PARA.condition.isPoopy)
+            PARTNER_PARA.poopLevel -= amount * 6;
+        else
+            PARTNER_PARA.poopingTimer -= amount * 1200; // vanilla doesn't multiply with hours
+
+        if (PARTNER_PARA.condition.isSick) PARTNER_PARA.sicknessTimer += amount;
+
+        if (PARTNER_PARA.sicknessCounter >= 10) // vanilla does this only when sick
+            PARTNER_PARA.sicknessTries += amount;
+
+        if (PARTNER_PARA.condition.isInjured) PARTNER_PARA.injuryTimer += amount;
+    }
 }

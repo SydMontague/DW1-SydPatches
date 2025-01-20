@@ -48,7 +48,9 @@
 .definelabel setButterfly,              0x800e9d24
 .definelabel startAnimation,            0x800c1a04
 .definelabel writePStat,                0x80106474
+.definelabel updateTimeOfDay,           0x800d676c
 
+.definelabel IS_NATURAL_DEATH, 0x80134c4c
 .definelabel ITEM_FUNCTIONS, 0x80127c88
 .definelabel IS_SCRIPT_PAUSED, 0x80134ff4
 .definelabel PARTNER_ENTITY, 0x801557a8
