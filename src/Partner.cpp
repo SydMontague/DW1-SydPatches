@@ -246,6 +246,7 @@ extern "C"
             getModelTile(&PARTNER_ENTITY.posData->location, &tileX, &tileY);
             createPoopPile(tileX, tileY);
             PARTNER_PARA.poopingTimer = -1;
+            // fixes lack of care mistakes and doubles the poop timer
             handleWildPoop();
             addTamerLevel(1, -1);
         }
@@ -595,7 +596,8 @@ extern "C"
 
     void tickPartnerPoopingMechanic()
     {
-        if (Tamer_getState() != 0) return;
+        // TODO: this stops the timer during transitions 
+        if (Tamer_getState() != 0) return; 
 
         if (!PARTNER_PARA.condition.isPoopy)
         {

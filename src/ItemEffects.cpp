@@ -27,7 +27,8 @@ extern "C"
     {
         if (!PARTNER_PARA.condition.isPoopy) return;
 
-        PARTNER_PARA.poopLevel         = getRaiseData(PARTNER_ENTITY.type)->poopTimer;
+        // vanilla doesn't double the timer here
+        PARTNER_PARA.poopLevel         = getRaiseData(PARTNER_ENTITY.type)->poopTimer * 2;
         PARTNER_PARA.condition.isPoopy = false;
         handlePoopWeightLoss(PARTNER_ENTITY.type);
     }

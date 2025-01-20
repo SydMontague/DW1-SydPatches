@@ -21,7 +21,7 @@ extern "C"
 
     constexpr int32_t getTimeDiff(int32_t start, int32_t end)
     {
-        if (start <= end) { return end - start; } // fixes day skip? // TODO decide if we actually want to fix that
+        if (start <= end) { return end - start; } // <= instead of < fixes day skip? // TODO decide if we actually want to fix that
         else { return (24 - start) + end; }
     }
 
