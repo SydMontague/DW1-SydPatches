@@ -1,5 +1,6 @@
 #include "Partner.hpp"
 
+#include "Font.hpp"
 #include "Helper.hpp"
 #include "ItemEffects.hpp"
 #include "extern/dw1.hpp"
@@ -671,41 +672,127 @@ extern "C"
         handlePoopWeightLoss(PARTNER_ENTITY.type);
     }
 
-    void handleEatingPoop() {
-        auto& poop = WORLD_POOP[POOP_TO_EAT];
+    void handleEatingPoop()
+    {
+        auto& poop         = WORLD_POOP[POOP_TO_EAT];
         auto healingChance = 0;
 
-        if(poop.size < 11) {
+        if (poop.size < 11)
+        {
             PARTNER_ENTITY.stats.currentHP += (PARTNER_ENTITY.stats.currentHP * 5) / 100;
             PARTNER_ENTITY.stats.currentMP += (PARTNER_ENTITY.stats.currentMP * 2) / 100;
             PARTNER_PARA.weight += 1;
             healingChance = 2;
         }
-        else if(poop.size < 14) {
+        else if (poop.size < 14)
+        {
             PARTNER_ENTITY.stats.currentHP += (PARTNER_ENTITY.stats.currentHP * 10) / 100;
             PARTNER_ENTITY.stats.currentMP += (PARTNER_ENTITY.stats.currentMP * 5) / 100;
             PARTNER_PARA.weight += 3;
             healingChance = 7;
         }
-        else {
+        else
+        {
             PARTNER_ENTITY.stats.currentHP += (PARTNER_ENTITY.stats.currentHP * 50) / 100;
             PARTNER_ENTITY.stats.currentMP += (PARTNER_ENTITY.stats.currentMP * 10) / 100;
             PARTNER_PARA.weight += 10;
             healingChance = 20;
         }
 
-        if(PARTNER_ENTITY.stats.hp < PARTNER_ENTITY.stats.currentHP)
+        if (PARTNER_ENTITY.stats.hp < PARTNER_ENTITY.stats.currentHP)
             PARTNER_ENTITY.stats.currentHP = PARTNER_ENTITY.stats.hp;
-        if(PARTNER_ENTITY.stats.mp < PARTNER_ENTITY.stats.currentMP)
+        if (PARTNER_ENTITY.stats.mp < PARTNER_ENTITY.stats.currentMP)
             PARTNER_ENTITY.stats.currentMP = PARTNER_ENTITY.stats.mp;
-        if(PARTNER_PARA.weight > 99)
-            PARTNER_PARA.weight = 99;
+        if (PARTNER_PARA.weight > 99) PARTNER_PARA.weight = 99;
 
         handleMedicineHealing(healingChance, healingChance);
 
-        poop.map = 0xFF;
-        poop.x = -1;
-        poop.y = -1;
+        poop.map  = 0xFF;
+        poop.x    = -1;
+        poop.y    = -1;
         poop.size = 0;
+    }
+
+    void tickSicknessMechanics()
+    {
+        // already guaranteed by caller, actually
+        if (CURRENT_FRAME != LAST_HANDLED_FRAME) return;
+
+        bool gotSick;
+
+        if (!PARTNER_PARA.condition.isSick && PARTNER_PARA.sicknessCounter >= 10 && CURRENT_FRAME % 1200 == 0)
+        {
+            PARTNER_PARA.sicknessTries += 1;
+            auto roll = random(100);
+            if (roll < PARTNER_PARA.tiredness - 50 + (PARTNER_PARA.sicknessTries - 10) * 5)
+            {
+                PARTNER_PARA.condition.isSick = true;
+                PARTNER_PARA.timesBeingSick += 1;
+                PARTNER_PARA.sicknessTimer = 1;
+                PARTNER_PARA.happiness -= 20;
+                PARTNER_PARA.sicknessCounter = 0;
+
+                gotSick = true;
+            }
+        }
+
+        if (!PARTNER_PARA.condition.isSick && PARTNER_PARA.areaEffectTimer >= 12000 && CURRENT_SCREEN % 1200 == 0 &&
+            PARTNER_AREA_RESPONSE == 2)
+        {
+            PARTNER_PARA.condition.isSick = true;
+            PARTNER_PARA.timesBeingSick += 1;
+            PARTNER_PARA.sicknessTimer   = 1;
+            PARTNER_PARA.sicknessCounter = 0;
+
+            gotSick = true;
+        }
+
+        if (CURRENT_FRAME % 1200 == 0 && PARTNER_PARA.condition.isSick)
+        {
+            PARTNER_PARA.happiness -= 10;
+            PARTNER_PARA.discipline -= 5;
+            PARTNER_PARA.tiredness += 5;
+        }
+
+        if (!PARTNER_PARA.condition.isSick && PARTNER_PARA.sicknessTimer > 0) PARTNER_PARA.sicknessTimer = 0;
+
+        if (CURRENT_FRAME % 1200 == 0)
+        {
+            if (PARTNER_PARA.condition.isSick) PARTNER_PARA.sicknessTimer += 1;
+            if (PARTNER_PARA.condition.isInjured) PARTNER_PARA.injuryTimer += 1;
+        }
+
+        if (!HAS_IMMORTAL_HOUR || IMMORTAL_HOUR != HOUR)
+        {
+            if (Tamer_getState() == 0 && PARTNER_PARA.injuryTimer >= 12)
+            {
+                PARTNER_PARA.timesBeingSick += 1;
+                PARTNER_PARA.sicknessTimer       = 1;
+                PARTNER_PARA.condition.isSick    = true;
+                PARTNER_PARA.condition.isInjured = false;
+                PARTNER_PARA.injuryTimer         = 0;
+
+                gotSick = true;
+            }
+
+            if (gotSick)
+            {
+                Tamer_setState(20);
+                clearTextArea();
+                setTextColor(10);
+                auto width = drawStringNew(&vanillaFont, PARTNER_ENTITY.name, 704, 256 + 0x78);
+                setTextColor(1);
+                drawStringNew(&vanillaFont, reinterpret_cast<const uint8_t*>(" is sick!"), 704 + width, 256 + 0x78);
+            }
+
+            if (PARTNER_PARA.sicknessCounter >= 12 && PARTNER_STATE != 8 && Tamer_getState() == 0 &&
+                PARTNER_PARA.remainingLifetime != 0 && IS_SCRIPT_PAUSED == 1)
+            {
+                writePStat(255, 0);
+                PARTNER_ENTITY.lives -= 1;
+                callScriptSection(0, 1246, 0);
+                PARTNER_PARA.sicknessTimer = 0;
+            }
+        }
     }
 }

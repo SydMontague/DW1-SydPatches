@@ -47,6 +47,7 @@
 .definelabel addConditionBubble,        0x800ec538
 .definelabel setButterfly,              0x800e9d24
 .definelabel startAnimation,            0x800c1a04
+.definelabel writePStat,                0x80106474
 
 .definelabel ITEM_FUNCTIONS, 0x80127c88
 .definelabel IS_SCRIPT_PAUSED, 0x80134ff4

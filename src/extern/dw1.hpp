@@ -755,6 +755,7 @@ extern "C"
     extern uint8_t PARTNER_ANIMATION;
     extern uint8_t POOP_TO_EAT;
 
+    extern void writePStat(int32_t address, uint8_t value);
     extern void startAnimation(Entity*, uint32_t animId);
     extern void unsetBubble(uint32_t id);
     extern uint8_t addConditionBubble(uint32_t type, Entity* entity);
