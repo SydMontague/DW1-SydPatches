@@ -8,16 +8,16 @@
   .notice "Empty space left: " + (0x800e3584-.) + " bytes"
 .endarea
 
-.org 0x800a91b8
-  jal getFreshEvolutionTarget
-.org 0x800a91e8
-  jal getInTrainingEvolutionTarget
-.org 0x800a9218
-  jal getRegularEvolutionTarget
-.org 0x800a9248
-  jal getRegularEvolutionTarget
-.org 0x800a9274
-  jal handleSpecialEvolutionPraise
+;.org 0x800a91b8
+;  jal getFreshEvolutionTarget
+;.org 0x800a91e8
+;  jal getInTrainingEvolutionTarget
+;.org 0x800a9218
+;  jal getRegularEvolutionTarget
+;.org 0x800a9248
+;  jal getRegularEvolutionTarget
+;.org 0x800a9274
+;  jal handleSpecialEvolutionPraise
 
 .org 0x800ddea8
   jal handleSpecialEvolutionPraise

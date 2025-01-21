@@ -1,5 +1,6 @@
 #include "Partner.hpp"
 
+#include "Evolution.hpp"
 #include "Font.hpp"
 #include "Helper.hpp"
 #include "ItemEffects.hpp"
@@ -411,7 +412,7 @@ extern "C"
 
         PARTNER_PARA.condition.isTired = PARTNER_PARA.tiredness >= 80;
 
-        if (CURRENT_FRAME % 100 && CURRENT_FRAME != LAST_HANDLED_FRAME && PARTNER_PARA.tiredness >= 80)
+        if (CURRENT_FRAME % 100 == 0 && CURRENT_FRAME != LAST_HANDLED_FRAME && PARTNER_PARA.tiredness >= 80)
             PARTNER_PARA.happiness -= 2;
     }
 
@@ -820,8 +821,7 @@ extern "C"
 
         if ((HOUR + amount % 4) == 0 && PARTNER_PARA.happiness < 80)
         {
-            auto factor = 1 + PARTNER_PARA.happiness / 50;
-            PARTNER_PARA.remainingLifetime -= factor;
+            PARTNER_PARA.remainingLifetime -= getHappinessLifetimePenalty(PARTNER_PARA.happiness);
         }
 
         if (PARTNER_PARA.remainingLifetime < 0) PARTNER_PARA.remainingLifetime = 0;
@@ -853,5 +853,97 @@ extern "C"
             PARTNER_PARA.sicknessTries += amount;
 
         if (PARTNER_PARA.condition.isInjured) PARTNER_PARA.injuryTimer += amount;
+    }
+
+    void handlePostBattleTiredness()
+    {
+        auto maxMP     = PARTNER_ENTITY.stats.mp;
+        auto currentMP = PARTNER_ENTITY.stats.currentMP;
+
+        // in vanilla the math is broken, so the MP factor can only ever be 0 or 10
+        PARTNER_PARA.tiredness += 5 + ((maxMP - currentMP) * 10) / maxMP;
+        // TODO shouldn't this be 20? Or is this additional
+        PARTNER_PARA.foodLevel -= 15;
+    }
+
+    void tickPartner()
+    {
+        if (GAME_STATE != 0) return;
+        if (PARTNER_STATE != 1) return;
+        if (IS_GAMETIME_RUNNING == 0) return;
+        if (CURRENT_FRAME == LAST_HANDLED_FRAME) return;
+        if (FADE_DATA.fadeProtection == 1) return;
+
+        tickDeathCondition();
+        tickSleepMechanics();
+        tickSicknessMechanics();
+        tickTirednessMechanics();
+        tickHungerMechanics();
+        tickUnhappinessMechanics();
+        tickConditionBoundaries();
+
+        PARTNER_PARA.areaEffectTimer += 1;
+        if (PARTNER_PARA.areaEffectTimer > 28800) PARTNER_PARA.areaEffectTimer = 0;
+
+        PARTNER_PARA.trainBoostTimer -= 1;
+        if (PARTNER_PARA.trainBoostTimer < 1)
+        {
+            PARTNER_PARA.trainBoostFlag  = 0;
+            PARTNER_PARA.trainBoostTimer = 0;
+            PARTNER_PARA.trainBoostValue = 10; // reset to 10 -> 100%, not done in vanilla
+        }
+
+        if (CURRENT_FRAME % 4800 == 0)
+        {
+            PARTNER_PARA.remainingLifetime -= getHappinessLifetimePenalty(PARTNER_PARA.happiness);
+            if (PARTNER_PARA.remainingLifetime < 0) PARTNER_PARA.remainingLifetime = 0;
+        }
+
+        if (!isInDaytimeTransition()) return;
+        if (HAS_IMMORTAL_HOUR)
+        {
+            if (IMMORTAL_HOUR == HOUR) return;
+
+            HAS_IMMORTAL_HOUR = 0;
+            IMMORTAL_HOUR     = -1;
+        }
+
+        if (Tamer_getState() == 0 && PARTNER_STATE == 1)
+        {
+            auto type     = PARTNER_ENTITY.type;
+            auto level    = getDigimonData(type)->level;
+            auto evoTimer = PARTNER_PARA.evoTimer;
+            if (level == Level::FRESH && evoTimer >= 6)
+                EVOLUTION_TARGET = static_cast<int16_t>(getFreshEvolutionTarget(type));
+            if (level == Level::IN_TRAINING && evoTimer >= 24)
+                EVOLUTION_TARGET = static_cast<int16_t>(getInTrainingEvolutionTarget(type));
+            if (level == Level::ROOKIE && evoTimer >= 72)
+                EVOLUTION_TARGET = static_cast<int16_t>(getRegularEvolutionTarget(type));
+            if (level == Level::CHAMPION && evoTimer >= 144)
+                EVOLUTION_TARGET = static_cast<int16_t>(getRegularEvolutionTarget(type));
+
+            // forced Vademon, shouldn't need to call the function
+            if (level == Level::CHAMPION && evoTimer == 360)
+                EVOLUTION_TARGET = static_cast<int16_t>(handleSpecialEvolutionPraise(3, &PARTNER_ENTITY));
+        }
+
+        if (PARTNER_PARA.virusBar >= 16 && PARTNER_ENTITY.type != DigimonType::SUKAMON)
+        {
+            EVOLUTION_TARGET = static_cast<int16_t>(DigimonType::SUKAMON);
+            writePStat(5, static_cast<uint8_t>(PARTNER_ENTITY.type));
+            PARTNER_PARA.sukaBackupHP    = PARTNER_ENTITY.stats.hp;
+            PARTNER_PARA.sukaBackupMP    = PARTNER_ENTITY.stats.mp;
+            PARTNER_PARA.sukaBackupOff   = PARTNER_ENTITY.stats.off;
+            PARTNER_PARA.sukaBackupDef   = PARTNER_ENTITY.stats.def;
+            PARTNER_PARA.sukaBackupSpeed = PARTNER_ENTITY.stats.speed;
+            PARTNER_PARA.sukaBackupBrain = PARTNER_ENTITY.stats.brain;
+            PARTNER_PARA.virusBar        = 0;
+        }
+
+        if (EVOLUTION_TARGET != -1 && PARTNER_STATE != 13)
+        {
+            Tamer_setState(6);
+            Partner_setState(13);
+        }
     }
 }

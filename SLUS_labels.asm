@@ -49,6 +49,7 @@
 .definelabel startAnimation,            0x800c1a04
 .definelabel writePStat,                0x80106474
 .definelabel updateTimeOfDay,           0x800d676c
+.definelabel isInDaytimeTransition,     0x800d7618
 
 .definelabel IS_NATURAL_DEATH, 0x80134c4c
 .definelabel ITEM_FUNCTIONS, 0x80127c88
@@ -89,6 +90,9 @@
 .definelabel PARTNER_STATE, 0x80134c5b
 .definelabel PARTNER_ANIMATION, 0x80134e2c
 .definelabel POOP_TO_EAT, 0x80134c68
+.definelabel GAME_STATE, 0x80134f0a
+.definelabel FADE_DATA, 0x80134cac
+.definelabel IS_GAMETIME_RUNNING, 0x80134e20
 
 // libc
 .definelabel strcat,  0x800911cc

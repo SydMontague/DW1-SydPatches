@@ -708,9 +708,29 @@ extern "C"
         uint8_t size;
     };
 
+    enum FadeMode
+    {
+        NONE       = 0,
+        WHITE_FADE = 1,
+        BLACK_FADE = 2,
+    };
+
+    struct FadeData
+    {
+        int16_t fadeOutTarget;
+        int16_t fadeInTarget;
+        int16_t fadeOutCurrent;
+        int16_t fadeInCurrent;
+        int8_t fadeProgress;
+        FadeMode fadeMode;
+        uint16_t padding;
+        int32_t fadeProtection;
+    };
+
     using TickFunction   = void (*)(int32_t instanceId);
     using RenderFunction = void (*)(int32_t instanceId);
     using ItemFunction   = void (*)(ItemType itemId);
+
 
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
@@ -755,7 +775,11 @@ extern "C"
     extern uint8_t PARTNER_ANIMATION;
     extern uint8_t POOP_TO_EAT;
     extern uint32_t IS_NATURAL_DEATH;
+    extern FadeData FADE_DATA;
+    extern uint8_t GAME_STATE;
+    extern uint8_t IS_GAMETIME_RUNNING;
 
+    extern bool isInDaytimeTransition();
     extern void updateTimeOfDay();
     extern void writePStat(int32_t address, uint8_t value);
     extern void startAnimation(Entity*, uint32_t animId);

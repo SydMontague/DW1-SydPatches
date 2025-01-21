@@ -54,6 +54,12 @@ extern "C"
 
         return true;
     }
+
+    constexpr int32_t getHappinessLifetimePenalty(int32_t happiness)
+    {
+        if (happiness >= 80) return 0;
+        return 1 + (happiness - 80) / -50;
+    }
 }
 
 static_assert(getTimeDiff(9, 18) == 9);
@@ -73,3 +79,16 @@ static_assert(!isWithinTimeframe(10, 18, 9));
 static_assert(isWithinTimeframe(18, 18, 9));
 static_assert(isWithinTimeframe(19, 18, 9));
 static_assert(isWithinTimeframe(23, 18, 9));
+
+static_assert(getHappinessLifetimePenalty(81) == 0);
+static_assert(getHappinessLifetimePenalty(80) == 0);
+static_assert(getHappinessLifetimePenalty(79) == 1);
+static_assert(getHappinessLifetimePenalty(31) == 1);
+static_assert(getHappinessLifetimePenalty(30) == 2);
+static_assert(getHappinessLifetimePenalty(0) == 2);
+static_assert(getHappinessLifetimePenalty(-19) == 2);
+static_assert(getHappinessLifetimePenalty(-20) == 3);
+static_assert(getHappinessLifetimePenalty(-69) == 3);
+static_assert(getHappinessLifetimePenalty(-70) == 4);
+static_assert(getHappinessLifetimePenalty(-85) == 4);
+static_assert(getHappinessLifetimePenalty(-100) == 4);

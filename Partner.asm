@@ -2,26 +2,28 @@
 .psx
 
 .org 0x800a568c
-.area 0x800a8e78-.
+.area 0x800a936c-.
   .importobj "compiled/Partner.lib"
 
-  .notice "Empty space left: " + (0x800a8e78-.) + " bytes"
-  .fill 0x800a8e78-.
+  .notice "Empty space left: " + (0x800a936c-.) + " bytes"
+  .fill 0x800a936c-.
 .endarea
+
+.notice tickPartner
 
 
 .org 0x800dd99c
   jal tickConditionBoundaries
 .org 0x800abc28
   jal tickConditionBoundaries
-.org 0x800a8fc8
-  jal tickConditionBoundaries
+;.org 0x800a8fc8
+;  jal tickConditionBoundaries
 
-.org 0x800a8fa0
-  jal tickSleepMechanics
+;.org 0x800a8fa0
+;  jal tickSleepMechanics
 
-.org 0x800a8fc0
-  jal tickUnhappinessMechanics
+;.org 0x800a8fc0
+;  jal tickUnhappinessMechanics
 
 .org 0x800dde34
   jal handlePraiseScold
@@ -35,14 +37,14 @@
 .org 0x800ddbcc
   jal sleepRegen
 
-.org 0x800a8fb0
-  jal tickTirednessMechanics
+;.org 0x800a8fb0
+;  jal tickTirednessMechanics
 
 .org 0x800de0b8
   jal partnerWillRefuseItem
 
-.org 0x800a8fb8
-  jal tickHungerMechanics
+;.org 0x800a8fb8
+;  jal tickHungerMechanics
 
 .org 0x800dd944
   jal handleConditionBubble
@@ -55,6 +57,9 @@
 .org 0x800dd9e0
   jal tickPartnerPoopingMechanic
 
+.org 0x800dd9e8
+  jal detectEdiblePoop
+
 .org 0x800de4b4
   jal handleToilet
 
@@ -64,14 +69,22 @@
 .org 0x800de9e8
   jal handleEatingPoop
 
-.org 0x800a8fa8
-  jal tickSicknessMechanics
+;.org 0x800a8fa8
+;  jal tickSicknessMechanics
 
-.org 0x800a8f98
-  jal tickDeathCondition
+;.org 0x800a8f98
+;  jal tickDeathCondition
 
 .org 0x8010334c
   jal skipHours
+
+.org 0x800abb74
+  jal handlePostBattleTiredness
+.org 0x800abc08
+  jal handlePostBattleTiredness
+
+.org 0x800dd9d8
+  jal tickPartner
 
 .close 
 
