@@ -1,4 +1,15 @@
 {
   "name": "MIPS GCC",
-  "build": { "dockerfile": "Dockerfile" }
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools-extension-pack",
+        "llvm-vs-code-extensions.vscode-clangd",
+        "mhutchie.git-graph"
+      ]
+    }
+  }
 }

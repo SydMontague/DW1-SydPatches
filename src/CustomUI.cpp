@@ -17,12 +17,17 @@ extern "C"
             .height = 32,
         };
         uint8_t buffer[64];
+        
+        auto previous_color = COLORCODE_LOWBITS;
+
         setTextColor(1);
         sprintf(buffer, "%u", RNG_STATE);
         libgpu_ClearImage(&area, 0, 0, 0);
         drawStringNew(&myFont5px, buffer, 352, 224);
         sprintf(buffer, "%u", irqCount / 8);
         drawStringNew(&myFont5px, buffer, 352, 230);
+        
+        setTextColor(previous_color);
     }
 
     void debugOverlayRender(int32_t instanceId)
