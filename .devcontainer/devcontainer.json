@@ -1,0 +1,4 @@
+{
+  "name": "MIPS GCC",
+  "build": { "dockerfile": "Dockerfile" }
+}
