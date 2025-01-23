@@ -9,8 +9,6 @@
   .fill 0x800a936c-.
 .endarea
 
-.notice tickPartner
-
 
 .org 0x800dd99c
   jal tickConditionBoundaries
