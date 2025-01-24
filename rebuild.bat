@@ -1,6 +1,7 @@
-COPY ALLTIM.TIM work\DIGIMON\CHDAT\ALLTIM.TIM
-COPY BAKE.MMD work\DIGIMON\CHDAT\MMD1\BAKE.MMD
+DEL work\
+COPY extract\ work\
+COPY BUILD.xml work\BUILD.XML
 tools\windows\armips.exe patches.asm
-tools\windows\mkpsxiso.exe work\BUILD.XML -o DigimonWorldPatched.bin -y -q
+tools\windows\mkpsxiso.exe work\BUILD.XML -o -y -q
 DEL DigimonWorldPatched.cue
 REN mkpsxiso.cue DigimonWorldPatched.cue

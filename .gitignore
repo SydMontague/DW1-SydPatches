@@ -1,7 +1,6 @@
 work/
 extract/
 compiled/
-tools/
 
 *.bin
 *.cue
