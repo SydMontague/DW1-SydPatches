@@ -11,33 +11,4 @@
 .org 0x800deb94
   sb r0,@evoFlagOffset(gp)
 
-; fix evolution priority for in-training -> rookie
-.org 0x800e2664
-  nop
-  nop
-
-; fix evolution priority for rookie -> champion
-.org 0x800e2e7c
-  beq at,zero,@@elseLabel
-  nop
-  sll s3,s0,0x10
-  move s4,v1
-  sra s3,s3,0x10
-@@elseLabel:
-  clear s0
-  clear s1
-  nop
-
-; fix evolution priority for champion -> ultimate
-.org 0x800e31d0
-  beq at,zero,@@elseLabel
-  nop
-  sll s3,s0,0x10
-  move s5,v1
-  sra s3,s3,0x10
-@@elseLabel:
-  clear s0
-  clear s1
-  nop
-
 .close

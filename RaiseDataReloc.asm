@@ -37,46 +37,48 @@
   li.u v0,RAISE_DATA+0x15
   .skip 4
   li.l v0,RAISE_DATA+0x15
-.org 0x800a5774
-  li v0,RAISE_DATA+0x08
-.org 0x800a5ccc
-  li v0,RAISE_DATA+0x12
-.org 0x800a6574
-  li v0,RAISE_DATA+0x12
-.org 0x800a66f0
-  li v0,RAISE_DATA+0x0C
-.org 0x800a6a8c
-  li v1,RAISE_DATA+0x10
-.org 0x800a6b20
-  li v1,RAISE_DATA+0x10
-.org 0x800a6bd4
-  li v1,RAISE_DATA+0x10
-.org 0x800a754c
-  li v0,RAISE_DATA+0x11
-.org 0x800a76c0
-  li v0,RAISE_DATA+0x0A
-.org 0x800a77d4
-  li v0,RAISE_DATA+0x09
-.org 0x800a7920
-  li v0,RAISE_DATA+0x09
-.org 0x800a7bf8
-  li v0,RAISE_DATA+0x09
-.org 0x800a7c98
-  li v0,RAISE_DATA+0x11
-.org 0x800a7cb4
-  li v0,RAISE_DATA+0x09
-.org 0x800a80b4
-  li v0,RAISE_DATA+0x0C
-.org 0x800a8124
-  li v1,RAISE_DATA+0x10
-.org 0x800a8210
-  li v0,RAISE_DATA+0x0C
-.org 0x800a8cd4
-  li v0,RAISE_DATA+0x09
-.org 0x800a8d50
-  li v0,RAISE_DATA+0x0A
 .org 0x800abef4
   li v0,RAISE_DATA+0x09
+
+; Redundant, relocations dealt with in Partner.cpp
+;.org 0x800a5774
+;  li v0,RAISE_DATA+0x08
+;.org 0x800a5ccc
+;  li v0,RAISE_DATA+0x12
+;.org 0x800a6574
+;  li v0,RAISE_DATA+0x12
+;.org 0x800a66f0
+;  li v0,RAISE_DATA+0x0C
+;.org 0x800a6a8c
+;  li v1,RAISE_DATA+0x10
+;.org 0x800a6b20
+;  li v1,RAISE_DATA+0x10
+;.org 0x800a6bd4
+;  li v1,RAISE_DATA+0x10
+;.org 0x800a754c
+;  li v0,RAISE_DATA+0x11
+;.org 0x800a76c0
+;  li v0,RAISE_DATA+0x0A
+;.org 0x800a77d4
+;  li v0,RAISE_DATA+0x09
+;.org 0x800a7920
+;  li v0,RAISE_DATA+0x09
+;.org 0x800a7bf8
+;  li v0,RAISE_DATA+0x09
+;.org 0x800a7c98
+;  li v0,RAISE_DATA+0x11
+;.org 0x800a7cb4
+;  li v0,RAISE_DATA+0x09
+;.org 0x800a80b4
+;  li v0,RAISE_DATA+0x0C
+;.org 0x800a8124
+;  li v1,RAISE_DATA+0x10
+;.org 0x800a8210
+;  li v0,RAISE_DATA+0x0C
+;.org 0x800a8cd4
+;  li v0,RAISE_DATA+0x09
+;.org 0x800a8d50
+;  li v0,RAISE_DATA+0x0A
 
 ; Redundant, relocation dealt with in ItemEffects.cpp
 ;.org 0x800c432c
@@ -86,12 +88,14 @@
 ;.org 0x800c583c
 ;  li v0,RAISE_DATA+0x08
 
-.org 0x800bbd1c
-  li v0,RAISE_DATA+0x12
-.org 0x800bbd44
-  li v0,RAISE_DATA
-.org 0x800bbcb4
-  li v0,RAISE_DATA+0x12
+; Redundant, relocation dealt with in PartnerStatsView.cpp
+;.org 0x800bbd1c
+;  li v0,RAISE_DATA+0x12
+;.org 0x800bbd44
+;  li v0,RAISE_DATA
+;.org 0x800bbcb4
+;  li v0,RAISE_DATA+0x12
+
 .org 0x800bf040
   li v0,RAISE_DATA
 .org 0x800d61e4
