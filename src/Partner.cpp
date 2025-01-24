@@ -4,28 +4,35 @@
 #include "Font.hpp"
 #include "Helper.hpp"
 #include "ItemEffects.hpp"
+#include "constants.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
+
+constexpr auto FRESH_EVOLUTION_TIME       = 6;
+constexpr auto IN_TRAINING_EVOLUTION_TIME = 24;
+constexpr auto ROOKIE_EVOLUTION_TIME      = 72;
+constexpr auto CHAMPION_EVOLUTION_TIME    = 96;
+constexpr auto VADEMON_EVOLUTION_TIME     = 360;
 
 extern "C"
 {
     void tickConditionBoundaries()
     {
-        if (PARTNER_PARA.happiness > 100) PARTNER_PARA.happiness = 100;
-        if (PARTNER_PARA.happiness < -100) PARTNER_PARA.happiness = -100;
+        if (PARTNER_PARA.happiness > HAPPINESS_MAX) PARTNER_PARA.happiness = HAPPINESS_MAX;
+        if (PARTNER_PARA.happiness < HAPPINESS_MIN) PARTNER_PARA.happiness = HAPPINESS_MIN;
 
-        if (PARTNER_PARA.discipline > 100) PARTNER_PARA.discipline = 100;
-        if (PARTNER_PARA.discipline < 0) PARTNER_PARA.discipline = 0;
+        if (PARTNER_PARA.discipline > DISCIPLINE_MAX) PARTNER_PARA.discipline = DISCIPLINE_MAX;
+        if (PARTNER_PARA.discipline < DISCIPLINE_MIN) PARTNER_PARA.discipline = DISCIPLINE_MIN;
 
-        if (PARTNER_PARA.tiredness > 100) PARTNER_PARA.tiredness = 100;
-        if (PARTNER_PARA.tiredness < 0) PARTNER_PARA.tiredness = 0;
+        if (PARTNER_PARA.tiredness > TIREDNESS_MAX) PARTNER_PARA.tiredness = TIREDNESS_MAX;
+        if (PARTNER_PARA.tiredness < TIREDNESS_MIN) PARTNER_PARA.tiredness = TIREDNESS_MIN;
 
         auto energyCap = getRaiseData(PARTNER_ENTITY.type)->energyCap;
         if (PARTNER_PARA.energyLevel > energyCap) PARTNER_PARA.energyLevel = energyCap;
-        if (PARTNER_PARA.energyLevel < 0) PARTNER_PARA.energyLevel = 0;
+        if (PARTNER_PARA.energyLevel < ENERGY_MIN) PARTNER_PARA.energyLevel = ENERGY_MIN;
 
-        if (PARTNER_PARA.weight > 99) PARTNER_PARA.weight = 99;
-        if (PARTNER_PARA.weight < 1) PARTNER_PARA.weight = 1;
+        if (PARTNER_PARA.weight > WEIGHT_MAX) PARTNER_PARA.weight = WEIGHT_MAX;
+        if (PARTNER_PARA.weight < WEIGHT_MIN) PARTNER_PARA.weight = WEIGHT_MIN;
     }
 
     inline void updateSleepingTimes()
@@ -153,12 +160,12 @@ extern "C"
                     PARTNER_ENTITY.stats.speed -= (PARTNER_ENTITY.stats.speed / 50);
                     PARTNER_ENTITY.stats.brain -= (PARTNER_ENTITY.stats.brain / 50);
 
-                    if (PARTNER_ENTITY.stats.hp < 1) PARTNER_ENTITY.stats.hp = 1;
-                    if (PARTNER_ENTITY.stats.mp < 1) PARTNER_ENTITY.stats.mp = 1;
-                    if (PARTNER_ENTITY.stats.off < 1) PARTNER_ENTITY.stats.off = 1;
-                    if (PARTNER_ENTITY.stats.def < 1) PARTNER_ENTITY.stats.def = 1;
-                    if (PARTNER_ENTITY.stats.speed < 1) PARTNER_ENTITY.stats.speed = 1;
-                    if (PARTNER_ENTITY.stats.brain < 1) PARTNER_ENTITY.stats.brain = 1;
+                    if (PARTNER_ENTITY.stats.hp < HP_MIN) PARTNER_ENTITY.stats.hp = HP_MIN;
+                    if (PARTNER_ENTITY.stats.mp < MP_MIN) PARTNER_ENTITY.stats.mp = MP_MIN;
+                    if (PARTNER_ENTITY.stats.off < OFF_MIN) PARTNER_ENTITY.stats.off = OFF_MIN;
+                    if (PARTNER_ENTITY.stats.def < DEF_MIN) PARTNER_ENTITY.stats.def = DEF_MIN;
+                    if (PARTNER_ENTITY.stats.speed < SPEED_MIN) PARTNER_ENTITY.stats.speed = SPEED_MIN;
+                    if (PARTNER_ENTITY.stats.brain < BRAIN_MIN) PARTNER_ENTITY.stats.brain = BRAIN_MIN;
                     if (PARTNER_ENTITY.stats.currentHP > PARTNER_ENTITY.stats.hp)
                         PARTNER_ENTITY.stats.currentHP = PARTNER_ENTITY.stats.hp;
                     if (PARTNER_ENTITY.stats.currentMP > PARTNER_ENTITY.stats.mp)
@@ -207,7 +214,7 @@ extern "C"
         }
 
         if (getDigimonData(PARTNER_ENTITY.type)->level != Level::ROOKIE) return;
-        if (PARTNER_PARA.happiness != -100) return;
+        if (PARTNER_PARA.happiness != HAPPINESS_MIN) return;
         if (PARTNER_PARA.discipline == 0) return;
 
         NANIMON_TRIGGER = 1;
@@ -375,10 +382,10 @@ extern "C"
         auto randomTirednessFactor = random(20) + 80;
         auto reduceTiredness       = (sleepFactor * PARTNER_PARA.tiredness * randomTirednessFactor) / 10000;
         PARTNER_PARA.tiredness -= reduceTiredness;
-        if (PARTNER_PARA.tiredness < 0) PARTNER_PARA.tiredness = 0;
+        if (PARTNER_PARA.tiredness < TIREDNESS_MIN) PARTNER_PARA.tiredness = TIREDNESS_MIN;
 
         PARTNER_PARA.weight -= getRaiseData(PARTNER_ENTITY.type)->defaultWeight / 10;
-        if (PARTNER_PARA.weight < 1) PARTNER_PARA.weight = 1;
+        if (PARTNER_PARA.weight < WEIGHT_MIN) PARTNER_PARA.weight = WEIGHT_MIN;
     }
 
     void tickTirednessMechanics()
@@ -401,7 +408,7 @@ extern "C"
         if (PARTNER_PARA.subTiredness >= 60)
         {
             PARTNER_PARA.tiredness += 1;
-            if (PARTNER_PARA.tiredness > 100) PARTNER_PARA.tiredness = 100;
+            if (PARTNER_PARA.tiredness > TIREDNESS_MAX) PARTNER_PARA.tiredness = TIREDNESS_MAX;
             PARTNER_PARA.subTiredness = 0;
         }
 
@@ -485,7 +492,7 @@ extern "C"
         if (CURRENT_FRAME % 1200 == 0)
         {
             PARTNER_PARA.energyLevel -= raise->energyUsage;
-            if (PARTNER_PARA.energyLevel < 0) PARTNER_PARA.energyLevel = 0;
+            if (PARTNER_PARA.energyLevel < ENERGY_MIN) PARTNER_PARA.energyLevel = ENERGY_MIN;
         }
 
         // check if hungry condition should be set
@@ -511,7 +518,7 @@ extern "C"
             if (CURRENT_FRAME % 200 == 0)
             {
                 PARTNER_PARA.weight -= 1;
-                if (PARTNER_PARA.weight < 1) PARTNER_PARA.weight = 1;
+                if (PARTNER_PARA.weight < WEIGHT_MIN) PARTNER_PARA.weight = WEIGHT_MIN;
                 if (CURRENT_SCREEN % 20) PARTNER_PARA.emptyStomachTimer += 1; // unused
             }
         }
@@ -530,7 +537,7 @@ extern "C"
     void handleConditionBubble()
     {
         // TODO rework, this sucks to begin with since only two bubbles are visible at most
-        if (PARTNER_STATE != 1 && PARTNER_STATE != 10) return;
+        if (Partner_getState() != 1 && Partner_getState() != 10) return;
 
         int32_t bubbleType = -1;
         if (PARTNER_PARA.condition.isSick && conditionBubbleType != 2) bubbleType = 2;
@@ -651,7 +658,7 @@ extern "C"
     void handlePoopWeightLoss(DigimonType type)
     {
         PARTNER_PARA.weight -= (getRaiseData(type)->poopSize + random(4)) / 4;
-        if (PARTNER_PARA.weight < 1) PARTNER_PARA.weight = 1;
+        if (PARTNER_PARA.weight < WEIGHT_MIN) PARTNER_PARA.weight = WEIGHT_MIN;
     }
 
     void handleToilet()
@@ -704,7 +711,7 @@ extern "C"
             PARTNER_ENTITY.stats.currentHP = PARTNER_ENTITY.stats.hp;
         if (PARTNER_ENTITY.stats.mp < PARTNER_ENTITY.stats.currentMP)
             PARTNER_ENTITY.stats.currentMP = PARTNER_ENTITY.stats.mp;
-        if (PARTNER_PARA.weight > 99) PARTNER_PARA.weight = 99;
+        if (PARTNER_PARA.weight > WEIGHT_MAX) PARTNER_PARA.weight = WEIGHT_MAX;
 
         handleMedicineHealing(healingChance, healingChance);
 
@@ -786,7 +793,7 @@ extern "C"
                 drawStringNew(&vanillaFont, reinterpret_cast<const uint8_t*>(" is sick!"), 704 + width, 256 + 0x78);
             }
 
-            if (PARTNER_PARA.sicknessCounter >= 12 && PARTNER_STATE != 8 && Tamer_getState() == 0 &&
+            if (PARTNER_PARA.sicknessCounter >= 12 && Partner_getState() != 8 && Tamer_getState() == 0 &&
                 PARTNER_PARA.remainingLifetime != 0 && IS_SCRIPT_PAUSED == 1)
             {
                 writePStat(255, 0);
@@ -801,7 +808,7 @@ extern "C"
     {
         if (HAS_IMMORTAL_HOUR != 1 && IMMORTAL_HOUR == HOUR) return;
         if (PARTNER_PARA.remainingLifetime > 0) return;
-        if (PARTNER_STATE == 8) return;
+        if (Partner_getState() == 8) return;
         if (Tamer_getState() != 0) return;
         if (IS_SCRIPT_PAUSED != 1) return;
 
@@ -840,7 +847,7 @@ extern "C"
 
         // vanilla doesn't multiply with hours
         PARTNER_PARA.energyLevel -= getRaiseData(PARTNER_ENTITY.type)->energyUsage * amount;
-        if (PARTNER_PARA.energyLevel < 0) PARTNER_PARA.energyLevel = 0;
+        if (PARTNER_PARA.energyLevel < ENERGY_MIN) PARTNER_PARA.energyLevel = ENERGY_MIN;
 
         if (!PARTNER_PARA.condition.isPoopy)
             PARTNER_PARA.poopLevel -= amount * 6;
@@ -869,7 +876,7 @@ extern "C"
     void tickPartner()
     {
         if (GAME_STATE != 0) return;
-        if (PARTNER_STATE != 1) return;
+        if (Partner_getState() != 1) return;
         if (IS_GAMETIME_RUNNING == 0) return;
         if (CURRENT_FRAME == LAST_HANDLED_FRAME) return;
         if (FADE_DATA.fadeProtection == 1) return;
@@ -908,26 +915,26 @@ extern "C"
             IMMORTAL_HOUR     = -1;
         }
 
-        if (Tamer_getState() == 0 && PARTNER_STATE == 1)
+        if (Tamer_getState() == 0 && Partner_getState() == 1)
         {
             auto type     = PARTNER_ENTITY.type;
             auto level    = getDigimonData(type)->level;
             auto evoTimer = PARTNER_PARA.evoTimer;
-            if (level == Level::FRESH && evoTimer >= 6)
+            if (level == Level::FRESH && evoTimer >= FRESH_EVOLUTION_TIME)
                 EVOLUTION_TARGET = static_cast<int16_t>(getFreshEvolutionTarget(type));
-            if (level == Level::IN_TRAINING && evoTimer >= 24)
+            if (level == Level::IN_TRAINING && evoTimer >= IN_TRAINING_EVOLUTION_TIME)
                 EVOLUTION_TARGET = static_cast<int16_t>(getInTrainingEvolutionTarget(type));
-            if (level == Level::ROOKIE && evoTimer >= 72)
+            if (level == Level::ROOKIE && evoTimer >= ROOKIE_EVOLUTION_TIME)
                 EVOLUTION_TARGET = static_cast<int16_t>(getRegularEvolutionTarget(type));
-            if (level == Level::CHAMPION && evoTimer >= 144)
+            if (level == Level::CHAMPION && evoTimer >= CHAMPION_EVOLUTION_TIME)
                 EVOLUTION_TARGET = static_cast<int16_t>(getRegularEvolutionTarget(type));
 
             // forced Vademon, shouldn't need to call the function
-            if (level == Level::CHAMPION && evoTimer == 360)
+            if (level == Level::CHAMPION && evoTimer == VADEMON_EVOLUTION_TIME)
                 EVOLUTION_TARGET = static_cast<int16_t>(handleSpecialEvolutionPraise(3, &PARTNER_ENTITY));
         }
 
-        if (PARTNER_PARA.virusBar >= 16 && PARTNER_ENTITY.type != DigimonType::SUKAMON)
+        if (PARTNER_PARA.virusBar >= VIRUS_MAX && PARTNER_ENTITY.type != DigimonType::SUKAMON)
         {
             EVOLUTION_TARGET = static_cast<int16_t>(DigimonType::SUKAMON);
             writePStat(5, static_cast<uint8_t>(PARTNER_ENTITY.type));
@@ -937,10 +944,10 @@ extern "C"
             PARTNER_PARA.sukaBackupDef   = PARTNER_ENTITY.stats.def;
             PARTNER_PARA.sukaBackupSpeed = PARTNER_ENTITY.stats.speed;
             PARTNER_PARA.sukaBackupBrain = PARTNER_ENTITY.stats.brain;
-            PARTNER_PARA.virusBar        = 0;
+            PARTNER_PARA.virusBar        = VIRUS_MIN;
         }
 
-        if (EVOLUTION_TARGET != -1 && PARTNER_STATE != 13)
+        if (EVOLUTION_TARGET != -1 && Partner_getState() != 13)
         {
             Tamer_setState(6);
             Partner_setState(13);

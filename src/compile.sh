@@ -3,7 +3,24 @@
 cd "$(dirname "$0")"
 mkdir ../compiled/ -p
 
-FLAGS="-O3 -mabi=32 -march=r3000 -r -mel -nostdlib -mexplicit-relocs -mno-shared -fno-zero-initialized-in-bss -mno-gpopt -fno-inline-functions -fno-inline-small-functions -fno-exceptions -mno-check-zero-division -Wno-builtin-declaration-mismatch"
+# Flags explanation:
+# -O3                               -> highest optimization level
+# -mabi=32                          -> 32 bit ABI
+# -march=r3000                      -> target R3000 CPU, used in PSX
+# -r                                -> relocateable output/partial linking
+# -mel                              -> little endian
+# -nostdlib                         -> don't use stdlib, since we don't have one on PSX
+# -mexplicit-relocs                 -> use explicit relocations, required by -mno-gpopt
+# -mno-shared                       -> don't use position independent code, might be useless?
+# -fno-zero-initialized-in-bss      -> prevent the use of GP relative memory and memory sections that are not inserted
+# -mno-gpopt                        -> same as above
+# -fno-inline-functions             -> disable automatic inlining of functions, to save space and guarantee the symbols
+# -fno-inline-small-functions          use 'inline' or 'constexpr' keywords to mark functions for explicit inline
+# -msoft-float                      -> we don't have a floating point unit, will cause linking errors when using floats
+# -fno-exceptions                   -> we don't have exceptions
+# -mno-check-zero-division          -> don't emit trap instructions, saves space
+# -Wno-builtin-declaration-mismatch -> don't warn about custom implemented standard functions
+FLAGS="-O3 -mabi=32 -march=r3000 -r -mel -nostdlib -mexplicit-relocs -mno-shared -fno-zero-initialized-in-bss -mno-gpopt -fno-inline-functions -msoft-float -fno-inline-small-functions -fno-exceptions -mno-check-zero-division -Wno-builtin-declaration-mismatch"
 
 mips-g++ Utils.cpp UIElements.cpp -o ../compiled/utils.lib $FLAGS
 mips-g++ Font.cpp Font5px.cpp Font7px.cpp -o ../compiled/font.lib $FLAGS

@@ -772,6 +772,9 @@ extern "C"
     extern TamerItem TAMER_ITEM;
     extern DigimonType EVOLUTION_ITEM_TARGET[44];
     extern uint8_t PARTNER_STATE;
+    extern uint8_t PARTNER_SUB_STATE;
+    extern uint8_t TAMER_STATE;
+    extern uint8_t TAMER_SUB_STATE;
     extern uint8_t PARTNER_ANIMATION;
     extern uint8_t POOP_TO_EAT;
     extern uint32_t IS_NATURAL_DEATH;
@@ -815,9 +818,6 @@ extern "C"
                              int32_t layer);
 
     extern void setTrigger(uint32_t triggerId);
-    extern void Partner_setState(int32_t state);
-    extern int32_t Tamer_getState();
-    extern void Tamer_setState(int32_t state);
     extern void clearTextArea();
     extern void setTextColor(int32_t color);
     extern void addWithLimit(int16_t* valuePtr, int16_t value, int32_t limit);

@@ -2,7 +2,7 @@
 #include "Helper.hpp"
 #include "Partner.hpp"
 #include "extern/dw1.hpp"
-
+#include "constants.hpp"
 extern "C"
 {
     bool handleMedicineHealing(int32_t injuryHealChance, int32_t sicknessHealChance)
@@ -48,7 +48,7 @@ extern "C"
     {
         auto cap       = getRaiseData(PARTNER_ENTITY.type)->energyCap;
         auto new_value = PARTNER_PARA.energyLevel + amount;
-        if (new_value < 0) new_value = 0;
+        if (new_value < ENERGY_MIN) new_value = ENERGY_MIN;
         if (new_value > cap) new_value = cap;
         PARTNER_PARA.energyLevel = new_value;
     }
@@ -56,8 +56,8 @@ extern "C"
     void addTiredness(int32_t amount)
     {
         auto new_value = PARTNER_PARA.tiredness + amount;
-        if (new_value < 0) new_value = 0;
-        if (new_value > 100) new_value = 100;
+        if (new_value < TIREDNESS_MIN) new_value = TIREDNESS_MIN;
+        if (new_value > TIREDNESS_MAX) new_value = TIREDNESS_MAX;
         PARTNER_PARA.tiredness = new_value;
     }
 
@@ -69,24 +69,24 @@ extern "C"
     void addHappiness(int32_t amount)
     {
         auto new_value = PARTNER_PARA.happiness + amount;
-        if (new_value < -100) new_value = -100;
-        if (new_value > 100) new_value = 100;
+        if (new_value < HAPPINESS_MIN) new_value = HAPPINESS_MIN;
+        if (new_value > HAPPINESS_MAX) new_value = HAPPINESS_MAX;
         PARTNER_PARA.happiness = new_value;
     }
 
     void addDiscipline(int32_t amount)
     {
         auto new_value = PARTNER_PARA.discipline + amount;
-        if (new_value < 0) new_value = 0;
-        if (new_value > 100) new_value = 100;
+        if (new_value < DISCIPLINE_MIN) new_value = DISCIPLINE_MIN;
+        if (new_value > DISCIPLINE_MAX) new_value = DISCIPLINE_MAX;
         PARTNER_PARA.discipline = new_value;
     }
 
     void addWeight(int32_t amount)
     {
         auto new_weight = PARTNER_PARA.weight + amount;
-        if (new_weight < 1) new_weight = 1;
-        if (new_weight > 99) new_weight = 99;
+        if (new_weight < WEIGHT_MIN) new_weight = WEIGHT_MIN;
+        if (new_weight > WEIGHT_MAX) new_weight = WEIGHT_MAX;
         PARTNER_PARA.weight = new_weight;
     }
 

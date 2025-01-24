@@ -1,12 +1,13 @@
 #include "Font.hpp"
+#include "Helper.hpp"
 #include "StatsViewData.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
+#include "constants.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libc.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
-#include "Helper.hpp"
 
 extern "C"
 {
@@ -154,33 +155,36 @@ extern "C"
 
     void drawDigimonStatsViewStrings()
     {
+        constexpr auto HAPPINESS_MID  = HAPPINESS_MIN + ((HAPPINESS_MAX - HAPPINESS_MIN) / 2);
+        constexpr auto DISCIPLINE_MID = DISCIPLINE_MIN + ((DISCIPLINE_MAX - DISCIPLINE_MIN) / 2);
+
         DIGIVICE_ENTITY_VIEW.refpointX = -350; // TODO activate once the Tamer view has been re-implemented
-        auto* para      = getDigimonData(PARTNER_ENTITY.type);
-        auto* raisePara = getRaiseData(PARTNER_ENTITY.type);
+        auto* para                     = getDigimonData(PARTNER_ENTITY.type);
+        auto* raisePara                = getRaiseData(PARTNER_ENTITY.type);
 
         sprites[SpriteIndex::TYPE].uvX = static_cast<uint32_t>(para->type) * 12 - 12;
         initSpecialSprite(sprites[SpriteIndex::SPECIAL1], para->special[0]);
         initSpecialSprite(sprites[SpriteIndex::SPECIAL2], para->special[1]);
         initSpecialSprite(sprites[SpriteIndex::SPECIAL3], para->special[2]);
-        sprites[SpriteIndex::HAPPINESS].uvX  = PARTNER_PARA.happiness < 0 ? 11 : 0;
-        sprites[SpriteIndex::DISCIPLINE].uvX = PARTNER_PARA.discipline < 50 ? 33 : 22;
+        sprites[SpriteIndex::HAPPINESS].uvX  = PARTNER_PARA.happiness < HAPPINESS_MID ? 11 : 0;
+        sprites[SpriteIndex::DISCIPLINE].uvX = PARTNER_PARA.discipline < DISCIPLINE_MID ? 33 : 22;
 
         sprites[SpriteIndex::LIFE1].uvX = PARTNER_ENTITY.lives > 0 ? 232 : 244;
         sprites[SpriteIndex::LIFE2].uvX = PARTNER_ENTITY.lives > 1 ? 232 : 244;
         sprites[SpriteIndex::LIFE3].uvX = PARTNER_ENTITY.lives > 2 ? 232 : 244;
 
-        sprites[SpriteIndex::SICK].height    = (PARTNER_PARA.condition.isSick) == 0 ? 0 : 12;
-        sprites[SpriteIndex::INJURY].height  = (PARTNER_PARA.condition.isInjured) == 0 ? 0 : 12;
-        sprites[SpriteIndex::HUNGER].height  = (PARTNER_PARA.condition.isHungry) == 0 ? 0 : 12;
-        sprites[SpriteIndex::SLEEP].height   = (PARTNER_PARA.condition.isSleepy) == 0 ? 0 : 12;
-        sprites[SpriteIndex::UNHAPPY].height = (PARTNER_PARA.condition.isUnhappy) == 0 ? 0 : 12;
-        sprites[SpriteIndex::TIRED].height   = (PARTNER_PARA.condition.isTired) == 0 ? 0 : 12;
-        sprites[SpriteIndex::POOP].height    = (PARTNER_PARA.condition.isPoopy) == 0 ? 0 : 12;
+        sprites[SpriteIndex::SICK].height    = PARTNER_PARA.condition.isSick ? 12 : 0;
+        sprites[SpriteIndex::INJURY].height  = PARTNER_PARA.condition.isInjured ? 12 : 0;
+        sprites[SpriteIndex::HUNGER].height  = PARTNER_PARA.condition.isHungry ? 12 : 0;
+        sprites[SpriteIndex::SLEEP].height   = PARTNER_PARA.condition.isSleepy ? 12 : 0;
+        sprites[SpriteIndex::UNHAPPY].height = PARTNER_PARA.condition.isUnhappy ? 12 : 0;
+        sprites[SpriteIndex::TIRED].height   = PARTNER_PARA.condition.isTired ? 12 : 0;
+        sprites[SpriteIndex::POOP].height    = PARTNER_PARA.condition.isPoopy ? 12 : 0;
 
-        auto happiness1  = PARTNER_PARA.happiness > 0 ? 100 : PARTNER_PARA.happiness + 100;
-        auto happiness2  = PARTNER_PARA.happiness < 0 ? 0 : PARTNER_PARA.happiness;
-        auto discipline1 = PARTNER_PARA.discipline > 50 ? 100 : PARTNER_PARA.discipline * 2;
-        auto discipline2 = PARTNER_PARA.discipline < 50 ? 0 : (PARTNER_PARA.discipline - 50) * 2;
+        auto happiness1  = PARTNER_PARA.happiness > HAPPINESS_MID ? 100 : (PARTNER_PARA.happiness - HAPPINESS_MIN) * 100 / (HAPPINESS_MAX - HAPPINESS_MID);
+        auto happiness2  = PARTNER_PARA.happiness < HAPPINESS_MID ? 0 : (PARTNER_PARA.happiness - HAPPINESS_MID) * 100 / (HAPPINESS_MAX - HAPPINESS_MID);
+        auto discipline1 = PARTNER_PARA.discipline > DISCIPLINE_MID ? 100 : (PARTNER_PARA.discipline - DISCIPLINE_MIN) * 100 / (DISCIPLINE_MAX - DISCIPLINE_MID);
+        auto discipline2 = PARTNER_PARA.discipline < DISCIPLINE_MID ? 0 : (PARTNER_PARA.discipline - DISCIPLINE_MID) * 100 / (DISCIPLINE_MAX - DISCIPLINE_MID);
 
         sprites[SpriteIndex::HAPPINESS_BAR1].width  = happiness2 * 48 / 100;
         sprites[SpriteIndex::HAPPINESS_BAR2].width  = happiness1 * 48 / 100;
@@ -282,7 +286,7 @@ extern "C"
             renderTextSprite(entry);
         for (auto& entry : values)
             renderTextSprite(entry);
-        
+
         for (auto& entry : sprites)
         {
             int16_t offsetX = 0;
@@ -292,14 +296,14 @@ extern "C"
             renderRectPolyFT4(entry.posX, entry.posY, entry.width, entry.height, entry.uvX + offsetX, entry.uvY, entry.texture_page, entry.clut, 5, 0);
         }
 
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.hp, 9999, 75, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 24);
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.mp, 9999, 75, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 39);
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.off, 999, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 54);
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.def, 999, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 69);
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.speed, 999, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 84);
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.brain, 999, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 99);
-        renderBoxBar(CONDITION_OFFSET_X + 62, CONDITION_OFFSET_Y + 81, (PARTNER_PARA.tiredness * 48 / 100), 5, 50, 150, 255, 0, 5);
-        renderBoxBar(CONDITION_OFFSET_X + 62, CONDITION_OFFSET_Y + 95, PARTNER_PARA.virusBar * 3, 5, 200, 200, 60, 0, 5);
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.hp, HP_MAX, 75, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 24);
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.mp, MP_MAX, 75, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 39);
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.off, OFF_MAX, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 54);
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.def, DEF_MAX, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 69);
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.speed, SPEED_MAX, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 84);
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.brain, BRAIN_MAX, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 99);
+        renderBoxBar(CONDITION_OFFSET_X + 62, CONDITION_OFFSET_Y + 81, (PARTNER_PARA.tiredness * 48 / (TIREDNESS_MAX - TIREDNESS_MIN)), 5, 50, 150, 255, 0, 5);
+        renderBoxBar(CONDITION_OFFSET_X + 62, CONDITION_OFFSET_Y + 95, PARTNER_PARA.virusBar * 48 / (VIRUS_MAX - VIRUS_MIN), 5, 200, 200, 60, 0, 5);
         // clang-format on
 
         // profile insets

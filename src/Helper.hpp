@@ -3,10 +3,73 @@
 
 extern "C"
 {
+    /*
+     * Calculates whether a given time is within a given timeframe, where start being larger than end represents the
+     * timeframe covering the day-change (or equivalent).
+     */
     constexpr bool isWithinTimeframe(int32_t currentTime, int32_t start, int32_t end)
     {
         if (start < end) { return currentTime >= start && currentTime < end; }
         else { return !(currentTime >= end && currentTime < start); }
+    }
+
+    /*
+     * Get the difference between two timepoints in hours, accounting for the day change.
+     */
+    constexpr int32_t getTimeDiff(int32_t start, int32_t end)
+    {
+        // <= instead of < fixes day skip? // TODO decide if we actually want to fix that
+        if (start <= end)
+            return end - start;
+        else
+            return (24 - start) + end;
+    }
+
+    /*
+     * Checks whether a given item is a food item.
+     */
+    constexpr bool isFoodItem(ItemType item)
+    {
+        if (item >= ItemType::MEAT && item <= ItemType::CHAIN_MELON) return true;
+        if (item == ItemType::STEAK) return true;
+        if (item == ItemType::RAIN_PLANT) return true;
+
+        return false;
+    }
+
+    /*
+     * Convert a tile coordinate to a world coordinate.
+     */
+    constexpr int32_t tileToPos(int16_t tile)
+    {
+        return (tile - 50) * 100 + 50;
+    }
+
+    /*
+     * Check whether a given position is within an rectangular area defined by a center X+Z coordinate and an extent in
+     * every direction. This check happens on the XZ 2D plane, used for most of the game.
+     */
+    constexpr bool isWithinRect(int32_t centerX, int32_t centerZ, int32_t extent, Vector* pos)
+    {
+        auto x = pos->x;
+        auto z = pos->z;
+
+        if (centerX - extent > x) return false;
+        if (centerX + extent < x) return false;
+        if (centerZ - extent > z) return false;
+        if (centerZ + extent < z) return false;
+
+        return true;
+    }
+
+    /*
+     * Get the happiness lifetime penalty for a given happiness value.
+     * The vanilla formula is (1 + (happiness - 80) / 50), for values < 80
+     */
+    constexpr int32_t getHappinessLifetimePenalty(int32_t happiness)
+    {
+        if (happiness >= 80) return 0;
+        return 1 + (happiness - 80) / -50;
     }
 
     constexpr DigimonData* getDigimonData(DigimonType type)
@@ -19,46 +82,45 @@ extern "C"
         return &RAISE_DATA[static_cast<uint32_t>(type)];
     }
 
-    constexpr int32_t getTimeDiff(int32_t start, int32_t end)
+    inline void Partner_setState(uint8_t state)
     {
-        // <= instead of < fixes day skip? // TODO decide if we actually want to fix that
-        if (start <= end)
-            return end - start;
-        else
-            return (24 - start) + end;
+        PARTNER_STATE     = state;
+        PARTNER_SUB_STATE = 0;
     }
 
-    constexpr bool isFoodItem(ItemType item)
+    inline void Partner_setSubState(uint8_t state)
     {
-        if (item >= ItemType::MEAT && item <= ItemType::CHAIN_MELON) return true;
-        if (item == ItemType::STEAK) return true;
-        if (item == ItemType::RAIN_PLANT) return true;
-
-        return false;
+        PARTNER_SUB_STATE = state;
     }
 
-    constexpr int32_t tileToPos(int16_t tile)
+    inline uint8_t Partner_getState()
     {
-        return (tile - 50) * 100 + 50;
+        return PARTNER_STATE;
     }
 
-    constexpr bool isWithinRect(int32_t centerX, int32_t centerZ, int32_t radius, Vector* pos)
+    inline uint8_t Partner_getSubState()
     {
-        auto x = pos->x;
-        auto z = pos->z;
-
-        if (centerX - radius > x) return false;
-        if (centerX + radius < x) return false;
-        if (centerZ - radius > z) return false;
-        if (centerZ + radius < z) return false;
-
-        return true;
+        return PARTNER_SUB_STATE;
     }
 
-    constexpr int32_t getHappinessLifetimePenalty(int32_t happiness)
+    inline void Tamer_setState(uint8_t state)
     {
-        if (happiness >= 80) return 0;
-        return 1 + (happiness - 80) / -50;
+        TAMER_STATE = state;
+    }
+
+    inline uint8_t Tamer_getState()
+    {
+        return TAMER_STATE;
+    }
+
+    inline void Tamer_setSubState(uint8_t state)
+    {
+        TAMER_SUB_STATE = state;
+    }
+
+    inline uint8_t Tamer_getSubState()
+    {
+        return TAMER_SUB_STATE;
     }
 }
 

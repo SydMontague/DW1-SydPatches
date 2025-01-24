@@ -17,7 +17,7 @@
 .definelabel setUVDataPolyFT4, 0x800e56b4
 .definelabel setPosDataPolyFT4, 0x800e56ec
 .definelabel random,                    0x800a36d4
-.definelabel Tamer_setState,            0x800aa188
+;.definelabel Tamer_setState,            0x800aa188 ; use constexpr version instead
 .definelabel clearTextArea,             0x8010cb90
 .definelabel setTextColor,              0x8010cc0c
 .definelabel callScriptSection,         0x80105b14
@@ -26,8 +26,8 @@
 .definelabel addHealingParticleEffect,  0x800c1560
 .definelabel removeTamerItem,           0x800c55fc
 .definelabel hasDigimonRaised,          0x800ff824
-.definelabel Tamer_getState,            0x800ac050
-.definelabel Partner_setState,          0x800df4d0
+;.definelabel Tamer_getState,            0x800ac050 ; use constexpr version instead
+;.definelabel Partner_setState,          0x800df4d0 ; use constexpr version instead
 .definelabel renderSeperatorLines,      0x800b8360
 .definelabel renderRectPolyFT4,         0x800b8928
 .definelabel renderInsetBox,            0x800be734
@@ -88,6 +88,9 @@
 .definelabel TAMER_ITEM, 0x8013d4d0
 .definelabel EVOLUTION_ITEM_TARGET, 0x80127c5c
 .definelabel PARTNER_STATE, 0x80134c5b
+.definelabel PARTNER_SUB_STATE, 0x80134c5c
+.definelabel TAMER_STATE, 0x80134c91
+.definelabel TAMER_SUB_STATE, 0x80134c92
 .definelabel PARTNER_ANIMATION, 0x80134e2c
 .definelabel POOP_TO_EAT, 0x80134c68
 .definelabel GAME_STATE, 0x80134f0a
