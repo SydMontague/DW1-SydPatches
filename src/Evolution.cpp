@@ -171,6 +171,7 @@ extern "C"
             auto score = calculateRequirementScore(current, static_cast<DigimonType>(target), best);
             if (score < 3) continue;
 
+            // in vanilla sum and count are declared outside the loop and only reset when setting a new best
             int32_t statsSum   = 0;
             int32_t statsCount = 0;
             auto& data         = EVO_REQ_DATA[static_cast<uint32_t>(target)];
