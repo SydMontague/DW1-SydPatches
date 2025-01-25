@@ -1,0 +1,6 @@
+SECTIONS {
+  .data : {
+    *(.data)
+    *(.bss)
+  }
+}

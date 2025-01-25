@@ -52,7 +52,6 @@ extern "C"
         TIMER0.targetValue              = 42336; // 33868800 Hz / 42336 -> 800 ticks per second
         libetc_InterruptCallback(4, timer0irq);
 
-        initializeStatusObjects();
         addObject(ObjectID::DEBUG_OVERLAY, 0, &debugOverlayTick, &debugOverlayRender);
     }
 }

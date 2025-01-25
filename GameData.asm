@@ -77,6 +77,12 @@ NAMING_DATA:
   .fill 0x80096bcc-.
 .endarea
 
+; relocated poop data (model, libgs data)
+.org 0x80137c00
+.area 0x80138460-.
+  .notice "Empty space left: " + (0x80138460-.) + " bytes"
+  .fill 0x80138460-.
+.endarea
 
 .org 0x800ee8d4
   jal customInit

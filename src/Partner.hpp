@@ -3,6 +3,7 @@
 
 extern "C"
 {
+    extern void initializeStatusObjects();
     extern void createPoopPile(int16_t tileX, int16_t tileY);
     extern void handleConditionBubble();
     extern void handlePoopWeightLoss(DigimonType type);

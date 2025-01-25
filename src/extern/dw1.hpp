@@ -847,6 +847,16 @@ extern "C"
     extern FadeData FADE_DATA;
     extern uint8_t GAME_STATE;
     extern uint8_t IS_GAMETIME_RUNNING;
+    extern TamerEntity TAMER_ENTITY;
+    extern Stats DEATH_STATS;
+    extern EvoModelData REINCARNATION_MODEL_DATA;
+    extern EntityTable ENTITY_TABLE;
+    extern uint8_t STOP_DISTANCE_TIMER;
+    extern EvoSequenceData EVO_SEQUENCE_DATA;
+    extern SVector POOP_ROTATION_MATRIX;
+    extern bool MAP_LAYER_ENABLED;
+    extern bool HAS_USED_EVOITEM;
+    extern int16_t STATUS_UI_OFFSET_X;
 
     extern void setEntityPosition(int32_t entityId, int32_t posX, int32_t posY, int32_t posZ);
     extern void setEntityRotation(int32_t entityId, int32_t rotX, int32_t rotY, int32_t rotZ);
@@ -860,18 +870,10 @@ extern "C"
     extern void loadMMD(DigimonType digimonType, EntityType entityType);
     extern void loadPartnerSounds(DigimonType type);
     extern void learnMove(uint8_t move);
-    extern TamerEntity TAMER_ENTITY;
-    extern Stats DEATH_STATS;
-    extern EvoModelData REINCARNATION_MODEL_DATA;
-    extern EntityTable ENTITY_TABLE;
-    extern uint8_t STOP_DISTANCE_TIMER;
-    extern EvoSequenceData EVO_SEQUENCE_DATA;
-    extern SVector POOP_ROTATION_MATRIX;
-    extern bool MAP_LAYER_ENABLED;
-    extern GsDOBJ2 POOP_OBJECT;
-    extern GsCOORDINATE2 POOP_POSITION;
-    extern bool HAS_USED_EVOITEM;
-
+    extern void initializeConditionBubbles();
+    extern void initializeButterfly();
+    extern void initializePoop();
+    extern void readFile(const char* path, void* buffer);
     extern bool isInDaytimeTransition();
     extern void updateTimeOfDay();
     extern void writePStat(int32_t address, uint8_t value);
@@ -883,7 +885,6 @@ extern "C"
     extern void createPoopFX(SVector* pos);
     extern uint16_t convertAsciiToJis(uint8_t input);
     extern void clearTextSubArea(RECT* rect);
-    extern void initializeStatusObjects();
     extern bool addObject(ObjectID id, uint32_t instanceId, TickFunction tickFunc, RenderFunction renderFunc);
     extern void renderString(int32_t colorId,
                              int16_t posX,

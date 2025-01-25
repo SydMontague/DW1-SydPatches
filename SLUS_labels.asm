@@ -7,7 +7,6 @@
 .definelabel playSound, 0x800c6374
 .definelabel clearTextSubArea, 0x8010cbc4
 .definelabel addObject, 0x800a2f64
-.definelabel initializeStatusObjects, 0x800a435c
 .definelabel renderNumber, 0x800e5444
 .definelabel drawString, 0x8010cf24
 .definelabel convertAsciiToGameChar, 0x800f18c8
@@ -61,9 +60,11 @@
 .definelabel loadMMD,                   0x800a1f68
 .definelabel loadPartnerSounds,         0x800c64e0
 .definelabel learnMove,                 0x800e5f14
+.definelabel readFile,                  0x800a3410
+.definelabel initializeConditionBubbles,0x800ec520
+.definelabel initializeButterfly,       0x800e9ce8
 
-
-
+.definelabel STATUS_UI_OFFSET_X, 0x80134c50
 .definelabel IS_NATURAL_DEATH, 0x80134c4c
 .definelabel ITEM_FUNCTIONS, 0x80127c88
 .definelabel IS_SCRIPT_PAUSED, 0x80134ff4
@@ -117,8 +118,6 @@
 .definelabel EVO_SEQUENCE_DATA,         0x80154f90
 .definelabel POOP_ROTATION_MATRIX,      0x801341ec
 .definelabel MAP_LAYER_ENABLED,         0x80134ec8
-.definelabel POOP_OBJECT,               0x80138400
-.definelabel POOP_POSITION,             0x80138410
 .definelabel HAS_USED_EVOITEM,          0x80134e52
 
 // libc
@@ -142,6 +141,9 @@
 // libgs
 .definelabel libgs_GsGetWorkBase, 0x80098c38
 .definelabel libgs_GsSetWorkBase, 0x80098c28
+.definelabel libgs_GsMapModelingData, 0x80098158
+.definelabel libgs_GsLinkObject4, 0x80099bf8
+.definelabel libgs_GsInitCoordinate2, 0x80097d68
 
 .definelabel libgs_REFERENCE_MATRIX, 0x80136f84
 

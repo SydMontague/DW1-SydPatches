@@ -69,6 +69,9 @@ extern "C"
 
     extern void* libgs_GsGetWorkBase();
     extern void libgs_GsSetWorkBase(void* newBase);
+    extern void libgs_GsMapModelingData(uint32_t* p);
+    extern void libgs_GsLinkObject4(uint32_t* p, GsDOBJ2* objBase, int32_t index);
+    extern void libgs_GsInitCoordinate2(GsCOORDINATE2* super, GsCOORDINATE2* base);
 }
 
 static_assert(sizeof(GsOT) == 20);
