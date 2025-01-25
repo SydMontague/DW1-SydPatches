@@ -122,8 +122,8 @@ extern "C"
         Tamer_setState(20);
         clearTextArea();
         setTextColor(10);
-        uint8_t buffer[40];
-        sprintf(buffer, "%s is sick", PARTNER_ENTITY.name);
-        drawStringNew(&vanillaFont, buffer, 704, 256 + 0x78);
+        auto width = drawStringNew(&vanillaFont, PARTNER_ENTITY.name, 704, 256 + 0x78);
+        setTextColor(1);
+        drawStringNew(&vanillaFont, reinterpret_cast<const uint8_t*>("is sick"), 704 + width, 256 + 0x78);
     }
 }

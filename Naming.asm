@@ -247,14 +247,15 @@ naming_buffer_length equ 20
   jal strcat
 ;;;
 
-;;; fix "is sick" dialogue
-.org 0x800a8954
-  jal jis_len
-.org 0x800a8960
-  move t9,v0
-  .skip 4
-  nop
-;;;
+;; Covered by Partner.cpp
+;;;; fix "is sick" dialogue
+;.org 0x800a8954
+;  jal jis_len
+;.org 0x800a8960
+;  move t9,v0
+;  .skip 4
+;  nop
+;;;;
 
 ;;; a bit more space in the battle registration
 .org 0x8010fd48
@@ -263,30 +264,31 @@ naming_buffer_length equ 20
   li a1,0x04
 ;;;
 
-; Partner View: Enlarge name box
-.org 0x800bb7c4
-  li a3,0x70
-.org 0x801242d0
-  .halfword 0x70
-; Partner View: add 1px padding
-.org 0x800bb7b8
-  li a1,-0x6c
-
-; Partner View: fix HAPPINESS being misaligned
-.org 0x80124408
-  .byte 0x28
-  .skip 1
-  .byte 0xD6
-
-; Partner View: fix seperator lines
-.org 0x80123f5a
-  .byte 0x62
-.org 0x80123f64
-  .byte 0x62
-.org 0x80123f68
-  .halfword 0xFFE7
-.org 0x80123f6e
-  .byte 0x62 
+;; Covered by StatsView.cpp
+;; Partner View: Enlarge name box
+;.org 0x800bb7c4
+;  li a3,0x70
+;.org 0x801242d0
+;  .halfword 0x70
+;; Partner View: add 1px padding
+;.org 0x800bb7b8
+;  li a1,-0x6c
+;
+;; Partner View: fix HAPPINESS being misaligned
+;.org 0x80124408
+;  .byte 0x28
+;  .skip 1
+;  .byte 0xD6
+;
+;; Partner View: fix seperator lines
+;.org 0x80123f5a
+;  .byte 0x62
+;.org 0x80123f64
+;  .byte 0x62
+;.org 0x80123f68
+;  .halfword 0xFFE7
+;.org 0x80123f6e
+;  .byte 0x62 
 
 ; Moves View: fix "Techset" Y offset
 .org 0x800bc3b8
