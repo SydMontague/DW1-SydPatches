@@ -256,7 +256,7 @@ extern "C"
         Special special[3];
         uint8_t dropItem;
         uint8_t dropChance;
-        int8_t moves[16];
+        uint8_t moves[16];
         uint8_t padding;
     };
 
@@ -309,7 +309,7 @@ extern "C"
             bool isSick    : 1;
             uint32_t pad   : 1;
         };
-        uint32_t full;
+        uint32_t raw;
     };
 
     static_assert(sizeof(Condition) == 4);
@@ -655,6 +655,13 @@ extern "C"
         int32_t lives;
     };
 
+    struct TamerEntity : Entity
+    {
+        uint8_t tamerLevel;
+        uint8_t raisedCount;
+        uint16_t padding;
+    };
+
     struct EvolutionPath
     {
         uint8_t from[5];
@@ -727,10 +734,69 @@ extern "C"
         int32_t fadeProtection;
     };
 
+    struct EvoModelData
+    {
+        int32_t modelPtr;
+        int32_t unk1;
+        int32_t unk2;
+        int32_t modelSize;
+        int32_t imagePtr;
+        int32_t imageSize;
+    };
+
+    struct EvoSequenceData
+    {
+        int32_t unk1;
+        PartnerEntity* partner;
+        int16_t unk2;
+        DigimonType digimonId : 16;
+        EvoModelData modelData;
+        int32_t unk3;
+        PartnerPara* para;
+        int16_t evoTarget;
+        int16_t unk4;
+        int32_t heightFactor;
+    };
+
+    enum class EntityType
+    {
+        NPC     = 0,
+        UNKNOWN = 1,
+        PLAYER  = 2,
+        PARTNER = 3,
+
+        NONE = -1,
+    };
+
+    class NPCEntity : DigimonEntity
+    {
+        SVector flee;
+        int16_t bits;
+        bool unk1;
+        int8_t unk1_2;
+        uint8_t unk2;
+        uint8_t scriptId;
+        uint8_t autotalk;
+        uint8_t unk5;
+    };
+
+    struct EntityTable
+    {
+        TamerEntity* tamer;
+        PartnerEntity* partner;
+        NPCEntity* npc1;
+        NPCEntity* npc2;
+        NPCEntity* npc3;
+        NPCEntity* npc4;
+        NPCEntity* npc5;
+        NPCEntity* npc6;
+        NPCEntity* npc7;
+        NPCEntity* npc8;
+    };
+
     using TickFunction   = void (*)(int32_t instanceId);
     using RenderFunction = void (*)(int32_t instanceId);
     using ItemFunction   = void (*)(ItemType itemId);
-
 
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
@@ -782,6 +848,30 @@ extern "C"
     extern uint8_t GAME_STATE;
     extern uint8_t IS_GAMETIME_RUNNING;
 
+    extern void setEntityPosition(int32_t entityId, int32_t posX, int32_t posY, int32_t posZ);
+    extern void setEntityRotation(int32_t entityId, int32_t rotX, int32_t rotY, int32_t rotZ);
+    extern void setupEntityMatrix(int32_t entityId);
+    extern bool removeObject(ObjectID id, int32_t instance);
+    extern void loadTMDandMTN(DigimonType digimonType, EntityType entityType, EvoModelData* modelData);
+    extern void initializeDigimonObject(DigimonType type, int32_t instanceId, TickFunction tick);
+    extern void Partner_tick(int32_t);
+    extern void projectPosition(GsCOORDINATE2* position, Vector* translation, SVector* rotation, Vector* scale);
+    extern void renderObject(GsDOBJ2* obj, GsOT* ot, int32_t shift);
+    extern void loadMMD(DigimonType digimonType, EntityType entityType);
+    extern void loadPartnerSounds(DigimonType type);
+    extern void learnMove(uint8_t move);
+    extern TamerEntity TAMER_ENTITY;
+    extern Stats DEATH_STATS;
+    extern EvoModelData REINCARNATION_MODEL_DATA;
+    extern EntityTable ENTITY_TABLE;
+    extern uint8_t STOP_DISTANCE_TIMER;
+    extern EvoSequenceData EVO_SEQUENCE_DATA;
+    extern SVector POOP_ROTATION_MATRIX;
+    extern bool MAP_LAYER_ENABLED;
+    extern GsDOBJ2 POOP_OBJECT;
+    extern GsCOORDINATE2 POOP_POSITION;
+    extern bool HAS_USED_EVOITEM;
+
     extern bool isInDaytimeTransition();
     extern void updateTimeOfDay();
     extern void writePStat(int32_t address, uint8_t value);
@@ -794,7 +884,7 @@ extern "C"
     extern uint16_t convertAsciiToJis(uint8_t input);
     extern void clearTextSubArea(RECT* rect);
     extern void initializeStatusObjects();
-    extern bool addObject(ObjectID id, uint16_t instanceId, TickFunction tickFunc, RenderFunction renderFunc);
+    extern bool addObject(ObjectID id, uint32_t instanceId, TickFunction tickFunc, RenderFunction renderFunc);
     extern void renderString(int32_t colorId,
                              int16_t posX,
                              int16_t posY,
@@ -845,7 +935,6 @@ extern "C"
     extern void setSleepDisabled(bool isDisabled);
     extern void unsetButterfly(uint32_t id);
     extern void advanceToTime(uint32_t hour, uint32_t minute);
-    extern void setFoodTimer(DigimonType type);
     extern void getModelTile(Vector* location, int16_t* tileX, int16_t* tileY);
 }
 
@@ -853,6 +942,7 @@ static_assert(sizeof(PositionData) == 0x88);
 static_assert(sizeof(MomentumData) == 0x52);
 static_assert(sizeof(Entity) == 0x38);
 static_assert(sizeof(Stats) == 0x18);
+static_assert(sizeof(TamerEntity) == 0x3C);
 static_assert(sizeof(DigimonEntity) == 0x58);
 static_assert(sizeof(PartnerEntity) == 0x80);
 static_assert(sizeof(RaiseData) == 0x1C);
@@ -862,3 +952,5 @@ static_assert(sizeof(Position) == 16);
 static_assert(sizeof(GlyphData) == 24);
 static_assert(sizeof(RGB8) == 3);
 static_assert(sizeof(EvolutionPath) == 11);
+static_assert(sizeof(NPCEntity) == 0x68);
+static_assert(sizeof(EvoSequenceData) == 0x34);

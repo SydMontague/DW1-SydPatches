@@ -38,7 +38,6 @@
 .definelabel unsetButterfly,            0x800e9fb4
 .definelabel setSleepDisabled,          0x800ba40c
 .definelabel advanceToTime,             0x800dd678
-.definelabel setFoodTimer,              0x800a4a08
 .definelabel getModelTile,              0x800c0f28
 .definelabel createPoopFX,              0x800ae3c4
 .definelabel getItemCount,              0x800c51e0
@@ -50,6 +49,20 @@
 .definelabel writePStat,                0x80106474
 .definelabel updateTimeOfDay,           0x800d676c
 .definelabel isInDaytimeTransition,     0x800d7618
+.definelabel setEntityPosition,         0x800a1540
+.definelabel setEntityRotation,         0x800a15dc
+.definelabel setupEntityMatrix,         0x800a14c0
+.definelabel removeObject,              0x800a3008
+.definelabel loadTMDandMTN,             0x800a2a50
+.definelabel initializeDigimonObject,   0x800a0e68
+.definelabel Partner_tick,              0x800dd7ac
+.definelabel projectPosition,           0x800e1074
+.definelabel renderObject,              0x800e215c
+.definelabel loadMMD,                   0x800a1f68
+.definelabel loadPartnerSounds,         0x800c64e0
+.definelabel learnMove,                 0x800e5f14
+
+
 
 .definelabel IS_NATURAL_DEATH, 0x80134c4c
 .definelabel ITEM_FUNCTIONS, 0x80127c88
@@ -96,6 +109,17 @@
 .definelabel GAME_STATE, 0x80134f0a
 .definelabel FADE_DATA, 0x80134cac
 .definelabel IS_GAMETIME_RUNNING, 0x80134e20
+.definelabel TAMER_ENTITY,              0x8015576c
+.definelabel DEATH_STATS,               0x801384e4
+.definelabel REINCARNATION_MODEL_DATA,  0x8008788c
+.definelabel ENTITY_TABLE,              0x8012f344
+.definelabel STOP_DISTANCE_TIMER,       0x80134c5a
+.definelabel EVO_SEQUENCE_DATA,         0x80154f90
+.definelabel POOP_ROTATION_MATRIX,      0x801341ec
+.definelabel MAP_LAYER_ENABLED,         0x80134ec8
+.definelabel POOP_OBJECT,               0x80138400
+.definelabel POOP_POSITION,             0x80138410
+.definelabel HAS_USED_EVOITEM,          0x80134e52
 
 // libc
 .definelabel strcat,  0x800911cc
@@ -119,12 +143,18 @@
 .definelabel libgs_GsGetWorkBase, 0x80098c38
 .definelabel libgs_GsSetWorkBase, 0x80098c28
 
-// libgs
+.definelabel libgs_REFERENCE_MATRIX, 0x80136f84
+
+// libgpu
 .definelabel libgpu_ClearImage, 0x80094818
 .definelabel libgpu_LoadImage, 0x800948a8
 .definelabel libgpu_AddPrim, 0x80092ad4
 .definelabel libgpu_GetClut, 0x80092abc
 .definelabel libgpu_SetPolyFT4, 0x80092b88
+
+// libgte
+.definelabel libgte_setRotMatrix, 0x8009b200
+.definelabel libgte_setTransMatrix, 0x8009b290
 
 // PSX internal
 .definelabel TIMER0, 0x1F801100

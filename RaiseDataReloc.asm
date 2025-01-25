@@ -3,40 +3,40 @@
 
 
 
-.org 0x800a4528
-  li.u v0,RAISE_DATA+0x0C
-  .skip 4
-  li.l v0,RAISE_DATA+0x0C
-.org 0x800a4594
-  li v0,RAISE_DATA+0x09
-.org 0x800a45b8
-  li v0,RAISE_DATA+0x15
-.org 0x800a480c
-  li v1,RAISE_DATA+0x12
-.org 0x800a489c
-  li v0,RAISE_DATA+0x12
-.org 0x800a4b2c
-  li t4,RAISE_DATA
-.org 0x800a4b74
-  li t4,RAISE_DATA
-.org 0x800a4bbc
-  li t3,RAISE_DATA
-.org 0x800a4c00
-  li a1,RAISE_DATA
-.org 0x800a4c74
-  li v0,RAISE_DATA
-.org 0x800a50b8
-  li.u v0,RAISE_DATA+0x0C
-  .skip 4
-  li.l v0,RAISE_DATA+0x0C
-.org 0x800a5158
-  li.u v0,RAISE_DATA+0x15
-  .skip 4
-  li.l v0,RAISE_DATA+0x15
-.org 0x800a53b4
-  li.u v0,RAISE_DATA+0x15
-  .skip 4
-  li.l v0,RAISE_DATA+0x15
+;.org 0x800a4528
+;  li.u v0,RAISE_DATA+0x0C
+;  .skip 4
+;  li.l v0,RAISE_DATA+0x0C
+;.org 0x800a4594
+;  li v0,RAISE_DATA+0x09
+;.org 0x800a45b8
+;  li v0,RAISE_DATA+0x15
+;.org 0x800a480c
+;  li v1,RAISE_DATA+0x12
+;.org 0x800a489c
+;  li v0,RAISE_DATA+0x12
+;.org 0x800a4b2c
+;  li t4,RAISE_DATA
+;.org 0x800a4b74
+;  li t4,RAISE_DATA
+;.org 0x800a4bbc
+;  li t3,RAISE_DATA
+;.org 0x800a4c00
+;  li a1,RAISE_DATA
+;.org 0x800a4c74
+;  li v0,RAISE_DATA
+;.org 0x800a50b8
+;  li.u v0,RAISE_DATA+0x0C
+;  .skip 4
+;  li.l v0,RAISE_DATA+0x0C
+;.org 0x800a5158
+;  li.u v0,RAISE_DATA+0x15
+;  .skip 4
+;  li.l v0,RAISE_DATA+0x15
+;.org 0x800a53b4
+;  li.u v0,RAISE_DATA+0x15
+;  .skip 4
+;  li.l v0,RAISE_DATA+0x15
 .org 0x800abef4
   li v0,RAISE_DATA+0x09
 

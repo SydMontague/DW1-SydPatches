@@ -7,6 +7,8 @@
 #include "constants.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
+#include "extern/libgs.hpp"
+#include "extern/libgte.hpp"
 
 constexpr auto FRESH_EVOLUTION_TIME       = 6;
 constexpr auto IN_TRAINING_EVOLUTION_TIME = 24;
@@ -14,8 +16,306 @@ constexpr auto ROOKIE_EVOLUTION_TIME      = 72;
 constexpr auto CHAMPION_EVOLUTION_TIME    = 96;
 constexpr auto VADEMON_EVOLUTION_TIME     = 360;
 
+constexpr auto TAMER_RAISED_MAX = 99;
+constexpr auto START_LIFESPAN   = 360;
+constexpr auto START_HAPPINESS  = 50;
+constexpr auto START_DISCIPLINE = 50;
+
+constexpr auto FRESH_AWAKE_TIME       = 3;
+constexpr auto IN_TRAINING_AWAKE_TIME = 7;
+
 extern "C"
 {
+    void setSleepTimes(PartnerPara* para, DigimonType type)
+    {
+        auto level   = getDigimonData(type)->level;
+        auto raise   = getRaiseData(type);
+        auto pattern = SLEEP_PATTERN[raise->sleepCycle];
+
+        if (level == Level::FRESH || level == Level::IN_TRAINING)
+        {
+            auto awakeTime = random(1) + (level == Level::FRESH ? FRESH_AWAKE_TIME : IN_TRAINING_AWAKE_TIME);
+
+            para->sleepyHour         = (HOUR + awakeTime) % 24;
+            para->sleepyMinute       = 0;
+            para->wakeupHour         = (para->sleepyHour + pattern.sleepyDefault) % 24;
+            para->wakeupMinute       = para->sleepyMinute;
+            para->hoursAwakeDefault  = awakeTime;
+            para->hoursAsleepDefault = pattern.sleepyDefault;
+        }
+        else
+        {
+            para->sleepyHour         = pattern.sleepyHour;
+            para->sleepyMinute       = pattern.sleepyMinute;
+            para->wakeupHour         = pattern.wakeupHour;
+            para->wakeupMinute       = pattern.wakeupMinute;
+            para->hoursAwakeDefault  = pattern.wakeupMinute;
+            para->hoursAsleepDefault = pattern.sleepyDefault;
+        }
+
+        para->timeAwakeToday      = para->hoursAwakeDefault * 6;
+        para->sicknessCounter     = 0;
+        para->tirednessSleepTimer = 0;
+    }
+
+    void initializePartner(DigimonType type,
+                           int32_t posX,
+                           int32_t posY,
+                           int32_t posZ,
+                           int32_t rotX,
+                           int32_t rotY,
+                           int32_t rotZ)
+    {
+        loadMMD(type, EntityType::PARTNER);
+        ENTITY_TABLE.partner = &PARTNER_ENTITY;
+        initializeDigimonObject(type, 1, Partner_tick);
+        setEntityPosition(1, posX, posY, posZ);
+        setEntityRotation(1, rotX, rotY, rotZ);
+        setupEntityMatrix(1);
+        startAnimation(&PARTNER_ENTITY, 0);
+        STOP_DISTANCE_TIMER  = 0;
+        PARTNER_ENTITY.vabId = 4;
+        loadPartnerSounds(type);
+        PARTNER_ENTITY.isOnMap     = 1;
+        PARTNER_ENTITY.isOnScreen  = 1;
+        PARTNER_PARA.condition.raw = 0;
+        setSleepTimes(&PARTNER_PARA, type);
+        PARTNER_PARA.missedSleepHours = 0;
+        PARTNER_PARA.poopLevel        = getRaiseData(type)->poopTimer;
+        PARTNER_PARA.poopingTimer     = -1;
+        PARTNER_PARA.virusBar         = 0;
+        PARTNER_PARA.tiredness        = 0;
+        PARTNER_PARA.discipline       = START_DISCIPLINE;
+        PARTNER_PARA.happiness        = START_HAPPINESS;
+        PARTNER_PARA.unused3          = 50;
+        setFoodTimer(type);
+        PARTNER_PARA.energyLevel       = getRaiseData(type)->energyThreshold;
+        PARTNER_PARA.remainingLifetime = START_LIFESPAN;
+        PARTNER_PARA.weight            = getRaiseData(type)->defaultWeight;
+        PARTNER_PARA.trainBoostFlag    = 0;
+        PARTNER_PARA.trainBoostTimer   = 0;
+        PARTNER_PARA.trainBoostValue   = 0;
+        PARTNER_PARA.evoTimer          = 0;
+        PARTNER_PARA.battles           = 0;
+        PARTNER_PARA.careMistakes      = 0;
+        PARTNER_PARA.injuryTimer       = 0;
+        PARTNER_PARA.sicknessTimer     = 0;
+        PARTNER_PARA.areaEffectTimer   = 0;
+        PARTNER_PARA.timesBeingSick    = 0;
+        PARTNER_ENTITY.lives           = 3;
+
+        if (type == DigimonType::AGUMON)
+        {
+            PARTNER_ENTITY.stats.moves[0] = 0x2E;
+            learnMove(2);
+        }
+        if (type == DigimonType::GABUMON)
+        {
+            PARTNER_ENTITY.stats.moves[0] = 0x30;
+            learnMove(0x2B);
+        }
+
+        PARTNER_ENTITY.stats.moves[3] = 0xFF;
+        for (int32_t i = 0; i < 16; i++)
+        {
+            auto move = getDigimonData(type)->moves[i];
+            if (move == 0xFF) continue;
+            if (move < 58 || move > 112) continue;
+            PARTNER_ENTITY.stats.moves[3] = i + 46;
+        }
+
+        addObject(ObjectID::POOP, 0, 0, renderPoop);
+        HAS_IMMORTAL_HOUR = 0;
+        IMMORTAL_HOUR     = 0xFF;
+    }
+
+    void setFoodTimer(DigimonType type)
+    {
+        auto level = getDigimonData(type)->level;
+
+        if (level == Level::FRESH)
+        {
+            // every even hour
+            PARTNER_PARA.nextHungerHour = ((HOUR & ~1) + 2) % 24;
+        }
+        else if (level == Level::IN_TRAINING)
+        {
+            // every 3 hours
+            PARTNER_PARA.nextHungerHour = (((HOUR / 3) * 3) + 3) % 24;
+        }
+        else
+        {
+            auto raise   = getRaiseData(type);
+            auto hour    = HOUR;
+            auto minDiff = 24;
+            for (auto time : raise->hungerTimes)
+            {
+                // the vanilla game does this differently, but the vanilla game also has a bug here
+                if (time == -1) continue;
+                auto diff = getTimeDiff(hour, time);
+                if (diff < minDiff)
+                {
+                    minDiff                     = diff;
+                    PARTNER_PARA.nextHungerHour = time;
+                }
+            }
+        }
+
+        PARTNER_PARA.foodLevel = getTimeDiff(HOUR, PARTNER_PARA.nextHungerHour) * 60 - MINUTE;
+    }
+
+    void renderPoop(int32_t instanceId)
+    {
+        if (!MAP_LAYER_ENABLED) return;
+
+        libgte_SetRotMatrix(&libgs_REFERENCE_MATRIX);
+        libgte_SetTransMatrix(&libgs_REFERENCE_MATRIX);
+
+        for (auto& poop : WORLD_POOP)
+        {
+            if (poop.size == 0) continue;
+            if (poop.map != CURRENT_SCREEN) continue;
+
+            SVector rotation = POOP_ROTATION_MATRIX;
+            Vector translation;
+            Vector scale;
+
+            translation.x = (poop.x - 50) * 100 + 50;
+            translation.y = PARTNER_ENTITY.posData->location.y;
+            translation.z = (50 - poop.y) * 100 - 50;
+
+            scale.x = (poop.size * 4096) / 10;
+            scale.y = scale.x;
+            scale.z = scale.x;
+
+            projectPosition(&POOP_POSITION, &translation, &rotation, &scale);
+            renderObject(&POOP_OBJECT, ACTIVE_ORDERING_TABLE, 2);
+        }
+    }
+
+    void resetPartnerPara(DigimonType type)
+    {
+        PARTNER_PARA.poopLevel            = getRaiseData(type)->poopTimer;
+        PARTNER_PARA.unused2              = 0;
+        PARTNER_PARA.unused1              = 0;
+        PARTNER_PARA.poopingTimer         = -1;
+        PARTNER_PARA.tiredness            = 0;
+        PARTNER_PARA.subTiredness         = 0;
+        PARTNER_PARA.tirednessHungerTimer = 0;
+        PARTNER_PARA.timesBeingSick       = 0;
+        PARTNER_PARA.areaEffectTimer      = 0;
+        PARTNER_PARA.sicknessTimer        = 0;
+        PARTNER_PARA.injuryTimer          = 0;
+        PARTNER_PARA.sicknessTries        = 0;
+        PARTNER_PARA.unused4              = 0;
+        PARTNER_PARA.starvationTimer      = -1;
+        PARTNER_PARA.emptyStomachTimer    = 0;
+        PARTNER_PARA.weight               = getRaiseData(type)->defaultWeight;
+        PARTNER_PARA.careMistakes         = 0;
+        PARTNER_PARA.battles              = 0;
+        setFoodTimer(type);
+    }
+
+    void initializeEvolvedPartner(DigimonType type,
+                                  int32_t posX,
+                                  int32_t posY,
+                                  int32_t posZ,
+                                  int32_t rotX,
+                                  int32_t rotY,
+                                  int32_t rotZ)
+    {
+        removeObject(static_cast<ObjectID>(type), 1);
+        loadTMDandMTN(type, EntityType::PARTNER, &EVO_SEQUENCE_DATA.modelData);
+        ENTITY_TABLE.partner = &PARTNER_ENTITY;
+        initializeDigimonObject(type, 1, Partner_tick);
+        setEntityPosition(1, posX, posY, posZ);
+        setEntityRotation(1, rotX, rotY, rotZ);
+        setupEntityMatrix(1);
+        startAnimation(&PARTNER_ENTITY, 0);
+        PARTNER_ENTITY.vabId       = 4;
+        STOP_DISTANCE_TIMER        = 0;
+        PARTNER_PARA.condition.raw = 0;
+        setSleepTimes(&PARTNER_PARA, type);
+        resetPartnerPara(type);
+        HAS_IMMORTAL_HOUR = 0;
+        IMMORTAL_HOUR     = 0xFF;
+    }
+
+    void setReincarnateStats(int16_t hp, int16_t mp, int16_t offense, int16_t defense, int16_t speed, int16_t brains)
+    {
+        int32_t tamerLevel = IS_NATURAL_DEATH ? TAMER_ENTITY.tamerLevel : 0;
+
+        PARTNER_ENTITY.stats.hp        = hp + (DEATH_STATS.hp * tamerLevel) / 100;
+        PARTNER_ENTITY.stats.mp        = mp + (DEATH_STATS.mp * tamerLevel) / 100;
+        PARTNER_ENTITY.stats.off       = offense + (DEATH_STATS.off * tamerLevel) / 100;
+        PARTNER_ENTITY.stats.def       = defense + (DEATH_STATS.def * tamerLevel) / 100;
+        PARTNER_ENTITY.stats.speed     = speed + (DEATH_STATS.speed * tamerLevel) / 100;
+        PARTNER_ENTITY.stats.brain     = brains + (DEATH_STATS.brain * tamerLevel) / 100;
+        PARTNER_ENTITY.stats.currentHP = PARTNER_ENTITY.stats.hp;
+        PARTNER_ENTITY.stats.currentMP = PARTNER_ENTITY.stats.mp;
+    }
+
+    void initializeReincarnatedPartner(DigimonType type,
+                                       int32_t posX,
+                                       int32_t posY,
+                                       int32_t posZ,
+                                       int32_t rotX,
+                                       int32_t rotY,
+                                       int32_t rotZ)
+    {
+        removeObject(static_cast<ObjectID>(type), 1);
+        loadTMDandMTN(type, EntityType::PARTNER, &REINCARNATION_MODEL_DATA);
+        ENTITY_TABLE.partner = &PARTNER_ENTITY;
+        initializeDigimonObject(type, 1, Partner_tick);
+        setEntityPosition(1, posX, posY, posZ);
+        setEntityRotation(1, rotX, rotY, rotZ);
+        setupEntityMatrix(1);
+        startAnimation(&PARTNER_ENTITY, 0);
+        PARTNER_ENTITY.vabId = 4;
+        STOP_DISTANCE_TIMER  = 0;
+
+        if (type == DigimonType::BOTAMON) setReincarnateStats(90, 110, 10, 11, 9, 10);
+        if (type == DigimonType::PUNIMON) setReincarnateStats(120, 100, 16, 8, 8, 6);
+        if (type == DigimonType::POYOMON) setReincarnateStats(100, 140, 12, 6, 6, 8);
+        if (type == DigimonType::YURAMON) setReincarnateStats(100, 120, 8, 8, 8, 8);
+
+        PARTNER_PARA.condition.raw = 0;
+        setSleepTimes(&PARTNER_PARA, type);
+        PARTNER_PARA.missedSleepHours    = 0;
+        PARTNER_PARA.tirednessSleepTimer = 0;
+        resetPartnerPara(type);
+        PARTNER_PARA.discipline        = START_HAPPINESS;
+        PARTNER_PARA.happiness         = START_DISCIPLINE;
+        PARTNER_PARA.unused3           = 50;
+        PARTNER_PARA.timesBeingSick    = 0;
+        PARTNER_PARA.remainingLifetime = START_LIFESPAN;
+        PARTNER_PARA.age               = 0;
+        PARTNER_PARA.evoTimer          = 0;
+        PARTNER_PARA.careMistakes      = 0;
+        PARTNER_PARA.battles           = 0;
+        PARTNER_PARA.weight            = getRaiseData(type)->defaultWeight;
+
+        // fix evolutions not giving stats/lifetime after having used an evo item
+        HAS_USED_EVOITEM = false;
+
+        TAMER_ENTITY.raisedCount++;
+        if (TAMER_ENTITY.raisedCount > TAMER_RAISED_MAX) TAMER_ENTITY.raisedCount = TAMER_RAISED_MAX;
+
+        EVOLUTION_TARGET  = -1;
+        HAS_IMMORTAL_HOUR = 0;
+        IMMORTAL_HOUR     = 0xFF;
+    }
+
+    void setupPartnerOnWarp(int32_t posX, int32_t posY, int32_t posZ, int32_t rotation)
+    {
+        setEntityPosition(1, posX, posY, posZ);
+        setEntityRotation(1, PARTNER_ENTITY.posData->rotation.x, rotation, PARTNER_ENTITY.posData->rotation.z);
+        setupEntityMatrix(1);
+        startAnimation(&PARTNER_ENTITY, 0);
+        Partner_setState(1);
+        PARTNER_PARA.areaEffectTimer = 0;
+    }
+
     void tickConditionBoundaries()
     {
         if (PARTNER_PARA.happiness > HAPPINESS_MAX) PARTNER_PARA.happiness = HAPPINESS_MAX;
@@ -140,7 +440,7 @@ extern "C"
         if (CURRENT_FRAME != LAST_HANDLED_FRAME)
         {
             // roll butterfly chance
-            if (PARTNER_PARA.condition.full == 0 && PARTNER_PARA.happiness < 0 && CURRENT_FRAME % 200 == 0)
+            if (PARTNER_PARA.condition.raw == 0 && PARTNER_PARA.happiness < 0 && CURRENT_FRAME % 200 == 0)
             {
                 auto rand = random(100);
                 if (rand < (-PARTNER_PARA.happiness - PARTNER_PARA.discipline)) PARTNER_PARA.condition.isUnhappy = true;

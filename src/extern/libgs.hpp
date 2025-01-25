@@ -65,6 +65,8 @@ extern "C"
         GsCOORDINATE2* super;
     };
 
+    extern Matrix libgs_REFERENCE_MATRIX;
+
     extern void* libgs_GsGetWorkBase();
     extern void libgs_GsSetWorkBase(void* newBase);
 }

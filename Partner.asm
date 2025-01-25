@@ -1,7 +1,7 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800a568c
+.org 0x800a442c
 .area 0x800a936c-.
   .importobj "compiled/Partner.lib"
 
@@ -84,7 +84,37 @@
 .org 0x800dd9d8
   jal tickPartner
 
+.org 0x800a9bc4
+  jal setupPartnerOnWarp
+
+.org 0x800e3644
+  jal initializeReincarnatedPartner
+
+.org 0x800d9328
+  li.u a3,renderPoop
+.org 0x800d933c
+  li.l a3,renderPoop
+
+.org 0x801053cc
+  jal setFoodTimer
+
+.org 0x800ee9f4
+  jal initializePartner
+.org 0x800eeb38
+  jal initializePartner
+.org 0x800eea7c
+  jal initializePartner
+
+
 .close 
+
+.open "work/DIGIMON/EVL_REL.BIN",0x80060000
+.psx
+
+.org 0x80063ac4
+  jal initializeEvolvedPartner
+
+.close
 
 .open "work/DIGIMON/TRN_REL.BIN",0x80088800
 .psx

@@ -1,3 +1,4 @@
+#pragma once 
 #include "stddef.hpp"
 
 extern "C"
@@ -32,4 +33,7 @@ extern "C"
         int32_t z;
         int32_t pad;
     };
+
+    void libgte_SetRotMatrix(Matrix* matrix);
+    void libgte_SetTransMatrix(Matrix* matrix);
 }

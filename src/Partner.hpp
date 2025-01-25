@@ -7,4 +7,6 @@ extern "C"
     extern void handleConditionBubble();
     extern void handlePoopWeightLoss(DigimonType type);
     extern void handleWildPoop();
+    extern void setFoodTimer(DigimonType type);
+    extern void renderPoop(int32_t instanceId);
 }
