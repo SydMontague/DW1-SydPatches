@@ -48,7 +48,6 @@
 .definelabel writePStat,                0x80106474
 .definelabel updateTimeOfDay,           0x800d676c
 .definelabel isInDaytimeTransition,     0x800d7618
-.definelabel setEntityRotation,         0x800a15dc
 .definelabel removeObject,              0x800a3008
 .definelabel loadTMDandMTN,             0x800a2a50
 .definelabel Partner_tick,              0x800dd7ac

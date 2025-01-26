@@ -1,13 +1,12 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-; 0x800a1540
 .org 0x800a0a50
-.area 0x800a15dc-.
+.area 0x800a1628-.
   .importobj "compiled/Model.lib"
 
-  .notice "Empty space left: " + (0x800a15dc-.) + " bytes"
-  .fill 0x800a15dc-.
+  .notice "Empty space left: " + (0x800a1628-.) + " bytes"
+  .fill 0x800a1628-.
 .endarea
 
 .org 0x800a13b0
@@ -21,6 +20,7 @@
   jal loadMMD
 .org 0x800b6110
   j loadMMD
+
 
 .org 0x800b63fc
   j unloadModel
@@ -37,6 +37,7 @@
 .org 0x800f172c
   jal unloadModel
 
+
 ;.org 0x800a4490
 ;  jal initializeDigimonObject
 ;.org 0x800a4ff4
@@ -50,6 +51,7 @@
 .org 0x800f1558
   jal initializeDigimonObject
 
+
 .org 0x800b61a8		
   jal removeEntity
 .org 0x800b63e4		
@@ -62,6 +64,7 @@
   jal removeEntity
 .org 0x800f1720		
   jal removeEntity
+
 
 .org 0x800a9890
   jal setupEntityMatrix
@@ -81,6 +84,7 @@
   jal setupEntityMatrix
 .org 0x800f15a8
   jal setupEntityMatrix
+
 
 .org 0x800a9874
   jal setEntityPosition
@@ -103,6 +107,25 @@
 .org 0x800f1b68
   jal setEntityPosition
 
+
+.org 0x800a9888
+  jal setEntityRotation
+.org 0x800a9c7c
+  jal setEntityRotation
+.org 0x800b6238
+  jal setEntityRotation
+.org 0x800bf070
+  jal setEntityRotation
+.org 0x800bf1c0
+  jal setEntityRotation
+.org 0x800f14dc
+  jal setEntityRotation
+.org 0x800f15a0
+  jal setEntityRotation
+.org 0x800f1b0c
+  jal setEntityRotation
+.org 0x800f1b7c
+  jal setEntityRotation
 
 .close
 
@@ -150,6 +173,11 @@
   jal setEntityPosition
 .org 0x80058554
   jal setEntityPosition
+
+.org 0x800584dc
+  jal setEntityRotation
+.org 0x80058568
+  jal setEntityRotation
 
 .close
 

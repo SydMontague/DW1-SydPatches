@@ -235,4 +235,15 @@ extern "C"
         entity->locY        = posY;
         entity->locZ        = posZ;
     }
+
+    void setEntityRotation(int32_t entityId, int32_t rotX, int32_t rotY, int32_t rotZ)
+    {
+        auto* entity = ENTITY_TABLE.getEntityById(entityId);
+        if (entity == nullptr) return;
+
+        auto* posData       = entity->posData;
+        posData->rotation.x = rotX;
+        posData->rotation.y = rotY;
+        posData->rotation.z = rotZ;
+    }
 }

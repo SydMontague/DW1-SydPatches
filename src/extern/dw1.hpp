@@ -924,8 +924,7 @@ extern "C"
 
     extern void renderWireframed(GsDOBJ2* obj, int32_t wireFrameShare);
     extern void renderDropShadow(Entity* entity);
-    extern void setEntityRotation(int32_t entityId, int32_t rotX, int32_t rotY, int32_t rotZ);
-    extern void setupEntityMatrix(int32_t entityId);
+    extern void setupModelMatrix(PositionData* data);
     extern bool removeObject(ObjectID id, int32_t instance);
     extern void loadTMDandMTN(DigimonType digimonType, EntityType entityType, EvoModelData* modelData);
     extern void Partner_tick(int32_t);
