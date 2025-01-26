@@ -33,6 +33,8 @@ extern "C"
     extern Timer TIMER0;
     extern Timer TIMER1;
     extern Timer TIMER2;
+
+    extern uint32_t SCRATCHPAD;
 }
 
 static_assert(sizeof(TimerConfig) == 4);

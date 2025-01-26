@@ -6,18 +6,10 @@
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
 #include "extern/libgte.hpp"
+#include "extern/psx.hpp"
 
 extern "C"
 {
-    void initializePosData(PositionData* data)
-    {
-        Matrix* matrix = &data->posMatrix.modelMatrix;
-        libgte_RotMatrix(&data->rotation, matrix);
-        libgte_ScaleMatrix(matrix, &data->scale);
-        libgte_TransMatrix(matrix, &data->location);
-        data->posMatrix.someValue = 0;
-    }
-
     void renderFlatDigimon(Entity* entity)
     {
         auto entityType = getEntityType(entity);
@@ -89,6 +81,54 @@ extern "C"
         add3DSpritePrim(prim, &outVecs[0], &outVecs[1], &outVecs[2], &outVecs[3]);
     }
 
+    void renderDigimon(int32_t instanceId)
+    {
+        auto* entity = ENTITY_TABLE.getEntityById(instanceId);
+
+        if (entity->isOnMap != 2 && (entity->isOnMap == 0 && entity->isOnScreen == 0)) return;
+
+        if (entity->flatSprite != 0xFF)
+            renderFlatDigimon(entity);
+        else
+        {
+            auto boneCount = getDigimonData(entity->type)->boneCount;
+            for (int i = 0; i < boneCount; i++)
+            {
+                auto* posData = &entity->posData[i];
+                if (posData->obj.tmd == nullptr) continue;
+
+                Matrix worldMatrix;
+                Matrix screenMatrix;
+
+                libgs_GsGetLws(posData->obj.coord2, &worldMatrix, &screenMatrix);
+                libgs_GsSetLightMatrix(&worldMatrix);
+                libgs_GsSetLsMatrix(&screenMatrix);
+
+                auto wireFrameVal = 0x10;
+
+                if (instanceId == 1)
+                {
+                    if (PARTNER_WIREFRAME_TOTAL == 0x10)
+                        wireFrameVal = PARTNER_WIREFRAME_SUB[i];
+                    else
+                        wireFrameVal = PARTNER_WIREFRAME_TOTAL;
+                }
+                else if (instanceId == 2)
+                    wireFrameVal = ENTITY1_WIREFRAME_TOTAL;
+
+                if (wireFrameVal == 0x10)
+                    libgs_GsSortObject4(&posData->obj, ACTIVE_ORDERING_TABLE, 2, &SCRATCHPAD);
+                else
+                    renderWireframed(&posData->obj, wireFrameVal);
+            }
+        }
+
+        if (instanceId != 0)
+            renderDropShadow(entity);
+        else if (PLAYER_SHADOW_ENABLED != 0)
+            renderDropShadow(entity);
+    }
+
     void initializeDigimonObject(DigimonType type, int32_t instanceId, TickFunction tick)
     {
         if (instanceId < 0 || instanceId >= 10) return;
@@ -127,9 +167,7 @@ extern "C"
             if (node->object == -1)
                 posData->obj.tmd = nullptr;
             else
-            {
                 libgs_GsLinkObject4(reinterpret_cast<uint32_t*>(model->modelPtr->objects), &posData->obj, node->object);
-            }
 
             posData->obj.attribute = 0;
             libgs_GsInitCoordinate2(parent, base);
@@ -139,13 +177,13 @@ extern "C"
         auto* rootPosData     = &entity->posData[0];
         rootPosData->rotation = {};
         rootPosData->location = {};
-
         if (type == DigimonType::METEORMON)
             rootPosData->scale = {0x1800, 0x1800, 0x1800};
         else
             rootPosData->scale = {0x1000, 0x1000, 0x1000};
 
-        initializePosData(rootPosData);
+        // vanilla uses initializePosData here, but both functions look functional identical?
+        setupModelMatrix(rootPosData);
 
         // in vanilla the game sets the posData for all the bones here as well, but since that's already done by
         // startAnimation it is redundant. It also didn't respect the hasScale property and thus is kinda bugged to

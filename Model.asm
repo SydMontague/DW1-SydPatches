@@ -1,13 +1,12 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-;0x800a11a8
 .org 0x800a0a50
-.area 0x800a11a8-.
+.area 0x800a1430-.
   .importobj "compiled/Model.lib"
 
-  .notice "Empty space left: " + (0x800a11a8-.) + " bytes"
-  .fill 0x800a11a8-.
+  .notice "Empty space left: " + (0x800a1430-.) + " bytes"
+  .fill 0x800a1430-.
 .endarea
 
 .org 0x800a13b0

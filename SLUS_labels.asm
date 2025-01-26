@@ -66,7 +66,9 @@
 .definelabel getEntityModelComponent,   0x800a254c
 .definelabel add3DSpritePrim,           0x800da1fc
 .definelabel unloadModel,               0x800a23f4
-.definelabel renderDigimon,             0x800a11a8
+.definelabel setupModelMatrix,          0x800c19a4
+.definelabel renderWireframed,          0x800a1628
+.definelabel renderDropShadow,          0x800a3f60
 
 .definelabel DIGIMON_SKELETONS, 0x8011ce60
 .definelabel PARTNER_MOMENTUM_DATA, 0x80185be8
@@ -130,6 +132,11 @@
 .definelabel POOP_ROTATION_MATRIX,      0x801341ec
 .definelabel MAP_LAYER_ENABLED,         0x80134ec8
 .definelabel HAS_USED_EVOITEM,          0x80134e52
+.definelabel PLAYER_SHADOW_ENABLED,     0x80133b3c
+.definelabel ENTITY1_WIREFRAME_TOTAL,   0x80133b38
+.definelabel PARTNER_WIREFRAME_TOTAL,   0x80133b34
+.definelabel PARTNER_WIREFRAME_SUB,     0x8011d130
+
 
 // libapi
 .definelabel libapi_malloc3, 0x80090f84
@@ -158,6 +165,10 @@
 .definelabel libgs_GsMapModelingData, 0x80098158
 .definelabel libgs_GsLinkObject4, 0x80099bf8
 .definelabel libgs_GsInitCoordinate2, 0x80097d68
+.definelabel libgs_GsGetLws, 0x800998d8
+.definelabel libgs_GsSetLightMatrix, 0x80097e04
+.definelabel libgs_GsSetLsMatrix, 0x80097dd8
+.definelabel libgs_GsSortObject4, 0x80099d88
 
 .definelabel libgs_REFERENCE_MATRIX, 0x80136f84
 
@@ -180,3 +191,4 @@
 .definelabel TIMER0, 0x1F801100
 .definelabel TIMER1, 0x1F801110
 .definelabel TIMER2, 0x1F801120
+.definelabel SCRATCHPAD, 0x1F800000

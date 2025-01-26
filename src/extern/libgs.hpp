@@ -72,6 +72,11 @@ extern "C"
     extern void libgs_GsMapModelingData(uint32_t* p);
     extern void libgs_GsLinkObject4(uint32_t* p, GsDOBJ2* objBase, int32_t index);
     extern void libgs_GsInitCoordinate2(GsCOORDINATE2* super, GsCOORDINATE2* base);
+    extern void libgs_GsGetLws(GsCOORDINATE2* coord, Matrix* worldMatrix, Matrix* screenMatrix);
+    extern void libgs_GsSetLightMatrix(Matrix* worldMatrix);
+    extern void libgs_GsSetLsMatrix(Matrix* screenMatrix);
+    extern void libgs_GsSortObject4(GsDOBJ2* objp, GsOT* otp, int32_t shift, uint32_t* scratch);
+    
 }
 
 static_assert(sizeof(GsOT) == 20);

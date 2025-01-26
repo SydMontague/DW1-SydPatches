@@ -9,6 +9,7 @@
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
 #include "extern/libgte.hpp"
+#include "Model.hpp"
 
 constexpr auto FRESH_EVOLUTION_TIME       = 6;
 constexpr auto IN_TRAINING_EVOLUTION_TIME = 24;

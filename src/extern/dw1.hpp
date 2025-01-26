@@ -896,13 +896,19 @@ extern "C"
     extern bool HAS_USED_EVOITEM;
     extern int16_t STATUS_UI_OFFSET_X;
     extern SkeletonNode* DIGIMON_SKELETONS[180];
+    extern uint32_t PARTNER_WIREFRAME_TOTAL;
+    extern uint16_t PARTNER_WIREFRAME_SUB[40];
+    extern uint32_t ENTITY1_WIREFRAME_TOTAL;
+    extern uint32_t PLAYER_SHADOW_ENABLED;
     // TODO: can be non-extern, but large
     extern PositionData PARTNER_POSITION_DATA[34];
     extern MomentumData PARTNER_MOMENTUM_DATA[34];
     extern PositionData TAMER_POSITION_DATA[22];
     extern MomentumData TAMER_MOMENTUM_DATA[22];
 
-    extern void renderDigimon(int32_t instanceId);
+    extern void renderWireframed(GsDOBJ2* obj, int32_t wireFrameShare);
+    extern void renderDropShadow(Entity* entity);
+    extern void setupModelMatrix(PositionData* data);
     extern void setEntityPosition(int32_t entityId, int32_t posX, int32_t posY, int32_t posZ);
     extern void setEntityRotation(int32_t entityId, int32_t rotX, int32_t rotY, int32_t rotZ);
     extern void setupEntityMatrix(int32_t entityId);
