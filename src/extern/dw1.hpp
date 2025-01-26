@@ -800,7 +800,23 @@ extern "C"
             Entity* table[10];
         };
 
-        constexpr Entity* getEntityById(int32_t instanceId) { return table[instanceId]; }
+        /*
+         * Gets the entity pointer by their instance/entity ID or null if the ID is out of bound.
+         */
+        constexpr Entity* getEntityById(int32_t instanceId)
+        {
+            if (instanceId < 0 || instanceId > 9) return nullptr;
+            return table[instanceId];
+        }
+
+        /*
+         * Sets the entity pointer for a given instance. If the ID is out of bounds, nothing happens.
+         */
+        constexpr void setEntity(int32_t instanceId, Entity* ptr)
+        {
+            if (instanceId < 0 || instanceId > 9) return;
+            table[instanceId] = ptr;
+        }
     };
 
     struct TMDModel
@@ -908,8 +924,6 @@ extern "C"
 
     extern void renderWireframed(GsDOBJ2* obj, int32_t wireFrameShare);
     extern void renderDropShadow(Entity* entity);
-    extern void setupModelMatrix(PositionData* data);
-    extern void setEntityPosition(int32_t entityId, int32_t posX, int32_t posY, int32_t posZ);
     extern void setEntityRotation(int32_t entityId, int32_t rotX, int32_t rotY, int32_t rotZ);
     extern void setupEntityMatrix(int32_t entityId);
     extern bool removeObject(ObjectID id, int32_t instance);

@@ -1,5 +1,7 @@
 
 
+#include "Model.hpp"
+
 #include "Helper.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libapi.hpp"
@@ -84,6 +86,7 @@ extern "C"
     void renderDigimon(int32_t instanceId)
     {
         auto* entity = ENTITY_TABLE.getEntityById(instanceId);
+        if (entity == nullptr) return;
 
         if (entity->isOnMap != 2 && (entity->isOnMap == 0 && entity->isOnScreen == 0)) return;
 
@@ -131,10 +134,10 @@ extern "C"
 
     void initializeDigimonObject(DigimonType type, int32_t instanceId, TickFunction tick)
     {
-        if (instanceId < 0 || instanceId >= 10) return;
+        auto* entity = ENTITY_TABLE.getEntityById(instanceId);
+        if (entity == nullptr) return;
 
         auto boneCount  = getDigimonData(type)->boneCount;
-        auto* entity    = ENTITY_TABLE.getEntityById(instanceId);
         auto entityType = getEntityType(entity);
         entity->type    = type;
         if (entityType == EntityType::NPC)
@@ -191,5 +194,45 @@ extern "C"
 
         startAnimation(entity, 0);
         addObject(static_cast<ObjectID>(type), instanceId, tick, renderDigimon);
+    }
+
+    void removeEntity(DigimonType type, int32_t instanceId)
+    {
+        removeObject(static_cast<ObjectID>(type), instanceId);
+
+        auto* entity = ENTITY_TABLE.getEntityById(instanceId);
+        if (entity == nullptr) return;
+
+        libapi_free3(entity->momentum);
+        libapi_free3(entity->posData);
+        ENTITY_TABLE.setEntity(instanceId, nullptr);
+    }
+
+    void setupEntityMatrix(int32_t entityId)
+    {
+        auto* entity = ENTITY_TABLE.getEntityById(entityId);
+        if (entity == nullptr) return;
+
+        auto* posData = entity->posData;
+        auto* matrix  = &posData->posMatrix.modelMatrix;
+
+        libgte_RotMatrix(&posData->rotation, matrix);
+        libgte_ScaleMatrix(matrix, &posData->scale);
+        libgte_TransMatrix(matrix, &posData->location);
+        posData->posMatrix.someValue = 0;
+    }
+
+    void setEntityPosition(int32_t entityId, int32_t posX, int32_t posY, int32_t posZ)
+    {
+        auto* entity = ENTITY_TABLE.getEntityById(entityId);
+        if (entity == nullptr) return;
+
+        auto* posData       = entity->posData;
+        posData->location.x = posX;
+        posData->location.y = posY;
+        posData->location.z = posZ;
+        entity->locX        = posX;
+        entity->locY        = posY;
+        entity->locZ        = posZ;
     }
 }

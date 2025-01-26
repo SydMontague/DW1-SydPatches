@@ -48,9 +48,7 @@
 .definelabel writePStat,                0x80106474
 .definelabel updateTimeOfDay,           0x800d676c
 .definelabel isInDaytimeTransition,     0x800d7618
-.definelabel setEntityPosition,         0x800a1540
 .definelabel setEntityRotation,         0x800a15dc
-.definelabel setupEntityMatrix,         0x800a14c0
 .definelabel removeObject,              0x800a3008
 .definelabel loadTMDandMTN,             0x800a2a50
 .definelabel Partner_tick,              0x800dd7ac
@@ -140,6 +138,7 @@
 
 // libapi
 .definelabel libapi_malloc3, 0x80090f84
+.definelabel libapi_free3, 0x80091034
 
 // libc
 .definelabel strcat,  0x800911cc
