@@ -2,6 +2,7 @@
 
 #include "Helper.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libapi.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
 #include "extern/libgte.hpp"
@@ -86,5 +87,71 @@ extern "C"
         }
 
         add3DSpritePrim(prim, &outVecs[0], &outVecs[1], &outVecs[2], &outVecs[3]);
+    }
+
+    void initializeDigimonObject(DigimonType type, int32_t instanceId, TickFunction tick)
+    {
+        if (instanceId < 0 || instanceId >= 10) return;
+
+        auto boneCount  = getDigimonData(type)->boneCount;
+        auto* entity    = ENTITY_TABLE.getEntityById(instanceId);
+        auto entityType = getEntityType(entity);
+        entity->type    = type;
+        if (entityType == EntityType::NPC)
+        {
+            entity->posData  = reinterpret_cast<PositionData*>(libapi_malloc3(boneCount * sizeof(PositionData)));
+            entity->momentum = reinterpret_cast<MomentumData*>(libapi_malloc3(boneCount * sizeof(MomentumData)));
+        }
+        else if (entityType == EntityType::PARTNER)
+        {
+            entity->posData  = PARTNER_POSITION_DATA;
+            entity->momentum = PARTNER_MOMENTUM_DATA;
+        }
+        else if (entityType == EntityType::PLAYER)
+        {
+            entity->posData  = TAMER_POSITION_DATA;
+            entity->momentum = TAMER_MOMENTUM_DATA;
+        }
+
+        auto* model            = getEntityModelComponent(type, entityType);
+        entity->animPtr        = model->animTablePtr;
+        SkeletonNode* skeleton = DIGIMON_SKELETONS[static_cast<uint32_t>(type)];
+
+        for (int32_t boneId = 0; boneId < boneCount; boneId++)
+        {
+            auto* node    = &skeleton[boneId];
+            auto* posData = &entity->posData[boneId];
+            auto* base    = &posData->posMatrix;
+            auto* parent  = node->parent == -1 ? nullptr : &entity->posData[node->parent].posMatrix;
+
+            if (node->object == -1)
+                posData->obj.tmd = nullptr;
+            else
+            {
+                libgs_GsLinkObject4(reinterpret_cast<uint32_t*>(model->modelPtr->objects), &posData->obj, node->object);
+            }
+
+            posData->obj.attribute = 0;
+            libgs_GsInitCoordinate2(parent, base);
+            posData->obj.coord2 = base;
+        }
+
+        auto* rootPosData     = &entity->posData[0];
+        rootPosData->rotation = {};
+        rootPosData->location = {};
+
+        if (type == DigimonType::METEORMON)
+            rootPosData->scale = {0x1800, 0x1800, 0x1800};
+        else
+            rootPosData->scale = {0x1000, 0x1000, 0x1000};
+
+        initializePosData(rootPosData);
+
+        // in vanilla the game sets the posData for all the bones here as well, but since that's already done by
+        // startAnimation it is redundant. It also didn't respect the hasScale property and thus is kinda bugged to
+        // begin wtih.
+
+        startAnimation(entity, 0);
+        addObject(static_cast<ObjectID>(type), instanceId, tick, renderDigimon);
     }
 }

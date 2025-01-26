@@ -53,7 +53,6 @@
 .definelabel setupEntityMatrix,         0x800a14c0
 .definelabel removeObject,              0x800a3008
 .definelabel loadTMDandMTN,             0x800a2a50
-.definelabel initializeDigimonObject,   0x800a0e68
 .definelabel Partner_tick,              0x800dd7ac
 .definelabel projectPosition,           0x800e1074
 .definelabel renderObject,              0x800e215c
@@ -66,6 +65,15 @@
 .definelabel getEntityType,             0x800a2660
 .definelabel getEntityModelComponent,   0x800a254c
 .definelabel add3DSpritePrim,           0x800da1fc
+.definelabel unloadModel,               0x800a23f4
+.definelabel renderDigimon,             0x800a11a8
+
+.definelabel DIGIMON_SKELETONS, 0x8011ce60
+.definelabel PARTNER_MOMENTUM_DATA, 0x80185be8
+.definelabel PARTNER_POSITION_DATA, 0x801866cc
+
+.definelabel TAMER_MOMENTUM_DATA, 0x801a00dc
+.definelabel TAMER_POSITION_DATA, 0x801a07e8
 
 .definelabel STATUS_UI_OFFSET_X, 0x80134c50
 .definelabel IS_NATURAL_DEATH, 0x80134c4c
@@ -122,6 +130,9 @@
 .definelabel POOP_ROTATION_MATRIX,      0x801341ec
 .definelabel MAP_LAYER_ENABLED,         0x80134ec8
 .definelabel HAS_USED_EVOITEM,          0x80134e52
+
+// libapi
+.definelabel libapi_malloc3, 0x80090f84
 
 // libc
 .definelabel strcat,  0x800911cc

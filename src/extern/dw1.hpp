@@ -599,7 +599,7 @@ extern "C"
     {
         DigimonType type;
         PositionData* posData;
-        void** animPtr;
+        int32_t* animPtr;
         MomentumData* momentum;
         int32_t locX;
         int32_t locY;
@@ -782,16 +782,25 @@ extern "C"
 
     struct EntityTable
     {
-        TamerEntity* tamer;
-        PartnerEntity* partner;
-        NPCEntity* npc1;
-        NPCEntity* npc2;
-        NPCEntity* npc3;
-        NPCEntity* npc4;
-        NPCEntity* npc5;
-        NPCEntity* npc6;
-        NPCEntity* npc7;
-        NPCEntity* npc8;
+        union
+        {
+            struct
+            {
+                TamerEntity* tamer;
+                PartnerEntity* partner;
+                NPCEntity* npc1;
+                NPCEntity* npc2;
+                NPCEntity* npc3;
+                NPCEntity* npc4;
+                NPCEntity* npc5;
+                NPCEntity* npc6;
+                NPCEntity* npc7;
+                NPCEntity* npc8;
+            };
+            Entity* table[10];
+        };
+
+        constexpr Entity* getEntityById(int32_t instanceId) { return table[instanceId]; }
     };
 
     struct TMDModel
@@ -806,7 +815,7 @@ extern "C"
     {
         int32_t unk0;
         TMDModel* modelPtr;
-        void* animTablePtr;
+        int32_t* animTablePtr;
         void* mmdPtr;
         int16_t pixelPage;
         int16_t clutPage;
@@ -815,6 +824,12 @@ extern "C"
         int16_t unk2_3;
         uint16_t digiType;
         int16_t unk3;
+    };
+
+    struct SkeletonNode
+    {
+        int8_t object;
+        int8_t parent;
     };
 
     using TickFunction   = void (*)(int32_t instanceId);
@@ -880,13 +895,19 @@ extern "C"
     extern bool MAP_LAYER_ENABLED;
     extern bool HAS_USED_EVOITEM;
     extern int16_t STATUS_UI_OFFSET_X;
+    extern SkeletonNode* DIGIMON_SKELETONS[180];
+    // TODO: can be non-extern, but large
+    extern PositionData PARTNER_POSITION_DATA[34];
+    extern MomentumData PARTNER_MOMENTUM_DATA[34];
+    extern PositionData TAMER_POSITION_DATA[22];
+    extern MomentumData TAMER_MOMENTUM_DATA[22];
 
+    extern void renderDigimon(int32_t instanceId);
     extern void setEntityPosition(int32_t entityId, int32_t posX, int32_t posY, int32_t posZ);
     extern void setEntityRotation(int32_t entityId, int32_t rotX, int32_t rotY, int32_t rotZ);
     extern void setupEntityMatrix(int32_t entityId);
     extern bool removeObject(ObjectID id, int32_t instance);
     extern void loadTMDandMTN(DigimonType digimonType, EntityType entityType, EvoModelData* modelData);
-    extern void initializeDigimonObject(DigimonType type, int32_t instanceId, TickFunction tick);
     extern void Partner_tick(int32_t);
     extern void projectPosition(GsCOORDINATE2* position, Vector* translation, SVector* rotation, Vector* scale);
     extern void renderObject(GsDOBJ2* obj, GsOT* ot, int32_t shift);
