@@ -9,9 +9,6 @@
   .fill 0x800a1628-.
 .endarea
 
-.org 0x800a13b0
-  jal renderFlatDigimon
-
 ;.org 0x800a446c
 ;  jal loadMMD
 .org 0x800a983c
@@ -51,6 +48,7 @@
 .org 0x800f1558
   jal initializeDigimonObject
 
+.notice removeEntity
 
 .org 0x800b61a8		
   jal removeEntity
