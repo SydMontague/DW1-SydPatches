@@ -34,6 +34,10 @@ extern "C"
         int32_t pad;
     };
 
-    void libgte_SetRotMatrix(Matrix* matrix);
-    void libgte_SetTransMatrix(Matrix* matrix);
+    extern void libgte_SetRotMatrix(Matrix* matrix);
+    extern void libgte_SetTransMatrix(Matrix* matrix);
+    extern Matrix* libgte_RotMatrix(SVector* rotation, Matrix* matrix);
+    extern Matrix* libgte_ScaleMatrix(Matrix* matrix, Vector* scale);
+    extern Matrix* libgte_TransMatrix(Matrix* matrix, Vector* translation);
+    extern SVector* libgte_ApplyMatrixSV(Matrix* matrix, SVector* input, SVector* output);
 }

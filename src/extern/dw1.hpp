@@ -794,6 +794,29 @@ extern "C"
         NPCEntity* npc8;
     };
 
+    struct TMDModel
+    {
+        int32_t id;
+        uint32_t flags;
+        int32_t objectCount;
+        TMD_STRUCT objects[];
+    };
+
+    struct ModelComponent
+    {
+        int32_t unk0;
+        TMDModel* modelPtr;
+        void* animTablePtr;
+        void* mmdPtr;
+        int16_t pixelPage;
+        int16_t clutPage;
+        uint8_t pixelOffsetX;
+        uint8_t pixelOffsetY;
+        int16_t unk2_3;
+        uint16_t digiType;
+        int16_t unk3;
+    };
+
     using TickFunction   = void (*)(int32_t instanceId);
     using RenderFunction = void (*)(int32_t instanceId);
     using ItemFunction   = void (*)(ItemType itemId);
@@ -937,6 +960,10 @@ extern "C"
     extern void unsetButterfly(uint32_t id);
     extern void advanceToTime(uint32_t hour, uint32_t minute);
     extern void getModelTile(Vector* location, int16_t* tileX, int16_t* tileY);
+
+    extern EntityType getEntityType(Entity* entity);
+    extern ModelComponent* getEntityModelComponent(DigimonType digimonType, EntityType entityType);
+    extern void add3DSpritePrim(POLY_FT4* prim, SVector* vec1, SVector* vec2, SVector* vec3, SVector* vec4);
 }
 
 static_assert(sizeof(PositionData) == 0x88);

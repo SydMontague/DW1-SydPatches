@@ -63,6 +63,9 @@
 .definelabel readFile,                  0x800a3410
 .definelabel initializeConditionBubbles,0x800ec520
 .definelabel initializeButterfly,       0x800e9ce8
+.definelabel getEntityType,             0x800a2660
+.definelabel getEntityModelComponent,   0x800a254c
+.definelabel add3DSpritePrim,           0x800da1fc
 
 .definelabel STATUS_UI_OFFSET_X, 0x80134c50
 .definelabel IS_NATURAL_DEATH, 0x80134c4c
@@ -157,6 +160,10 @@
 // libgte
 .definelabel libgte_setRotMatrix, 0x8009b200
 .definelabel libgte_setTransMatrix, 0x8009b290
+.definelabel libgte_RotMatrix, 0x8009b804
+.definelabel libgte_ScaleMatrix, 0x8009b0c0
+.definelabel libgte_TransMatrix, 0x8009b090
+.definelabel libgte_ApplyMatrixSV, 0x8009b030
 
 // PSX internal
 .definelabel TIMER0, 0x1F801100
