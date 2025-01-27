@@ -623,4 +623,45 @@ extern "C"
                              comp->pixelOffsetY,
                              comp->clutPage - 0x7A00);
     }
+
+    // this function blows up in size otherwise
+    __attribute__((optimize("Os")))
+    inline void unloadNPCModel(DigimonType type) {
+        for(auto& model : NPC_MODEL) {
+            if(model.digiType != type) continue;
+
+            model.useCount--;
+            if(model.useCount <= 0) {
+                model.digiType = DigimonType::INVALID; // NOLINT
+                if(model.mmdPtr != nullptr)
+                    libapi_free3(model.mmdPtr);
+                model.modelPtr = nullptr;
+                model.animTablePtr = nullptr;
+                model.mmdPtr = nullptr;
+                if(model.modelId != -1)
+                    NPC_MODEL_TAKEN[model.modelId] = 0;
+                model.modelId = -1;
+            }
+        }
+    }
+
+    // this function blows up in size otherwise
+    __attribute__((optimize("Os")))
+    inline void unloadUnknowModel(int32_t id) {
+        for(auto& model : UNKNOWN_MODEL) {
+            if(model.useCount != id) continue;
+
+            model.useCount = 0;
+            if(model.modelId != -1)
+                UNKNOWN_MODEL_TAKEN[model.modelId] = 0;
+            model.modelId = -1;
+        }
+    }
+
+    void unloadModel(int32_t id, EntityType type)  {
+        if(type == EntityType::NPC)
+            unloadNPCModel(static_cast<DigimonType>(id));
+        else if(type == EntityType::UNKNOWN)
+            unloadUnknowModel(id);
+    }
 }

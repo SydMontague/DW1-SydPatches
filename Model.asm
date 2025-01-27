@@ -2,11 +2,11 @@
 .psx
 
 .org 0x800a0a50
-.area 0x800a23f4-.
+.area 0x800a254c-.
   .importobj "compiled/Model.lib"
 
-  .notice "Empty space left: " + (0x800a23f4-.) + " bytes"
-  .fill 0x800a23f4-.
+  .notice "Empty space left: " + (0x800a254c-.) + " bytes"
+  .fill 0x800a254c-.
 .endarea
 
 ;.org 0x800a446c
@@ -181,6 +181,9 @@
 .org 0x8005724c
   jal removeEntity
 
+.org 0x80063830
+  jal unloadModel
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
@@ -188,6 +191,9 @@
 
 .org 0x80056cb8
   jal resetFlattenGlobal
+
+.org 0x80065078
+  jal unloadModel
 
 .close
 
@@ -211,6 +217,9 @@
 
 .org 0x8005e8f0
   jal resetFlattenGlobal
+
+.org 0x8006d760
+  jal unloadModel
 
 .close
 
