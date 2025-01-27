@@ -162,6 +162,12 @@ extern "C"
         uint32_t pad;
     };
 
+    constexpr void libgpu_SetPolyGT3(POLY_GT3* prim)
+    {
+        prim->tag[3] = 9;
+        prim->code   = 0x34;
+    }
+
     constexpr void libgpu_SetPolyGT4(POLY_GT4* prim)
     {
         prim->tag[3] = 12;

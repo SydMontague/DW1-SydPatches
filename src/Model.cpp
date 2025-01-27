@@ -98,7 +98,7 @@ extern "C"
         auto* entity = ENTITY_TABLE.getEntityById(instanceId);
         if (entity == nullptr) return;
 
-        if (entity->isOnMap != 2 && (entity->isOnMap == 0 && entity->isOnScreen == 0)) return;
+        if (entity->isOnMap != 2 && (entity->isOnMap == 0 || entity->isOnScreen == 0)) return;
 
         if (entity->flatSprite != 0xFF)
             renderFlatDigimon(entity);
@@ -210,6 +210,9 @@ extern "C"
     {
         removeObject(static_cast<ObjectID>(type), instanceId);
 
+        // never remove player or partner
+        if(instanceId == 0 || instanceId == 1) return;
+
         auto* entity = ENTITY_TABLE.getEntityById(instanceId);
         if (entity == nullptr) return;
 
@@ -292,9 +295,9 @@ extern "C"
             CVector* color1  = reinterpret_cast<CVector*>(&prim->r1);
             CVector* color2  = reinterpret_cast<CVector*>(&prim->r2);
             libgte_NormalColorCol3(normal0, normal1, normal2, &colorInput, color0, color1, color2);
-            // TODO: create SetPolyGT3
-            prim->tag[3] = 9;
-            prim->code   = 0x34;
+            
+            // make sure to call this *after* NormalColorCol3, otherwise things get overwritten
+            libgpu_SetPolyGT3(prim);
 
             prim->x0 = sXY0.x;
             prim->y0 = sXY0.y;
@@ -367,7 +370,6 @@ extern "C"
         {
             // draw normal
             POLY_GT4* prim = reinterpret_cast<POLY_GT4*>(primPtr);
-            libgpu_SetPolyGT4(prim);
 
             SVector* normal0 = normalTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x14);
             SVector* normal1 = normalTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x18);
@@ -379,6 +381,9 @@ extern "C"
             CVector* color3  = reinterpret_cast<CVector*>(&prim->r3);
             libgte_NormalColorCol3(normal0, normal1, normal2, &colorInput, color0, color1, color2);
             libgte_NormalColorCol(normal3, &colorInput, color3);
+
+            // make sure to call this *after* NormalColorCol3, otherwise things get overwritten
+            libgpu_SetPolyGT4(prim);
 
             prim->x0 = sXY0.x;
             prim->y0 = sXY0.y;
@@ -510,21 +515,7 @@ extern "C"
 
     void concatStrings(char* out, char* in1, char* in2)
     {
-        char current = *in1;
-        while (current != 0)
-        {
-            *out++  = current;
-            current = *in1++;
-        }
-
-        current = *in2;
-        while (current != 0)
-        {
-            *out++  = current;
-            current = *in2++;
-        }
-
-        *out = 0;
+        sprintf(reinterpret_cast<uint8_t*>(out), "%s%s", in1, in2);
     }
 
     void initializeModelComponents()
