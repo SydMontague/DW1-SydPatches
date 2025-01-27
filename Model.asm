@@ -2,11 +2,11 @@
 .psx
 
 .org 0x800a0a50
-.area 0x800a1cd8-.
+.area 0x800a23f4-.
   .importobj "compiled/Model.lib"
 
-  .notice "Empty space left: " + (0x800a1cd8-.) + " bytes"
-  .fill 0x800a1cd8-.
+  .notice "Empty space left: " + (0x800a23f4-.) + " bytes"
+  .fill 0x800a23f4-.
 .endarea
 
 ;.org 0x800a446c
@@ -48,7 +48,6 @@
 .org 0x800f1558
   jal initializeDigimonObject
 
-.notice removeEntity
 
 .org 0x800b61a8		
   jal removeEntity
@@ -125,6 +124,30 @@
 .org 0x800f1b7c
   jal setEntityRotation
 
+.org 0x800f03d4
+  jal resetFlattenGlobal
+.org 0x800f2e94
+  jal resetFlattenGlobal
+
+.org 0x800a2ba8
+  jal loadDigimonTexture
+
+.org 0x800a29a4
+  jal concatStrings
+.org 0x800a29b4
+  jal concatStrings
+.org 0x800a2bbc
+  jal concatStrings
+.org 0x800a2bcc
+  jal concatStrings
+.org 0x800a2c68
+  jal concatStrings
+.org 0x800a2c78
+  jal concatStrings
+
+.org 0x800ee85c
+  jal initializeModelComponents
+
 .close
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
@@ -160,6 +183,14 @@
 
 .close
 
+.open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
+.psx
+
+.org 0x80056cb8
+  jal resetFlattenGlobal
+
+.close
+
 
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
 .psx
@@ -176,6 +207,10 @@
   jal setEntityRotation
 .org 0x80058568
   jal setEntityRotation
+
+
+.org 0x8005e8f0
+  jal resetFlattenGlobal
 
 .close
 

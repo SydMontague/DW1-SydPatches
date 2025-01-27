@@ -768,7 +768,7 @@ extern "C"
         NONE = -1,
     };
 
-    class NPCEntity : DigimonEntity
+    struct NPCEntity : DigimonEntity
     {
         SVector flee;
         int16_t bits;
@@ -829,7 +829,7 @@ extern "C"
 
     struct ModelComponent
     {
-        int32_t unk0;
+        int32_t useCount;
         TMDModel* modelPtr;
         int32_t* animTablePtr;
         void* mmdPtr;
@@ -837,8 +837,8 @@ extern "C"
         int16_t clutPage;
         uint8_t pixelOffsetX;
         uint8_t pixelOffsetY;
-        int16_t unk2_3;
-        uint16_t digiType;
+        int16_t modelId;
+        DigimonType digiType : 16;
         int16_t unk3;
     };
 
@@ -866,6 +866,7 @@ extern "C"
     extern RGB8 TEXT_COLORS[17];
     extern GsOT* ACTIVE_ORDERING_TABLE;
     extern PartnerEntity PARTNER_ENTITY;
+    extern NPCEntity NPC_ENTITIES[8];
     extern ItemFunction ITEM_FUNCTIONS[128];
     extern uint32_t IS_SCRIPT_PAUSED;
     extern int32_t NANIMON_TRIGGER;
@@ -919,14 +920,26 @@ extern "C"
     extern int16_t WIREFRAME_COLOR_MIN;
     extern int16_t WIREFRAME_COLOR_MAX;
     extern uint8_t WIREFRAME_RNG_TABLE[16];
+    extern ModelComponent TAMER_MODEL;
+    extern ModelComponent PARTNER_MODEL;
+    extern uint8_t TAMER_MODEL_BUFFER[56 * 1024];
+    extern uint8_t PARTNER_MODEL_BUFFER[98 * 1024];
+    extern ModelComponent NPC_MODEL[5];
+    extern ModelComponent UNKNOWN_MODEL[16];
+    extern int32_t NPC_MODEL_TAKEN[5];
+    extern int32_t UNKNOWN_MODEL_TAKEN[16];
+    extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
     // TODO: can be non-extern, but large
     extern PositionData PARTNER_POSITION_DATA[34];
     extern MomentumData PARTNER_MOMENTUM_DATA[34];
     extern PositionData TAMER_POSITION_DATA[22];
     extern MomentumData TAMER_MOMENTUM_DATA[22];
 
+    extern uint32_t lookupFileSize(const uint8_t* path);
+    extern void updateTMDTextureData(TMDModel* model, int pixelPage, int pixelOffsetX, int pixelOffsetY, int clutPage);
+    extern void readFileSectors(const char* path, void* buffer, uint32_t offset, uint32_t count);
+    extern void uploadModelTexture(void* buffer, ModelComponent* model);
     extern void setRotTransMatrix(Matrix* matrix);
-    extern void renderWireframed(GsDOBJ2* obj, int32_t wireFrameShare);
     extern void renderDropShadow(Entity* entity);
     extern void setupModelMatrix(PositionData* data);
     extern bool removeObject(ObjectID id, int32_t instance);
@@ -934,7 +947,6 @@ extern "C"
     extern void Partner_tick(int32_t);
     extern void projectPosition(GsCOORDINATE2* position, Vector* translation, SVector* rotation, Vector* scale);
     extern void renderObject(GsDOBJ2* obj, GsOT* ot, int32_t shift);
-    extern void loadMMD(DigimonType digimonType, EntityType entityType);
     extern void loadPartnerSounds(DigimonType type);
     extern void learnMove(uint8_t move);
     extern void initializeConditionBubbles();
@@ -1026,3 +1038,4 @@ static_assert(sizeof(RGB8) == 3);
 static_assert(sizeof(EvolutionPath) == 11);
 static_assert(sizeof(NPCEntity) == 0x68);
 static_assert(sizeof(EvoSequenceData) == 0x34);
+static_assert(sizeof(ModelComponent) == 0x1C);

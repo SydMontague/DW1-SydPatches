@@ -1,14 +1,10 @@
 #pragma once
 #include "Font.hpp"
 #include "extern/stddef.hpp"
+#include "Helper.hpp"
 
 extern "C"
 {
-    constexpr uint16_t getClut(uint32_t dx, uint32_t dy)
-    {
-        return (dy & 0x3ff) << 6 | dx >> 4 & 0x3fU;
-    }
-
     enum class AlignmentX : uint8_t
     {
         LEFT,

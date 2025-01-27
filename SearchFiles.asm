@@ -49,10 +49,10 @@ SS_address: ; initializeMusic
   li.u a1,ALLTIM_address
 .org 0x800a2950
   li.l a1,ALLTIM_address
-.org 0x800a1d68
-  li.u a1,ALLTIM_address
-.org 0x800a1d74
-  li.l a1,ALLTIM_address
+;.org 0x800a1d68
+;  li.u a1,ALLTIM_address
+;.org 0x800a1d74
+;  li.l a1,ALLTIM_address
 
 ;; redirect SB string to new address
 .org 0x800c65ec

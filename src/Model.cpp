@@ -25,7 +25,7 @@ extern "C"
     void renderFlatDigimon(Entity* entity)
     {
         auto entityType = getEntityType(entity);
-        auto model      = getEntityModelComponent(entity->type, entityType);
+        auto* model     = getEntityModelComponent(entity->type, entityType);
 
         POLY_FT4* prim = (POLY_FT4*)libgs_GsGetWorkBase();
         libgpu_SetPolyFT4(prim);
@@ -484,5 +484,152 @@ extern "C"
         }
 
         libgs_GsSetWorkBase(primPtr);
+    }
+
+    void resetFlattenGlobal()
+    {
+        TAMER_ENTITY.flatSprite = 0xFF;
+        TAMER_ENTITY.flatTimer  = 0;
+
+        PARTNER_ENTITY.flatSprite = 0xFF;
+        PARTNER_ENTITY.flatTimer  = 0;
+        for (Entity& entity : NPC_ENTITIES)
+        {
+            entity.flatSprite = 0xFF;
+            entity.flatTimer  = 0;
+        }
+    }
+
+    void loadDigimonTexture(DigimonType type, const char* name, ModelComponent* model)
+    {
+        auto* buffer = libapi_malloc3(0x4800);
+        readFileSectors("CHDAT\\ALLTIM.TIM", buffer, static_cast<uint32_t>(type) * 9, 9);
+        uploadModelTexture(buffer, model);
+        libapi_free3(buffer);
+    }
+
+    void concatStrings(char* out, char* in1, char* in2)
+    {
+        char current = *in1;
+        while (current != 0)
+        {
+            *out++  = current;
+            current = *in1++;
+        }
+
+        current = *in2;
+        while (current != 0)
+        {
+            *out++  = current;
+            current = *in2++;
+        }
+
+        *out = 0;
+    }
+
+    void initializeModelComponents()
+    {
+        ModelComponent base = {0};
+        base.modelId        = -1;
+        base.digiType       = DigimonType::INVALID; // NOLINT: bitfield truncation expected
+
+        for (auto& model : NPC_MODEL)
+            model = base;
+        for (auto& taken : NPC_MODEL_TAKEN)
+            taken = 0;
+
+        for (auto& model : UNKNOWN_MODEL)
+            model = base;
+        for (auto& taken : UNKNOWN_MODEL_TAKEN)
+            taken = 0;
+    }
+
+
+    inline ModelComponent* getNPCComponent(DigimonType type)
+    {
+        for (auto& component : NPC_MODEL)
+        {
+            if (component.useCount == 0) return &component;
+            if (component.digiType == type) return &component;
+        }
+
+        return nullptr;
+    }
+
+    void loadMMD(DigimonType digimonType, EntityType entityType)
+    {
+        if (entityType == EntityType::UNKNOWN) return;
+        if (!isValidDigimon(digimonType)) return;
+
+        ModelComponent* comp;
+        uint8_t pathBuffer[32];
+        sprintf(pathBuffer,
+                "CHDAT\\MMD%d\\%s.MMD",
+                static_cast<uint32_t>(digimonType) / 30,
+                PTR_DIGIMON_FILE_NAMES[static_cast<uint32_t>(digimonType)]);
+
+        if (entityType == EntityType::NPC)
+        {
+            comp = getNPCComponent(digimonType);
+            if (comp == nullptr) return;
+            if (comp->useCount > 0) return;
+
+            comp->useCount++;
+            // TODO this whole NPC_MODEL_TAKEN stuff can probably be removed, as texture sizes are static
+            int32_t i = 0;
+            for (; i < 5; i++)
+                if (NPC_MODEL_TAKEN[i] == 0) break;
+
+            if (i >= 5) return;
+
+            NPC_MODEL_TAKEN[i] = 1;
+
+            comp->pixelPage    = i / 2 + 0x16;
+            comp->clutPage     = (((i * 0x10 + 0x20) / 16) & 0x3F) | 0x7A00;
+            comp->pixelOffsetX = 0;
+            comp->pixelOffsetY = 128 * (i & 1);
+            comp->modelId      = i;
+            comp->digiType     = digimonType;
+
+            auto fileSize = lookupFileSize(pathBuffer);
+            comp->mmdPtr  = reinterpret_cast<uint8_t*>(libapi_malloc3((fileSize + 0x7FF) & 0xFFFFF800));
+        }
+        // TODO this is static data?
+        if (entityType == EntityType::PLAYER)
+        {
+            comp               = &TAMER_MODEL;
+            comp->pixelPage    = 0x15;
+            comp->clutPage     = 0x7A00;
+            comp->pixelOffsetX = 0;
+            comp->pixelOffsetY = 0;
+            comp->modelId      = 0;
+            comp->mmdPtr       = TAMER_MODEL_BUFFER;
+        }
+        if (entityType == EntityType::PARTNER)
+        {
+            comp               = &PARTNER_MODEL;
+            comp->pixelPage    = 0x15;
+            comp->clutPage     = 0x7A01;
+            comp->pixelOffsetX = 0;
+            comp->pixelOffsetY = 0x80;
+            comp->modelId      = 0;
+            comp->mmdPtr       = PARTNER_MODEL_BUFFER;
+        }
+        
+        // load MMD file
+        readFile(reinterpret_cast<char*>(pathBuffer), comp->mmdPtr);
+        comp->modelPtr     = reinterpret_cast<TMDModel*>(reinterpret_cast<uint8_t*>(comp->mmdPtr) +
+                                                     reinterpret_cast<uint32_t*>(comp->mmdPtr)[0]);
+        comp->animTablePtr = reinterpret_cast<int32_t*>(reinterpret_cast<uint8_t*>(comp->mmdPtr) +
+                                                        reinterpret_cast<uint32_t*>(comp->mmdPtr)[1]);
+        libgs_GsMapModelingData(&comp->modelPtr->flags);
+
+        // load texture
+        loadDigimonTexture(digimonType, "", comp);
+        updateTMDTextureData(comp->modelPtr,
+                             comp->pixelPage,
+                             comp->pixelOffsetX,
+                             comp->pixelOffsetY,
+                             comp->clutPage - 0x7A00);
     }
 }

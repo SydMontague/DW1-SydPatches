@@ -1,3 +1,4 @@
+#pragma once
 #include "extern/dw1.hpp"
 #include "extern/stddef.hpp"
 
@@ -70,6 +71,25 @@ extern "C"
     {
         if (happiness >= 80) return 0;
         return 1 + (happiness - 80) / -50;
+    }
+
+    /*
+     * Returns whether the DigimonType is a valid Digimon
+     */
+    constexpr bool isValidDigimon(DigimonType type)
+    {
+        if (type == DigimonType::INVALID) return false;
+        if (type > DigimonType::NPC2_METALGREYMON) return false;
+
+        return true;
+    }
+
+    /*
+     * Gets the CLUT address of the given point in VRAM
+     */
+    constexpr uint16_t getClut(uint32_t dx, uint32_t dy)
+    {
+        return (dy & 0x3ff) << 6 | dx >> 4 & 0x3fU;
     }
 
     constexpr DigimonData* getDigimonData(DigimonType type)

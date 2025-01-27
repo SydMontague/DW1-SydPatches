@@ -53,7 +53,6 @@
 .definelabel Partner_tick,              0x800dd7ac
 .definelabel projectPosition,           0x800e1074
 .definelabel renderObject,              0x800e215c
-.definelabel loadMMD,                   0x800a1f68
 .definelabel loadPartnerSounds,         0x800c64e0
 .definelabel learnMove,                 0x800e5f14
 .definelabel readFile,                  0x800a3410
@@ -66,10 +65,24 @@
 .definelabel setupModelMatrix,          0x800c19a4
 .definelabel renderDropShadow,          0x800a3f60
 .definelabel setRotTransMatrix,         0x800a3924
+.definelabel readFileSectors,           0x800a361c
+.definelabel uploadModelTexture,        0x800a26dc
+.definelabel updateTMDTextureData,      0x800a3e74
+.definelabel lookupFileSize,            0x800a32cc
 
 .definelabel DIGIMON_SKELETONS, 0x8011ce60
 .definelabel PARTNER_MOMENTUM_DATA, 0x80185be8
 .definelabel PARTNER_POSITION_DATA, 0x801866cc
+.definelabel UNKNOWN_MODEL, 0x80137218
+.definelabel UNKNOWN_MODEL_TAKEN, 0x801373d8
+.definelabel NPC_MODEL, 0x80137140
+.definelabel NPC_MODEL_TAKEN, 0x801371cc
+.definelabel TAMER_MODEL, 0x801371e0
+.definelabel TAMER_MODEL_BUFFER, 0x801a1398
+.definelabel PARTNER_MODEL, 0x801371fc
+.definelabel PARTNER_MODEL_BUFFER, 0x801878dc
+.definelabel PTR_DIGIMON_FILE_NAMES, 0x8011d19c
+.definelabel NPC_ENTITIES, 0x80155828
 
 .definelabel TAMER_MOMENTUM_DATA, 0x801a00dc
 .definelabel TAMER_POSITION_DATA, 0x801a07e8
