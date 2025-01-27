@@ -33,4 +33,10 @@
 .org 0x800a97a4
   li a2,2
 
+; fix last pixel missing
+.org 0x800a9414
+  li a2,0x4C
+.org 0x800a9450
+  li a2,0x4C
+
 .close
