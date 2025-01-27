@@ -8,4 +8,6 @@ extern "C"
     extern void setEntityRotation(int32_t entityId, int32_t rotX, int32_t rotY, int32_t rotZ);
     extern void loadMMD(DigimonType digimonType, EntityType entityType);
     extern void renderWireframed(GsDOBJ2* obj, int32_t wireFrameShare);
+    extern ModelComponent* getEntityModelComponent(int32_t instance, EntityType entityType);
+    extern EntityType getEntityType(Entity* entity);
 }

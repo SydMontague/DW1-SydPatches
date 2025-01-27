@@ -58,8 +58,6 @@
 .definelabel readFile,                  0x800a3410
 .definelabel initializeConditionBubbles,0x800ec520
 .definelabel initializeButterfly,       0x800e9ce8
-.definelabel getEntityType,             0x800a2660
-.definelabel getEntityModelComponent,   0x800a254c
 .definelabel add3DSpritePrim,           0x800da1fc
 .definelabel setupModelMatrix,          0x800c19a4
 .definelabel renderDropShadow,          0x800a3f60

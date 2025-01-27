@@ -1017,8 +1017,6 @@ extern "C"
     extern void advanceToTime(uint32_t hour, uint32_t minute);
     extern void getModelTile(Vector* location, int16_t* tileX, int16_t* tileY);
 
-    extern EntityType getEntityType(Entity* entity);
-    extern ModelComponent* getEntityModelComponent(DigimonType digimonType, EntityType entityType);
     extern void add3DSpritePrim(POLY_FT4* prim, SVector* vec1, SVector* vec2, SVector* vec3, SVector* vec4);
 }
 

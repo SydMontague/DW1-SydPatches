@@ -2,11 +2,11 @@
 .psx
 
 .org 0x800a0a50
-.area 0x800a254c-.
+.area 0x800a26dc-.
   .importobj "compiled/Model.lib"
 
-  .notice "Empty space left: " + (0x800a254c-.) + " bytes"
-  .fill 0x800a254c-.
+  .notice "Empty space left: " + (0x800a26dc-.) + " bytes"
+  .fill 0x800a26dc-.
 .endarea
 
 ;.org 0x800a446c
@@ -147,6 +147,12 @@
 
 .org 0x800ee85c
   jal initializeModelComponents
+  
+.org 0x800c1a8c
+  jal getEntityModelComponent
+
+.org 0x800c1a80
+  jal getEntityType
 
 .close
 
@@ -241,6 +247,22 @@
 .org 0x80063a8c
   jal removeEntity
 
+.org 0x80060064
+  jal getEntityModelComponent
+.org 0x80061a9c
+  jal getEntityModelComponent
+.org 0x80061dc0
+  jal getEntityModelComponent
+.org 0x80062478
+  jal getEntityModelComponent
+
+.org 0x80060058
+  jal getEntityType
+.org 0x80061a90
+  jal getEntityType
+
+
+
 .close
 
 
@@ -266,5 +288,37 @@
   jal setEntityPosition
 .org 0x8008255c
   jal setEntityPosition
+
+.org 0x800812bc
+  jal getEntityModelComponent
+.org 0x80083348
+  jal getEntityModelComponent
+.org 0x80083c10
+  jal getEntityModelComponent
+
+.org 0x800812b0
+  jal getEntityType
+
+
+.close
+
+
+.open "work/DIGIMON/MURD_REL.BIN",0x8007C000
+.psx
+
+.org 0x8007c684
+  jal getEntityModelComponent
+
+.org 0x8007c678
+  jal getEntityType
+
+.close
+
+
+.open "work/DIGIMON/MURD_REL.BIN",0x80060000
+.psx
+
+.org 0x800601ac
+  jal getEntityModelComponent
 
 .close

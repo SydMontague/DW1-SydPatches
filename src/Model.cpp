@@ -25,7 +25,7 @@ extern "C"
     void renderFlatDigimon(Entity* entity)
     {
         auto entityType = getEntityType(entity);
-        auto* model     = getEntityModelComponent(entity->type, entityType);
+        auto* model     = getEntityModelComponent(static_cast<int32_t>(entity->type), entityType);
 
         POLY_FT4* prim = (POLY_FT4*)libgs_GsGetWorkBase();
         libgpu_SetPolyFT4(prim);
@@ -166,9 +166,9 @@ extern "C"
             entity->momentum = TAMER_MOMENTUM_DATA;
         }
 
-        auto* model            = getEntityModelComponent(type, entityType);
+        auto* model            = getEntityModelComponent(static_cast<int32_t>(type), entityType);
         entity->animPtr        = model->animTablePtr;
-        SkeletonNode* skeleton = DIGIMON_SKELETONS[static_cast<uint32_t>(type)];
+        SkeletonNode* skeleton = DIGIMON_SKELETONS[static_cast<int32_t>(type)];
 
         for (int32_t boneId = 0; boneId < boneCount; boneId++)
         {
@@ -211,7 +211,7 @@ extern "C"
         removeObject(static_cast<ObjectID>(type), instanceId);
 
         // never remove player or partner
-        if(instanceId == 0 || instanceId == 1) return;
+        if (instanceId == 0 || instanceId == 1) return;
 
         auto* entity = ENTITY_TABLE.getEntityById(instanceId);
         if (entity == nullptr) return;
@@ -295,7 +295,7 @@ extern "C"
             CVector* color1  = reinterpret_cast<CVector*>(&prim->r1);
             CVector* color2  = reinterpret_cast<CVector*>(&prim->r2);
             libgte_NormalColorCol3(normal0, normal1, normal2, &colorInput, color0, color1, color2);
-            
+
             // make sure to call this *after* NormalColorCol3, otherwise things get overwritten
             libgpu_SetPolyGT3(prim);
 
@@ -535,7 +535,6 @@ extern "C"
             taken = 0;
     }
 
-
     inline ModelComponent* getNPCComponent(DigimonType type)
     {
         for (auto& component : NPC_MODEL)
@@ -606,7 +605,7 @@ extern "C"
             comp->modelId      = 0;
             comp->mmdPtr       = PARTNER_MODEL_BUFFER;
         }
-        
+
         // load MMD file
         readFile(reinterpret_cast<char*>(pathBuffer), comp->mmdPtr);
         comp->modelPtr     = reinterpret_cast<TMDModel*>(reinterpret_cast<uint8_t*>(comp->mmdPtr) +
@@ -625,43 +624,86 @@ extern "C"
     }
 
     // this function blows up in size otherwise
-    __attribute__((optimize("Os")))
-    inline void unloadNPCModel(DigimonType type) {
-        for(auto& model : NPC_MODEL) {
-            if(model.digiType != type) continue;
+    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
+    __attribute__((optimize("Os"))) inline void unloadNPCModel(DigimonType type)
+    {
+        for (auto& model : NPC_MODEL)
+        {
+            if (model.digiType != type) continue;
 
             model.useCount--;
-            if(model.useCount <= 0) {
+            if (model.useCount <= 0)
+            {
                 model.digiType = DigimonType::INVALID; // NOLINT
-                if(model.mmdPtr != nullptr)
-                    libapi_free3(model.mmdPtr);
-                model.modelPtr = nullptr;
+                if (model.mmdPtr != nullptr) libapi_free3(model.mmdPtr);
+                model.modelPtr     = nullptr;
                 model.animTablePtr = nullptr;
-                model.mmdPtr = nullptr;
-                if(model.modelId != -1)
-                    NPC_MODEL_TAKEN[model.modelId] = 0;
+                model.mmdPtr       = nullptr;
+                if (model.modelId != -1) NPC_MODEL_TAKEN[model.modelId] = 0;
                 model.modelId = -1;
             }
         }
     }
 
     // this function blows up in size otherwise
-    __attribute__((optimize("Os")))
-    inline void unloadUnknowModel(int32_t id) {
-        for(auto& model : UNKNOWN_MODEL) {
-            if(model.useCount != id) continue;
+    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
+    __attribute__((optimize("Os"))) inline void unloadUnknowModel(int32_t id)
+    {
+        for (auto& model : UNKNOWN_MODEL)
+        {
+            if (model.useCount != id) continue;
 
             model.useCount = 0;
-            if(model.modelId != -1)
-                UNKNOWN_MODEL_TAKEN[model.modelId] = 0;
+            if (model.modelId != -1) UNKNOWN_MODEL_TAKEN[model.modelId] = 0;
             model.modelId = -1;
         }
     }
 
-    void unloadModel(int32_t id, EntityType type)  {
-        if(type == EntityType::NPC)
+    void unloadModel(int32_t id, EntityType type)
+    {
+        if (type == EntityType::NPC)
             unloadNPCModel(static_cast<DigimonType>(id));
-        else if(type == EntityType::UNKNOWN)
+        else if (type == EntityType::UNKNOWN)
             unloadUnknowModel(id);
+    }
+
+    ModelComponent* getEntityModelComponent(int32_t instance, EntityType type)
+    {
+        if (type == EntityType::PLAYER) return &TAMER_MODEL;
+        if (type == EntityType::PARTNER) return &PARTNER_MODEL;
+
+        if (type == EntityType::NPC)
+        {
+            auto digimonType = static_cast<DigimonType>(instance);
+            if (!isValidDigimon(digimonType)) return nullptr;
+
+            for (auto& model : NPC_MODEL)
+                if (model.digiType == digimonType && model.useCount > 0) return &model;
+
+            return nullptr;
+        }
+
+        if (type == EntityType::UNKNOWN)
+        {
+            // TODO this should be a bug? UNKNOWN_MODEL has only 16 entries
+            if (instance < 0 || instance > 149) return nullptr;
+
+            auto* model = &UNKNOWN_MODEL[instance];
+            return model->useCount != 0 ? model : nullptr;
+        }
+
+        return nullptr;
+    }
+
+    EntityType getEntityType(Entity* entity)
+    {
+        int32_t i = 0;
+        while (ENTITY_TABLE.table[i] != entity)
+            i++;
+
+        if (i == 0) return EntityType::PLAYER;
+        if (i == 1) return EntityType::PARTNER;
+        if (i == 10) return EntityType::NONE;
+        return EntityType::NPC;
     }
 }
