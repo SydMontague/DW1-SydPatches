@@ -916,12 +916,16 @@ extern "C"
     extern uint16_t PARTNER_WIREFRAME_SUB[40];
     extern uint32_t ENTITY1_WIREFRAME_TOTAL;
     extern uint32_t PLAYER_SHADOW_ENABLED;
+    extern int16_t WIREFRAME_COLOR_MIN;
+    extern int16_t WIREFRAME_COLOR_MAX;
+    extern uint8_t WIREFRAME_RNG_TABLE[16];
     // TODO: can be non-extern, but large
     extern PositionData PARTNER_POSITION_DATA[34];
     extern MomentumData PARTNER_MOMENTUM_DATA[34];
     extern PositionData TAMER_POSITION_DATA[22];
     extern MomentumData TAMER_MOMENTUM_DATA[22];
 
+    extern void setRotTransMatrix(Matrix* matrix);
     extern void renderWireframed(GsDOBJ2* obj, int32_t wireFrameShare);
     extern void renderDropShadow(Entity* entity);
     extern void setupModelMatrix(PositionData* data);

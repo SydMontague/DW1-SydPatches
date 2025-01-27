@@ -64,8 +64,8 @@
 .definelabel add3DSpritePrim,           0x800da1fc
 .definelabel unloadModel,               0x800a23f4
 .definelabel setupModelMatrix,          0x800c19a4
-.definelabel renderWireframed,          0x800a1628
 .definelabel renderDropShadow,          0x800a3f60
+.definelabel setRotTransMatrix,         0x800a3924
 
 .definelabel DIGIMON_SKELETONS, 0x8011ce60
 .definelabel PARTNER_MOMENTUM_DATA, 0x80185be8
@@ -133,7 +133,9 @@
 .definelabel ENTITY1_WIREFRAME_TOTAL,   0x80133b38
 .definelabel PARTNER_WIREFRAME_TOTAL,   0x80133b34
 .definelabel PARTNER_WIREFRAME_SUB,     0x8011d130
-
+.definelabel WIREFRAME_COLOR_MIN, 0x80133b40
+.definelabel WIREFRAME_COLOR_MAX, 0x80133b42
+.definelabel WIREFRAME_RNG_TABLE, 0x8011d180
 
 // libapi
 .definelabel libapi_malloc3, 0x80090f84
@@ -150,6 +152,7 @@
 .definelabel memset,  0x8009125c
 .definelabel sprintf, 0x8009129c
 .definelabel printf,  0x8009128c
+.definelabel rand,    0x8009127c
 
 // libcd
 .definelabel libcd_CdSearchFile, 0x800b23c0
@@ -169,6 +172,7 @@
 .definelabel libgs_GsSortObject4, 0x80099d88
 
 .definelabel libgs_REFERENCE_MATRIX, 0x80136f84
+.definelabel libgs_GsLIGHTWSMATRIX, 0x80136f24
 
 // libgpu
 .definelabel libgpu_ClearImage, 0x80094818
@@ -176,6 +180,9 @@
 .definelabel libgpu_AddPrim, 0x80092ad4
 .definelabel libgpu_GetClut, 0x80092abc
 .definelabel libgpu_SetPolyFT4, 0x80092b88
+.definelabel libgpu_SetLineF2, 0x80092bc4
+.definelabel libgpu_SetLineF3, 0x80092bd8
+.definelabel libgpu_SetLineF4, 0x80092bf8
 
 // libgte
 .definelabel libgte_setRotMatrix, 0x8009b200
@@ -184,6 +191,13 @@
 .definelabel libgte_ScaleMatrix, 0x8009b0c0
 .definelabel libgte_TransMatrix, 0x8009b090
 .definelabel libgte_ApplyMatrixSV, 0x8009b030
+.definelabel libgte_MulMatrix0, 0x8009a8a0
+.definelabel libgte_RotNclip3, 0x8009b544
+.definelabel libgte_RotNclip4, 0x8009b5d4
+.definelabel libgte_NormalColorCol3, 0x8009b390
+.definelabel libgte_NormalColorCol, 0x8009b370
+.definelabel libgte_SetLightMatrix, 0x8009b230
+.definelabel libgte_CompMatrix, 0x8009a9b0
 
 // PSX internal
 .definelabel TIMER0, 0x1F801100

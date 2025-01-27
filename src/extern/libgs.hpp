@@ -35,8 +35,8 @@ extern "C"
 
     struct GsCOORDINATE2
     {
-        int32_t someValue;
-        Matrix modelMatrix;
+        int32_t flag;
+        Matrix coord;
         Matrix work;
         GsCOORD2PARAM* param;
         GsCOORDINATE2* super;
@@ -66,6 +66,7 @@ extern "C"
     };
 
     extern Matrix libgs_REFERENCE_MATRIX;
+    extern Matrix libgs_GsLIGHTWSMATRIX;
 
     extern void* libgs_GsGetWorkBase();
     extern void libgs_GsSetWorkBase(void* newBase);
