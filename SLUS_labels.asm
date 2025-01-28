@@ -49,7 +49,6 @@
 .definelabel updateTimeOfDay,           0x800d676c
 .definelabel isInDaytimeTransition,     0x800d7618
 .definelabel removeObject,              0x800a3008
-.definelabel loadTMDandMTN,             0x800a2a50
 .definelabel Partner_tick,              0x800dd7ac
 .definelabel projectPosition,           0x800e1074
 .definelabel renderObject,              0x800e215c
@@ -159,6 +158,7 @@
 .definelabel strncpy, 0x8009120c
 .definelabel strlen,  0x8009121c
 .definelabel strrchr, 0x8009122c
+.definelabel memcpy,  0x8009124c
 .definelabel memset,  0x8009125c
 .definelabel sprintf, 0x8009129c
 .definelabel printf,  0x8009128c

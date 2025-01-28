@@ -948,7 +948,6 @@ extern "C"
     extern void renderDropShadow(Entity* entity);
     extern void setupModelMatrix(PositionData* data);
     extern bool removeObject(ObjectID id, int32_t instance);
-    extern void loadTMDandMTN(DigimonType digimonType, EntityType entityType, EvoModelData* modelData);
     extern void Partner_tick(int32_t);
     extern void projectPosition(GsCOORDINATE2* position, Vector* translation, SVector* rotation, Vector* scale);
     extern void renderObject(GsDOBJ2* obj, GsOT* ot, int32_t shift);

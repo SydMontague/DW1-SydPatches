@@ -252,7 +252,7 @@ extern "C"
                                   int32_t rotZ)
     {
         removeObject(static_cast<ObjectID>(type), 1);
-        loadTMDandMTN(type, EntityType::PARTNER, &EVO_SEQUENCE_DATA.modelData);
+        applyMMD(type, EntityType::PARTNER, &EVO_SEQUENCE_DATA.modelData);
         ENTITY_TABLE.partner = &PARTNER_ENTITY;
         initializeDigimonObject(type, 1, Partner_tick);
         setEntityPosition(1, posX, posY, posZ);
@@ -291,7 +291,7 @@ extern "C"
                                        int32_t rotZ)
     {
         removeObject(static_cast<ObjectID>(type), 1);
-        loadTMDandMTN(type, EntityType::PARTNER, &REINCARNATION_MODEL_DATA);
+        applyMMD(type, EntityType::PARTNER, &REINCARNATION_MODEL_DATA);
         ENTITY_TABLE.partner = &PARTNER_ENTITY;
         initializeDigimonObject(type, 1, Partner_tick);
         setEntityPosition(1, posX, posY, posZ);

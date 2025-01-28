@@ -2,11 +2,11 @@
 .psx
 
 .org 0x800a0a50
-.area 0x800a2a50-.
+.area 0x800a2ef8-.
   .importobj "compiled/Model.lib"
 
-  .notice "Empty space left: " + (0x800a2a50-.) + " bytes"
-  .fill 0x800a2a50-.
+  .notice "Empty space left: " + (0x800a2ef8-.) + " bytes"
+  .fill 0x800a2ef8-.
 .endarea
 
 ;.org 0x800a446c
@@ -128,22 +128,6 @@
   jal resetFlattenGlobal
 .org 0x800f2e94
   jal resetFlattenGlobal
-
-.org 0x800a2ba8
-  jal loadDigimonTexture
-
-.org 0x800a29a4
-  jal concatStrings
-.org 0x800a29b4
-  jal concatStrings
-.org 0x800a2bbc
-  jal concatStrings
-.org 0x800a2bcc
-  jal concatStrings
-.org 0x800a2c68
-  jal concatStrings
-.org 0x800a2c78
-  jal concatStrings
 
 .org 0x800ee85c
   jal initializeModelComponents

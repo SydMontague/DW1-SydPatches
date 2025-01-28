@@ -10,4 +10,5 @@ extern "C"
     extern void renderWireframed(GsDOBJ2* obj, int32_t wireFrameShare);
     extern ModelComponent* getEntityModelComponent(int32_t instance, EntityType entityType);
     extern EntityType getEntityType(Entity* entity);
+    extern void applyMMD(DigimonType digimonType, EntityType entityType, EvoModelData* modelData);
 }

@@ -536,17 +536,12 @@ extern "C"
         libgpu_DrawSync(0);
     }
 
-    void loadDigimonTexture(DigimonType type, const char* name, ModelComponent* model)
+    void loadDigimonTexture(DigimonType type, ModelComponent* model)
     {
         uint32_t* buffer = reinterpret_cast<uint32_t*>(libapi_malloc3(0x4800));
         readFileSectors("CHDAT\\ALLTIM.TIM", buffer, static_cast<uint32_t>(type) * 9, 9);
         uploadModelTexture(buffer, model);
         libapi_free3(buffer);
-    }
-
-    void concatStrings(char* out, char* in1, char* in2)
-    {
-        sprintf(reinterpret_cast<uint8_t*>(out), "%s%s", in1, in2);
     }
 
     void initializeModelComponents()
@@ -646,7 +641,7 @@ extern "C"
         libgs_GsMapModelingData(&comp->modelPtr->flags);
 
         // load texture
-        loadDigimonTexture(digimonType, "", comp);
+        loadDigimonTexture(digimonType, comp);
         updateTMDTextureData(comp->modelPtr,
                              comp->pixelPage,
                              comp->pixelOffsetX,
@@ -759,5 +754,35 @@ extern "C"
         modelData->modelPtr  = buffer + 0x4800;
         addFileReadRequest2(pathBuffer, modelData->modelPtr, readComplete, nullptr, 0);
         modelData->modelSize = lookupFileSize(pathBuffer);
+    }
+
+    void applyMMD(DigimonType digimonType, EntityType entityType, EvoModelData* modelData)
+    {
+        // vanilla has some code loading TMD and MTN data separate for NPCs, but it never gets used and frankly makes no
+        // sense given the purpose of the function
+        if (!isValidDigimon(digimonType)) return;
+        if (entityType != EntityType::PARTNER) return;
+
+        PARTNER_MODEL.pixelPage    = 0x15;
+        PARTNER_MODEL.clutPage     = 0x7a01;
+        PARTNER_MODEL.pixelOffsetX = 0;
+        PARTNER_MODEL.pixelOffsetY = 0x80;
+        PARTNER_MODEL.modelId      = 0;
+        PARTNER_MODEL.mmdPtr       = PARTNER_MODEL_BUFFER;
+        PARTNER_MODEL.useCount     = 1;
+
+        uploadModelTexture(reinterpret_cast<uint32_t*>(modelData->imagePtr), &PARTNER_MODEL);
+        memcpy(PARTNER_MODEL.mmdPtr, modelData->modelPtr, modelData->modelSize);
+
+        PARTNER_MODEL.modelPtr     = reinterpret_cast<TMDModel*>(reinterpret_cast<uint8_t*>(PARTNER_MODEL.mmdPtr) +
+                                                             reinterpret_cast<uint32_t*>(PARTNER_MODEL.mmdPtr)[0]);
+        PARTNER_MODEL.animTablePtr = reinterpret_cast<int32_t*>(reinterpret_cast<uint8_t*>(PARTNER_MODEL.mmdPtr) +
+                                                                reinterpret_cast<uint32_t*>(PARTNER_MODEL.mmdPtr)[1]);
+        libgs_GsMapModelingData(&PARTNER_MODEL.modelPtr->flags);
+        updateTMDTextureData(PARTNER_MODEL.modelPtr,
+                             PARTNER_MODEL.pixelPage,
+                             PARTNER_MODEL.pixelOffsetX,
+                             PARTNER_MODEL.pixelOffsetY,
+                             PARTNER_MODEL.clutPage - 0x7a00);
     }
 }
