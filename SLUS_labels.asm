@@ -63,9 +63,9 @@
 .definelabel renderDropShadow,          0x800a3f60
 .definelabel setRotTransMatrix,         0x800a3924
 .definelabel readFileSectors,           0x800a361c
-.definelabel uploadModelTexture,        0x800a26dc
 .definelabel updateTMDTextureData,      0x800a3e74
 .definelabel lookupFileSize,            0x800a32cc
+.definelabel addFileReadRequest2,       0x800e3938
 
 .definelabel DIGIMON_SKELETONS, 0x8011ce60
 .definelabel PARTNER_MOMENTUM_DATA, 0x80185be8
@@ -180,6 +180,7 @@
 .definelabel libgs_GsSetLightMatrix, 0x80097e04
 .definelabel libgs_GsSetLsMatrix, 0x80097dd8
 .definelabel libgs_GsSortObject4, 0x80099d88
+.definelabel libgs_GsGetTimInfo, 0x80098a68
 
 .definelabel libgs_REFERENCE_MATRIX, 0x80136f84
 .definelabel libgs_GsLIGHTWSMATRIX, 0x80136f24
@@ -193,6 +194,7 @@
 .definelabel libgpu_SetLineF2, 0x80092bc4
 .definelabel libgpu_SetLineF3, 0x80092bd8
 .definelabel libgpu_SetLineF4, 0x80092bf8
+.definelabel libgpu_DrawSync, 0x800947b0
 
 // libgte
 .definelabel libgte_setRotMatrix, 0x8009b200

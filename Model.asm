@@ -2,11 +2,11 @@
 .psx
 
 .org 0x800a0a50
-.area 0x800a26dc-.
+.area 0x800a2a50-.
   .importobj "compiled/Model.lib"
 
-  .notice "Empty space left: " + (0x800a26dc-.) + " bytes"
-  .fill 0x800a26dc-.
+  .notice "Empty space left: " + (0x800a2a50-.) + " bytes"
+  .fill 0x800a2a50-.
 .endarea
 
 ;.org 0x800a446c
@@ -261,6 +261,8 @@
 .org 0x80061a90
   jal getEntityType
 
+.org 0x800604a0
+  jal loadMMDAsync
 
 
 .close
@@ -299,6 +301,8 @@
 .org 0x800812b0
   jal getEntityType
 
+.org 0x800822a8
+  jal loadMMDAsync
 
 .close
 

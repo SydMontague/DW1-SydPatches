@@ -736,11 +736,11 @@ extern "C"
 
     struct EvoModelData
     {
-        int32_t modelPtr;
+        uint8_t* modelPtr;
         int32_t unk1;
         int32_t unk2;
         int32_t modelSize;
-        int32_t imagePtr;
+        uint8_t* imagePtr;
         int32_t imageSize;
     };
 
@@ -848,9 +848,10 @@ extern "C"
         int8_t parent;
     };
 
-    using TickFunction   = void (*)(int32_t instanceId);
-    using RenderFunction = void (*)(int32_t instanceId);
-    using ItemFunction   = void (*)(ItemType itemId);
+    using TickFunction     = void (*)(int32_t instanceId);
+    using RenderFunction   = void (*)(int32_t instanceId);
+    using ItemFunction     = void (*)(ItemType itemId);
+    using FileReadCallback = void (*)(int32_t);
 
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
@@ -935,10 +936,14 @@ extern "C"
     extern PositionData TAMER_POSITION_DATA[22];
     extern MomentumData TAMER_MOMENTUM_DATA[22];
 
+    extern void addFileReadRequest2(const uint8_t* path,
+                                    uint8_t* buffer,
+                                    int32_t* readComplete,
+                                    FileReadCallback callback,
+                                    int32_t param);
     extern uint32_t lookupFileSize(const uint8_t* path);
     extern void updateTMDTextureData(TMDModel* model, int pixelPage, int pixelOffsetX, int pixelOffsetY, int clutPage);
     extern void readFileSectors(const char* path, void* buffer, uint32_t offset, uint32_t count);
-    extern void uploadModelTexture(void* buffer, ModelComponent* model);
     extern void setRotTransMatrix(Matrix* matrix);
     extern void renderDropShadow(Entity* entity);
     extern void setupModelMatrix(PositionData* data);

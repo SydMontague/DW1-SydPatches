@@ -65,6 +65,21 @@ extern "C"
         GsCOORDINATE2* super;
     };
 
+    struct GsIMAGE
+    {
+        uint32_t pixelMode;
+        int16_t pixelX;
+        int16_t pixelY;
+        uint16_t pixelWidth;
+        uint16_t pixelHeight;
+        uint32_t* pixelPtr;
+        int16_t clutX;
+        int16_t clutY;
+        uint16_t clutWidth;
+        uint16_t clutHeight;
+        uint32_t* clutPtr;
+    };
+    
     extern Matrix libgs_REFERENCE_MATRIX;
     extern Matrix libgs_GsLIGHTWSMATRIX;
 
@@ -77,6 +92,7 @@ extern "C"
     extern void libgs_GsSetLightMatrix(Matrix* worldMatrix);
     extern void libgs_GsSetLsMatrix(Matrix* screenMatrix);
     extern void libgs_GsSortObject4(GsDOBJ2* objp, GsOT* otp, int32_t shift, uint32_t* scratch);
+    extern void libgs_GsGetTimInfo(uint32_t* tim, GsIMAGE* image);
     
 }
 

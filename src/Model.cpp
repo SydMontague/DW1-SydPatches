@@ -505,9 +505,40 @@ extern "C"
         }
     }
 
+    void uploadModelTexture(uint32_t* timData, ModelComponent* model)
+    {
+        GsIMAGE imageData;
+        libgs_GsGetTimInfo(timData + 1, &imageData);
+
+        imageData.pixelX = (model->pixelPage & 15) * 0x40 + model->pixelOffsetX;
+        imageData.pixelY = (model->pixelPage >> 4) * 0x100 + model->pixelOffsetY;
+        imageData.clutX  = (model->clutPage & 63) << 4;
+        imageData.clutY  = (model->clutPage >> 6);
+
+        RECT pixelRect = {
+            .x      = imageData.pixelX,
+            .y      = imageData.pixelY,
+            .width  = static_cast<int16_t>(imageData.pixelWidth),
+            .height = static_cast<int16_t>(imageData.pixelHeight),
+        };
+        libgpu_LoadImage(&pixelRect, imageData.pixelPtr);
+        // if has CLUT
+        if ((imageData.pixelMode >> 3 & 1) != 0)
+        {
+            RECT clutRect = {
+                .x      = imageData.clutX,
+                .y      = imageData.clutY,
+                .width  = static_cast<int16_t>(imageData.clutWidth),
+                .height = static_cast<int16_t>(imageData.clutHeight),
+            };
+            libgpu_LoadImage(&clutRect, imageData.clutPtr);
+        }
+        libgpu_DrawSync(0);
+    }
+
     void loadDigimonTexture(DigimonType type, const char* name, ModelComponent* model)
     {
-        auto* buffer = libapi_malloc3(0x4800);
+        uint32_t* buffer = reinterpret_cast<uint32_t*>(libapi_malloc3(0x4800));
         readFileSectors("CHDAT\\ALLTIM.TIM", buffer, static_cast<uint32_t>(type) * 9, 9);
         uploadModelTexture(buffer, model);
         libapi_free3(buffer);
@@ -705,5 +736,28 @@ extern "C"
         if (i == 1) return EntityType::PARTNER;
         if (i == 10) return EntityType::NONE;
         return EntityType::NPC;
+    }
+
+    void loadMMDAsync(DigimonType digimonType,
+                      EntityType entityType,
+                      uint8_t* buffer,
+                      EvoModelData* modelData,
+                      int32_t* readComplete)
+    {
+        // vanilla has code for NPCs here, but since it's never used it got removed
+        if (entityType != EntityType::PLAYER && entityType != EntityType::PARTNER) return;
+
+        uint8_t pathBuffer[32];
+        sprintf(pathBuffer,
+                "CHDAT\\MMD%d\\%s.MMD",
+                static_cast<uint32_t>(digimonType) / 30,
+                PTR_DIGIMON_FILE_NAMES[static_cast<uint32_t>(digimonType)]);
+
+        readFileSectors("CHDAT\\ALLTIM.TIM", buffer, static_cast<uint32_t>(digimonType) * 9, 9);
+        modelData->imagePtr  = buffer;
+        modelData->imageSize = 0x4800;
+        modelData->modelPtr  = buffer + 0x4800;
+        addFileReadRequest2(pathBuffer, modelData->modelPtr, readComplete, nullptr, 0);
+        modelData->modelSize = lookupFileSize(pathBuffer);
     }
 }

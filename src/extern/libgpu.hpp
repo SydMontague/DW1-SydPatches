@@ -182,6 +182,7 @@ extern "C"
     extern void libgpu_ClearImage(RECT* rect, uint32_t red, uint32_t green, uint32_t blue);
     extern int libgpu_LoadImage(RECT* rect, uint32_t* data);
     extern uint16_t libgpu_GetClut(int32_t x, int32_t y);
+    extern void libgpu_DrawSync(int32_t mode);
 }
 
 // validation
