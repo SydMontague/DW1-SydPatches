@@ -870,6 +870,8 @@ extern "C"
     extern ModelComponent UNKNOWN_MODEL[16];
     extern int32_t NPC_MODEL_TAKEN[5];
     extern int32_t UNKNOWN_MODEL_TAKEN[16];
+
+    // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
     // TODO: can be non-extern, but large
     extern PositionData PARTNER_POSITION_DATA[34];

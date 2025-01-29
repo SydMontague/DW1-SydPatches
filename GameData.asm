@@ -28,7 +28,7 @@
   .fill 0x800a31f0-.
 .endarea
 
-.org 0x8011d490
+.org 0x8011d46c
 .area 0x80122584-.
 ;;;
 ; Relocated game data start. 

@@ -18,6 +18,7 @@ extern "C"
 
     bool addObject(ObjectID id, uint16_t instanceId, TickFunction tickFunc, RenderFunction renderFunc)
     {
+        // vanilla fills object 129 as a terminator, but we can do without
         for (auto& obj : WORLD_OBJECTS)
         {
             if (obj.objectId != ObjectID::NONE) continue;
@@ -34,6 +35,7 @@ extern "C"
 
     bool removeObject(ObjectID id, uint16_t instance)
     {
+        // vanilla fills object 129 as a terminator, but we can do without
         for (auto& obj : WORLD_OBJECTS)
         {
             if (obj.objectId != id || obj.instanceId != instance) continue;
