@@ -29,9 +29,6 @@
   jr ra
   nop
 
-ALLTIM_address:
-.ascii "CHDAT\\ALLTIM.TIM",0x00
-
 .align 4
 SB_address: ; loadSounds, 0x800e8f80
 .ascii "SOUND\\VHB\\SB",0
@@ -43,16 +40,6 @@ SS_address: ; initializeMusic
 .ascii "SOUND\\VHB\\SS",0
 
 .endarea
-
-;; change ALLTIM path loading
-.org 0x800a2934
-  li.u a1,ALLTIM_address
-.org 0x800a2950
-  li.l a1,ALLTIM_address
-;.org 0x800a1d68
-;  li.u a1,ALLTIM_address
-;.org 0x800a1d74
-;  li.l a1,ALLTIM_address
 
 ;; redirect SB string to new address
 .org 0x800c65ec

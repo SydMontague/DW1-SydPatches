@@ -2,6 +2,7 @@
 
 #include "Model.hpp"
 
+#include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libapi.hpp"

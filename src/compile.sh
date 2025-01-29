@@ -34,6 +34,6 @@ mips-g++ StatsView.cpp -o ../compiled/StatsView.lib $FLAGS
 mips-g++ StatsViewData.cpp -o ../compiled/StatsViewData.lib $FLAGS
 mips-g++ Partner.cpp -o ../compiled/Partner.lib $FLAGS
 
-mips-g++ Model.cpp -o ../compiled/Model.lib $FLAGS
+mips-g++ Model.cpp GameObjects.cpp -o ../compiled/Model.lib $FLAGS
 
 cd -

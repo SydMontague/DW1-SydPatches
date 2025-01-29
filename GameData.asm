@@ -20,6 +20,14 @@
   li v1,ATAN_LOOKUP_TABLE
 
 
+.org 0x800a0a50
+.area 0x800a31f0-.
+  .importobj "compiled/Model.lib"
+
+  .notice "Empty space left: " + (0x800a31f0-.) + " bytes"
+  .fill 0x800a31f0-.
+.endarea
+
 .org 0x8011d490
 .area 0x80122584-.
 ;;;

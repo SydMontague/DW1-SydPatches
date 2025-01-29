@@ -2,14 +2,15 @@
 
 #include "Evolution.hpp"
 #include "Font.hpp"
+#include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "ItemEffects.hpp"
+#include "Model.hpp"
 #include "constants.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
 #include "extern/libgte.hpp"
-#include "Model.hpp"
 
 constexpr auto FRESH_EVOLUTION_TIME       = 6;
 constexpr auto IN_TRAINING_EVOLUTION_TIME = 24;
@@ -31,25 +32,27 @@ extern "C"
     static GsDOBJ2 POOP_OBJECT;
     static GsCOORDINATE2 POOP_POSITION;
 
-    void initializePoop() {
+    void initializePoop()
+    {
         readFile("\\ETCNA\\UNTI.TMD", POOP_MODEL_BUFFER);
         libgs_GsMapModelingData(reinterpret_cast<uint32_t*>(POOP_MODEL_BUFFER + 4));
         libgs_GsLinkObject4(reinterpret_cast<uint32_t*>(POOP_MODEL_BUFFER + 12), &POOP_OBJECT, 0);
         libgs_GsInitCoordinate2(nullptr, &POOP_POSITION);
         POOP_OBJECT.attribute = 0;
-        POOP_OBJECT.coord2 = &POOP_POSITION;
+        POOP_OBJECT.coord2    = &POOP_POSITION;
     }
 
-    void initializeStatusObjects() {
+    void initializeStatusObjects()
+    {
         initializeConditionBubbles();
         initializeButterfly();
         HAS_BUTTERFLY = -1;
         initializePoop();
-        EVOLUTION_TARGET = -1;
-        CURRENT_POOP_ID = 0;
-        HAS_USED_EVOITEM = 0;
-        IS_NATURAL_DEATH = 0;
-        ITEM_SCOLD_FLAG = 0;
+        EVOLUTION_TARGET   = -1;
+        CURRENT_POOP_ID    = 0;
+        HAS_USED_EVOITEM   = 0;
+        IS_NATURAL_DEATH   = 0;
+        ITEM_SCOLD_FLAG    = 0;
         STATUS_UI_OFFSET_X = 75;
     }
 

@@ -2,11 +2,9 @@
 .definelabel lookupFileTable_end, 0x800a32c8
 .definelabel global_pointer, 0x8013bb2c
 .definelabel padWithSpaces, 0x800ff51c
-.definelabel unsetObject, 0x800a3008
 .definelabel updateNamingPreview, 0x8010aa60
 .definelabel playSound, 0x800c6374
 .definelabel clearTextSubArea, 0x8010cbc4
-.definelabel addObject, 0x800a2f64
 .definelabel renderNumber, 0x800e5444
 .definelabel drawString, 0x8010cf24
 .definelabel convertAsciiToGameChar, 0x800f18c8
@@ -48,7 +46,6 @@
 .definelabel writePStat,                0x80106474
 .definelabel updateTimeOfDay,           0x800d676c
 .definelabel isInDaytimeTransition,     0x800d7618
-.definelabel removeObject,              0x800a3008
 .definelabel Partner_tick,              0x800dd7ac
 .definelabel projectPosition,           0x800e1074
 .definelabel renderObject,              0x800e215c
@@ -145,6 +142,7 @@
 .definelabel WIREFRAME_COLOR_MIN, 0x80133b40
 .definelabel WIREFRAME_COLOR_MAX, 0x80133b42
 .definelabel WIREFRAME_RNG_TABLE, 0x8011d180
+.definelabel WORLD_OBJECTS, 0x80137418
 
 // libapi
 .definelabel libapi_malloc3, 0x80090f84

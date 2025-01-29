@@ -3,6 +3,7 @@
 #include "extern/dw1.hpp"
 #include "extern/libetc.hpp"
 #include "extern/psx.hpp"
+#include "GameObjects.hpp"
 
 extern "C"
 {
