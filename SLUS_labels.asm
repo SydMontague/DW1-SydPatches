@@ -55,7 +55,6 @@
 .definelabel setupModelMatrix,          0x800c19a4
 .definelabel renderDropShadow,          0x800a3f60
 .definelabel setRotTransMatrix,         0x800a3924
-.definelabel readFileSectors,           0x800a361c
 .definelabel updateTMDTextureData,      0x800a3e74
 .definelabel addFileReadRequest2,       0x800e3938
 
@@ -164,6 +163,8 @@
 .definelabel libcd_CdControl, 0x800b0010
 .definelabel libcd_CdRead, 0x800b2bb4
 .definelabel libcd_CdReadSync, 0x800b2cb4
+.definelabel libcd_CdPosToInt, 0x800b0554
+.definelabel libcd_CdIntToPos, 0x800b0450
 
 // libetc
 .definelabel libetc_InterruptCallback, 0x8009237c

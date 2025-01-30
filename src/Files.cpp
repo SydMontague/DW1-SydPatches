@@ -76,7 +76,8 @@ extern "C"
     void readFile(const char* file, void* buffer)
     {
         FileLookup lookup;
-        bool result = lookupFileTable(&lookup, file);
+
+        if (!lookupFileTable(&lookup, file)) return;
 
         // seek file location
         while (!libcd_CdControl(CdCommand::CdlSetloc, reinterpret_cast<uint8_t*>(&lookup.pos), nullptr))
@@ -89,13 +90,35 @@ extern "C"
             ;
     }
 
-    void loadTIMFile(const char* fileName, uint8_t* buffer) {
+    void loadTIMFile(const char* fileName, uint8_t* buffer)
+    {
         readFile(fileName, buffer);
         loadTexture(buffer, nullptr, nullptr);
     }
 
-    void loadStackedTIMEntry(const char* fileName, uint8_t* buffer, uint32_t offset, uint32_t sectors) {
+    void loadStackedTIMEntry(const char* fileName, uint8_t* buffer, uint32_t offset, uint32_t sectors)
+    {
         readFileSectors(fileName, buffer, offset, sectors);
         loadTexture(buffer, nullptr, nullptr);
+    }
+
+    void readFileSectors(const char* path, void* buffer, uint32_t offset, uint32_t count)
+    {
+        FileLookup lookup;
+
+        if (!lookupFileTable(&lookup, path)) return;
+
+        int32_t pos = libcd_CdPosToInt(&lookup.pos);
+        libcd_CdIntToPos(pos + offset, &lookup.pos);
+
+        // seek file location
+        while (!libcd_CdControl(CdCommand::CdlSetloc, reinterpret_cast<uint8_t*>(&lookup.pos), nullptr))
+            ;
+        // start reading
+        while (!libcd_CdRead(count, buffer, 0x80))
+            ;
+        // wait for reading to complete
+        while (libcd_CdReadSync(0, nullptr) > 0)
+            ;
     }
 }

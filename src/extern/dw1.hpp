@@ -796,10 +796,10 @@ extern "C"
 
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
-    extern DigimonData DIGIMON_DATA[1];
-    extern RaiseData RAISE_DATA[1];
-    extern EvolutionPath EVO_PATHS_DATA[1];
-    extern EvoRequirements EVO_REQ_DATA[1];
+    extern DigimonData DIGIMON_DATA[];
+    extern RaiseData RAISE_DATA[];
+    extern EvolutionPath EVO_PATHS_DATA[];
+    extern EvoRequirements EVO_REQ_DATA[];
 
     extern uint16_t CHAR_TO_GLYPH_TABLE[80];
     extern GlyphData GLYPH_DATA[79];
@@ -886,7 +886,6 @@ extern "C"
                                     FileReadCallback callback,
                                     int32_t param);
     extern void updateTMDTextureData(TMDModel* model, int pixelPage, int pixelOffsetX, int pixelOffsetY, int clutPage);
-    extern void readFileSectors(const char* path, void* buffer, uint32_t offset, uint32_t count);
     extern void setRotTransMatrix(Matrix* matrix);
     extern void renderDropShadow(Entity* entity);
     extern void setupModelMatrix(PositionData* data);

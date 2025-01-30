@@ -80,6 +80,9 @@
 .org 0x800bb51c
   j loadStackedTIMEntry
 
+.org 0x800c5cd4
+  jal readFileSectors
+
 ;; redirect SB string to new address
 .org 0x800c65ec
   li.u a1,SB_address
