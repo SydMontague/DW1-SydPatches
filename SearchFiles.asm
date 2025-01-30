@@ -1,45 +1,23 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-;; patch lookupFileTable function to use libcd_CdSearchFile instead, allowing for arbitrary LBAs and file sizes
-.org lookupFileTable
-.area lookupFileTable_end-.
-  addiu sp,sp,-0x128
-  sw ra,0x120(sp)
-  sw a0,0x11C(sp)
-  li v0,0x5c ; '\\'
-  sw a1,0x118(sp)
-  sb v0,0x00(sp)
-  jal strcpy
-  addiu a0,sp,0x01
-  addiu a0,sp,0x00
-  jal strcat
-  addiu a1,gp,-0x790c
-  addiu a1,sp,0x00
-  jal libcd_CdSearchFile
-  addiu a0,sp,0x100
-  lw a1,0x11C(sp)
-  lw at,0x100(sp)
-  lw a0,0x104(sp)
-  sw at,0x00(a1)
-  sw a0,0x04(a1)
-  lw ra,0x120(sp)
-  sltu v0,r0,v0
-  addiu sp,sp,0x128
-  jr ra
-  nop
+;.org 0x800a32d8
+;  jal lookupFileTable
+.org 0x800a3428
+  jal lookupFileTable
+.org 0x800a3644
+  jal lookupFileTable
+.org 0x800e3b38
+  jal lookupFileTable
+.org 0x800e3be8
+  jal lookupFileTable
 
-.align 4
-SB_address: ; loadSounds, 0x800e8f80
-.ascii "SOUND\\VHB\\SB",0
-.align 4
-SL_address: ; initializeMusic
-.ascii "SOUND\\VHB\\SL",0
-.align 4
-SS_address: ; initializeMusic
-.ascii "SOUND\\VHB\\SS",0
 
-.endarea
+.org 0x800e0fe8
+  jal loadTextureFile
+.org 0x801043cc
+  jal loadTextureFile
+
 
 ;; redirect SB string to new address
 .org 0x800c65ec
@@ -138,5 +116,34 @@ VLALL_address:
 .org 0x800e91bc
   b 0x800e91dc
   nop
+
+.close
+
+.open "work/DIGIMON/FISH_REL.BIN",0x80070000
+.psx
+
+.org 0x80079f44
+  jal lookupFileSize
+
+
+.org 0x80072bc0
+  jal loadTextureFile
+
+.close
+
+.open "work/DIGIMON/STD_REL.BIN",0x80052ae0
+.psx
+
+.org 0x80057ebc
+  jal lookupFileSize
+
+.close
+
+
+.open "work/DIGIMON/MURD_REL.BIN",0x8007C000
+.psx
+
+.org 0x8007d690
+  jal loadTextureFile
 
 .close

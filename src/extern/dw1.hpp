@@ -870,6 +870,7 @@ extern "C"
     extern ModelComponent UNKNOWN_MODEL[16];
     extern int32_t NPC_MODEL_TAKEN[5];
     extern int32_t UNKNOWN_MODEL_TAKEN[16];
+    extern uint8_t TEXTURE_BUFFER[];
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -884,7 +885,6 @@ extern "C"
                                     int32_t* readComplete,
                                     FileReadCallback callback,
                                     int32_t param);
-    extern uint32_t lookupFileSize(const uint8_t* path);
     extern void updateTMDTextureData(TMDModel* model, int pixelPage, int pixelOffsetX, int pixelOffsetY, int clutPage);
     extern void readFileSectors(const char* path, void* buffer, uint32_t offset, uint32_t count);
     extern void setRotTransMatrix(Matrix* matrix);

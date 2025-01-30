@@ -1,5 +1,3 @@
-.definelabel lookupFileTable, 0x800a31f8
-.definelabel lookupFileTable_end, 0x800a32c8
 .definelabel global_pointer, 0x8013bb2c
 .definelabel padWithSpaces, 0x800ff51c
 .definelabel updateNamingPreview, 0x8010aa60
@@ -60,7 +58,6 @@
 .definelabel setRotTransMatrix,         0x800a3924
 .definelabel readFileSectors,           0x800a361c
 .definelabel updateTMDTextureData,      0x800a3e74
-.definelabel lookupFileSize,            0x800a32cc
 .definelabel addFileReadRequest2,       0x800e3938
 
 .definelabel DIGIMON_SKELETONS, 0x8011ce60
@@ -76,6 +73,7 @@
 .definelabel PARTNER_MODEL_BUFFER, 0x801878dc
 .definelabel PTR_DIGIMON_FILE_NAMES, 0x8011d19c
 .definelabel NPC_ENTITIES, 0x80155828
+.definelabel TEXTURE_BUFFER, 0x80088800
 
 .definelabel TAMER_MOMENTUM_DATA, 0x801a00dc
 .definelabel TAMER_POSITION_DATA, 0x801a07e8
@@ -193,6 +191,7 @@
 .definelabel libgpu_SetLineF3, 0x80092bd8
 .definelabel libgpu_SetLineF4, 0x80092bf8
 .definelabel libgpu_DrawSync, 0x800947b0
+.definelabel libgpu_GetTPage, 0x80092a80
 
 // libgte
 .definelabel libgte_setRotMatrix, 0x8009b200

@@ -51,6 +51,16 @@ NAMING_DATA:
   .include "NamingData.asm"
 
 .align 4
+SB_address: ; loadSounds, 0x800e8f80
+.ascii "SOUND\\VHB\\SB",0
+.align 4
+SL_address: ; initializeMusic
+.ascii "SOUND\\VHB\\SL",0
+.align 4
+SS_address: ; initializeMusic
+.ascii "SOUND\\VHB\\SS",0
+
+.align 4
   .importobj "compiled/utils.lib"
   .importobj "compiled/font.lib"
   .importobj "compiled/CustomUI.lib"

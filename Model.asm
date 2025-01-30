@@ -295,7 +295,7 @@
 .close
 
 
-.open "work/DIGIMON/MURD_REL.BIN",0x80060000
+.open "work/DIGIMON/ENDI_REL.BIN",0x80060000
 .psx
 
 .org 0x800601ac

@@ -608,7 +608,7 @@ extern "C"
             comp->modelId      = i;
             comp->digiType     = digimonType;
 
-            auto fileSize = lookupFileSize(pathBuffer);
+            auto fileSize = lookupFileSize(reinterpret_cast<char*>(pathBuffer));
             comp->mmdPtr  = reinterpret_cast<uint8_t*>(libapi_malloc3((fileSize + 0x7FF) & 0xFFFFF800));
         }
         // TODO this is static data?
@@ -754,7 +754,7 @@ extern "C"
         modelData->imageSize = 0x4800;
         modelData->modelPtr  = buffer + 0x4800;
         addFileReadRequest2(pathBuffer, modelData->modelPtr, readComplete, nullptr, 0);
-        modelData->modelSize = lookupFileSize(pathBuffer);
+        modelData->modelSize = lookupFileSize(reinterpret_cast<char*>(pathBuffer));
     }
 
     void applyMMD(DigimonType digimonType, EntityType entityType, EvoModelData* modelData)
