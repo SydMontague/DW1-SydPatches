@@ -38,14 +38,10 @@ extern "C"
         return lookup.size;
     }
 
-    void loadTextureFile(const char* fileName, uint32_t* outTexPage, uint32_t* outCLUT)
+    void loadTexture(uint8_t* buffer, uint32_t* outTexPage, uint32_t* outCLUT)
     {
-        lookupFileSize(fileName);
         GsIMAGE imageData;
-
-        readFile(fileName, TEXTURE_BUFFER);
-
-        libgs_GsGetTimInfo(reinterpret_cast<uint32_t*>(TEXTURE_BUFFER + 4), &imageData);
+        libgs_GsGetTimInfo(reinterpret_cast<uint32_t*>(buffer + 4), &imageData);
         RECT pixelRect = {
             .x      = imageData.pixelX,
             .y      = imageData.pixelY,
@@ -53,7 +49,7 @@ extern "C"
             .height = static_cast<int16_t>(imageData.pixelHeight),
         };
         libgpu_LoadImage(&pixelRect, imageData.pixelPtr);
-        *outTexPage = libgpu_GetTPage(imageData.pixelMode & 3, 0, imageData.pixelX, imageData.pixelY);
+        if (outTexPage) *outTexPage = libgpu_GetTPage(imageData.pixelMode & 3, 0, imageData.pixelX, imageData.pixelY);
 
         // if has CLUT
         if ((imageData.pixelMode >> 3 & 1) != 0)
@@ -65,8 +61,16 @@ extern "C"
                 .height = static_cast<int16_t>(imageData.clutHeight),
             };
             libgpu_LoadImage(&clutRect, imageData.clutPtr);
-            *outCLUT = libgpu_GetClut(imageData.clutX, imageData.clutY);
+            if (outCLUT) *outCLUT = libgpu_GetClut(imageData.clutX, imageData.clutY);
         }
+    }
+
+    void loadTextureFile(const char* fileName, uint32_t* outTexPage, uint32_t* outCLUT)
+    {
+        GsIMAGE imageData;
+
+        readFile(fileName, TEXTURE_BUFFER);
+        loadTexture(TEXTURE_BUFFER, outTexPage, outCLUT);
     }
 
     void readFile(const char* file, void* buffer)
@@ -83,5 +87,15 @@ extern "C"
         // wait for reading to complete
         while (libcd_CdReadSync(0, nullptr) > 0)
             ;
+    }
+
+    void loadTIMFile(const char* fileName, uint8_t* buffer) {
+        readFile(fileName, buffer);
+        loadTexture(buffer, nullptr, nullptr);
+    }
+
+    void loadStackedTIMEntry(const char* fileName, uint8_t* buffer, uint32_t offset, uint32_t sectors) {
+        readFileSectors(fileName, buffer, offset, sectors);
+        loadTexture(buffer, nullptr, nullptr);
     }
 }

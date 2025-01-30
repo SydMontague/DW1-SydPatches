@@ -12,8 +12,8 @@
 ;  jal readFile
 ;.org 0x800a3320
 ;  jal readFile
-.org 0x800a34b8
-  jal readFile
+;.org 0x800a34b8
+;  jal readFile
 ;.org 0x800a43d0
 ;  jal readFile
 .org 0x800c5b28
@@ -56,6 +56,29 @@
 .org 0x801043cc
   jal loadTextureFile
 
+.org 0x800ee8e4
+  jal loadTIMFile
+.org 0x800ee8f4
+  jal loadTIMFile
+.org 0x800ef008
+  jal loadTIMFile
+.org 0x800f7adc
+  jal loadTIMFile
+.org 0x800f7aec
+  jal loadTIMFile
+.org 0x800f7afc
+  jal loadTIMFile
+.org 0x800f7b0c
+  jal loadTIMFile
+.org 0x800f7b1c
+  jal loadTIMFile
+.org 0x800f7b2c
+  jal loadTIMFile
+.org 0x800f8130
+  jal loadTIMFile
+
+.org 0x800bb51c
+  j loadStackedTIMEntry
 
 ;; redirect SB string to new address
 .org 0x800c65ec
@@ -196,6 +219,14 @@ VLALL_address:
 .org 0x8006bd94
   jal readFile
 
+
+.org 0x80056db8
+  jal loadTIMFile
+.org 0x80056dd4
+  jal loadTIMFile
+.org 0x80057700
+  jal loadTIMFile
+
 .close
 
 
@@ -208,7 +239,7 @@ VLALL_address:
 .close
 
 
-.open "work/DIGIMON/STD_REL.BIN",0x80052ae0
+.open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
 
 .org 0x80058000
@@ -223,6 +254,9 @@ VLALL_address:
   jal readFile
 .org 0x80062b8c
   jal readFile
+
+.org 0x80056e6c
+  jal loadTIMFile
 
 .close
 
