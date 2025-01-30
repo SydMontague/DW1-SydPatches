@@ -1,10 +1,48 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
+
+;.org 0x800a21c8
+;  jal readFile
+;.org 0x800a236c
+;  jal readFile
+;.org 0x800a2c20
+;  jal readFile
+;.org 0x800a2ca4
+;  jal readFile
+;.org 0x800a3320
+;  jal readFile
+.org 0x800a34b8
+  jal readFile
+;.org 0x800a43d0
+;  jal readFile
+.org 0x800c5b28
+  jal readFile
+.org 0x800d5bb0
+  jal readFile
+.org 0x800d6334
+  jal readFile
+.org 0x800dfeb0
+  jal readFile
+.org 0x800e0898
+  jal readFile
+.org 0x800e0b28
+  jal readFile
+.org 0x800e11e4
+  jal readFile
+.org 0x800e11fc
+  jal readFile
+.org 0x800e6220
+  jal readFile
+.org 0x800e65d8
+  jal readFile
+.org 0x80105a14
+  jal readFile
+
 ;.org 0x800a32d8
 ;  jal lookupFileTable
-.org 0x800a3428
-  jal lookupFileTable
+;.org 0x800a3428
+;  jal lookupFileTable
 .org 0x800a3644
   jal lookupFileTable
 .org 0x800e3b38
@@ -125,9 +163,11 @@ VLALL_address:
 .org 0x80079f44
   jal lookupFileSize
 
-
 .org 0x80072bc0
   jal loadTextureFile
+
+.org 0x80079f80
+  jal readFile
 
 .close
 
@@ -137,6 +177,25 @@ VLALL_address:
 .org 0x80057ebc
   jal lookupFileSize
 
+.org 0x800578f4
+  jal readFile
+.org 0x80057d74
+  jal readFile
+.org 0x80057eec
+  jal readFile
+.org 0x80057f9c
+  jal readFile
+.org 0x8006b2e8
+  jal readFile
+.org 0x8006b8a4
+  jal readFile
+.org 0x8006baf4
+  jal readFile
+.org 0x8006bd80
+  jal readFile
+.org 0x8006bd94
+  jal readFile
+
 .close
 
 
@@ -145,5 +204,44 @@ VLALL_address:
 
 .org 0x8007d690
   jal loadTextureFile
+
+.close
+
+
+.open "work/DIGIMON/STD_REL.BIN",0x80052ae0
+.psx
+
+.org 0x80058000
+  jal readFile
+.org 0x800587dc
+  jal readFile
+.org 0x80058934
+  jal readFile
+.org 0x800589f0
+  jal readFile
+.org 0x800625a4
+  jal readFile
+.org 0x80062b8c
+  jal readFile
+
+.close
+
+
+.open "work/DIGIMON/KAR_REL.BIN",0x80053800
+.psx
+
+.org 0x80053c50
+  jal readFile
+
+.close
+
+
+.open "work/DIGIMON/DOOA_REL.BIN",0x80080000
+.psx
+
+.org 0x80080d3c
+  jal readFile
+.org 0x80080e24
+  jal readFile
 
 .close

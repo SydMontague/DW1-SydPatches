@@ -898,7 +898,6 @@ extern "C"
     extern void initializeConditionBubbles();
     extern void initializeButterfly();
     extern void initializePoop();
-    extern void readFile(const char* path, void* buffer);
     extern bool isInDaytimeTransition();
     extern void updateTimeOfDay();
     extern void writePStat(int32_t address, uint8_t value);

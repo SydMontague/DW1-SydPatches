@@ -49,7 +49,6 @@
 .definelabel renderObject,              0x800e215c
 .definelabel loadPartnerSounds,         0x800c64e0
 .definelabel learnMove,                 0x800e5f14
-.definelabel readFile,                  0x800a3410
 .definelabel initializeConditionBubbles,0x800ec520
 .definelabel initializeButterfly,       0x800e9ce8
 .definelabel add3DSpritePrim,           0x800da1fc
@@ -162,6 +161,9 @@
 
 // libcd
 .definelabel libcd_CdSearchFile, 0x800b23c0
+.definelabel libcd_CdControl, 0x800b0010
+.definelabel libcd_CdRead, 0x800b2bb4
+.definelabel libcd_CdReadSync, 0x800b2cb4
 
 // libetc
 .definelabel libetc_InterruptCallback, 0x8009237c

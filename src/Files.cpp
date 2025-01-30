@@ -68,4 +68,20 @@ extern "C"
             *outCLUT = libgpu_GetClut(imageData.clutX, imageData.clutY);
         }
     }
+
+    void readFile(const char* file, void* buffer)
+    {
+        FileLookup lookup;
+        bool result = lookupFileTable(&lookup, file);
+
+        // seek file location
+        while (!libcd_CdControl(CdCommand::CdlSetloc, reinterpret_cast<uint8_t*>(&lookup.pos), nullptr))
+            ;
+        // start reading
+        while (!libcd_CdRead((lookup.size + 2047) >> 11, buffer, 0x80))
+            ;
+        // wait for reading to complete
+        while (libcd_CdReadSync(0, nullptr) > 0)
+            ;
+    }
 }
