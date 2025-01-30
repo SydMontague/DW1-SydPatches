@@ -879,6 +879,8 @@ extern "C"
     extern MomentumData PARTNER_MOMENTUM_DATA[34];
     extern PositionData TAMER_POSITION_DATA[22];
     extern MomentumData TAMER_MOMENTUM_DATA[22];
+    extern int16_t SIN_LOOKUP_TABLE[128];
+    extern int16_t ATAN_LOOKUP_TABLE[512];
 
     extern void addFileReadRequest2(const uint8_t* path,
                                     uint8_t* buffer,

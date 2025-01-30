@@ -102,12 +102,43 @@
 .org 0x80106ee0
   jal random
 
+.org 0x800adae8
+  jal sin
+.org 0x800addd8
+  jal sin
+.org 0x800aebbc
+  jal sin
+.org 0x800aec6c
+  jal sin
+.org 0x800c12d8
+  jal sin
+.org 0x800e9e58
+  jal sin
+.org 0x800e9ef8
+  jal sin
+.org 0x800ecd80
+  jal sin
+
+.org 0x800adb04
+  jal cos
+.org 0x800c1320
+  jal cos
+.org 0x800e9e98
+  jal cos
+
+.org 0x800ab228
+  jal atan
+.org 0x800b6f28
+  jal atan
+.org 0x800d45d0
+  jal atan
+.org 0x800e81f8
+  jal atan
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
-
-
 
 .org 0x80057cc4
   jal random
@@ -179,6 +210,67 @@
   jal random
 .org 0x800632e0
   jal random
+
+.org 0x8005e460
+  jal sin
+.org 0x8005e470
+  jal sin
+.org 0x8005e4c4
+  jal sin
+.org 0x8005e4e8
+  jal sin
+.org 0x80067138
+  jal sin
+.org 0x8006b4ec
+  jal sin
+.org 0x8006b664
+  jal sin
+.org 0x8006b680
+  jal sin
+.org 0x8006c0cc
+  jal sin
+.org 0x8006d414
+  jal sin
+.org 0x8006d430
+  jal sin
+.org 0x8006ef48
+  jal sin
+.org 0x8006f2b4
+  jal sin
+.org 0x80070254
+  jal sin
+
+.org 0x800670f8
+  jal cos
+.org 0x8006b504
+  jal cos
+.org 0x8006c0e4
+  jal cos
+.org 0x8006f2f8
+  jal cos
+.org 0x80070120
+  jal cos
+
+.org 0x8005c274
+  jal atan
+.org 0x8005c318
+  jal atan
+.org 0x8005c3ac
+  jal atan
+.org 0x8005c42c
+  jal atan
+.org 0x8006b038
+  jal atan
+.org 0x8006b0bc
+  jal atan
+.org 0x8006b494
+  jal atan
+.org 0x8006b570
+  jal atan
+.org 0x8006ce50
+  jal atan
+.org 0x8006e79c
+  jal atan
 
 .close
 
@@ -297,6 +389,75 @@
 .org 0x8006c740
   jal random
 
+.org 0x800662a4
+  jal sin
+.org 0x800662b4
+  jal sin
+.org 0x80066308
+  jal sin
+.org 0x8006632c
+  jal sin
+.org 0x8006f730
+  jal sin
+.org 0x80073af8
+  jal sin
+.org 0x80073c70
+  jal sin
+.org 0x80073c8c
+  jal sin
+.org 0x800746d8
+  jal sin
+.org 0x800759f0
+  jal sin
+.org 0x80075a0c
+  jal sin
+.org 0x800774e8
+  jal sin
+.org 0x80077854
+  jal sin
+.org 0x800787f4
+  jal sin
+
+.org 0x8006f6f0
+  jal cos
+.org 0x80073b10
+  jal cos
+.org 0x800746f0
+  jal cos
+.org 0x80077898
+  jal cos
+.org 0x800786c0
+  jal cos
+
+.org 0x80059c60
+  jal atan
+.org 0x80059cf8
+  jal atan
+.org 0x8005a0ac
+  jal atan
+.org 0x8005b78c
+  jal atan
+.org 0x8006425c
+  jal atan
+.org 0x80064300
+  jal atan
+.org 0x80064394
+  jal atan
+.org 0x80064414
+  jal atan
+.org 0x80073644
+  jal atan
+.org 0x800736c8
+  jal atan
+.org 0x80073aa0
+  jal atan
+.org 0x80073b7c
+  jal atan
+.org 0x8007542c
+  jal atan
+.org 0x80076d78
+  jal atan
+
 .close
 
 
@@ -357,6 +518,75 @@
 .org 0x80060bdc
   jal random
 
+.org 0x8005dc88
+  jal sin
+.org 0x8005dc98
+  jal sin
+.org 0x8005dcec
+  jal sin
+.org 0x8005dd10
+  jal sin
+.org 0x80065800
+  jal sin
+.org 0x80069bc8
+  jal sin
+.org 0x80069d40
+  jal sin
+.org 0x80069d5c
+  jal sin
+.org 0x8006a7a8
+  jal sin
+.org 0x8006bac0
+  jal sin
+.org 0x8006badc
+  jal sin
+.org 0x8006d5b8
+  jal sin
+.org 0x8006d924
+  jal sin
+.org 0x8006e8c4
+  jal sin
+
+.org 0x800657c0
+  jal cos
+.org 0x80069be0
+  jal cos
+.org 0x8006a7c0
+  jal cos
+.org 0x8006d968
+  jal cos
+.org 0x8006e790
+  jal cos
+
+.org 0x800591a4
+  jal atan
+.org 0x8005923c
+  jal atan
+.org 0x800595fc
+  jal atan
+.org 0x8005aa0c
+  jal atan
+.org 0x8005be64
+  jal atan
+.org 0x8005bf08
+  jal atan
+.org 0x8005bf9c
+  jal atan
+.org 0x8005c01c
+  jal atan
+.org 0x80069714
+  jal atan
+.org 0x80069798
+  jal atan
+.org 0x80069b70
+  jal atan
+.org 0x80069c4c
+  jal atan
+.org 0x8006b4fc
+  jal atan
+.org 0x8006ce48
+  jal atan
+
 .close
 
 
@@ -367,5 +597,29 @@
   jal random
 .org 0x8008a930
   jal random
+
+.close
+
+
+.open "work/DIGIMON/EAB_REL.BIN",0x80060000
+.psx
+
+.org 0x80060330
+  jal sin
+.org 0x80060580
+  jal sin
+.org 0x80060910
+  jal sin
+.org 0x800609c4
+  jal sin
+
+.close
+
+
+.open "work/DIGIMON/DOOA_REL.BIN",0x80080000
+.psx
+
+.org 0x80080c88
+  jal sin
 
 .close

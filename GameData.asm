@@ -21,11 +21,11 @@
 
 
 .org 0x800a0a50
-.area 0x800a3704-.
+.area 0x800a3924-.
   .importobj "compiled/Model.lib"
 
-  .notice "Empty space left: " + (0x800a3704-.) + " bytes"
-  .fill 0x800a3704-.
+  .notice "Empty space left: " + (0x800a3924-.) + " bytes"
+  .fill 0x800a3924-.
 .endarea
 
 .org 0x8011d46c
