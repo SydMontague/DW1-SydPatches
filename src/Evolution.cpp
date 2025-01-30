@@ -2,6 +2,7 @@
 
 #include "extern/dw1.hpp"
 #include "Helper.hpp"
+#include "Math.hpp"
 
 extern "C"
 {

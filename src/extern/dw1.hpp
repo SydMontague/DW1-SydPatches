@@ -919,7 +919,6 @@ extern "C"
                              int32_t hasShadow);
     extern void setUVDataPolyFT4(POLY_FT4* prim, int16_t uvX, int16_t uvY, int16_t uvWidth, int16_t uvHeight);
     extern void setPosDataPolyFT4(POLY_FT4* prim, int16_t posX, int16_t posY, int16_t uvWidth, int16_t uvHeight);
-    extern int32_t random(int32_t limit);
     extern void renderBoxBar(int16_t posX,
                              int16_t posY,
                              uint16_t width,

@@ -17,3 +17,4 @@
 .include "Model.asm"
 .include "GameObjects.asm"
 .include "SearchFiles.asm"
+.include "Math.asm"

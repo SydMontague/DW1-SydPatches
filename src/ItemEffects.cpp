@@ -3,6 +3,8 @@
 #include "Partner.hpp"
 #include "extern/dw1.hpp"
 #include "constants.hpp"
+#include "Math.hpp"
+
 extern "C"
 {
     bool handleMedicineHealing(int32_t injuryHealChance, int32_t sicknessHealChance)

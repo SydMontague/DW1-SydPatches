@@ -11,7 +11,6 @@
 .definelabel renderString, 0x800e5b50
 .definelabel setUVDataPolyFT4, 0x800e56b4
 .definelabel setPosDataPolyFT4, 0x800e56ec
-.definelabel random,                    0x800a36d4
 ;.definelabel Tamer_setState,            0x800aa188 ; use constexpr version instead
 .definelabel clearTextArea,             0x8010cb90
 .definelabel setTextColor,              0x8010cc0c
