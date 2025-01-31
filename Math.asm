@@ -1,6 +1,9 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
+.org 0x800a40ac
+  jal setRotTransMatrix
+
 ;.org 0x800a47cc
 ;  jal random
 ;.org 0x800a5f10
@@ -140,6 +143,11 @@
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
 
+.org 0x80069384
+  jal setRotTransMatrix
+.org 0x80069484
+  jal setRotTransMatrix
+
 .org 0x80057cc4
   jal random
 .org 0x80058178
@@ -277,6 +285,11 @@
 
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
 .psx
+
+.org 0x8007191c
+  jal setRotTransMatrix
+.org 0x80071a58
+  jal setRotTransMatrix
 
 .org 0x80056f54
   jal random
@@ -465,6 +478,11 @@
 .psx
 
 
+.org 0x800679ec
+  jal setRotTransMatrix
+.org 0x80067b28
+  jal setRotTransMatrix
+
 .org 0x8005990c
   jal random
 .org 0x8005994c
@@ -621,5 +639,14 @@
 
 .org 0x80080c88
   jal sin
+
+.close
+
+
+.open "work/DIGIMON/DOOA_REL.BIN",0x80070000
+.psx
+
+.org 0x80070cd4
+  jal setRotTransMatrix
 
 .close

@@ -53,7 +53,6 @@
 .definelabel add3DSpritePrim,           0x800da1fc
 .definelabel setupModelMatrix,          0x800c19a4
 .definelabel renderDropShadow,          0x800a3f60
-.definelabel setRotTransMatrix,         0x800a3924
 .definelabel updateTMDTextureData,      0x800a3e74
 .definelabel addFileReadRequest2,       0x800e3938
 

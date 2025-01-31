@@ -2,6 +2,7 @@
 
 #include "extern/dw1.hpp"
 #include "extern/libc.hpp"
+#include "extern/psx.hpp"
 #include "extern/stddef.hpp"
 
 extern "C"
@@ -67,5 +68,18 @@ extern "C"
         if (generalDirection >= 2) tmpVal = -tmpVal;
 
         return (tmpVal + 0x800) & 0xFFF;
+    }
+
+    void setRotTransMatrix(Matrix* matrix) {
+        auto* vals = reinterpret_cast<uint32_t*>(matrix);
+
+        gte_rot1 = vals[0];
+        gte_rot2 = vals[1];
+        gte_rot3 = vals[2];
+        gte_rot4 = vals[3];
+        gte_rot5 = vals[4];
+        gte_transX = matrix->t[0];
+        gte_transY = matrix->t[1];
+        gte_transZ = matrix->t[2];
     }
 }
