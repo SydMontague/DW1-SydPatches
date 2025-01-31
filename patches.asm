@@ -18,3 +18,4 @@
 .include "GameObjects.asm"
 .include "SearchFiles.asm"
 .include "Math.asm"
+.include "Main.asm"

@@ -3,6 +3,7 @@
 #include "libc.hpp"
 #include "libgpu.hpp"
 #include "libgs.hpp"
+#include "libgte.hpp"
 #include "stddef.hpp"
 
 extern "C"
@@ -871,6 +872,7 @@ extern "C"
     extern int32_t NPC_MODEL_TAKEN[5];
     extern int32_t UNKNOWN_MODEL_TAKEN[16];
     extern uint8_t TEXTURE_BUFFER[];
+    extern GsTMDFunction GS_TMD_MAP[64];
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];

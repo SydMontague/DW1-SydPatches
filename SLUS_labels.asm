@@ -209,6 +209,36 @@
 .definelabel libgte_SetLightMatrix, 0x8009b230
 .definelabel libgte_CompMatrix, 0x8009a9b0
 
+.definelabel libgte_GsTMDdivTNF3, 0x8009de78
+.definelabel libgte_GsTMDdivTF3NL, 0x8009dbc8
+.definelabel libgte_GsTMDdivTNG4, 0x8009efc8
+.definelabel libgte_GsTMDdivTF4L, 0x8009e598
+.definelabel libgte_GsTMDdivTG4NL, 0x8009ed38
+.definelabel libgte_GsTMDdivTNF4, 0x8009eab8
+.definelabel libgte_GsTMDdivTF4NL, 0x8009e838
+.definelabel libgte_GsTMDdivTNG3, 0x8009e358
+.definelabel libgte_GsTMDdivTG3NL, 0x8009e128
+.definelabel libgte_GsTMDfastTG4L, 0x8009d9bc
+.definelabel libgte_GsTMDfastG4L, 0x8009c6d8
+.definelabel libgte_GsTMDfastTNG4, 0x8009d668
+.definelabel libgte_GsTMDfastTG3L, 0x8009d4b4
+.definelabel libgte_GsTMDfastTF4L, 0x8009d034
+.definelabel libgte_GsTMDfastTNF4, 0x8009ccf8
+.definelabel libgte_GsTMDfastTF4NL, 0x8009ce98
+.definelabel libgte_GsTMDfastTG4NL, 0x8009d824
+.definelabel libgte_GsTMDfastG3L, 0x8009c548
+.definelabel libgte_GsTMDfastTNG3, 0x8009d1e0
+.definelabel libgte_GsTMDfastF4L, 0x8009c3d0
+.definelabel libgte_GsTMDfastTF3L, 0x8009cb88
+.definelabel libgte_GsTMDfastTNF3, 0x8009c8b8
+.definelabel libgte_GsTMDfastF4NL, 0x8009c264
+.definelabel libgte_GsTMDfastNF4, 0x8009c0fc
+.definelabel libgte_GsTMDfastTF3NL, 0x8009ca24
+.definelabel libgte_GsTMDfastTG3NL, 0x8009d358
+.definelabel libgte_GsTMDfastF3L, 0x8009bfb4
+
+.definelabel GS_TMD_MAP, 0x80137000
+
 // PSX internal
 .definelabel TIMER0, 0x1F801100
 .definelabel TIMER1, 0x1F801110

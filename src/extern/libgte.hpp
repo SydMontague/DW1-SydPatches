@@ -79,4 +79,35 @@ extern "C"
                                        CVector* colorOut1,
                                        CVector* colorOut2);
     extern void libgte_NormalColorCol(SVector* normal, CVector* colorInput, CVector* colorOut);
+
+    // TODO: use proper signature
+    using GsTMDFunction = void* (*)();
+
+    extern void* libgte_GsTMDfastF3L();
+    extern void* libgte_GsTMDfastTF3L();
+    extern void* libgte_GsTMDfastTF3NL();
+    extern void* libgte_GsTMDfastTNF3();
+    extern void* libgte_GsTMDfastG3L();
+    extern void* libgte_GsTMDfastTG3L();
+    extern void* libgte_GsTMDfastTG3NL();
+    extern void* libgte_GsTMDfastTNG3();
+    extern void* libgte_GsTMDfastF4L();
+    extern void* libgte_GsTMDfastTF4L();
+    extern void* libgte_GsTMDfastTF4NL();
+    extern void* libgte_GsTMDfastTNF4();
+    extern void* libgte_GsTMDfastG4L();
+    extern void* libgte_GsTMDfastTG4L();
+    extern void* libgte_GsTMDfastTG4NL();
+    extern void* libgte_GsTMDfastTNG4();
+    extern void* libgte_GsTMDdivTF4L();
+    extern void* libgte_GsTMDdivTF4NL();
+    extern void* libgte_GsTMDdivTF3NL();
+    extern void* libgte_GsTMDdivTG4NL();
+    extern void* libgte_GsTMDdivTG3NL();
+    extern void* libgte_GsTMDdivTNG4();
+    extern void* libgte_GsTMDdivTNG3();
+    extern void* libgte_GsTMDdivTNF4();
+    extern void* libgte_GsTMDdivTNF3();
+    extern void* libgte_GsTMDfastF4NL();
+    extern void* libgte_GsTMDfastNF4();
 }

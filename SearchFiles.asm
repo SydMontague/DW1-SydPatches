@@ -43,8 +43,8 @@
 ;  jal lookupFileTable
 ;.org 0x800a3428
 ;  jal lookupFileTable
-.org 0x800a3644
-  jal lookupFileTable
+;.org 0x800a3644
+;  jal lookupFileTable
 .org 0x800e3b38
   jal lookupFileTable
 .org 0x800e3be8

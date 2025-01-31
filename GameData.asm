@@ -1,31 +1,12 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-; relocate sin() lookup table
-.org 0x800a3720
-  li.u v0,SIN_LOOKUP_TABLE
-  .skip 4
-  li.l v0,SIN_LOOKUP_TABLE
-.org 0x800a3760
-  li v0,SIN_LOOKUP_TABLE
-.org 0x800a3798
-  li v0,SIN_LOOKUP_TABLE
-.org 0x800a37d4
-  li v0,SIN_LOOKUP_TABLE
-
-; relocate atan() lookup table
-.org 0x800a3888
-  li v1,ATAN_LOOKUP_TABLE
-.org 0x800a38d0
-  li v1,ATAN_LOOKUP_TABLE
-
-
 .org 0x800a0a50
-.area 0x800a396c-.
+.area 0x800a3b18-.
   .importobj "compiled/Model.lib"
 
-  .notice "Empty space left: " + (0x800a396c-.) + " bytes"
-  .fill 0x800a396c-.
+  .notice "Empty space left: " + (0x800a3b18-.) + " bytes"
+  .fill 0x800a3b18-.
 .endarea
 
 .org 0x8011d46c
