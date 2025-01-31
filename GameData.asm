@@ -2,11 +2,11 @@
 .psx
 
 .org 0x800a0a50
-.area 0x800a3b18-.
+.area 0x800a3e74-.
   .importobj "compiled/Model.lib"
 
-  .notice "Empty space left: " + (0x800a3b18-.) + " bytes"
-  .fill 0x800a3b18-.
+  .notice "Empty space left: " + (0x800a3e74-.) + " bytes"
+  .fill 0x800a3e74-.
 .endarea
 
 .org 0x8011d46c
@@ -60,6 +60,14 @@ SS_address: ; initializeMusic
   .fill 0x80122cf4-.
 .endarea
 
+
+; override vanilla attack objects
+.org 0x80137a24
+.area 0x80137c00-.
+
+  .notice "Empty space left: " + (0x80137c00-.) + " bytes"
+  .fill 0x80137c00-.
+.endarea
 
 ; override vanilla raise data
 .org 0x8012abec
