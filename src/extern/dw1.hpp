@@ -920,9 +920,18 @@ extern "C"
     extern int32_t UNKNOWN_MODEL_TAKEN[16];
     extern uint8_t TEXTURE_BUFFER[];
     extern GsTMDFunction GS_TMD_MAP[64];
+    extern Vector STORED_TAMER_POS;
+    extern uint8_t HAS_ROTATION_DATA[8];
+    extern bool PREVIOUS_CAMERA_POS_INITIALIZED;
+    extern uint8_t PICKED_UP_ITEM;
+    extern uint32_t TAMER_LEVEL_AWARD_PENDING;
+    extern uint32_t MEDAL_AWARD_PENDING;
+    extern uint32_t IS_IN_MENU;
+    extern uint32_t TAMER_LEVELS_AWARDED;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
+    extern uint8_t UNKNOWN_TAMER_DATA[10];
     // TODO: can be non-extern, but large
     extern PositionData PARTNER_POSITION_DATA[34];
     extern MomentumData PARTNER_MOMENTUM_DATA[34];
@@ -930,6 +939,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    extern void Tamer_tick(int32_t instanceId);
     extern int32_t main();
     extern int32_t getTileTrigger(Vector* position);
     extern void addFileReadRequest2(const uint8_t* path,

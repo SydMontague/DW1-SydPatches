@@ -1285,4 +1285,10 @@ extern "C"
             Partner_setState(13);
         }
     }
+
+    void setImmortalHour(void)
+    {
+        HAS_IMMORTAL_HOUR = 1;
+        IMMORTAL_HOUR     = HOUR;
+    }
 }

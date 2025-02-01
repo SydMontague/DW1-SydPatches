@@ -1,6 +1,13 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
+.org 0x800ee9bc
+  jal initializeTamer
+.org 0x800eea58
+  jal initializeTamer
+.org 0x800eeb14
+  jal initializeTamer
+
 .org 0x80090010
   .word EntryPoint
 

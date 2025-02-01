@@ -55,6 +55,7 @@
 .definelabel addFileReadRequest2,       0x800e3938
 .definelabel getTileTrigger,            0x800c0acc
 .definelabel main,                      0x800ee800
+.definelabel Tamer_tick,                0x800a99ac
 
 .definelabel DIGIMON_SKELETONS, 0x8011ce60
 .definelabel PARTNER_MOMENTUM_DATA, 0x80185be8
@@ -138,6 +139,15 @@
 .definelabel WIREFRAME_COLOR_MAX, 0x80133b42
 .definelabel WIREFRAME_RNG_TABLE, 0x8011d180
 .definelabel WORLD_OBJECTS, 0x80137418
+.definelabel STORED_TAMER_POS, 0x80138720
+.definelabel HAS_ROTATION_DATA, 0x80134c78
+.definelabel UNKNOWN_TAMER_DATA, 0x80138694
+.definelabel PREVIOUS_CAMERA_POS_INITIALIZED, 0x80134c80
+.definelabel PICKED_UP_ITEM, 0x80134c84
+.definelabel TAMER_LEVEL_AWARD_PENDING, 0x80134c88
+.definelabel MEDAL_AWARD_PENDING, 0x80134c8c
+.definelabel IS_IN_MENU, 0x80134ef0
+.definelabel TAMER_LEVELS_AWARDED, 0x80134c90
 
 // libapi
 .definelabel libapi_malloc3, 0x80090f84
