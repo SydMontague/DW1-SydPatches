@@ -52,8 +52,8 @@
 .definelabel initializeButterfly,       0x800e9ce8
 .definelabel add3DSpritePrim,           0x800da1fc
 .definelabel setupModelMatrix,          0x800c19a4
-.definelabel renderDropShadow,          0x800a3f60
 .definelabel addFileReadRequest2,       0x800e3938
+.definelabel getTileTrigger,            0x800c0acc
 
 .definelabel DIGIMON_SKELETONS, 0x8011ce60
 .definelabel PARTNER_MOMENTUM_DATA, 0x80185be8
@@ -192,6 +192,7 @@
 .definelabel libgpu_SetLineF4, 0x80092bf8
 .definelabel libgpu_DrawSync, 0x800947b0
 .definelabel libgpu_GetTPage, 0x80092a80
+.definelabel libgpu_SetSemiTrans, 0x80092b10
 
 // libgte
 .definelabel libgte_setRotMatrix, 0x8009b200
@@ -207,6 +208,9 @@
 .definelabel libgte_NormalColorCol, 0x8009b370
 .definelabel libgte_SetLightMatrix, 0x8009b230
 .definelabel libgte_CompMatrix, 0x8009a9b0
+.definelabel libgte_RotTransPers, 0x8009b3d4
+.definelabel libgte_RotTransPers3, 0x8009b404
+.definelabel libgte_RotTransPers4, 0x8009b464
 
 .definelabel libgte_GsTMDdivTNF3, 0x8009de78
 .definelabel libgte_GsTMDdivTF3NL, 0x8009dbc8

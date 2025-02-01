@@ -55,6 +55,76 @@ struct PrimHeader
 
 extern "C"
 {
+    void renderDropShadow(Entity* entity)
+    {
+        auto* loc    = &entity->posData->location;
+        auto trigger = getTileTrigger(loc);
+        if (trigger == -1) return;
+
+        auto radius = getDigimonData(entity->type)->radius;
+
+        SVector p1 = {
+            .x = static_cast<int16_t>(loc->x - radius),
+            .y = static_cast<int16_t>(loc->y),
+            .z = static_cast<int16_t>(loc->z - radius),
+        };
+        SVector p2 = {
+            .x = static_cast<int16_t>(loc->x + radius),
+            .y = static_cast<int16_t>(loc->y),
+            .z = static_cast<int16_t>(loc->z - radius),
+        };
+        SVector p3 = {
+            .x = static_cast<int16_t>(loc->x - radius),
+            .y = static_cast<int16_t>(loc->y),
+            .z = static_cast<int16_t>(loc->z + radius),
+        };
+        SVector p4 = {
+            .x = static_cast<int16_t>(loc->x + radius),
+            .y = static_cast<int16_t>(loc->y),
+            .z = static_cast<int16_t>(loc->z + radius),
+        };
+
+        auto* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+        libgpu_SetPolyFT4(prim);
+        libgpu_SetSemiTrans(prim, 1);
+
+        prim->tpage = 221;
+        prim->clut  = libgpu_GetClut(0, 487);
+        prim->u0    = 64;
+        prim->v0    = 128;
+        prim->u1    = 127;
+        prim->v1    = 128;
+        prim->u2    = 64;
+        prim->v2    = 191;
+        prim->u3    = 127;
+        prim->v3    = 191;
+
+        setRotTransMatrix(&libgs_REFERENCE_MATRIX);
+        ScreenCoord sXY0;
+        ScreenCoord sXY1;
+        ScreenCoord sXY2;
+        ScreenCoord sXY3;
+        int32_t i;
+        int32_t flag;
+        libgte_RotTransPers4(&p1, &p2, &p3, &p4, &sXY0.raw, &sXY1.raw, &sXY2.raw, &sXY3.raw, &i, &flag);
+        prim->x0 = sXY0.x;
+        prim->y0 = sXY0.y;
+        prim->x1 = sXY1.x;
+        prim->y1 = sXY1.y;
+        prim->x2 = sXY2.x;
+        prim->y2 = sXY2.y;
+        prim->x3 = sXY3.x;
+        prim->y3 = sXY3.y;
+        prim->r0 = 0x30;
+        prim->g0 = 0x30;
+        prim->b0 = 0x30;
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 0xFFD, prim);
+        libgs_GsSetWorkBase(prim + 1);
+
+        // vanilla creates some more SVectors here, based on loc, height and radius, but the function it gets passed to
+        // is a no-op, so let's just skip it here
+    }
+
     void updateTMDTextureData(TMDModel* model, uint32_t tpage, uint32_t pixelX, uint32_t pixelY, uint32_t clutPage)
     {
         auto objCount = model->objectCount;

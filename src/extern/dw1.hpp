@@ -884,12 +884,13 @@ extern "C"
     extern int16_t SIN_LOOKUP_TABLE[128];
     extern int16_t ATAN_LOOKUP_TABLE[512];
 
+    
+    extern int32_t getTileTrigger(Vector* position);
     extern void addFileReadRequest2(const uint8_t* path,
                                     uint8_t* buffer,
                                     int32_t* readComplete,
                                     FileReadCallback callback,
                                     int32_t param);
-    extern void setRotTransMatrix(Matrix* matrix);
     extern void renderDropShadow(Entity* entity);
     extern void setupModelMatrix(PositionData* data);
     extern void Partner_tick(int32_t);

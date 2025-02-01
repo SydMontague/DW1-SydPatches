@@ -2,11 +2,11 @@
 .psx
 
 .org 0x800a0a50
-.area 0x800a3f60-.
+.area 0x800a4238-.
   .importobj "compiled/Model.lib"
 
-  .notice "Empty space left: " + (0x800a3f60-.) + " bytes"
-  .fill 0x800a3f60-.
+  .notice "Empty space left: " + (0x800a4238-.) + " bytes"
+  .fill 0x800a4238-.
 .endarea
 
 .org 0x8011d46c

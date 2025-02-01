@@ -1,4 +1,5 @@
 #include "extern/stddef.hpp"
+#include "extern/libgte.hpp"
 
 extern "C"
 {
@@ -11,4 +12,5 @@ extern "C"
     extern int16_t sin(uint32_t input);
     extern int16_t cos(uint32_t input);
     extern int16_t atan(int32_t dx, int32_t dy);
+    extern void setRotTransMatrix(Matrix* matrix);
 }

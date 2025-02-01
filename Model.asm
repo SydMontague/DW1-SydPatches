@@ -247,6 +247,9 @@
 .open "work/DIGIMON/DOOA_REL.BIN",0x80080000
 .psx
 
+.org 0x80081a8c
+  jal renderDropShadow
+
 .org 0x8008060c
   jal setupEntityMatrix
 .org 0x800806d0
@@ -285,6 +288,9 @@
 
 .open "work/DIGIMON/MURD_REL.BIN",0x8007C000
 .psx
+
+.org 0x8007cdcc
+  jal renderDropShadow
 
 .org 0x8007c684
   jal getEntityModelComponent

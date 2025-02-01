@@ -79,6 +79,25 @@ extern "C"
                                        CVector* colorOut1,
                                        CVector* colorOut2);
     extern void libgte_NormalColorCol(SVector* normal, CVector* colorInput, CVector* colorOut);
+    extern int32_t libgte_RotTransPers(SVector* point, int32_t* screenXY, int32_t* interpolValue, int32_t* flag);
+    extern int32_t libgte_RotTransPers3(SVector* point1,
+                                        SVector* point2,
+                                        SVector* point3,
+                                        int32_t* screenXY0,
+                                        int32_t* screenXY1,
+                                        int32_t* screenXY2,
+                                        int32_t* interpolValue,
+                                        int32_t* flag);
+    extern int32_t libgte_RotTransPers4(SVector* point1,
+                                        SVector* point2,
+                                        SVector* point3,
+                                        SVector* point4,
+                                        int32_t* screenXY0,
+                                        int32_t* screenXY1,
+                                        int32_t* screenXY2,
+                                        int32_t* screenXY3,
+                                        int32_t* interpolValue,
+                                        int32_t* flag);
 
     // TODO: use proper signature
     using GsTMDFunction = void* (*)();
