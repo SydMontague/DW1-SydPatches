@@ -5,6 +5,7 @@
 #include "Files.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
+#include "Math.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libapi.hpp"
 #include "extern/libgpu.hpp"
