@@ -22,8 +22,79 @@ union ScreenCoord
     int32_t raw;
 };
 
+struct UV1Packet
+{
+    uint8_t u;
+    uint8_t v;
+    uint16_t clut;
+};
+
+struct UV2Packet
+{
+    uint8_t u;
+    uint8_t v;
+    uint16_t tpage     : 6;
+    uint16_t abr       : 2;
+    uint16_t colorMode : 2;
+};
+
+struct UVPacket
+{
+    uint8_t u;
+    uint8_t v;
+    uint16_t pad;
+};
+
+struct PrimHeader
+{
+    uint8_t olen;
+    uint8_t ilen;
+    uint8_t flag;
+    uint8_t mode;
+};
+
 extern "C"
 {
+    void updateTMDTextureData(TMDModel* model, uint32_t tpage, uint32_t pixelX, uint32_t pixelY, uint32_t clutPage)
+    {
+        auto objCount = model->objectCount;
+
+        for (int32_t i = 0; i < objCount; i++)
+        {
+            auto& obj      = model->objects[i];
+            auto primCount = obj.n_primitive;
+
+            auto* currentPrim = obj.primitive_top;
+            for (int32_t j = 0; j < primCount; j++)
+            {
+                auto* header = reinterpret_cast<PrimHeader*>(currentPrim);
+                if ((header->mode & 4) != 0)
+                {
+                    auto* uv1 = reinterpret_cast<UV1Packet*>(currentPrim + 1);
+                    uv1->clut += clutPage;
+                    uv1->u += pixelX;
+                    uv1->v += pixelY;
+                    auto* uv2  = reinterpret_cast<UV2Packet*>(currentPrim + 2);
+                    uv2->tpage = tpage;
+                    uv2->u += pixelX;
+                    uv2->v += pixelY;
+                    auto* uv3 = reinterpret_cast<UVPacket*>(currentPrim + 3);
+                    uv3->u += pixelX;
+                    uv3->v += pixelY;
+                    if ((header->mode & 8) != 0)
+                    {
+                        auto* uv4 = reinterpret_cast<UVPacket*>(currentPrim + 4);
+                        uv4->u += pixelX;
+                        uv4->v += pixelY;
+                    }
+                }
+                // vanilla exits the loop if the mode isn't textured, but we just skip those primitives
+
+                currentPrim += header->ilen + 1;
+            }
+        }
+    }
+
     void renderFlatDigimon(Entity* entity)
     {
         auto entityType = getEntityType(entity);

@@ -889,7 +889,6 @@ extern "C"
                                     int32_t* readComplete,
                                     FileReadCallback callback,
                                     int32_t param);
-    extern void updateTMDTextureData(TMDModel* model, int pixelPage, int pixelOffsetX, int pixelOffsetY, int clutPage);
     extern void setRotTransMatrix(Matrix* matrix);
     extern void renderDropShadow(Entity* entity);
     extern void setupModelMatrix(PositionData* data);
