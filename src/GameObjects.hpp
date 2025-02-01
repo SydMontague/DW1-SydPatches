@@ -72,6 +72,16 @@ extern "C"
         RenderFunction render;
     };
 
+    struct AttackObject
+    {
+        int32_t victimId = -1;
+        int32_t unk1     = -1;
+        SVector position;
+        uint32_t unk2;
+        uint32_t unk3;
+        uint32_t casterId;
+    };
+
     // TODO can be relocated
     extern Object WORLD_OBJECTS[129];
 
@@ -80,4 +90,8 @@ extern "C"
     bool removeObject(ObjectID id, uint16_t instance);
     void tickObjects();
     void renderObjects();
+
+    void initializeAttackObjects();
+    bool popAttackObject(int32_t entityId, AttackObject* out);
+    bool addAttackObject(int32_t victimId, int32_t unk1, SVector* pos, uint32_t unk2, uint32_t unk3, uint32_t casterId);
 }

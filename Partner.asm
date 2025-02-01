@@ -1,15 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800a435c
-.area 0x800a936c-.
-  .importobj "compiled/Partner.lib"
-
-  .notice "Empty space left: " + (0x800a936c-.) + " bytes"
-  .fill 0x800a936c-.
-.endarea
-
-
 .org 0x800dd99c
   jal tickConditionBoundaries
 .org 0x800abc28

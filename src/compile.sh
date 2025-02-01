@@ -32,8 +32,7 @@ mips-g++ CustomInit.cpp -o ../compiled/CustomInit.lib $FLAGS
 mips-g++ Evolution.cpp -o ../compiled/Evolution.lib $FLAGS
 mips-g++ StatsView.cpp -o ../compiled/StatsView.lib $FLAGS
 mips-g++ StatsViewData.cpp -o ../compiled/StatsViewData.lib $FLAGS
-mips-g++ Partner.cpp -o ../compiled/Partner.lib $FLAGS
 
-mips-g++ Model.cpp GameObjects.cpp Files.cpp Math.cpp Main.cpp -o ../compiled/Model.lib $FLAGS
+mips-g++ Model.cpp GameObjects.cpp Files.cpp Math.cpp Main.cpp Partner.cpp -o ../compiled/Model.lib $FLAGS
 
 cd -
