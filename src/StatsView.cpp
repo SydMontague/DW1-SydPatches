@@ -8,6 +8,7 @@
 #include "extern/libc.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
+#include "Math.hpp"
 
 extern "C"
 {
@@ -155,9 +156,6 @@ extern "C"
 
     void drawDigimonStatsViewStrings()
     {
-        constexpr auto HAPPINESS_MID  = HAPPINESS_MIN + ((HAPPINESS_MAX - HAPPINESS_MIN) / 2);
-        constexpr auto DISCIPLINE_MID = DISCIPLINE_MIN + ((DISCIPLINE_MAX - DISCIPLINE_MIN) / 2);
-
         DIGIVICE_ENTITY_VIEW.refpointX = -350; // TODO activate once the Tamer view has been re-implemented
         auto* para                     = getDigimonData(PARTNER_ENTITY.type);
         auto* raisePara                = getRaiseData(PARTNER_ENTITY.type);
@@ -181,10 +179,12 @@ extern "C"
         sprites[SpriteIndex::TIRED].height   = PARTNER_PARA.condition.isTired ? 12 : 0;
         sprites[SpriteIndex::POOP].height    = PARTNER_PARA.condition.isPoopy ? 12 : 0;
 
-        auto happiness1  = PARTNER_PARA.happiness > HAPPINESS_MID ? 100 : (PARTNER_PARA.happiness - HAPPINESS_MIN) * 100 / (HAPPINESS_MAX - HAPPINESS_MID);
-        auto happiness2  = PARTNER_PARA.happiness < HAPPINESS_MID ? 0 : (PARTNER_PARA.happiness - HAPPINESS_MID) * 100 / (HAPPINESS_MAX - HAPPINESS_MID);
-        auto discipline1 = PARTNER_PARA.discipline > DISCIPLINE_MID ? 100 : (PARTNER_PARA.discipline - DISCIPLINE_MIN) * 100 / (DISCIPLINE_MAX - DISCIPLINE_MID);
-        auto discipline2 = PARTNER_PARA.discipline < DISCIPLINE_MID ? 0 : (PARTNER_PARA.discipline - DISCIPLINE_MID) * 100 / (DISCIPLINE_MAX - DISCIPLINE_MID);
+        // clang-format off
+        auto happiness1  = clamp((PARTNER_PARA.happiness - HAPPINESS_MIN) * 100 / (HAPPINESS_MAX - HAPPINESS_MID), 0, 100);
+        auto happiness2  = clamp((PARTNER_PARA.happiness - HAPPINESS_MID) * 100 / (HAPPINESS_MAX - HAPPINESS_MID), 0, 100);
+        auto discipline1 = clamp((PARTNER_PARA.discipline - DISCIPLINE_MIN) * 100 / (DISCIPLINE_MAX - DISCIPLINE_MID), 0, 100);
+        auto discipline2 = clamp((PARTNER_PARA.discipline - DISCIPLINE_MID) * 100 / (DISCIPLINE_MAX - DISCIPLINE_MID), 0, 100);
+        // clang-format on
 
         sprites[SpriteIndex::HAPPINESS_BAR1].width  = happiness2 * 48 / 100;
         sprites[SpriteIndex::HAPPINESS_BAR2].width  = happiness1 * 48 / 100;

@@ -29,14 +29,8 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-; fix 100 discipline overshooting the bar
-.org 0x800a97a4
-  li a2,2
+.org 0x800dd5c0
+  jal renderStatusBars
 
-; fix last pixel missing
-.org 0x800a9414
-  li a2,0x4C
-.org 0x800a9450
-  li a2,0x4C
 
 .close

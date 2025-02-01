@@ -4,8 +4,10 @@
 
 constexpr auto HAPPINESS_MIN  = -100;
 constexpr auto HAPPINESS_MAX  = 100;
+constexpr auto HAPPINESS_MID  = HAPPINESS_MIN + ((HAPPINESS_MAX - HAPPINESS_MIN) / 2);
 constexpr auto DISCIPLINE_MIN = 0;
 constexpr auto DISCIPLINE_MAX = 100;
+constexpr auto DISCIPLINE_MID = DISCIPLINE_MIN + ((DISCIPLINE_MAX - DISCIPLINE_MIN) / 2);
 constexpr auto TIREDNESS_MIN  = 0;
 constexpr auto TIREDNESS_MAX  = 100;
 constexpr auto ENERGY_MIN     = 0;
