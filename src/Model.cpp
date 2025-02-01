@@ -388,9 +388,9 @@ extern "C"
         posData->location.x = posX;
         posData->location.y = posY;
         posData->location.z = posZ;
-        entity->locX        = posX;
-        entity->locY        = posY;
-        entity->locZ        = posZ;
+        entity->locX        = posX << 0x0F;
+        entity->locY        = posY << 0x0F;
+        entity->locZ        = posZ << 0x0F;
     }
 
     void setEntityRotation(int32_t entityId, int32_t rotX, int32_t rotY, int32_t rotZ)
