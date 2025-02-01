@@ -54,6 +54,7 @@
 .definelabel setupModelMatrix,          0x800c19a4
 .definelabel addFileReadRequest2,       0x800e3938
 .definelabel getTileTrigger,            0x800c0acc
+.definelabel main,                      0x800ee800
 
 .definelabel DIGIMON_SKELETONS, 0x8011ce60
 .definelabel PARTNER_MOMENTUM_DATA, 0x80185be8
@@ -69,6 +70,7 @@
 .definelabel PTR_DIGIMON_FILE_NAMES, 0x8011d19c
 .definelabel NPC_ENTITIES, 0x80155828
 .definelabel TEXTURE_BUFFER, 0x80088800
+.definelabel SECTION_DATA, 0x80113a60
 
 .definelabel TAMER_MOMENTUM_DATA, 0x801a00dc
 .definelabel TAMER_POSITION_DATA, 0x801a07e8

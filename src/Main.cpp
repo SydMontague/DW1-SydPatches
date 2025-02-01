@@ -2,6 +2,7 @@
 
 #include "extern/dw1.hpp"
 #include "extern/libgte.hpp"
+#include "extern/psx.hpp"
 
 extern "C"
 {
@@ -78,5 +79,20 @@ extern "C"
             }
         }
         return false;
+    }
+
+    void EntryPoint() {
+        // vanilla resets r2-27 and r30 here
+        gp = SECTION_DATA.globalPointer;
+        sp = SECTION_DATA.stackTop;
+
+        memset(SECTION_DATA.bss1Offset, 0, SECTION_DATA.bss1Size);
+        memset(SECTION_DATA.bss2Offset, 0, SECTION_DATA.bss2Size);
+
+        cop0_status = 0x40000000;
+
+        main();
+        
+        asm volatile("break 0x20, 0x201");
     }
 }

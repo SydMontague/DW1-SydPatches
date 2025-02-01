@@ -48,6 +48,11 @@ extern "C"
 
     extern uint32_t SCRATCHPAD;
 
+    register uint32_t* gp asm("gp");
+    register uint32_t* sp asm("sp");
+
+    register uint32_t cop0_status asm("c0r12");
+
     static GTEControlRegister<0> gte_rot1;
     static GTEControlRegister<1> gte_rot2;
     static GTEControlRegister<2> gte_rot3;

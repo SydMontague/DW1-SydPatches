@@ -784,6 +784,53 @@ extern "C"
         int16_t unk3;
     };
 
+    struct SectionData
+    {
+        uint32_t unk1;
+        uint32_t* globalPointer;
+        uint32_t bss1Size;
+        uint32_t bss2Size;
+        uint32_t unk2;
+        uint32_t data1Size;
+        uint32_t codeDataSize;
+        uint32_t* bss1Offset;
+        uint32_t* bss2Offset;
+        uint32_t* data2Offset;
+        uint32_t* data1Offset;
+        uint32_t* codeDataOffset;
+        uint32_t* unk6;
+        uint32_t* unk7;
+        uint32_t* unk8;
+        uint32_t* stackTop;
+        uint32_t unk9;
+        uint32_t stackFrames;
+        uint32_t unk10;
+        uint32_t unk11;
+        uint32_t unk12;
+        uint32_t heapPtr;
+        uint32_t unk13;
+        uint32_t unk14;
+        uint32_t unk15;
+        uint32_t unk16;
+        uint32_t unk17;
+        void* codeOffset;
+        void* btlCodeOffset;
+        void* stdCodeOffset;
+        void* fishCodeOffset;
+        void* evlCodeOffset;
+        void* karCodeOffset;
+        void* vsCodeOffset;
+        void* movCodeOffset;
+        void* doo2CodeOffset;
+        void* dooaCodeOffset;
+        void* trnCodeOffset;
+        void* dgetCodeOffset;
+        void* trn2CodeOffset;
+        void* murdCodeOffset;
+        void* endiCodeOffset;
+        void* eabCodeOffset;
+    };
+
     struct SkeletonNode
     {
         int8_t object;
@@ -883,8 +930,9 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern int16_t SIN_LOOKUP_TABLE[128];
     extern int16_t ATAN_LOOKUP_TABLE[512];
+    extern SectionData SECTION_DATA;
 
-    
+    extern int32_t main();
     extern int32_t getTileTrigger(Vector* position);
     extern void addFileReadRequest2(const uint8_t* path,
                                     uint8_t* buffer,
@@ -983,3 +1031,4 @@ static_assert(sizeof(EvolutionPath) == 11);
 static_assert(sizeof(NPCEntity) == 0x68);
 static_assert(sizeof(EvoSequenceData) == 0x34);
 static_assert(sizeof(ModelComponent) == 0x1C);
+static_assert(sizeof(SectionData) == 0xac);
