@@ -874,7 +874,7 @@ extern "C"
     extern int16_t EVOLUTION_TARGET;
     extern uint8_t CURRENT_SCREEN;
     extern SleepPattern SLEEP_PATTERN[8];
-    extern uint32_t MENU_STATE;
+    extern uint8_t MENU_STATE;
     extern uint16_t PLAYTIME_FRAMES;
     extern uint16_t LAST_HANDLED_FRAME;
     extern uint16_t CURRENT_FRAME;

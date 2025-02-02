@@ -154,6 +154,8 @@ extern "C"
         {CONDITION_OFFSET_X + 60, CONDITION_OFFSET_Y + 51, 51, 8},
     };
 
+    constexpr uint16_t CONDITION_OFFSETS[16] = {14, 15, 16, 17, 18, 19, 20, 21, 21, 20, 19, 18, 17, 16, 15, 14};
+
     void drawDigimonStatsViewStrings()
     {
         DIGIVICE_ENTITY_VIEW.refpointX = -350; // TODO activate once the Tamer view has been re-implemented
@@ -263,12 +265,10 @@ extern "C"
 
     void renderDigimonStatsView()
     {
-        constexpr uint16_t CONDITION_OFFSETS[16] = {14, 15, 16, 17, 18, 19, 20, 21, 21, 20, 19, 18, 17, 16, 15, 14};
-
         if (MENU_STATE == 0)
         {
-            drawDigimonStatsViewStrings();
             MENU_STATE = 1;
+            drawDigimonStatsViewStrings();
             return;
         }
 
