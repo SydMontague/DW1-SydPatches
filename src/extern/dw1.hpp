@@ -950,10 +950,23 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void Tamer_tickWalkingState();
+    void Tamer_tickChangeMap();
+    void Tamer_tickEvolution();
+    void Tamer_tickPickupItem();
+    void Tamer_tickTraining();
+    void Tamer_tickPraiseScold();
+    void Tamer_tickFishing();
+    void Tamer_tickTakeChest();
+    void Tamer_tickOpening();
+    void Tamer_tickEnding();
+    void Tamer_tickBattleLostLife();
+    void Tamer_tickMachinedramonSpawn();
+    void Tamer_tickSicknessLostLife();
+    void Tamer_tickAwardSomething();
+    void tickAnimation(Entity* entity);
     void loadMapDigimon(uint8_t* buffer, uint32_t mapId);
-    extern void Tamer_tickOverworld(int32_t instanceId);
     extern void Tamer_tickBattle(int32_t instanceId);
-    extern void Tamer_tick(int32_t instanceId);
     extern int32_t main();
     extern int32_t getTileTrigger(Vector* position);
     extern void addFileReadRequest2(const uint8_t* path,

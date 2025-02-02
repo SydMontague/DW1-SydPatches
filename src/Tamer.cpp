@@ -1,10 +1,58 @@
+#include "Helper.hpp"
 #include "Model.hpp"
+#include "extern/KAR.hpp"
 #include "extern/STD.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgte.hpp"
 
 extern "C"
 {
+    /*
+     * Tamer States Overworld
+     *  0 -> walking/normal
+     *  1 -> set idle state?
+     *  5 -> change map
+     *  6 -> idle
+     *  7 -> pickup item
+     *  8 -> training
+     *  9 -> scold
+     * 10 -> Dialogue/Script
+     * 11 -> Fishing
+     * 12 -> Curling
+     * 13 -> praise
+     * 14 -> take chest
+     * 15 -> Opening??
+     * 16 -> Ending
+     * 17 -> lose battle
+     * 18 -> Machinedramon entrance?
+     * 19 -> lose life (sickness)
+     * 20 -> award something
+     */
+    void Tamer_tickOverworld(int32_t instanceId)
+    {
+        switch (TAMER_STATE)
+        {
+            case 0: Tamer_tickWalkingState(); break;
+            case 1: Tamer_setState(6); break;
+            case 5: Tamer_tickChangeMap(); break;
+            case 6: Tamer_tickEvolution(); break;
+            case 7: Tamer_tickPickupItem(); break;
+            case 8: Tamer_tickTraining(); break;
+            case 9:
+            case 13: Tamer_tickPraiseScold(); break;
+            case 11: Tamer_tickFishing(); break;
+            case 12: KAR_tick(); break;
+            case 14: Tamer_tickTakeChest(); break;
+            case 15: Tamer_tickOpening(); break;
+            case 16: Tamer_tickEnding(); break;
+            case 17: Tamer_tickBattleLostLife(); break;
+            case 18: Tamer_tickMachinedramonSpawn(); break;
+            case 19: Tamer_tickSicknessLostLife(); break;
+            case 20: Tamer_tickAwardSomething(); break;
+        }
+        tickAnimation(&TAMER_ENTITY);
+    }
+
     void Tamer_tick(int32_t instanceId)
     {
         if (GAME_STATE != 0 || TAMER_STATE != 0)

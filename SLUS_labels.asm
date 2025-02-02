@@ -55,9 +55,23 @@
 .definelabel addFileReadRequest2,       0x800e3938
 .definelabel getTileTrigger,            0x800c0acc
 .definelabel main,                      0x800ee800
-.definelabel Tamer_tickOverworld,       0x800a9cac
 .definelabel Tamer_tickBattle,          0x800f1214
 .definelabel loadMapDigimon,            0x800b5d0c
+.definelabel tickAnimation,             0x800c1c64
+.definelabel Tamer_tickWalkingState,    0x800a9df8
+.definelabel Tamer_tickChangeMap,       0x800aa194
+.definelabel Tamer_tickEvolution,       0x800aaa64
+.definelabel Tamer_tickPickupItem,      0x800aa2f4
+.definelabel Tamer_tickTraining,        0x800aaaa0
+.definelabel Tamer_tickPraiseScold,     0x800aab00
+.definelabel Tamer_tickFishing,         0x800e4e18
+.definelabel Tamer_tickTakeChest,       0x800aa654
+.definelabel Tamer_tickOpening,         0x800aac68
+.definelabel Tamer_tickEnding,          0x800aacb0
+.definelabel Tamer_tickBattleLostLife,  0x800aad28
+.definelabel Tamer_tickMachinedramonSpawn,0x800aadd8
+.definelabel Tamer_tickSicknessLostLife,0x800aae44
+.definelabel Tamer_tickAwardSomething,  0x800aaec8
 
 .definelabel DIGIMON_SKELETONS, 0x8011ce60
 .definelabel PARTNER_MOMENTUM_DATA, 0x80185be8
@@ -154,6 +168,9 @@
 
 // STD_REL
 .definelabel STD_Tamer_tickTournament,  0x80069688
+
+// KAR_REL
+.definelabel KAR_tick, 0x800545c8
 
 // libapi
 .definelabel libapi_malloc3, 0x80090f84
