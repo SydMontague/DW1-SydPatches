@@ -1,9 +1,32 @@
 #include "Model.hpp"
+#include "extern/STD.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgte.hpp"
 
 extern "C"
 {
+    void Tamer_tick(int32_t instanceId)
+    {
+        if (GAME_STATE != 0 || TAMER_STATE != 0)
+        {
+            if (HAS_BUTTERFLY == 0)
+            {
+                unsetButterfly(BUTTERFLY_ID);
+                HAS_BUTTERFLY = -1;
+            }
+        }
+
+        switch (GAME_STATE)
+        {
+            case 0: Tamer_tickOverworld(instanceId); break;
+            case 1:
+            case 2:
+            case 3: Tamer_tickBattle(instanceId); break;
+            case 4:
+            case 5: STD_Tamer_tickTournament(instanceId); break;
+        }
+    }
+
     void initializeTamer(DigimonType type,
                          int32_t posX,
                          int32_t posY,

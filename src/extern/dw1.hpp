@@ -939,6 +939,8 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    extern void Tamer_tickOverworld(int32_t instanceId);
+    extern void Tamer_tickBattle(int32_t instanceId);
     extern void Tamer_tick(int32_t instanceId);
     extern int32_t main();
     extern int32_t getTileTrigger(Vector* position);

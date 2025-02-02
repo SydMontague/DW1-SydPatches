@@ -55,7 +55,8 @@
 .definelabel addFileReadRequest2,       0x800e3938
 .definelabel getTileTrigger,            0x800c0acc
 .definelabel main,                      0x800ee800
-.definelabel Tamer_tick,                0x800a99ac
+.definelabel Tamer_tickOverworld,       0x800a9cac
+.definelabel Tamer_tickBattle,          0x800f1214
 
 .definelabel DIGIMON_SKELETONS, 0x8011ce60
 .definelabel PARTNER_MOMENTUM_DATA, 0x80185be8
@@ -148,6 +149,9 @@
 .definelabel MEDAL_AWARD_PENDING, 0x80134c8c
 .definelabel IS_IN_MENU, 0x80134ef0
 .definelabel TAMER_LEVELS_AWARDED, 0x80134c90
+
+// STD_REL
+.definelabel STD_Tamer_tickTournament,  0x80069688
 
 // libapi
 .definelabel libapi_malloc3, 0x80090f84
