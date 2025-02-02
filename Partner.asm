@@ -78,9 +78,6 @@
 .org 0x800dd9d8
   jal tickPartner
 
-.org 0x800a9bc4
-  jal setupPartnerOnWarp
-
 .org 0x800e3644
   jal initializeReincarnatedPartner
 

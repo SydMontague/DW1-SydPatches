@@ -3,8 +3,8 @@
 
 ;.org 0x800a446c
 ;  jal loadMMD
-.org 0x800a983c
-  jal loadMMD
+;.org 0x800a983c
+;  jal loadMMD
 .org 0x800f1534
   jal loadMMD
 .org 0x800b6110
@@ -33,8 +33,8 @@
 ;  jal initializeDigimonObject
 ;.org 0x800a5218
 ;  jal initializeDigimonObject
-.org 0x800a9860
-  jal initializeDigimonObject
+;.org 0x800a9860
+;  jal initializeDigimonObject
 .org 0x800b61f0
   jal initializeDigimonObject
 .org 0x800f1558
@@ -55,10 +55,10 @@
   jal removeEntity
 
 
-.org 0x800a9890
-  jal setupEntityMatrix
-.org 0x800a9c84
-  jal setupEntityMatrix
+;.org 0x800a9890
+;  jal setupEntityMatrix
+;.org 0x800a9c84
+;  jal setupEntityMatrix
 .org 0x800ac700
   jal setupEntityMatrix
 .org 0x800ac96c
@@ -75,10 +75,10 @@
   jal setupEntityMatrix
 
 
-.org 0x800a9874
-  jal setEntityPosition
-.org 0x800a9c60
-  jal setEntityPosition
+;.org 0x800a9874
+;  jal setEntityPosition
+;.org 0x800a9c60
+;  jal setEntityPosition
 .org 0x800ac6f4
   jal setEntityPosition
 .org 0x800ac960
@@ -97,10 +97,10 @@
   jal setEntityPosition
 
 
-.org 0x800a9888
-  jal setEntityRotation
-.org 0x800a9c7c
-  jal setEntityRotation
+;.org 0x800a9888
+;  jal setEntityRotation
+;.org 0x800a9c7c
+;  jal setEntityRotation
 .org 0x800b6238
   jal setEntityRotation
 .org 0x800bf070
