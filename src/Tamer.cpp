@@ -7,6 +7,70 @@
 
 extern "C"
 {
+    inline void Tamer_tickWalking()
+    {
+        bool isRunning          = (POLLED_INPUT & (BUTTON_TRIANGLE | BUTTON_R1)) == 0;
+        bool isDirectionPressed = (POLLED_INPUT & (BUTTON_UP | BUTTON_RIGHT | BUTTON_DOWN | BUTTON_LEFT));
+
+        if (!isDirectionPressed)
+            startAnimation(&TAMER_ENTITY, 0);
+        else
+        {
+            auto animId = isRunning ? 3 : 2;
+            if (TAMER_ENTITY.animId != animId) startAnimation(&TAMER_ENTITY, animId);
+            ITEM_SCOLD_FLAG = 0;
+        }
+
+        auto mapRotation = getMapRotation();
+        // align rotation to axis
+        mapRotation += mapRotation % 0x200 > 0xFF ? 0x200 : 0;
+        mapRotation &= ~0x1FF;
+        auto playerRotation = 0;
+
+        if ((POLLED_INPUT & BUTTON_UP) != 0) playerRotation = 0x800;
+        if ((POLLED_INPUT & BUTTON_DOWN) != 0) playerRotation = 0x000;
+        if ((POLLED_INPUT & BUTTON_RIGHT) != 0) playerRotation = 0xC00;
+        if ((POLLED_INPUT & BUTTON_LEFT) != 0) playerRotation = 0x400;
+
+        if ((POLLED_INPUT & (BUTTON_UP | BUTTON_RIGHT)) == (BUTTON_UP | BUTTON_RIGHT)) playerRotation = 0xA00;
+        if ((POLLED_INPUT & (BUTTON_UP | BUTTON_LEFT)) == (BUTTON_UP | BUTTON_LEFT)) playerRotation = 0x600;
+        if ((POLLED_INPUT & (BUTTON_DOWN | BUTTON_LEFT)) == (BUTTON_DOWN | BUTTON_LEFT)) playerRotation = 0x200;
+        if ((POLLED_INPUT & (BUTTON_DOWN | BUTTON_RIGHT)) == (BUTTON_DOWN | BUTTON_RIGHT)) playerRotation = 0xE00;
+
+        if (isDirectionPressed) setTamerDirection(mapRotation + playerRotation);
+
+        checkItemPickup();
+        checkMapInteraction();
+        checkMedalConditions();
+        checkPendingAwards();
+    }
+
+    inline void Tamer_tickOpenMenu()
+    {
+        addTriangleMenu();
+        Tamer_setState(1);
+        startAnimation(&TAMER_ENTITY, 0);
+        unsetCameraFollowPlayer();
+        IS_IN_MENU = 1;
+        stopGameTime();
+        setPartnerIdling();
+    }
+
+    void Tamer_tickWalkingState()
+    {
+        tickTamerWaypoints();
+
+        auto isTrianglePressed = isKeyDown(BUTTON_TRIANGLE); // menu open button
+
+        if (!isTrianglePressed || IS_SCRIPT_PAUSED != 1 || FADE_DATA.fadeProtection != 0 || UI_BOX_DATA[0].state == 1 ||
+            UI_BOX_DATA[0].frame != 0)
+            Tamer_tickWalking();
+        else
+            Tamer_tickOpenMenu();
+
+        STORED_TAMER_POS = TAMER_ENTITY.posData->location;
+    }
+
     /*
      * Tamer States Overworld
      *  0 -> walking/normal

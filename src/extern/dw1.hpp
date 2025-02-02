@@ -852,6 +852,39 @@ extern "C"
     using ItemFunction     = void (*)(ItemType itemId);
     using FileReadCallback = void (*)(int32_t);
 
+    struct UIBoxData
+    {
+        RECT startPos;
+        RECT finalPos;
+        uint16_t frame;
+        uint16_t state;
+        uint16_t rowOffset;
+        uint16_t visibleRows;
+        uint16_t totalRows;
+        uint8_t features; // flag, 1 -> header separator, 2 -> transparent bg, 3 -> scroll bar
+        uint8_t color;
+        TickFunction tick;
+        RenderFunction render;
+    };
+
+    enum InputButtons : uint16_t
+    {
+        BUTTON_L2       = 0x0001,
+        BUTTON_R2       = 0x0002,
+        BUTTON_L1       = 0x0004,
+        BUTTON_R1       = 0x0008,
+        BUTTON_TRIANGLE = 0x0010,
+        BUTTON_CIRCLE   = 0x0020,
+        BUTTON_CROSS    = 0x0040,
+        BUTTON_SQUARE   = 0x0080,
+        BUTTON_SELECT   = 0x0100,
+        BUTTON_START    = 0x0800,
+        BUTTON_UP       = 0x1000,
+        BUTTON_RIGHT    = 0x2000,
+        BUTTON_DOWN     = 0x4000,
+        BUTTON_LEFT     = 0x8000,
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -859,6 +892,8 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern UIBoxData UI_BOX_DATA[6];
+    extern uint32_t POLLED_INPUT;
     extern MapWarps MAP_WARPS;
     extern uint16_t CHAR_TO_GLYPH_TABLE[80];
     extern GlyphData GLYPH_DATA[79];
@@ -950,7 +985,23 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
-    void Tamer_tickWalkingState();
+    /*
+     * Checks if a button has been pressed and consumes it (i.e. subsequent checks for the same button within the same
+     * tick return false).
+     */
+    bool isKeyDown(uint16_t keyMask);
+    void tickTamerWaypoints();
+    void addTriangleMenu();
+    void unsetCameraFollowPlayer();
+    void stopGameTime();
+    void setPartnerIdling();
+    int16_t getMapRotation();
+    void checkItemPickup();
+    void checkMapInteraction();
+    void checkMedalConditions();
+    void checkPendingAwards();
+    void setTamerDirection(int16_t direction);
+    bool rotateEntity(SVector* rotVector, int16_t* targetAngle, int16_t* ccDiff, int16_t* dwDiff, int16_t speed);
     void Tamer_tickChangeMap();
     void Tamer_tickEvolution();
     void Tamer_tickPickupItem();

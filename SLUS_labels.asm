@@ -58,7 +58,6 @@
 .definelabel Tamer_tickBattle,          0x800f1214
 .definelabel loadMapDigimon,            0x800b5d0c
 .definelabel tickAnimation,             0x800c1c64
-.definelabel Tamer_tickWalkingState,    0x800a9df8
 .definelabel Tamer_tickChangeMap,       0x800aa194
 .definelabel Tamer_tickEvolution,       0x800aaa64
 .definelabel Tamer_tickPickupItem,      0x800aa2f4
@@ -72,6 +71,19 @@
 .definelabel Tamer_tickMachinedramonSpawn,0x800aadd8
 .definelabel Tamer_tickSicknessLostLife,0x800aae44
 .definelabel Tamer_tickAwardSomething,  0x800aaec8
+.definelabel isKeyDown,                 0x800fc054
+.definelabel tickTamerWaypoints,        0x800d4adc
+.definelabel addTriangleMenu,           0x800b7c28
+.definelabel unsetCameraFollowPlayer,   0x800d8b3c
+.definelabel stopGameTime,              0x800dd798
+.definelabel setPartnerIdling,          0x800b7c18
+.definelabel getMapRotation,            0x800ab1ec
+.definelabel checkItemPickup,           0x800ab26c
+.definelabel checkMapInteraction,       0x800ab378
+.definelabel checkMedalConditions,      0x800ab66c
+.definelabel checkPendingAwards,        0x800ab8e4
+.definelabel setTamerDirection,         0x800ab244
+.definelabel rotateEntity,              0x800b6fb0
 
 .definelabel DIGIMON_SKELETONS, 0x8011ce60
 .definelabel PARTNER_MOMENTUM_DATA, 0x80185be8
@@ -89,6 +101,8 @@
 .definelabel TEXTURE_BUFFER, 0x80088800
 .definelabel SECTION_DATA, 0x80113a60
 .definelabel MAP_WARPS, 0x80138730
+.definelabel UI_BOX_DATA, 0x8013d390
+.definelabel POLLED_INPUT, 0x80134ee4
 
 .definelabel TAMER_MOMENTUM_DATA, 0x801a00dc
 .definelabel TAMER_POSITION_DATA, 0x801a07e8
