@@ -19,3 +19,4 @@
 .include "SearchFiles.asm"
 .include "Math.asm"
 .include "Main.asm"
+.include "Map.asm"

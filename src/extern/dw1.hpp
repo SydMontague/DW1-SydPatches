@@ -837,6 +837,16 @@ extern "C"
         int8_t parent;
     };
 
+    struct MapWarps
+    {
+        int16_t spawnX[10];
+        int16_t spawnY[10];
+        int16_t spawnZ[10];
+        int16_t rotation[10];
+        uint16_t targetMap[10];
+        uint16_t targetExit[10];
+    };
+
     using TickFunction     = void (*)(int32_t instanceId);
     using RenderFunction   = void (*)(int32_t instanceId);
     using ItemFunction     = void (*)(ItemType itemId);
@@ -849,6 +859,7 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern MapWarps MAP_WARPS;
     extern uint16_t CHAR_TO_GLYPH_TABLE[80];
     extern GlyphData GLYPH_DATA[79];
     extern uint8_t COLORCODE_HIGHBITS;
@@ -939,6 +950,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void loadMapDigimon(uint8_t* buffer, uint32_t mapId);
     extern void Tamer_tickOverworld(int32_t instanceId);
     extern void Tamer_tickBattle(int32_t instanceId);
     extern void Tamer_tick(int32_t instanceId);
@@ -1042,3 +1054,4 @@ static_assert(sizeof(NPCEntity) == 0x68);
 static_assert(sizeof(EvoSequenceData) == 0x34);
 static_assert(sizeof(ModelComponent) == 0x1C);
 static_assert(sizeof(SectionData) == 0xac);
+static_assert(sizeof(MapWarps) == 0x78);

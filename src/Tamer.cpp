@@ -61,4 +61,12 @@ extern "C"
         IS_IN_MENU                      = 0;
         TAMER_LEVELS_AWARDED            = 1;
     }
+
+    void setupTamerOnWarp(int32_t posX, int32_t posY, int32_t posZ, int32_t rotation)
+    {
+        setEntityPosition(0, posX, posY, posZ);
+        setEntityRotation(0, TAMER_ENTITY.posData->rotation.x, rotation, TAMER_ENTITY.posData->rotation.z);
+        setupEntityMatrix(0);
+        startAnimation(&TAMER_ENTITY, 0);
+    }
 }

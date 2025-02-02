@@ -57,6 +57,7 @@
 .definelabel main,                      0x800ee800
 .definelabel Tamer_tickOverworld,       0x800a9cac
 .definelabel Tamer_tickBattle,          0x800f1214
+.definelabel loadMapDigimon,            0x800b5d0c
 
 .definelabel DIGIMON_SKELETONS, 0x8011ce60
 .definelabel PARTNER_MOMENTUM_DATA, 0x80185be8
@@ -73,6 +74,7 @@
 .definelabel NPC_ENTITIES, 0x80155828
 .definelabel TEXTURE_BUFFER, 0x80088800
 .definelabel SECTION_DATA, 0x80113a60
+.definelabel MAP_WARPS, 0x80138730
 
 .definelabel TAMER_MOMENTUM_DATA, 0x801a00dc
 .definelabel TAMER_POSITION_DATA, 0x801a07e8
