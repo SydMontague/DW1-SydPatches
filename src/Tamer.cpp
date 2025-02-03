@@ -1,9 +1,11 @@
+#include "Font.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Model.hpp"
 #include "extern/KAR.hpp"
 #include "extern/STD.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libgpu.hpp"
 #include "extern/libgte.hpp"
 
 extern "C"
@@ -67,6 +69,99 @@ extern "C"
                 startGameTime();
             }
         }
+    }
+
+    void Tamer_tickPickupItem()
+    {
+        RECT textArea = {.x = 0, .y = 12, .width = 256, .height = 200};
+        auto itemType = DROPPED_ITEMS[PICKED_UP_DROP_ID].type;
+
+        if (Tamer_getSubState() == 0)
+        {
+            startAnimation(&TAMER_ENTITY, 12);
+            unsetCameraFollowPlayer();
+            clearTextSubArea(&textArea);
+            drawStringNew(&vanillaFont, getDigimonData(DigimonType::TAMER)->name, 704 + 0, 256 + 12);
+            drawStringNew(&vanillaFont, getItem(itemType)->name, 704 + 0, 256 + 24);
+            drawStringNew(&vanillaFont, reinterpret_cast<const uint8_t*>("Woah!"), 704 + 0, 256 + 36);
+
+            TAKE_CHEST_STATE        = 0;
+            TAKE_ITEM_FRAME_COUNTER = 0;
+            Tamer_setSubState(1);
+        }
+        else if (Tamer_getSubState() == 1)
+        {
+            if (!isUIBoxAvailable(1)) return;
+
+            Position pos;
+            getEntityScreenPos(&TAMER_ENTITY, 1, &pos);
+
+            RECT target = {.x = -130, .y = 42, .width = 262, .height = 59};
+            RECT source = {
+                .x      = static_cast<int16_t>(pos.x - 5),
+                .y      = static_cast<int16_t>(pos.y - 5),
+                .width  = 10,
+                .height = 10,
+            };
+            // vanilla writes TAKE_CHEST_ITEM here, but it's never used so skip that
+
+            createAnimatedUIBox(1, 0, 2, &target, &source, nullptr, renderItemPickupTextbox);
+            Tamer_setSubState(2);
+        }
+        else if (Tamer_getSubState() == 2)
+        {
+            TAKE_ITEM_FRAME_COUNTER++;
+            if (TAKE_ITEM_FRAME_COUNTER < 4) return;
+            if (!isKeyDown(BUTTON_CROSS)) return;
+
+            playSound(0, 3);
+
+            if (!giveItem(itemType, 0))
+            {
+                drawStringNew(&vanillaFont,
+                              reinterpret_cast<const uint8_t*>("I can't hold anymore."),
+                              704 + 0,
+                              256 + 24);
+                TAKE_CHEST_STATE        = 1;
+                TAKE_ITEM_FRAME_COUNTER = 0;
+                Tamer_setSubState(3);
+            }
+            else
+            {
+                playSound(0, 7);
+                Tamer_setSubState(4);
+            }
+        }
+        else if (Tamer_getSubState() == 3)
+        {
+            TAKE_ITEM_FRAME_COUNTER++;
+            if (TAKE_ITEM_FRAME_COUNTER < 4) return;
+            if (!isKeyDown(BUTTON_CROSS)) return;
+
+            playSound(0, 3);
+            Tamer_setSubState(4);
+        }
+        else if (Tamer_getSubState() == 4)
+        {
+            Position pos;
+            getEntityScreenPos(&TAMER_ENTITY, 1, &pos);
+            RECT target = {
+                .x      = static_cast<int16_t>(pos.x - 5),
+                .y      = static_cast<int16_t>(pos.y - 5),
+                .width  = 10,
+                .height = 10,
+            };
+
+            unsetUIBoxAnimated(1, &target);
+
+            if (TAKE_CHEST_STATE == 0) pickupItem(PICKED_UP_DROP_ID);
+
+            Tamer_setState(0);
+            setCameraFollowPlayer();
+        }
+
+        // Vanilla check for TAKE_ITEM_FRAME_COUNTER to be below 60 before calling playSound(0, 3),
+        // but it also limits the value to 10. So that code is dead and got removed.
     }
 
     inline void Tamer_tickWalking()
@@ -228,7 +323,7 @@ extern "C"
             val = 0; // unused?
 
         PREVIOUS_CAMERA_POS_INITIALIZED = 0;
-        PICKED_UP_ITEM                  = 0;
+        HAS_PICKED_UP_ITEM              = 0;
         STORED_TAMER_POS                = TAMER_ENTITY.posData->location;
         TAMER_LEVEL_AWARD_PENDING       = 0;
         MEDAL_AWARD_PENDING             = 0;

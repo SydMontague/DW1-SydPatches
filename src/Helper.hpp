@@ -102,6 +102,11 @@ extern "C"
         return &RAISE_DATA[static_cast<uint32_t>(type)];
     }
 
+    constexpr Item* getItem(ItemType type)
+    {
+        return &ITEM_PARA[static_cast<uint8_t>(type)];
+    }
+
     inline void Partner_setState(uint8_t state)
     {
         PARTNER_STATE     = state;

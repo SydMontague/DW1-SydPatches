@@ -1,7 +1,8 @@
 #include "Utils.hpp"
 
-#include "extern/dw1.hpp"
 #include "Helper.hpp"
+#include "extern/dw1.hpp"
+#include "extern/libgte.hpp"
 
 extern "C"
 {
@@ -10,7 +11,7 @@ extern "C"
         return (first & 0x80) != 0;
     }
 
-    int32_t getDistanceSquared(Position* pos1, Position* pos2)
+    int32_t getDistanceSquared(Vector* pos1, Vector* pos2)
     {
         int32_t diffX = pos1->x - pos2->x;
         int32_t diffZ = pos1->z - pos2->z;

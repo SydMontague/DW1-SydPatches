@@ -17,10 +17,8 @@ extern "C"
 
     struct Position
     {
-        int32_t x;
-        int32_t y;
-        int32_t z;
-        int32_t pad;
+        int16_t x;
+        int16_t y;
     };
 
     enum class Type : uint8_t
@@ -657,7 +655,7 @@ extern "C"
         uint8_t size;
     };
 
-    enum class FadeMode
+    enum class FadeMode : uint8_t
     {
         NONE       = 0,
         WHITE_FADE = 1,
@@ -847,10 +845,24 @@ extern "C"
         uint16_t targetExit[10];
     };
 
+    struct Item
+    {
+        uint8_t name[20];
+        int32_t value;
+        int16_t meritValue;
+        int16_t sortingValue;
+        uint8_t itemColor;
+        bool dropable;
+        uint16_t unk;
+    };
+
     using TickFunction     = void (*)(int32_t instanceId);
     using RenderFunction   = void (*)(int32_t instanceId);
     using ItemFunction     = void (*)(ItemType itemId);
     using FileReadCallback = void (*)(int32_t);
+
+    using BoxTickFunction   = void();
+    using BoxRenderFunction = void();
 
     struct UIBoxData
     {
@@ -892,6 +904,11 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern Item ITEM_PARA[128];
+    extern DroppedItem DROPPED_ITEMS[10];
+    extern uint8_t PICKED_UP_DROP_ID;
+    extern uint8_t TAKE_ITEM_FRAME_COUNTER;
+    extern uint8_t TAKE_CHEST_STATE;
     extern UIBoxData UI_BOX_DATA[6];
     extern uint32_t POLLED_INPUT;
     extern MapWarps MAP_WARPS;
@@ -969,7 +986,7 @@ extern "C"
     extern Vector STORED_TAMER_POS;
     extern uint8_t HAS_ROTATION_DATA[8];
     extern bool PREVIOUS_CAMERA_POS_INITIALIZED;
-    extern uint8_t PICKED_UP_ITEM;
+    extern uint8_t HAS_PICKED_UP_ITEM;
     extern uint32_t TAMER_LEVEL_AWARD_PENDING;
     extern uint32_t MEDAL_AWARD_PENDING;
     extern uint32_t IS_IN_MENU;
@@ -987,6 +1004,21 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void createAnimatedUIBox(int32_t instanceId,
+                             uint8_t color,
+                             uint8_t features,
+                             RECT* finalPos,
+                             RECT* startPos,
+                             BoxTickFunction tickFunc,
+                             BoxRenderFunction renderFunc);
+    void playSound(int32_t vabId, uint32_t note);
+    bool giveItem(ItemType type, uint8_t amount);
+    void setCameraFollowPlayer();
+    bool pickupItem(int32_t dropId);
+    void unsetUIBoxAnimated(int32_t boxId, RECT* target);
+    void renderItemPickupTextbox();
+    void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos);
+    bool isUIBoxAvailable(int32_t id);
     void fadeToBlack(int32_t frames);
     void fadeFromBlack(int32_t frames);
     void addMapNameObject(int32_t mapId);
@@ -1011,7 +1043,6 @@ extern "C"
     bool rotateEntity(SVector* rotVector, int16_t* targetAngle, int16_t* ccDiff, int16_t* dwDiff, int16_t speed);
     void Tamer_tickChangeMap();
     void Tamer_tickEvolution();
-    void Tamer_tickPickupItem();
     void Tamer_tickTraining();
     void Tamer_tickPraiseScold();
     void Tamer_tickFishing();
@@ -1117,7 +1148,7 @@ static_assert(sizeof(PartnerEntity) == 0x80);
 static_assert(sizeof(RaiseData) == 0x1C);
 static_assert(sizeof(DigimonData) == 0x34);
 static_assert(sizeof(PartnerPara) == 0x84);
-static_assert(sizeof(Position) == 16);
+static_assert(sizeof(Position) == 4);
 static_assert(sizeof(GlyphData) == 24);
 static_assert(sizeof(RGB8) == 3);
 static_assert(sizeof(EvolutionPath) == 11);
@@ -1126,3 +1157,5 @@ static_assert(sizeof(EvoSequenceData) == 0x34);
 static_assert(sizeof(ModelComponent) == 0x1C);
 static_assert(sizeof(SectionData) == 0xac);
 static_assert(sizeof(MapWarps) == 0x78);
+static_assert(sizeof(FadeData) == 0x10);
+static_assert(sizeof(Item) == 0x20);

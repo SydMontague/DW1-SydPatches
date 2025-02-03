@@ -58,7 +58,6 @@
 .definelabel loadMapDigimon,            0x800b5d0c
 .definelabel tickAnimation,             0x800c1c64
 .definelabel Tamer_tickEvolution,       0x800aaa64
-.definelabel Tamer_tickPickupItem,      0x800aa2f4
 .definelabel Tamer_tickTraining,        0x800aaaa0
 .definelabel Tamer_tickPraiseScold,     0x800aab00
 .definelabel Tamer_tickFishing,         0x800e4e18
@@ -87,7 +86,20 @@
 .definelabel addMapNameObject,          0x800d8fb0
 .definelabel changeMap,                 0x800d9020
 .definelabel startGameTime,             0x800dd7a0
+.definelabel getEntityScreenPos,        0x800e52d8
+.definelabel createAnimatedUIBox,       0x800c3014
+.definelabel giveItem,                  0x800c5240
+.definelabel setCameraFollowPlayer,     0x800d8b44
+.definelabel pickupItem,                0x800c5490
+.definelabel unsetUIBoxAnimated,        0x800c31fc
+.definelabel renderItemPickupTextbox,   0x800ab928
+.definelabel isUIBoxAvailable,          0x800ba1d4
 
+.definelabel ITEM_PARA, 0x801269dc
+.definelabel DROPPED_ITEMS, 0x8013d4e0
+.definelabel PICKED_UP_DROP_ID, 0x80134c93
+.definelabel TAKE_CHEST_STATE, 0x80134c94
+.definelabel TAKE_ITEM_FRAME_COUNTER, 0x80134c95
 .definelabel DIGIMON_SKELETONS, 0x8011ce60
 .definelabel PARTNER_MOMENTUM_DATA, 0x80185be8
 .definelabel PARTNER_POSITION_DATA, 0x801866cc
@@ -179,7 +191,7 @@
 .definelabel HAS_ROTATION_DATA, 0x80134c78
 .definelabel UNKNOWN_TAMER_DATA, 0x80138694
 .definelabel PREVIOUS_CAMERA_POS_INITIALIZED, 0x80134c80
-.definelabel PICKED_UP_ITEM, 0x80134c84
+.definelabel HAS_PICKED_UP_ITEM, 0x80134c84
 .definelabel TAMER_LEVEL_AWARD_PENDING, 0x80134c88
 .definelabel MEDAL_AWARD_PENDING, 0x80134c8c
 .definelabel IS_IN_MENU, 0x80134ef0
