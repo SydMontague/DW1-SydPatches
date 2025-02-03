@@ -1,3 +1,4 @@
+#include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Model.hpp"
 #include "extern/KAR.hpp"
@@ -32,6 +33,40 @@ extern "C"
     uint8_t Tamer_getSubState()
     {
         return TAMER_SUB_STATE;
+    }
+
+    void Tamer_tickChangeMap()
+    {
+        if (Tamer_getSubState() == 0)
+        {
+            fadeToBlack(20);
+            startAnimation(&TAMER_ENTITY, 2);
+            Tamer_setSubState(1);
+        }
+        else if (Tamer_getSubState() == 1)
+        {
+            if (FADE_DATA.fadeOutCurrent == 10) { addMapNameObject(TARGET_MAP); }
+
+            if (FADE_DATA.fadeOutCurrent >= 20)
+            {
+                changeMap(TARGET_MAP, CURRENT_EXIT);
+                STORED_TAMER_POS = TAMER_ENTITY.posData->location;
+                fadeFromBlack(20);
+                removeObject(ObjectID::MAP_NAME, TARGET_MAP);
+                Tamer_setSubState(2);
+            }
+        }
+        else if (Tamer_getSubState() == 2)
+        {
+            if (FADE_DATA.fadeInCurrent >= 20)
+            {
+                Tamer_setState(0);
+                Partner_setState(1);
+                checkMapInteraction();
+                STORED_TAMER_POS = TAMER_ENTITY.posData->location;
+                startGameTime();
+            }
+        }
     }
 
     inline void Tamer_tickWalking()

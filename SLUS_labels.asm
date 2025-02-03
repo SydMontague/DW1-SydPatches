@@ -57,7 +57,6 @@
 .definelabel Tamer_tickBattle,          0x800f1214
 .definelabel loadMapDigimon,            0x800b5d0c
 .definelabel tickAnimation,             0x800c1c64
-.definelabel Tamer_tickChangeMap,       0x800aa194
 .definelabel Tamer_tickEvolution,       0x800aaa64
 .definelabel Tamer_tickPickupItem,      0x800aa2f4
 .definelabel Tamer_tickTraining,        0x800aaaa0
@@ -83,6 +82,11 @@
 .definelabel checkPendingAwards,        0x800ab8e4
 .definelabel setTamerDirection,         0x800ab244
 .definelabel rotateEntity,              0x800b6fb0
+.definelabel fadeToBlack,               0x800acd88
+.definelabel fadeFromBlack,             0x800ace74
+.definelabel addMapNameObject,          0x800d8fb0
+.definelabel changeMap,                 0x800d9020
+.definelabel startGameTime,             0x800dd7a0
 
 .definelabel DIGIMON_SKELETONS, 0x8011ce60
 .definelabel PARTNER_MOMENTUM_DATA, 0x80185be8
@@ -102,6 +106,8 @@
 .definelabel MAP_WARPS, 0x80138730
 .definelabel UI_BOX_DATA, 0x8013d390
 .definelabel POLLED_INPUT, 0x80134ee4
+.definelabel TARGET_MAP, 0x80134de0
+.definelabel CURRENT_EXIT, 0x80134daa
 
 .definelabel TAMER_MOMENTUM_DATA, 0x801a00dc
 .definelabel TAMER_POSITION_DATA, 0x801a07e8

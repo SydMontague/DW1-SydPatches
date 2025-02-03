@@ -974,6 +974,8 @@ extern "C"
     extern uint32_t MEDAL_AWARD_PENDING;
     extern uint32_t IS_IN_MENU;
     extern uint32_t TAMER_LEVELS_AWARDED;
+    extern uint8_t TARGET_MAP;
+    extern uint8_t CURRENT_EXIT;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -985,6 +987,11 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void fadeToBlack(int32_t frames);
+    void fadeFromBlack(int32_t frames);
+    void addMapNameObject(int32_t mapId);
+    void changeMap(uint32_t map, uint32_t exit);
+    void startGameTime();
     /*
      * Checks if a button has been pressed and consumes it (i.e. subsequent checks for the same button within the same
      * tick return false).
