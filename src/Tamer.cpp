@@ -9,17 +9,17 @@ extern "C"
 {
     inline void Tamer_tickWalking()
     {
+        // TODO is triangle really intended here?
         bool isRunning          = (POLLED_INPUT & (BUTTON_TRIANGLE | BUTTON_R1)) == 0;
         bool isDirectionPressed = (POLLED_INPUT & (BUTTON_UP | BUTTON_RIGHT | BUTTON_DOWN | BUTTON_LEFT));
+        int32_t animId          = 0;
 
-        if (!isDirectionPressed)
-            startAnimation(&TAMER_ENTITY, 0);
-        else
+        if (isDirectionPressed)
         {
-            auto animId = isRunning ? 3 : 2;
-            if (TAMER_ENTITY.animId != animId) startAnimation(&TAMER_ENTITY, animId);
+            animId          = isRunning ? 3 : 2;
             ITEM_SCOLD_FLAG = 0;
         }
+        if (TAMER_ENTITY.animId != animId) startAnimation(&TAMER_ENTITY, animId);
 
         auto mapRotation = getMapRotation();
         // align rotation to axis
@@ -27,15 +27,15 @@ extern "C"
         mapRotation &= ~0x1FF;
         auto playerRotation = 0;
 
-        if ((POLLED_INPUT & BUTTON_UP) != 0) playerRotation = 0x800;
         if ((POLLED_INPUT & BUTTON_DOWN) != 0) playerRotation = 0x000;
+        if ((POLLED_INPUT & BUTTON_UP) != 0) playerRotation = 0x800;
         if ((POLLED_INPUT & BUTTON_RIGHT) != 0) playerRotation = 0xC00;
         if ((POLLED_INPUT & BUTTON_LEFT) != 0) playerRotation = 0x400;
 
+        if ((POLLED_INPUT & (BUTTON_DOWN | BUTTON_RIGHT)) == (BUTTON_DOWN | BUTTON_RIGHT)) playerRotation = 0xE00;
+        if ((POLLED_INPUT & (BUTTON_DOWN | BUTTON_LEFT)) == (BUTTON_DOWN | BUTTON_LEFT)) playerRotation = 0x200;
         if ((POLLED_INPUT & (BUTTON_UP | BUTTON_RIGHT)) == (BUTTON_UP | BUTTON_RIGHT)) playerRotation = 0xA00;
         if ((POLLED_INPUT & (BUTTON_UP | BUTTON_LEFT)) == (BUTTON_UP | BUTTON_LEFT)) playerRotation = 0x600;
-        if ((POLLED_INPUT & (BUTTON_DOWN | BUTTON_LEFT)) == (BUTTON_DOWN | BUTTON_LEFT)) playerRotation = 0x200;
-        if ((POLLED_INPUT & (BUTTON_DOWN | BUTTON_RIGHT)) == (BUTTON_DOWN | BUTTON_RIGHT)) playerRotation = 0xE00;
 
         if (isDirectionPressed) setTamerDirection(mapRotation + playerRotation);
 
