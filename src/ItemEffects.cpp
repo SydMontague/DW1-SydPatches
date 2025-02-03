@@ -1,9 +1,10 @@
 #include "Font.hpp"
 #include "Helper.hpp"
-#include "Partner.hpp"
-#include "extern/dw1.hpp"
-#include "constants.hpp"
 #include "Math.hpp"
+#include "Partner.hpp"
+#include "Tamer.hpp"
+#include "constants.hpp"
+#include "extern/dw1.hpp"
 
 extern "C"
 {

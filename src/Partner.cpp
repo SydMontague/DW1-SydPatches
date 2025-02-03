@@ -8,6 +8,7 @@
 #include "ItemEffects.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
+#include "Tamer.hpp"
 #include "constants.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"

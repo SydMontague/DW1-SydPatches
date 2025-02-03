@@ -20,3 +20,4 @@
 .include "Math.asm"
 .include "Main.asm"
 .include "Map.asm"
+.include "Tamer.asm"

@@ -122,26 +122,6 @@ extern "C"
     {
         return PARTNER_SUB_STATE;
     }
-
-    inline void Tamer_setState(uint8_t state)
-    {
-        TAMER_STATE = state;
-    }
-
-    inline uint8_t Tamer_getState()
-    {
-        return TAMER_STATE;
-    }
-
-    inline void Tamer_setSubState(uint8_t state)
-    {
-        TAMER_SUB_STATE = state;
-    }
-
-    inline uint8_t Tamer_getSubState()
-    {
-        return TAMER_SUB_STATE;
-    }
 }
 
 static_assert(getTimeDiff(9, 18) == 9);

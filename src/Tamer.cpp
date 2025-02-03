@@ -7,6 +7,33 @@
 
 extern "C"
 {
+    void Tamer_setState(uint8_t state)
+    {
+        TAMER_STATE     = state;
+        TAMER_SUB_STATE = 0;
+    }
+
+    void Tamer_setSubState(uint8_t state)
+    {
+        TAMER_SUB_STATE = state;
+    }
+
+    void Tamer_setFullState(uint8_t state, uint8_t subState)
+    {
+        TAMER_STATE     = state;
+        TAMER_SUB_STATE = subState;
+    }
+
+    uint8_t Tamer_getState()
+    {
+        return TAMER_STATE;
+    }
+
+    uint8_t Tamer_getSubState()
+    {
+        return TAMER_SUB_STATE;
+    }
+
     inline void Tamer_tickWalking()
     {
         // TODO is triangle really intended here?
