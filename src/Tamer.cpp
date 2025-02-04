@@ -10,6 +10,8 @@
 
 extern "C"
 {
+    static uint8_t takeItemFrameCount;
+
     void Tamer_setState(uint8_t state)
     {
         TAMER_STATE     = state;
@@ -101,8 +103,8 @@ extern "C"
         }
         else if (Tamer_getSubState() == 1)
         {
-            if (!isUIBoxAvailable(1)) return;
             if (!tickOpenChestTray(INTERACTED_CHEST)) return;
+            if (!isUIBoxAvailable(1)) return;
 
             Position pos;
             getEntityScreenPos(&TAMER_ENTITY, 1, &pos);
@@ -114,22 +116,21 @@ extern "C"
                 .width  = 10,
                 .height = 10,
             };
-            TAKE_CHEST_ITEM = itemType;
 
             createAnimatedUIBox(1, 0, 2, &target, &source, nullptr, renderItemPickupTextbox);
             Tamer_setSubState(TAKE_CHEST_STATE == 0 ? 2 : 4);
-            TAKE_ITEM_FRAME_COUNTER = 0;
+            takeItemFrameCount = 0;
         }
         else if (Tamer_getSubState() == 2)
         {
-            TAKE_ITEM_FRAME_COUNTER++;
+            takeItemFrameCount++;
             // vanilla checks for polled inputs instead of consuming them, but for the sake of code unification this is
             // the same as the item pickup code. It also gives 5 frames delay instead of 4.
-            if (TAKE_ITEM_FRAME_COUNTER < 5) return;
+            if (takeItemFrameCount < 5) return;
             if (!isKeyDown(BUTTON_CROSS)) return;
 
-            TAKE_ITEM_FRAME_COUNTER = 0;
-            if (!giveItem(TAKE_CHEST_ITEM, 0))
+            takeItemFrameCount = 0;
+            if (!giveItem(itemType, 0))
             {
                 drawStringNew(&vanillaFont,
                               reinterpret_cast<const uint8_t*>("I can't hold anymore."),
@@ -152,8 +153,8 @@ extern "C"
         else if (Tamer_getSubState() == 4)
         {
             // added extra state to fix some paths requiring more confirmation inputs than necessary
-            TAKE_ITEM_FRAME_COUNTER++;
-            if (TAKE_ITEM_FRAME_COUNTER < 5) return;
+            takeItemFrameCount++;
+            if (takeItemFrameCount < 5) return;
             if (!isKeyDown(BUTTON_CROSS)) return;
             Tamer_setSubState(5);
         }
@@ -170,14 +171,14 @@ extern "C"
 
             unsetUIBoxAnimated(1, &target);
 
-            if (TAKE_CHEST_STATE == 0) giveItem(TAKE_CHEST_ITEM, 1);
+            if (TAKE_CHEST_STATE == 0) giveItem(itemType, 1);
 
             Tamer_setState(0);
             Partner_setState(1);
             setCameraFollowPlayer();
         }
 
-        // vanilla limits the TAKE_ITEM_FRAME_COUNTER to 10 here, but doesn't even use it within this state...
+        // vanilla limits the takeItemFrameCount to 10 here, but doesn't even use it within this state...
     }
 
     void Tamer_tickPickupItem()
@@ -196,8 +197,8 @@ extern "C"
             drawStringNew(&vanillaFont, getItem(itemType)->name, 704 + 0, 256 + 24);
             drawStringNew(&vanillaFont, reinterpret_cast<const uint8_t*>("Woah!"), 704 + 0, 256 + 36);
 
-            TAKE_CHEST_STATE        = 0;
-            TAKE_ITEM_FRAME_COUNTER = 0;
+            TAKE_CHEST_STATE   = 0;
+            takeItemFrameCount = 0;
             Tamer_setSubState(1);
         }
         else if (Tamer_getSubState() == 1)
@@ -221,10 +222,10 @@ extern "C"
         }
         else if (Tamer_getSubState() == 2)
         {
-            TAKE_ITEM_FRAME_COUNTER++;
+            takeItemFrameCount++;
             // vanilla does the isKeyDown check before the frame count check,
             // but changing the order allows to buffer inputs
-            if (TAKE_ITEM_FRAME_COUNTER < 5) return;
+            if (takeItemFrameCount < 5) return;
             if (!isKeyDown(BUTTON_CROSS)) return;
 
             playSound(0, 3);
@@ -235,8 +236,8 @@ extern "C"
                               reinterpret_cast<const uint8_t*>("I can't hold anymore."),
                               704 + 0,
                               256 + 24);
-                TAKE_CHEST_STATE        = 1;
-                TAKE_ITEM_FRAME_COUNTER = 0;
+                TAKE_CHEST_STATE   = 1;
+                takeItemFrameCount = 0;
                 Tamer_setSubState(3);
             }
             else
@@ -247,10 +248,10 @@ extern "C"
         }
         else if (Tamer_getSubState() == 3)
         {
-            TAKE_ITEM_FRAME_COUNTER++;
+            takeItemFrameCount++;
             // vanilla does the isKeyDown check before the frame count check,
             // but changing the order allows to buffer inputs
-            if (TAKE_ITEM_FRAME_COUNTER < 5) return;
+            if (takeItemFrameCount < 5) return;
             if (!isKeyDown(BUTTON_CROSS)) return;
 
             playSound(0, 3);
@@ -275,7 +276,7 @@ extern "C"
             setCameraFollowPlayer();
         }
 
-        // Vanilla check for TAKE_ITEM_FRAME_COUNTER to be below 60 before calling playSound(0, 3),
+        // Vanilla check for takeItemFrameCount to be below 60 before calling playSound(0, 3),
         // but it also limits the value to 10. So that code is dead and got removed.
     }
 

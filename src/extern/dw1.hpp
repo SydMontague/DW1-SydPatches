@@ -924,7 +924,6 @@ extern "C"
     extern Item ITEM_PARA[128];
     extern DroppedItem DROPPED_ITEMS[10];
     extern uint8_t PICKED_UP_DROP_ID;
-    extern uint8_t TAKE_ITEM_FRAME_COUNTER;
     extern uint8_t TAKE_CHEST_STATE;
     extern UIBoxData UI_BOX_DATA[6];
     extern uint32_t POLLED_INPUT;
