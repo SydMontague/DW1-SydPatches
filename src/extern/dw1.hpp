@@ -856,6 +856,20 @@ extern "C"
         uint16_t unk;
     };
 
+    struct Chest
+    {
+        Vector location;
+        Vector trayLocation;
+        SVector rotation;
+        SVector trayRotation;
+        uint16_t trigger;
+        ItemType item;
+        bool isTaken;
+        uint8_t tileX;
+        uint8_t tileY;
+        uint16_t padding;
+    };
+
     using TickFunction     = void (*)(int32_t instanceId);
     using RenderFunction   = void (*)(int32_t instanceId);
     using ItemFunction     = void (*)(ItemType itemId);
@@ -904,6 +918,9 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern Chest CHEST_ARRAY[8];
+    extern uint8_t INTERACTED_CHEST;
+    extern ItemType TAKE_CHEST_ITEM;
     extern Item ITEM_PARA[128];
     extern DroppedItem DROPPED_ITEMS[10];
     extern uint8_t PICKED_UP_DROP_ID;
@@ -1004,6 +1021,9 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void entityLookAtLocation(Entity* entity, Vector* location);
+    bool tickOpenChestTray(uint32_t chestId);
+    bool tickCloseChestTray(uint32_t chestId);
     void createAnimatedUIBox(int32_t instanceId,
                              uint8_t color,
                              uint8_t features,
@@ -1046,7 +1066,6 @@ extern "C"
     void Tamer_tickTraining();
     void Tamer_tickPraiseScold();
     void Tamer_tickFishing();
-    void Tamer_tickTakeChest();
     void Tamer_tickOpening();
     void Tamer_tickEnding();
     void Tamer_tickBattleLostLife();
@@ -1159,3 +1178,4 @@ static_assert(sizeof(SectionData) == 0xac);
 static_assert(sizeof(MapWarps) == 0x78);
 static_assert(sizeof(FadeData) == 0x10);
 static_assert(sizeof(Item) == 0x20);
+static_assert(sizeof(Chest) == 0x38);

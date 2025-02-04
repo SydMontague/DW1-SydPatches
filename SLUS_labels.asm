@@ -61,7 +61,6 @@
 .definelabel Tamer_tickTraining,        0x800aaaa0
 .definelabel Tamer_tickPraiseScold,     0x800aab00
 .definelabel Tamer_tickFishing,         0x800e4e18
-.definelabel Tamer_tickTakeChest,       0x800aa654
 .definelabel Tamer_tickOpening,         0x800aac68
 .definelabel Tamer_tickEnding,          0x800aacb0
 .definelabel Tamer_tickBattleLostLife,  0x800aad28
@@ -94,7 +93,13 @@
 .definelabel unsetUIBoxAnimated,        0x800c31fc
 .definelabel renderItemPickupTextbox,   0x800ab928
 .definelabel isUIBoxAvailable,          0x800ba1d4
+.definelabel entityLookAtLocation,      0x800d459c
+.definelabel tickOpenChestTray,         0x800e21d0
+.definelabel tickCloseChestTray,        0x800e223c
 
+.definelabel TAKE_CHEST_ITEM, 0x80134c96
+.definelabel INTERACTED_CHEST, 0x80134c97
+.definelabel CHEST_ARRAY, 0x80150f00
 .definelabel ITEM_PARA, 0x801269dc
 .definelabel DROPPED_ITEMS, 0x8013d4e0
 .definelabel PICKED_UP_DROP_ID, 0x80134c93

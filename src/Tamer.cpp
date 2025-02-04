@@ -71,8 +71,119 @@ extern "C"
         }
     }
 
+    void Tamer_tickTakeChest()
+    {
+        RECT textArea = {.x = 0, .y = 12, .width = 256, .height = 200};
+        Chest& chest  = CHEST_ARRAY[INTERACTED_CHEST];
+        auto itemType = chest.item;
+
+        if (Tamer_getSubState() == 0)
+        {
+            startAnimation(&TAMER_ENTITY, 0);
+            Partner_setState(11);
+            unsetCameraFollowPlayer();
+            entityLookAtLocation(&TAMER_ENTITY, &chest.location);
+            clearTextSubArea(&textArea);
+
+            drawStringNew(&vanillaFont, getDigimonData(DigimonType::TAMER)->name, 704 + 0, 256 + 12);
+            if (chest.isTaken)
+            {
+                drawStringNew(&vanillaFont, reinterpret_cast<const uint8_t*>("Hey! It's empty!"), 704 + 0, 256 + 24);
+                TAKE_CHEST_STATE = 2;
+            }
+            else
+            {
+                drawStringNew(&vanillaFont, getItem(itemType)->name, 704 + 0, 256 + 24);
+                drawStringNew(&vanillaFont, reinterpret_cast<const uint8_t*>("Woah!"), 704 + 0, 256 + 36);
+                TAKE_CHEST_STATE = 0;
+            }
+            Tamer_setSubState(1);
+        }
+        else if (Tamer_getSubState() == 1)
+        {
+            if (!isUIBoxAvailable(1)) return;
+            if (!tickOpenChestTray(INTERACTED_CHEST)) return;
+
+            Position pos;
+            getEntityScreenPos(&TAMER_ENTITY, 1, &pos);
+
+            RECT target = {.x = -130, .y = 42, .width = 262, .height = 59};
+            RECT source = {
+                .x      = static_cast<int16_t>(pos.x - 5),
+                .y      = static_cast<int16_t>(pos.y - 5),
+                .width  = 10,
+                .height = 10,
+            };
+            TAKE_CHEST_ITEM = itemType;
+
+            createAnimatedUIBox(1, 0, 2, &target, &source, nullptr, renderItemPickupTextbox);
+            Tamer_setSubState(TAKE_CHEST_STATE == 0 ? 2 : 4);
+            TAKE_ITEM_FRAME_COUNTER = 0;
+        }
+        else if (Tamer_getSubState() == 2)
+        {
+            TAKE_ITEM_FRAME_COUNTER++;
+            // vanilla checks for polled inputs instead of consuming them, but for the sake of code unification this is
+            // the same as the item pickup code. It also gives 5 frames delay instead of 4.
+            if (TAKE_ITEM_FRAME_COUNTER < 5) return;
+            if (!isKeyDown(BUTTON_CROSS)) return;
+
+            TAKE_ITEM_FRAME_COUNTER = 0;
+            if (!giveItem(TAKE_CHEST_ITEM, 0))
+            {
+                drawStringNew(&vanillaFont,
+                              reinterpret_cast<const uint8_t*>("I can't hold anymore."),
+                              704 + 0,
+                              256 + 24);
+                TAKE_CHEST_STATE = 1;
+                Tamer_setSubState(3);
+            }
+            else
+            {
+                setTrigger(chest.trigger);
+                Tamer_setSubState(5);
+            }
+        }
+        else if (Tamer_getSubState() == 3)
+        {
+            if (!tickCloseChestTray(INTERACTED_CHEST)) return;
+            Tamer_setSubState(4);
+        }
+        else if (Tamer_getSubState() == 4)
+        {
+            // added extra state to fix some paths requiring more confirmation inputs than necessary
+            TAKE_ITEM_FRAME_COUNTER++;
+            if (TAKE_ITEM_FRAME_COUNTER < 5) return;
+            if (!isKeyDown(BUTTON_CROSS)) return;
+            Tamer_setSubState(5);
+        }
+        else if (Tamer_getSubState() == 5)
+        {
+            Position pos;
+            getEntityScreenPos(&TAMER_ENTITY, 1, &pos);
+            RECT target = {
+                .x      = static_cast<int16_t>(pos.x - 5),
+                .y      = static_cast<int16_t>(pos.y - 5),
+                .width  = 10,
+                .height = 10,
+            };
+
+            unsetUIBoxAnimated(1, &target);
+
+            if (TAKE_CHEST_STATE == 0) giveItem(TAKE_CHEST_ITEM, 1);
+
+            Tamer_setState(0);
+            Partner_setState(1);
+            setCameraFollowPlayer();
+        }
+
+        // vanilla limits the TAKE_ITEM_FRAME_COUNTER to 10 here, but doesn't even use it within this state...
+    }
+
     void Tamer_tickPickupItem()
     {
+        // vanilla has a delay of 4 frames between boxes, but it takes 5 for text to be come visble
+        // TODO bug: the lack of Partner_setState and stopGameTime allows for text stacking
         RECT textArea = {.x = 0, .y = 12, .width = 256, .height = 200};
         auto itemType = DROPPED_ITEMS[PICKED_UP_DROP_ID].type;
 
@@ -111,7 +222,9 @@ extern "C"
         else if (Tamer_getSubState() == 2)
         {
             TAKE_ITEM_FRAME_COUNTER++;
-            if (TAKE_ITEM_FRAME_COUNTER < 4) return;
+            // vanilla does the isKeyDown check before the frame count check,
+            // but changing the order allows to buffer inputs
+            if (TAKE_ITEM_FRAME_COUNTER < 5) return;
             if (!isKeyDown(BUTTON_CROSS)) return;
 
             playSound(0, 3);
@@ -135,7 +248,9 @@ extern "C"
         else if (Tamer_getSubState() == 3)
         {
             TAKE_ITEM_FRAME_COUNTER++;
-            if (TAKE_ITEM_FRAME_COUNTER < 4) return;
+            // vanilla does the isKeyDown check before the frame count check,
+            // but changing the order allows to buffer inputs
+            if (TAKE_ITEM_FRAME_COUNTER < 5) return;
             if (!isKeyDown(BUTTON_CROSS)) return;
 
             playSound(0, 3);
