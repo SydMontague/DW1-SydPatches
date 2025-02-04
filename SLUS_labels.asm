@@ -57,9 +57,6 @@
 .definelabel Tamer_tickBattle,          0x800f1214
 .definelabel loadMapDigimon,            0x800b5d0c
 .definelabel tickAnimation,             0x800c1c64
-.definelabel Tamer_tickEvolution,       0x800aaa64
-.definelabel Tamer_tickTraining,        0x800aaaa0
-.definelabel Tamer_tickPraiseScold,     0x800aab00
 .definelabel Tamer_tickFishing,         0x800e4e18
 .definelabel Tamer_tickOpening,         0x800aac68
 .definelabel Tamer_tickEnding,          0x800aacb0

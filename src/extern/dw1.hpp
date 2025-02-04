@@ -1061,9 +1061,6 @@ extern "C"
     void setTamerDirection(int16_t direction);
     bool rotateEntity(SVector* rotVector, int16_t* targetAngle, int16_t* ccDiff, int16_t* dwDiff, int16_t speed);
     void Tamer_tickChangeMap();
-    void Tamer_tickEvolution();
-    void Tamer_tickTraining();
-    void Tamer_tickPraiseScold();
     void Tamer_tickFishing();
     void Tamer_tickOpening();
     void Tamer_tickEnding();

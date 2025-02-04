@@ -39,6 +39,64 @@ extern "C"
         return TAMER_SUB_STATE;
     }
 
+    void Tamer_tickIdle()
+    {
+        if (Tamer_getSubState() != 0) return;
+
+        startAnimation(&TAMER_ENTITY, 0);
+        Tamer_setSubState(1);
+    }
+
+    void Tamer_tickTraining()
+    {
+        if (Tamer_getSubState() == 0)
+        {
+            startAnimation(&TAMER_ENTITY, 10);
+            Tamer_setSubState(1);
+        }
+        else if (Tamer_getSubState() == 1) { entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location); }
+    }
+
+    void Tamer_tickPraise()
+    {
+        if (Tamer_getSubState() == 0)
+        {
+            auto animId = 39;
+            auto type   = PARTNER_ENTITY.type;
+            if (getDigimonData(type)->level < Level::CHAMPION) animId = 38;
+            if (type == DigimonType::MAMEMON) animId = 38;
+            if (type == DigimonType::METALMAMEMON) animId = 38;
+            if (type == DigimonType::DIGITAMAMON) animId = 38;
+
+            startAnimation(&TAMER_ENTITY, animId);
+            startAnimation(&PARTNER_ENTITY, 11); // TODO this shouldn't be in tamer code?
+            Tamer_setSubState(1);
+        }
+        else if (Tamer_getSubState() == 1)
+        {
+            if (TAMER_ENTITY.frameCount > TAMER_ENTITY.animFrame) return;
+
+            Tamer_setState(6);
+        }
+    }
+
+    void Tamer_tickScold()
+    {
+        if (Tamer_getSubState() == 0)
+        {
+            playSound(0, 13);
+            startAnimation(&TAMER_ENTITY, 7);
+            startAnimation(&PARTNER_ENTITY, ITEM_SCOLD_FLAG == 1 ? 25 : 12);
+            Tamer_setSubState(1);
+        }
+        else if (Tamer_getSubState() == 1)
+        {
+            if (TAMER_ENTITY.frameCount > TAMER_ENTITY.animFrame) return;
+
+            Tamer_setState(6);
+        }
+    }
+
     void Tamer_tickChangeMap()
     {
         if (Tamer_getSubState() == 0)
@@ -372,11 +430,11 @@ extern "C"
             case 0: Tamer_tickWalkingState(); break;
             case 1: Tamer_setState(6); break;
             case 5: Tamer_tickChangeMap(); break;
-            case 6: Tamer_tickEvolution(); break;
+            case 6: Tamer_tickIdle(); break;
             case 7: Tamer_tickPickupItem(); break;
             case 8: Tamer_tickTraining(); break;
-            case 9:
-            case 13: Tamer_tickPraiseScold(); break;
+            case 9: Tamer_tickScold(); break;
+            case 13: Tamer_tickPraise(); break;
             case 11: Tamer_tickFishing(); break;
             case 12: KAR_tick(); break;
             case 14: Tamer_tickTakeChest(); break;
