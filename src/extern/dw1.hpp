@@ -1044,6 +1044,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void renderAwardSomethingTextbox();
     void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileReadCallback callback, int32_t param);
     int32_t isSoundLoaded(bool isAsync, int32_t soundId);
     void setMapLayerEnabled(int32_t val);
@@ -1088,7 +1089,6 @@ extern "C"
     void setTamerDirection(int16_t direction);
     bool rotateEntity(SVector* rotVector, int16_t* targetAngle, int16_t* ccDiff, int16_t* dwDiff, int16_t speed);
     void Tamer_tickFishing();
-    void Tamer_tickAwardSomething();
     void tickAnimation(Entity* entity);
     void loadMapDigimon(uint8_t* buffer, uint32_t mapId);
     extern void Tamer_tickBattle(int32_t instanceId);

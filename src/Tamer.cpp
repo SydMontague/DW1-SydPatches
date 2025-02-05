@@ -15,6 +15,14 @@
 extern "C"
 {
     static uint8_t takeItemFrameCount;
+    constexpr uint8_t findItemStr[]       = "Woah!";
+    constexpr uint8_t emptyChestStr[]     = "Hey! It's empty!";
+    constexpr uint8_t inventoryFullStr[]  = "I can't hold any more!";
+    constexpr uint8_t tamerLevelUpStr[]   = "Tamer level went up!!!";
+    constexpr uint8_t tamerLevelDownStr[] = "Tamer level went down!!!";
+    constexpr uint8_t medalLine1[]        = "Congratulations!";
+    constexpr uint8_t medalLine2[]        = "To recognize your great";
+    constexpr uint8_t medalLine3[]        = "records, we sent you a medal!";
 
     void Tamer_setState(uint8_t state)
     {
@@ -135,6 +143,7 @@ extern "C"
         }
     }
 
+    // TODO: refactor takeChest, pickupItem and awardSomething, as they duplicate a lot of code
     void Tamer_tickTakeChest()
     {
         RECT textArea = {.x = 0, .y = 12, .width = 256, .height = 200};
@@ -152,13 +161,13 @@ extern "C"
             drawStringNew(&vanillaFont, getDigimonData(DigimonType::TAMER)->name, 704 + 0, 256 + 12);
             if (chest.isTaken)
             {
-                drawStringNew(&vanillaFont, reinterpret_cast<const uint8_t*>("Hey! It's empty!"), 704 + 0, 256 + 24);
+                drawStringNew(&vanillaFont, emptyChestStr, 704 + 0, 256 + 24);
                 TAKE_CHEST_STATE = 2;
             }
             else
             {
                 drawStringNew(&vanillaFont, getItem(itemType)->name, 704 + 0, 256 + 24);
-                drawStringNew(&vanillaFont, reinterpret_cast<const uint8_t*>("Woah!"), 704 + 0, 256 + 36);
+                drawStringNew(&vanillaFont, findItemStr, 704 + 0, 256 + 36);
                 TAKE_CHEST_STATE = 0;
             }
             Tamer_setSubState(1);
@@ -194,10 +203,7 @@ extern "C"
             takeItemFrameCount = 0;
             if (!giveItem(itemType, 0))
             {
-                drawStringNew(&vanillaFont,
-                              reinterpret_cast<const uint8_t*>("I can't hold anymore."),
-                              704 + 0,
-                              256 + 24);
+                drawStringNew(&vanillaFont, inventoryFullStr, 704 + 0, 256 + 24);
                 TAKE_CHEST_STATE = 1;
                 Tamer_setSubState(3);
             }
@@ -257,7 +263,7 @@ extern "C"
             clearTextSubArea(&textArea);
             drawStringNew(&vanillaFont, getDigimonData(DigimonType::TAMER)->name, 704 + 0, 256 + 12);
             drawStringNew(&vanillaFont, getItem(itemType)->name, 704 + 0, 256 + 24);
-            drawStringNew(&vanillaFont, reinterpret_cast<const uint8_t*>("Woah!"), 704 + 0, 256 + 36);
+            drawStringNew(&vanillaFont, findItemStr, 704 + 0, 256 + 36);
 
             TAKE_CHEST_STATE   = 0;
             takeItemFrameCount = 0;
@@ -294,10 +300,7 @@ extern "C"
 
             if (!giveItem(itemType, 0))
             {
-                drawStringNew(&vanillaFont,
-                              reinterpret_cast<const uint8_t*>("I can't hold anymore."),
-                              704 + 0,
-                              256 + 24);
+                drawStringNew(&vanillaFont, inventoryFullStr, 704 + 0, 256 + 24);
                 TAKE_CHEST_STATE   = 1;
                 takeItemFrameCount = 0;
                 Tamer_setSubState(3);
@@ -340,6 +343,83 @@ extern "C"
 
         // Vanilla check for takeItemFrameCount to be below 60 before calling playSound(0, 3),
         // but it also limits the value to 10. So that code is dead and got removed.
+    }
+
+    void Tamer_tickAwardSomething()
+    {
+        if (Tamer_getSubState() == 0)
+        {
+            stopGameTime();
+            startAnimation(&TAMER_ENTITY, 0);
+            Partner_setState(11);
+            unsetCameraFollowPlayer();
+            clearTextArea();
+
+            if (MEDAL_AWARD_PENDING == 1)
+            {
+                setTextColor(7);
+                // vanilla draws these strings in multiple frames/states
+                drawStringNew(&vanillaFont, medalLine1, 704, 256 + 0x78);
+                drawStringNew(&vanillaFont, medalLine2, 704, 256 + 0x84);
+                drawStringNew(&vanillaFont, medalLine3, 704, 256 + 0x90);
+            }
+            else if (TAMER_LEVEL_AWARD_PENDING == 1)
+            {
+                if (TAMER_LEVELS_AWARDED > 0)
+                {
+                    setTextColor(7);
+                    drawStringNew(&vanillaFont, tamerLevelUpStr, 704, 256 + 0x78);
+                }
+                else
+                {
+                    setTextColor(3);
+                    drawStringNew(&vanillaFont, tamerLevelDownStr, 704, 256 + 0x78);
+                }
+            }
+
+            setTextColor(1);
+            Tamer_setSubState(1);
+        }
+        else if (Tamer_getSubState() == 1)
+        {
+            if (!isUIBoxAvailable(1)) return;
+
+            Position pos;
+            getEntityScreenPos(&TAMER_ENTITY, 1, &pos);
+
+            RECT target = {.x = -130, .y = 42, .width = 262, .height = 59};
+            RECT source = {
+                .x      = static_cast<int16_t>(pos.x - 5),
+                .y      = static_cast<int16_t>(pos.y - 5),
+                .width  = 10,
+                .height = 10,
+            };
+            // vanilla writes TAKE_CHEST_ITEM here, but it's never used so skip that
+
+            createAnimatedUIBox(1, 0, 2, &target, &source, nullptr, renderAwardSomethingTextbox);
+            Tamer_setSubState(2);
+        }
+        else if (Tamer_getSubState() == 2)
+        {
+            if (!isKeyDown(BUTTON_CROSS)) return;
+
+            Position pos;
+            getEntityScreenPos(&TAMER_ENTITY, 1, &pos);
+            RECT target = {
+                .x      = static_cast<int16_t>(pos.x - 5),
+                .y      = static_cast<int16_t>(pos.y - 5),
+                .width  = 10,
+                .height = 10,
+            };
+
+            unsetUIBoxAnimated(1, &target);
+            Tamer_setState(0);
+            Partner_setState(1);
+            setCameraFollowPlayer();
+            startGameTime();
+            MEDAL_AWARD_PENDING       = 0;
+            TAMER_LEVEL_AWARD_PENDING = 0;
+        }
     }
 
     inline void Tamer_tickWalking()

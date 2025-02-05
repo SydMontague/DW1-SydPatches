@@ -58,7 +58,6 @@
 .definelabel loadMapDigimon,            0x800b5d0c
 .definelabel tickAnimation,             0x800c1c64
 .definelabel Tamer_tickFishing,         0x800e4e18
-.definelabel Tamer_tickAwardSomething,  0x800aaec8
 .definelabel isKeyDown,                 0x800fc054
 .definelabel tickTamerWaypoints,        0x800d4adc
 .definelabel addTriangleMenu,           0x800b7c28
@@ -91,6 +90,7 @@
 .definelabel setMapLayerEnabled,        0x800e65b8
 .definelabel isSoundLoaded,             0x800e90cc
 .definelabel loadDynamicLibrary,        0x800e61e4
+.definelabel renderAwardSomethingTextbox,0x800acd00
 
 .definelabel SOME_SCRIPT_SYNC_BIT, 0x80134e30
 .definelabel DOOA_DATA_PTR, 0x8005b000
