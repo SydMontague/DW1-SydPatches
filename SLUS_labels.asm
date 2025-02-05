@@ -58,11 +58,6 @@
 .definelabel loadMapDigimon,            0x800b5d0c
 .definelabel tickAnimation,             0x800c1c64
 .definelabel Tamer_tickFishing,         0x800e4e18
-.definelabel Tamer_tickOpening,         0x800aac68
-.definelabel Tamer_tickEnding,          0x800aacb0
-.definelabel Tamer_tickBattleLostLife,  0x800aad28
-.definelabel Tamer_tickMachinedramonSpawn,0x800aadd8
-.definelabel Tamer_tickSicknessLostLife,0x800aae44
 .definelabel Tamer_tickAwardSomething,  0x800aaec8
 .definelabel isKeyDown,                 0x800fc054
 .definelabel tickTamerWaypoints,        0x800d4adc
@@ -93,7 +88,12 @@
 .definelabel entityLookAtLocation,      0x800d459c
 .definelabel tickOpenChestTray,         0x800e21d0
 .definelabel tickCloseChestTray,        0x800e223c
+.definelabel setMapLayerEnabled,        0x800e65b8
+.definelabel isSoundLoaded,             0x800e90cc
+.definelabel loadDynamicLibrary,        0x800e61e4
 
+.definelabel SOME_SCRIPT_SYNC_BIT, 0x80134e30
+.definelabel DOOA_DATA_PTR, 0x8005b000
 .definelabel TAKE_CHEST_ITEM, 0x80134c96
 .definelabel INTERACTED_CHEST, 0x80134c97
 .definelabel CHEST_ARRAY, 0x80150f00
@@ -197,6 +197,18 @@
 .definelabel MEDAL_AWARD_PENDING, 0x80134c8c
 .definelabel IS_IN_MENU, 0x80134ef0
 .definelabel TAMER_LEVELS_AWARDED, 0x80134c90
+
+// ENDI_REL
+.definelabel ENDI_tickEnding, 0x80060d00
+
+// MURD_REL
+.definelabel MURD_tick, 0x8007d628
+
+// EAB_REL
+.definelabel EaB_tick, 0x80061530
+
+// DOOA_REL
+.definelabel DoOA_tick, 0x80084644
 
 // STD_REL
 .definelabel STD_Tamer_tickTournament,  0x80069688

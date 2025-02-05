@@ -911,6 +911,28 @@ extern "C"
         BUTTON_LEFT     = 0x8000,
     };
 
+    enum class Overlay
+    {
+        NONE     = 0,
+        BTL_REL  = 1,
+        STD_REL  = 2,
+        FISH_REL = 3,
+        EVL_REL  = 4,
+        KAR_REL  = 5,
+        VS_REL   = 6,
+        MOV_REL  = 7,
+        DOO2_REL = 8,
+        DOOA_REL = 9,
+        TRN_REL  = 10,
+        SHOP_REL = 11,
+        DGET_REL = 12,
+        TRN2_REL = 13,
+        MURD_REL = 14,
+        ENDI_REL = 15,
+        EAB_REL  = 16,
+        OFFSET   = -1,
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1009,6 +1031,8 @@ extern "C"
     extern uint32_t TAMER_LEVELS_AWARDED;
     extern uint8_t TARGET_MAP;
     extern uint8_t CURRENT_EXIT;
+    extern void* DOOA_DATA_PTR;
+    extern uint32_t SOME_SCRIPT_SYNC_BIT;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1020,6 +1044,9 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileReadCallback callback, int32_t param);
+    int32_t isSoundLoaded(bool isAsync, int32_t soundId);
+    void setMapLayerEnabled(int32_t val);
     void entityLookAtLocation(Entity* entity, Vector* location);
     bool tickOpenChestTray(uint32_t chestId);
     bool tickCloseChestTray(uint32_t chestId);
@@ -1060,13 +1087,7 @@ extern "C"
     void checkPendingAwards();
     void setTamerDirection(int16_t direction);
     bool rotateEntity(SVector* rotVector, int16_t* targetAngle, int16_t* ccDiff, int16_t* dwDiff, int16_t speed);
-    void Tamer_tickChangeMap();
     void Tamer_tickFishing();
-    void Tamer_tickOpening();
-    void Tamer_tickEnding();
-    void Tamer_tickBattleLostLife();
-    void Tamer_tickMachinedramonSpawn();
-    void Tamer_tickSicknessLostLife();
     void Tamer_tickAwardSomething();
     void tickAnimation(Entity* entity);
     void loadMapDigimon(uint8_t* buffer, uint32_t mapId);

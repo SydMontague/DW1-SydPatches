@@ -2,7 +2,11 @@
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Model.hpp"
+#include "extern/DOOA.hpp"
+#include "extern/EAB.hpp"
+#include "extern/ENDI.hpp"
 #include "extern/KAR.hpp"
+#include "extern/MURD.hpp"
 #include "extern/STD.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
@@ -402,6 +406,76 @@ extern "C"
         STORED_TAMER_POS = TAMER_ENTITY.posData->location;
     }
 
+    void Tamer_tickOpening()
+    {
+        // potential useless/unused state, log to see if it gets used
+        printf("Debug: tickOpening called.");
+
+        if (Tamer_getSubState() == 0) { Tamer_setSubState(1); }
+        else if (Tamer_getSubState() == 1)
+        {
+            setMapLayerEnabled(1);
+            SOME_SCRIPT_SYNC_BIT = 1;
+        }
+    }
+
+    void Tamer_tickEnding()
+    {
+        if (Tamer_getSubState() == 0)
+        {
+            isSoundLoaded(false, 8);
+            ENDI_tickEnding(&TAMER_ENTITY, false);
+            Tamer_setSubState(1);
+        }
+        else if (Tamer_getSubState() == 1)
+        {
+            if (ENDI_tickEnding(&TAMER_ENTITY, true) < 0) SOME_SCRIPT_SYNC_BIT = 1;
+        }
+    }
+
+    void Tamer_tickBattleLostLife()
+    {
+        if (Tamer_getSubState() == 0)
+        {
+            loadDynamicLibrary(Overlay::MURD_REL, nullptr, false, nullptr, 0);
+            MURD_tick(&PARTNER_ENTITY, false);
+            Tamer_setSubState(1);
+        }
+        else if (Tamer_getSubState() == 1)
+        {
+            if (MURD_tick(&PARTNER_ENTITY, true) >= 0) return;
+            if (DoOA_tick(&PARTNER_ENTITY, DOOA_DATA_PTR, true) >= 0) return;
+            SOME_SCRIPT_SYNC_BIT = 1;
+        }
+    }
+
+    void Tamer_tickMachinedramonSpawn()
+    {
+        if (Tamer_getSubState() == 0)
+        {
+            EaB_tick(ENTITY_TABLE.npc1, false);
+            Tamer_setSubState(1);
+        }
+        else if (Tamer_getSubState() == 1)
+        {
+            if (EaB_tick(ENTITY_TABLE.npc1, true) < 0) SOME_SCRIPT_SYNC_BIT = 1;
+        }
+    }
+
+    void Tamer_tickSicknessLostLife()
+    {
+        if (Tamer_getSubState() == 0)
+        {
+            loadDynamicLibrary(Overlay::MURD_REL, nullptr, false, nullptr, 0);
+            MURD_tick(&PARTNER_ENTITY, false);
+            Tamer_setSubState(1);
+        }
+        else if (Tamer_getSubState() == 1)
+        {
+            if (MURD_tick(&PARTNER_ENTITY, true) < 0) SOME_SCRIPT_SYNC_BIT = 1;
+        }
+    }
+
     /*
      * Tamer States Overworld
      *  0 -> walking/normal
@@ -434,9 +508,10 @@ extern "C"
             case 7: Tamer_tickPickupItem(); break;
             case 8: Tamer_tickTraining(); break;
             case 9: Tamer_tickScold(); break;
-            case 13: Tamer_tickPraise(); break;
+            case 10: break; // do nothing
             case 11: Tamer_tickFishing(); break;
             case 12: KAR_tick(); break;
+            case 13: Tamer_tickPraise(); break;
             case 14: Tamer_tickTakeChest(); break;
             case 15: Tamer_tickOpening(); break;
             case 16: Tamer_tickEnding(); break;
