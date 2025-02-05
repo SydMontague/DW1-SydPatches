@@ -1,6 +1,7 @@
 #include "Font.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
+#include "Map.hpp"
 #include "Model.hpp"
 #include "extern/DOOA.hpp"
 #include "extern/EAB.hpp"
@@ -23,6 +24,11 @@ extern "C"
     constexpr uint8_t medalLine1[]        = "Congratulations!";
     constexpr uint8_t medalLine2[]        = "To recognize your great";
     constexpr uint8_t medalLine3[]        = "records, we sent you a medal!";
+
+    void setTamerDirection(int16_t direction)
+    {
+        TAMER_ENTITY.posData->rotation.y = direction % 4096;
+    }
 
     void Tamer_setState(uint8_t state)
     {

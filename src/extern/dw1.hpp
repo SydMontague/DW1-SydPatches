@@ -940,6 +940,7 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern GsRVIEW2 GS_VIEWPOINT;
     extern Chest CHEST_ARRAY[8];
     extern uint8_t INTERACTED_CHEST;
     extern ItemType TAKE_CHEST_ITEM;
@@ -1081,12 +1082,10 @@ extern "C"
     void unsetCameraFollowPlayer();
     void stopGameTime();
     void setPartnerIdling();
-    int16_t getMapRotation();
     void checkItemPickup();
     void checkMapInteraction();
     void checkMedalConditions();
     void checkPendingAwards();
-    void setTamerDirection(int16_t direction);
     bool rotateEntity(SVector* rotVector, int16_t* targetAngle, int16_t* ccDiff, int16_t* dwDiff, int16_t speed);
     void Tamer_tickFishing();
     void tickAnimation(Entity* entity);

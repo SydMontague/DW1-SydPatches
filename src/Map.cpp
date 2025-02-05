@@ -1,6 +1,8 @@
+#include "Math.hpp"
 #include "Partner.hpp"
 #include "Tamer.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libgs.hpp"
 #include "extern/stddef.hpp"
 
 extern "C"
@@ -24,5 +26,12 @@ extern "C"
         setupPartnerOnWarp(posX, posY, posZ, rotation);
         loadMapDigimon(buffer + sizeof(MapWarps), mapId);
         STORED_TAMER_POS = TAMER_ENTITY.posData->location;
+    }
+
+    int16_t getMapRotation()
+    {
+        auto diffZ = GS_VIEWPOINT.viewpointZ - GS_VIEWPOINT.refpointZ;
+        auto diffX = GS_VIEWPOINT.viewpointX - GS_VIEWPOINT.refpointX;
+        return atan(diffZ, diffX);
     }
 }

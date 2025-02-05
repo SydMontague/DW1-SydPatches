@@ -64,12 +64,10 @@
 .definelabel unsetCameraFollowPlayer,   0x800d8b3c
 .definelabel stopGameTime,              0x800dd798
 .definelabel setPartnerIdling,          0x800b7c18
-.definelabel getMapRotation,            0x800ab1ec
 .definelabel checkItemPickup,           0x800ab26c
 .definelabel checkMapInteraction,       0x800ab378
 .definelabel checkMedalConditions,      0x800ab66c
 .definelabel checkPendingAwards,        0x800ab8e4
-.definelabel setTamerDirection,         0x800ab244
 .definelabel rotateEntity,              0x800b6fb0
 .definelabel fadeToBlack,               0x800acd88
 .definelabel fadeFromBlack,             0x800ace74
@@ -92,6 +90,7 @@
 .definelabel loadDynamicLibrary,        0x800e61e4
 .definelabel renderAwardSomethingTextbox,0x800acd00
 
+.definelabel GS_VIEWPOINT, 0x80185ba8
 .definelabel SOME_SCRIPT_SYNC_BIT, 0x80134e30
 .definelabel DOOA_DATA_PTR, 0x8005b000
 .definelabel TAKE_CHEST_ITEM, 0x80134c96
