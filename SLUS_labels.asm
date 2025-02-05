@@ -64,7 +64,6 @@
 .definelabel unsetCameraFollowPlayer,   0x800d8b3c
 .definelabel stopGameTime,              0x800dd798
 .definelabel setPartnerIdling,          0x800b7c18
-.definelabel checkItemPickup,           0x800ab26c
 .definelabel checkMapInteraction,       0x800ab378
 .definelabel checkMedalConditions,      0x800ab66c
 .definelabel checkPendingAwards,        0x800ab8e4
@@ -98,7 +97,6 @@
 .definelabel CHEST_ARRAY, 0x80150f00
 .definelabel ITEM_PARA, 0x801269dc
 .definelabel DROPPED_ITEMS, 0x8013d4e0
-.definelabel PICKED_UP_DROP_ID, 0x80134c93
 .definelabel TAKE_CHEST_STATE, 0x80134c94
 .definelabel DIGIMON_SKELETONS, 0x8011ce60
 .definelabel PARTNER_MOMENTUM_DATA, 0x80185be8
@@ -191,7 +189,6 @@
 .definelabel HAS_ROTATION_DATA, 0x80134c78
 .definelabel UNKNOWN_TAMER_DATA, 0x80138694
 .definelabel PREVIOUS_CAMERA_POS_INITIALIZED, 0x80134c80
-.definelabel HAS_PICKED_UP_ITEM, 0x80134c84
 .definelabel TAMER_LEVEL_AWARD_PENDING, 0x80134c88
 .definelabel MEDAL_AWARD_PENDING, 0x80134c8c
 .definelabel IS_IN_MENU, 0x80134ef0

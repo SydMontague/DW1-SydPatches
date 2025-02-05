@@ -232,6 +232,7 @@ extern "C"
 
     struct DroppedItem : public WorldItem
     {
+        [[gnu::aligned(4)]]
         int16_t tileX;
         int16_t tileY;
     };
@@ -946,7 +947,6 @@ extern "C"
     extern ItemType TAKE_CHEST_ITEM;
     extern Item ITEM_PARA[128];
     extern DroppedItem DROPPED_ITEMS[10];
-    extern uint8_t PICKED_UP_DROP_ID;
     extern uint8_t TAKE_CHEST_STATE;
     extern UIBoxData UI_BOX_DATA[6];
     extern uint32_t POLLED_INPUT;
@@ -1025,7 +1025,6 @@ extern "C"
     extern Vector STORED_TAMER_POS;
     extern uint8_t HAS_ROTATION_DATA[8];
     extern bool PREVIOUS_CAMERA_POS_INITIALIZED;
-    extern uint8_t HAS_PICKED_UP_ITEM;
     extern uint32_t TAMER_LEVEL_AWARD_PENDING;
     extern uint32_t MEDAL_AWARD_PENDING;
     extern uint32_t IS_IN_MENU;
@@ -1082,7 +1081,6 @@ extern "C"
     void unsetCameraFollowPlayer();
     void stopGameTime();
     void setPartnerIdling();
-    void checkItemPickup();
     void checkMapInteraction();
     void checkMedalConditions();
     void checkPendingAwards();
@@ -1195,3 +1193,5 @@ static_assert(sizeof(MapWarps) == 0x78);
 static_assert(sizeof(FadeData) == 0x10);
 static_assert(sizeof(Item) == 0x20);
 static_assert(sizeof(Chest) == 0x38);
+static_assert(sizeof(DroppedItem) == 0x10);
+static_assert(sizeof(TamerItem) == 0x10);

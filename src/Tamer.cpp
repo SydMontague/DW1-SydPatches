@@ -2,6 +2,7 @@
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Map.hpp"
+#include "Math.hpp"
 #include "Model.hpp"
 #include "extern/DOOA.hpp"
 #include "extern/EAB.hpp"
@@ -15,7 +16,6 @@
 
 extern "C"
 {
-    static uint8_t takeItemFrameCount;
     constexpr uint8_t findItemStr[]       = "Woah!";
     constexpr uint8_t emptyChestStr[]     = "Hey! It's empty!";
     constexpr uint8_t inventoryFullStr[]  = "I can't hold any more!";
@@ -24,6 +24,10 @@ extern "C"
     constexpr uint8_t medalLine1[]        = "Congratulations!";
     constexpr uint8_t medalLine2[]        = "To recognize your great";
     constexpr uint8_t medalLine3[]        = "records, we sent you a medal!";
+
+    static uint8_t takeItemFrameCount;
+    static bool isStandingOnDrop;
+    static uint8_t pickedDropId;
 
     void setTamerDirection(int16_t direction)
     {
@@ -55,6 +59,36 @@ extern "C"
     uint8_t Tamer_getSubState()
     {
         return TAMER_SUB_STATE;
+    }
+
+    // this function blows up in size otherwise
+    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
+    __attribute__((optimize("Os"))) void checkItemPickup()
+    {
+        int16_t tileX;
+        int16_t tileY;
+
+        getModelTile(&TAMER_ENTITY.posData->location, &tileX, &tileY);
+        pickedDropId = -1;
+
+        for (int32_t i = 0; i < sizeof(DROPPED_ITEMS) / sizeof(DROPPED_ITEMS[0]); i++)
+        {
+            auto& item = DROPPED_ITEMS[i];
+
+            if (item.type == ItemType::NONE) continue;
+            if (abs(item.tileX - tileX) > 1) continue;
+            if (abs(item.tileY - tileY) > 1) continue;
+
+            pickedDropId = i;
+            if (!isStandingOnDrop)
+            {
+                Tamer_setState(7);
+                isStandingOnDrop = true;
+            }
+            return;
+        }
+
+        isStandingOnDrop = false;
     }
 
     void Tamer_tickIdle()
@@ -260,7 +294,7 @@ extern "C"
         // vanilla has a delay of 4 frames between boxes, but it takes 5 for text to be come visble
         // TODO bug: the lack of Partner_setState and stopGameTime allows for text stacking
         RECT textArea = {.x = 0, .y = 12, .width = 256, .height = 200};
-        auto itemType = DROPPED_ITEMS[PICKED_UP_DROP_ID].type;
+        auto itemType = DROPPED_ITEMS[pickedDropId].type;
 
         if (Tamer_getSubState() == 0)
         {
@@ -341,7 +375,7 @@ extern "C"
 
             unsetUIBoxAnimated(1, &target);
 
-            if (TAKE_CHEST_STATE == 0) pickupItem(PICKED_UP_DROP_ID);
+            if (TAKE_CHEST_STATE == 0) pickupItem(pickedDropId);
 
             Tamer_setState(0);
             setCameraFollowPlayer();
@@ -658,7 +692,7 @@ extern "C"
             val = 0; // unused?
 
         PREVIOUS_CAMERA_POS_INITIALIZED = 0;
-        HAS_PICKED_UP_ITEM              = 0;
+        isStandingOnDrop                = false;
         STORED_TAMER_POS                = TAMER_ENTITY.posData->location;
         TAMER_LEVEL_AWARD_PENDING       = 0;
         MEDAL_AWARD_PENDING             = 0;
