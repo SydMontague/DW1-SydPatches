@@ -1078,6 +1078,7 @@ extern "C"
     extern uint16_t CURRENT_SCRIPT_ID;
     extern uint8_t PREVIOUS_EXIT;
     extern uint32_t MONEY;
+    extern uint8_t TEXTBOX_OPEN_TIMER;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1089,6 +1090,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void renderUIBox(int32_t instanceId);
     bool hasMedal(Medal medal);
     void unlockMedal(Medal medal);
     uint8_t getCardAmount(uint8_t cardId);
@@ -1117,7 +1119,6 @@ extern "C"
     void setCameraFollowPlayer();
     bool pickupItem(int32_t dropId);
     void unsetUIBoxAnimated(int32_t boxId, RECT* target);
-    void renderItemPickupTextbox();
     void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos);
     bool isUIBoxAvailable(int32_t id);
     void fadeToBlack(int32_t frames);

@@ -76,7 +76,6 @@
 .definelabel setCameraFollowPlayer,     0x800d8b44
 .definelabel pickupItem,                0x800c5490
 .definelabel unsetUIBoxAnimated,        0x800c31fc
-.definelabel renderItemPickupTextbox,   0x800ab928
 .definelabel isUIBoxAvailable,          0x800ba1d4
 .definelabel entityLookAtLocation,      0x800d459c
 .definelabel tickOpenChestTray,         0x800e21d0
@@ -94,7 +93,9 @@
 .definelabel unlockMedal,               0x800ff830
 .definelabel hasMedal,                  0x800ff85c
 .definelabel getCardAmount,             0x801067ec
+.definelabel renderUIBox,               0x80101440
 
+.definelabel TEXTBOX_OPEN_TIMER, 0x800135012
 .definelabel MONEY, 0x80134eb8
 .definelabel PREVIOUS_EXIT, 0x80134dab
 .definelabel CURRENT_SCRIPT_ID, 0x80134fc0

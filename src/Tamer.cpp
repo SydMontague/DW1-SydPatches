@@ -63,6 +63,16 @@ extern "C"
         return TAMER_SUB_STATE;
     }
 
+    void renderItemPickupTextbox()
+    {
+        // vanilla uses the take state to determine how many lines to render, but that's just redundant
+        renderStringNew(15, -125, 45, 255, 12, 704, 12 + 256, 5, 1);
+        renderStringNew(3, -125, 57, 255, 12, 704, 24 + 256, 5, 1);
+        renderStringNew(0, -125, 69, 255, 12, 704, 36 + 256, 5, 1);
+        renderUIBox(1);
+        TEXTBOX_OPEN_TIMER++;
+    }
+
     // this function blows up in size otherwise
     // NOLINTNEXTLINE: dunno why it doesn't know optimize...
     __attribute__((optimize("Os"))) void checkItemPickup()
