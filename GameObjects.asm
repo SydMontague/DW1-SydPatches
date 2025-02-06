@@ -40,8 +40,8 @@
 ;  jal removeObject
 ;.org 0x800a51e0
 ;  jal removeObject
-.org 0x800aa260
-  jal removeObject
+;.org 0x800aa260
+;  jal removeObject
 .org 0x800acdb8
   jal removeObject
 .org 0x800ace88

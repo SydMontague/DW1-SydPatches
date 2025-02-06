@@ -91,6 +91,59 @@ extern "C"
         isStandingOnDrop = false;
     }
 
+    void checkMapInteraction()
+    {
+        // vanilla checks for CHANGED_INPUT instead of isKeyDown, but this allows buffering input
+        auto collision = entityCheckCollision(&PARTNER_ENTITY, &TAMER_ENTITY, 0, 0);
+
+        if (collision == CollisionCode::MAP) { collisionGrace(nullptr, &TAMER_ENTITY, 0, 0); }
+        else if (collision >= CollisionCode::NPC1 && collision <= CollisionCode::NPC8)
+        {
+            TAMER_ENTITY.animFlag |= 2;
+            auto& npc = NPC_ENTITIES[static_cast<int32_t>(collision) - 2];
+            if (IS_SCRIPT_PAUSED && (npc.autotalk || isKeyDown(BUTTON_CROSS)))
+            {
+                removeTriangleMenu();
+                closeInventoryBoxes();
+                removeUIBox1();
+                TALKED_TO_ENTITY = static_cast<uint8_t>(collision);
+                callScriptSection(CURRENT_SCRIPT_ID, npc.scriptId, 1);
+            }
+        }
+
+        if (Tamer_getState() != 0) return;
+
+        auto trigger = getTileTrigger(&TAMER_ENTITY.posData->location);
+
+        if (IS_SCRIPT_PAUSED == 1)
+        {
+            if (trigger == 120 && PARTNER_PARA.condition.isPoopy) callScriptSection(0, 1250, 0);
+
+            if (trigger >= 80 && trigger < 110 && isKeyDown(BUTTON_CROSS))
+                callScriptSection(CURRENT_SCRIPT_ID, trigger, 0);
+
+            if (trigger >= 50 && trigger < 80) callScriptSection(CURRENT_SCRIPT_ID, trigger, 0);
+        }
+
+        if (trigger >= 110 && trigger < 120)
+        {
+            PREVIOUS_EXIT = trigger - 110;
+            TARGET_MAP    = MAP_WARPS.targetMap[trigger - 110];
+            CURRENT_EXIT  = MAP_WARPS.targetExit[trigger - 110];
+            // vanilla writes the previous exit 0x80134df9, but it seems unused
+            Tamer_setState(5);
+            unsetCameraFollowPlayer();
+            stopGameTime();
+        }
+
+        auto chest = checkChestCollision();
+        if (chest != 0xFF && isKeyDown(BUTTON_CROSS))
+        {
+            INTERACTED_CHEST = chest;
+            Tamer_setState(14);
+        }
+    }
+
     void Tamer_tickIdle()
     {
         if (Tamer_getSubState() != 0) return;

@@ -129,8 +129,8 @@
 .org 0x800e9e98
   jal cos
 
-.org 0x800ab228
-  jal atan
+;.org 0x800ab228
+;  jal atan
 .org 0x800b6f28
   jal atan
 .org 0x800d45d0

@@ -64,7 +64,6 @@
 .definelabel unsetCameraFollowPlayer,   0x800d8b3c
 .definelabel stopGameTime,              0x800dd798
 .definelabel setPartnerIdling,          0x800b7c18
-.definelabel checkMapInteraction,       0x800ab378
 .definelabel checkMedalConditions,      0x800ab66c
 .definelabel checkPendingAwards,        0x800ab8e4
 .definelabel rotateEntity,              0x800b6fb0
@@ -88,7 +87,16 @@
 .definelabel isSoundLoaded,             0x800e90cc
 .definelabel loadDynamicLibrary,        0x800e61e4
 .definelabel renderAwardSomethingTextbox,0x800acd00
+.definelabel entityCheckCollision,      0x800d45ec
+.definelabel removeTriangleMenu,        0x800c0510
+.definelabel closeInventoryBoxes,       0x800db238
+.definelabel removeUIBox1,              0x800c053c
+.definelabel collisionGrace,            0x800d4884
+.definelabel checkChestCollision,       0x800acb04
 
+.definelabel PREVIOUS_EXIT, 0x80134dab
+.definelabel CURRENT_SCRIPT_ID, 0x80134fc0
+.definelabel TALKED_TO_ENTITY, 0x80134c9c
 .definelabel GS_VIEWPOINT, 0x80185ba8
 .definelabel SOME_SCRIPT_SYNC_BIT, 0x80134e30
 .definelabel DOOA_DATA_PTR, 0x8005b000

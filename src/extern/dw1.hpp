@@ -934,6 +934,23 @@ extern "C"
         OFFSET   = -1,
     };
 
+    enum class CollisionCode
+    {
+        TAMER,
+        PARTNER,
+        NPC1,
+        NPC2,
+        NPC3,
+        NPC4,
+        NPC5,
+        NPC6,
+        NPC7,
+        NPC8,
+        MAP,
+        SCREEN,
+        NONE = -1,
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1033,6 +1050,9 @@ extern "C"
     extern uint8_t CURRENT_EXIT;
     extern void* DOOA_DATA_PTR;
     extern uint32_t SOME_SCRIPT_SYNC_BIT;
+    extern uint8_t TALKED_TO_ENTITY;
+    extern uint16_t CURRENT_SCRIPT_ID;
+    extern uint8_t PREVIOUS_EXIT;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1044,6 +1064,12 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    CollisionCode entityCheckCollision(Entity* ignore, Entity* self, int32_t width, int32_t height);
+    void collisionGrace(Entity* ignore, Entity* self, int32_t dx, int32_t dy);
+    void removeTriangleMenu();
+    void closeInventoryBoxes();
+    void removeUIBox1();
+    uint8_t checkChestCollision();
     void renderAwardSomethingTextbox();
     void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileReadCallback callback, int32_t param);
     int32_t isSoundLoaded(bool isAsync, int32_t soundId);
@@ -1081,7 +1107,6 @@ extern "C"
     void unsetCameraFollowPlayer();
     void stopGameTime();
     void setPartnerIdling();
-    void checkMapInteraction();
     void checkMedalConditions();
     void checkPendingAwards();
     bool rotateEntity(SVector* rotVector, int16_t* targetAngle, int16_t* ccDiff, int16_t* dwDiff, int16_t speed);
