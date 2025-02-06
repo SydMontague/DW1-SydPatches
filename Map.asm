@@ -4,4 +4,7 @@
 .org 0x800d5d18
   jal loadMapEntities
 
+.org 0x800d8f84
+  jal checkMapInteraction
+
 .close
