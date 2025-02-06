@@ -951,6 +951,30 @@ extern "C"
         NONE = -1,
     };
 
+    enum class Medal
+    {
+        GRADE_CUP,
+        VERSION_CUP,
+        TYPE_CUP,
+        SPECIAL_CUP,
+        WIN_100_CUPS,
+        ALL_TECHS,
+        ALL_DIGIMON,
+        MAX_STATS,
+        PERFECT_CURLING,
+        CATCH_100_FISH,
+        BEAT_THE_GAME,
+        RECRUIT_EVERYONE,
+        ALL_CARDS,
+        MAX_MONEY,
+        PLAYTIME,
+        UNUSED1,
+        UNUSED2,
+        UNUSED3,
+        UNUSED4,
+        UNUSED5,
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1053,6 +1077,7 @@ extern "C"
     extern uint8_t TALKED_TO_ENTITY;
     extern uint16_t CURRENT_SCRIPT_ID;
     extern uint8_t PREVIOUS_EXIT;
+    extern uint32_t MONEY;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1064,6 +1089,9 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    bool hasMedal(Medal medal);
+    void unlockMedal(Medal medal);
+    uint8_t getCardAmount(uint8_t cardId);
     CollisionCode entityCheckCollision(Entity* ignore, Entity* self, int32_t width, int32_t height);
     void collisionGrace(Entity* ignore, Entity* self, int32_t dx, int32_t dy);
     void removeTriangleMenu();
@@ -1107,8 +1135,6 @@ extern "C"
     void unsetCameraFollowPlayer();
     void stopGameTime();
     void setPartnerIdling();
-    void checkMedalConditions();
-    void checkPendingAwards();
     bool rotateEntity(SVector* rotVector, int16_t* targetAngle, int16_t* ccDiff, int16_t* dwDiff, int16_t speed);
     void Tamer_tickFishing();
     void tickAnimation(Entity* entity);

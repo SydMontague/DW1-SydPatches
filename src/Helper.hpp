@@ -107,6 +107,11 @@ extern "C"
         return &ITEM_PARA[static_cast<uint8_t>(type)];
     }
 
+    constexpr DigimonType operator++(DigimonType in, int32_t amount)
+    {
+        return static_cast<DigimonType>(static_cast<int32_t>(in) + amount);
+    }
+
     inline void Partner_setState(uint8_t state)
     {
         PARTNER_STATE     = state;

@@ -64,8 +64,6 @@
 .definelabel unsetCameraFollowPlayer,   0x800d8b3c
 .definelabel stopGameTime,              0x800dd798
 .definelabel setPartnerIdling,          0x800b7c18
-.definelabel checkMedalConditions,      0x800ab66c
-.definelabel checkPendingAwards,        0x800ab8e4
 .definelabel rotateEntity,              0x800b6fb0
 .definelabel fadeToBlack,               0x800acd88
 .definelabel fadeFromBlack,             0x800ace74
@@ -93,7 +91,11 @@
 .definelabel removeUIBox1,              0x800c053c
 .definelabel collisionGrace,            0x800d4884
 .definelabel checkChestCollision,       0x800acb04
+.definelabel unlockMedal,               0x800ff830
+.definelabel hasMedal,                  0x800ff85c
+.definelabel getCardAmount,             0x801067ec
 
+.definelabel MONEY, 0x80134eb8
 .definelabel PREVIOUS_EXIT, 0x80134dab
 .definelabel CURRENT_SCRIPT_ID, 0x80134fc0
 .definelabel TALKED_TO_ENTITY, 0x80134c9c

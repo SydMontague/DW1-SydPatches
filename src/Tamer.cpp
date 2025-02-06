@@ -1,9 +1,11 @@
+#include "Evolution.hpp"
 #include "Font.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Map.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
+#include "constants.hpp"
 #include "extern/DOOA.hpp"
 #include "extern/EAB.hpp"
 #include "extern/ENDI.hpp"
@@ -512,6 +514,90 @@ extern "C"
             startGameTime();
             MEDAL_AWARD_PENDING       = 0;
             TAMER_LEVEL_AWARD_PENDING = 0;
+        }
+    }
+
+    constexpr bool hasMaxStats(const Stats& stats)
+    {
+        if (stats.hp != HP_MAX) return false;
+        if (stats.mp != MP_MAX) return false;
+        if (stats.off != OFF_MAX) return false;
+        if (stats.def != DEF_MAX) return false;
+        if (stats.speed != SPEED_MAX) return false;
+        if (stats.brain != BRAIN_MAX) return false;
+
+        return true;
+    }
+
+    inline bool hasAllDigimonRaised()
+    {
+        for (auto i = DigimonType::BOTAMON; i < DigimonType::WEREGARURUMON; i++)
+            if (!hasDigimonRaised(i)) return false;
+
+        return true;
+    }
+
+    inline bool hasAllCards()
+    {
+        for (int32_t i = 0; i < 66; i++)
+            if (getCardAmount(i) == 0) return false;
+
+        return true;
+    }
+
+    void checkMedalConditions()
+    {
+        // vanilla doesn't use getNumMasteredMoves, but it should boil down to the same
+        if (!hasMedal(Medal::ALL_TECHS) && getNumMasteredMoves() >= 57)
+        {
+            unlockMedal(Medal::ALL_TECHS);
+            MEDAL_AWARD_PENDING = 1;
+        }
+
+        if (!hasMedal(Medal::MAX_STATS) && hasMaxStats(PARTNER_ENTITY.stats))
+        {
+            unlockMedal(Medal::MAX_STATS);
+            MEDAL_AWARD_PENDING = 1;
+        }
+
+        if (!hasMedal(Medal::MAX_MONEY) && MONEY == MAX_MONEY)
+        {
+            unlockMedal(Medal::MAX_MONEY);
+            MEDAL_AWARD_PENDING = 1;
+        }
+
+        if (!hasMedal(Medal::PLAYTIME) && YEAR >= 10)
+        {
+            unlockMedal(Medal::PLAYTIME);
+            MEDAL_AWARD_PENDING = 1;
+        }
+
+        if (!hasMedal(Medal::ALL_DIGIMON) && hasAllDigimonRaised())
+        {
+            unlockMedal(Medal::ALL_DIGIMON);
+            MEDAL_AWARD_PENDING     = 1;
+            TAMER_ENTITY.tamerLevel = min(TAMER_ENTITY.tamerLevel + 1, MAX_TAMER_LEVEL);
+        }
+
+        if (!hasMedal(Medal::CATCH_100_FISH) && PARTNER_PARA.fishCaught >= 100)
+        {
+            unlockMedal(Medal::CATCH_100_FISH);
+            MEDAL_AWARD_PENDING = 1;
+        }
+
+        if (!hasMedal(Medal::ALL_CARDS) && hasAllCards())
+        {
+            unlockMedal(Medal::ALL_CARDS);
+            MEDAL_AWARD_PENDING = 1;
+        }
+    }
+
+    void checkPendingAwards()
+    {
+        if (TAMER_LEVEL_AWARD_PENDING == 1 || MEDAL_AWARD_PENDING == 1)
+        {
+            Tamer_setState(20);
+            stopGameTime(); // is this necessary? The state already does that
         }
     }
 
