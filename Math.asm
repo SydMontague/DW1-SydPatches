@@ -643,7 +643,7 @@
 .close
 
 
-.open "work/DIGIMON/DOOA_REL.BIN",0x80070000
+.open "work/DIGIMON/DOO2_REL.BIN",0x80070000
 .psx
 
 .org 0x80070cd4

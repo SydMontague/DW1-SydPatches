@@ -1069,7 +1069,7 @@ extern "C"
     extern uint32_t TAMER_LEVEL_AWARD_PENDING;
     extern uint32_t MEDAL_AWARD_PENDING;
     extern uint32_t IS_IN_MENU;
-    extern uint32_t TAMER_LEVELS_AWARDED;
+    extern int8_t TAMER_LEVELS_AWARDED;
     extern uint8_t TARGET_MAP;
     extern uint8_t CURRENT_EXIT;
     extern void* DOOA_DATA_PTR;

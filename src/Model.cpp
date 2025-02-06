@@ -56,6 +56,8 @@ struct PrimHeader
 
 extern "C"
 {
+    static CVector colorInput = {0x80, 0x80, 0x80, 0};
+
     void renderDropShadow(Entity* entity)
     {
         auto* loc    = &entity->posData->location;
@@ -404,8 +406,6 @@ extern "C"
         posData->rotation.z = rotZ;
     }
 
-    CVector colorInput = {0x80, 0x80, 0x80, 0};
-
     inline void* _renderWireframedTriangle(void* primPtr,
                                            uint8_t* currentPrim,
                                            SVector* vertTop,
@@ -617,18 +617,18 @@ extern "C"
             // this should be a bug? It matches a whole lot of primitive types, but uses a lot of them wrong?
 
             auto primMode = currentPrim[3] & 0xFC;
-            bool isLine   = WIREFRAME_RNG_TABLE[i % 16] < wireFrameShare;
+            bool isPoly   = WIREFRAME_RNG_TABLE[i & 15] < wireFrameShare;
 
             // triangle
             if (primMode == 0x34)
             {
                 primTop += 0x1C;
-                primPtr = _renderWireframedTriangle(primPtr, currentPrim, vertTop, normalTop, isLine, color);
+                primPtr = _renderWireframedTriangle(primPtr, currentPrim, vertTop, normalTop, isPoly, color);
             }
             else if (primMode == 0x3C)
             {
                 primTop += 0x24;
-                primPtr = _renderWiredframedQuad(primPtr, currentPrim, vertTop, normalTop, isLine, color);
+                primPtr = _renderWiredframedQuad(primPtr, currentPrim, vertTop, normalTop, isPoly, color);
             }
         }
 

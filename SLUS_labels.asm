@@ -163,7 +163,7 @@
 .definelabel BUTTERFLY_ID, 0x80134c60
 .definelabel HAS_BUTTERFLY, 0x80134c54
 .definelabel ITEM_SCOLD_FLAG, 0x80134c59
-.definelabel HAS_IMMORTAL_HOUR, 0x80134ca0
+.definelabel HAS_IMMORTAL_HOUR, 0x80134ca8
 .definelabel IMMORTAL_HOUR, 0x80134ca4
 .definelabel WORLD_POOP, 0x80138504
 .definelabel CURRENT_POOP_ID, 0x80134c58

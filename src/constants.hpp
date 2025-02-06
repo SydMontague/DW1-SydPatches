@@ -1,7 +1,8 @@
+#include "extern/stddef.hpp"
+
 /*
  * Global Constants and magic values goes here.
  */
-
 constexpr auto HAPPINESS_MIN   = -100;
 constexpr auto HAPPINESS_MAX   = 100;
 constexpr auto HAPPINESS_MID   = HAPPINESS_MIN + ((HAPPINESS_MAX - HAPPINESS_MIN) / 2);
@@ -31,3 +32,8 @@ constexpr auto MIN_MONEY       = 0;
 constexpr auto MAX_MONEY       = 999999;
 constexpr auto MIN_TAMER_LEVEL = 0;
 constexpr auto MAX_TAMER_LEVEL = 10;
+
+/*
+ * User facing strings go here.
+ */
+constexpr uint8_t isSickStr[] = "is sick.";

@@ -1057,9 +1057,9 @@ extern "C"
     void tickSicknessMechanics()
     {
         // already guaranteed by caller, actually
-        if (CURRENT_FRAME != LAST_HANDLED_FRAME) return;
+        if (CURRENT_FRAME == LAST_HANDLED_FRAME) return;
 
-        bool gotSick;
+        bool gotSick = false;
 
         if (!PARTNER_PARA.condition.isSick && PARTNER_PARA.sicknessCounter >= 10 && CURRENT_FRAME % 1200 == 0)
         {
@@ -1069,7 +1069,7 @@ extern "C"
             {
                 PARTNER_PARA.condition.isSick = true;
                 PARTNER_PARA.timesBeingSick += 1;
-                PARTNER_PARA.sicknessTimer = 1;
+                PARTNER_PARA.sicknessTimer = 0; // vanilla sets it to 1, but the hourly check later makes it the same
                 PARTNER_PARA.happiness -= 20;
                 PARTNER_PARA.sicknessCounter = 0;
 
@@ -1121,12 +1121,12 @@ extern "C"
                 Tamer_setState(20);
                 clearTextArea();
                 setTextColor(10);
-                auto width = drawStringNew(&vanillaFont, PARTNER_ENTITY.name, 704, 256 + 0x78);
+                auto width = drawStringNew(&vanillaFont, PARTNER_ENTITY.name, 704, 256 + 120) / 4;
                 setTextColor(1);
-                drawStringNew(&vanillaFont, reinterpret_cast<const uint8_t*>(" is sick!"), 704 + width, 256 + 0x78);
+                drawStringNew(&vanillaFont, isSickStr, 704 + width + 1, 256 + 120);
             }
 
-            if (PARTNER_PARA.sicknessCounter >= 12 && Partner_getState() != 8 && Tamer_getState() == 0 &&
+            if (PARTNER_PARA.sicknessTimer >= 12 && Partner_getState() != 8 && Tamer_getState() == 0 &&
                 PARTNER_PARA.remainingLifetime != 0 && IS_SCRIPT_PAUSED == 1)
             {
                 writePStat(255, 0);
@@ -1139,7 +1139,7 @@ extern "C"
 
     void tickDeathCondition()
     {
-        if (HAS_IMMORTAL_HOUR != 1 && IMMORTAL_HOUR == HOUR) return;
+        if (HAS_IMMORTAL_HOUR == 1 && IMMORTAL_HOUR == HOUR) return;
         if (PARTNER_PARA.remainingLifetime > 0) return;
         if (Partner_getState() == 8) return;
         if (Tamer_getState() != 0) return;

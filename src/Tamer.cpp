@@ -20,7 +20,7 @@ extern "C"
 {
     constexpr uint8_t findItemStr[]       = "Woah!";
     constexpr uint8_t emptyChestStr[]     = "Hey! It's empty!";
-    constexpr uint8_t inventoryFullStr[]  = "I can't hold any more!";
+    constexpr uint8_t inventoryFullStr[]  = "But I can't hold any more!";
     constexpr uint8_t tamerLevelUpStr[]   = "Tamer level went up!!!";
     constexpr uint8_t tamerLevelDownStr[] = "Tamer level went down!!!";
     constexpr uint8_t medalLine1[]        = "Congratulations!";
@@ -67,7 +67,7 @@ extern "C"
     {
         // vanilla uses the take state to determine how many lines to render, but that's just redundant
         renderStringNew(15, -125, 45, 255, 12, 704, 12 + 256, 5, 1);
-        renderStringNew(3, -125, 57, 255, 12, 704, 24 + 256, 5, 1);
+        renderStringNew(0, -125, 57, 255, 12, 704, 24 + 256, 5, 1);
         renderStringNew(0, -125, 69, 255, 12, 704, 36 + 256, 5, 1);
         renderUIBox(1);
         TEXTBOX_OPEN_TIMER++;
@@ -267,13 +267,13 @@ extern "C"
             if (chest.isTaken)
             {
                 drawStringNew(&vanillaFont, emptyChestStr, 704 + 0, 256 + 24);
-                TAKE_CHEST_STATE = 2;
             }
             else
             {
-                drawStringNew(&vanillaFont, getItem(itemType)->name, 704 + 0, 256 + 24);
-                drawStringNew(&vanillaFont, findItemStr, 704 + 0, 256 + 36);
-                TAKE_CHEST_STATE = 0;
+                auto offset = drawStringNew(&vanillaFont, findItemStr, 704 + 0, 256 + 24) / 4;
+                setTextColor(5);
+                drawStringNew(&vanillaFont, getItem(itemType)->name, 704 + offset + 1, 256 + 24);
+                setTextColor(1);
             }
             Tamer_setSubState(1);
         }
@@ -294,7 +294,7 @@ extern "C"
             };
 
             createAnimatedUIBox(1, 0, 2, &target, &source, nullptr, renderItemPickupTextbox);
-            Tamer_setSubState(TAKE_CHEST_STATE == 0 ? 2 : 4);
+            Tamer_setSubState(chest.isTaken != 0 ? 2 : 4);
             takeItemFrameCount = 0;
         }
         else if (Tamer_getSubState() == 2)
@@ -306,10 +306,9 @@ extern "C"
             if (!isKeyDown(BUTTON_CROSS)) return;
 
             takeItemFrameCount = 0;
-            if (!giveItem(itemType, 0))
+            if (!giveItem(itemType, 1))
             {
                 drawStringNew(&vanillaFont, inventoryFullStr, 704 + 0, 256 + 24);
-                TAKE_CHEST_STATE = 1;
                 Tamer_setSubState(3);
             }
             else
@@ -344,8 +343,6 @@ extern "C"
 
             unsetUIBoxAnimated(1, &target);
 
-            if (TAKE_CHEST_STATE == 0) giveItem(itemType, 1);
-
             Tamer_setState(0);
             Partner_setState(1);
             setCameraFollowPlayer();
@@ -367,10 +364,11 @@ extern "C"
             unsetCameraFollowPlayer();
             clearTextSubArea(&textArea);
             drawStringNew(&vanillaFont, getDigimonData(DigimonType::TAMER)->name, 704 + 0, 256 + 12);
-            drawStringNew(&vanillaFont, getItem(itemType)->name, 704 + 0, 256 + 24);
-            drawStringNew(&vanillaFont, findItemStr, 704 + 0, 256 + 36);
+            auto offset = drawStringNew(&vanillaFont, findItemStr, 704 + 0, 256 + 24) / 4;
+            setTextColor(5);
+            drawStringNew(&vanillaFont, getItem(itemType)->name, 704 + offset + 1, 256 + 24);
+            setTextColor(1);
 
-            TAKE_CHEST_STATE   = 0;
             takeItemFrameCount = 0;
             Tamer_setSubState(1);
         }
@@ -405,8 +403,9 @@ extern "C"
 
             if (!giveItem(itemType, 0))
             {
+                clearTextSubArea(&textArea);
+                drawStringNew(&vanillaFont, getDigimonData(DigimonType::TAMER)->name, 704 + 0, 256 + 12);
                 drawStringNew(&vanillaFont, inventoryFullStr, 704 + 0, 256 + 24);
-                TAKE_CHEST_STATE   = 1;
                 takeItemFrameCount = 0;
                 Tamer_setSubState(3);
             }
@@ -440,7 +439,7 @@ extern "C"
 
             unsetUIBoxAnimated(1, &target);
 
-            if (TAKE_CHEST_STATE == 0) pickupItem(pickedDropId);
+            pickupItem(pickedDropId);
 
             Tamer_setState(0);
             setCameraFollowPlayer();
@@ -458,10 +457,10 @@ extern "C"
             startAnimation(&TAMER_ENTITY, 0);
             Partner_setState(11);
             unsetCameraFollowPlayer();
-            clearTextArea();
 
             if (MEDAL_AWARD_PENDING == 1)
             {
+                clearTextArea();
                 setTextColor(7);
                 // vanilla draws these strings in multiple frames/states
                 drawStringNew(&vanillaFont, medalLine1, 704, 256 + 0x78);
@@ -470,6 +469,7 @@ extern "C"
             }
             else if (TAMER_LEVEL_AWARD_PENDING == 1)
             {
+                clearTextArea();
                 if (TAMER_LEVELS_AWARDED > 0)
                 {
                     setTextColor(7);
@@ -702,7 +702,7 @@ extern "C"
         }
     }
 
-    void Tamer_tickBattleLostLife()
+    void Tamer_tickSicknessLostLife()
     {
         if (Tamer_getSubState() == 0)
         {
@@ -731,7 +731,7 @@ extern "C"
         }
     }
 
-    void Tamer_tickSicknessLostLife()
+    void Tamer_tickBattleLostLife()
     {
         if (Tamer_getSubState() == 0)
         {
@@ -784,9 +784,9 @@ extern "C"
             case 14: Tamer_tickTakeChest(); break;
             case 15: Tamer_tickOpening(); break;
             case 16: Tamer_tickEnding(); break;
-            case 17: Tamer_tickBattleLostLife(); break;
+            case 17: Tamer_tickSicknessLostLife(); break;
             case 18: Tamer_tickMachinedramonSpawn(); break;
-            case 19: Tamer_tickSicknessLostLife(); break;
+            case 19: Tamer_tickBattleLostLife(); break;
             case 20: Tamer_tickAwardSomething(); break;
         }
         tickAnimation(&TAMER_ENTITY);

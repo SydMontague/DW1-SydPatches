@@ -5,7 +5,7 @@
 
 extern "C"
 {
-    AttackObject ATTACK_OBJECTS[17];
+    static AttackObject ATTACK_OBJECTS[17];
 
     void initializeWorldObjects()
     {
