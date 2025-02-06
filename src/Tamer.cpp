@@ -541,8 +541,11 @@ extern "C"
 
     inline bool hasAllDigimonRaised()
     {
-        for (auto i = DigimonType::BOTAMON; i < DigimonType::WEREGARURUMON; i++)
-            if (!hasDigimonRaised(i)) return false;
+        constexpr auto begin = static_cast<uint32_t>(DigimonType::BOTAMON);
+        constexpr auto end = static_cast<uint32_t>(DigimonType::WEREGARURUMON);
+
+        for (auto i = begin; i < end; i++)
+            if (!hasDigimonRaised(static_cast<DigimonType>(i))) return false;
 
         return true;
     }

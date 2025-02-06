@@ -35,6 +35,10 @@ extern "C"
     static GsDOBJ2 POOP_OBJECT;
     static GsCOORDINATE2 POOP_POSITION;
 
+    static uint8_t conditionBubbleType   = -1;
+    static uint8_t conditionBubbleId     = -1;
+    static uint16_t conditionBubbleTimer = 0;
+
     void initializePoop()
     {
         readFile("\\ETCNA\\UNTI.TMD", POOP_MODEL_BUFFER);
@@ -862,10 +866,6 @@ extern "C"
         // set trigger 640 if energy level reaches threshold (used for Restaurant?)
         if (PARTNER_PARA.energyLevel >= raise->energyThreshold) setTrigger(640);
     }
-
-    uint8_t conditionBubbleType   = -1;
-    uint8_t conditionBubbleId     = -1;
-    uint16_t conditionBubbleTimer = 0;
 
     void handleConditionBubble()
     {
