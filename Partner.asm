@@ -6,8 +6,8 @@
 
 .org 0x800dd99c
   jal tickConditionBoundaries
-.org 0x800abc28
-  jal tickConditionBoundaries
+;.org 0x800abc28
+;  jal tickConditionBoundaries
 ;.org 0x800a8fc8
 ;  jal tickConditionBoundaries
 
@@ -69,11 +69,6 @@
 
 .org 0x8010334c
   jal skipHours
-
-.org 0x800abb74
-  jal handlePostBattleTiredness
-.org 0x800abc08
-  jal handlePostBattleTiredness
 
 .org 0x800dd9d8
   jal tickPartner

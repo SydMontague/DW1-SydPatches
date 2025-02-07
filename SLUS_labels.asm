@@ -19,7 +19,6 @@
 .definelabel addHealingParticleEffect,  0x800c1560
 .definelabel removeTamerItem,           0x800c55fc
 .definelabel hasDigimonRaised,          0x800ff824
-;.definelabel Tamer_getState,            0x800ac050 ; use constexpr version instead
 ;.definelabel Partner_setState,          0x800df4d0 ; use constexpr version instead
 .definelabel renderSeperatorLines,      0x800b8360
 .definelabel renderRectPolyFT4,         0x800b8928
