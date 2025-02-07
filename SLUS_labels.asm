@@ -94,12 +94,13 @@
 .definelabel hasMedal,                  0x800ff85c
 .definelabel getCardAmount,             0x801067ec
 .definelabel renderUIBox,               0x80101440
-.definelabel advanceBattleTime,         0x800abccc
 .definelabel readMapTFS,                0x800d6308
 .definelabel playBGM,                   0x80106a80
 .definelabel loadBattleData,            0x800e74d0
 .definelabel handleBattleStart,         0x800e847c
 .definelabel closeTriangleMenu,         0x800b7ffc
+.definelabel updateMinuteHand,          0x800dd780
+.definelabel initializeDaytimeTransition,0x800d7104
 
 .definelabel TEXTBOX_OPEN_TIMER, 0x800135012
 .definelabel MONEY, 0x80134eb8
@@ -215,6 +216,7 @@
 .definelabel GS_WORK_BASES, 0x8015dba8
 .definelabel ACTIVE_FRAMEBUFFER, 0x80134ecc
 .definelabel ACTIVE_BGM_FONT, 0x80135006
+.definelabel MAP_ENTRIES, 0x801292d4
 
 // BTL_REL
 .definelabel BTL_battleMain, 0x8005b5f4

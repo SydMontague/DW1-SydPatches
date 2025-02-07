@@ -7,6 +7,73 @@
 
 extern "C"
 {
+    void advanceBattleTime(BattleResult result)
+    {
+        CURRENT_FRAME += 400;
+        MINUTE += 20;
+
+        if (MINUTE >= 60)
+        {
+            // TODO this is missing a lot of hourly mechanics
+            HOUR += 1;
+            MINUTE = MINUTE % 60;
+            PARTNER_PARA.remainingLifetime -= 1;
+            if (PARTNER_PARA.remainingLifetime < 0) PARTNER_PARA.remainingLifetime = 0;
+
+            if (PARTNER_PARA.condition.isSleepy)
+            {
+                PARTNER_PARA.sicknessCounter += 1;
+                PARTNER_PARA.missedSleepHours += 1;
+            }
+            if (PARTNER_PARA.condition.isSick)
+            {
+                PARTNER_PARA.sicknessTries += 1;
+                PARTNER_PARA.sicknessTimer += 1;
+            }
+            if (PARTNER_PARA.condition.isInjured) PARTNER_PARA.injuryTimer += 1;
+
+            if (HOUR >= 24)
+            {
+                DAY += 1;
+                CURRENT_FRAME = MINUTE * 20;
+                HOUR          = HOUR % 24;
+
+                if (DAY >= 30)
+                {
+                    YEAR += 1;
+                    DAY = 0;
+                    if (YEAR > 99) YEAR = 0;
+                }
+            }
+        }
+
+        if (PARTNER_PARA.condition.isHungry)
+        {
+            PARTNER_PARA.starvationTimer -= 40;
+            if (PARTNER_PARA.starvationTimer <= 0 &&
+                PARTNER_PARA.energyLevel < getRaiseData(PARTNER_ENTITY.type)->energyThreshold)
+            {
+                PARTNER_PARA.careMistakes += 1;
+            }
+        }
+        else
+            PARTNER_PARA.foodLevel -= 20;
+
+        if (PARTNER_PARA.condition.isPoopy)
+            PARTNER_PARA.poopingTimer -= 400;
+        else
+            PARTNER_PARA.poopLevel -= 2;
+
+        updateMinuteHand(HOUR, MINUTE);
+
+        if (result != BattleResult::WON) return;
+        if ((MAP_ENTRIES[CURRENT_SCREEN].flags & 0x40) != 0) return;
+
+        if (HOUR == 16) initializeDaytimeTransition(0);
+        if (HOUR == 20) initializeDaytimeTransition(1);
+        if (HOUR == 6) initializeDaytimeTransition(2);
+    }
+
     BattleResult startBattle(uint32_t talkedToEntity)
     {
         GAME_STATE       = 1;

@@ -894,6 +894,17 @@ extern "C"
         RenderFunction render;
     };
 
+    struct MapEntry
+    {
+        uint8_t filename[10];
+        int8_t num8bppImages;
+        int8_t num4bppImages;
+        uint8_t flags; // 0x40 no day/night | 0x80 has Digimon
+        uint8_t doorsId;
+        uint8_t toiletId;
+        uint8_t loadingName;
+    };
+
     enum InputButtons : uint16_t
     {
         BUTTON_L2       = 0x0001,
@@ -1091,6 +1102,7 @@ extern "C"
     extern int32_t ACTIVE_FRAMEBUFFER;
     extern uint8_t GS_WORK_BASES[2][81920];
     extern GsOT GS_ORDERING_TABLE[2];
+    extern MapEntry MAP_ENTRIES[255];
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1102,12 +1114,13 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void updateMinuteHand(int32_t hour, int32_t minute);
+    void initializeDaytimeTransition(int32_t mode);
     void closeTriangleMenu();
     uint32_t handleBattleStart(uint32_t talkedToEntity);
     void loadBattleData(uint32_t talkedToEntity, uint32_t enemyCount);
     void playBGM(uint8_t soundFont);
     void readMapTFS(uint8_t map);
-    void advanceBattleTime(BattleResult result);
     void renderUIBox(int32_t instanceId);
     bool hasMedal(Medal medal);
     void unlockMedal(Medal medal);
