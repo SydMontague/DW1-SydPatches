@@ -93,6 +93,8 @@ extern "C"
     extern void libgs_GsSetLsMatrix(Matrix* screenMatrix);
     extern void libgs_GsSortObject4(GsDOBJ2* objp, GsOT* otp, int32_t shift, uint32_t* scratch);
     extern void libgs_GsGetTimInfo(uint32_t* tim, GsIMAGE* image);
+    int32_t libgs_GsGetActiveBuffer();
+    void libgs_GsClearOt(uint16_t offset, uint16_t point, GsOT* ot);
     
 }
 

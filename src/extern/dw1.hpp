@@ -975,6 +975,13 @@ extern "C"
         UNUSED5,
     };
 
+    enum class BattleResult : int32_t
+    {
+        FLED = 0,
+        WON  = 1,
+        LOST = -1,
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1079,6 +1086,11 @@ extern "C"
     extern uint8_t PREVIOUS_EXIT;
     extern uint32_t MONEY;
     extern uint8_t TEXTBOX_OPEN_TIMER;
+    extern uint8_t SKIP_DAYTIME_TRANSITION;
+    extern uint8_t ACTIVE_BGM_FONT;
+    extern int32_t ACTIVE_FRAMEBUFFER;
+    extern uint8_t GS_WORK_BASES[2][81920];
+    extern GsOT GS_ORDERING_TABLE[2];
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1090,6 +1102,12 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void closeTriangleMenu();
+    uint32_t handleBattleStart(uint32_t talkedToEntity);
+    void loadBattleData(uint32_t talkedToEntity, uint32_t enemyCount);
+    void playBGM(uint8_t soundFont);
+    void readMapTFS(uint8_t map);
+    void advanceBattleTime(BattleResult result);
     void renderUIBox(int32_t instanceId);
     bool hasMedal(Medal medal);
     void unlockMedal(Medal medal);

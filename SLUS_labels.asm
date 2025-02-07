@@ -94,6 +94,12 @@
 .definelabel hasMedal,                  0x800ff85c
 .definelabel getCardAmount,             0x801067ec
 .definelabel renderUIBox,               0x80101440
+.definelabel advanceBattleTime,         0x800abccc
+.definelabel readMapTFS,                0x800d6308
+.definelabel playBGM,                   0x80106a80
+.definelabel loadBattleData,            0x800e74d0
+.definelabel handleBattleStart,         0x800e847c
+.definelabel closeTriangleMenu,         0x800b7ffc
 
 .definelabel TEXTBOX_OPEN_TIMER, 0x800135012
 .definelabel MONEY, 0x80134eb8
@@ -204,6 +210,14 @@
 .definelabel MEDAL_AWARD_PENDING, 0x80134c8c
 .definelabel IS_IN_MENU, 0x80134ef0
 .definelabel TAMER_LEVELS_AWARDED, 0x80134c90
+.definelabel SKIP_DAYTIME_TRANSITION, 0x80134db4
+.definelabel GS_ORDERING_TABLE, 0x8015db68
+.definelabel GS_WORK_BASES, 0x8015dba8
+.definelabel ACTIVE_FRAMEBUFFER, 0x80134ecc
+.definelabel ACTIVE_BGM_FONT, 0x80135006
+
+// BTL_REL
+.definelabel BTL_battleMain, 0x8005b5f4
 
 // ENDI_REL
 .definelabel ENDI_tickEnding, 0x80060d00
@@ -263,6 +277,8 @@
 .definelabel libgs_GsSetLsMatrix, 0x80097dd8
 .definelabel libgs_GsSortObject4, 0x80099d88
 .definelabel libgs_GsGetTimInfo, 0x80098a68
+.definelabel libgs_GsClearOt, 0x80098838
+.definelabel libgs_GsGetActiveBuffer, 0x80097af8
 
 .definelabel libgs_REFERENCE_MATRIX, 0x80136f84
 .definelabel libgs_GsLIGHTWSMATRIX, 0x80136f24
