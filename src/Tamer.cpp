@@ -174,6 +174,10 @@ extern "C"
         else if (Tamer_getSubState() == 1) { entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location); }
     }
 
+    void Tamer_startAnimation(int32_t animId) {
+        startAnimation(&TAMER_ENTITY, animId);
+    }
+
     void Tamer_tickPraise()
     {
         if (Tamer_getSubState() == 0)
