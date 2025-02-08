@@ -1,0 +1,6 @@
+9650,9651c9650,9651
+< 	    /* We need to print $0 .. $31 for COP0 registers.  */
+< 	    if (COP0_REG_P (regno))
+---
+> 	    /* We need to print $0 .. $31 for COP0, COP2 and COP3 registers.  */
+> 	    if (COP0_REG_P (regno) || COP2_REG_P (regno) || COP3_REG_P (regno))

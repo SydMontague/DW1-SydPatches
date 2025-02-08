@@ -8,11 +8,14 @@ RUN apt-get update \
  && apt-get upgrade -y \
  && apt-get install libmpc-dev flex texinfo -y
 
+ADD mips.cc.patch mips.cc.patch
 ADD https://ftp.gnu.org/gnu/gcc/gcc-14.2.0/gcc-14.2.0.tar.xz gcc-14.2.0.tar.xz
 ADD https://ftp.gnu.org/gnu/binutils/binutils-2.43.tar.xz binutils-2.43.tar.xz
 
 RUN tar -xf gcc-14.2.0.tar.xz \
  && tar -xf binutils-2.43.tar.xz
+
+RUN patch /tmp/build-mips-tools/gcc-14.2.0/gcc/config/mips/mips.cc mips.cc.patch
 
 WORKDIR /tmp/build-mips-tools/build-gcc
 
