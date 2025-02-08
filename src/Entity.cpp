@@ -1,4 +1,5 @@
 #include "Helper.hpp"
+#include "Model.hpp"
 #include "Utils.hpp"
 #include "extern/dw1.hpp"
 #include "extern/stddef.hpp"
@@ -8,6 +9,11 @@ extern "C"
     // vanilla only allocates 8 vectors here, but there are 10 NPCs...
     static bool hasRotationData[10];
     static Vector rotationData[10];
+
+    static int16_t moveToDeltaX;
+    static int16_t moveToDeltaZ;
+    static Vector previousCameraPos;
+    static bool previousCameraPosInitialized;
 
     Entity* getEntityFromScriptId(uint8_t* param)
     {
@@ -35,6 +41,141 @@ extern "C"
         }
 
         return nullptr;
+    }
+
+    bool tickEntityMoveToAxis(uint32_t scriptId, int32_t target, int32_t axis, int32_t speed, bool withCamera)
+    {
+        uint8_t entityId = scriptId;
+        auto entityPtr   = getEntityFromScriptId(&entityId);
+
+        // vanilla doesn't do a nullptr check here, but you can't move an entity that doesn't exist
+        if (entityPtr == nullptr) return true;
+
+        int32_t* axisValue;
+        if (axis == 0)
+            axisValue = &entityPtr->posData->location.x;
+        else if (axis == 1)
+            axisValue = &entityPtr->posData->location.y;
+        else
+            axisValue = &entityPtr->posData->location.z;
+
+        if (!previousCameraPosInitialized)
+        {
+            moveToDeltaX                 = (target - *axisValue) / speed;
+            previousCameraPosInitialized = true;
+            previousCameraPos            = entityPtr->posData->location;
+        }
+        else
+        {
+            *axisValue += moveToDeltaX;
+            setEntityPosition(entityId,
+                              entityPtr->posData->location.x,
+                              entityPtr->posData->location.y,
+                              entityPtr->posData->location.z);
+            setupEntityMatrix(entityId);
+
+            // in vanilla, when the DELTA speed is 0 this function may never return true, as the entity never reaches
+            // the target location. If the game waits for the movement to complete, this will cause a softlock.
+            // We solve this by treating DELTA speeds of 0 as always completed
+            bool reachedTarget = moveToDeltaX == 0;
+            if (moveToDeltaX < 0)
+                reachedTarget = *axisValue <= target;
+            else if (moveToDeltaX > 0)
+                reachedTarget = *axisValue >= target;
+
+            if (reachedTarget)
+            {
+                *axisValue                   = target;
+                previousCameraPosInitialized = false;
+                return true;
+            }
+        }
+
+        if (withCamera)
+        {
+            moveCameraByDiff(&previousCameraPos, &entityPtr->posData->location);
+            previousCameraPos = entityPtr->posData->location;
+        }
+
+        return false;
+    }
+
+    bool tickEntityMoveTo(uint32_t scriptId1,
+                          uint32_t scriptId2,
+                          int32_t targetX,
+                          int32_t targetZ,
+                          int8_t speed,
+                          bool withCamera)
+    {
+        uint8_t entityId1 = scriptId1;
+        auto entityPtr    = getEntityFromScriptId(&entityId1);
+
+        // vanilla doesn't do a nullptr check here, but you can't move an entity that doesn't exist
+        if (entityPtr == nullptr) return true;
+
+        if (!previousCameraPosInitialized)
+        {
+            if (scriptId2 == 0xFF)
+            {
+                moveToDeltaX = (targetX - entityPtr->posData->location.x) / speed;
+                moveToDeltaZ = (targetZ - entityPtr->posData->location.z) / speed;
+            }
+            else
+            {
+                uint8_t entityId2 = scriptId2;
+                auto entityPtr2   = getEntityFromScriptId(&entityId2);
+                // vanilla doesn't do a nullptr check here, but you can't move to an entity that doesn't exist
+                if (entityPtr2 == nullptr) return true;
+                moveToDeltaX = (entityPtr2->posData->location.x - entityPtr->posData->location.x) / speed;
+                moveToDeltaZ = (entityPtr2->posData->location.z - entityPtr->posData->location.z) / speed;
+            }
+
+            previousCameraPosInitialized = true;
+            previousCameraPos            = entityPtr->posData->location;
+        }
+        else
+        {
+            setEntityPosition(entityId1,
+                              entityPtr->posData->location.x + moveToDeltaX,
+                              entityPtr->posData->location.y,
+                              entityPtr->posData->location.z + moveToDeltaZ);
+            setupEntityMatrix(entityId1);
+
+            // in vanilla, when the DELTA speed is 0 this function may never return true, as the entity never reaches
+            // the target location. If the game waits for the movement to complete, this will cause a softlock.
+            // We solve this by treating DELTA speeds of 0 as always completed
+            bool finishedX = moveToDeltaX == 0;
+            if (moveToDeltaX < 0) { finishedX = entityPtr->posData->location.x <= targetX; }
+            else if (moveToDeltaX > 0) { finishedX = entityPtr->posData->location.x >= targetX; }
+
+            bool finishedZ = moveToDeltaZ == 0;
+            if (moveToDeltaZ < 0) { finishedZ = entityPtr->posData->location.z <= targetZ; }
+            else if (moveToDeltaZ > 0) { finishedZ = entityPtr->posData->location.z >= targetZ; }
+
+            if (finishedX) entityPtr->posData->location.x = targetX;
+            if (finishedZ) entityPtr->posData->location.z = targetZ;
+            if (finishedX && finishedZ)
+            {
+                previousCameraPosInitialized = false;
+                return true;
+            }
+        }
+
+        if (withCamera)
+        {
+            moveCameraByDiff(&previousCameraPos, &entityPtr->posData->location);
+            previousCameraPos = entityPtr->posData->location;
+        }
+        return false;
+    }
+
+    bool tickEntitySetRotation(uint32_t scriptId, int16_t angle)
+    {
+        uint8_t id   = scriptId;
+        auto* entity = getEntityFromScriptId(&id);
+        if (entity != nullptr) entity->posData->rotation.y = angle;
+
+        return true;
     }
 
     bool tickLookAtEntity(uint32_t scriptId1, uint32_t scriptId2)
@@ -86,18 +227,18 @@ extern "C"
 
         if (entityId1 >= 2) NPC_IS_WALKING_TOWARDS[entityId1 - 2] = 1;
 
-        if (!PREVIOUS_CAMERA_POS_INITIALIZED && withCamera)
+        if (!previousCameraPosInitialized && withCamera)
         {
-            PREVIOUS_CAMERA_POS             = currentPos;
-            PREVIOUS_CAMERA_POS_INITIALIZED = true;
+            previousCameraPos            = currentPos;
+            previousCameraPosInitialized = true;
         }
 
         entityLookAtLocation(entityPtr, &targetPos);
 
         if (withCamera)
         {
-            moveCameraByDiff(&PREVIOUS_CAMERA_POS, &currentPos);
-            PREVIOUS_CAMERA_POS = currentPos;
+            moveCameraByDiff(&previousCameraPos, &currentPos);
+            previousCameraPos = currentPos;
         }
 
         CollisionCode collision = CollisionCode::NONE;
@@ -113,7 +254,7 @@ extern "C"
 
         if (distance < radius * radius || (collision != CollisionCode::NONE && collision < CollisionCode::MAP))
         {
-            PREVIOUS_CAMERA_POS_INITIALIZED = 0;
+            previousCameraPosInitialized = false;
             if (entityId1 >= 2) NPC_IS_WALKING_TOWARDS[entityId1 - 2] = 0;
             return true;
         }

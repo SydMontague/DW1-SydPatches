@@ -841,9 +841,9 @@ extern "C"
         TAMER_ENTITY.isOnScreen = 1;
 
         // vanilla initializes HAS_ROTATION_DATA here, but we already moved it to Entity.cpp
-        // vanilla initialized UNKNOWN_TAMER_DATA here, but it seems entirely unused
+        // vanilla initializes UNKNOWN_TAMER_DATA here, but it seems entirely unused
+        // vanilla initializes PREVIOUS_CAMERA_POS_INITIALIZED here, but we moved it to Entity.cpp 
 
-        PREVIOUS_CAMERA_POS_INITIALIZED = 0;
         isStandingOnDrop                = false;
         STORED_TAMER_POS                = TAMER_ENTITY.posData->location;
         TAMER_LEVEL_AWARD_PENDING       = 0;

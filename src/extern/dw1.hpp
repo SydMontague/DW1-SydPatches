@@ -1082,7 +1082,6 @@ extern "C"
     extern uint8_t TEXTURE_BUFFER[];
     extern GsTMDFunction GS_TMD_MAP[64];
     extern Vector STORED_TAMER_POS;
-    extern bool PREVIOUS_CAMERA_POS_INITIALIZED;
     extern uint32_t TAMER_LEVEL_AWARD_PENDING;
     extern uint32_t MEDAL_AWARD_PENDING;
     extern uint32_t IS_IN_MENU;
@@ -1103,7 +1102,6 @@ extern "C"
     extern GsOT GS_ORDERING_TABLE[2];
     extern MapEntry MAP_ENTRIES[255];
     extern int8_t NPC_IS_WALKING_TOWARDS[8];
-    extern Vector PREVIOUS_CAMERA_POS;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];

@@ -10,18 +10,6 @@
   nop
   nop
 
-;; entityMoveTo Softlock fix
-.org 0x800ac748
-  beq v0,zero,0x800ac764
-
-.org 0x800ac7a4
-  beq v0,zero,0x800ac7c0
-
-;; entityMoveToAxis
-.org 0x800ac9ac
-  beq v0,zero,0x800ac9c8
-
-
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

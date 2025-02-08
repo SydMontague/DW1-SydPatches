@@ -18,18 +18,18 @@
 .org 0x801057a4
   jal tickEntityWalkTo
 
-.org 0x800ac478
-  jal getEntityFromScriptId
-.org 0x800ac4c8
-  jal getEntityFromScriptId
-.org 0x800ac564
-  jal getEntityFromScriptId
-.org 0x800ac5c0
-  jal getEntityFromScriptId
-.org 0x800ac62c
-  jal getEntityFromScriptId
-.org 0x800ac890
-  jal getEntityFromScriptId
+;.org 0x800ac478
+;  jal getEntityFromScriptId
+;.org 0x800ac4c8
+;  jal getEntityFromScriptId
+;.org 0x800ac564
+;  jal getEntityFromScriptId
+;.org 0x800ac5c0
+;  jal getEntityFromScriptId
+;.org 0x800ac62c
+;  jal getEntityFromScriptId
+;.org 0x800ac890
+;  jal getEntityFromScriptId
 .org 0x800b5bfc
   jal getEntityFromScriptId
 .org 0x800b63d0
@@ -39,6 +39,23 @@
 
 .org 0x80105704
   jal tickLookAtEntity
+
+.org 0x8010571c
+  jal tickEntitySetRotation
+
+.org 0x80105804
+  jal tickEntityMoveTo
+.org 0x8010582c
+  jal tickEntityMoveTo
+.org 0x8010585c
+  jal tickEntityMoveTo
+.org 0x80105888
+  jal tickEntityMoveTo
+
+.org 0x80105908
+  jal tickEntityMoveToAxis
+.org 0x80105930
+  jal tickEntityMoveToAxis
 
 .close 
 
