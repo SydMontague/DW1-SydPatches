@@ -1116,7 +1116,6 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
-    Entity* getEntityFromScriptId(uint8_t* id);
     void moveCameraByDiff(Vector* start, Vector* end);
     void updateMinuteHand(int32_t hour, int32_t minute);
     void initializeDaytimeTransition(int32_t mode);

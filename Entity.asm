@@ -18,6 +18,25 @@
 .org 0x801057a4
   jal tickEntityWalkTo
 
+.org 0x800ac478
+  jal getEntityFromScriptId
+.org 0x800ac4c8
+  jal getEntityFromScriptId
+.org 0x800ac564
+  jal getEntityFromScriptId
+.org 0x800ac5c0
+  jal getEntityFromScriptId
+.org 0x800ac62c
+  jal getEntityFromScriptId
+.org 0x800ac890
+  jal getEntityFromScriptId
+.org 0x800b5bfc
+  jal getEntityFromScriptId
+.org 0x800b63d0
+  jal getEntityFromScriptId
+.org 0x800b795c
+  jal getEntityFromScriptId
+
 .close 
 
 

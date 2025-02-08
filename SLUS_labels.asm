@@ -101,7 +101,6 @@
 .definelabel updateMinuteHand,          0x800dd780
 .definelabel initializeDaytimeTransition,0x800d7104
 .definelabel moveCameraByDiff,          0x800d892c
-.definelabel getEntityFromScriptId,     0x800ac2f8
 
 .definelabel PREVIOUS_CAMERA_POS, 0x801387a8
 .definelabel NPC_IS_WALKING_TOWARDS, 0x8013d170
