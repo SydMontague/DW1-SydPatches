@@ -879,6 +879,16 @@ extern "C"
     using BoxTickFunction   = void();
     using BoxRenderFunction = void();
 
+    union ScreenCoord
+    {
+        struct
+        {
+            int16_t x;
+            int16_t y;
+        };
+        int32_t raw;
+    };
+
     struct UIBoxData
     {
         RECT startPos;
@@ -1102,6 +1112,8 @@ extern "C"
     extern GsOT GS_ORDERING_TABLE[2];
     extern MapEntry MAP_ENTRIES[255];
     extern int8_t NPC_IS_WALKING_TOWARDS[8];
+    extern int32_t DRAWING_OFFSET_X;
+    extern int32_t DRAWING_OFFSET_Y;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];

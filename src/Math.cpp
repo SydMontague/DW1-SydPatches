@@ -119,6 +119,7 @@ extern "C"
 
     void setRotTransMatrix(Matrix* matrix)
     {
+        // TODO this is just libgs_GsSetLsMatrix...
         auto* vals = reinterpret_cast<uint32_t*>(matrix);
 
         gte_rot1   = vals[0];
@@ -129,5 +130,19 @@ extern "C"
         gte_transX = matrix->t[0];
         gte_transY = matrix->t[1];
         gte_transZ = matrix->t[2];
+    }
+
+    void worldPosToScreenPos2(int16_t* x, int16_t* y, int16_t* z)
+    {
+        libgs_GsSetLsMatrix(&libgs_REFERENCE_MATRIX);
+
+        cop2_v0xy = *x | (*y << 16);
+        cop2_v0z  = *z;
+
+        asm volatile("cop2 0x180001");
+        ScreenCoord val{.raw = static_cast<int32_t>(cop2_sxy2)};
+
+        *x = val.x - (160 - DRAWING_OFFSET_X);
+        *y = val.y - (120 - DRAWING_OFFSET_Y);
     }
 }

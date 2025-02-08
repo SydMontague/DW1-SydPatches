@@ -13,16 +13,6 @@
 #include "extern/libgte.hpp"
 #include "extern/psx.hpp"
 
-union ScreenCoord
-{
-    struct
-    {
-        int16_t x;
-        int16_t y;
-    };
-    int32_t raw;
-};
-
 struct UV1Packet
 {
     uint8_t u;

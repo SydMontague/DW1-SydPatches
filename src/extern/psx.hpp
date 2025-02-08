@@ -53,6 +53,13 @@ extern "C"
 
     register uint32_t cop0_status asm("c0r12");
 
+    register uint32_t cop2_v0xy asm("c2r0");
+    register uint32_t cop2_v0z asm("c2r1");
+
+    register uint32_t cop2_sxy0 asm("c2r12");
+    register uint32_t cop2_sxy1 asm("c2r13");
+    register uint32_t cop2_sxy2 asm("c2r14");
+
     static GTEControlRegister<0> gte_rot1;
     static GTEControlRegister<1> gte_rot2;
     static GTEControlRegister<2> gte_rot3;
