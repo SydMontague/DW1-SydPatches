@@ -4,7 +4,6 @@
 extern "C"
 {
     int32_t getDistanceSquared(Vector* pos1, Vector* pos2);
-    int32_t getDigimonRadius(DigimonType type);
 
     void jis_concat_glyph(uint8_t* string, const uint8_t* glyph);
     const uint8_t* jis_at_index(const uint8_t* string, uint32_t index);

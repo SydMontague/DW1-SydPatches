@@ -21,31 +21,6 @@
 .org 0x800ac9ac
   beq v0,zero,0x800ac9c8
 
-;; entityWalkTo
-.org 0x800ac1bc
-.area 32
-  addiu a0,sp,0x28
-  jal getDistanceSquared
-  addiu a1,sp,0x38
-  lw a0,0x00(s1)
-  jal getDigimonRadius
-  sw v0,0x48(sp)
-  sw v0,0x4C(sp)
-  nop
-.endarea
-
-.org 0x800ac260
-.area 40
-  lw v1,0x4C(sp)
-  lw v0,0x48(sp)
-  mult v1,v1
-  nop
-  mflo v1
-  nop
-  nop
-  blt v0,v1,0x800ac2a0
-  nop
-.endarea
 
 .close
 

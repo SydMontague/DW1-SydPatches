@@ -22,3 +22,4 @@
 .include "Map.asm"
 .include "Tamer.asm"
 .include "Battle.asm"
+.include "Entity.asm"

@@ -1103,6 +1103,8 @@ extern "C"
     extern uint8_t GS_WORK_BASES[2][81920];
     extern GsOT GS_ORDERING_TABLE[2];
     extern MapEntry MAP_ENTRIES[255];
+    extern int8_t NPC_IS_WALKING_TOWARDS[8];
+    extern Vector PREVIOUS_CAMERA_POS;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1114,6 +1116,8 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    Entity* getEntityFromScriptId(uint8_t* id);
+    void moveCameraByDiff(Vector* start, Vector* end);
     void updateMinuteHand(int32_t hour, int32_t minute);
     void initializeDaytimeTransition(int32_t mode);
     void closeTriangleMenu();
