@@ -2,11 +2,11 @@
 .psx
 
 .org 0x800a0a50
-.area 0x800ac3c8-.
+.area 0x800ac550-.
   .importobj "compiled/Model.lib"
 
-  .notice "Empty space left: " + (0x800ac3c8-.) + " bytes"
-  .fill 0x800ac3c8-.
+  .notice "Empty space left: " + (0x800ac550-.) + " bytes"
+  .fill 0x800ac550-.
 .endarea
 
 .org 0x8011d46c
@@ -63,6 +63,14 @@ SS_address: ; initializeMusic
 
   .notice "Empty space left: " + (0x8012b918-.) + " bytes"
   .fill 0x8012b918-.
+.endarea
+
+; override vanilla rotation data
+.org 0x80138694
+.area 0x80138720-.
+
+  .notice "Empty space left: " + (0x80138720-.) + " bytes"
+  .fill 0x80138720-.
 .endarea
 
 ; unused libgs functions

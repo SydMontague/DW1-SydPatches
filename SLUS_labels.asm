@@ -101,6 +101,7 @@
 .definelabel updateMinuteHand,          0x800dd780
 .definelabel initializeDaytimeTransition,0x800d7104
 .definelabel moveCameraByDiff,          0x800d892c
+.definelabel getRotationDifference,     0x800b6edc
 
 .definelabel PREVIOUS_CAMERA_POS, 0x801387a8
 .definelabel NPC_IS_WALKING_TOWARDS, 0x8013d170
@@ -206,7 +207,6 @@
 .definelabel WIREFRAME_RNG_TABLE, 0x8011d180
 .definelabel WORLD_OBJECTS, 0x80137418
 .definelabel STORED_TAMER_POS, 0x80138720
-.definelabel HAS_ROTATION_DATA, 0x80134c78
 .definelabel UNKNOWN_TAMER_DATA, 0x80138694
 .definelabel PREVIOUS_CAMERA_POS_INITIALIZED, 0x80134c80
 .definelabel TAMER_LEVEL_AWARD_PENDING, 0x80134c88

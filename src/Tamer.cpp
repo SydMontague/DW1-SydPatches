@@ -174,7 +174,8 @@ extern "C"
         else if (Tamer_getSubState() == 1) { entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location); }
     }
 
-    void Tamer_startAnimation(int32_t animId) {
+    void Tamer_startAnimation(int32_t animId)
+    {
         startAnimation(&TAMER_ENTITY, animId);
     }
 
@@ -268,10 +269,7 @@ extern "C"
             clearTextSubArea(&textArea);
 
             drawStringNew(&vanillaFont, getDigimonData(DigimonType::TAMER)->name, 704 + 0, 256 + 12);
-            if (chest.isTaken)
-            {
-                drawStringNew(&vanillaFont, emptyChestStr, 704 + 0, 256 + 24);
-            }
+            if (chest.isTaken) { drawStringNew(&vanillaFont, emptyChestStr, 704 + 0, 256 + 24); }
             else
             {
                 auto offset = drawStringNew(&vanillaFont, findItemStr, 704 + 0, 256 + 24) / 4;
@@ -546,7 +544,7 @@ extern "C"
     inline bool hasAllDigimonRaised()
     {
         constexpr auto begin = static_cast<uint32_t>(DigimonType::BOTAMON);
-        constexpr auto end = static_cast<uint32_t>(DigimonType::WEREGARURUMON);
+        constexpr auto end   = static_cast<uint32_t>(DigimonType::WEREGARURUMON);
 
         for (auto i = begin; i < end; i++)
             if (!hasDigimonRaised(static_cast<DigimonType>(i))) return false;
@@ -842,10 +840,8 @@ extern "C"
         TAMER_ENTITY.isOnMap    = 1;
         TAMER_ENTITY.isOnScreen = 1;
 
-        for (auto& val : HAS_ROTATION_DATA)
-            val = 0;
-        for (auto& val : UNKNOWN_TAMER_DATA)
-            val = 0; // unused?
+        // vanilla initializes HAS_ROTATION_DATA here, but we already moved it to Entity.cpp
+        // vanilla initialized UNKNOWN_TAMER_DATA here, but it seems entirely unused
 
         PREVIOUS_CAMERA_POS_INITIALIZED = 0;
         isStandingOnDrop                = false;

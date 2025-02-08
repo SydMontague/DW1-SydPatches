@@ -37,6 +37,9 @@
 .org 0x800b795c
   jal getEntityFromScriptId
 
+.org 0x80105704
+  jal tickLookAtEntity
+
 .close 
 
 

@@ -5,6 +5,10 @@
 
 extern "C"
 {
+    // vanilla only allocates 8 vectors here, but there are 10 NPCs...
+    static bool hasRotationData[10];
+    static Vector rotationData[10];
+
     Entity* getEntityFromScriptId(uint8_t* param)
     {
         // TODO separate in and out parameters, once all users are implemented
@@ -33,6 +37,38 @@ extern "C"
         return nullptr;
     }
 
+    bool tickLookAtEntity(uint32_t scriptId1, uint32_t scriptId2)
+    {
+        uint8_t entityId1 = scriptId1;
+        uint8_t entityId2 = scriptId2;
+        auto entityPtr    = getEntityFromScriptId(&entityId1);
+        auto entityPtr2   = getEntityFromScriptId(&entityId2);
+
+        // vanilla doesn't do a nullptr check here, but unchecked access is iffy
+        if (entityPtr == nullptr || entityPtr2 == nullptr) return true;
+
+        if (hasRotationData[entityId1] == 0)
+        {
+            rotationData[entityId1]    = entityPtr2->posData->location;
+            hasRotationData[entityId1] = 1;
+        }
+        else
+        {
+            int16_t targetAngle;
+            int16_t cwDiff;
+            int16_t ccDiff;
+            getRotationDifference(entityPtr->posData, &rotationData[entityId1], &targetAngle, &ccDiff, &cwDiff);
+
+            if (rotateEntity(&entityPtr->posData->rotation, &targetAngle, &ccDiff, &cwDiff, 0x200))
+            {
+                hasRotationData[entityId1] = 0;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     bool tickEntityWalkTo(uint32_t scriptId1, uint32_t scriptId2, int32_t targetX, int32_t targetZ, bool withCamera)
     {
         uint8_t entityId1 = scriptId1;
@@ -43,8 +79,8 @@ extern "C"
         // vanilla doesn't do a nullptr check here, but unchecked access is iffy
         if (entityPtr == nullptr) return true;
 
-        Vector currentPos     = entityPtr->posData->location;
-        Vector targetPos      = {.x = targetX, .y = currentPos.y, .z = targetZ};
+        Vector currentPos = entityPtr->posData->location;
+        Vector targetPos  = {.x = targetX, .y = currentPos.y, .z = targetZ};
 
         if (entityPtr2 != nullptr) targetPos = entityPtr2->posData->location;
 

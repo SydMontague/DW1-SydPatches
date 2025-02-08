@@ -1082,7 +1082,6 @@ extern "C"
     extern uint8_t TEXTURE_BUFFER[];
     extern GsTMDFunction GS_TMD_MAP[64];
     extern Vector STORED_TAMER_POS;
-    extern uint8_t HAS_ROTATION_DATA[8];
     extern bool PREVIOUS_CAMERA_POS_INITIALIZED;
     extern uint32_t TAMER_LEVEL_AWARD_PENDING;
     extern uint32_t MEDAL_AWARD_PENDING;
@@ -1116,6 +1115,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void getRotationDifference(PositionData* pos, Vector* target, int16_t* outAngle, int16_t* ccDiff, int16_t* cwDiff);
     void moveCameraByDiff(Vector* start, Vector* end);
     void updateMinuteHand(int32_t hour, int32_t minute);
     void initializeDaytimeTransition(int32_t mode);
