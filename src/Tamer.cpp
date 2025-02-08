@@ -63,6 +63,29 @@ extern "C"
         return TAMER_SUB_STATE;
     }
 
+    // this function blows up in size otherwise
+    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
+    __attribute__((optimize("Os"))) 
+    uint8_t checkChestCollision()
+    {
+        int16_t tileX;
+        int16_t tileY;
+        getModelTile(&TAMER_ENTITY.posData->location, &tileX, &tileY);
+
+        for (int32_t i = 0; i < sizeof(CHEST_ARRAY) / sizeof(CHEST_ARRAY[0]); i++)
+        {
+            auto& chest = CHEST_ARRAY[i];
+
+            if (chest.item == ItemType::NONE) continue;
+            if (abs(chest.tileX - tileX) > 1) continue;
+            if (abs(chest.tileY - tileY) > 1) continue;
+
+            return i;
+        }
+
+        return 0xFF;
+    }
+
     void renderItemPickupTextbox()
     {
         // vanilla uses the take state to determine how many lines to render, but that's just redundant
@@ -842,14 +865,14 @@ extern "C"
 
         // vanilla initializes HAS_ROTATION_DATA here, but we already moved it to Entity.cpp
         // vanilla initializes UNKNOWN_TAMER_DATA here, but it seems entirely unused
-        // vanilla initializes PREVIOUS_CAMERA_POS_INITIALIZED here, but we moved it to Entity.cpp 
+        // vanilla initializes PREVIOUS_CAMERA_POS_INITIALIZED here, but we moved it to Entity.cpp
 
-        isStandingOnDrop                = false;
-        STORED_TAMER_POS                = TAMER_ENTITY.posData->location;
-        TAMER_LEVEL_AWARD_PENDING       = 0;
-        MEDAL_AWARD_PENDING             = 0;
-        IS_IN_MENU                      = 0;
-        TAMER_LEVELS_AWARDED            = 1;
+        isStandingOnDrop          = false;
+        STORED_TAMER_POS          = TAMER_ENTITY.posData->location;
+        TAMER_LEVEL_AWARD_PENDING = 0;
+        MEDAL_AWARD_PENDING       = 0;
+        IS_IN_MENU                = 0;
+        TAMER_LEVELS_AWARDED      = 1;
     }
 
     void setupTamerOnWarp(int32_t posX, int32_t posY, int32_t posZ, int32_t rotation)

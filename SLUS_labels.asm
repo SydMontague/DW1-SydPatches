@@ -88,7 +88,6 @@
 .definelabel closeInventoryBoxes,       0x800db238
 .definelabel removeUIBox1,              0x800c053c
 .definelabel collisionGrace,            0x800d4884
-.definelabel checkChestCollision,       0x800acb04
 .definelabel unlockMedal,               0x800ff830
 .definelabel hasMedal,                  0x800ff85c
 .definelabel getCardAmount,             0x801067ec

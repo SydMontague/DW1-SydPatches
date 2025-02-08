@@ -1143,7 +1143,6 @@ extern "C"
     void removeTriangleMenu();
     void closeInventoryBoxes();
     void removeUIBox1();
-    uint8_t checkChestCollision();
     void renderAwardSomethingTextbox();
     void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileReadCallback callback, int32_t param);
     int32_t isSoundLoaded(bool isAsync, int32_t soundId);
