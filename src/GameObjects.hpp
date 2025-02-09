@@ -24,7 +24,7 @@ extern "C"
         MONOCHROMON_BUBBLE   = 433,
         VS_PLAYER_INPUT      = 434,
         FILE_READ_QUEUE      = 1028,
-        KNOCKBACK_FX         = 1536,
+        PARTICLE_FX         = 1536,
         POOP_FX              = 1537,
         CONDITION_BUBBLE     = 2050,
         POISON_BUBBLE        = 2053,

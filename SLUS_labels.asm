@@ -97,8 +97,9 @@
 .definelabel initializeDaytimeTransition,0x800d7104
 .definelabel moveCameraByDiff,          0x800d892c
 .definelabel getRotationDifference,     0x800b6edc
-.definelabel tickParticleFX,            0x800ad8c8
 .definelabel renderParticleFX,          0x800adba4
+.definelabel addEntityParticleFX,       0x800adeb4
+.definelabel createCloudFX,             0x800ae3c4
 
 .definelabel PARTICLE_FX_DATA, 0x801387b8
 .definelabel FX_PARTICLE_DATA, 0x80138888

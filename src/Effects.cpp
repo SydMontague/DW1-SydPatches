@@ -1,4 +1,5 @@
 #include "GameObjects.hpp"
+#include "Helper.hpp"
 #include "Math.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgte.hpp"
@@ -58,6 +59,71 @@ extern "C"
         return nullptr;
     }
 
+    void tickParticleFX(int32_t instanceId)
+    {
+        auto& data   = PARTICLE_FX_DATA[instanceId];
+        auto* entity = data.entity;
+        data.tickCount++;
+        data.cloudDelay--;
+
+        if (data.tickCount == 10)
+        {
+            if (data.mode == 1)
+            {
+                addEntityParticleFX(entity, 22);
+                addEntityParticleFX(entity, 22);
+                addEntityParticleFX(entity, 22);
+            }
+            if (data.mode == 0 && entity != nullptr)
+            {
+                addEntityParticleFX(entity, 14);
+                addEntityParticleFX(entity, 14);
+                addEntityParticleFX(entity, 14);
+            }
+        }
+        else if (data.tickCount == 13)
+        {
+            if (data.mode == 1)
+            {
+                addEntityParticleFX(entity, 22);
+                addEntityParticleFX(entity, 14);
+            }
+            if (data.mode == 0 && entity != nullptr)
+            {
+                addEntityParticleFX(entity, 14);
+                addEntityParticleFX(entity, 14);
+            }
+        }
+        else
+        {
+            auto delay = data.cloudDelay;
+            if (delay < 4 && delay >= 0 && data.mode == 1)
+            {
+                auto pos    = entity->posData;
+                auto baseX  = pos->posMatrix.work.t[0];
+                auto baseZ  = pos->posMatrix.work.t[2];
+                auto radius = getDigimonData(entity->type)->radius;
+
+                for (int32_t i = 0; i < data.cloudDelay + 2; i++)
+                {
+                    auto roll   = rand();
+                    auto offset = radius + random2(radius / 2);
+
+                    SVector vec;
+                    vec.x = baseX + (offset * sin(roll) >> 12);
+                    vec.y = 0;
+                    vec.z = baseZ - (offset * cos(roll) >> 12);
+                    createCloudFX(&vec);
+                }
+            }
+            else if (data.tickTarget <= data.tickCount && delay < 0)
+            {
+                data.tickCount = -1;
+                removeObject(ObjectID::PARTICLE_FX, instanceId);
+            }
+        }
+    }
+
     void createParticleFX(uint32_t color, int32_t mode, SVector* position, Entity* entity, int16_t cloudDelay)
     {
         int32_t id;
@@ -99,6 +165,6 @@ extern "C"
         data->pos        = *position;
         data->entity     = entity;
         data->cloudDelay = cloudDelay + 4;
-        addObject(ObjectID::KNOCKBACK_FX, id, tickParticleFX, renderParticleFX);
+        addObject(ObjectID::PARTICLE_FX, id, tickParticleFX, renderParticleFX);
     }
 }

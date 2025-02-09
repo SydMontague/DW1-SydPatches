@@ -1145,7 +1145,8 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
-    void tickParticleFX(int32_t instanceId);
+    void addEntityParticleFX(Entity* entity, int32_t counter);
+    void createCloudFX(SVector* position);
     void renderParticleFX(int32_t instanceId);
     void getRotationDifference(PositionData* pos, Vector* target, int16_t* outAngle, int16_t* ccDiff, int16_t* cwDiff);
     void moveCameraByDiff(Vector* start, Vector* end);
