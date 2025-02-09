@@ -73,6 +73,13 @@ extern "C"
         loadTexture(TEXTURE_BUFFER, outTexPage, outCLUT);
     }
 
+    /*
+     * Reads given file from disc into the given buffer.
+     * The buffer must be large enough to hold all the *sectors* of the file, meaning that it's always a multiple of
+     * 2048. If the file is larger, your memory is busted.
+     *
+     * TODO: write safe version of this function 
+     */
     void readFile(const char* file, void* buffer)
     {
         FileLookup lookup;

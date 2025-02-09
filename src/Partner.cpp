@@ -41,7 +41,9 @@ extern "C"
 
     void initializePoop()
     {
-        readFile("\\ETCNA\\UNTI.TMD", poopModelBuffer);
+        uint8_t buffer[2048]; // buffer must be a multiple of 2048
+        readFile("\\ETCNA\\UNTI.TMD", buffer);
+        memcpy(poopModelBuffer, buffer, sizeof(poopModelBuffer));
         libgs_GsMapModelingData(reinterpret_cast<uint32_t*>(poopModelBuffer + 4));
         libgs_GsLinkObject4(reinterpret_cast<uint32_t*>(poopModelBuffer + 12), &poopObject, 0);
         libgs_GsInitCoordinate2(nullptr, &poopPosition);

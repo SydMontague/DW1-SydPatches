@@ -1053,8 +1053,6 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
-    extern ParticleFXData PARTICLE_FX_DATA[4];
-    extern SPosition3D FX_PARTICLE_DATA[50];
     extern GsRVIEW2 GS_VIEWPOINT;
     extern Chest CHEST_ARRAY[8];
     extern Item ITEM_PARA[128];
@@ -1164,6 +1162,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void addFXPrim(POLY_FT4* prim, short x, short y, uint32_t scaleX, int16_t scaleY, uint32_t distance);
     int32_t worldPosToScreenPos(SVector* worldPos, Position* screenPos);
     void renderParticleFlash(ParticleFlashData* data);
     int32_t lerp(int32_t start, int32_t end, int32_t tMin, int32_t tMax, int32_t tCurrent);

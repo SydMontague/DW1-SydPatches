@@ -4,10 +4,16 @@
 .org 0x800f0390
   jal initializeParticleFX
 
+.org 0x800f0398
+  jal initializeEntityParticleFX
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
+
+.org 0x8006bfa4
+  j addEntityParticleFX
 
 .org 0x8005c774
   jal createParticleFX
@@ -20,6 +26,9 @@
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
 .psx
 
+.org 0x800745b0
+  j addEntityParticleFX
+
 .org 0x800647d4
   jal createParticleFX
 .org 0x80064d38
@@ -30,6 +39,9 @@
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
+
+.org 0x8006a680
+  j addEntityParticleFX
 
 .org 0x8005c3bc
   jal createParticleFX
