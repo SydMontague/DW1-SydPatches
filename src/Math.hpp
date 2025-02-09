@@ -1,8 +1,15 @@
+#include "extern/dw1.hpp"
 #include "extern/libgte.hpp"
 #include "extern/stddef.hpp"
 
 extern "C"
 {
+    struct AABB
+    {
+        SVector* center;
+        SVector extent;
+    };
+
     constexpr int32_t abs(int32_t val)
     {
         return val < 0 ? -val : val;
@@ -30,4 +37,6 @@ extern "C"
     extern int16_t cos(uint32_t input);
     extern int16_t atan(int32_t dx, int32_t dy);
     extern void setRotTransMatrix(Matrix* matrix);
+    bool hasAABBOverlap(AABB* aabb1, AABB* aabb2);
+    int32_t findAABBHitEntity(AABB* aabb, Entity* ignoreEntity, int32_t startId);
 }

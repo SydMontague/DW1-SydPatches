@@ -1,7 +1,9 @@
 #include "Math.hpp"
 
+#include "Helper.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libc.hpp"
+#include "extern/libgte.hpp"
 #include "extern/psx.hpp"
 #include "extern/stddef.hpp"
 
@@ -144,5 +146,58 @@ extern "C"
 
         *x = val.x - (160 - DRAWING_OFFSET_X);
         *y = val.y - (120 - DRAWING_OFFSET_Y);
+    }
+
+    bool hasAABBOverlap(AABB* aabb1, AABB* aabb2)
+    {
+        auto x1     = aabb1->center->x;
+        auto x2     = aabb2->center->x;
+        auto width1 = aabb1->extent.x;
+        auto width2 = aabb2->extent.x;
+
+        if (x1 - width1 > x2 + width2) return false;
+        if (x1 + width1 < x2 - width2) return false;
+
+        auto y1      = aabb1->center->y;
+        auto y2      = aabb2->center->y;
+        auto height1 = aabb1->extent.y;
+        auto height2 = aabb2->extent.y;
+
+        if (y1 - height1 > y2 + height2) return false;
+        if (y1 + height1 < y2 - height2) return false;
+
+        auto z1     = aabb1->center->z;
+        auto z2     = aabb2->center->z;
+        auto depth1 = aabb1->extent.z;
+        auto depth2 = aabb2->extent.z;
+
+        if (z1 - depth1 > z2 + depth2) return false;
+        if (z1 + depth1 < z2 - depth2) return false;
+
+        return true;
+    }
+
+    int32_t findAABBHitEntity(AABB* aabb, Entity* ignoreEntity, int32_t startId)
+    {
+        for (int32_t i = startId; i < 10; i++)
+        {
+            auto* entity = ENTITY_TABLE.getEntityById(i);
+            if (entity == ignoreEntity || entity == nullptr) continue;
+
+            auto loc       = entity->posData->location;
+            SVector center = {
+                .x   = static_cast<int16_t>(loc.x),
+                .y   = static_cast<int16_t>(loc.y),
+                .z   = static_cast<int16_t>(loc.z),
+                .pad = static_cast<int16_t>(loc.pad),
+            };
+            int16_t radius = getDigimonData(entity->type)->radius >> 1;
+            int16_t height = getDigimonData(entity->type)->height >> 1;
+            AABB digimonBB{.center = &center, .extent = {.x = radius, .y = height, .z = radius}};
+
+            if (hasAABBOverlap(aabb, &digimonBB)) return i;
+        }
+
+        return -1;
     }
 }

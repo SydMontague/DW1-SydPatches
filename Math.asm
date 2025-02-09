@@ -146,6 +146,13 @@
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
 
+.org 0x80066678
+  jal findAABBHitEntity
+.org 0x8006ab58
+  jal findAABBHitEntity
+.org 0x80070d4c
+  jal findAABBHitEntity
+
 .org 0x80069384
   jal setRotTransMatrix
 .org 0x80069484
@@ -288,6 +295,13 @@
 
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
 .psx
+
+.org 0x8006ec70
+  jal findAABBHitEntity
+.org 0x80073164
+  jal findAABBHitEntity
+.org 0x800792ec
+  jal findAABBHitEntity
 
 .org 0x8007191c
   jal setRotTransMatrix
@@ -480,6 +494,12 @@
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
 
+.org 0x80064d40
+  jal findAABBHitEntity
+.org 0x80069234
+  jal findAABBHitEntity
+.org 0x8006f3bc
+  jal findAABBHitEntity
 
 .org 0x800679ec
   jal setRotTransMatrix
