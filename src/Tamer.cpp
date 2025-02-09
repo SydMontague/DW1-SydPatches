@@ -1,4 +1,5 @@
 #include "Evolution.hpp"
+#include "Fade.hpp"
 #include "Font.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"

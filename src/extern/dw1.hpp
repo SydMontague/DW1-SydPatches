@@ -669,7 +669,7 @@ extern "C"
         int16_t fadeInTarget;
         int16_t fadeOutCurrent;
         int16_t fadeInCurrent;
-        int8_t fadeProgress;
+        uint8_t fadeProgress;
         FadeMode fadeMode;
         uint16_t padding;
         int32_t fadeProtection;
@@ -1156,8 +1156,6 @@ extern "C"
     void unsetUIBoxAnimated(int32_t boxId, RECT* target);
     void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos);
     bool isUIBoxAvailable(int32_t id);
-    void fadeToBlack(int32_t frames);
-    void fadeFromBlack(int32_t frames);
     void addMapNameObject(int32_t mapId);
     void changeMap(uint32_t map, uint32_t exit);
     void startGameTime();

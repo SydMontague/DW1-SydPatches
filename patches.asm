@@ -23,3 +23,4 @@
 .include "Tamer.asm"
 .include "Battle.asm"
 .include "Entity.asm"
+.include "Fade.asm"

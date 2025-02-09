@@ -63,8 +63,6 @@
 .definelabel stopGameTime,              0x800dd798
 .definelabel setPartnerIdling,          0x800b7c18
 .definelabel rotateEntity,              0x800b6fb0
-.definelabel fadeToBlack,               0x800acd88
-.definelabel fadeFromBlack,             0x800ace74
 .definelabel addMapNameObject,          0x800d8fb0
 .definelabel changeMap,                 0x800d9020
 .definelabel startGameTime,             0x800dd7a0

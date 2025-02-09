@@ -33,6 +33,6 @@ mips-g++ Evolution.cpp -o ../compiled/Evolution.lib $FLAGS
 mips-g++ StatsView.cpp -o ../compiled/StatsView.lib $FLAGS
 mips-g++ StatsViewData.cpp -o ../compiled/StatsViewData.lib $FLAGS
 
-mips-g++ Model.cpp GameObjects.cpp Files.cpp Math.cpp Main.cpp Partner.cpp Tamer.cpp Entity.cpp GUI.cpp Map.cpp Battle.cpp -o ../compiled/Model.lib $FLAGS
+mips-g++ Model.cpp GameObjects.cpp Files.cpp Math.cpp Main.cpp Partner.cpp Tamer.cpp Entity.cpp GUI.cpp Map.cpp Battle.cpp Fade.cpp -o ../compiled/Model.lib $FLAGS
 
 cd -
