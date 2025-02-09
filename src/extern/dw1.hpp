@@ -915,6 +915,31 @@ extern "C"
         uint8_t loadingName;
     };
 
+    struct ParticleFXData
+    {
+        int16_t tickCount;
+        int16_t tickTarget;
+        int16_t color;
+        int16_t mode;
+        int16_t cloudDelay;
+        uint16_t r;
+        uint16_t g;
+        uint16_t b;
+        SVector pos;
+        Entity* entity;
+        int16_t flashX[3];
+        int16_t flashY[3];
+        int16_t flashZ[3];
+        int16_t flashScale[3];
+    };
+
+    struct SPosition3D
+    {
+        int16_t x;
+        int16_t y;
+        int16_t z;
+    };
+
     enum InputButtons : uint16_t
     {
         BUTTON_L2       = 0x0001,
@@ -1010,6 +1035,8 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern ParticleFXData PARTICLE_FX_DATA[4];
+    extern SPosition3D FX_PARTICLE_DATA[50];
     extern GsRVIEW2 GS_VIEWPOINT;
     extern Chest CHEST_ARRAY[8];
     extern Item ITEM_PARA[128];
@@ -1279,3 +1306,4 @@ static_assert(sizeof(Item) == 0x20);
 static_assert(sizeof(Chest) == 0x38);
 static_assert(sizeof(DroppedItem) == 0x10);
 static_assert(sizeof(TamerItem) == 0x10);
+static_assert(sizeof(ParticleFXData) == 0x34);

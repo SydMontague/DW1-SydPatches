@@ -32,6 +32,11 @@ extern "C"
         return val;
     }
 
+    inline int32_t random2(int32_t limit)
+    {
+        return rand() % limit;
+    }
+
     extern int32_t random(int32_t limit);
     extern int16_t sin(uint32_t input);
     extern int16_t cos(uint32_t input);

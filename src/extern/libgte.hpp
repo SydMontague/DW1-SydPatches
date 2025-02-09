@@ -98,6 +98,7 @@ extern "C"
                                         int32_t* screenXY3,
                                         int32_t* interpolValue,
                                         int32_t* flag);
+    void libgte_RotMatrixZYX(SVector* rotation, Matrix* matrix);
 
     // TODO: use proper signature
     using GsTMDFunction = void* (*)();

@@ -98,6 +98,8 @@
 .definelabel moveCameraByDiff,          0x800d892c
 .definelabel getRotationDifference,     0x800b6edc
 
+.definelabel PARTICLE_FX_DATA, 0x801387b8
+.definelabel FX_PARTICLE_DATA, 0x80138888
 .definelabel TRAINING_COMPLETE, 0x80134ca0
 .definelabel PREVIOUS_CAMERA_POS, 0x801387a8
 .definelabel NPC_IS_WALKING_TOWARDS, 0x8013d170
@@ -306,6 +308,7 @@
 .definelabel libgte_RotTransPers, 0x8009b3d4
 .definelabel libgte_RotTransPers3, 0x8009b404
 .definelabel libgte_RotTransPers4, 0x8009b464
+.definelabel libgte_RotMatrixZYX, 0x8009bd24
 
 .definelabel libgte_GsTMDdivTNF3, 0x8009de78
 .definelabel libgte_GsTMDdivTF3NL, 0x8009dbc8

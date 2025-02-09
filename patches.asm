@@ -24,3 +24,4 @@
 .include "Battle.asm"
 .include "Entity.asm"
 .include "Fade.asm"
+.include "Effects.asm"
