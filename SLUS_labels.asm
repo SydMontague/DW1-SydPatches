@@ -81,7 +81,6 @@
 .definelabel setMapLayerEnabled,        0x800e65b8
 .definelabel isSoundLoaded,             0x800e90cc
 .definelabel loadDynamicLibrary,        0x800e61e4
-.definelabel renderAwardSomethingTextbox,0x800acd00
 .definelabel entityCheckCollision,      0x800d45ec
 .definelabel removeTriangleMenu,        0x800c0510
 .definelabel closeInventoryBoxes,       0x800db238
@@ -101,6 +100,7 @@
 .definelabel moveCameraByDiff,          0x800d892c
 .definelabel getRotationDifference,     0x800b6edc
 
+.definelabel TRAINING_COMPLETE, 0x80134ca0
 .definelabel PREVIOUS_CAMERA_POS, 0x801387a8
 .definelabel NPC_IS_WALKING_TOWARDS, 0x8013d170
 .definelabel TEXTBOX_OPEN_TIMER, 0x800135012

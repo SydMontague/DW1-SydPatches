@@ -1106,6 +1106,7 @@ extern "C"
     extern int8_t NPC_IS_WALKING_TOWARDS[8];
     extern int32_t DRAWING_OFFSET_X;
     extern int32_t DRAWING_OFFSET_Y;
+    extern uint32_t TRAINING_COMPLETE;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1135,7 +1136,6 @@ extern "C"
     void removeTriangleMenu();
     void closeInventoryBoxes();
     void removeUIBox1();
-    void renderAwardSomethingTextbox();
     void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileReadCallback callback, int32_t param);
     int32_t isSoundLoaded(bool isAsync, int32_t soundId);
     void setMapLayerEnabled(int32_t val);

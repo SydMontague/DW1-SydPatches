@@ -70,6 +70,16 @@ extern "C"
         return subState;
     }
 
+    bool isTrainingComplete()
+    {
+        if (TRAINING_COMPLETE == 1)
+        {
+            TRAINING_COMPLETE = 0;
+            return true;
+        }
+        return false;
+    }
+
     void addTamerLevel(int32_t chance, int32_t amount)
     {
         if (random(100) >= chance) return;
@@ -107,8 +117,17 @@ extern "C"
         return 0xFF;
     }
 
+    void renderAwardSomethingTextbox()
+    {
+        // vanilla doesn't use shadows
+        renderStringNew(0, -125, 45, 255, 36, 704, 120 + 256, 5, 1);
+        renderUIBox(1);
+        TEXTBOX_OPEN_TIMER++;
+    }
+
     void renderItemPickupTextbox()
     {
+        // vanilla doesn't use shadows
         // vanilla uses the take state to determine how many lines to render, but that's just redundant
         renderStringNew(15, -125, 45, 255, 12, 704, 12 + 256, 5, 1);
         renderStringNew(0, -125, 57, 255, 12, 704, 24 + 256, 5, 1);
@@ -509,9 +528,9 @@ extern "C"
                 clearTextArea();
                 setTextColor(7);
                 // vanilla draws these strings in multiple frames/states
-                drawStringNew(&vanillaFont, medalLine1, 704, 256 + 0x78);
-                drawStringNew(&vanillaFont, medalLine2, 704, 256 + 0x84);
-                drawStringNew(&vanillaFont, medalLine3, 704, 256 + 0x90);
+                drawStringNew(&vanillaFont, medalLine1, 704, 256 + 120);
+                drawStringNew(&vanillaFont, medalLine2, 704, 256 + 132);
+                drawStringNew(&vanillaFont, medalLine3, 704, 256 + 144);
             }
             else if (hasLevelsAwardPending)
             {
@@ -519,12 +538,12 @@ extern "C"
                 if (levelsAwarded > 0)
                 {
                     setTextColor(7);
-                    drawStringNew(&vanillaFont, tamerLevelUpStr, 704, 256 + 0x78);
+                    drawStringNew(&vanillaFont, tamerLevelUpStr, 704, 256 + 120);
                 }
                 else
                 {
                     setTextColor(3);
-                    drawStringNew(&vanillaFont, tamerLevelDownStr, 704, 256 + 0x78);
+                    drawStringNew(&vanillaFont, tamerLevelDownStr, 704, 256 + 120);
                 }
             }
 
