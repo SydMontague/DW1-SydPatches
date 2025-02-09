@@ -1028,6 +1028,24 @@ extern "C"
         LOST = -1,
     };
 
+    struct ParticleFlashData
+    {
+        Position screenPos;
+        int16_t depth;
+        uint16_t unk1;
+        int32_t scale;
+        uint16_t sizeX;
+        uint16_t sizeY;
+        uint16_t tpage;
+        uint8_t uBase;
+        uint8_t vBase;
+        uint16_t clut;
+        uint8_t red;
+        uint8_t green;
+        uint8_t blue;
+        uint8_t colorScale;
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1134,6 +1152,7 @@ extern "C"
     extern int32_t DRAWING_OFFSET_X;
     extern int32_t DRAWING_OFFSET_Y;
     extern uint32_t TRAINING_COMPLETE;
+    extern uint32_t VIEWPORT_DISTANCE;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1145,9 +1164,12 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    int32_t worldPosToScreenPos(SVector* worldPos, Position* screenPos);
+    void renderParticleFlash(ParticleFlashData* data);
+    int32_t lerp(int32_t start, int32_t end, int32_t tMin, int32_t tMax, int32_t tCurrent);
+    void renderFXParticle(SVector* pos, int16_t scale, RGB8* color);
     void addEntityParticleFX(Entity* entity, int32_t counter);
     void createCloudFX(SVector* position);
-    void renderParticleFX(int32_t instanceId);
     void getRotationDifference(PositionData* pos, Vector* target, int16_t* outAngle, int16_t* ccDiff, int16_t* cwDiff);
     void moveCameraByDiff(Vector* start, Vector* end);
     void updateMinuteHand(int32_t hour, int32_t minute);
@@ -1310,3 +1332,4 @@ static_assert(sizeof(Chest) == 0x38);
 static_assert(sizeof(DroppedItem) == 0x10);
 static_assert(sizeof(TamerItem) == 0x10);
 static_assert(sizeof(ParticleFXData) == 0x34);
+static_assert(sizeof(ParticleFlashData) == 0x1C);

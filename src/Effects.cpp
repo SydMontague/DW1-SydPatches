@@ -16,6 +16,8 @@ extern "C"
         {.red = 0x96, .green = 0x96, .blue = 0x96},
         {.red = 0xFF, .green = 0x6E, .blue = 0x6E},
     };
+    constexpr uint8_t flashCountMapping[4]    = {2, 3, 2, 0};
+    constexpr uint8_t particleCountMapping[4] = {25, 48, 20, 0};
 
     void initializeParticleFX()
     {
@@ -57,6 +59,61 @@ extern "C"
         }
 
         return nullptr;
+    }
+
+    void renderParticleFX(int32_t instanceId)
+    {
+        auto& data         = PARTICLE_FX_DATA[instanceId];
+        auto flashCount    = flashCountMapping[data.mode];
+        auto particleCount = particleCountMapping[data.mode];
+        auto tickTarget    = data.tickTarget;
+        auto tickCount     = data.tickCount;
+
+        if (data.tickCount == 2)
+        {
+            for (int32_t i = 0; i < flashCount; i++)
+            {
+                SVector worldPos;
+                Position screenPos;
+                ParticleFlashData flashData;
+                worldPos.x = data.pos.x + data.flashX[i];
+                worldPos.y = data.pos.y + data.flashY[i];
+                worldPos.z = data.pos.z + data.flashZ[i];
+                auto depth = worldPosToScreenPos(&worldPos, &flashData.screenPos);
+
+                flashData.sizeX      = 64;
+                flashData.sizeY      = 64;
+                flashData.tpage      = 0xbd;
+                flashData.clut       = 0x79C0;
+                flashData.uBase      = 64;
+                flashData.vBase      = 192;
+                flashData.red        = data.r;
+                flashData.green      = data.g;
+                flashData.blue       = data.b;
+                flashData.colorScale = 0x80;
+                flashData.scale      = (data.flashScale[i] * VIEWPORT_DISTANCE * 8) / depth;
+                flashData.depth      = depth / 16;
+                if (flashData.depth > 32 && flashData.depth < 4096) renderParticleFlash(&flashData);
+            }
+        }
+
+        if (tickCount < tickTarget)
+        {
+            RGB8 color;
+            color.red   = lerp(data.r, 0, 0, tickTarget, tickCount);
+            color.green = lerp(data.g, 0, 0, tickTarget, tickCount);
+            color.blue  = lerp(data.b, 0, 0, tickTarget, tickCount);
+            auto scale  = sin(lerp(0, 110, 0, tickTarget, tickCount)) / 128;
+
+            for (int32_t i = 0; i < particleCount; i++)
+            {
+                SVector pos;
+                pos.x = data.pos.x + (FX_PARTICLE_DATA[i].x * scale) / 512;
+                pos.y = data.pos.y + (FX_PARTICLE_DATA[i].y * scale) / 512;
+                pos.z = data.pos.z + (FX_PARTICLE_DATA[i].z * scale) / 512;
+                renderFXParticle(&pos, 40, &color);
+            }
+        }
     }
 
     void tickParticleFX(int32_t instanceId)

@@ -97,10 +97,14 @@
 .definelabel initializeDaytimeTransition,0x800d7104
 .definelabel moveCameraByDiff,          0x800d892c
 .definelabel getRotationDifference,     0x800b6edc
-.definelabel renderParticleFX,          0x800adba4
 .definelabel addEntityParticleFX,       0x800adeb4
 .definelabel createCloudFX,             0x800ae3c4
+.definelabel worldPosToScreenPos,       0x800da2ec
+.definelabel renderParticleFlash,       0x800af030
+.definelabel lerp,                      0x800d990c
+.definelabel renderFXParticle,          0x800daa00
 
+.definelabel VIEWPORT_DISTANCE, 0x80134ed4
 .definelabel PARTICLE_FX_DATA, 0x801387b8
 .definelabel FX_PARTICLE_DATA, 0x80138888
 .definelabel TRAINING_COMPLETE, 0x80134ca0
