@@ -2,6 +2,7 @@
 
 #include "Helper.hpp"
 #include "ItemEffects.hpp"
+#include "Tamer.hpp"
 #include "extern/dw1.hpp"
 
 extern "C"

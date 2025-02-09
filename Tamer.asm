@@ -1,6 +1,17 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
+.org 0x800de6a8
+  jal addTamerLevel
+.org 0x800dd254
+  jal addTamerLevel
+.org 0x800dd238
+  jal addTamerLevel
+;.org 0x800c46f4
+;  jal addTamerLevel
+;.org 0x800a5db0
+;  jal addTamerLevel
+
 
 ;.org 0x800a8924	
 ;  jal Tamer_setState
@@ -233,3 +244,14 @@
   jal Tamer_setFullState
 
 .close
+
+
+.open "work/DIGIMON/EVL_REL.BIN",0x80060000
+.psx
+
+.org 0x80063750
+  jal addTamerLevel
+.org 0x80063728
+  jal addTamerLevel
+
+.close 

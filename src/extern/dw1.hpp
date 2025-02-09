@@ -1012,11 +1012,8 @@ extern "C"
 
     extern GsRVIEW2 GS_VIEWPOINT;
     extern Chest CHEST_ARRAY[8];
-    extern uint8_t INTERACTED_CHEST;
-    extern ItemType TAKE_CHEST_ITEM;
     extern Item ITEM_PARA[128];
     extern DroppedItem DROPPED_ITEMS[10];
-    extern uint8_t TAKE_CHEST_STATE;
     extern UIBoxData UI_BOX_DATA[6];
     extern uint32_t POLLED_INPUT;
     extern MapWarps MAP_WARPS;
@@ -1055,8 +1052,6 @@ extern "C"
     extern DigimonType EVOLUTION_ITEM_TARGET[44];
     extern uint8_t PARTNER_STATE;
     extern uint8_t PARTNER_SUB_STATE;
-    extern uint8_t TAMER_STATE;
-    extern uint8_t TAMER_SUB_STATE;
     extern uint8_t PARTNER_ANIMATION;
     extern uint8_t POOP_TO_EAT;
     extern uint32_t IS_NATURAL_DEATH;
@@ -1092,10 +1087,7 @@ extern "C"
     extern uint8_t TEXTURE_BUFFER[];
     extern GsTMDFunction GS_TMD_MAP[64];
     extern Vector STORED_TAMER_POS;
-    extern uint32_t TAMER_LEVEL_AWARD_PENDING;
-    extern uint32_t MEDAL_AWARD_PENDING;
     extern uint32_t IS_IN_MENU;
-    extern int8_t TAMER_LEVELS_AWARDED;
     extern uint8_t TARGET_MAP;
     extern uint8_t CURRENT_EXIT;
     extern void* DOOA_DATA_PTR;
@@ -1240,7 +1232,6 @@ extern "C"
     extern void addHealingParticleEffect(Entity* entity, int32_t param);
     extern void removeTamerItem();
     extern void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
-    extern void addTamerLevel(int32_t chance, int32_t amount);
     extern bool hasDigimonRaised(DigimonType type);
     extern void renderInsetBox(int32_t posX, int32_t posY, int32_t width, int32_t height, int32_t order);
     extern void renderDigimonStatsBar(int32_t value, int32_t maxValue, int32_t width, int32_t posX, int32_t posY);

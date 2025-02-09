@@ -30,43 +30,64 @@ extern "C"
     static uint8_t takeItemFrameCount;
     static bool isStandingOnDrop;
     static uint8_t pickedDropId;
+    static int8_t levelsAwarded;
+    static bool hasLevelsAwardPending;
+    static bool hasMedalAwardPending;
+    static uint8_t interactedChest;
+
+    static uint8_t state;
+    static uint8_t subState;
 
     void setTamerDirection(int16_t direction)
     {
         TAMER_ENTITY.posData->rotation.y = direction % 4096;
     }
 
-    void Tamer_setState(uint8_t state)
+    void Tamer_setState(uint8_t newState)
     {
-        TAMER_STATE     = state;
-        TAMER_SUB_STATE = 0;
+        state    = newState;
+        subState = 0;
     }
 
-    void Tamer_setSubState(uint8_t state)
+    void Tamer_setSubState(uint8_t newState)
     {
-        TAMER_SUB_STATE = state;
+        subState = newState;
     }
 
-    void Tamer_setFullState(uint8_t state, uint8_t subState)
+    void Tamer_setFullState(uint8_t newState, uint8_t newSubState)
     {
-        TAMER_STATE     = state;
-        TAMER_SUB_STATE = subState;
+        state    = newState;
+        subState = newSubState;
     }
 
     uint8_t Tamer_getState()
     {
-        return TAMER_STATE;
+        return state;
     }
 
     uint8_t Tamer_getSubState()
     {
-        return TAMER_SUB_STATE;
+        return subState;
+    }
+
+    void addTamerLevel(int32_t chance, int32_t amount)
+    {
+        if (random(100) >= chance) return;
+
+        TAMER_ENTITY.tamerLevel += amount;
+        if (TAMER_ENTITY.tamerLevel <= 10 && TAMER_ENTITY.tamerLevel >= 0)
+        {
+            levelsAwarded         = amount;
+            hasLevelsAwardPending = true;
+        }
+
+        if (TAMER_ENTITY.tamerLevel < 0) TAMER_ENTITY.tamerLevel = 0;
+        if (TAMER_ENTITY.tamerLevel > 10) TAMER_ENTITY.tamerLevel = 10;
     }
 
     // this function blows up in size otherwise
     // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-    __attribute__((optimize("Os"))) 
-    uint8_t checkChestCollision()
+    __attribute__((optimize("Os"))) uint8_t checkChestCollision()
     {
         int16_t tileX;
         int16_t tileY;
@@ -174,7 +195,7 @@ extern "C"
         auto chest = checkChestCollision();
         if (chest != 0xFF && isKeyDown(BUTTON_CROSS))
         {
-            INTERACTED_CHEST = chest;
+            interactedChest = chest;
             Tamer_setState(14);
         }
     }
@@ -280,7 +301,7 @@ extern "C"
     void Tamer_tickTakeChest()
     {
         RECT textArea = {.x = 0, .y = 12, .width = 256, .height = 200};
-        Chest& chest  = CHEST_ARRAY[INTERACTED_CHEST];
+        Chest& chest  = CHEST_ARRAY[interactedChest];
         auto itemType = chest.item;
 
         if (Tamer_getSubState() == 0)
@@ -304,7 +325,7 @@ extern "C"
         }
         else if (Tamer_getSubState() == 1)
         {
-            if (!tickOpenChestTray(INTERACTED_CHEST)) return;
+            if (!tickOpenChestTray(interactedChest)) return;
             if (!isUIBoxAvailable(1)) return;
 
             Position pos;
@@ -344,7 +365,7 @@ extern "C"
         }
         else if (Tamer_getSubState() == 3)
         {
-            if (!tickCloseChestTray(INTERACTED_CHEST)) return;
+            if (!tickCloseChestTray(interactedChest)) return;
             Tamer_setSubState(4);
         }
         else if (Tamer_getSubState() == 4)
@@ -483,7 +504,7 @@ extern "C"
             Partner_setState(11);
             unsetCameraFollowPlayer();
 
-            if (MEDAL_AWARD_PENDING == 1)
+            if (hasMedalAwardPending)
             {
                 clearTextArea();
                 setTextColor(7);
@@ -492,10 +513,10 @@ extern "C"
                 drawStringNew(&vanillaFont, medalLine2, 704, 256 + 0x84);
                 drawStringNew(&vanillaFont, medalLine3, 704, 256 + 0x90);
             }
-            else if (TAMER_LEVEL_AWARD_PENDING == 1)
+            else if (hasLevelsAwardPending)
             {
                 clearTextArea();
-                if (TAMER_LEVELS_AWARDED > 0)
+                if (levelsAwarded > 0)
                 {
                     setTextColor(7);
                     drawStringNew(&vanillaFont, tamerLevelUpStr, 704, 256 + 0x78);
@@ -547,8 +568,8 @@ extern "C"
             Partner_setState(1);
             setCameraFollowPlayer();
             startGameTime();
-            MEDAL_AWARD_PENDING       = 0;
-            TAMER_LEVEL_AWARD_PENDING = 0;
+            hasMedalAwardPending  = false;
+            hasLevelsAwardPending = false;
         }
     }
 
@@ -589,50 +610,50 @@ extern "C"
         if (!hasMedal(Medal::ALL_TECHS) && getNumMasteredMoves() >= 57)
         {
             unlockMedal(Medal::ALL_TECHS);
-            MEDAL_AWARD_PENDING = 1;
+            hasMedalAwardPending = true;
         }
 
         if (!hasMedal(Medal::MAX_STATS) && hasMaxStats(PARTNER_ENTITY.stats))
         {
             unlockMedal(Medal::MAX_STATS);
-            MEDAL_AWARD_PENDING = 1;
+            hasMedalAwardPending = true;
         }
 
         if (!hasMedal(Medal::MAX_MONEY) && MONEY == MAX_MONEY)
         {
             unlockMedal(Medal::MAX_MONEY);
-            MEDAL_AWARD_PENDING = 1;
+            hasMedalAwardPending = true;
         }
 
         if (!hasMedal(Medal::PLAYTIME) && YEAR >= 10)
         {
             unlockMedal(Medal::PLAYTIME);
-            MEDAL_AWARD_PENDING = 1;
+            hasMedalAwardPending = true;
         }
 
         if (!hasMedal(Medal::ALL_DIGIMON) && hasAllDigimonRaised())
         {
             unlockMedal(Medal::ALL_DIGIMON);
-            MEDAL_AWARD_PENDING     = 1;
+            hasMedalAwardPending    = true;
             TAMER_ENTITY.tamerLevel = min(TAMER_ENTITY.tamerLevel + 1, MAX_TAMER_LEVEL);
         }
 
         if (!hasMedal(Medal::CATCH_100_FISH) && PARTNER_PARA.fishCaught >= 100)
         {
             unlockMedal(Medal::CATCH_100_FISH);
-            MEDAL_AWARD_PENDING = 1;
+            hasMedalAwardPending = true;
         }
 
         if (!hasMedal(Medal::ALL_CARDS) && hasAllCards())
         {
             unlockMedal(Medal::ALL_CARDS);
-            MEDAL_AWARD_PENDING = 1;
+            hasMedalAwardPending = true;
         }
     }
 
     void checkPendingAwards()
     {
-        if (TAMER_LEVEL_AWARD_PENDING == 1 || MEDAL_AWARD_PENDING == 1)
+        if (hasLevelsAwardPending || hasMedalAwardPending)
         {
             Tamer_setState(20);
             stopGameTime(); // is this necessary? The state already does that
@@ -796,7 +817,7 @@ extern "C"
      */
     void Tamer_tickOverworld(int32_t instanceId)
     {
-        switch (TAMER_STATE)
+        switch (Tamer_getState())
         {
             case 0: Tamer_tickWalkingState(); break;
             case 1: Tamer_setState(6); break;
@@ -822,7 +843,7 @@ extern "C"
 
     void Tamer_tick(int32_t instanceId)
     {
-        if (GAME_STATE != 0 || TAMER_STATE != 0)
+        if (GAME_STATE != 0 || Tamer_getState() != 0)
         {
             if (HAS_BUTTERFLY == 0)
             {
@@ -867,12 +888,11 @@ extern "C"
         // vanilla initializes UNKNOWN_TAMER_DATA here, but it seems entirely unused
         // vanilla initializes PREVIOUS_CAMERA_POS_INITIALIZED here, but we moved it to Entity.cpp
 
-        isStandingOnDrop          = false;
-        STORED_TAMER_POS          = TAMER_ENTITY.posData->location;
-        TAMER_LEVEL_AWARD_PENDING = 0;
-        MEDAL_AWARD_PENDING       = 0;
-        IS_IN_MENU                = 0;
-        TAMER_LEVELS_AWARDED      = 1;
+        isStandingOnDrop      = false;
+        STORED_TAMER_POS      = TAMER_ENTITY.posData->location;
+        hasLevelsAwardPending = false;
+        hasMedalAwardPending  = false;
+        IS_IN_MENU            = 0;
     }
 
     void setupTamerOnWarp(int32_t posX, int32_t posY, int32_t posZ, int32_t rotation)

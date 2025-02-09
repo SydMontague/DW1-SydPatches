@@ -31,9 +31,9 @@ constexpr auto IN_TRAINING_AWAKE_TIME = 7;
 
 extern "C"
 {
-    static uint8_t POOP_MODEL_BUFFER[512];
-    static GsDOBJ2 POOP_OBJECT;
-    static GsCOORDINATE2 POOP_POSITION;
+    static uint8_t poopModelBuffer[512];
+    static GsDOBJ2 poopObject;
+    static GsCOORDINATE2 poopPosition;
 
     static uint8_t conditionBubbleType   = -1;
     static uint8_t conditionBubbleId     = -1;
@@ -41,12 +41,12 @@ extern "C"
 
     void initializePoop()
     {
-        readFile("\\ETCNA\\UNTI.TMD", POOP_MODEL_BUFFER);
-        libgs_GsMapModelingData(reinterpret_cast<uint32_t*>(POOP_MODEL_BUFFER + 4));
-        libgs_GsLinkObject4(reinterpret_cast<uint32_t*>(POOP_MODEL_BUFFER + 12), &POOP_OBJECT, 0);
-        libgs_GsInitCoordinate2(nullptr, &POOP_POSITION);
-        POOP_OBJECT.attribute = 0;
-        POOP_OBJECT.coord2    = &POOP_POSITION;
+        readFile("\\ETCNA\\UNTI.TMD", poopModelBuffer);
+        libgs_GsMapModelingData(reinterpret_cast<uint32_t*>(poopModelBuffer + 4));
+        libgs_GsLinkObject4(reinterpret_cast<uint32_t*>(poopModelBuffer + 12), &poopObject, 0);
+        libgs_GsInitCoordinate2(nullptr, &poopPosition);
+        poopObject.attribute = 0;
+        poopObject.coord2    = &poopPosition;
     }
 
     void initializeStatusObjects()
@@ -225,8 +225,8 @@ extern "C"
             scale.y = scale.x;
             scale.z = scale.x;
 
-            projectPosition(&POOP_POSITION, &translation, &rotation, &scale);
-            renderObject(&POOP_OBJECT, ACTIVE_ORDERING_TABLE, 2);
+            projectPosition(&poopPosition, &translation, &rotation, &scale);
+            renderObject(&poopObject, ACTIVE_ORDERING_TABLE, 2);
         }
     }
 

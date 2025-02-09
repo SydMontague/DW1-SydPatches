@@ -15,7 +15,6 @@
 .definelabel setTextColor,              0x8010cc0c
 .definelabel callScriptSection,         0x80105b14
 .definelabel addWithLimit,              0x800c563c
-.definelabel addTamerLevel,             0x800acbf4
 .definelabel addHealingParticleEffect,  0x800c1560
 .definelabel removeTamerItem,           0x800c55fc
 .definelabel hasDigimonRaised,          0x800ff824
@@ -112,12 +111,9 @@
 .definelabel GS_VIEWPOINT, 0x80185ba8
 .definelabel SOME_SCRIPT_SYNC_BIT, 0x80134e30
 .definelabel DOOA_DATA_PTR, 0x8005b000
-.definelabel TAKE_CHEST_ITEM, 0x80134c96
-.definelabel INTERACTED_CHEST, 0x80134c97
 .definelabel CHEST_ARRAY, 0x80150f00
 .definelabel ITEM_PARA, 0x801269dc
 .definelabel DROPPED_ITEMS, 0x8013d4e0
-.definelabel TAKE_CHEST_STATE, 0x80134c94
 .definelabel DIGIMON_SKELETONS, 0x8011ce60
 .definelabel PARTNER_MOMENTUM_DATA, 0x80185be8
 .definelabel PARTNER_POSITION_DATA, 0x801866cc
@@ -181,8 +177,6 @@
 .definelabel EVOLUTION_ITEM_TARGET, 0x80127c5c
 .definelabel PARTNER_STATE, 0x80134c5b
 .definelabel PARTNER_SUB_STATE, 0x80134c5c
-.definelabel TAMER_STATE, 0x80134c91
-.definelabel TAMER_SUB_STATE, 0x80134c92
 .definelabel PARTNER_ANIMATION, 0x80134e2c
 .definelabel POOP_TO_EAT, 0x80134c68
 .definelabel GAME_STATE, 0x80134f0a
@@ -207,10 +201,7 @@
 .definelabel WORLD_OBJECTS, 0x80137418
 .definelabel STORED_TAMER_POS, 0x80138720
 .definelabel UNKNOWN_TAMER_DATA, 0x80138694
-.definelabel TAMER_LEVEL_AWARD_PENDING, 0x80134c88
-.definelabel MEDAL_AWARD_PENDING, 0x80134c8c
 .definelabel IS_IN_MENU, 0x80134ef0
-.definelabel TAMER_LEVELS_AWARDED, 0x80134c90
 .definelabel SKIP_DAYTIME_TRANSITION, 0x80134db4
 .definelabel GS_ORDERING_TABLE, 0x8015db68
 .definelabel GS_WORK_BASES, 0x8015dba8
