@@ -5,3 +5,81 @@
   jal initializeParticleFX
 
 .close
+
+.open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
+.psx
+
+.org 0x8005c774
+  jal createParticleFX
+.org 0x8005cca8
+  jal createParticleFX
+
+.close
+
+
+.open "work/DIGIMON/STD_REL.BIN",0x80052ae0
+.psx
+
+.org 0x800647d4
+  jal createParticleFX
+.org 0x80064d38
+  jal createParticleFX
+
+.close
+
+
+.open "work/DIGIMON/VS_REL.BIN",0x80052ae0
+.psx
+
+.org 0x8005c3bc
+  jal createParticleFX
+.org 0x8005c88c
+  jal createParticleFX
+
+.close
+
+
+.open "work/DIGIMON/TRN_REL.BIN",0x80088800
+.psx
+
+.org 0x8008ba2c
+  jal createParticleFX
+.org 0x8008ba48
+  jal createParticleFX
+.org 0x8008ba64
+  jal createParticleFX
+.org 0x8008be68
+  jal createParticleFX
+.org 0x8008be84
+  jal createParticleFX
+.org 0x8008bea0
+  jal createParticleFX
+.org 0x8008c384
+  jal createParticleFX
+.org 0x8008c3a0
+  jal createParticleFX
+.org 0x8008c3bc
+  jal createParticleFX
+
+.close
+
+
+.open "work/DIGIMON/TRN2_REL.BIN",0x80088800
+.psx
+
+.org 0x80088e48
+  jal createParticleFX
+.org 0x80089d40
+  jal createParticleFX
+.org 0x80089d5c
+  jal createParticleFX
+.org 0x80089d78
+  jal createParticleFX
+.org 0x8008a3b0
+  jal createParticleFX
+.org 0x8008a3cc
+  jal createParticleFX
+.org 0x8008a3e8
+  jal createParticleFX
+
+.close
