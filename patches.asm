@@ -25,3 +25,4 @@
 .include "Entity.asm"
 .include "Fade.asm"
 .include "Effects.asm"
+.include "EFE.asm"

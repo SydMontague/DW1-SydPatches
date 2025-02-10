@@ -213,6 +213,7 @@
 .definelabel MAP_ENTRIES, 0x801292d4
 .definelabel DRAWING_OFFSET_X, 0x80134ec0
 .definelabel DRAWING_OFFSET_Y, 0x80134ec4
+.definelabel EFE_DATA_STACK, 0x80134cc8
 
 // BTL_REL
 .definelabel BTL_battleMain, 0x8005b5f4
