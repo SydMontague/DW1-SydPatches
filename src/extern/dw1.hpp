@@ -1046,6 +1046,25 @@ extern "C"
         uint8_t colorScale;
     };
 
+    struct EFEFlashData
+    {
+        SVector worldPos;
+        int16_t progress;
+        int16_t tMax;
+        int16_t mode;
+        int16_t fixedDepth;
+        int16_t redMin;
+        int16_t greenMin;
+        int16_t blueMin;
+        int16_t redMax;
+        int16_t greenMax;
+        int16_t blueMax;
+        int32_t scaleMin;
+        int32_t scaleMax;
+        int16_t offsetX;
+        int16_t offsetY;
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1151,6 +1170,9 @@ extern "C"
     extern int32_t DRAWING_OFFSET_Y;
     extern uint32_t TRAINING_COMPLETE;
     extern uint32_t VIEWPORT_DISTANCE;
+    extern EFEFlashData* EFE_FLASH_DATA;
+    extern int32_t FLASH_INSTANCE;
+    extern uint8_t* EFE_DATA_STACK;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1162,6 +1184,10 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void tickEFEFlash(int32_t instanceId);
+    void renderEFEFlash(int32_t instanceId);
+    bool isTamerOnScreen();
+    void getDrawingOffsetCopy(int32_t* offsetX, int32_t* offsetY);
     void addFXPrim(POLY_FT4* prim, short x, short y, uint32_t scaleX, int16_t scaleY, uint32_t distance);
     int32_t worldPosToScreenPos(SVector* worldPos, Position* screenPos);
     void renderParticleFlash(ParticleFlashData* data);
@@ -1330,3 +1356,4 @@ static_assert(sizeof(DroppedItem) == 0x10);
 static_assert(sizeof(TamerItem) == 0x10);
 static_assert(sizeof(ParticleFXData) == 0x34);
 static_assert(sizeof(ParticleFlashData) == 0x1C);
+static_assert(sizeof(EFEFlashData) == 0x28);

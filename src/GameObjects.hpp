@@ -27,6 +27,7 @@ extern "C"
         ENTITY_PARTICLE_FX   = 1282,
         PARTICLE_FX          = 1536,
         CLOUD_FX             = 1537,
+        EFE_FLASH            = 1538,
         CONDITION_BUBBLE     = 2050,
         POISON_BUBBLE        = 2053,
         CONFUSION_EFFECT     = 2054,

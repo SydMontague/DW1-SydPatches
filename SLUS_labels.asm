@@ -101,6 +101,10 @@
 .definelabel lerp,                      0x800d990c
 .definelabel renderFXParticle,          0x800daa00
 .definelabel addFXPrim,                 0x800da3fc
+.definelabel isTamerOnScreen,           0x800e67ec
+.definelabel getDrawingOffsetCopy,      0x800d969c
+.definelabel tickEFEFlash,              0x800ae9c4
+.definelabel renderEFEFlash,            0x800ae95c
 
 .definelabel VIEWPORT_DISTANCE, 0x80134ed4
 .definelabel TRAINING_COMPLETE, 0x80134ca0
@@ -214,6 +218,8 @@
 .definelabel DRAWING_OFFSET_X, 0x80134ec0
 .definelabel DRAWING_OFFSET_Y, 0x80134ec4
 .definelabel EFE_DATA_STACK, 0x80134cc8
+.definelabel EFE_FLASH_DATA, 0x80134cc0
+.definelabel FLASH_INSTANCE, 0x80134cc4
 
 // BTL_REL
 .definelabel BTL_battleMain, 0x8005b5f4
