@@ -1,3 +1,5 @@
+#include "Effects.hpp"
+
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
@@ -28,6 +30,13 @@ extern "C"
         uint8_t height;
     };
 
+    struct CloudFXData
+    {
+        int16_t frame;
+        int16_t posX;
+        int16_t posZ;
+    };
+
     constexpr RGB8 particleColors[7] = {
         {.red = 0xFF, .green = 0x6E, .blue = 0x46},
         {.red = 0xFF, .green = 0x6E, .blue = 0x46},
@@ -37,7 +46,7 @@ extern "C"
         {.red = 0x96, .green = 0x96, .blue = 0x96},
         {.red = 0xFF, .green = 0x6E, .blue = 0x6E},
     };
-    constexpr EntityParticleFXMode ENTITY_PARTICLE_FX_MODES[9] = {
+    constexpr EntityParticleFXMode entityParticleFXModes[9] = {
         {.scaleX = 0x78, .scaleY = 0x50, .x = 0x80, .y = 0x80, .width = 0x0F, .height = 0x0F},
         {.scaleX = 0x78, .scaleY = 0x50, .x = 0xC0, .y = 0x80, .width = 0x0F, .height = 0x0F},
         {.scaleX = 0xC8, .scaleY = 0x50, .x = 0x80, .y = 0x90, .width = 0x1F, .height = 0x07},
@@ -50,21 +59,61 @@ extern "C"
     };
     constexpr uint8_t flashCountMapping[4]    = {2, 3, 2, 0};
     constexpr uint8_t particleCountMapping[4] = {25, 48, 20, 0};
+    constexpr int16_t cloudYData[14]          = {-50, -54, -58, -62, -66, -70, -74, -78, -82, -86, -90, -93, -96, -99};
+    constexpr uint8_t cloudUData[14]          = {0, 0, 32, 32, 32, 64, 64, 64, 64, 64, 96, 96, 96, 96};
+    constexpr uint8_t cloudColorData[14] =
+        {0x80, 0x80, 0x80, 0x80, 0x79, 0x73, 0x6C, 0x66, 0x60, 0x59, 0x53, 0x4C, 0x46, 0x40};
+    constexpr int16_t cloudScaleData[14] = {0x2000,
+                                            0x2EE0,
+                                            0x3840,
+                                            0x4000,
+                                            0x4000,
+                                            0x5000,
+                                            0x5000,
+                                            0x5000,
+                                            0x5000,
+                                            0x5400,
+                                            0x5800,
+                                            0x5C00,
+                                            0x6000,
+                                            0x6400};
 
-    static EntityParticleFXData ENTITY_PARTICLE_FX_DATA[20];
-    static ParticleFXData PARTICLE_FX_DATA[4];
-    static SPosition3D FX_PARTICLE_DATA[50];
+    static EntityParticleFXData entityParticleFXData[20];
+    static ParticleFXData particleFXData[4];
+    static SPosition3D fxParticleData[50];
+    static CloudFXData cloudFXData[60];
+
+    static GsSPRITE cloudFXSprite = {
+        .attribute = 0x50000000,
+        .x         = 0,
+        .y         = 0,
+        .width     = 32,
+        .height    = 32,
+        .tpage     = 0x3C,
+        .u         = 0,
+        .v         = 128,
+        .clutX     = 192,
+        .clutY     = 488,
+        .r         = 128,
+        .g         = 128,
+        .b         = 128,
+        .mx        = 16,
+        .my        = 16,
+        .scaleX    = 0,
+        .scaleY    = 0,
+        .rotate    = 0,
+    };
 
     void removeEntityParticleFX(int32_t instanceId)
     {
-        ENTITY_PARTICLE_FX_DATA[instanceId].counter = -1;
+        entityParticleFXData[instanceId].counter = -1;
         removeObject(ObjectID::ENTITY_PARTICLE_FX, instanceId);
     }
 
     void renderEntityParticleFX(int32_t instanceId)
     {
-        auto& data     = ENTITY_PARTICLE_FX_DATA[instanceId];
-        auto& modeData = ENTITY_PARTICLE_FX_MODES[data.mode];
+        auto& data     = entityParticleFXData[instanceId];
+        auto& modeData = entityParticleFXModes[data.mode];
         SVector bonePos;
         Position screenPos;
         bonePos.x  = data.entity->posData->posMatrix.work.t[0];
@@ -100,7 +149,7 @@ extern "C"
 
     void tickEntityParticleFX(int32_t instanceId)
     {
-        auto& data = ENTITY_PARTICLE_FX_DATA[instanceId];
+        auto& data = entityParticleFXData[instanceId];
 
         if (data.counter <= 0)
         {
@@ -118,14 +167,14 @@ extern "C"
 
     void initializeEntityParticleFX()
     {
-        for (auto& data : ENTITY_PARTICLE_FX_DATA)
+        for (auto& data : entityParticleFXData)
             data.counter = -1;
     }
 
     void addEntityParticleFX(Entity* entity, int32_t counter)
     {
         int32_t i = 0;
-        for (auto& data : ENTITY_PARTICLE_FX_DATA)
+        for (auto& data : entityParticleFXData)
         {
             if (data.counter < 0)
             {
@@ -142,10 +191,10 @@ extern "C"
 
     void initializeParticleFX()
     {
-        for (ParticleFXData& data : PARTICLE_FX_DATA)
+        for (ParticleFXData& data : particleFXData)
             data.tickCount = -1;
 
-        for (SPosition3D& data : FX_PARTICLE_DATA)
+        for (SPosition3D& data : fxParticleData)
         {
             Matrix matrix;
             SVector rotation;
@@ -169,7 +218,7 @@ extern "C"
     inline ParticleFXData* getFreeParticleFXData(int32_t* id)
     {
         int32_t i = 0;
-        for (auto& data : PARTICLE_FX_DATA)
+        for (auto& data : particleFXData)
         {
             if (data.tickCount == -1)
             {
@@ -184,7 +233,7 @@ extern "C"
 
     void renderParticleFX(int32_t instanceId)
     {
-        auto& data         = PARTICLE_FX_DATA[instanceId];
+        auto& data         = particleFXData[instanceId];
         auto flashCount    = flashCountMapping[data.mode];
         auto particleCount = particleCountMapping[data.mode];
         auto tickTarget    = data.tickTarget;
@@ -229,9 +278,9 @@ extern "C"
             for (int32_t i = 0; i < particleCount; i++)
             {
                 SVector pos;
-                pos.x = data.pos.x + (FX_PARTICLE_DATA[i].x * scale) / 512;
-                pos.y = data.pos.y + (FX_PARTICLE_DATA[i].y * scale) / 512;
-                pos.z = data.pos.z + (FX_PARTICLE_DATA[i].z * scale) / 512;
+                pos.x = data.pos.x + (fxParticleData[i].x * scale) / 512;
+                pos.y = data.pos.y + (fxParticleData[i].y * scale) / 512;
+                pos.z = data.pos.z + (fxParticleData[i].z * scale) / 512;
                 renderFXParticle(&pos, 40, &color);
             }
         }
@@ -239,7 +288,7 @@ extern "C"
 
     void tickParticleFX(int32_t instanceId)
     {
-        auto& data   = PARTICLE_FX_DATA[instanceId];
+        auto& data   = particleFXData[instanceId];
         auto* entity = data.entity;
         data.tickCount++;
         data.cloudDelay--;
@@ -344,5 +393,76 @@ extern "C"
         data->entity     = entity;
         data->cloudDelay = cloudDelay + 4;
         addObject(ObjectID::PARTICLE_FX, id, tickParticleFX, renderParticleFX);
+    }
+
+    void initializeCloudFXData()
+    {
+        for (auto& data : cloudFXData)
+            data.frame = -1;
+    }
+
+    void removeAllCloudFX()
+    {
+        int32_t instanceId = 0;
+        for (auto& data : cloudFXData)
+        {
+            if (data.frame != -1) removeObject(ObjectID::CLOUD_FX, instanceId);
+            instanceId++;
+        }
+    }
+
+    void renderCloudFX(int32_t instanceId)
+    {
+        auto& data = cloudFXData[instanceId];
+        SVector worldPos;
+        Position screenPos;
+        worldPos.x           = data.posX;
+        worldPos.y           = cloudYData[data.frame];
+        worldPos.z           = data.posZ;
+        auto depth           = worldPosToScreenPos(&worldPos, &screenPos);
+        cloudFXSprite.u      = cloudUData[data.frame];
+        cloudFXSprite.r      = cloudColorData[data.frame];
+        cloudFXSprite.g      = cloudColorData[data.frame];
+        cloudFXSprite.b      = cloudColorData[data.frame];
+        cloudFXSprite.x      = screenPos.x;
+        cloudFXSprite.y      = screenPos.y;
+        cloudFXSprite.scaleX = (cloudScaleData[data.frame] * VIEWPORT_DISTANCE) / depth;
+        cloudFXSprite.scaleY = (cloudScaleData[data.frame] * VIEWPORT_DISTANCE) / depth;
+
+        printf("%x | %x | %x\n", (int32_t)cloudFXSprite.tpage, (int32_t)cloudFXSprite.u, (int32_t)cloudFXSprite.v);
+
+        // vanilla calls renderSprite (0x800da36c) here, but we inlined it.
+        // It modified the passed sprite, which is kinda dirty.
+        auto origin = depth / 16;
+        if (origin >= 0 && origin < 0x1000) libgs_GsSortSprite(&cloudFXSprite, ACTIVE_ORDERING_TABLE, origin);
+    }
+
+    void tickCloudFX(int32_t instanceId)
+    {
+        auto& data = cloudFXData[instanceId];
+        data.frame++;
+
+        if (data.frame > 13)
+        {
+            data.frame = -1;
+            removeObject(ObjectID::CLOUD_FX, instanceId);
+        }
+    }
+
+    void createCloudFX(SVector* position)
+    {
+        int32_t instanceId = 0;
+        for (auto& data : cloudFXData)
+        {
+            if (data.frame == -1)
+            {
+                data.frame = 0;
+                data.posX  = position->x;
+                data.posZ  = position->z;
+                addObject(ObjectID::CLOUD_FX, instanceId, tickCloudFX, renderCloudFX);
+                return;
+            }
+            instanceId++;
+        }
     }
 }

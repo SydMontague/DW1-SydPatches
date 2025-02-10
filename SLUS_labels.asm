@@ -30,7 +30,6 @@
 .definelabel setSleepDisabled,          0x800ba40c
 .definelabel advanceToTime,             0x800dd678
 .definelabel getModelTile,              0x800c0f28
-.definelabel createPoopFX,              0x800ae3c4
 .definelabel getItemCount,              0x800c51e0
 .definelabel setTrigger,                0x801065c0
 .definelabel unsetBubble,               0x800ece20
@@ -97,7 +96,6 @@
 .definelabel initializeDaytimeTransition,0x800d7104
 .definelabel moveCameraByDiff,          0x800d892c
 .definelabel getRotationDifference,     0x800b6edc
-.definelabel createCloudFX,             0x800ae3c4
 .definelabel worldPosToScreenPos,       0x800da2ec
 .definelabel renderParticleFlash,       0x800af030
 .definelabel lerp,                      0x800d990c
@@ -279,6 +277,7 @@
 .definelabel libgs_GsGetTimInfo, 0x80098a68
 .definelabel libgs_GsClearOt, 0x80098838
 .definelabel libgs_GsGetActiveBuffer, 0x80097af8
+.definelabel libgs_GsSortSprite, 0x80096f90
 
 .definelabel libgs_REFERENCE_MATRIX, 0x80136f84
 .definelabel libgs_GsLIGHTWSMATRIX, 0x80136f24

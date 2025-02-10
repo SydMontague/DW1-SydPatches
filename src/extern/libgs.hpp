@@ -79,7 +79,29 @@ extern "C"
         uint16_t clutHeight;
         uint32_t* clutPtr;
     };
-    
+
+    struct GsSPRITE
+    {
+        uint32_t attribute;
+        int16_t x;
+        int16_t y;
+        uint16_t width;
+        uint16_t height;
+        uint16_t tpage;
+        uint8_t u;
+        uint8_t v;
+        int16_t clutX;
+        int16_t clutY;
+        uint8_t r;
+        uint8_t g;
+        uint8_t b;
+        int16_t mx;
+        int16_t my;
+        int16_t scaleX;
+        int16_t scaleY;
+        int32_t rotate;
+    };
+
     extern Matrix libgs_REFERENCE_MATRIX;
     extern Matrix libgs_GsLIGHTWSMATRIX;
 
@@ -95,7 +117,8 @@ extern "C"
     extern void libgs_GsGetTimInfo(uint32_t* tim, GsIMAGE* image);
     int32_t libgs_GsGetActiveBuffer();
     void libgs_GsClearOt(uint16_t offset, uint16_t point, GsOT* ot);
-    
+    void libgs_GsSortSprite(GsSPRITE* sprite, GsOT* ot, uint16_t depth);
 }
 
 static_assert(sizeof(GsOT) == 20);
+static_assert(sizeof(GsSPRITE) == 0x24);

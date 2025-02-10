@@ -26,7 +26,7 @@ extern "C"
         FILE_READ_QUEUE      = 1028,
         ENTITY_PARTICLE_FX   = 1282,
         PARTICLE_FX          = 1536,
-        POOP_FX              = 1537,
+        CLOUD_FX             = 1537,
         CONDITION_BUBBLE     = 2050,
         POISON_BUBBLE        = 2053,
         CONFUSION_EFFECT     = 2054,

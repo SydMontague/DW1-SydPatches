@@ -108,10 +108,10 @@
 .org 0x80106ee0
   jal random
 
-.org 0x800adae8
-  jal sin
-.org 0x800addd8
-  jal sin
+;.org 0x800adae8
+;  jal sin
+;.org 0x800addd8
+;  jal sin
 .org 0x800aebbc
   jal sin
 .org 0x800aec6c
@@ -125,8 +125,8 @@
 .org 0x800ecd80
   jal sin
 
-.org 0x800adb04
-  jal cos
+;.org 0x800adb04
+;  jal cos
 .org 0x800c1320
   jal cos
 .org 0x800e9e98

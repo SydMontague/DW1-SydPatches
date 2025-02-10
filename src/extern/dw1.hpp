@@ -1168,7 +1168,6 @@ extern "C"
     int32_t lerp(int32_t start, int32_t end, int32_t tMin, int32_t tMax, int32_t tCurrent);
     void renderFXParticle(SVector* pos, int16_t scale, RGB8* color);
     void addEntityParticleFX(Entity* entity, int32_t counter);
-    void createCloudFX(SVector* position);
     void getRotationDifference(PositionData* pos, Vector* target, int16_t* outAngle, int16_t* ccDiff, int16_t* cwDiff);
     void moveCameraByDiff(Vector* start, Vector* end);
     void updateMinuteHand(int32_t hour, int32_t minute);
@@ -1250,7 +1249,6 @@ extern "C"
     extern uint8_t addConditionBubble(uint32_t type, Entity* entity);
     extern uint32_t setButterfly(Entity* entity);
     extern uint8_t getItemCount(ItemType item);
-    extern void createPoopFX(SVector* pos);
     extern uint16_t convertAsciiToJis(uint8_t input);
     extern void clearTextSubArea(RECT* rect);
     extern void renderString(int32_t colorId,

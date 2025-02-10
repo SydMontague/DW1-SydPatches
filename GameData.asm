@@ -2,12 +2,14 @@
 .psx
 
 .org 0x800a0a50
-.area 0x800ae338-.
+.area 0x800ae5c8-.
   .importobj "compiled/Model.lib"
 
-  .notice "Empty space left: " + (0x800ae338-.) + " bytes"
-  .fill 0x800ae338-.
+  .notice "Empty space left: " + (0x800ae5c8-.) + " bytes"
+  .fill 0x800ae5c8-.
 .endarea
+
+.notice renderCloudFX
 
 .org 0x8011d46c
 .area 0x80122cf4-.
@@ -57,6 +59,14 @@ SS_address: ; initializeMusic
   .fill 0x80137c00-.
 .endarea
 
+; override some effect data
+.org 0x80123370
+.area 0x8012342c-.
+
+  .notice "Empty space left: " + (0x8012342c-.) + " bytes"
+  .fill 0x8012342c-.
+.endarea
+
 ; override vanilla raise data
 .org 0x8012abec
 .area 0x8012b918-.
@@ -68,10 +78,10 @@ SS_address: ; initializeMusic
 
 ; override effect data
 .org 0x801387b8
-.area 0x80138aa4-.
+.area 0x80138c0c-.
 
-  .notice "Empty space left: " + (0x80138aa4-.) + " bytes"
-  .fill 0x80138aa4-.
+  .notice "Empty space left: " + (0x80138c0c-.) + " bytes"
+  .fill 0x80138c0c-.
 .endarea
 
 ; override vanilla rotation data

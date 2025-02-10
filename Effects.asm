@@ -1,6 +1,9 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
+.org 0x800f03a0
+  jal initializeCloudFXData
+
 .org 0x800f0390
   jal initializeParticleFX
 
@@ -11,6 +14,9 @@
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
+
+.org 0x8006c9e0
+  jal createCloudFX
 
 .org 0x8006bfa4
   j addEntityParticleFX
@@ -26,6 +32,9 @@
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
 .psx
 
+.org 0x80074fbc
+  jal createCloudFX
+
 .org 0x800745b0
   j addEntityParticleFX
 
@@ -40,6 +49,9 @@
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
 
+.org 0x8006b08c
+  jal createCloudFX
+
 .org 0x8006a680
   j addEntityParticleFX
 
@@ -53,6 +65,16 @@
 
 .open "work/DIGIMON/TRN_REL.BIN",0x80088800
 .psx
+
+.org 0x800889c4
+  jal createCloudFX
+.org 0x8008c458
+  jal createCloudFX
+.org 0x8008c520
+  jal createCloudFX
+
+.org 0x8008b090
+  jal removeAllCloudFX
 
 .org 0x8008ba2c
   jal createParticleFX
@@ -78,6 +100,11 @@
 
 .open "work/DIGIMON/TRN2_REL.BIN",0x80088800
 .psx
+
+.org 0x8008965c
+  jal removeAllCloudFX
+.org 0x80088c8c
+  jal removeAllCloudFX
 
 .org 0x80088e48
   jal createParticleFX

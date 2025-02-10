@@ -1,5 +1,6 @@
 #include "Partner.hpp"
 
+#include "Effects.hpp"
 #include "Evolution.hpp"
 #include "Files.hpp"
 #include "Font.hpp"
@@ -695,7 +696,7 @@ extern "C"
             .y = static_cast<int16_t>(PARTNER_ENTITY.posData->location.y),
             .z = static_cast<int16_t>((50 - tileY) * 100 - 50),
         };
-        createPoopFX(&pos);
+        createCloudFX(&pos);
     }
 
     void sleepRegen()
