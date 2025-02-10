@@ -24,7 +24,7 @@ struct UV2Packet
 {
     uint8_t u;
     uint8_t v;
-    uint16_t tpage     : 6;
+    uint16_t tpage     : 5;
     uint16_t abr       : 2;
     uint16_t colorMode : 2;
 };
