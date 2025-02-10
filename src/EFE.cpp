@@ -12,6 +12,8 @@ template<class T> constexpr T pop()
 
 extern "C"
 {
+    constexpr uint8_t flashBaseU[4] = {64, 0, 0, 0};
+
     struct RGB32
     {
         int32_t red;
@@ -48,6 +50,65 @@ extern "C"
         return data + sizeof(EFEFlashData) * 12;
     }
 
+    void tickFlash(int32_t instanceId)
+    {
+        auto& data = EFE_FLASH_DATA[instanceId];
+        data.progress++;
+        if (data.progress >= data.tMax)
+        {
+            data.progress = -1;
+            removeObject(ObjectID::EFE_FLASH, instanceId);
+        }
+    }
+
+    void renderFlash(int32_t instanceId)
+    {
+        auto& data   = EFE_FLASH_DATA[instanceId];
+        auto absMode = abs(data.mode);
+
+        if (data.progress < 0) return;
+
+        ParticleFlashData flashData;
+
+        auto depth = worldPosToScreenPos(&data.worldPos, &flashData.screenPos);
+        if (data.mode < 0)
+        {
+            flashData.screenPos.x += data.offsetX;
+            flashData.screenPos.y += data.offsetY;
+        }
+        else
+        {
+            flashData.screenPos.x += ((data.offsetX * VIEWPORT_DISTANCE) / depth);
+            flashData.screenPos.y += ((data.offsetY * VIEWPORT_DISTANCE) / depth);
+        }
+        flashData.sizeX = 64;
+        flashData.sizeY = 64;
+        if (absMode == 0x20) flashData.tpage = 0xDD;
+        if (absMode == 1 || absMode == 0) flashData.tpage = 0xBD;
+
+        flashData.uBase = flashBaseU[absMode % 4];
+        flashData.vBase = 192;
+        flashData.clut  = 0x79C0;
+
+        auto red             = lerp(data.redMin, data.redMax, 0, data.tMax, data.progress);
+        auto green           = lerp(data.greenMin, data.greenMax, 0, data.tMax, data.progress);
+        auto blue            = lerp(data.blueMin, data.blueMax, 0, data.tMax, data.progress);
+        auto colorFactor     = sin(lerp(128, 20, 0, data.tMax, data.progress));
+        flashData.red        = red * colorFactor / 4096;
+        flashData.green      = green * colorFactor / 4096;
+        flashData.blue       = blue * colorFactor / 4096;
+        flashData.colorScale = 0x80;
+
+        auto scale       = lerp(data.scaleMin, data.scaleMax, 0, data.tMax, data.progress);
+        scale            = (VIEWPORT_DISTANCE * scale * 10) / depth;
+        auto factorScale = sin(lerp(0, 491, 0, 23, data.progress));
+        flashData.scale  = scale + (factorScale * 300 / 4096) + 1;
+
+        if (flashData.scale > 32767) return;
+        flashData.depth = data.fixedDepth > 0 ? data.fixedDepth : (depth / 16);
+        if (flashData.depth > 32 && flashData.depth < 4096) renderParticleFlash(&flashData);
+    }
+
     void EFE_createFlash()
     {
         auto colorMax   = pop<RGB32*>();
@@ -69,7 +130,7 @@ extern "C"
             FLASH_INSTANCE = i;
             if (absMode == 0 || absMode == 1 || absMode == 0x20)
             {
-                addObject(ObjectID::EFE_FLASH, i, tickEFEFlash, renderEFEFlash);
+                addObject(ObjectID::EFE_FLASH, i, tickFlash, renderFlash);
 
                 data.progress   = 0;
                 data.worldPos.x = worldPos->x;

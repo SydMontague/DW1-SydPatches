@@ -1184,8 +1184,6 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
-    void tickEFEFlash(int32_t instanceId);
-    void renderEFEFlash(int32_t instanceId);
     bool isTamerOnScreen();
     void getDrawingOffsetCopy(int32_t* offsetX, int32_t* offsetY);
     void addFXPrim(POLY_FT4* prim, short x, short y, uint32_t scaleX, int16_t scaleY, uint32_t distance);
