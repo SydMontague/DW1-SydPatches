@@ -185,6 +185,7 @@ extern "C"
     extern void libgpu_DrawSync(int32_t mode);
     extern uint16_t libgpu_GetTPage(int32_t textureMode, int32_t transparency, int32_t x, int32_t y);
     extern void libgpu_SetSemiTrans(void* prim, int32_t abe);
+    void libgpu_StoreImage(RECT* rect, uint32_t* buffer);
 }
 
 // validation

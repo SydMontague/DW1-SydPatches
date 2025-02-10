@@ -1173,6 +1173,10 @@ extern "C"
     extern EFEFlashData* EFE_FLASH_DATA;
     extern int32_t FLASH_INSTANCE;
     extern uint8_t* EFE_DATA_STACK;
+    extern uint8_t SOME_IMAGE_DATA[3584];
+    extern int16_t EFE_LOADED_MOVE_DATA[16];
+    extern int16_t EFE_LOAD_STATE;
+    extern uint8_t EFE_SCRIPT_MEM1_DATA[128];
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];

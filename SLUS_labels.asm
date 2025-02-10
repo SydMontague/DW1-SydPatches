@@ -103,9 +103,12 @@
 .definelabel addFXPrim,                 0x800da3fc
 .definelabel isTamerOnScreen,           0x800e67ec
 .definelabel getDrawingOffsetCopy,      0x800d969c
-.definelabel tickEFEFlash,              0x800ae9c4
-.definelabel renderEFEFlash,            0x800ae95c
+.definelabel libgpu_StoreImage,         0x80094908
 
+.definelabel EFE_SCRIPT_MEM1_DATA, 0x80139a30
+.definelabel EFE_LOAD_STATE, 0x80139a2c
+.definelabel EFE_LOADED_MOVE_DATA, 0x80139a0c
+.definelabel SOME_IMAGE_DATA, 0x80138c0c
 .definelabel VIEWPORT_DISTANCE, 0x80134ed4
 .definelabel TRAINING_COMPLETE, 0x80134ca0
 .definelabel PREVIOUS_CAMERA_POS, 0x801387a8

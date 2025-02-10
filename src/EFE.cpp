@@ -1,6 +1,8 @@
 #include "GameObjects.hpp"
 #include "Math.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libcd.hpp"
+#include "extern/libgpu.hpp"
 #include "extern/libgte.hpp"
 #include "extern/stddef.hpp"
 
@@ -12,14 +14,26 @@ template<class T> constexpr T pop()
 
 extern "C"
 {
-    constexpr uint8_t flashBaseU[4] = {64, 0, 0, 0};
-
     struct RGB32
     {
         int32_t red;
         int32_t green;
         int32_t blue;
     };
+
+    struct RGB5551
+    {
+        uint16_t red   : 5;
+        uint16_t green : 5;
+        uint16_t blue  : 5;
+        uint16_t alpha : 1;
+    };
+
+    static_assert(sizeof(RGB5551) == 2);
+
+    constexpr uint8_t flashBaseU[4] = {64, 0, 0, 0};
+
+    static int32_t EFEDAT_CD_LOCATION;
 
     void EFE_rotateVector()
     {
@@ -107,6 +121,67 @@ extern "C"
         if (flashData.scale > 32767) return;
         flashData.depth = data.fixedDepth > 0 ? data.fixedDepth : (depth / 16);
         if (flashData.depth > 32 && flashData.depth < 4096) renderParticleFlash(&flashData);
+    }
+
+    CdlLoc* getEFEDATEntry(int32_t id)
+    {
+        // Vanilla returns a local stack variable here. That's dangerous!
+        // TODO: refactor the function/its callers
+        static CdlLoc loc;
+        return libcd_CdIntToPos(EFEDAT_CD_LOCATION + (id - 256) * 10, &loc);
+    }
+
+    void findEFEDATFile()
+    {
+        while (libcd_CdReadSync(1, nullptr))
+            ;
+
+        CdlFILE file;
+        while (!libcd_CdSearchFile(&file, "\\ETCHI\\EFEDAT.EFE;1"))
+            ;
+
+        uint8_t mode = 0x80;
+        libcd_CdControl(CdCommand::CdlSetmode, &mode, nullptr);
+        EFEDAT_CD_LOCATION = libcd_CdPosToInt(&file.pos);
+    }
+
+    void initializeEFE()
+    {
+        for (auto& val : EFE_LOADED_MOVE_DATA)
+            val = -1;
+        EFE_LOAD_STATE = -1;
+        EFE_DATA_STACK = EFE_SCRIPT_MEM1_DATA;
+        findEFEDATFile();
+    }
+
+    void EFE_downloadSomeImage()
+    {
+        RECT rect = {.x = 512, .y = 248, .width = 256, .height = 7};
+        libgpu_StoreImage(&rect, reinterpret_cast<uint32_t*>(SOME_IMAGE_DATA));
+        libgpu_DrawSync(0);
+    }
+
+    void EFE_modifySomeImage(int32_t scale)
+    {
+        RGB5551* input = reinterpret_cast<RGB5551*>(SOME_IMAGE_DATA);
+
+        for (int32_t i = 0; i < 0x700; i++)
+        {
+            input[i].red *= scale / 255;
+            input[i].blue *= scale / 255;
+            input[i].green *= scale / 255;
+        }
+
+        RECT rect = {.x = 512, .y = 248, .width = 256, .height = 7};
+        libgpu_LoadImage(&rect, reinterpret_cast<uint32_t*>(SOME_IMAGE_DATA));
+        libgpu_DrawSync(0);
+    }
+
+    void EFE_setFlashOffset(int32_t id, int16_t offsetX, int16_t offsetY)
+    {
+        auto& data   = EFE_FLASH_DATA[id];
+        data.offsetX = offsetX;
+        data.offsetY = offsetY;
     }
 
     void EFE_createFlash()
