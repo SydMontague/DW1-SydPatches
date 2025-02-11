@@ -209,8 +209,8 @@ extern "C"
 
                 data.progress   = 0;
                 data.worldPos.x = worldPos->x;
-                data.worldPos.z = worldPos->y;
-                data.worldPos.y = worldPos->z;
+                data.worldPos.y = worldPos->y;
+                data.worldPos.z = worldPos->z;
                 data.tMax       = tMax;
                 data.mode       = mode;
                 data.fixedDepth = fixedDepth;
@@ -239,10 +239,11 @@ extern "C"
                         offsetX = DRAWING_OFFSET_X;
                         offsetY = DRAWING_OFFSET_Y;
                     }
-                    data.offsetX = offsetX;
-                    data.offsetY = offsetY;
+                    data.offsetX = 160 - offsetX;
+                    data.offsetY = 120 - offsetY;
                 }
             }
+            return;
         }
     }
 }
