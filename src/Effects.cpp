@@ -231,6 +231,164 @@ extern "C"
         return nullptr;
     }
 
+    POLY_FT4* renderParticleFlashLoop(POLY_FT4* prim,
+                                      ParticleFlashData* data,
+                                      int32_t finalScaledX,
+                                      int32_t finalScaledY,
+                                      int32_t loopCount,
+                                      int32_t innerLoopCount,
+                                      int32_t heightStep,
+                                      int32_t widthStep,
+                                      int32_t uStep,
+                                      int32_t vStep,
+                                      uint32_t red,
+                                      uint32_t green,
+                                      uint32_t blue)
+    {
+        for (int32_t i = 0; i <= loopCount; i++)
+        {
+            auto yPos = (data->screenPos.y + finalScaledY) + (heightStep * i);
+
+            if (yPos > (-DRAWING_OFFSET_Y + 240) || (yPos + heightStep) < -DRAWING_OFFSET_Y) continue;
+
+            for (int32_t j = 0; j <= innerLoopCount; j++)
+            {
+                auto xPos = (data->screenPos.x + finalScaledX) + (widthStep * j);
+                if (xPos > (-DRAWING_OFFSET_X + 320) || (xPos + widthStep) < -DRAWING_OFFSET_X) continue;
+
+                libgpu_SetPolyFT4(prim);
+                libgpu_SetSemiTrans(prim, 1);
+                prim->tpage = data->tpage;
+                prim->clut  = data->clut;
+                prim->x0    = xPos;
+                prim->y0    = yPos;
+                prim->x1    = xPos + widthStep;
+                prim->y1    = yPos;
+                prim->x2    = xPos;
+                prim->y2    = yPos + heightStep;
+                prim->x3    = xPos + widthStep;
+                prim->y3    = yPos + heightStep;
+                if (j == innerLoopCount)
+                {
+                    prim->x1 = data->screenPos.x;
+                    prim->x3 = data->screenPos.x;
+                }
+                if (i == loopCount)
+                {
+                    prim->y2 = data->screenPos.y;
+                    prim->y3 = data->screenPos.y;
+                }
+                prim->r0 = red;
+                prim->g0 = green;
+                prim->b0 = blue;
+
+                prim->u0 = data->uBase + uStep * j;
+                prim->u1 = data->uBase + uStep * (j + 1) - 1;
+                prim->u2 = data->uBase + uStep * j;
+                prim->u3 = data->uBase + uStep * (j + 1) - 1;
+
+                prim->v0 = data->vBase + vStep * i;
+                prim->v1 = data->vBase + vStep * i;
+                prim->v2 = data->vBase + vStep * (i + 1) - 1;
+                prim->v3 = data->vBase + vStep * (i + 1) - 1;
+
+                libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + data->depth, prim);
+                prim += 1;
+            }
+        }
+        return prim;
+    }
+
+    void renderParticleFlash(ParticleFlashData* data)
+    {
+        // TODO is this ever going to loop? This function is ugly af
+        if (data->depth <= 32 || data->depth >= 4096) return;
+        if (abs(data->screenPos.x) >= 1024 || abs(data->screenPos.y) >= 512) return;
+
+        uint8_t sizeX = data->sizeX - 1;
+        uint8_t sizeY = data->sizeY - 1;
+        auto scaledX  = (data->scale * sizeX) / 1024;
+        auto scaledY  = (data->scale * sizeY) / 1024;
+
+        if (scaledX <= 0) return;
+        if (scaledY <= 0) return;
+
+        auto finalScaledX = scaledX + 1;
+        auto finalScaledY = scaledY + 1;
+
+        uint32_t innerLoopCount;
+        if (finalScaledX < 1024 && finalScaledY < 512)
+            innerLoopCount = 0;
+        else
+            innerLoopCount = (((scaledX + 2) / 1024 + 1) | 3) + 1;
+
+        uint32_t loopCount = ((scaledY + 2) / 512) + 1;
+        auto widthStep     = (scaledX + 2) / (innerLoopCount + 1);
+        auto heightStep    = (scaledY + 2) / (loopCount + 1);
+        auto uStep         = (sizeX + 1) / (innerLoopCount + 1);
+        auto vStep         = (sizeY + 1) / (loopCount + 1);
+        auto red           = data->red * data->colorScale / 128;
+        auto green         = data->green * data->colorScale / 128;
+        auto blue          = data->blue * data->colorScale / 128;
+
+        POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+
+        prim = renderParticleFlashLoop(prim,
+                                       data,
+                                       -finalScaledX,
+                                       -finalScaledY,
+                                       loopCount,
+                                       innerLoopCount,
+                                       heightStep,
+                                       widthStep,
+                                       uStep,
+                                       vStep,
+                                       red,
+                                       green,
+                                       blue);
+        prim = renderParticleFlashLoop(prim,
+                                       data,
+                                       finalScaledX,
+                                       -finalScaledY,
+                                       loopCount,
+                                       innerLoopCount,
+                                       heightStep,
+                                       -widthStep,
+                                       uStep,
+                                       vStep,
+                                       red,
+                                       green,
+                                       blue);
+        prim = renderParticleFlashLoop(prim,
+                                       data,
+                                       -finalScaledX,
+                                       finalScaledY,
+                                       loopCount,
+                                       innerLoopCount,
+                                       -heightStep,
+                                       widthStep,
+                                       uStep,
+                                       vStep,
+                                       red,
+                                       green,
+                                       blue);
+        prim = renderParticleFlashLoop(prim,
+                                       data,
+                                       finalScaledX,
+                                       finalScaledY,
+                                       loopCount,
+                                       innerLoopCount,
+                                       -heightStep,
+                                       -widthStep,
+                                       uStep,
+                                       vStep,
+                                       red,
+                                       green,
+                                       blue);
+
+        libgs_GsSetWorkBase(prim);
+    }
+
     void renderParticleFX(int32_t instanceId)
     {
         auto& data         = particleFXData[instanceId];
@@ -428,8 +586,6 @@ extern "C"
         cloudFXSprite.y      = screenPos.y;
         cloudFXSprite.scaleX = (cloudScaleData[data.frame] * VIEWPORT_DISTANCE) / depth;
         cloudFXSprite.scaleY = (cloudScaleData[data.frame] * VIEWPORT_DISTANCE) / depth;
-
-        printf("%x | %x | %x\n", (int32_t)cloudFXSprite.tpage, (int32_t)cloudFXSprite.u, (int32_t)cloudFXSprite.v);
 
         // vanilla calls renderSprite (0x800da36c) here, but we inlined it.
         // It modified the passed sprite, which is kinda dirty.

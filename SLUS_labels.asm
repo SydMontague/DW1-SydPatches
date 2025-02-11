@@ -97,7 +97,6 @@
 .definelabel moveCameraByDiff,          0x800d892c
 .definelabel getRotationDifference,     0x800b6edc
 .definelabel worldPosToScreenPos,       0x800da2ec
-.definelabel renderParticleFlash,       0x800af030
 .definelabel lerp,                      0x800d990c
 .definelabel renderFXParticle,          0x800daa00
 .definelabel addFXPrim,                 0x800da3fc
