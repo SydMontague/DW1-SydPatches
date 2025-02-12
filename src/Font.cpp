@@ -2,6 +2,7 @@
 
 #include "Utils.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libgpu.hpp"
 
 extern "C"
 {
@@ -143,7 +144,7 @@ extern "C"
             width += drawGlyphNew(font, codepoint, render_area, width, string_width);
         }
 
-        libgpu_LoadImage(&rect, reinterpret_cast<uint32_t*>(render_area));
+        libgpu_LoadImage2(&rect, reinterpret_cast<uint32_t*>(render_area));
         return width;
     }
 

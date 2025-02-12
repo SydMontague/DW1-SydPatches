@@ -174,17 +174,18 @@ extern "C"
         prim->code   = 0x3C;
     }
 
-    extern void libgpu_SetPolyFT4(POLY_FT4* prim);
-    extern void libgpu_SetLineF2(LINE_F2* prim);
-    extern void libgpu_SetLineF3(LINE_F3* prim);
-    extern void libgpu_SetLineF4(LINE_F4* prim);
-    extern void libgpu_AddPrim(void* ot, void* prim);
-    extern void libgpu_ClearImage(RECT* rect, uint32_t red, uint32_t green, uint32_t blue);
-    extern int libgpu_LoadImage(RECT* rect, uint32_t* data);
-    extern uint16_t libgpu_GetClut(int32_t x, int32_t y);
-    extern void libgpu_DrawSync(int32_t mode);
-    extern uint16_t libgpu_GetTPage(int32_t textureMode, int32_t transparency, int32_t x, int32_t y);
-    extern void libgpu_SetSemiTrans(void* prim, int32_t abe);
+    void libgpu_SetPolyFT4(POLY_FT4* prim);
+    void libgpu_SetLineF2(LINE_F2* prim);
+    void libgpu_SetLineF3(LINE_F3* prim);
+    void libgpu_SetLineF4(LINE_F4* prim);
+    void libgpu_AddPrim(void* ot, void* prim);
+    void libgpu_ClearImage(RECT* rect, uint32_t red, uint32_t green, uint32_t blue);
+    int32_t libgpu_LoadImage(RECT* rect, uint32_t* data);
+    int32_t libgpu_LoadImage2(RECT* rect, uint32_t* data);
+    uint16_t libgpu_GetClut(int32_t x, int32_t y);
+    void libgpu_DrawSync(int32_t mode);
+    uint16_t libgpu_GetTPage(int32_t textureMode, int32_t transparency, int32_t x, int32_t y);
+    void libgpu_SetSemiTrans(void* prim, int32_t abe);
     void libgpu_StoreImage(RECT* rect, uint32_t* buffer);
 }
 

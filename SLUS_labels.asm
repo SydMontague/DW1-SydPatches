@@ -102,7 +102,6 @@
 .definelabel addFXPrim,                 0x800da3fc
 .definelabel isTamerOnScreen,           0x800e67ec
 .definelabel getDrawingOffsetCopy,      0x800d969c
-.definelabel libgpu_StoreImage,         0x80094908
 
 .definelabel EFE_SCRIPT_MEM1_DATA, 0x80139a30
 .definelabel EFE_LOAD_STATE, 0x80139a2c
@@ -292,8 +291,10 @@
 .definelabel libgs_GsLIGHTWSMATRIX, 0x80136f24
 
 // libgpu
+.definelabel libgpu_StoreImage, 0x80094908
 .definelabel libgpu_ClearImage, 0x80094818
 .definelabel libgpu_LoadImage, 0x800948a8
+.definelabel libgpu_LoadImage2, 0x80095290
 .definelabel libgpu_AddPrim, 0x80092ad4
 .definelabel libgpu_GetClut, 0x80092abc
 .definelabel libgpu_SetPolyFT4, 0x80092b88
