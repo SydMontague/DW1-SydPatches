@@ -9,6 +9,13 @@
   .fill 0x800afd78-.
 .endarea
 
+.org 0x800b3d84
+.area 0x800b40cc-.
+
+  .notice "Empty space left: " + (0x800b40cc-.) + " bytes"
+  .fill 0x800b40cc-.
+.endarea
+
 .org 0x8011d46c
 .area 0x80122cf4-.
 ;;;

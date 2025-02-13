@@ -1065,6 +1065,67 @@ extern "C"
         int16_t offsetY;
     };
 
+    struct MapObject
+    {
+        uint16_t texX;
+        uint16_t texY;
+        uint16_t width;
+        uint16_t height;
+        uint16_t someX;
+        uint16_t someY;
+        uint16_t someZ;
+        uint16_t clut;
+        uint16_t transparency;
+    };
+
+    struct LocalMapObjectInstance
+    {
+        int16_t orderValue;
+        int16_t x;
+        int16_t y;
+        uint16_t animSprites[8];
+        uint8_t animTimes[8];
+        uint8_t timer;
+        uint8_t pad;
+        int8_t currentFrame;
+        uint8_t flag;
+    };
+
+    struct LocalMapObject
+    {
+        uint16_t texX;
+        uint16_t texY;
+        uint16_t someX;
+        uint16_t someY;
+        uint16_t someZ;
+        uint8_t width;
+        uint8_t height;
+        uint8_t clut;
+        uint8_t transparency;
+
+        LocalMapObject(const MapObject& obj)
+        {
+            texX         = obj.texX;
+            texY         = obj.texY;
+            someX        = obj.someX;
+            someY        = obj.someY;
+            someZ        = obj.someZ;
+            width        = obj.width;
+            height       = obj.height;
+            clut         = obj.clut;
+            transparency = obj.transparency;
+        }
+    };
+
+    struct MapObjectInstance
+    {
+        uint16_t animState[8];
+        uint16_t animDuration[8];
+        uint16_t posX;
+        uint16_t posY;
+        uint16_t flag;
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1177,6 +1238,9 @@ extern "C"
     extern int16_t EFE_LOADED_MOVE_DATA[16];
     extern int16_t EFE_LOAD_STATE;
     extern uint8_t EFE_SCRIPT_MEM1_DATA[128];
+    extern LocalMapObject LOCAL_MAP_OBJECTS[180];
+    extern uint16_t MAP_OBJECT_INSTANCE_COUNT;
+    extern uint32_t MAP_OBJECT_MOVE_TO_DATA[10];
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1359,3 +1423,6 @@ static_assert(sizeof(TamerItem) == 0x10);
 static_assert(sizeof(ParticleFXData) == 0x34);
 static_assert(sizeof(ParticleFlashData) == 0x1C);
 static_assert(sizeof(EFEFlashData) == 0x28);
+static_assert(sizeof(LocalMapObject) == 0x0E);
+static_assert(sizeof(MapObject) == 0x12);
+static_assert(sizeof(MapObjectInstance) == 0x26);

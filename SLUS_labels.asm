@@ -221,6 +221,9 @@
 .definelabel EFE_DATA_STACK, 0x80134cc8
 .definelabel EFE_FLASH_DATA, 0x80134cc0
 .definelabel FLASH_INSTANCE, 0x80134cc4
+.definelabel LOCAL_MAP_OBJECTS, 0x8013c060
+.definelabel MAP_OBJECT_INSTANCE_COUNT, 0x80134d1c
+.definelabel MAP_OBJECT_MOVE_TO_DATA, 0x8013c038
 
 // BTL_REL
 .definelabel BTL_battleMain, 0x8005b5f4
