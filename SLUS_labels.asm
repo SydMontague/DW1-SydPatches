@@ -102,6 +102,9 @@
 .definelabel addFXPrim,                 0x800da3fc
 .definelabel isTamerOnScreen,           0x800e67ec
 .definelabel getDrawingOffsetCopy,      0x800d969c
+.definelabel buildMapOverlayPrim,       0x800b5008
+.definelabel buildSnowflakePrim,        0x800b4cf4
+.definelabel renderMist,                0x800b4780
 
 .definelabel EFE_SCRIPT_MEM1_DATA, 0x80139a30
 .definelabel EFE_LOAD_STATE, 0x80139a2c

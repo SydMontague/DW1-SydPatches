@@ -1083,7 +1083,7 @@ extern "C"
         int16_t orderValue;
         int16_t x;
         int16_t y;
-        uint16_t animSprites[8];
+        int16_t animSprites[8];
         uint8_t animTimes[8];
         uint8_t timer;
         uint8_t pad;
@@ -1252,6 +1252,14 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void renderMist();
+    void buildSnowflakePrim(POLY_FT4* prim, LocalMapObjectInstance* instance, LocalMapObject* object);
+    void buildMapOverlayPrim(POLY_FT4* prim,
+                             LocalMapObjectInstance* instance,
+                             LocalMapObject* object,
+                             int16_t cameraX,
+                             int16_t cameraY,
+                             bool isVeryClose);
     bool isTamerOnScreen();
     void getDrawingOffsetCopy(int32_t* offsetX, int32_t* offsetY);
     void addFXPrim(POLY_FT4* prim, short x, short y, uint32_t scaleX, int16_t scaleY, uint32_t distance);

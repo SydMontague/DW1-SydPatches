@@ -132,14 +132,14 @@ extern "C"
             if ((data.flag & 0x80) != 0)
             {
                 data.orderValue = 30;
-                return;
+                continue;
             }
 
             SVector worldPos;
             Position screenPos;
             for (auto val : data.animSprites)
             {
-                if (val == 0xFFFF || val == 0xFFFE) continue;
+                if (val == -1 || val == -2) continue;
 
                 worldPos.x = LOCAL_MAP_OBJECTS[val].someX;
                 worldPos.y = LOCAL_MAP_OBJECTS[val].someY;
@@ -153,6 +153,66 @@ extern "C"
             if (worldPos.y == 10000) depth = 4094;
 
             data.orderValue = depth;
+        }
+    }
+
+    constexpr bool hasMist(int32_t mapId)
+    {
+        if (mapId > 114 && mapId < 120) return true;
+        if (mapId == 121) return true;
+        if (mapId == 163) return true;
+        if (mapId == 220) return true;
+
+        return false;
+    }
+
+    inline void
+    renderMapOverlay(LocalMapObjectInstance& instance, LocalMapObject& object, int32_t cameraX, int32_t cameraY)
+    {
+        bool onScreenX = (cameraX - 40 < instance.x + object.width) && (instance.x < cameraX + 360);
+        bool onScreenY = (cameraY - 60 < instance.y + object.height) && (instance.y < cameraY + 300);
+
+        // order value is impossible, as calcMapObjectOrder puts the minimum to 35?
+        if (!(onScreenX && onScreenY) && (instance.flag & 0x80) == 0 && instance.orderValue >= 20) return;
+
+        POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+        libgpu_SetPolyFT4(prim);
+        libgpu_SetSemiTrans(prim, object.transparency == 4 ? 0 : 1);
+
+        if ((instance.flag & 0x80) != 0) { buildSnowflakePrim(prim, &instance, &object); }
+        else
+            buildMapOverlayPrim(prim, &instance, &object, cameraX, cameraY, instance.orderValue < 20);
+
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + instance.orderValue, prim);
+        libgs_GsSetWorkBase(prim + 1);
+    }
+
+    void renderMapOverlays(LocalMapObjectInstance* objects, int32_t cameraX, int32_t cameraY)
+    {
+        if (MAP_LAYER_ENABLED == 0) return;
+        if (hasMist(CURRENT_SCREEN)) renderMist();
+
+        for (int32_t i = 0; i < 188; i++)
+        {
+            auto& data         = objects[i];
+            auto currentFrame  = data.currentFrame;
+            auto currentSprite = data.animSprites[currentFrame];
+
+            if (currentFrame == -1 || currentSprite == -1) continue;
+
+            if (currentSprite != -2 && data.flag != 1)
+            {
+                auto& mapObj = LOCAL_MAP_OBJECTS[currentSprite];
+                renderMapOverlay(data, mapObj, cameraX, cameraY);
+            }
+
+            data.timer++;
+            if (data.timer == data.animTimes[currentFrame])
+            {
+                data.currentFrame++;
+                data.timer = 0;
+                if (data.currentFrame >= 8 || data.animSprites[data.currentFrame] == -1) data.currentFrame = 0;
+            }
         }
     }
 }
