@@ -13,4 +13,13 @@
 .org 0x800d5bd8
   jal clearMapObjects
 
+.org 0x800d6738
+  jal calcMapObjectOrder
+
+.org 0x800d5cb0
+  jal loadMapImage2
+
+.org 0x800d5c44
+  jal loadMapImage1
+
 .close

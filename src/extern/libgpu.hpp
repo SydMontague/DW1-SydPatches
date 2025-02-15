@@ -162,6 +162,15 @@ extern "C"
         uint32_t pad;
     };
 
+    struct TIM_IMAGE
+    {
+        uint32_t mode;
+        RECT* clutRect;
+        uint32_t* clutPtr;
+        RECT* pixelRect;
+        uint32_t* pixelPtr;
+    };
+
     constexpr void libgpu_SetPolyGT3(POLY_GT3* prim)
     {
         prim->tag[3] = 9;
@@ -187,6 +196,8 @@ extern "C"
     uint16_t libgpu_GetTPage(int32_t textureMode, int32_t transparency, int32_t x, int32_t y);
     void libgpu_SetSemiTrans(void* prim, int32_t abe);
     void libgpu_StoreImage(RECT* rect, uint32_t* buffer);
+    uint32_t libgpu_OpenTIM(uint8_t* buffer);
+    TIM_IMAGE* libgpu_ReadTIM(TIM_IMAGE* image);
 }
 
 // validation

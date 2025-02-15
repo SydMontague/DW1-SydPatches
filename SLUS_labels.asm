@@ -307,6 +307,8 @@
 .definelabel libgpu_DrawSync, 0x800947b0
 .definelabel libgpu_GetTPage, 0x80092a80
 .definelabel libgpu_SetSemiTrans, 0x80092b10
+.definelabel libgpu_OpenTIM, 0x80096bcc
+.definelabel libgpu_ReadTIM, 0x80096bdc
 
 // libgte
 .definelabel libgte_setRotMatrix, 0x8009b200
