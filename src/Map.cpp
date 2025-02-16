@@ -1,3 +1,4 @@
+#include "Helper.hpp"
 #include "Math.hpp"
 #include "Partner.hpp"
 #include "Tamer.hpp"
@@ -9,6 +10,9 @@
 
 extern "C"
 {
+    static int16_t mistOffsetX[4] = {-160, 160, 160, -160};
+    static int16_t mistOffsetY[2] = {-120, 120};
+
     void loadMapEntities(uint8_t* buffer, uint32_t mapId, uint32_t exitId)
     {
         memcpy(&MAP_WARPS, buffer, sizeof(MapWarps));
@@ -185,6 +189,85 @@ extern "C"
 
         libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + instance.orderValue, prim);
         libgs_GsSetWorkBase(prim + 1);
+    }
+
+    inline bool isMistEnabled(int32_t mapId)
+    {
+        if (CURRENT_FRAME != 220 && CURRENT_FRAME != 163) return true;
+
+        return !isTriggerSet(341);
+    }
+
+    void renderMist()
+    {
+        if (!isMistEnabled(CURRENT_SCREEN)) return;
+
+        if (CURRENT_SCREEN != 220 && isTriggerSet(148))
+        {
+            MIST_CLUT_Y[0] = 192;
+            MIST_CLUT_Y[1] = 128;
+        }
+
+        auto cameraXDiff = CAMERA_X_PREVIOUS - CAMERA_X;
+        auto cameraYDiff = CAMERA_Y_PREVIOUS - CAMERA_Y;
+
+        mistOffsetX[0] += cameraXDiff;
+        if (PLAYTIME_FRAMES % 2 == 0) mistOffsetX[0]--;
+        mistOffsetX[0] = ring(mistOffsetX[0], -480, 160);
+        mistOffsetX[1] = ring(mistOffsetX[0] + 320, -480, 160);
+
+        mistOffsetX[2] += (cameraXDiff * 12 / 10);
+        if (PLAYTIME_FRAMES % 2 == 0) mistOffsetX[2]++;
+        mistOffsetX[2] = ring(mistOffsetX[2], -160, 480);
+        mistOffsetX[3] = ring(mistOffsetX[2] + 320, -160, 480);
+
+        mistOffsetY[0] += cameraYDiff;
+        mistOffsetY[0] = ring(mistOffsetY[0], -360, 120);
+        mistOffsetY[1] = ring(mistOffsetY[0] + 240, -360, 120);
+
+        for (int32_t i = -4; i < 4; i++)
+        {
+            POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+            libgpu_SetPolyFT4(prim);
+            libgpu_SetSemiTrans(prim, 1);
+            if (i < 0)
+            {
+                prim->tpage = libgpu_GetTPage(0, 3, 704, 0);
+                prim->clut  = getClut(0, 486);
+
+                setPosDataPolyFT4(prim, mistOffsetX[abs(i + 4) % 2], mistOffsetY[abs(i + 4) / 2], 320, 240);
+                prim->r0 = 150;
+                prim->g0 = 150;
+                prim->b0 = 150;
+            }
+            else
+            {
+                prim->tpage = libgpu_GetTPage(0, 1, 704, 0);
+                if (CURRENT_SCREEN == 163 || CURRENT_SCREEN == 220)
+                    prim->clut = getClut(0, 486);
+                else if (CURRENT_SCREEN == 119)
+                    prim->clut = getClut(MIST_CLUT_Y[0], 486);
+                else
+                    prim->clut = getClut(MIST_CLUT_Y[1], 486);
+
+                prim->x0 = mistOffsetX[2 + (i % 2)];
+                prim->x1 = mistOffsetX[2 + (i % 2)] - 320;
+                prim->x2 = mistOffsetX[2 + (i % 2)];
+                prim->x3 = mistOffsetX[2 + (i % 2)] - 320;
+
+                prim->y0 = mistOffsetY[i / 2];
+                prim->y1 = mistOffsetY[i / 2];
+                prim->y2 = mistOffsetY[i / 2] + 240;
+                prim->y3 = mistOffsetY[i / 2] + 240;
+
+                prim->r0 = 80;
+                prim->g0 = 80;
+                prim->b0 = 80;
+            }
+            setUVDataPolyFT4(prim, 0, 0, 255, 200);
+            libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 20, prim);
+            libgs_GsSetWorkBase(prim + 1);
+        }
     }
 
     void renderMapOverlays(LocalMapObjectInstance* objects, int32_t cameraX, int32_t cameraY)

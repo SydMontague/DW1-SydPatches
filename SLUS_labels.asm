@@ -104,8 +104,15 @@
 .definelabel getDrawingOffsetCopy,      0x800d969c
 .definelabel buildMapOverlayPrim,       0x800b5008
 .definelabel buildSnowflakePrim,        0x800b4cf4
-.definelabel renderMist,                0x800b4780
+.definelabel isTriggerSet,              0x8010643c
 
+.definelabel MIST_CLUT_Y, 0x80134230
+.definelabel MIST_Y_OFFSETS, 0x8013422c
+.definelabel MIST_X_OFFSETS, 0x80134224
+.definelabel CAMERA_X, 0x80150c38
+.definelabel CAMERA_Y, 0x80150c3a
+.definelabel CAMERA_X_PREVIOUS, 0x80134dcc
+.definelabel CAMERA_Y_PREVIOUS, 0x80134dce
 .definelabel EFE_SCRIPT_MEM1_DATA, 0x80139a30
 .definelabel EFE_LOAD_STATE, 0x80139a2c
 .definelabel EFE_LOADED_MOVE_DATA, 0x80139a0c

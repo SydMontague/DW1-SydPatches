@@ -1241,6 +1241,11 @@ extern "C"
     extern LocalMapObject LOCAL_MAP_OBJECTS[180];
     extern uint16_t MAP_OBJECT_INSTANCE_COUNT;
     extern uint32_t MAP_OBJECT_MOVE_TO_DATA[10];
+    extern int16_t MIST_CLUT_Y[2];
+    extern int16_t CAMERA_X;
+    extern int16_t CAMERA_Y;
+    extern int16_t CAMERA_X_PREVIOUS;
+    extern int16_t CAMERA_Y_PREVIOUS;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1252,7 +1257,8 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
-    void renderMist();
+
+    bool isTriggerSet(int32_t trigger);
     void buildSnowflakePrim(POLY_FT4* prim, LocalMapObjectInstance* instance, LocalMapObject* object);
     void buildMapOverlayPrim(POLY_FT4* prim,
                              LocalMapObjectInstance* instance,

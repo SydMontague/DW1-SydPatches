@@ -1,3 +1,4 @@
+#pragma once
 #include "extern/dw1.hpp"
 #include "extern/libgte.hpp"
 #include "extern/stddef.hpp"
@@ -25,13 +26,6 @@ extern "C"
         return val1 < val2 ? val2 : val1;
     }
 
-    constexpr int32_t clamp(int32_t val, int32_t min, int32_t max)
-    {
-        if (min > val) return min;
-        if (max < val) return max;
-        return val;
-    }
-
     inline int32_t random2(int32_t limit)
     {
         return rand() % limit;
@@ -45,3 +39,50 @@ extern "C"
     bool hasAABBOverlap(AABB* aabb1, AABB* aabb2);
     int32_t findAABBHitEntity(AABB* aabb, Entity* ignoreEntity, int32_t startId);
 }
+
+template<class T> constexpr auto clamp(T val, decltype(val) min, decltype(val) max) -> decltype(val)
+{
+    if (min > val) return min;
+    if (max < val) return max;
+    return val;
+}
+
+template<class T> constexpr auto ring(T val, decltype(val) min, decltype(val) max) -> decltype(val)
+{
+    if (max < min) return val;
+
+    auto diff = max - min;
+    while (val >= max)
+        val -= diff;
+    while (val < min)
+        val += diff;
+
+    return val;
+}
+
+static_assert(max(100, 200) == 200);
+static_assert(max(100, -200) == 100);
+static_assert(max(-300, -200) == -200);
+
+static_assert(min(100, 200) == 100);
+static_assert(min(100, -200) == -200);
+static_assert(min(-300, -200) == -300);
+
+static_assert(abs(0) == 0);
+static_assert(abs(1000) == 1000);
+static_assert(abs(-1000) == 1000);
+static_assert(abs(-1) == 1);
+
+static_assert(ring(128, -160, 480) == 128);
+static_assert(ring(490, -160, 480) == -150);
+static_assert(ring(-170, -160, 480) == 470);
+static_assert(ring(480, -160, 480) == -160);
+static_assert(ring(-160, -160, 480) == -160);
+static_assert(ring(490, 480, -160) == 490);
+
+static_assert(clamp(128, 64, 256) == 128);
+static_assert(clamp(31, 64, 256) == 64);
+static_assert(clamp(1024, 64, 256) == 256);
+static_assert(clamp(256, 64, 256) == 256);
+static_assert(clamp(-10, 64, 256) == 64);
+static_assert(clamp(64, 64, 256) == 64);
