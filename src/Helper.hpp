@@ -107,6 +107,30 @@ extern "C"
         return &ITEM_PARA[static_cast<uint8_t>(type)];
     }
 
+    /*
+     * Sets the UV coordinates of a POLY_FT4. It makes sure that if the resulting coordinates are a multiple of 256,
+     * they get reduced by 1. This is necessary because of a PSX hardware limitation.
+     */
+    constexpr void setPolyFT4UV(POLY_FT4* prim, int16_t uvX, int16_t uvY, int16_t uvWidth, int16_t uvHeight)
+    {
+        // The way the PSX works makes it impossible to address the last column and row of VRAM for textures, as
+        // attempting to do so will create an integer overflow.
+        // Therefore we must crop coordinates to the texture page boundaries.
+        auto uMax = uvX + uvWidth;
+        auto vMax = uvY + uvHeight;
+        if (uMax != 0 && (uMax & 0xFF) == 0) uMax--;
+        if (vMax != 0 && (vMax & 0xFF) == 0) vMax--;
+
+        prim->u0 = uvX;
+        prim->v0 = uvY;
+        prim->u1 = uMax;
+        prim->v1 = uvY;
+        prim->u2 = uvX;
+        prim->v2 = vMax;
+        prim->u3 = uMax;
+        prim->v3 = vMax;
+    }
+
     inline void Partner_setState(uint8_t state)
     {
         PARTNER_STATE     = state;

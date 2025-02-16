@@ -170,6 +170,45 @@ extern "C"
         return false;
     }
 
+    void buildMapOverlayPrim(POLY_FT4* prim,
+                             LocalMapObjectInstance* instance,
+                             LocalMapObject* object,
+                             int16_t cameraX,
+                             int16_t cameraY,
+                             bool isFixedPos)
+    {
+        if (isFixedPos)
+            setPosDataPolyFT4(prim, instance->x, instance->y, object->width, object->height);
+        else
+        {
+            auto posX = (instance->x - 160) - (cameraX - (160 - DRAWING_OFFSET_X));
+            auto posY = (instance->y - 120) - (cameraY - (120 - DRAWING_OFFSET_Y));
+            setPosDataPolyFT4(prim, posX, posY, object->width, object->height);
+        }
+
+        prim->r0 = 128;
+        prim->g0 = 128;
+        prim->b0 = 128;
+        setPolyFT4UV(prim, object->texX, object->texY, object->width, object->height);
+
+        auto clut = object->clut;
+        if (clut == 0xFF)
+        {
+            prim->tpage = libgpu_GetTPage(1, object->transparency, (object->texX / 256) * 128 + 384, 0);
+            prim->clut  = getClut(0, 480);
+        }
+        else if (clut < 16)
+        {
+            prim->tpage = libgpu_GetTPage(0, object->transparency, (object->texX / 256) * 64 + 384, 0);
+            prim->clut  = getClut(object->clut * 16, 486);
+        }
+        else
+        {
+            prim->tpage = libgpu_GetTPage(1, object->transparency, (object->texX / 256) * 128 + 384, 0);
+            prim->clut  = getClut(0, 468 + object->clut);
+        }
+    }
+
     void buildSnowflakePrim(POLY_FT4* prim, LocalMapObjectInstance* instance, LocalMapObject* object)
     {
         auto firstSprite = instance->animSprites[0];

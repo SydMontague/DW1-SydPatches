@@ -102,7 +102,6 @@
 .definelabel addFXPrim,                 0x800da3fc
 .definelabel isTamerOnScreen,           0x800e67ec
 .definelabel getDrawingOffsetCopy,      0x800d969c
-.definelabel buildMapOverlayPrim,       0x800b5008
 .definelabel isTriggerSet,              0x8010643c
 
 .definelabel MIST_CLUT_Y, 0x80134230

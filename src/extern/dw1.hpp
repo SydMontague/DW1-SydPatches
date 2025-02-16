@@ -1258,12 +1258,6 @@ extern "C"
     extern SectionData SECTION_DATA;
 
     bool isTriggerSet(int32_t trigger);
-    void buildMapOverlayPrim(POLY_FT4* prim,
-                             LocalMapObjectInstance* instance,
-                             LocalMapObject* object,
-                             int16_t cameraX,
-                             int16_t cameraY,
-                             bool isVeryClose);
     bool isTamerOnScreen();
     void getDrawingOffsetCopy(int32_t* offsetX, int32_t* offsetY);
     void addFXPrim(POLY_FT4* prim, short x, short y, uint32_t scaleX, int16_t scaleY, uint32_t distance);
