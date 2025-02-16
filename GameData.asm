@@ -10,10 +10,10 @@
 .endarea
 
 .org 0x800b3d84
-.area 0x800b4cf4-.
+.area 0x800b5008-.
 
-  .notice "Empty space left: " + (0x800b4cf4-.) + " bytes"
-  .fill 0x800b4cf4-.
+  .notice "Empty space left: " + (0x800b5008-.) + " bytes"
+  .fill 0x800b5008-.
 .endarea
 
 .org 0x8011d46c

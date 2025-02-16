@@ -170,6 +170,62 @@ extern "C"
         return false;
     }
 
+    void buildSnowflakePrim(POLY_FT4* prim, LocalMapObjectInstance* instance, LocalMapObject* object)
+    {
+        auto firstSprite = instance->animSprites[0];
+        int32_t xOffsetLimit;
+        int32_t yOffset;
+        switch (firstSprite)
+        {
+            case 0:
+            case 3:
+            case 4:
+                xOffsetLimit = 6;
+                yOffset      = 3;
+                break;
+            case 1:
+            case 5:
+            case 6:
+                xOffsetLimit = 2;
+                yOffset      = 1;
+                break;
+            case 2:
+                xOffsetLimit = 4;
+                yOffset      = 10;
+                break;
+        }
+
+        int32_t xOffset = random(xOffsetLimit);
+        if (xOffsetLimit / 2 < xOffset) xOffset = -(xOffset % (xOffsetLimit / 2));
+
+        if ((CURRENT_FRAME % 3 == 0) && (firstSprite == 0 || firstSprite == 3 || firstSprite == 4))
+            instance->x = ring(instance->x + xOffset, 0, 320);
+
+        setPosDataPolyFT4(prim, instance->x - 160 + xOffset, instance->y - 120, object->width - 1, object->height - 1);
+        setUVDataPolyFT4(prim, object->texX, object->texY, object->width - 1, object->height - 1);
+        prim->r0    = 128;
+        prim->b0    = 128;
+        prim->g0    = 128;
+        prim->tpage = libgpu_GetTPage(0, object->transparency, (object->texX / 256) * 64 + 384, 0);
+        prim->clut  = getClut(object->clut * 16, 486);
+        instance->y += yOffset;
+        if (firstSprite != 2 && instance->y > 130)
+        {
+            auto roll = random(10);
+            if (roll < 2 && instance->currentFrame == 0)
+            {
+                instance->currentFrame = 1;
+                instance->timer        = 0;
+            }
+            if (instance->currentFrame > 1 && instance->animSprites[instance->currentFrame + 1] == -1)
+            {
+                instance->currentFrame = 0;
+                instance->y            = 0;
+            }
+        }
+        if (instance->y > 240) instance->y = 0;
+    }
+
     inline void
     renderMapOverlay(LocalMapObjectInstance& instance, LocalMapObject& object, int32_t cameraX, int32_t cameraY)
     {
@@ -183,7 +239,8 @@ extern "C"
         libgpu_SetPolyFT4(prim);
         libgpu_SetSemiTrans(prim, object.transparency == 4 ? 0 : 1);
 
-        if ((instance.flag & 0x80) != 0) { buildSnowflakePrim(prim, &instance, &object); }
+        if ((instance.flag & 0x80) != 0)
+            buildSnowflakePrim(prim, &instance, &object);
         else
             buildMapOverlayPrim(prim, &instance, &object, cameraX, cameraY, instance.orderValue < 20);
 

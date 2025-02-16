@@ -1257,9 +1257,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
-
     bool isTriggerSet(int32_t trigger);
-    void buildSnowflakePrim(POLY_FT4* prim, LocalMapObjectInstance* instance, LocalMapObject* object);
     void buildMapOverlayPrim(POLY_FT4* prim,
                              LocalMapObjectInstance* instance,
                              LocalMapObject* object,
