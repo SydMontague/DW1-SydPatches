@@ -3,7 +3,7 @@
 
 .org 0x800a0a50
 .area 0x800afd78-.
-  .importobj "compiled/Model.lib"
+  .importobj "compiled/Cave1.lib"
 
   .notice "Empty space left: " + (0x800afd78-.) + " bytes"
   .fill 0x800afd78-.
@@ -11,6 +11,7 @@
 
 .org 0x800b3d84
 .area 0x800b5008-.
+  .importobj "compiled/Cave2.lib"
 
   .notice "Empty space left: " + (0x800b5008-.) + " bytes"
   .fill 0x800b5008-.
