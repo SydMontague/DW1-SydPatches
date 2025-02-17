@@ -412,6 +412,35 @@ extern "C"
         }
     }
 
+    bool
+    moveMapObjectsWithLimit(int32_t start, int32_t count, int32_t xOffset, int32_t yOffset, int32_t maxX, int32_t maxY)
+    {
+        // this function only checks the limit on the first object?
+        for (int32_t i = 0; i < count; i++)
+        {
+            LOCAL_MAP_OBJECT_INSTANCE[start + i].x += xOffset;
+            LOCAL_MAP_OBJECT_INSTANCE[start + i].y += yOffset;
+        }
+
+        if (xOffset < 0 && LOCAL_MAP_OBJECT_INSTANCE[start].x <= maxX) return true;
+        if (xOffset > 0 && LOCAL_MAP_OBJECT_INSTANCE[start].x >= maxX) return true;
+        
+        if (yOffset < 0 && LOCAL_MAP_OBJECT_INSTANCE[start].y <= maxY) return true;
+        if (yOffset > 0 && LOCAL_MAP_OBJECT_INSTANCE[start].y >= maxY) return true;
+
+        return false;
+    }
+
+    void loadMapObjectPosition(int16_t* xPtr, int16_t* yPtr, int32_t start, int32_t count)
+    {
+        for (int32_t i = 0; i < count; i++)
+        {
+            LOCAL_MAP_OBJECT_INSTANCE[start + i].x = xPtr[i];
+            LOCAL_MAP_OBJECT_INSTANCE[start + i].y = yPtr[i];
+            LOCAL_MAP_OBJECT_INSTANCE[start + i].flag &= 0xEF;
+        }
+    }
+
     void renderNinjamonEffect(int32_t instanceId)
     {
         for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++)

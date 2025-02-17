@@ -31,6 +31,9 @@
 .org 0x800b5384
   jal renderNinjamonEffect
 
+.org 0x800b5bc4
+  jal loadMapObjectPosition
+
 .close
 
 
@@ -46,6 +49,18 @@
 .org 0x8008c22c
   jal storeMapObjectPosition
 
+
+.org 0x8008b080
+  jal loadMapObjectPosition
+.org 0x8008b4b0
+  jal loadMapObjectPosition
+.org 0x8008bcfc
+  jal loadMapObjectPosition
+.org 0x8008c7b0
+  jal loadMapObjectPosition
+.org 0x8008c9a8
+  jal loadMapObjectPosition
+  
 .close
 
 
@@ -60,5 +75,17 @@
   jal storeMapObjectPosition
 .org 0x80089bb4
   jal storeMapObjectPosition
+
+
+.org 0x80088c7c
+  jal loadMapObjectPosition
+.org 0x80088f14
+  jal loadMapObjectPosition
+.org 0x800890e8
+  jal loadMapObjectPosition
+.org 0x8008964c
+  jal loadMapObjectPosition
+.org 0x8008a604
+  jal loadMapObjectPosition
 
 .close
