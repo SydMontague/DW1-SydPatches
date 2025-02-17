@@ -39,14 +39,14 @@
 ;  jal random
 ;.org 0x800b4f60
 ;  jal random
-.org 0x800b52a8
-  jal random
-.org 0x800b52c4
-  jal random
-.org 0x800b5438
-  jal random
-.org 0x800b5454
-  jal random
+;.org 0x800b52a8
+;  jal random
+;.org 0x800b52c4
+;  jal random
+;.org 0x800b5438
+;  jal random
+;.org 0x800b5454
+;  jal random
 ;.org 0x800c5694
 ;  jal random
 ;.org 0x800c56e8

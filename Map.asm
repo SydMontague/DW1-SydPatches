@@ -25,4 +25,40 @@
 .org 0x800d5b00
   jal renderMapOverlays
 
+.org 0x8010435c
+  jal createNinjamonEffect
+
+.org 0x800b5384
+  jal renderNinjamonEffect
+
+.close
+
+
+.open "work/DIGIMON/TRN_REL.BIN",0x80088800
+.psx
+
+.org 0x8008ac18
+  jal storeMapObjectPosition
+.org 0x8008b23c
+  jal storeMapObjectPosition
+.org 0x8008b870
+  jal storeMapObjectPosition
+.org 0x8008c22c
+  jal storeMapObjectPosition
+
+.close
+
+
+.open "work/DIGIMON/TRN2_REL.BIN",0x80088800
+.psx
+
+.org 0x80088890
+  jal storeMapObjectPosition
+.org 0x80088d10
+  jal storeMapObjectPosition
+.org 0x8008926c
+  jal storeMapObjectPosition
+.org 0x80089bb4
+  jal storeMapObjectPosition
+
 .close

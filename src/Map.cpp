@@ -1,3 +1,4 @@
+#include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
 #include "Partner.hpp"
@@ -10,8 +11,15 @@
 
 extern "C"
 {
+    constexpr auto NINJAMON_EFFECT_COUNT = 41;
+
     static int16_t mistOffsetX[4] = {-160, 160, 160, -160};
     static int16_t mistOffsetY[2] = {-120, 120};
+
+    static int16_t ninjamonEffecX[NINJAMON_EFFECT_COUNT];
+    static int16_t ninjamonEffecY[NINJAMON_EFFECT_COUNT];
+    static int8_t ninjamonEffecXOffset[NINJAMON_EFFECT_COUNT];
+    static int8_t ninjamonEffecYOffset[NINJAMON_EFFECT_COUNT];
 
     void loadMapEntities(uint8_t* buffer, uint32_t mapId, uint32_t exitId)
     {
@@ -393,5 +401,57 @@ extern "C"
                 if (data.currentFrame >= 8 || data.animSprites[data.currentFrame] == -1) data.currentFrame = 0;
             }
         }
+    }
+
+    void storeMapObjectPosition(int16_t* xPtr, int16_t* yPtr, int32_t start, int32_t count)
+    {
+        for (int32_t i = 0; i < count; i++)
+        {
+            xPtr[i] = LOCAL_MAP_OBJECT_INSTANCE[start + i].x;
+            yPtr[i] = LOCAL_MAP_OBJECT_INSTANCE[start + i].y;
+        }
+    }
+
+    void renderNinjamonEffect(int32_t instanceId)
+    {
+        for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++)
+        {
+            auto& data = LOCAL_MAP_OBJECT_INSTANCE[i];
+            data.x += ninjamonEffecXOffset[i];
+            data.y += ninjamonEffecYOffset[i];
+            data.orderValue = 10;
+
+            if (data.x > 160)
+            {
+                data.x                  = ninjamonEffecX[i];
+                data.y                  = ninjamonEffecY[i];
+                ninjamonEffecXOffset[i] = random(10) + 12;
+                ninjamonEffecYOffset[i] = random(10) + 3;
+            }
+        }
+
+        NPC_ACTIVE_ANIM[0]++;
+        if (NPC_ACTIVE_ANIM[0] >= 60)
+        {
+            for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++)
+            {
+                LOCAL_MAP_OBJECT_INSTANCE[i].flag = 1;
+            }
+            removeObject(ObjectID::NINJAMON_EFFECT, 0);
+        }
+    }
+
+    void createNinjamonEffect()
+    {
+        NPC_ACTIVE_ANIM[0] = 0;
+        storeMapObjectPosition(ninjamonEffecX, ninjamonEffecY, 0, NINJAMON_EFFECT_COUNT);
+
+        for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++)
+        {
+            ninjamonEffecXOffset[i] = random(10) + 12;
+            ninjamonEffecYOffset[i] = random(10) + 3;
+        }
+
+        addObject(ObjectID::NINJAMON_EFFECT, 0, nullptr, renderNinjamonEffect);
     }
 }

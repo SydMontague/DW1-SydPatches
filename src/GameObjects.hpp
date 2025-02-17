@@ -56,6 +56,7 @@ extern "C"
         BOULDER              = 4022,
         MERAMON_SHAKE        = 4024,
         PLAYTIME             = 4025,
+        NINJAMON_EFFECT      = 4026,
         DAYTIME_TRANSITION   = 4030,
         MAIN_MENU            = 5000,
         FISHING              = 12289,

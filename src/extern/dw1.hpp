@@ -1246,6 +1246,8 @@ extern "C"
     extern int16_t CAMERA_Y;
     extern int16_t CAMERA_X_PREVIOUS;
     extern int16_t CAMERA_Y_PREVIOUS;
+    extern uint8_t NPC_ACTIVE_ANIM[10];
+    extern LocalMapObjectInstance LOCAL_MAP_OBJECT_INSTANCE[188];
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];

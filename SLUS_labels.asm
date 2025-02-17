@@ -104,6 +104,8 @@
 .definelabel getDrawingOffsetCopy,      0x800d969c
 .definelabel isTriggerSet,              0x8010643c
 
+.definelabel LOCAL_MAP_OBJECT_INSTANCE, 0x8014f340
+.definelabel NPC_ACTIVE_ANIM, 0x80134d1e
 .definelabel MIST_CLUT_Y, 0x80134230
 .definelabel MIST_Y_OFFSETS, 0x8013422c
 .definelabel MIST_X_OFFSETS, 0x80134224
