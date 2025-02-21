@@ -7,6 +7,7 @@
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
 #include "extern/libgte.hpp"
+#include "extern/psx.hpp"
 #include "extern/stddef.hpp"
 
 extern "C"
@@ -15,6 +16,8 @@ extern "C"
 
     static int16_t mistOffsetX[4] = {-160, 160, 160, -160};
     static int16_t mistOffsetY[2] = {-120, 120};
+    static uint8_t moveObjectDeltaX[12];
+    static uint8_t moveObjectDeltaY[12];
 
     static int16_t ninjamonEffecX[NINJAMON_EFFECT_COUNT];
     static int16_t ninjamonEffecY[NINJAMON_EFFECT_COUNT];
@@ -412,6 +415,35 @@ extern "C"
         }
     }
 
+    void moveMapObjects(int32_t start, int32_t count, int32_t xOffset, int32_t yOffset)
+    {
+        for (int32_t i = 0; i < count; i++)
+        {
+            LOCAL_MAP_OBJECT_INSTANCE[start + i].x += xOffset;
+            LOCAL_MAP_OBJECT_INSTANCE[start + i].y += yOffset;
+        }
+    }
+
+    void setMapObjectsFlag(int32_t start, int32_t count, int32_t flag)
+    {
+        for (int32_t i = 0; i < count; i++)
+            LOCAL_MAP_OBJECT_INSTANCE[start + i].flag = flag;
+    }
+
+    void getDrawPosition(SVector* position, int16_t* outX, int16_t* outY)
+    {
+        libgs_GsSetLsMatrix(&libgs_REFERENCE_MATRIX);
+
+        cop2_v0xy = position->x | (position->y << 16);
+        cop2_v0z  = position->z | (position->pad << 16);
+
+        asm volatile("cop2 0x180001");
+        ScreenCoord val{.raw = static_cast<int32_t>(cop2_sxy2)};
+
+        *outX = DRAWING_OFFSET_X + val.x + CAMERA_X;
+        *outY = DRAWING_OFFSET_Y + val.y + CAMERA_Y;
+    }
+
     bool
     moveMapObjectsWithLimit(int32_t start, int32_t count, int32_t xOffset, int32_t yOffset, int32_t maxX, int32_t maxY)
     {
@@ -424,7 +456,7 @@ extern "C"
 
         if (xOffset < 0 && LOCAL_MAP_OBJECT_INSTANCE[start].x <= maxX) return true;
         if (xOffset > 0 && LOCAL_MAP_OBJECT_INSTANCE[start].x >= maxX) return true;
-        
+
         if (yOffset < 0 && LOCAL_MAP_OBJECT_INSTANCE[start].y <= maxY) return true;
         if (yOffset > 0 && LOCAL_MAP_OBJECT_INSTANCE[start].y >= maxY) return true;
 
@@ -482,5 +514,44 @@ extern "C"
         }
 
         addObject(ObjectID::NINJAMON_EFFECT, 0, nullptr, renderNinjamonEffect);
+    }
+
+    bool tickMoveObjectTo(int32_t objectId, int32_t actorId, int32_t speed, int32_t posX, int32_t posY)
+    {
+        auto& data = LOCAL_MAP_OBJECT_INSTANCE[objectId];
+
+        if (MAP_OBJECT_MOVE_TO_DATA[actorId] == 0)
+        {
+            moveObjectDeltaX[actorId]        = posX - data.x / speed;
+            moveObjectDeltaY[actorId]        = posY - data.y / speed;
+            MAP_OBJECT_MOVE_TO_DATA[actorId] = 1;
+        }
+
+        auto deltaX = moveObjectDeltaX[actorId];
+        auto deltaY = moveObjectDeltaY[actorId];
+        data.x += deltaX;
+        data.y += deltaY;
+
+        if (deltaX < 0 && data.x <= posX)
+            data.x = posX;
+        else if (deltaX > 0 && data.x >= posX)
+            data.x = posX;
+        else if (deltaX == 0)
+            data.x = posX;
+
+        if (deltaY < 0 && data.y <= posY)
+            data.y = posY;
+        else if (deltaY > 0 && data.y >= posY)
+            data.y = posY;
+        else if (deltaY == 0)
+            data.y = posY;
+
+        if (data.x == posX && data.y == posY)
+        {
+            MAP_OBJECT_MOVE_TO_DATA[actorId] = 0;
+            return true;
+        }
+
+        return false;
     }
 }
