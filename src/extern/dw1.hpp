@@ -1126,6 +1126,64 @@ extern "C"
         uint16_t flag;
     };
 
+    struct MapDigimon {
+        int16_t typeId;
+        int16_t unk1; // follow behavior
+        int16_t posX;
+        int16_t posY;
+        int16_t posZ;
+        int16_t rotX;
+        int16_t rotY;
+        int16_t rotZ;
+        int16_t aiTrackRange;
+        int16_t unk2;
+        int16_t scriptId;
+        int16_t maxHP;
+        int16_t maxMP;
+        int16_t currentHP;
+        int16_t currentMP;
+        int16_t offense;
+        int16_t defense;
+        int16_t speed;
+        int16_t brains;
+        int16_t bits;
+        int16_t chargeMode;
+        int16_t unk5; // smart AI?
+        int16_t moves[4];
+        int16_t movePrio[4];
+        int16_t fleeX;
+        int16_t fleeY;
+        int16_t fleeZ;
+        int16_t waypointCount;
+        int16_t aiSections[8];
+        SPosition3D waypoints[];
+    };
+
+    struct MapDigimonEntity {
+        int16_t typeId;
+        uint16_t padding;
+        Vector waypoints[8];
+        int16_t aiSections[8];
+        int16_t activeSecton;
+        int16_t padding2;
+        Vector targetLocation;
+        int16_t posX;
+        int16_t posY;
+        int16_t posZ;
+        int16_t rotX;
+        int16_t rotY;
+        int16_t rotZ;
+        int16_t trackingRange;
+        int16_t targetAngle;
+        int16_t ccDiff;
+        int16_t cwDiff;
+        uint8_t state;
+        uint8_t waypointWaitTimer;
+        int8_t animation;
+        bool hasWaypointTarget;
+        int8_t lookAtTamerState;
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1133,6 +1191,7 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern MapDigimonEntity MAP_DIGIMON_TABLE[8];
     extern GsRVIEW2 GS_VIEWPOINT;
     extern Chest CHEST_ARRAY[8];
     extern Item ITEM_PARA[128];
@@ -1322,7 +1381,6 @@ extern "C"
     bool rotateEntity(SVector* rotVector, int16_t* targetAngle, int16_t* ccDiff, int16_t* dwDiff, int16_t speed);
     void Tamer_tickFishing();
     void tickAnimation(Entity* entity);
-    void loadMapDigimon(uint8_t* buffer, uint32_t mapId);
     extern void Tamer_tickBattle(int32_t instanceId);
     extern int32_t main();
     extern int32_t getTileTrigger(Vector* position);
@@ -1434,3 +1492,5 @@ static_assert(sizeof(EFEFlashData) == 0x28);
 static_assert(sizeof(LocalMapObject) == 0x0E);
 static_assert(sizeof(MapObject) == 0x12);
 static_assert(sizeof(MapObjectInstance) == 0x26);
+static_assert(sizeof(MapDigimon) == 0x54);
+static_assert(sizeof(MapDigimonEntity) == 0xC4);

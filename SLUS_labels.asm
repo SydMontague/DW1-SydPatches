@@ -52,7 +52,6 @@
 .definelabel getTileTrigger,            0x800c0acc
 .definelabel main,                      0x800ee800
 .definelabel Tamer_tickBattle,          0x800f1214
-.definelabel loadMapDigimon,            0x800b5d0c
 .definelabel tickAnimation,             0x800c1c64
 .definelabel Tamer_tickFishing,         0x800e4e18
 .definelabel isKeyDown,                 0x800fc054
@@ -104,6 +103,7 @@
 .definelabel getDrawingOffsetCopy,      0x800d969c
 .definelabel isTriggerSet,              0x8010643c
 
+.definelabel MAP_DIGIMON_TABLE, 0x8013cb50
 .definelabel LOCAL_MAP_OBJECT_INSTANCE, 0x8014f340
 .definelabel NPC_ACTIVE_ANIM, 0x80134d1e
 .definelabel MIST_CLUT_Y, 0x80134230

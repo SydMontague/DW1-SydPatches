@@ -25,6 +25,73 @@ extern "C"
     static int8_t ninjamonEffecXOffset[NINJAMON_EFFECT_COUNT];
     static int8_t ninjamonEffecYOffset[NINJAMON_EFFECT_COUNT];
 
+    void loadMapDigimon(uint8_t* buffer, uint32_t mapId)
+    {
+        auto digimonCount = *reinterpret_cast<int16_t*>(buffer);
+        auto* currentPtr  = buffer + 2;
+
+        for (int32_t i = 0; i < digimonCount; i++)
+        {
+            auto* mapDigimon = reinterpret_cast<MapDigimon*>(currentPtr);
+
+            MAP_DIGIMON_TABLE[i].typeId        = mapDigimon->typeId;
+            MAP_DIGIMON_TABLE[i].state         = mapDigimon->unk1;
+            MAP_DIGIMON_TABLE[i].posX          = mapDigimon->posX;
+            MAP_DIGIMON_TABLE[i].posY          = mapDigimon->posY;
+            MAP_DIGIMON_TABLE[i].posZ          = mapDigimon->posZ;
+            MAP_DIGIMON_TABLE[i].rotX          = mapDigimon->rotX;
+            MAP_DIGIMON_TABLE[i].rotY          = mapDigimon->rotY;
+            MAP_DIGIMON_TABLE[i].rotZ          = mapDigimon->rotZ;
+            MAP_DIGIMON_TABLE[i].trackingRange = mapDigimon->aiTrackRange;
+
+            NPC_ENTITIES[i].unk2            = mapDigimon->unk2;
+            NPC_ENTITIES[i].scriptId        = mapDigimon->scriptId;
+            NPC_ENTITIES[i].stats.hp        = mapDigimon->maxHP;
+            NPC_ENTITIES[i].stats.mp        = mapDigimon->maxMP;
+            NPC_ENTITIES[i].stats.currentHP = mapDigimon->currentHP;
+            NPC_ENTITIES[i].stats.currentMP = mapDigimon->currentMP;
+            NPC_ENTITIES[i].stats.off       = mapDigimon->offense;
+            NPC_ENTITIES[i].stats.def       = mapDigimon->defense;
+            NPC_ENTITIES[i].stats.speed     = mapDigimon->speed;
+            NPC_ENTITIES[i].stats.brain     = mapDigimon->brains;
+            NPC_ENTITIES[i].bits            = mapDigimon->bits;
+            NPC_ENTITIES[i].chargeMode      = mapDigimon->chargeMode;
+            NPC_ENTITIES[i].unk1            = mapDigimon->unk5;
+
+            NPC_ENTITIES[i].stats.moves[0]     = mapDigimon->moves[0];
+            NPC_ENTITIES[i].stats.moves[1]     = mapDigimon->moves[1];
+            NPC_ENTITIES[i].stats.moves[2]     = mapDigimon->moves[2];
+            NPC_ENTITIES[i].stats.moves[3]     = mapDigimon->moves[3];
+            NPC_ENTITIES[i].stats.movesPrio[0] = mapDigimon->movePrio[0];
+            NPC_ENTITIES[i].stats.movesPrio[1] = mapDigimon->movePrio[1];
+            NPC_ENTITIES[i].stats.movesPrio[2] = mapDigimon->movePrio[2];
+            NPC_ENTITIES[i].stats.movesPrio[3] = mapDigimon->movePrio[3];
+            NPC_ENTITIES[i].flee.x             = mapDigimon->fleeX;
+            NPC_ENTITIES[i].flee.y             = mapDigimon->fleeY;
+            NPC_ENTITIES[i].flee.z             = mapDigimon->fleeZ;
+            MAP_DIGIMON_TABLE[i].animation     = 0;
+
+            MAP_DIGIMON_TABLE[i].aiSections[0] = mapDigimon->aiSections[0];
+            MAP_DIGIMON_TABLE[i].aiSections[1] = mapDigimon->aiSections[1];
+            MAP_DIGIMON_TABLE[i].aiSections[2] = mapDigimon->aiSections[2];
+            MAP_DIGIMON_TABLE[i].aiSections[3] = mapDigimon->aiSections[3];
+            MAP_DIGIMON_TABLE[i].aiSections[4] = mapDigimon->aiSections[4];
+            MAP_DIGIMON_TABLE[i].aiSections[5] = mapDigimon->aiSections[5];
+            MAP_DIGIMON_TABLE[i].aiSections[6] = mapDigimon->aiSections[6];
+            MAP_DIGIMON_TABLE[i].aiSections[7] = mapDigimon->aiSections[7];
+
+            for (int32_t j = 0; j < mapDigimon->waypointCount; j++)
+            {
+                MAP_DIGIMON_TABLE[i].waypoints[j].x = mapDigimon->waypoints[j].x;
+                MAP_DIGIMON_TABLE[i].waypoints[j].y = mapDigimon->waypoints[j].y;
+                MAP_DIGIMON_TABLE[i].waypoints[j].z = mapDigimon->waypoints[j].z;
+            }
+            MAP_DIGIMON_TABLE[i].activeSecton = 0;
+
+            currentPtr += sizeof(MapDigimon) + sizeof(SPosition3D) * mapDigimon->waypointCount;
+        }
+    }
+
     void loadMapEntities(uint8_t* buffer, uint32_t mapId, uint32_t exitId)
     {
         memcpy(&MAP_WARPS, buffer, sizeof(MapWarps));
