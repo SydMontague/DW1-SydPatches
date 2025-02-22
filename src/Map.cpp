@@ -1,3 +1,4 @@
+#include "Entity.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
@@ -549,6 +550,73 @@ extern "C"
         if (data.x == posX && data.y == posY)
         {
             MAP_OBJECT_MOVE_TO_DATA[actorId] = 0;
+            return true;
+        }
+
+        return false;
+    }
+
+    constexpr int32_t getFirstSpriteIndex(LocalMapObjectInstance* instance)
+    {
+        for (auto val : instance->animSprites)
+            if (val != -2) return val;
+
+        return -1;
+    }
+
+    void spawnSpriteAtLocation(int16_t x, int16_t y, int16_t z, int32_t sprite, int16_t count)
+    {
+        // TODO this function breaks when trying to add more than 30 sprites
+        SVector pos{.x = x, .y = y, .z = z};
+        int16_t drawX;
+        int16_t drawY;
+        int16_t xPtr[30];
+        int16_t yPtr[30];
+
+        getDrawPosition(&pos, &drawX, &drawY);
+
+        for (int32_t i = 0; i < count; i++)
+        {
+            int32_t spriteIndex = getFirstSpriteIndex(&LOCAL_MAP_OBJECT_INSTANCE[i]);
+
+            // vanilla doesn't check if no sprite got found and thus potentially trashes its stack
+            if (spriteIndex == -1) continue;
+
+            auto& obj = LOCAL_MAP_OBJECTS[spriteIndex];
+            xPtr[i]   = drawX - obj.width / 2;
+            yPtr[i]   = drawY - obj.height / 2;
+        }
+
+        loadMapObjectPosition(xPtr, yPtr, sprite, count);
+    }
+
+    void spawnSpriteAtEntity(int32_t scriptId, int32_t nodeId, int32_t sprite)
+    {
+        uint8_t _scriptId = scriptId;
+        auto* entity      = getEntityFromScriptId(&_scriptId);
+        auto* pos         = entity->posData[nodeId].posMatrix.work.t;
+
+        spawnSpriteAtLocation(pos[0], pos[1], pos[2], sprite, 1);
+    }
+
+    void resetMapObjectAnimation(int32_t start, int32_t count)
+    {
+        for (int32_t i = 0; i < count; i++)
+        {
+            LOCAL_MAP_OBJECT_INSTANCE[start + i].timer        = 0;
+            LOCAL_MAP_OBJECT_INSTANCE[start + i].currentFrame = 0;
+        }
+    }
+
+    bool tickRemoveMist()
+    {
+        MIST_CLUT_Y[0] += 0x10;
+        MIST_CLUT_Y[1] += 0x10;
+
+        if (MIST_CLUT_Y[0] >= 192)
+        {
+            MIST_CLUT_Y[0] = 192;
+            MIST_CLUT_Y[1] = 128;
             return true;
         }
 

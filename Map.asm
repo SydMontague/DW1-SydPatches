@@ -31,11 +31,11 @@
 ;.org 0x800b5384
 ;  jal renderNinjamonEffect
 
-.org 0x800b5bc4
-  jal loadMapObjectPosition
+;.org 0x800b5bc4
+;  jal loadMapObjectPosition
 
-.org 0x800b5a98
-  jal getDrawPosition
+;.org 0x800b5a98
+;  jal getDrawPosition
 
 .org 0x800e68a4
   jal setMapObjectsFlag
@@ -50,6 +50,19 @@
 
 .org 0x801058e4
   jal tickMoveObjectTo
+
+.org 0x80104f28
+  jal spawnSpriteAtLocation
+
+.org 0x80104f58
+  jal spawnSpriteAtEntity
+
+.org 0x80104140
+  jal resetMapObjectAnimation
+
+.org 0x80105e64
+  jal tickRemoveMist
+
 .close
 
 
@@ -115,8 +128,44 @@
   jal setMapObjectsFlag
 
 
+.org 0x8008ad5c
+  jal moveMapObjectsWithLimit
+.org 0x8008ad9c
+  jal moveMapObjectsWithLimit
+.org 0x8008adc0
+  jal moveMapObjectsWithLimit
+.org 0x8008b018
+  jal moveMapObjectsWithLimit
+.org 0x8008bad0
+  jal moveMapObjectsWithLimit
+.org 0x8008bb00
+  jal moveMapObjectsWithLimit
+.org 0x8008bb94
+  jal moveMapObjectsWithLimit
+.org 0x8008bc04
+  jal moveMapObjectsWithLimit
+.org 0x8008c35c
+  jal moveMapObjectsWithLimit
+.org 0x8008c488
+  jal moveMapObjectsWithLimit
+.org 0x8008c550
+  jal moveMapObjectsWithLimit
+.org 0x8008c5c4
+  jal moveMapObjectsWithLimit
+.org 0x8008c638
+  jal moveMapObjectsWithLimit
+.org 0x8008c6ac
+  jal moveMapObjectsWithLimit
+.org 0x8008c720
+  jal moveMapObjectsWithLimit
+.org 0x8008c788
+  jal moveMapObjectsWithLimit
+
 .org 0x8008b398
   jal moveMapObjects
+
+.org 0x8008bed8
+  jal resetMapObjectAnimation
 
 .close
 
@@ -187,5 +236,35 @@
   jal setMapObjectsFlag
 .org 0x8008a904
   jal setMapObjectsFlag
+
+
+.org 0x80088e78
+  jal resetMapObjectAnimation
+.org 0x80089db0
+  jal resetMapObjectAnimation
+.org 0x8008a32c
+  jal resetMapObjectAnimation
+.org 0x8008a438
+  jal resetMapObjectAnimation
+
+
+.org 0x800889cc
+  jal moveMapObjectsWithLimit
+.org 0x80088a0c
+  jal moveMapObjectsWithLimit
+.org 0x80088a30
+  jal moveMapObjectsWithLimit
+.org 0x80088c14
+  jal moveMapObjectsWithLimit
+.org 0x80088e20
+  jal moveMapObjectsWithLimit
+.org 0x800893b0
+  jal moveMapObjectsWithLimit
+.org 0x800893f0
+  jal moveMapObjectsWithLimit
+.org 0x80089414
+  jal moveMapObjectsWithLimit
+.org 0x800895e4
+  jal moveMapObjectsWithLimit
 
 .close

@@ -30,8 +30,8 @@
 ;  jal getEntityFromScriptId
 ;.org 0x800ac890
 ;  jal getEntityFromScriptId
-.org 0x800b5bfc
-  jal getEntityFromScriptId
+;.org 0x800b5bfc
+;  jal getEntityFromScriptId
 .org 0x800b63d0
   jal getEntityFromScriptId
 .org 0x800b795c
