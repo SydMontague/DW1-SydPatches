@@ -33,6 +33,48 @@ extern "C"
         removeEntity(entity->type, _entityId);
     }
 
+    void clearMapAITable(int32_t entityId)
+    {
+        if (entityId != -1)
+        {
+            MAP_DIGIMON_TABLE[entityId].hasWaypointTarget = false;
+            MAP_DIGIMON_TABLE[entityId].lookAtTamerState  = 0;
+            MAP_DIGIMON_TABLE[entityId].activeSecton      = 0;
+        }
+        else
+        {
+            for (int32_t i = 0; i < 8; i++)
+            {
+                MAP_DIGIMON_TABLE[i].hasWaypointTarget = false;
+                MAP_DIGIMON_TABLE[i].lookAtTamerState  = 0;
+                MAP_DIGIMON_TABLE[i].activeSecton      = 0;
+            }
+        }
+    }
+
+    void removeMapEntities()
+    {
+        // vanilla writes a stack local int32_t[8] array here to -1, but it seems unused?
+
+        for (int32_t i = 2; i < 10; i++)
+        {
+            auto* entity = ENTITY_TABLE.getEntityById(i);
+            if (entity == nullptr) continue;
+
+            removeEntity(entity->type, i);
+            ENTITY_TABLE.setEntity(i, nullptr);
+        }
+
+        for (int32_t i = 0; i < 8; i++)
+        {
+            if (LOADED_DIGIMON_MODELS[i] == -1) continue;
+            unloadModel(LOADED_DIGIMON_MODELS[i], EntityType::NPC);
+        }
+
+        initializeLoadedNPCModels();
+        clearMapAITable(-1);
+    }
+
     void unloadDigimonModel(DigimonType digimonType)
     {
         unloadModel(static_cast<int32_t>(digimonType), EntityType::NPC);

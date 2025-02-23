@@ -11,10 +11,10 @@
 ;  j loadMMD
 
 
-.org 0x800b63fc
-  j unloadModel
-.org 0x800b6634
-  jal unloadModel
+;.org 0x800b63fc
+;  j unloadModel
+;.org 0x800b6634
+;  jal unloadModel
 .org 0x800d9764
   jal unloadModel
 .org 0x800d9770
@@ -43,10 +43,10 @@
 
 ;.org 0x800b61a8		
 ;  jal removeEntity
-.org 0x800b63e4		
-  jal removeEntity
-.org 0x800b65e0		
-  jal removeEntity
+;.org 0x800b63e4		
+;  jal removeEntity
+;.org 0x800b65e0		
+;  jal removeEntity
 .org 0x800d9744		
   jal removeEntity
 .org 0x800e3610		

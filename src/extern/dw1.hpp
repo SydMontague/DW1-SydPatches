@@ -1308,6 +1308,7 @@ extern "C"
     extern int16_t CAMERA_Y_PREVIOUS;
     extern uint8_t NPC_ACTIVE_ANIM[10];
     extern LocalMapObjectInstance LOCAL_MAP_OBJECT_INSTANCE[188];
+    extern int32_t LOADED_DIGIMON_MODELS[8];
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1319,6 +1320,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void initializeLoadedNPCModels();
     void NPCEntity_tickOverworld(int32_t instanceId, MapDigimonEntity* mapDigimon);
     void NPCEntity_tickBattle(int32_t instanceId);
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);

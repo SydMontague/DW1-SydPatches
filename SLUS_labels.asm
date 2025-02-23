@@ -105,7 +105,9 @@
 .definelabel entityIsOffScreen,         0x800d5430
 .definelabel NPCEntity_tickOverworld,   0x800b6720
 .definelabel NPCEntity_tickBattle,      0x800f1430
+.definelabel initializeLoadedNPCModels, 0x80105aa8
 
+.definelabel LOADED_DIGIMON_MODELS, 0x801be7ec
 .definelabel MAP_DIGIMON_TABLE, 0x8013cb50
 .definelabel LOCAL_MAP_OBJECT_INSTANCE, 0x8014f340
 .definelabel NPC_ACTIVE_ANIM, 0x80134d1e
