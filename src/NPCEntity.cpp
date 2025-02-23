@@ -1,5 +1,6 @@
 #include "Entity.hpp"
 #include "Model.hpp"
+#include "Tamer.hpp"
 #include "extern/STD.hpp"
 #include "extern/dw1.hpp"
 
@@ -8,6 +9,87 @@ extern "C"
     void loadNPCModel(DigimonType digimonId)
     {
         loadMMD(digimonId, EntityType::NPC);
+    }
+
+    void NPCEntity_tickOverworld(int32_t instanceId, MapDigimonEntity* mapDigimon)
+    {
+        NPCEntity* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(instanceId));
+        if (entity == nullptr) return;
+        if (IS_IN_MENU == 1) return;
+
+        if (NPC_ACTIVE_ANIM[instanceId] != 0) {}
+        else if (mapDigimon->stopAnim)
+        {
+            if (mapDigimon->animation != 0)
+            {
+                mapDigimon->animation = 0;
+                startAnimation(entity, mapDigimon->animation);
+            }
+        }
+        else
+        {
+            if (mapDigimon->lookAtTamerState == 0) tickWaypointAI(mapDigimon, entity, instanceId);
+
+            auto inTrackingRange = isInTrackingRange(mapDigimon, &TAMER_ENTITY.posData->location);
+            auto inSomeRange     = isWithinSomeRange(entity, &TAMER_ENTITY, mapDigimon);
+
+            switch (mapDigimon->state)
+            {
+                case 2:
+                case 11:
+                    if (inTrackingRange || mapDigimon->lookAtTamerState != 0)
+                        tickLookingAtTamer(mapDigimon, entity, &TAMER_ENTITY);
+                    break;
+                case 3:
+                case 4:
+                case 5:
+                case 12:
+                case 13:
+                case 14:
+                    if (inTrackingRange || mapDigimon->lookAtTamerState != 0)
+                        tickTrackingTamer(mapDigimon, entity, &TAMER_ENTITY, instanceId);
+                    break;
+                case 6:
+                case 15:
+                    if (inSomeRange || mapDigimon->lookAtTamerState != 0)
+                        tickTrackingTamer2(mapDigimon, entity, &TAMER_ENTITY, instanceId, 2);
+                    break;
+                case 7:
+                case 16:
+                    if (inSomeRange || mapDigimon->lookAtTamerState != 0)
+                        tickTrackingTamer2(mapDigimon, entity, &TAMER_ENTITY, instanceId, 4);
+                    break;
+                case 8:
+                case 9:
+                case 17:
+                case 18:
+                    if (inTrackingRange || mapDigimon->lookAtTamerState != 0)
+                        tickTrackingTamer2(mapDigimon, entity, &TAMER_ENTITY, instanceId, 2);
+                    break;
+            }
+
+            auto collisionResult                = entityCheckCollision(nullptr, entity, 0, 0);
+            NPC_COLLISION_STATE[instanceId - 2] = collisionResult;
+            if (collisionResult == CollisionCode::TAMER && Tamer_getState() == 0 &&
+                NPC_ENTITIES[instanceId - 2].autotalk == 1)
+            {
+                entity->animFlag |= 2;
+                if (IS_SCRIPT_PAUSED == 1)
+                {
+                    removeTriangleMenu();
+                    closeInventoryBoxes();
+                    removeUIBox1();
+                    TALKED_TO_ENTITY = instanceId;
+                    callScriptSection(CURRENT_SCRIPT_ID, entity->scriptId, 1);
+                }
+            }
+            if (collisionResult != CollisionCode::NONE && NPC_IS_WALKING_TOWARDS[instanceId - 2] == 0 &&
+                entity->animId > 1 && entity->animId < 5)
+                collisionGrace(0, entity, 0, 0);
+        }
+
+        entity->isOnScreen = !entityIsOffScreen(entity, 320, 240);
+        tickAnimation(entity);
     }
 
     void NPCEntity_tick(int32_t instanceId)

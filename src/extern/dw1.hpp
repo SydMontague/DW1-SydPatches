@@ -980,7 +980,7 @@ extern "C"
         OFFSET   = -1,
     };
 
-    enum class CollisionCode
+    enum class CollisionCode : int16_t
     {
         TAMER,
         PARTNER,
@@ -1183,6 +1183,7 @@ extern "C"
         int8_t animation;
         bool hasWaypointTarget;
         int8_t lookAtTamerState;
+        bool stopAnim;
     };
 
     extern PartnerPara PARTNER_PARA;
@@ -1309,6 +1310,7 @@ extern "C"
     extern uint8_t NPC_ACTIVE_ANIM[10];
     extern LocalMapObjectInstance LOCAL_MAP_OBJECT_INSTANCE[188];
     extern int32_t LOADED_DIGIMON_MODELS[8];
+    extern CollisionCode NPC_COLLISION_STATE[8];
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1320,8 +1322,17 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void tickWaypointAI(MapDigimonEntity* mapDigimon, Entity* entity, uint32_t entityId);
+    bool isInTrackingRange(MapDigimonEntity* mapDigimon, Vector* location);
+    bool isWithinSomeRange(Entity* entity, Entity* otherEntity, MapDigimonEntity* mapDigimon);
+    void tickLookingAtTamer(MapDigimonEntity* mapDigimon, Entity* entity, Entity* otherEntity);
+    void tickTrackingTamer(MapDigimonEntity* mapDigimon, Entity* entity, Entity* otherEntity, int32_t instanceId);
+    void tickTrackingTamer2(MapDigimonEntity* mapDigimon,
+                            Entity* entity,
+                            Entity* otherEntity,
+                            int32_t instanceId,
+                            int32_t animId);
     void initializeLoadedNPCModels();
-    void NPCEntity_tickOverworld(int32_t instanceId, MapDigimonEntity* mapDigimon);
     void NPCEntity_tickBattle(int32_t instanceId);
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
     bool isTriggerSet(int32_t trigger);

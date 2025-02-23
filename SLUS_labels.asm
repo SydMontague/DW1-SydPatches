@@ -103,10 +103,16 @@
 .definelabel getDrawingOffsetCopy,      0x800d969c
 .definelabel isTriggerSet,              0x8010643c
 .definelabel entityIsOffScreen,         0x800d5430
-.definelabel NPCEntity_tickOverworld,   0x800b6720
 .definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8
+.definelabel tickWaypointAI,            0x800b6b6c
+.definelabel isInTrackingRange,         0x800b6c18
+.definelabel isWithinSomeRange,         0x800b6dfc
+.definelabel tickLookingAtTamer,        0x800b6c8c
+.definelabel tickTrackingTamer,         0x800b6d68
+.definelabel tickTrackingTamer2,        0x800b6e74
 
+.definelabel NPC_COLLISION_STATE, 0x8013d190
 .definelabel LOADED_DIGIMON_MODELS, 0x801be7ec
 .definelabel MAP_DIGIMON_TABLE, 0x8013cb50
 .definelabel LOCAL_MAP_OBJECT_INSTANCE, 0x8014f340
