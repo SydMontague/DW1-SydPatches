@@ -34,7 +34,7 @@ extern "C"
         {
             auto* mapDigimon = reinterpret_cast<MapDigimon*>(currentPtr);
 
-            MAP_DIGIMON_TABLE[i].typeId        = mapDigimon->typeId;
+            MAP_DIGIMON_TABLE[i].typeId        = static_cast<DigimonType>(mapDigimon->typeId);
             MAP_DIGIMON_TABLE[i].state         = mapDigimon->unk1;
             MAP_DIGIMON_TABLE[i].posX          = mapDigimon->posX;
             MAP_DIGIMON_TABLE[i].posY          = mapDigimon->posY;

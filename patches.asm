@@ -26,3 +26,4 @@
 .include "Fade.asm"
 .include "Effects.asm"
 .include "EFE.asm"
+.include "NPCEntity.asm"

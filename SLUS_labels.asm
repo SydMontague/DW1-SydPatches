@@ -102,6 +102,8 @@
 .definelabel isTamerOnScreen,           0x800e67ec
 .definelabel getDrawingOffsetCopy,      0x800d969c
 .definelabel isTriggerSet,              0x8010643c
+.definelabel entityIsOffScreen,         0x800d5430
+.definelabel NPCEntity_tick,            0x800b6304
 
 .definelabel MAP_DIGIMON_TABLE, 0x8013cb50
 .definelabel LOCAL_MAP_OBJECT_INSTANCE, 0x8014f340

@@ -2,13 +2,14 @@
 
 extern "C"
 {
-    extern void initializeDigimonObject(DigimonType type, int32_t instanceId, TickFunction tick);
-    extern void setupEntityMatrix(int32_t entityId);
-    extern void setEntityPosition(int32_t entityId, int32_t posX, int32_t posY, int32_t posZ);
-    extern void setEntityRotation(int32_t entityId, int32_t rotX, int32_t rotY, int32_t rotZ);
-    extern void loadMMD(DigimonType digimonType, EntityType entityType);
-    extern void renderWireframed(GsDOBJ2* obj, int32_t wireFrameShare);
-    extern ModelComponent* getEntityModelComponent(int32_t instance, EntityType entityType);
-    extern EntityType getEntityType(Entity* entity);
-    extern void applyMMD(DigimonType digimonType, EntityType entityType, EvoModelData* modelData);
+    void initializeDigimonObject(DigimonType type, int32_t instanceId, TickFunction tick);
+    void setupEntityMatrix(int32_t entityId);
+    void setEntityPosition(int32_t entityId, int32_t posX, int32_t posY, int32_t posZ);
+    void setEntityRotation(int32_t entityId, int32_t rotX, int32_t rotY, int32_t rotZ);
+    void loadMMD(DigimonType digimonType, EntityType entityType);
+    void renderWireframed(GsDOBJ2* obj, int32_t wireFrameShare);
+    ModelComponent* getEntityModelComponent(int32_t instance, EntityType entityType);
+    EntityType getEntityType(Entity* entity);
+    void applyMMD(DigimonType digimonType, EntityType entityType, EvoModelData* modelData);
+    void removeEntity(DigimonType type, int32_t instanceId);
 }

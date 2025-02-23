@@ -1126,7 +1126,8 @@ extern "C"
         uint16_t flag;
     };
 
-    struct MapDigimon {
+    struct MapDigimon
+    {
         int16_t typeId;
         int16_t unk1; // follow behavior
         int16_t posX;
@@ -1159,9 +1160,9 @@ extern "C"
         SPosition3D waypoints[];
     };
 
-    struct MapDigimonEntity {
-        int16_t typeId;
-        uint16_t padding;
+    struct MapDigimonEntity
+    {
+        DigimonType typeId;
         Vector waypoints[8];
         int16_t aiSections[8];
         int16_t activeSecton;
@@ -1318,6 +1319,8 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
+    void NPCEntity_tick(int32_t instanceId);
     bool isTriggerSet(int32_t trigger);
     bool isTamerOnScreen();
     void getDrawingOffsetCopy(int32_t* offsetX, int32_t* offsetY);
