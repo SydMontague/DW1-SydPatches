@@ -6,5 +6,11 @@
 
 .org 0x80103620
   jal scriptSetDigimon
+
+.org 0x80106c4c
+  jal unloadDigimonModel
+
+.org 0x80103644
+  jal scriptUnloadEntity
   
 .close

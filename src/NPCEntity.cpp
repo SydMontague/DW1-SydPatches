@@ -1,4 +1,6 @@
+#include "Entity.hpp"
 #include "Model.hpp"
+#include "extern/STD.hpp"
 #include "extern/dw1.hpp"
 
 extern "C"
@@ -6,6 +8,56 @@ extern "C"
     void loadNPCModel(DigimonType digimonId)
     {
         loadMMD(digimonId, EntityType::NPC);
+    }
+
+    void NPCEntity_tick(int32_t instanceId)
+    {
+        if (!ENTITY_TABLE.getEntityById(instanceId)->isOnMap) return;
+
+        switch (GAME_STATE)
+        {
+            case 0: NPCEntity_tickOverworld(instanceId, &MAP_DIGIMON_TABLE[instanceId - 2]); break;
+            case 1:
+            case 2:
+            case 3: NPCEntity_tickBattle(instanceId); break;
+            case 4:
+            case 5: STD_NPCEntity_tickTournament(instanceId); break;
+        }
+    }
+
+    void scriptUnloadEntity(int32_t entityId)
+    {
+        uint8_t _entityId = entityId;
+        auto* entity      = getEntityFromScriptId(&_entityId);
+        entity->isOnMap   = false;
+        removeEntity(entity->type, _entityId);
+    }
+
+    void unloadDigimonModel(DigimonType digimonType)
+    {
+        unloadModel(static_cast<int32_t>(digimonType), EntityType::NPC);
+    }
+
+    void clearMapDigimon()
+    {
+        for (int32_t i = 0; i < 8; i++)
+        {
+            for (int32_t j = 0; j < 8; j++)
+            {
+                MAP_DIGIMON_TABLE[i].aiSections[j] = -1;
+                MAP_DIGIMON_TABLE[i].waypoints[j]  = {};
+            }
+
+            MAP_DIGIMON_TABLE[i].activeSecton      = 0;
+            MAP_DIGIMON_TABLE[i].typeId            = DigimonType::INVALID;
+            MAP_DIGIMON_TABLE[i].waypointWaitTimer = 0;
+            MAP_DIGIMON_TABLE[i].cwDiff            = 0;
+            MAP_DIGIMON_TABLE[i].ccDiff            = 0;
+            MAP_DIGIMON_TABLE[i].targetAngle       = 0;
+            MAP_DIGIMON_TABLE[i].hasWaypointTarget = 0;
+            MAP_DIGIMON_TABLE[i].lookAtTamerState  = 0;
+            NPC_ACTIVE_ANIM[i + 2]                 = 0;
+        }
     }
 
     bool scriptSetDigimon(DigimonType digimonId, int32_t actorId, uint8_t autoTalk)

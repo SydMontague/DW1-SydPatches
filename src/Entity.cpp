@@ -15,18 +15,18 @@ extern "C"
     static Vector previousCameraPos;
     static bool previousCameraPosInitialized;
 
-    Entity* getEntityFromScriptId(uint8_t* param)
+    Entity* getEntityFromScriptId(uint8_t* entityId)
     {
         // TODO separate in and out parameters, once all users are implemented
-        auto input = *param;
+        auto input = *entityId;
         if (input == 0xFD)
         {
-            *param = 0;
+            *entityId = 0;
             return &TAMER_ENTITY;
         }
         if (input == 0xFC)
         {
-            *param = 1;
+            *entityId = 1;
             return &PARTNER_ENTITY;
         }
 
@@ -35,7 +35,7 @@ extern "C"
             auto* entity = &NPC_ENTITIES[i];
             if (entity->scriptId == input)
             {
-                *param = i + 2;
+                *entityId = i + 2;
                 return entity;
             }
         }

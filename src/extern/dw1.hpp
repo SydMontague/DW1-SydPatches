@@ -1319,8 +1319,9 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void NPCEntity_tickOverworld(int32_t instanceId, MapDigimonEntity* mapDigimon);
+    void NPCEntity_tickBattle(int32_t instanceId);
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
-    void NPCEntity_tick(int32_t instanceId);
     bool isTriggerSet(int32_t trigger);
     bool isTamerOnScreen();
     void getDrawingOffsetCopy(int32_t* offsetX, int32_t* offsetY);

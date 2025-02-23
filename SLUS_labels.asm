@@ -103,7 +103,8 @@
 .definelabel getDrawingOffsetCopy,      0x800d969c
 .definelabel isTriggerSet,              0x8010643c
 .definelabel entityIsOffScreen,         0x800d5430
-.definelabel NPCEntity_tick,            0x800b6304
+.definelabel NPCEntity_tickOverworld,   0x800b6720
+.definelabel NPCEntity_tickBattle,      0x800f1430
 
 .definelabel MAP_DIGIMON_TABLE, 0x8013cb50
 .definelabel LOCAL_MAP_OBJECT_INSTANCE, 0x8014f340
@@ -253,7 +254,8 @@
 .definelabel DoOA_tick, 0x80084644
 
 // STD_REL
-.definelabel STD_Tamer_tickTournament,  0x80069688
+.definelabel STD_Tamer_tickTournament, 0x80069688
+.definelabel STD_NPCEntity_tickTournament, 0x80069700
 
 // KAR_REL
 .definelabel KAR_tick, 0x800545c8

@@ -63,6 +63,9 @@
 .org 0x80105e64
   jal tickRemoveMist
 
+.org 0x800d5d04
+  jal clearMapDigimon
+
 .close
 
 
