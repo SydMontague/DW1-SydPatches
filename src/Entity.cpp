@@ -201,7 +201,7 @@ extern "C"
             int16_t ccDiff;
             getRotationDifference(entityPtr->posData, &rotationData[entityId1], &targetAngle, &ccDiff, &cwDiff);
 
-            if (rotateEntity(&entityPtr->posData->rotation, &targetAngle, &ccDiff, &cwDiff, 0x200))
+            if (rotateEntity(&entityPtr->posData->rotation, targetAngle, ccDiff, cwDiff, 0x200))
             {
                 hasRotationData[entityId1] = 0;
                 return true;

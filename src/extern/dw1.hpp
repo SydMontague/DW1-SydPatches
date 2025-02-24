@@ -1322,8 +1322,6 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
-    void tickWaypointWalk(MapDigimonEntity* mapDigimon, Entity* entity, int animation, int entityId);
-    void tickWaypointWait(MapDigimonEntity* mapDigimon, Entity* entity);
     void initializeLoadedNPCModels();
     void NPCEntity_tickBattle(int32_t instanceId);
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);

@@ -15,6 +15,68 @@ extern "C"
         loadMMD(digimonId, EntityType::NPC);
     }
 
+    void tickWaypointWalk(MapDigimonEntity* mapDigimon, Entity* entity, int32_t animation, int32_t instanceId)
+    {
+        if (mapDigimon->hasWaypointTarget)
+        {
+            if (NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::NONE)
+            {
+                int16_t targetAngle;
+                int16_t ccDiff;
+                int16_t cwDiff;
+                getRotationDifference(entity->posData, &mapDigimon->targetLocation, &targetAngle, &ccDiff, &cwDiff);
+                rotateEntity(&entity->posData->rotation, targetAngle, ccDiff, cwDiff, ROTATION_SPEED);
+            }
+            int16_t currentTileX;
+            int16_t currentTileY;
+            int16_t targetTileX;
+            int16_t targetTileY;
+            getModelTile(&entity->posData->location, &currentTileX, &currentTileY);
+            getModelTile(&mapDigimon->targetLocation, &targetTileX, &targetTileY);
+            // TODO this is similar to the entityWalkTo softlock, does the bug exist here as well?
+
+            if (currentTileX == targetTileX && currentTileY == targetTileY)
+            {
+                mapDigimon->hasWaypointTarget = false;
+                mapDigimon->activeSecton++;
+            }
+        }
+        else
+        {
+            mapDigimon->targetLocation = mapDigimon->waypoints[mapDigimon->activeSecton];
+            if (mapDigimon->animation != animation)
+            {
+                mapDigimon->animation = animation;
+                startAnimation(entity, mapDigimon->animation);
+            }
+            mapDigimon->hasWaypointTarget = true;
+        }
+    }
+
+    void tickWaypointWait(MapDigimonEntity* mapDigimon, Entity* entity)
+    {
+        if (mapDigimon->hasWaypointTarget)
+        {
+            mapDigimon->waypointWaitTimer++;
+            if (mapDigimon->waypoints[mapDigimon->activeSecton].x <= mapDigimon->waypointWaitTimer)
+            {
+                mapDigimon->hasWaypointTarget = false;
+                mapDigimon->waypointWaitTimer = 0;
+                mapDigimon->activeSecton++;
+            }
+        }
+        else
+        {
+            if (mapDigimon->animation != 0)
+            {
+                mapDigimon->animation = 0;
+                startAnimation(entity, mapDigimon->animation);
+            }
+            mapDigimon->waypointWaitTimer = 0;
+            mapDigimon->hasWaypointTarget = true;
+        }
+    }
+
     bool isInTrackingRect(MapDigimonEntity* mapDigimon, Vector* location)
     {
         return isWithinRect(mapDigimon->posX, mapDigimon->posZ, mapDigimon->trackingRange, location);
@@ -54,7 +116,7 @@ extern "C"
                     int16_t ccDiff;
                     int16_t cwDiff;
                     getRotationDifference(entity->posData, &mapDigimon->targetLocation, &targetAngle, &ccDiff, &cwDiff);
-                    rotateEntity(&entity->posData->rotation, &targetAngle, &ccDiff, &cwDiff, ROTATION_SPEED);
+                    rotateEntity(&entity->posData->rotation, targetAngle, ccDiff, cwDiff, ROTATION_SPEED);
                 }
             }
             else
@@ -73,7 +135,7 @@ extern "C"
                 int16_t ccDiff;
                 int16_t cwDiff;
                 getRotationDifference(entity->posData, &mapDigimon->targetLocation, &targetAngle, &ccDiff, &cwDiff);
-                rotateEntity(&entity->posData->rotation, &targetAngle, &ccDiff, &cwDiff, ROTATION_SPEED);
+                rotateEntity(&entity->posData->rotation, targetAngle, ccDiff, cwDiff, ROTATION_SPEED);
             }
             int16_t currentTileX;
             int16_t currentTileY;
@@ -126,7 +188,7 @@ extern "C"
                 int16_t ccDiff;
                 int16_t cwDiff;
                 getRotationDifference(entity->posData, &mapDigimon->targetLocation, &targetAngle, &ccDiff, &cwDiff);
-                rotateEntity(&entity->posData->rotation, &targetAngle, &ccDiff, &cwDiff, ROTATION_SPEED);
+                rotateEntity(&entity->posData->rotation, targetAngle, ccDiff, cwDiff, ROTATION_SPEED);
             }
 
             int16_t currentTileX;
@@ -168,7 +230,7 @@ extern "C"
                 int16_t ccDiff;
                 int16_t cwDiff;
                 getRotationDifference(entity->posData, &mapDigimon->targetLocation, &targetAngle, &ccDiff, &cwDiff);
-                rotateEntity(&entity->posData->rotation, &targetAngle, &ccDiff, &cwDiff, ROTATION_SPEED);
+                rotateEntity(&entity->posData->rotation, targetAngle, ccDiff, cwDiff, ROTATION_SPEED);
             }
             int16_t currentTileX;
             int16_t currentTileY;
@@ -206,7 +268,7 @@ extern "C"
             int16_t cwDiff;
 
             getRotationDifference(entity->posData, &otherEntity->posData->location, &targetAngle, &ccDiff, &cwDiff);
-            rotateEntity(&entity->posData->rotation, &targetAngle, &ccDiff, &cwDiff, ROTATION_SPEED);
+            rotateEntity(&entity->posData->rotation, targetAngle, ccDiff, cwDiff, ROTATION_SPEED);
 
             if (!isInTrackingRect(mapDigimon, &otherEntity->posData->location))
             {

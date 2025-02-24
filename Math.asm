@@ -141,36 +141,6 @@
 .org 0x800e81f8
   jal atan
 
-;.org 0x800ac4f4
-;  jal getRotationDifference
-;.org 0x800b6cfc
-;  jal getRotationDifference
-;.org 0x800b7184
-;  jal getRotationDifference
-;.org 0x800b72e4
-;  jal getRotationDifference
-;.org 0x800b7468
-;  jal getRotationDifference
-;.org 0x800b7508
-;  jal getRotationDifference
-.org 0x800b77a0
-  jal getRotationDifference
-
-;.org 0x800ac514
-;  jal rotateEntity
-;.org 0x800b6d1c
-;  jal rotateEntity
-;.org 0x800b71a4
-;  jal rotateEntity
-;.org 0x800b7304
-;  jal rotateEntity
-;.org 0x800b7488
-;  jal rotateEntity
-;.org 0x800b7528
-;  jal rotateEntity
-.org 0x800b77c0
-  jal rotateEntity
-
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

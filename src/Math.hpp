@@ -39,7 +39,7 @@ extern "C"
     bool hasAABBOverlap(AABB* aabb1, AABB* aabb2);
     int32_t findAABBHitEntity(AABB* aabb, Entity* ignoreEntity, int32_t startId);
     void getRotationDifference(PositionData* pos, Vector* target, int16_t* outAngle, int16_t* ccDiff, int16_t* cwDiff);
-    bool rotateEntity(SVector* rotVector, int16_t* targetAngle, int16_t* ccDiff, int16_t* dwDiff, int16_t speed);
+    bool rotateEntity(SVector* rotVector, int16_t targetAngle, int16_t ccDiff, int16_t cwDiff, int16_t speed);
 }
 
 template<class T> constexpr auto clamp(T val, decltype(val) min, decltype(val) max) -> decltype(val)
