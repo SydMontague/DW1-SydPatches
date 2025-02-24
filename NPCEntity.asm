@@ -23,9 +23,6 @@
 .org 0x800b7bec
   jal clearMapAiTable
 
-.org 0x800b7410
-  jal isInTrackingRadius
-
 .close
 
 

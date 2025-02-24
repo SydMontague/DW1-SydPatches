@@ -1324,8 +1324,6 @@ extern "C"
 
     void tickWaypointWalk(MapDigimonEntity* mapDigimon, Entity* entity, int animation, int entityId);
     void tickWaypointWait(MapDigimonEntity* mapDigimon, Entity* entity);
-    void tickTrackingTamer3(MapDigimonEntity* mapDigimon, Entity* entity, int32_t instanceId);
-    void tickTrackingTamer4(MapDigimonEntity* mapDigimon, Entity* entity, Entity* otherEntity, int32_t instanceId);
     void initializeLoadedNPCModels();
     void NPCEntity_tickBattle(int32_t instanceId);
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);

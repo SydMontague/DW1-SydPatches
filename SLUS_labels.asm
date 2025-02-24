@@ -105,8 +105,6 @@
 .definelabel initializeLoadedNPCModels, 0x80105aa8
 .definelabel tickWaypointWait,          0x800b75ec
 .definelabel tickWaypointWalk,          0x800b76a4
-.definelabel tickTrackingTamer3,        0x800b70c8
-.definelabel tickTrackingTamer4,        0x800b7398
 
 .definelabel NPC_COLLISION_STATE, 0x8013d190
 .definelabel LOADED_DIGIMON_MODELS, 0x801be7ec

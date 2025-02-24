@@ -8,6 +8,8 @@
 
 extern "C"
 {
+    constexpr auto ROTATION_SPEED = 113;
+
     void loadNPCModel(DigimonType digimonId)
     {
         loadMMD(digimonId, EntityType::NPC);
@@ -42,8 +44,63 @@ extern "C"
             }
             mapDigimon->lookAtTamerState = 1;
         }
-        else
-            tickTrackingTamer4(mapDigimon, entity, otherEntity, instanceId);
+        else if (mapDigimon->lookAtTamerState == 1)
+        {
+            if (isInTrackingRadius(entity, otherEntity, mapDigimon))
+            {
+                if (NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::NONE)
+                {
+                    int16_t targetAngle;
+                    int16_t ccDiff;
+                    int16_t cwDiff;
+                    getRotationDifference(entity->posData, &mapDigimon->targetLocation, &targetAngle, &ccDiff, &cwDiff);
+                    rotateEntity(&entity->posData->rotation, &targetAngle, &ccDiff, &cwDiff, ROTATION_SPEED);
+                }
+            }
+            else
+            {
+                mapDigimon->lookAtTamerState = 2;
+                mapDigimon->targetLocation.x = mapDigimon->posX;
+                mapDigimon->targetLocation.y = mapDigimon->posY;
+                mapDigimon->targetLocation.z = mapDigimon->posZ;
+            }
+        }
+        else if (mapDigimon->lookAtTamerState == 2)
+        {
+            if (NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::NONE)
+            {
+                int16_t targetAngle;
+                int16_t ccDiff;
+                int16_t cwDiff;
+                getRotationDifference(entity->posData, &mapDigimon->targetLocation, &targetAngle, &ccDiff, &cwDiff);
+                rotateEntity(&entity->posData->rotation, &targetAngle, &ccDiff, &cwDiff, ROTATION_SPEED);
+            }
+            int16_t currentTileX;
+            int16_t currentTileY;
+            int16_t targetTileX;
+            int16_t targetTileY;
+            getModelTile(&entity->posData->location, &currentTileX, &currentTileY);
+            getModelTile(&mapDigimon->targetLocation, &targetTileX, &targetTileY);
+            // TODO this is similar to the entityWalkTo softlock, does the bug exist here as well?
+
+            if (currentTileX == targetTileX && currentTileY == targetTileY)
+            {
+                mapDigimon->animation = 0;
+                startAnimation(entity, mapDigimon->animation);
+                mapDigimon->waypointWaitTimer = 0;
+                mapDigimon->lookAtTamerState  = 3;
+            }
+        }
+        else if (mapDigimon->lookAtTamerState == 3)
+        {
+            mapDigimon->waypointWaitTimer++;
+            if (mapDigimon->waypointWaitTimer >= 80)
+            {
+                mapDigimon->hasWaypointTarget = false;
+                mapDigimon->lookAtTamerState  = 0;
+                mapDigimon->waypointWaitTimer = 0;
+            }
+        }
     }
 
     void tickTrackingTamer(MapDigimonEntity* mapDigimon, Entity* entity, Entity* otherEntity, int32_t instanceId)
@@ -55,14 +112,85 @@ extern "C"
             startAnimation(entity, mapDigimon->animation);
             mapDigimon->lookAtTamerState = 1;
         }
-        else
-            tickTrackingTamer3(mapDigimon, entity, instanceId);
+        else if (mapDigimon->lookAtTamerState == 1)
+        {
+            mapDigimon->animation = 4;
+            startAnimation(entity, mapDigimon->animation);
+            mapDigimon->lookAtTamerState = 2;
+        }
+        else if (mapDigimon->lookAtTamerState == 2)
+        {
+            if (NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::NONE)
+            {
+                int16_t targetAngle;
+                int16_t ccDiff;
+                int16_t cwDiff;
+                getRotationDifference(entity->posData, &mapDigimon->targetLocation, &targetAngle, &ccDiff, &cwDiff);
+                rotateEntity(&entity->posData->rotation, &targetAngle, &ccDiff, &cwDiff, ROTATION_SPEED);
+            }
+
+            int16_t currentTileX;
+            int16_t currentTileY;
+            int16_t targetTileX;
+            int16_t targetTileY;
+            getModelTile(&entity->posData->location, &currentTileX, &currentTileY);
+            getModelTile(&mapDigimon->targetLocation, &targetTileX, &targetTileY);
+            // TODO this is similar to the entityWalkTo softlock, does the bug exist here as well?
+
+            if ((currentTileX == targetTileX && currentTileY == targetTileY) ||
+                NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::TAMER)
+            {
+                mapDigimon->animation = 0;
+                startAnimation(entity, mapDigimon->animation);
+                mapDigimon->waypointWaitTimer = 0;
+                mapDigimon->lookAtTamerState  = 3;
+            }
+        }
+        else if (mapDigimon->lookAtTamerState == 3)
+        {
+            mapDigimon->waypointWaitTimer++;
+            if (mapDigimon->waypointWaitTimer >= 40)
+            {
+                mapDigimon->animation = 2;
+                startAnimation(entity, mapDigimon->animation);
+                mapDigimon->targetLocation.x  = mapDigimon->posX;
+                mapDigimon->targetLocation.y  = mapDigimon->posY;
+                mapDigimon->targetLocation.z  = mapDigimon->posZ;
+                mapDigimon->waypointWaitTimer = 0;
+                mapDigimon->lookAtTamerState  = 4;
+            }
+        }
+        else if (mapDigimon->lookAtTamerState == 4)
+        {
+            if (NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::NONE)
+            {
+                int16_t targetAngle;
+                int16_t ccDiff;
+                int16_t cwDiff;
+                getRotationDifference(entity->posData, &mapDigimon->targetLocation, &targetAngle, &ccDiff, &cwDiff);
+                rotateEntity(&entity->posData->rotation, &targetAngle, &ccDiff, &cwDiff, ROTATION_SPEED);
+            }
+            int16_t currentTileX;
+            int16_t currentTileY;
+            int16_t targetTileX;
+            int16_t targetTileY;
+            getModelTile(&entity->posData->location, &currentTileX, &currentTileY);
+            getModelTile(&mapDigimon->targetLocation, &targetTileX, &targetTileY);
+            // TODO this is similar to the entityWalkTo softlock, does the bug exist here as well?
+
+            if (currentTileX == targetTileX && currentTileY == targetTileY)
+            {
+                mapDigimon->animation = 0;
+                startAnimation(entity, mapDigimon->animation);
+                mapDigimon->waypointWaitTimer = 0;
+                mapDigimon->hasWaypointTarget = false;
+                mapDigimon->lookAtTamerState  = 0;
+            }
+        }
     }
 
     void tickLookingAtTamer(MapDigimonEntity* mapDigimon, Entity* entity, Entity* otherEntity)
     {
-        constexpr auto ROTATION_SPEED = 113;
-
         if (mapDigimon->lookAtTamerState == 0)
         {
             mapDigimon->animation = 0;
