@@ -1,5 +1,6 @@
 #include "Entity.hpp"
 #include "Helper.hpp"
+#include "Math.hpp"
 #include "Model.hpp"
 #include "Tamer.hpp"
 #include "extern/STD.hpp"

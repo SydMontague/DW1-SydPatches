@@ -1,15 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-;; entityLookAt Softlock fix, happens at exactly 180° rotations
-.org 0x800b7008
-  nop
-  nop
-
-.org 0x800b707c
-  nop
-  nop
-
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

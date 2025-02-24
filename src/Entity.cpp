@@ -1,4 +1,5 @@
 #include "Helper.hpp"
+#include "Math.hpp"
 #include "Model.hpp"
 #include "Utils.hpp"
 #include "extern/dw1.hpp"

@@ -200,4 +200,81 @@ extern "C"
 
         return -1;
     }
+
+    void getRotationDifference(PositionData* pos, Vector* target, int16_t* outAngle, int16_t* ccDiff, int16_t* cwDiff)
+    {
+        // TODO remove pointless pointers once every user is implemented
+        auto targetAngle  = atan(target->z - pos->location.z, target->x - pos->location.x);
+        auto currentAngle = pos->rotation.y;
+
+        *outAngle = targetAngle;
+        if (currentAngle < targetAngle)
+        {
+            *cwDiff = targetAngle - currentAngle;
+            *ccDiff = currentAngle + (4096 - targetAngle);
+        }
+        else
+        {
+            *cwDiff = targetAngle + (4096 - currentAngle);
+            *ccDiff = currentAngle - targetAngle;
+        }
+    }
+
+    bool rotateEntity(SVector* rotVector, int16_t* targetAngle, int16_t* ccDiff, int16_t* cwDiff, int16_t speed)
+    {
+        // TODO remove pointless pointers once every user is implemented
+        // vanilla doesn't handle the case ccDiff == cwDiff, resulting in it never returning true and thus softlocking
+        auto currentAngle = rotVector->y;
+
+        if (currentAngle == *targetAngle)
+        {
+            rotVector->y = *targetAngle;
+            return true;
+        }
+
+        if (currentAngle < *targetAngle)
+        {
+            if (*ccDiff < *cwDiff)
+            {
+                rotVector->y -= speed;
+                if (rotVector->y < (*targetAngle - 4096))
+                {
+                    rotVector->y = *targetAngle;
+                    return true;
+                }
+            }
+            else
+            {
+                rotVector->y += speed;
+                if (rotVector->y > *targetAngle)
+                {
+                    rotVector->y = *targetAngle;
+                    return true;
+                }
+            }
+        }
+        else if (currentAngle > *targetAngle)
+        {
+            if (*ccDiff < *cwDiff)
+            {
+                rotVector->y -= speed;
+                if (rotVector->y < *targetAngle)
+                {
+                    rotVector->y = *targetAngle;
+                    return true;
+                }
+            }
+            else
+            {
+                rotVector->y += speed;
+                if (rotVector->y > (*targetAngle + 4096))
+                {
+                    rotVector->y = *targetAngle;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

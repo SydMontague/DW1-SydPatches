@@ -1338,7 +1338,6 @@ extern "C"
     int32_t lerp(int32_t start, int32_t end, int32_t tMin, int32_t tMax, int32_t tCurrent);
     void renderFXParticle(SVector* pos, int16_t scale, RGB8* color);
     void addEntityParticleFX(Entity* entity, int32_t counter);
-    void getRotationDifference(PositionData* pos, Vector* target, int16_t* outAngle, int16_t* ccDiff, int16_t* cwDiff);
     void moveCameraByDiff(Vector* start, Vector* end);
     void updateMinuteHand(int32_t hour, int32_t minute);
     void initializeDaytimeTransition(int32_t mode);
@@ -1389,7 +1388,6 @@ extern "C"
     void unsetCameraFollowPlayer();
     void stopGameTime();
     void setPartnerIdling();
-    bool rotateEntity(SVector* rotVector, int16_t* targetAngle, int16_t* ccDiff, int16_t* dwDiff, int16_t speed);
     void Tamer_tickFishing();
     void tickAnimation(Entity* entity);
     extern void Tamer_tickBattle(int32_t instanceId);
