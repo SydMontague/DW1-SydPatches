@@ -1,4 +1,5 @@
 #include "Entity.hpp"
+#include "Helper.hpp"
 #include "Model.hpp"
 #include "Tamer.hpp"
 #include "extern/STD.hpp"
@@ -9,6 +10,96 @@ extern "C"
     void loadNPCModel(DigimonType digimonId)
     {
         loadMMD(digimonId, EntityType::NPC);
+    }
+
+    bool isInTrackingRect(MapDigimonEntity* mapDigimon, Vector* location)
+    {
+        return isWithinRect(mapDigimon->posX, mapDigimon->posZ, mapDigimon->trackingRange, location);
+    }
+
+    bool isInTrackingRadius(Entity* entity, Entity* otherEntity, MapDigimonEntity* mapDigimon)
+    {
+        auto& ownPos   = entity->posData->location;
+        auto& otherPos = otherEntity->posData->location;
+        auto dist      = mapDigimon->trackingRange * 6 / 10;
+
+        return ownPos.x - otherPos.x + ownPos.z - otherPos.z < (dist * dist);
+    }
+
+    void tickTrackingTamer2(MapDigimonEntity* mapDigimon,
+                            Entity* entity,
+                            Entity* otherEntity,
+                            int32_t instanceId,
+                            int32_t animId)
+    {
+        if (mapDigimon->lookAtTamerState == 0)
+        {
+            if (mapDigimon->animation != animId)
+            {
+                mapDigimon->animation = animId;
+                startAnimation(entity, animId);
+            }
+            mapDigimon->lookAtTamerState = 1;
+        }
+        else
+            tickTrackingTamer4(mapDigimon, entity, otherEntity, instanceId);
+    }
+
+    void tickTrackingTamer(MapDigimonEntity* mapDigimon, Entity* entity, Entity* otherEntity, int32_t instanceId)
+    {
+        if (mapDigimon->lookAtTamerState == 0)
+        {
+            mapDigimon->targetLocation = otherEntity->posData->location;
+            mapDigimon->animation      = 2;
+            startAnimation(entity, mapDigimon->animation);
+            mapDigimon->lookAtTamerState = 1;
+        }
+        else
+            tickTrackingTamer3(mapDigimon, entity, instanceId);
+    }
+
+    void tickLookingAtTamer(MapDigimonEntity* mapDigimon, Entity* entity, Entity* otherEntity)
+    {
+        constexpr auto ROTATION_SPEED = 113;
+
+        if (mapDigimon->lookAtTamerState == 0)
+        {
+            mapDigimon->animation = 0;
+            startAnimation(entity, mapDigimon->animation);
+            mapDigimon->lookAtTamerState = 1;
+        }
+        else
+        {
+            // vanilla uses the respective fields of the MapDigimonEntity, but since those are always overwritten before
+            // used we can get rid of this state in favor of local variables
+            int16_t targetAngle;
+            int16_t ccDiff;
+            int16_t cwDiff;
+
+            getRotationDifference(entity->posData, &otherEntity->posData->location, &targetAngle, &ccDiff, &cwDiff);
+            rotateEntity(&entity->posData->rotation, &targetAngle, &ccDiff, &cwDiff, ROTATION_SPEED);
+
+            if (!isInTrackingRect(mapDigimon, &otherEntity->posData->location))
+            {
+                mapDigimon->lookAtTamerState  = 0;
+                mapDigimon->hasWaypointTarget = false;
+            }
+        }
+    }
+
+    void tickWaypointAI(MapDigimonEntity* mapDigimon, Entity* entity, uint32_t entityId)
+    {
+        auto speed = mapDigimon->aiSections[mapDigimon->activeSecton];
+
+        if (speed == 0)
+            tickWaypointWait(mapDigimon, entity);
+        else if (speed == 1)
+            tickWaypointWalk(mapDigimon, entity, 2, entityId);
+        else if (speed == 2)
+            tickWaypointWalk(mapDigimon, entity, 4, entityId);
+
+        if (mapDigimon->activeSecton >= 8 || mapDigimon->aiSections[mapDigimon->activeSecton] == -1)
+            mapDigimon->activeSecton = 0;
     }
 
     void NPCEntity_tickOverworld(int32_t instanceId, MapDigimonEntity* mapDigimon)
@@ -30,10 +121,10 @@ extern "C"
         {
             if (mapDigimon->lookAtTamerState == 0) tickWaypointAI(mapDigimon, entity, instanceId);
 
-            auto inTrackingRange = isInTrackingRange(mapDigimon, &TAMER_ENTITY.posData->location);
-            auto inSomeRange     = isWithinSomeRange(entity, &TAMER_ENTITY, mapDigimon);
+            auto inTrackingRange = isInTrackingRect(mapDigimon, &TAMER_ENTITY.posData->location);
+            auto inSomeRange     = isInTrackingRadius(entity, &TAMER_ENTITY, mapDigimon);
 
-            switch (mapDigimon->state)
+            switch (mapDigimon->followMode)
             {
                 case 2:
                 case 11:

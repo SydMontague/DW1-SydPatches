@@ -105,12 +105,10 @@
 .definelabel entityIsOffScreen,         0x800d5430
 .definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8
-.definelabel tickWaypointAI,            0x800b6b6c
-.definelabel isInTrackingRange,         0x800b6c18
-.definelabel isWithinSomeRange,         0x800b6dfc
-.definelabel tickLookingAtTamer,        0x800b6c8c
-.definelabel tickTrackingTamer,         0x800b6d68
-.definelabel tickTrackingTamer2,        0x800b6e74
+.definelabel tickWaypointWait,          0x800b75ec
+.definelabel tickWaypointWalk,          0x800b76a4
+.definelabel tickTrackingTamer3,        0x800b70c8
+.definelabel tickTrackingTamer4,        0x800b7398
 
 .definelabel NPC_COLLISION_STATE, 0x8013d190
 .definelabel LOADED_DIGIMON_MODELS, 0x801be7ec

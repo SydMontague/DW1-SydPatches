@@ -1129,7 +1129,7 @@ extern "C"
     struct MapDigimon
     {
         int16_t typeId;
-        int16_t unk1; // follow behavior
+        int16_t followMode; // follow behavior
         int16_t posX;
         int16_t posY;
         int16_t posZ;
@@ -1178,7 +1178,7 @@ extern "C"
         int16_t targetAngle;
         int16_t ccDiff;
         int16_t cwDiff;
-        uint8_t state;
+        uint8_t followMode;
         uint8_t waypointWaitTimer;
         int8_t animation;
         bool hasWaypointTarget;
@@ -1322,16 +1322,10 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
-    void tickWaypointAI(MapDigimonEntity* mapDigimon, Entity* entity, uint32_t entityId);
-    bool isInTrackingRange(MapDigimonEntity* mapDigimon, Vector* location);
-    bool isWithinSomeRange(Entity* entity, Entity* otherEntity, MapDigimonEntity* mapDigimon);
-    void tickLookingAtTamer(MapDigimonEntity* mapDigimon, Entity* entity, Entity* otherEntity);
-    void tickTrackingTamer(MapDigimonEntity* mapDigimon, Entity* entity, Entity* otherEntity, int32_t instanceId);
-    void tickTrackingTamer2(MapDigimonEntity* mapDigimon,
-                            Entity* entity,
-                            Entity* otherEntity,
-                            int32_t instanceId,
-                            int32_t animId);
+    void tickWaypointWalk(MapDigimonEntity* mapDigimon, Entity* entity, int animation, int entityId);
+    void tickWaypointWait(MapDigimonEntity* mapDigimon, Entity* entity);
+    void tickTrackingTamer3(MapDigimonEntity* mapDigimon, Entity* entity, int32_t instanceId);
+    void tickTrackingTamer4(MapDigimonEntity* mapDigimon, Entity* entity, Entity* otherEntity, int32_t instanceId);
     void initializeLoadedNPCModels();
     void NPCEntity_tickBattle(int32_t instanceId);
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
