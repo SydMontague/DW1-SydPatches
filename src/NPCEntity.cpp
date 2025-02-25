@@ -44,8 +44,7 @@ extern "C"
 
     void setLoopCountToOne(uint32_t scriptId)
     {
-        uint8_t _scriptId = scriptId;
-        auto* entity      = getEntityFromScriptId(&_scriptId);
+        auto* entity = getEntityFromScriptId(scriptId).first;
         // vanilla doesn't do the nullptr check
         if (entity != nullptr) entity->loopCount = 1;
     }
@@ -426,10 +425,10 @@ extern "C"
 
     void scriptUnloadEntity(int32_t entityId)
     {
-        uint8_t _entityId = entityId;
-        auto* entity      = getEntityFromScriptId(&_entityId);
-        entity->isOnMap   = false;
-        removeEntity(entity->type, _entityId);
+        uint8_t _entityId     = entityId;
+        auto entity           = getEntityFromScriptId(entityId);
+        entity.first->isOnMap = false;
+        removeEntity(entity.first->type, entity.second);
     }
 
     void clearMapAITable(int32_t entityId)

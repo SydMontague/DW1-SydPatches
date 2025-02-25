@@ -2,6 +2,12 @@
 #include "extern/dw1.hpp"
 #include "extern/stddef.hpp"
 
+template<class First, class Second> struct Pair
+{
+    First first;
+    Second second;
+};
+
 extern "C"
 {
     /*
