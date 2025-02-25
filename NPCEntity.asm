@@ -23,6 +23,21 @@
 .org 0x800b7bec
   jal clearMapAiTable
 
+.org 0x80104478
+  jal setLoopCountToOne
+
+.org 0x801054c4
+  jal startNPCAnimation
+.org 0x80105538
+  jal startNPCAnimation
+.org 0x801059a4
+  jal startNPCAnimation
+
+.org 0x801054cc
+  jal setActiveAnim
+.org 0x80105540
+  jal setActiveAnim
+
 .close
 
 

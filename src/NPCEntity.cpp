@@ -15,6 +15,41 @@ extern "C"
         loadMMD(digimonId, EntityType::NPC);
     }
 
+    void setActiveAnim(uint32_t scriptId, uint8_t animId)
+    {
+        // TODO figure out if this function is even useful. All callers are hardcoded to use scriptId 12
+        for (int32_t i = 0; i < 8; i++)
+        {
+            NPCEntity* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i + 2));
+            if (entity != nullptr && entity->scriptId == scriptId)
+            {
+                NPC_ACTIVE_ANIM[i + 2] = animId;
+                return;
+            }
+        }
+    }
+
+    void startNPCAnimation(uint32_t scriptId, uint8_t animId)
+    {
+        for (int32_t i = 0; i < 8; i++)
+        {
+            NPCEntity* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i + 2));
+            if (entity != nullptr && entity->scriptId == scriptId)
+            {
+                startAnimation(entity, animId);
+                return;
+            }
+        }
+    }
+
+    void setLoopCountToOne(uint32_t scriptId)
+    {
+        uint8_t _scriptId = scriptId;
+        auto* entity      = getEntityFromScriptId(&_scriptId);
+        // vanilla doesn't do the nullptr check
+        if (entity != nullptr) entity->loopCount = 1;
+    }
+
     void tickWaypointWalk(MapDigimonEntity* mapDigimon, Entity* entity, int32_t animation, int32_t instanceId)
     {
         if (mapDigimon->hasWaypointTarget)
