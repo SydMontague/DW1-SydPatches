@@ -1383,7 +1383,6 @@ extern "C"
     void addTriangleMenu();
     void unsetCameraFollowPlayer();
     void stopGameTime();
-    void setPartnerIdling();
     void Tamer_tickFishing();
     void tickAnimation(Entity* entity);
     extern void Tamer_tickBattle(int32_t instanceId);

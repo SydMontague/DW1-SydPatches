@@ -6,6 +6,7 @@
 #include "Map.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
+#include "Partner.hpp"
 #include "constants.hpp"
 #include "extern/DOOA.hpp"
 #include "extern/EAB.hpp"
