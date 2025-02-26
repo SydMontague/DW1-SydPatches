@@ -13,4 +13,5 @@ extern "C"
     void setupPartnerOnWarp(int32_t posX, int32_t posY, int32_t posZ, int32_t rotation);
     void tickConditionBoundaries();
     void handlePostBattleTiredness();
+    void setPartnerIdling();
 }

@@ -450,6 +450,58 @@ extern "C"
         }
     }
 
+    void resetEntityOrigin(uint32_t scriptId)
+    {
+        for (int32_t i = 0; i < 8; i++)
+        {
+            NPCEntity* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i + 2));
+            if (entity != nullptr && entity->scriptId == scriptId)
+            {
+                auto& mapDigimon = MAP_DIGIMON_TABLE[i + 2];
+                auto& posData    = entity->posData->location;
+                auto currentX    = posData.x;
+                auto currentZ    = posData.z;
+                auto diffX       = currentX - mapDigimon.posX;
+                auto diffZ       = currentZ - mapDigimon.posZ;
+                mapDigimon.posX  = currentX;
+                mapDigimon.posZ  = currentZ;
+
+                for (int32_t i = 0; i < 8; i++)
+                {
+                    if (mapDigimon.aiSections[i] != 0)
+                    {
+                        mapDigimon.waypoints[i].x += diffX;
+                        mapDigimon.waypoints[i].z += diffZ;
+                    }
+                }
+            }
+        }
+    }
+
+    inline void _setMovementEnabled(int32_t entityId, uint32_t mode)
+    {
+        if (entityId == 0)
+            Tamer_setState(mode == 0 ? 0 : 6);
+        else if (entityId == 1)
+            Partner_setState(mode == 0 ? 1 : 11);
+        else
+        {
+            MAP_DIGIMON_TABLE[entityId].stopAnim = mode;
+            if (mode == 1) clearMapAITable(entityId);
+        }
+    }
+
+    void setMovementEnabled(int32_t entityId, uint32_t mode)
+    {
+        if (entityId == -1)
+        {
+            for (int32_t i = 0; i < 10; i++)
+                _setMovementEnabled(i, mode);
+        }
+        else
+            _setMovementEnabled(entityId, mode);
+    }
+
     void removeMapEntities()
     {
         // vanilla writes a stack local int32_t[8] array here to -1, but it seems unused?

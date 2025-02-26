@@ -38,6 +38,20 @@
 .org 0x80105540
   jal setActiveAnim
 
+.org 0x80103c68
+  jal resetEntityOrigin
+
+.org 0x80104720
+  jal setMovementEnabled
+.org 0x801061e8
+  jal setMovementEnabled
+.org 0x8010631c
+  jal setMovementEnabled
+.org 0x80106328
+  jal setMovementEnabled
+.org 0x80106424
+  jal setMovementEnabled
+
 .close
 
 

@@ -40,6 +40,10 @@ extern "C"
     static uint8_t conditionBubbleId     = -1;
     static uint16_t conditionBubbleTimer = 0;
 
+    void setPartnerIdling() {
+        startAnimation(&PARTNER_ENTITY, 0);
+    }
+
     void initializePoop()
     {
         uint8_t buffer[2048]; // buffer must be a multiple of 2048

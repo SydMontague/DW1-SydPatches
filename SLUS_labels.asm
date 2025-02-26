@@ -59,7 +59,6 @@
 .definelabel addTriangleMenu,           0x800b7c28
 .definelabel unsetCameraFollowPlayer,   0x800d8b3c
 .definelabel stopGameTime,              0x800dd798
-.definelabel setPartnerIdling,          0x800b7c18
 .definelabel addMapNameObject,          0x800d8fb0
 .definelabel changeMap,                 0x800d9020
 .definelabel startGameTime,             0x800dd7a0
