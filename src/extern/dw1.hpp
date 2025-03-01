@@ -1186,6 +1186,19 @@ extern "C"
         bool stopAnim;
     };
 
+    struct MenuOptionData
+    {
+        int16_t posX;
+        int16_t posY;
+        uint16_t selection;
+        bool enabled;
+        uint8_t clutId;
+        uint8_t frame1X;
+        uint8_t frame1Y;
+        uint8_t frame2XOffset;
+        uint8_t frame2YOffset;
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1193,6 +1206,14 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern MenuOptionData MENU_POINTER;
+    extern MenuOptionData MENU_OPTIONS[7];
+    extern uint32_t MENU_OPTION_COUNT;
+    extern bool HAS_FISHING_ROD;
+    extern uint32_t TRIANGLE_MENU_STATE;
+    extern uint8_t MENU_SUB_STATE;
+    extern uint8_t DIGIMON_MENU_STATE;
+    extern uint8_t PLAYER_MENU_STATE;
     extern MapDigimonEntity MAP_DIGIMON_TABLE[8];
     extern GsRVIEW2 GS_VIEWPOINT;
     extern Chest CHEST_ARRAY[8];
@@ -1322,6 +1343,23 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    bool hasFishingRod();
+    void tickGameMenu();
+    void renderGameMenu();
+    void tickPlayerMenu();
+    void renderPlayerMenu();
+    void tickDigimonMenu();
+    void renderDigimonMenu();
+    void closeUIBoxIfOpen(int32_t instanceId);
+    void initializeInventoryObject();
+    bool createMenuBox(int32_t instanceId,
+                       int16_t posX,
+                       int16_t posY,
+                       int16_t width,
+                       int16_t height,
+                       uint8_t features,
+                       BoxTickFunction tickFunc,
+                       BoxRenderFunction renderFunc);
     void initializeLoadedNPCModels();
     void NPCEntity_tickBattle(int32_t instanceId);
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
@@ -1380,7 +1418,6 @@ extern "C"
      */
     bool isKeyDown(uint16_t keyMask);
     void tickTamerWaypoints();
-    void addTriangleMenu();
     void unsetCameraFollowPlayer();
     void stopGameTime();
     void Tamer_tickFishing();
@@ -1498,3 +1535,4 @@ static_assert(sizeof(MapObject) == 0x12);
 static_assert(sizeof(MapObjectInstance) == 0x26);
 static_assert(sizeof(MapDigimon) == 0x54);
 static_assert(sizeof(MapDigimonEntity) == 0xC4);
+static_assert(sizeof(MenuOptionData) == 0xC);

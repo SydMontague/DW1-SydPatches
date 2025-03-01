@@ -41,6 +41,7 @@ extern "C"
         MAP_NAME             = 4001,
         GAME_CLOCK           = 4002,
         MAIN_MENU_SCREEN     = 4003,
+        GAME_MENU            = 4004,
         FADE                 = 4005,
         FEEDING_ITEM         = 4007,
         POOP                 = 4008,

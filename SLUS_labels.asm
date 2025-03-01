@@ -56,7 +56,6 @@
 .definelabel Tamer_tickFishing,         0x800e4e18
 .definelabel isKeyDown,                 0x800fc054
 .definelabel tickTamerWaypoints,        0x800d4adc
-.definelabel addTriangleMenu,           0x800b7c28
 .definelabel unsetCameraFollowPlayer,   0x800d8b3c
 .definelabel stopGameTime,              0x800dd798
 .definelabel addMapNameObject,          0x800d8fb0
@@ -102,6 +101,16 @@
 .definelabel entityIsOffScreen,         0x800d5430
 .definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8
+.definelabel createMenuBox,             0x800b8e50
+.definelabel initializeInventoryObject, 0x800dade8
+.definelabel closeUIBoxIfOpen,          0x800b8038
+.definelabel tickGameMenu,              0x800b8bf0
+.definelabel renderGameMenu,            0x800b80c0
+.definelabel tickPlayerMenu,            0x800b94d4
+.definelabel renderPlayerMenu,          0x800b9fe8
+.definelabel tickDigimonMenu,           0x800b8f54
+.definelabel renderDigimonMenu,         0x800b93d4
+.definelabel hasFishingRod,             0x800e4da0
 
 .definelabel NPC_COLLISION_STATE, 0x8013d190
 .definelabel LOADED_DIGIMON_MODELS, 0x801be7ec
@@ -158,6 +167,11 @@
 .definelabel TAMER_MOMENTUM_DATA, 0x801a00dc
 .definelabel TAMER_POSITION_DATA, 0x801a07e8
 
+.definelabel MENU_POINTER, 0x80123e88
+.definelabel MENU_OPTIONS, 0x80123e94
+.definelabel MENU_OPTION_COUNT, 0x80134d28
+.definelabel HAS_FISHING_ROD, 0x80134d2c
+.definelabel TRIANGLE_MENU_STATE, 0x80134d30
 .definelabel STATUS_UI_OFFSET_X, 0x80134c50
 .definelabel IS_NATURAL_DEATH, 0x80134c4c
 .definelabel ITEM_FUNCTIONS, 0x80127c88
@@ -176,6 +190,9 @@
 .definelabel EVOLUTION_TARGET, 0x80134e50
 .definelabel CURRENT_SCREEN, 0x80134da8
 .definelabel MENU_STATE, 0x80134d34
+.definelabel MENU_SUB_STATE, 0x80134d35
+.definelabel DIGIMON_MENU_STATE, 0x80134d36
+.definelabel PLAYER_MENU_STATE, 0x80134d37
 .definelabel SLEEP_PATTERN, 0x80122cf4
 .definelabel PLAYTIME_FRAMES, 0x80134f00
 .definelabel DIGIVICE_ENTITY_VIEW, 0x80123860

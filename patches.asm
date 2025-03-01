@@ -27,3 +27,4 @@
 .include "Effects.asm"
 .include "EFE.asm"
 .include "NPCEntity.asm"
+.include "GameMenu.asm"

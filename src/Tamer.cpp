@@ -1,6 +1,7 @@
 #include "Evolution.hpp"
 #include "Fade.hpp"
 #include "Font.hpp"
+#include "GameMenu.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Map.hpp"
@@ -721,7 +722,7 @@ extern "C"
 
     inline void Tamer_tickOpenMenu()
     {
-        addTriangleMenu();
+        addGameMenu();
         Tamer_setState(1);
         startAnimation(&TAMER_ENTITY, 0);
         unsetCameraFollowPlayer();

@@ -412,8 +412,8 @@ naming_buffer_length equ 20
   .byte 0x1C
 
 ; Triangle Menu, fix "Year" sometimes having garbage data
-.org 0x800b7e10
-  li a2,0xD8
+;.org 0x800b7e10
+;  li a2,0xD8
 .org 0x800b82c4
   li v0,0xD8
 .org 0x800b8300
