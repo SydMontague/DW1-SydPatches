@@ -1,7 +1,7 @@
 #pragma once
 #include "Font.hpp"
-#include "extern/stddef.hpp"
 #include "Helper.hpp"
+#include "extern/stddef.hpp"
 
 extern "C"
 {
@@ -65,6 +65,6 @@ extern "C"
     };
 
     void drawTextSprite(TextSprite& entry);
-    void renderTextSprite(TextSprite& entry);
+    void renderTextSprite(TextSprite& entry, int32_t xOffset, int32_t yOffset);
     void initSpecialSprite(IconSprite& sprite, Special special);
 }

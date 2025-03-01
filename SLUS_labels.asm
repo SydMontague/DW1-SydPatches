@@ -103,13 +103,14 @@
 .definelabel createMenuBox,             0x800b8e50
 .definelabel initializeInventoryObject, 0x800dade8
 .definelabel tickGameMenu,              0x800b8bf0
-.definelabel renderGameMenu,            0x800b80c0
 .definelabel tickPlayerMenu,            0x800b94d4
 .definelabel renderPlayerMenu,          0x800b9fe8
 .definelabel tickDigimonMenu,           0x800b8f54
 .definelabel renderDigimonMenu,         0x800b93d4
 .definelabel hasFishingRod,             0x800e4da0
 .definelabel closeInventoryBoxes2,      0x800dbb84
+.definelabel renderDateDigits,          0x800b8418
+.definelabel renderTriangleCursor,      0x800b8654
 
 .definelabel NPC_COLLISION_STATE, 0x8013d190
 .definelabel LOADED_DIGIMON_MODELS, 0x801be7ec

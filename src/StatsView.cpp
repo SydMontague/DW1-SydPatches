@@ -1,5 +1,6 @@
 #include "Font.hpp"
 #include "Helper.hpp"
+#include "Math.hpp"
 #include "StatsViewData.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
@@ -8,7 +9,6 @@
 #include "extern/libc.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
-#include "Math.hpp"
 
 extern "C"
 {
@@ -281,11 +281,11 @@ extern "C"
         sprites[SpriteIndex::POOP].posY    = CONDITION_OFFSET_Y + CONDITION_OFFSETS[PLAYTIME_FRAMES % 16];
 
         for (auto& entry : badges)
-            renderTextSprite(entry);
+            renderTextSprite(entry, 0, 0);
         for (auto& entry : labels)
-            renderTextSprite(entry);
+            renderTextSprite(entry, 0, 0);
         for (auto& entry : values)
-            renderTextSprite(entry);
+            renderTextSprite(entry, 0, 0);
 
         for (auto& entry : sprites)
         {

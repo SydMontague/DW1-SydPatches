@@ -1191,7 +1191,7 @@ extern "C"
         int16_t posX;
         int16_t posY;
         uint16_t selection;
-        bool enabled;
+        bool disabled;
         uint8_t clutId;
         uint8_t frame1X;
         uint8_t frame1Y;
@@ -1209,7 +1209,7 @@ extern "C"
     extern MenuOptionData MENU_POINTER;
     extern MenuOptionData MENU_OPTIONS[7];
     extern uint32_t MENU_OPTION_COUNT;
-    extern bool HAS_FISHING_ROD;
+    extern uint32_t HAS_FISHING_ROD;
     extern uint32_t TRIANGLE_MENU_STATE;
     extern uint8_t MENU_SUB_STATE;
     extern uint8_t DIGIMON_MENU_STATE;
@@ -1343,10 +1343,11 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void renderDateDigits();
+    void renderTriangleCursor(int32_t selection, int16_t yOffset);
     void closeInventoryBoxes2();
-    bool hasFishingRod();
+    uint32_t hasFishingRod();
     void tickGameMenu();
-    void renderGameMenu();
     void tickPlayerMenu();
     void renderPlayerMenu();
     void tickDigimonMenu();
@@ -1480,7 +1481,7 @@ extern "C"
     extern bool hasDigimonRaised(DigimonType type);
     extern void renderInsetBox(int32_t posX, int32_t posY, int32_t width, int32_t height, int32_t order);
     extern void renderDigimonStatsBar(int32_t value, int32_t maxValue, int32_t width, int32_t posX, int32_t posY);
-    extern void renderSeperatorLines(Line* linePtr, int32_t count, int32_t layer);
+    extern void renderSeperatorLines(const Line* linePtr, int32_t count, int32_t layer);
     extern void renderRectPolyFT4(int16_t posX,
                                   int16_t posY,
                                   uint32_t width,

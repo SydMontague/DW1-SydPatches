@@ -8,23 +8,20 @@ extern "C"
         entry.uvHeight = entry.font->height;
     }
 
-    void renderTextSprite(TextSprite& entry)
+    void renderTextSprite(TextSprite& entry, int32_t offsetX, int32_t offsetY)
     {
-        auto offsetX = 0;
-        auto offsetY = 0;
-
         switch (entry.alignmentX)
         {
-            case AlignmentX::LEFT: offsetX = 0; break;
-            case AlignmentX::CENTER: offsetX = (entry.boxWidth - entry.uvWidth) / 2; break;
-            case AlignmentX::RIGHT: offsetX = (entry.boxWidth - entry.uvWidth); break;
+            case AlignmentX::LEFT: offsetX += 0; break;
+            case AlignmentX::CENTER: offsetX += (entry.boxWidth - entry.uvWidth) / 2; break;
+            case AlignmentX::RIGHT: offsetX += (entry.boxWidth - entry.uvWidth); break;
         }
 
         switch (entry.alignmentY)
         {
-            case AlignmentY::TOP: offsetY = 0; break;
-            case AlignmentY::CENTER: offsetY = (entry.boxHeight - entry.uvHeight) / 2; break;
-            case AlignmentY::BOTTOM: offsetY = offsetY = (entry.boxHeight - entry.uvHeight); break;
+            case AlignmentY::TOP: offsetY += 0; break;
+            case AlignmentY::CENTER: offsetY += (entry.boxHeight - entry.uvHeight) / 2; break;
+            case AlignmentY::BOTTOM: offsetY += (entry.boxHeight - entry.uvHeight); break;
         }
 
         renderStringNew(entry.color,
@@ -46,7 +43,7 @@ extern "C"
                             entry.uvHeight,
                             entry.uvX,
                             entry.uvY,
-                            5,
+                            entry.layer,
                             0);
         }
     }
