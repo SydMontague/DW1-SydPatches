@@ -87,7 +87,6 @@
 .definelabel playBGM,                   0x80106a80
 .definelabel loadBattleData,            0x800e74d0
 .definelabel handleBattleStart,         0x800e847c
-.definelabel closeTriangleMenu,         0x800b7ffc
 .definelabel updateMinuteHand,          0x800dd780
 .definelabel initializeDaytimeTransition,0x800d7104
 .definelabel moveCameraByDiff,          0x800d892c
@@ -103,7 +102,6 @@
 .definelabel initializeLoadedNPCModels, 0x80105aa8
 .definelabel createMenuBox,             0x800b8e50
 .definelabel initializeInventoryObject, 0x800dade8
-.definelabel closeUIBoxIfOpen,          0x800b8038
 .definelabel tickGameMenu,              0x800b8bf0
 .definelabel renderGameMenu,            0x800b80c0
 .definelabel tickPlayerMenu,            0x800b94d4
@@ -111,6 +109,7 @@
 .definelabel tickDigimonMenu,           0x800b8f54
 .definelabel renderDigimonMenu,         0x800b93d4
 .definelabel hasFishingRod,             0x800e4da0
+.definelabel closeInventoryBoxes2,      0x800dbb84
 
 .definelabel NPC_COLLISION_STATE, 0x8013d190
 .definelabel LOADED_DIGIMON_MODELS, 0x801be7ec

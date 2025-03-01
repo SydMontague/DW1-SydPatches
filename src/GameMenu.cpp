@@ -9,6 +9,23 @@ extern "C"
     constexpr uint8_t YEAR_DAY_STRING[]  = "YearDay";
     constexpr uint8_t PLAYER_MENU_TABS[] = "Player   Chart    Med. Card Fish";
 
+    void closeUIBoxIfOpen(int32_t instanceId)
+    {
+        if (UI_BOX_DATA[instanceId].frame < 5) return;
+        if (UI_BOX_DATA[instanceId].state != 1) return;
+
+        // vanilla calls getEntityScreenPos here, but it's results are unused?
+        unsetUIBoxAnimated(instanceId, nullptr);
+    }
+
+    void closeTriangleMenu()
+    {
+        closeUIBoxIfOpen(1);
+        closeInventoryBoxes2();
+        closeUIBoxIfOpen(0);
+        removeObject(ObjectID::GAME_MENU, 0);
+    }
+
     void tickTriangleMenu(int32_t instanceId)
     {
         switch (TRIANGLE_MENU_STATE)

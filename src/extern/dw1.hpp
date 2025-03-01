@@ -1343,6 +1343,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void closeInventoryBoxes2();
     bool hasFishingRod();
     void tickGameMenu();
     void renderGameMenu();
@@ -1350,7 +1351,6 @@ extern "C"
     void renderPlayerMenu();
     void tickDigimonMenu();
     void renderDigimonMenu();
-    void closeUIBoxIfOpen(int32_t instanceId);
     void initializeInventoryObject();
     bool createMenuBox(int32_t instanceId,
                        int16_t posX,
@@ -1375,7 +1375,6 @@ extern "C"
     void moveCameraByDiff(Vector* start, Vector* end);
     void updateMinuteHand(int32_t hour, int32_t minute);
     void initializeDaytimeTransition(int32_t mode);
-    void closeTriangleMenu();
     uint32_t handleBattleStart(uint32_t talkedToEntity);
     void loadBattleData(uint32_t talkedToEntity, uint32_t enemyCount);
     void playBGM(uint8_t soundFont);
