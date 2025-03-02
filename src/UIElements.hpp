@@ -67,4 +67,5 @@ extern "C"
     void drawTextSprite(TextSprite& entry);
     void renderTextSprite(TextSprite& entry, int32_t xOffset, int32_t yOffset);
     void initSpecialSprite(IconSprite& sprite, Special special);
+    void renderSeperatorLines(const Line* linePtr, int32_t count, int32_t layer);
 }

@@ -227,6 +227,32 @@ extern "C"
         drawTextSprite(yearLabel);
     }
 
+    void renderDateNumber(int32_t value, int32_t posX, int32_t posY)
+    {
+        uint8_t buffer[8]{};
+        sprintf(buffer, "%d", value);
+
+        for (int32_t i = 0; i < sizeof(buffer); i++)
+        {
+            auto val = buffer[i];
+            if (val == 0) break;
+            if (val < '0' || val > '9') continue;
+
+            auto digit     = val - '0';
+            uint8_t uCoord = 121;
+            uint8_t vCoord = 52;
+            if (digit == 0) {}
+            else if (digit < 5)
+            {
+                vCoord = 40;
+                uCoord = (digit - 1) * 8 + 97;
+            }
+            else { uCoord = (digit - 5) * 8 + 81; }
+
+            renderRectPolyFT4(posX + i * 9, -74, 7, 12, uCoord, vCoord - 64, 30, 0x7F10, 5, 0);
+        }
+    }
+
     void renderGameMenu()
     {
         const auto yOffset = MENU_OPTION_COUNT == 7 ? -39 : 0;
@@ -238,7 +264,8 @@ extern "C"
         }
 
         renderSeperatorLines(GAME_MENU_LINES, 3, 5);
-        renderDateDigits();
+        renderDateNumber(DAY + 1, 37, -74);
+        renderDateNumber(YEAR + 1, -22, -74);
         renderTriangleCursor(MENU_POINTER.selection, yOffset);
 
         for (int32_t i = 0; i < MENU_OPTION_COUNT - 1; i++)

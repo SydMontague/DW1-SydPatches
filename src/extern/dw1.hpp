@@ -329,6 +329,15 @@ extern "C"
         uint8_t red;
         uint8_t green;
         uint8_t blue;
+
+        constexpr uint32_t asUint32() const
+        {
+            uint32_t val = red;
+            val |= green << 8;
+            val |= blue << 16;
+
+            return val;
+        }
     };
 
     enum class DigimonType : int32_t
@@ -1343,7 +1352,8 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
-    void renderDateDigits();
+    void
+    renderLinePrimitive(uint32_t color, int16_t x1, int16_t y1, int16_t x2, int16_t y2, int32_t layer, uint32_t flag);
     void renderTriangleCursor(int32_t selection, int16_t yOffset);
     void closeInventoryBoxes2();
     uint32_t hasFishingRod();
@@ -1481,7 +1491,6 @@ extern "C"
     extern bool hasDigimonRaised(DigimonType type);
     extern void renderInsetBox(int32_t posX, int32_t posY, int32_t width, int32_t height, int32_t order);
     extern void renderDigimonStatsBar(int32_t value, int32_t maxValue, int32_t width, int32_t posX, int32_t posY);
-    extern void renderSeperatorLines(const Line* linePtr, int32_t count, int32_t layer);
     extern void renderRectPolyFT4(int16_t posX,
                                   int16_t posY,
                                   uint32_t width,

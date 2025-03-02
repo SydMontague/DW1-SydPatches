@@ -1,11 +1,29 @@
 #include "UIElements.hpp"
 
+#include "extern/dw1.hpp"
+
 extern "C"
 {
+    constexpr RGB8 UILINE_COLORS[] = {
+        {.red = 2, .green = 2, .blue = 2},
+        {.red = 144, .green = 217, .blue = 250},
+        {.red = 74, .green = 159, .blue = 197},
+        {.red = 180, .green = 150, .blue = 105},
+    };
+
     void drawTextSprite(TextSprite& entry)
     {
         entry.uvWidth = drawStringNew(entry.font, reinterpret_cast<const uint8_t*>(entry.string), entry.uvX, entry.uvY);
         entry.uvHeight = entry.font->height;
+    }
+
+    void renderSeperatorLines(const Line* linePtr, int32_t count, int32_t layer)
+    {
+        for (int32_t i = 0; i < count; i++)
+        {
+            auto& line = linePtr[i];
+            renderLinePrimitive(UILINE_COLORS[line.clut].asUint32(), line.x1, line.y1, line.x2, line.y2, layer, 0);
+        }
     }
 
     void renderTextSprite(TextSprite& entry, int32_t offsetX, int32_t offsetY)
