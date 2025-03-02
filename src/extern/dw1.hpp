@@ -1354,7 +1354,6 @@ extern "C"
 
     void
     renderLinePrimitive(uint32_t color, int16_t x1, int16_t y1, int16_t x2, int16_t y2, int32_t layer, uint32_t flag);
-    void renderTriangleCursor(int32_t selection, int16_t yOffset);
     void closeInventoryBoxes2();
     uint32_t hasFishingRod();
     void tickGameMenu();

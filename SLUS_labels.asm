@@ -108,7 +108,6 @@
 .definelabel renderDigimonMenu,         0x800b93d4
 .definelabel hasFishingRod,             0x800e4da0
 .definelabel closeInventoryBoxes2,      0x800dbb84
-.definelabel renderTriangleCursor,      0x800b8654
 .definelabel renderLinePrimitive,       0x800e3e7c
 
 .definelabel NPC_COLLISION_STATE, 0x8013d190

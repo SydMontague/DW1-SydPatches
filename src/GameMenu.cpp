@@ -4,6 +4,8 @@
 #include "UIElements.hpp"
 #include "Utils.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libgpu.hpp"
+#include "extern/libgs.hpp"
 #include "extern/stddef.hpp"
 
 extern "C"
@@ -210,11 +212,54 @@ extern "C"
         {GAME_MENU_OPTIONS_X + 10, GAME_MENU_OPTIONS_Y + 44, 20, 20, 0, 0, 0, 30, getClut(0x100, 0x1F0 + 12)},
         {GAME_MENU_OPTIONS_X + 50, GAME_MENU_OPTIONS_Y + 44, 20, 20, 40, 0, 0, 30, getClut(0x100, 0x1F0 + 13)},
         {GAME_MENU_OPTIONS_X + 90, GAME_MENU_OPTIONS_Y + 44, 20, 20, 0, 20, 0, 30, getClut(0x100, 0x1F0 + 12)},
-        {GAME_MENU_OPTIONS_X + 10, GAME_MENU_OPTIONS_Y + 83, 20, 20, 40, 20, 0, 30, getClut(0x100, 0x1F0 + 13)},
+        // reduced width by 1 to make it align better ingame
+        {GAME_MENU_OPTIONS_X + 10, GAME_MENU_OPTIONS_Y + 83, 19, 20, 41, 20, 0, 30, getClut(0x100, 0x1F0 + 13)},
         {GAME_MENU_OPTIONS_X + 50, GAME_MENU_OPTIONS_Y + 83, 20, 20, 0, 40, 0, 30, getClut(0x100, 0x1F0 + 13)},
         {GAME_MENU_OPTIONS_X + 90, GAME_MENU_OPTIONS_Y + 83, 20, 20, 40, 40, 0, 30, getClut(0x100, 0x1F0 + 13)},
+        // vanilla only has 19px for us here, too
         {GAME_MENU_OPTIONS_X + 10, GAME_MENU_OPTIONS_Y + 5, 20, 19, 80, 0, 0, 30, getClut(0x100, 0x1F0 + 13)},
     };
+
+    constexpr SelectionSprite gameMenuSelector[] = {
+        {0, 4, 251, 255, 0, 0, 4, 4},
+        {4, 0, 251, 255, 23, 0, 4, 4},
+        {0, 4, 255, 251, 0, 23, 4, 4},
+        {4, 0, 255, 251, 23, 23, 4, 4},
+
+        {4, 8, 251, 255, 4, 0, 20, 4},
+        {4, 8, 251, 255, 4, 23, 20, 4},
+        {8, 12, 252, 255, 0, 3, 4, 22},
+        {11, 7, 252, 255, 24, 3, 4, 22},
+    };
+
+    void renderTriangleCursor(int32_t selection, int16_t yOffset)
+    {
+        auto posX = gameMenuSprites[selection - 1].posX - 4;
+        auto posY = gameMenuSprites[selection - 1].posY - 4;
+
+        for (auto& val : gameMenuSelector)
+        {
+            POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+            libgpu_SetPolyFT4(prim);
+            prim->u0 = val.uMin;
+            prim->v0 = val.vMin;
+            prim->u1 = val.uMax;
+            prim->v1 = val.vMin;
+            prim->u2 = val.uMin;
+            prim->v2 = val.vMax;
+            prim->u3 = val.uMax;
+            prim->v3 = val.vMax;
+
+            setPosDataPolyFT4(prim, posX + val.posX, posY + val.posY + yOffset, val.width, val.height);
+            prim->r0    = 128;
+            prim->g0    = 128;
+            prim->b0    = 128;
+            prim->tpage = libgpu_GetTPage(0, 0, 896, 448);
+            prim->clut  = getClut(0x100, 0x1FC);
+            libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 5, prim);
+            libgs_GsSetWorkBase(prim + 1);
+        }
+    }
 
     void drawGameMenu()
     {

@@ -54,7 +54,17 @@ extern "C"
         uint16_t clut;
     };
 
-    static_assert(sizeof(IconSprite));
+    struct SelectionSprite
+    {
+        uint8_t uMin;
+        uint8_t uMax;
+        uint8_t vMin;
+        uint8_t vMax;
+        int8_t posX;
+        int8_t posY;
+        uint8_t width;
+        uint8_t height;
+    };
 
     struct Inset
     {
