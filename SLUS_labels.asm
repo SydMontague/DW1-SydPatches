@@ -25,7 +25,6 @@
 .definelabel renderBoxBar,              0x800be85c
 .definelabel updateConditionAnimation,  0x800df2d0
 .definelabel unsetButterfly,            0x800e9fb4
-.definelabel setSleepDisabled,          0x800ba40c
 .definelabel advanceToTime,             0x800dd678
 .definelabel getModelTile,              0x800c0f28
 .definelabel getItemCount,              0x800c51e0
@@ -100,7 +99,6 @@
 .definelabel initializeLoadedNPCModels, 0x80105aa8
 .definelabel createMenuBox,             0x800b8e50
 .definelabel initializeInventoryObject, 0x800dade8
-.definelabel tickGameMenu,              0x800b8bf0
 .definelabel tickPlayerMenu,            0x800b94d4
 .definelabel renderPlayerMenu,          0x800b9fe8
 .definelabel tickDigimonMenu,           0x800b8f54
@@ -109,6 +107,8 @@
 .definelabel closeInventoryBoxes2,      0x800dbb84
 .definelabel renderLinePrimitive,       0x800e3e7c
 .definelabel renderTrianglePrimitive,   0x800e3d14
+.definelabel initializeFishing,         0x800e4e0c
+.definelabel drawInventoryText,         0x800dac48
 
 .definelabel NPC_COLLISION_STATE, 0x8013d190
 .definelabel LOADED_DIGIMON_MODELS, 0x801be7ec
@@ -165,10 +165,6 @@
 .definelabel TAMER_MOMENTUM_DATA, 0x801a00dc
 .definelabel TAMER_POSITION_DATA, 0x801a07e8
 
-.definelabel MENU_POINTER, 0x80123e88
-.definelabel MENU_OPTIONS, 0x80123e94
-.definelabel MENU_OPTION_COUNT, 0x80134d28
-.definelabel HAS_FISHING_ROD, 0x80134d2c
 .definelabel TRIANGLE_MENU_STATE, 0x80134d30
 .definelabel STATUS_UI_OFFSET_X, 0x80134c50
 .definelabel IS_NATURAL_DEATH, 0x80134c4c

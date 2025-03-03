@@ -8,8 +8,8 @@
 
 ;.org 0x800aba9c
 ;  jal closeTriangleMenu
-.org 0x800b8e1c
-  jal closeTriangleMenu
+;.org 0x800b8e1c
+;  jal closeTriangleMenu
 .org 0x800ba2d0
   jal closeTriangleMenu
 .org 0x800ba320
@@ -180,5 +180,24 @@
   jal renderRectPolyFT4
 .org 0x800dd5b4
   jal renderRectPolyFT4
+
+;.org 0x800b80ec
+;  jal renderSeperatorLines
+;.org 0x800bb690
+;  jal renderSeperatorLines
+.org 0x800bc560
+  jal renderSeperatorLines
+.org 0x800bc6b4
+  jal renderSeperatorLines
+.org 0x800bca48
+  jal renderSeperatorLines
+.org 0x800bd4f4
+  jal renderSeperatorLines
+.org 0x800bdfc8
+  jal renderSeperatorLines
+.org 0x800bf530
+  jal renderSeperatorLines
+.org 0x800bf54c
+  jal renderSeperatorLines
 
 .close

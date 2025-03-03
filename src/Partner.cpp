@@ -476,7 +476,7 @@ extern "C"
         // set sleepy
         if (!isSleepy && !shouldBeAwake) { PARTNER_PARA.condition.isSleepy = true; }
 
-        setSleepDisabled(!PARTNER_PARA.condition.isSleepy);
+        // vanilla sets the menu opion to disabled here, but the logic moved to tickGameMenu
     }
 
     void tickUnhappinessMechanics()
@@ -592,7 +592,7 @@ extern "C"
         PARTNER_PARA.condition.isSleepy  = false;
         HAS_IMMORTAL_HOUR                = 1;
         IMMORTAL_HOUR                    = HOUR;
-        setSleepDisabled(1);
+        // vanilla sets the menu opion to disabled here, but the logic moved to tickGameMenu
 
         if (PARTNER_PARA.condition.isPoopy)
         {

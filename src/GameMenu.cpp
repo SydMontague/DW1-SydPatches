@@ -1,6 +1,10 @@
+#include "GameMenu.hpp"
+
 #include "Font.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
+#include "Math.hpp"
+#include "Tamer.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
 #include "extern/dw1.hpp"
@@ -48,6 +52,29 @@ extern "C"
             .y2   = GAME_MENU_Y + 23,
             .clut = 0,
         },
+    };
+
+    constexpr IconSprite GAME_MENU_SPRITES[] = {
+        {GAME_MENU_OPTIONS_X + 10, GAME_MENU_OPTIONS_Y + 44, 20, 20, 0, 0, 0, 30, getClut(0x100, 0x1F0 + 12)},
+        {GAME_MENU_OPTIONS_X + 50, GAME_MENU_OPTIONS_Y + 44, 20, 20, 40, 0, 0, 30, getClut(0x100, 0x1F0 + 13)},
+        {GAME_MENU_OPTIONS_X + 90, GAME_MENU_OPTIONS_Y + 44, 20, 20, 0, 20, 0, 30, getClut(0x100, 0x1F0 + 12)},
+        // reduced width by 1 to make it align better ingame
+        {GAME_MENU_OPTIONS_X + 10, GAME_MENU_OPTIONS_Y + 83, 19, 20, 41, 20, 0, 30, getClut(0x100, 0x1F0 + 13)},
+        {GAME_MENU_OPTIONS_X + 50, GAME_MENU_OPTIONS_Y + 83, 20, 20, 0, 40, 0, 30, getClut(0x100, 0x1F0 + 13)},
+        {GAME_MENU_OPTIONS_X + 90, GAME_MENU_OPTIONS_Y + 83, 20, 20, 40, 40, 0, 30, getClut(0x100, 0x1F0 + 13)},
+        // vanilla only has 19px for us here, too
+        {GAME_MENU_OPTIONS_X + 10, GAME_MENU_OPTIONS_Y + 5, 20, 19, 80, 0, 0, 30, getClut(0x100, 0x1F0 + 13)},
+    };
+
+    constexpr SelectionSprite GAME_MENU_SELECTOR[] = {
+        {0, 4, 251, 255, 0, 0, 4, 4},
+        {4, 0, 251, 255, 23, 0, 4, 4},
+        {0, 4, 255, 251, 0, 23, 4, 4},
+        {4, 0, 255, 251, 23, 23, 4, 4},
+        {4, 8, 251, 255, 4, 0, 20, 4},
+        {4, 8, 251, 255, 4, 23, 20, 4},
+        {8, 12, 252, 255, 0, 3, 4, 22},
+        {11, 7, 252, 255, 24, 3, 4, 22},
     };
 
     static TextSprite yearLabel = {
@@ -208,36 +235,17 @@ extern "C"
         },
     };
 
-    constexpr IconSprite gameMenuSprites[] = {
-        {GAME_MENU_OPTIONS_X + 10, GAME_MENU_OPTIONS_Y + 44, 20, 20, 0, 0, 0, 30, getClut(0x100, 0x1F0 + 12)},
-        {GAME_MENU_OPTIONS_X + 50, GAME_MENU_OPTIONS_Y + 44, 20, 20, 40, 0, 0, 30, getClut(0x100, 0x1F0 + 13)},
-        {GAME_MENU_OPTIONS_X + 90, GAME_MENU_OPTIONS_Y + 44, 20, 20, 0, 20, 0, 30, getClut(0x100, 0x1F0 + 12)},
-        // reduced width by 1 to make it align better ingame
-        {GAME_MENU_OPTIONS_X + 10, GAME_MENU_OPTIONS_Y + 83, 19, 20, 41, 20, 0, 30, getClut(0x100, 0x1F0 + 13)},
-        {GAME_MENU_OPTIONS_X + 50, GAME_MENU_OPTIONS_Y + 83, 20, 20, 0, 40, 0, 30, getClut(0x100, 0x1F0 + 13)},
-        {GAME_MENU_OPTIONS_X + 90, GAME_MENU_OPTIONS_Y + 83, 20, 20, 40, 40, 0, 30, getClut(0x100, 0x1F0 + 13)},
-        // vanilla only has 19px for us here, too
-        {GAME_MENU_OPTIONS_X + 10, GAME_MENU_OPTIONS_Y + 5, 20, 19, 80, 0, 0, 30, getClut(0x100, 0x1F0 + 13)},
-    };
-
-    constexpr SelectionSprite gameMenuSelector[] = {
-        {0, 4, 251, 255, 0, 0, 4, 4},
-        {4, 0, 251, 255, 23, 0, 4, 4},
-        {0, 4, 255, 251, 0, 23, 4, 4},
-        {4, 0, 255, 251, 23, 23, 4, 4},
-
-        {4, 8, 251, 255, 4, 0, 20, 4},
-        {4, 8, 251, 255, 4, 23, 20, 4},
-        {8, 12, 252, 255, 0, 3, 4, 22},
-        {11, 7, 252, 255, 24, 3, 4, 22},
-    };
+    static bool menuOptionDisabled[7]{};
+    static int8_t selectedOption;
+    static int8_t optionCount;
+    static uint8_t fishingRodState;
 
     void renderTriangleCursor(int32_t selection, int16_t yOffset)
     {
-        auto posX = gameMenuSprites[selection - 1].posX - 4;
-        auto posY = gameMenuSprites[selection - 1].posY - 4;
+        auto posX = GAME_MENU_SPRITES[selection].posX - 4;
+        auto posY = GAME_MENU_SPRITES[selection].posY - 4;
 
-        for (auto& val : gameMenuSelector)
+        for (auto& val : GAME_MENU_SELECTOR)
         {
             POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
             libgpu_SetPolyFT4(prim);
@@ -300,7 +308,8 @@ extern "C"
 
     void renderGameMenu()
     {
-        const auto yOffset = MENU_OPTION_COUNT == 7 ? -39 : 0;
+        // not strictly vanilla equivalent, adjusted to improve layout and fix inconsistencies 
+        const auto yOffset = optionCount <= 6 ? -39 : 0;
 
         if (MENU_STATE == 0)
         {
@@ -311,18 +320,18 @@ extern "C"
         renderSeperatorLines(GAME_MENU_LINES, 3, 5);
         renderDateNumber(DAY + 1, 37, -74);
         renderDateNumber(YEAR + 1, -22, -74);
-        renderTriangleCursor(MENU_POINTER.selection, yOffset);
+        renderTriangleCursor(selectedOption, yOffset);
 
-        for (int32_t i = 0; i < MENU_OPTION_COUNT - 1; i++)
+        for (int32_t i = 0; i < optionCount; i++)
         {
-            const auto& option = MENU_OPTIONS[i];
-            auto& badge        = gameMenuLabels[i];
-            auto& sprite       = gameMenuSprites[i];
-            auto uOffset       = 0;
-            if (MENU_POINTER.selection == i + 1 && PLAYTIME_FRAMES % 10 < 5) uOffset = 20;
+            auto option  = menuOptionDisabled[i];
+            auto& badge  = gameMenuLabels[i];
+            auto& sprite = GAME_MENU_SPRITES[i];
+            auto uOffset = 0;
+            if (selectedOption == i && PLAYTIME_FRAMES % 10 < 5) uOffset = 20;
 
-            badge.hasShadow = option.disabled ? 0 : 1;
-            badge.color     = option.disabled ? -1 : 0;
+            badge.hasShadow = option ? 0 : 1;
+            badge.color     = option ? -1 : 0;
 
             renderRectPolyFT4(sprite.posX,
                               sprite.posY + yOffset,
@@ -333,12 +342,110 @@ extern "C"
                               sprite.texture_page,
                               sprite.clut,
                               6,
-                              option.disabled);
+                              option);
             renderTextSprite(badge, 0, yOffset);
         }
 
         renderTextSprite(yearLabel, 0, 0);
         renderTextSprite(dayLabel, 0, 0);
+    }
+
+    void handleGameMenuSelection(int32_t option)
+    {
+        switch (option)
+        {
+            case 0:
+                TRIANGLE_MENU_STATE = 2;
+                drawInventoryText();
+                break;
+            case 1: TRIANGLE_MENU_STATE = 3; break;
+            case 2: TRIANGLE_MENU_STATE = 5; break;
+            case 3:
+                closeTriangleMenu();
+                Partner_setState(15);
+                IS_IN_MENU = 0;
+                startGameTime();
+                break;
+            case 4:
+                closeTriangleMenu();
+                Partner_setState(4);
+                IS_IN_MENU = 0;
+                startGameTime();
+                break;
+            case 5:
+                closeTriangleMenu();
+                Partner_setState(3);
+                IS_IN_MENU = 0;
+                startGameTime();
+                break;
+            case 6:
+                closeTriangleMenu();
+                setCameraFollowPlayer();
+                initializeFishing();
+                Tamer_setState(11);
+                IS_IN_MENU = 0;
+                break;
+        }
+    }
+
+    void tickGameMenu()
+    {
+        constexpr int16_t mapping[3][3] = {
+            {0, 1, 2},
+            {3, 4, 5},
+            {6, 1, 2},
+        };
+
+        menuOptionDisabled[5] = !PARTNER_PARA.condition.isSleepy;
+
+        // vanilla allows only handled at most one key per frame, we but can handle all of them
+        // order it set to allow diagonal movements even with fishing enabled
+        auto newSelection = selectedOption;
+        if (isKeyDown(InputButtons::BUTTON_DOWN))
+        {
+            auto col     = newSelection % 3;
+            auto row     = ring((newSelection / 3) + 1, 0, (optionCount + 2 - col) / 3);
+            newSelection = mapping[row][col];
+        }
+        if (isKeyDown(InputButtons::BUTTON_LEFT)) newSelection = ring(newSelection - 1, 0, optionCount);
+        if (isKeyDown(InputButtons::BUTTON_RIGHT)) newSelection = ring(newSelection + 1, 0, optionCount);
+        if (isKeyDown(InputButtons::BUTTON_UP))
+        {
+            auto col     = newSelection % 3;
+            auto row     = ring((newSelection / 3) - 1, 0, (optionCount + 2 - col) / 3);
+            newSelection = mapping[row][col];
+        }
+
+        if (newSelection != selectedOption)
+        {
+            selectedOption = newSelection;
+            playSound(0, 2);
+        }
+
+        if (MENU_STATE == 1)
+        {
+            if (isKeyDown(InputButtons::BUTTON_CROSS))
+            {
+                if (menuOptionDisabled[selectedOption])
+                    playSound(0, 4);
+                else
+                {
+                    playSound(0, 3);
+                    // vanilla does this unconditional, but that seems stupid
+                    handleGameMenuSelection(selectedOption);
+                }
+            }
+
+            if (isKeyDown(InputButtons::BUTTON_TRIANGLE) && (UI_BOX_DATA[0].state == 1 || UI_BOX_DATA[0].frame == 0))
+            {
+                playSound(0, 4);
+                closeTriangleMenu();
+                Tamer_setState(0);
+                setCameraFollowPlayer();
+                IS_IN_MENU = 0;
+                startGameTime();
+            }
+        }
     }
 
     void closeUIBoxIfOpen(int32_t instanceId)
@@ -365,13 +472,10 @@ extern "C"
             case 0:
             {
                 auto height = GAME_MENU_HEIGHT;
-                if (HAS_FISHING_ROD != 0) height += GAME_MENU_EXTRA_HEIGHT;
+                if (fishingRodState != 0) height += GAME_MENU_EXTRA_HEIGHT;
                 createMenuBox(0, GAME_MENU_X, GAME_MENU_Y, GAME_MENU_WIDTH, height, 2, tickGameMenu, renderGameMenu);
-                if (UI_BOX_DATA[0].frame == 4)
-                {
-                    TRIANGLE_MENU_STATE = 0xFFFFFFFF;
-                    MENU_STATE          = 0;
-                }
+                MENU_STATE          = 0;
+                TRIANGLE_MENU_STATE = 0xFFFFFFFF;
                 break;
             }
             case 1:
@@ -443,21 +547,21 @@ extern "C"
 
     void addGameMenu()
     {
-        HAS_FISHING_ROD = hasFishingRod();
-        if (HAS_FISHING_ROD != 0)
+        fishingRodState = hasFishingRod();
+        if (fishingRodState != 0)
         {
-            MENU_OPTION_COUNT        = 8;
-            MENU_OPTIONS[6].disabled = HAS_FISHING_ROD != 2;
-            MENU_POINTER.selection   = 7;
+            optionCount     = 7;
+            menuOptionDisabled[6] = fishingRodState != 2;
+            selectedOption        = 6;
         }
         else
         {
-            MENU_OPTION_COUNT        = 7;
-            MENU_OPTIONS[6].disabled = false;
-            MENU_POINTER.selection   = 1;
+            optionCount     = 6;
+            menuOptionDisabled[6] = false;
+            selectedOption        = 0;
         }
-        MENU_OPTIONS[6].disabled = PARTNER_PARA.condition.isSleepy;
-        TRIANGLE_MENU_STATE      = 0;
+        menuOptionDisabled[6] = PARTNER_PARA.condition.isSleepy;
+        TRIANGLE_MENU_STATE   = 0;
         addObject(ObjectID::GAME_MENU, 0, tickTriangleMenu, nullptr);
     }
 }

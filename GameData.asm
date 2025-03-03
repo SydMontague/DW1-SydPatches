@@ -10,11 +10,11 @@
 .endarea
 
 .org 0x800b3d84
-.area 0x800b8928-.
+.area 0x800b8e50-.
   .importobj "compiled/Cave2.lib"
 
-  .notice "Empty space left: " + (0x800b8928-.) + " bytes"
-  .fill 0x800b8928-.
+  .notice "Empty space left: " + (0x800b8e50-.) + " bytes"
+  .fill 0x800b8e50-.
 .endarea
 
 .org 0x8011d46c
@@ -72,6 +72,15 @@ SS_address: ; initializeMusic
   .notice "Empty space left: " + (0x8012342c-.) + " bytes"
   .fill 0x8012342c-.
 .endarea
+
+; override some menu data
+.org 0x80123e88
+.area 0x80123f54-.
+
+  .notice "Empty space left: " + (0x80123f54-.) + " bytes"
+  .fill 0x80123f54-.
+.endarea
+
 
 ; override vanilla raise data
 .org 0x8012abec
