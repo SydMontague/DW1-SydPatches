@@ -19,7 +19,6 @@
 .definelabel removeTamerItem,           0x800c55fc
 .definelabel hasDigimonRaised,          0x800ff824
 ;.definelabel Partner_setState,          0x800df4d0 ; use constexpr version instead
-.definelabel renderRectPolyFT4,         0x800b8928
 .definelabel renderInsetBox,            0x800be734
 .definelabel renderdigimonstatsbar,     0x800bec28
 .definelabel renderDigiviceEntity,      0x800beebc
@@ -109,6 +108,7 @@
 .definelabel hasFishingRod,             0x800e4da0
 .definelabel closeInventoryBoxes2,      0x800dbb84
 .definelabel renderLinePrimitive,       0x800e3e7c
+.definelabel renderTrianglePrimitive,   0x800e3d14
 
 .definelabel NPC_COLLISION_STATE, 0x8013d190
 .definelabel LOADED_DIGIMON_MODELS, 0x801be7ec

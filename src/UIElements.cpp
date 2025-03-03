@@ -11,6 +11,61 @@ extern "C"
         {.red = 180, .green = 150, .blue = 105},
     };
 
+    void renderRectPolyFT4(int16_t posX,
+                           int16_t posY,
+                           uint32_t width,
+                           uint32_t height,
+                           uint8_t texX,
+                           uint8_t texY,
+                           uint16_t texturePage,
+                           uint16_t clut,
+                           int zIndex,
+                           char flag)
+    {
+        POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+        libgpu_SetPolyFT4(prim);
+        if ((flag & 0x40) != 0) libgpu_SetSemiTrans(prim, 1);
+
+        setPolyFT4UV(prim, texX, texY, width, height);
+
+        if ((flag & 2) != 0)
+            setPosDataPolyFT4(prim, posX, posY, width * 2, height * 2);
+        else if ((flag & 4) != 0)
+        {
+            setPosDataPolyFT4(prim, posX, posY, width * 2, height * 2);
+            prim->x0 += width;
+            prim->x1 -= width;
+            prim->x2 += width;
+            prim->x3 -= width;
+        }
+        else
+            setPosDataPolyFT4(prim, posX, posY, width, height);
+
+        if ((flag & 1) != 0)
+        {
+            prim->r0 = 50;
+            prim->g0 = 50;
+            prim->b0 = 50;
+        }
+        else
+        {
+            prim->r0 = 128;
+            prim->g0 = 128;
+            prim->b0 = 128;
+        }
+
+        prim->tpage = texturePage;
+        prim->clut  = clut;
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + zIndex, prim);
+        libgs_GsSetWorkBase(prim + 1);
+
+        if ((flag & 0x80) != 0)
+        {
+            renderTrianglePrimitive(0x202020, posX - 1, posY - 1, posX + 13, posY - 1, posX + 13, posY + 12, 2, 0);
+            renderTrianglePrimitive(0x202020, posX - 1, posY - 1, posX - 1, posY + 12, posX + 13, posY + 12, 2, 0);
+        }
+    }
+
     void drawTextSprite(TextSprite& entry)
     {
         entry.uvWidth = drawStringNew(entry.font, reinterpret_cast<const uint8_t*>(entry.string), entry.uvX, entry.uvY);

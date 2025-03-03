@@ -78,4 +78,14 @@ extern "C"
     void renderTextSprite(TextSprite& entry, int32_t xOffset, int32_t yOffset);
     void initSpecialSprite(IconSprite& sprite, Special special);
     void renderSeperatorLines(const Line* linePtr, int32_t count, int32_t layer);
+    void renderRectPolyFT4(int16_t posX,
+                           int16_t posY,
+                           uint32_t width,
+                           uint32_t height,
+                           uint8_t texX,
+                           uint8_t texY,
+                           uint16_t texturePage,
+                           uint16_t clut,
+                           int zIndex,
+                           char flag);
 }

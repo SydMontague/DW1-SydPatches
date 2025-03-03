@@ -1470,6 +1470,15 @@ extern "C"
                              int32_t hasShadow);
     extern void setUVDataPolyFT4(POLY_FT4* prim, int16_t uvX, int16_t uvY, int16_t uvWidth, int16_t uvHeight);
     extern void setPosDataPolyFT4(POLY_FT4* prim, int16_t posX, int16_t posY, int16_t uvWidth, int16_t uvHeight);
+    void renderTrianglePrimitive(uint32_t color,
+                                 int16_t x1,
+                                 int16_t y1,
+                                 int16_t x2,
+                                 int16_t y2,
+                                 int16_t x3,
+                                 int16_t y3,
+                                 int32_t order,
+                                 uint32_t flag);
     extern void renderBoxBar(int16_t posX,
                              int16_t posY,
                              uint16_t width,
@@ -1490,16 +1499,6 @@ extern "C"
     extern bool hasDigimonRaised(DigimonType type);
     extern void renderInsetBox(int32_t posX, int32_t posY, int32_t width, int32_t height, int32_t order);
     extern void renderDigimonStatsBar(int32_t value, int32_t maxValue, int32_t width, int32_t posX, int32_t posY);
-    extern void renderRectPolyFT4(int16_t posX,
-                                  int16_t posY,
-                                  uint32_t width,
-                                  uint32_t height,
-                                  uint8_t texX,
-                                  uint8_t texY,
-                                  uint16_t texturePage,
-                                  uint16_t clut,
-                                  int zIndex,
-                                  char flag);
     extern void renderDigiviceEntity(Entity* entity, int32_t entityId);
 
     extern void updateConditionAnimation();
