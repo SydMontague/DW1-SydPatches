@@ -28,3 +28,4 @@
 .include "EFE.asm"
 .include "NPCEntity.asm"
 .include "GameMenu.asm"
+.include "UIElements.asm"

@@ -142,4 +142,33 @@ extern "C"
             case Special::NONE: sprite.height = 0; break;
         }
     }
+    
+    bool createMenuBox(int32_t instanceId,
+                       int16_t posX,
+                       int16_t posY,
+                       int16_t width,
+                       int16_t height,
+                       uint8_t features,
+                       BoxTickFunction tickFunc,
+                       BoxRenderFunction renderFunc)
+    {
+        if (UI_BOX_DATA[instanceId].state == 1) return true;
+
+        if (UI_BOX_DATA[instanceId].frame == 0)
+        {
+            Position pos;
+            getEntityScreenPos(&TAMER_ENTITY, 1, &pos);
+
+            RECT final = {.x = posX, .y = posY, .width = width, .height = height};
+            RECT start = {
+                .x      = static_cast<int16_t>(pos.x - 5),
+                .y      = static_cast<int16_t>(pos.y - 5),
+                .width  = 10,
+                .height = 10,
+            };
+
+            createAnimatedUIBox(instanceId, 1, features, &final, &start, tickFunc, renderFunc);
+        }
+        return false;
+    }
 }

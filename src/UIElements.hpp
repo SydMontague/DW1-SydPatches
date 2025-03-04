@@ -88,4 +88,12 @@ extern "C"
                            uint16_t clut,
                            int zIndex,
                            char flag);
+    bool createMenuBox(int32_t instanceId,
+                       int16_t posX,
+                       int16_t posY,
+                       int16_t width,
+                       int16_t height,
+                       uint8_t features,
+                       BoxTickFunction tickFunc,
+                       BoxRenderFunction renderFunc);
 }

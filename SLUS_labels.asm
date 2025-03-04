@@ -97,7 +97,6 @@
 .definelabel entityIsOffScreen,         0x800d5430
 .definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8
-.definelabel createMenuBox,             0x800b8e50
 .definelabel initializeInventoryObject, 0x800dade8
 .definelabel tickPlayerMenu,            0x800b94d4
 .definelabel renderPlayerMenu,          0x800b9fe8
