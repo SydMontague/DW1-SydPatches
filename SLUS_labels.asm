@@ -100,7 +100,6 @@
 .definelabel initializeInventoryObject, 0x800dade8
 .definelabel tickPlayerMenu,            0x800b94d4
 .definelabel renderPlayerMenu,          0x800b9fe8
-.definelabel tickDigimonMenu,           0x800b8f54
 .definelabel renderDigimonMenu,         0x800b93d4
 .definelabel hasFishingRod,             0x800e4da0
 .definelabel closeInventoryBoxes2,      0x800dbb84
@@ -108,7 +107,14 @@
 .definelabel renderTrianglePrimitive,   0x800e3d14
 .definelabel initializeFishing,         0x800e4e0c
 .definelabel drawInventoryText,         0x800dac48
+.definelabel getEquippedSlot,           0x800ba4d4
+.definelabel equipMove,                 0x800ba654
+.definelabel entityGetTechFromAnim,     0x800e6000
 
+.definelabel MOVE_SELECT_BOX_Y, 0x80134d38
+.definelabel MOVE_SELECT_BOX_X, 0x80134d3a
+.definelabel EQUIPPED_MOVES, 0x80134234
+.definelabel MOVE_DATA, 0x8012623c
 .definelabel NPC_COLLISION_STATE, 0x8013d190
 .definelabel LOADED_DIGIMON_MODELS, 0x801be7ec
 .definelabel MAP_DIGIMON_TABLE, 0x8013cb50

@@ -247,4 +247,16 @@ extern "C"
 
         return false;
     }
+
+    bool hasAttackEquipped(DigimonEntity* entity)
+    {
+        for (int32_t i = 0; i < 3; i++)
+        {
+            auto move = entity->stats.moves[i];
+            auto tech = entityGetTechFromAnim(entity, move);
+            if (move != 0xFF && tech != 0xFF && MOVE_DATA[tech].power != 0) return true;
+        }
+
+        return false;
+    }
 }

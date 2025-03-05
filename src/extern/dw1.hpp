@@ -1195,6 +1195,22 @@ extern "C"
         bool stopAnim;
     };
 
+    struct Move
+    {
+        int32_t distance;
+        int16_t power;
+        uint8_t mpCost;
+        uint8_t iframes;
+        uint8_t range;
+        uint8_t special;
+        uint8_t status;
+        uint8_t accuracy;
+        uint8_t statusChance;
+        uint8_t unk3;
+        uint8_t unk4;
+        uint8_t unk5;
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1202,6 +1218,10 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern Move MOVE_DATA[122];
+    extern uint8_t EQUIPPED_MOVES[4];
+    extern int16_t MOVE_SELECT_BOX_Y;
+    extern int16_t MOVE_SELECT_BOX_X;
     extern uint32_t TRIANGLE_MENU_STATE;
     extern uint8_t MENU_SUB_STATE;
     extern uint8_t DIGIMON_MENU_STATE;
@@ -1335,6 +1355,9 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    int32_t getEquippedSlot();
+    void equipMove();
+    uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
     void initializeFishing();
     void drawInventoryText();
     void
@@ -1343,17 +1366,8 @@ extern "C"
     uint32_t hasFishingRod();
     void tickPlayerMenu();
     void renderPlayerMenu();
-    void tickDigimonMenu();
     void renderDigimonMenu();
     void initializeInventoryObject();
-    bool createMenuBox(int32_t instanceId,
-                       int16_t posX,
-                       int16_t posY,
-                       int16_t width,
-                       int16_t height,
-                       uint8_t features,
-                       BoxTickFunction tickFunc,
-                       BoxRenderFunction renderFunc);
     void initializeLoadedNPCModels();
     void NPCEntity_tickBattle(int32_t instanceId);
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
@@ -1525,3 +1539,4 @@ static_assert(sizeof(MapObject) == 0x12);
 static_assert(sizeof(MapObjectInstance) == 0x26);
 static_assert(sizeof(MapDigimon) == 0x54);
 static_assert(sizeof(MapDigimonEntity) == 0xC4);
+static_assert(sizeof(Move) == 16);

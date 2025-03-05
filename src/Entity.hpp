@@ -6,4 +6,5 @@ Pair<Entity*, uint8_t> getEntityFromScriptId(uint8_t scriptId);
 
 extern "C"
 {
+    bool hasAttackEquipped(DigimonEntity* entity);
 }

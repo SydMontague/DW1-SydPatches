@@ -1,5 +1,6 @@
 #include "GameMenu.hpp"
 
+#include "Entity.hpp"
 #include "Font.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
@@ -235,6 +236,11 @@ extern "C"
         },
     };
 
+    constexpr int32_t MOVE_ROW_COUNT = 7;
+    constexpr int32_t MOVE_COL_COUNT = 8;
+
+    static int8_t moveSelectedRow;
+    static int8_t moveSelectedColumn;
     static bool menuOptionDisabled[7]{};
     static int8_t selectedOption;
     static int8_t optionCount;
@@ -308,7 +314,7 @@ extern "C"
 
     void renderGameMenu()
     {
-        // not strictly vanilla equivalent, adjusted to improve layout and fix inconsistencies 
+        // not strictly vanilla equivalent, adjusted to improve layout and fix inconsistencies
         const auto yOffset = optionCount <= 6 ? -39 : 0;
 
         if (MENU_STATE == 0)
@@ -386,6 +392,96 @@ extern "C"
                 IS_IN_MENU = 0;
                 break;
         }
+    }
+
+    void tickDigimonMenuTechs()
+    {
+        if (MENU_STATE == 1 && isKeyDown(InputButtons::BUTTON_CROSS))
+        {
+            MENU_STATE = 2;
+            playSound(0, 3);
+        }
+
+        if (MENU_STATE == 6)
+        {
+            if (isKeyDown(InputButtons::BUTTON_CROSS))
+            {
+                auto slot = getEquippedSlot();
+                if (slot == -1)
+                    equipMove();
+                else
+                {
+                    EQUIPPED_MOVES[slot]             = 0xFF;
+                    PARTNER_ENTITY.stats.moves[slot] = 0xFF;
+                    playSound(0, 3);
+                }
+            }
+            if (isKeyDown(InputButtons::BUTTON_SQUARE))
+            {
+                MENU_STATE     = 7;
+                MENU_SUB_STATE = 0;
+                playSound(0, 3);
+            }
+            if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
+            {
+                if (hasAttackEquipped(&PARTNER_ENTITY)) MENU_STATE = 4;
+                playSound(0, 4);
+            }
+
+            auto oldRow = moveSelectedRow;
+            auto oldCol = moveSelectedColumn;
+            if (isKeyDown(InputButtons::BUTTON_RIGHT))
+                moveSelectedColumn = min(moveSelectedColumn + 1, MOVE_COL_COUNT - 1);
+            if (isKeyDown(InputButtons::BUTTON_LEFT)) moveSelectedColumn = max(moveSelectedColumn - 1, 0);
+            if (isKeyDown(InputButtons::BUTTON_DOWN)) moveSelectedRow = min(moveSelectedRow + 1, MOVE_ROW_COUNT - 1);
+            if (isKeyDown(InputButtons::BUTTON_UP)) moveSelectedRow = max(moveSelectedRow - 1, 0);
+
+            // TODO this belongs into the render
+            MOVE_SELECT_BOX_Y = 0x6f + moveSelectedRow * 15;
+            MOVE_SELECT_BOX_X = 0x73 + moveSelectedColumn * 18;
+
+            if (moveSelectedRow != oldRow || moveSelectedColumn != oldCol) playSound(0, 2);
+        }
+
+        if (MENU_STATE == 8 && isKeyDown(InputButtons::BUTTON_TRIANGLE))
+        {
+            MENU_STATE     = 9;
+            MENU_SUB_STATE = 0;
+            playSound(0, 4);
+        }
+    }
+
+    void tickDigimonMenu()
+    {
+        // stats menu doesn't need special interaction
+        if (DIGIMON_MENU_STATE == 1) tickDigimonMenuTechs();
+
+        if (MENU_STATE == 1)
+        {
+            if (isKeyDown(InputButtons::BUTTON_LEFT) && DIGIMON_MENU_STATE >= 1)
+            {
+                DIGIMON_MENU_STATE -= 1;
+                MENU_STATE     = 0;
+                MENU_SUB_STATE = 0;
+                playSound(0, 2);
+            }
+            if (isKeyDown(InputButtons::BUTTON_RIGHT) && DIGIMON_MENU_STATE < 1)
+            {
+                DIGIMON_MENU_STATE += 1;
+                MENU_STATE     = 0;
+                MENU_SUB_STATE = 0;
+                playSound(0, 2);
+            }
+
+            if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
+            {
+                TRIANGLE_MENU_STATE = 4;
+                playSound(0, 4);
+            }
+        }
+
+        TAMER_ENTITY.isOnScreen   = false;
+        PARTNER_ENTITY.isOnScreen = false;
     }
 
     void tickGameMenu()
@@ -550,13 +646,13 @@ extern "C"
         fishingRodState = hasFishingRod();
         if (fishingRodState != 0)
         {
-            optionCount     = 7;
+            optionCount           = 7;
             menuOptionDisabled[6] = fishingRodState != 2;
             selectedOption        = 6;
         }
         else
         {
-            optionCount     = 6;
+            optionCount           = 6;
             menuOptionDisabled[6] = false;
             selectedOption        = 0;
         }
