@@ -8,9 +8,6 @@
   .notice "Empty space left: " + (0x800bc2e0-.) + " bytes"
 .endarea
 
-.org 0x800b9410
-  jal renderDigimonStatsView
-
 .close
 
 .open "work/DIGIMON/ETCDAT/ETCTIM.BIN",0

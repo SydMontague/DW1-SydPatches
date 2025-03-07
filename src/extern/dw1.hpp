@@ -1224,7 +1224,6 @@ extern "C"
     extern int16_t MOVE_SELECT_BOX_X;
     extern uint32_t TRIANGLE_MENU_STATE;
     extern uint8_t MENU_SUB_STATE;
-    extern uint8_t DIGIMON_MENU_STATE;
     extern uint8_t PLAYER_MENU_STATE;
     extern MapDigimonEntity MAP_DIGIMON_TABLE[8];
     extern GsRVIEW2 GS_VIEWPOINT;
@@ -1355,6 +1354,8 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void renderMenuTab(int32_t posX, int32_t posY, bool isActive);
+    void renderDigimonMovesView();
     int32_t getEquippedSlot();
     void equipMove();
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
@@ -1366,7 +1367,6 @@ extern "C"
     uint32_t hasFishingRod();
     void tickPlayerMenu();
     void renderPlayerMenu();
-    void renderDigimonMenu();
     void initializeInventoryObject();
     void initializeLoadedNPCModels();
     void NPCEntity_tickBattle(int32_t instanceId);

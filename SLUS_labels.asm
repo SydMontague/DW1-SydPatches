@@ -100,7 +100,6 @@
 .definelabel initializeInventoryObject, 0x800dade8
 .definelabel tickPlayerMenu,            0x800b94d4
 .definelabel renderPlayerMenu,          0x800b9fe8
-.definelabel renderDigimonMenu,         0x800b93d4
 .definelabel hasFishingRod,             0x800e4da0
 .definelabel closeInventoryBoxes2,      0x800dbb84
 .definelabel renderLinePrimitive,       0x800e3e7c
@@ -110,6 +109,8 @@
 .definelabel getEquippedSlot,           0x800ba4d4
 .definelabel equipMove,                 0x800ba654
 .definelabel entityGetTechFromAnim,     0x800e6000
+.definelabel renderMenuTab,             0x800bd2e4
+.definelabel renderDigimonMovesView,    0x800bc2e0
 
 .definelabel MOVE_SELECT_BOX_Y, 0x80134d38
 .definelabel MOVE_SELECT_BOX_X, 0x80134d3a
@@ -190,7 +191,6 @@
 .definelabel CURRENT_SCREEN, 0x80134da8
 .definelabel MENU_STATE, 0x80134d34
 .definelabel MENU_SUB_STATE, 0x80134d35
-.definelabel DIGIMON_MENU_STATE, 0x80134d36
 .definelabel PLAYER_MENU_STATE, 0x80134d37
 .definelabel SLEEP_PATTERN, 0x80122cf4
 .definelabel PLAYTIME_FRAMES, 0x80134f00

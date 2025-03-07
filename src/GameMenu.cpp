@@ -5,6 +5,7 @@
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
+#include "StatsView.hpp"
 #include "Tamer.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
@@ -111,6 +112,42 @@ extern "C"
         .alignmentY = AlignmentY::CENTER,
         .color      = 3,
         .layer      = 6,
+        .hasShadow  = 1,
+    };
+
+    static TextSprite statusLabel = {
+        .font       = &vanillaFont,
+        .string     = "Status",
+        .uvX        = GAME_MENU_TEXT_DRAW_X + 0,
+        .uvY        = GAME_MENU_TEXT_DRAW_Y + 0,
+        .uvWidth    = 0,
+        .uvHeight   = 0,
+        .posX       = -138,
+        .posY       = -101,
+        .boxWidth   = 60,
+        .boxHeight  = 12,
+        .alignmentX = AlignmentX::CENTER,
+        .alignmentY = AlignmentY::CENTER,
+        .color      = 0,
+        .layer      = 5,
+        .hasShadow  = 1,
+    };
+
+    static TextSprite techLabel = {
+        .font       = &vanillaFont,
+        .string     = "Tech",
+        .uvX        = GAME_MENU_TEXT_DRAW_X + 16,
+        .uvY        = GAME_MENU_TEXT_DRAW_Y + 0,
+        .uvWidth    = 0,
+        .uvHeight   = 0,
+        .posX       = -63,
+        .posY       = -101,
+        .boxWidth   = 48,
+        .boxHeight  = 12,
+        .alignmentX = AlignmentX::CENTER,
+        .alignmentY = AlignmentY::CENTER,
+        .color      = 0,
+        .layer      = 5,
         .hasShadow  = 1,
     };
 
@@ -245,6 +282,7 @@ extern "C"
     static int8_t selectedOption;
     static int8_t optionCount;
     static uint8_t fishingRodState;
+    static uint8_t digimonMenuState;
 
     void renderTriangleCursor(int32_t selection, int16_t yOffset)
     {
@@ -310,6 +348,28 @@ extern "C"
 
             renderRectPolyFT4(posX + i * 9, -74, 7, 12, uCoord, vCoord - 64, 30, 0x7F10, 5, 0);
         }
+    }
+
+    void renderDigimonMenu()
+    {
+        if (MENU_STATE == 0)
+        {
+            clearTextSubArea2(0, 0, 256, 16);
+            drawTextSprite(statusLabel);
+            drawTextSprite(techLabel);
+        }
+
+        if (digimonMenuState == 0)
+            renderDigimonStatsView();
+        else if (digimonMenuState == 1)
+            renderDigimonMovesView();
+
+        statusLabel.color = digimonMenuState != 0 ? 1 : 0;
+        techLabel.color   = digimonMenuState != 1 ? 1 : 0;
+        renderTextSprite(statusLabel, 0, 0);
+        renderTextSprite(techLabel, 0, 0);
+        renderMenuTab(-145, 76, digimonMenuState != 0);
+        renderMenuTab(-70, 64, digimonMenuState != 1);
     }
 
     void renderGameMenu()
@@ -454,20 +514,20 @@ extern "C"
     void tickDigimonMenu()
     {
         // stats menu doesn't need special interaction
-        if (DIGIMON_MENU_STATE == 1) tickDigimonMenuTechs();
+        if (digimonMenuState == 1) tickDigimonMenuTechs();
 
         if (MENU_STATE == 1)
         {
-            if (isKeyDown(InputButtons::BUTTON_LEFT) && DIGIMON_MENU_STATE >= 1)
+            if (isKeyDown(InputButtons::BUTTON_LEFT) && digimonMenuState >= 1)
             {
-                DIGIMON_MENU_STATE -= 1;
+                digimonMenuState -= 1;
                 MENU_STATE     = 0;
                 MENU_SUB_STATE = 0;
                 playSound(0, 2);
             }
-            if (isKeyDown(InputButtons::BUTTON_RIGHT) && DIGIMON_MENU_STATE < 1)
+            if (isKeyDown(InputButtons::BUTTON_RIGHT) && digimonMenuState < 1)
             {
-                DIGIMON_MENU_STATE += 1;
+                digimonMenuState += 1;
                 MENU_STATE     = 0;
                 MENU_SUB_STATE = 0;
                 playSound(0, 2);
@@ -596,13 +656,10 @@ extern "C"
                 if (UI_BOX_DATA[0].frame == 0)
                 {
                     createMenuBox(1, -150, -89, 300, 190, 0, tickDigimonMenu, renderDigimonMenu);
-                    // TODO move this draw into the menu box tick/render
-                    clearTextArea();
-                    drawStringNew(&vanillaFont, DIGIMON_MENU_TABS, 704, 256);
                     MENU_STATE          = 0;
                     MENU_SUB_STATE      = 0;
                     TRIANGLE_MENU_STATE = 0xFFFFFFFF;
-                    DIGIMON_MENU_STATE  = 0;
+                    digimonMenuState    = 0;
                 }
                 break;
             }
