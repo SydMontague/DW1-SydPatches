@@ -96,4 +96,6 @@ extern "C"
                        uint8_t features,
                        BoxTickFunction tickFunc,
                        BoxRenderFunction renderFunc);
+    bool isUIBoxAvailable(int32_t id);
+    void closeUIBoxIfOpen(int32_t instanceId);
 }

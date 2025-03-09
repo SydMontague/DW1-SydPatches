@@ -64,7 +64,6 @@
 .definelabel setCameraFollowPlayer,     0x800d8b44
 .definelabel pickupItem,                0x800c5490
 .definelabel unsetUIBoxAnimated,        0x800c31fc
-.definelabel isUIBoxAvailable,          0x800ba1d4
 .definelabel entityLookAtLocation,      0x800d459c
 .definelabel tickOpenChestTray,         0x800e21d0
 .definelabel tickCloseChestTray,        0x800e223c

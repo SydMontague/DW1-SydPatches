@@ -1439,7 +1439,6 @@ extern "C"
     bool pickupItem(int32_t dropId);
     void unsetUIBoxAnimated(int32_t boxId, RECT* target);
     void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos);
-    bool isUIBoxAvailable(int32_t id);
     void addMapNameObject(int32_t mapId);
     void changeMap(uint32_t map, uint32_t exit);
     void startGameTime();

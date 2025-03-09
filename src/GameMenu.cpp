@@ -448,15 +448,6 @@ extern "C"
         }
     }
 
-    void closeUIBoxIfOpen(int32_t instanceId)
-    {
-        if (UI_BOX_DATA[instanceId].frame < 5) return;
-        if (UI_BOX_DATA[instanceId].state != 1) return;
-
-        // vanilla calls getEntityScreenPos here, but it's results are unused?
-        unsetUIBoxAnimated(instanceId, nullptr);
-    }
-
     void closeTriangleMenu()
     {
         closeUIBoxIfOpen(1);

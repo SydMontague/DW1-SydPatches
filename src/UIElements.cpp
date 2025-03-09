@@ -142,7 +142,7 @@ extern "C"
             case Special::NONE: sprite.height = 0; break;
         }
     }
-    
+
     bool createMenuBox(int32_t instanceId,
                        int16_t posX,
                        int16_t posY,
@@ -170,5 +170,19 @@ extern "C"
             createAnimatedUIBox(instanceId, 1, features, &final, &start, tickFunc, renderFunc);
         }
         return false;
+    }
+
+    void closeUIBoxIfOpen(int32_t instanceId)
+    {
+        if (UI_BOX_DATA[instanceId].frame < 5) return;
+        if (UI_BOX_DATA[instanceId].state != 1) return;
+
+        // vanilla calls getEntityScreenPos here, but it's results are unused?
+        unsetUIBoxAnimated(instanceId, nullptr);
+    }
+
+    bool isUIBoxAvailable(int32_t id)
+    {
+        return UI_BOX_DATA[id].state == 1 || UI_BOX_DATA[id].frame == 0;
     }
 }
