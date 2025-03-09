@@ -117,7 +117,11 @@
 .definelabel renderEvoChartView,        0x800bd940
 .definelabel renderMedalView,           0x800bdea8
 .definelabel renderCardsView,           0x800be35c
+.definelabel renderOverworldItem,       0x800c4e94
+.definelabel removeItem,                0x800c53ec
 
+.definelabel INVENTORY_ITEM_TYPES, 0x8013d474
+.definelabel INVENTORY_POINTER, 0x80134e10
 .definelabel SELECTED_CARD, 0x80134d3e
 .definelabel SELECTED_MEDAL, 0x80134d3c
 .definelabel MEDAL_SELECTOR_INDEX, 0x80134d3d

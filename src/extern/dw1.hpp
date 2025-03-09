@@ -1227,6 +1227,8 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern ItemType INVENTORY_ITEM_TYPES[30];
+    extern uint8_t INVENTORY_POINTER; 
     extern EvoChartBoxData EVOCHART_BOXES[61];
     extern uint16_t CHART_SELECTED_DIGIMON;
     extern int16_t CHART_SELECTED_COLUMN;
@@ -1370,6 +1372,8 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void removeItem(ItemType type, int32_t amount);
+    void renderOverworldItem(WorldItem* item);
     void renderPlayerInfoView();
     void renderEvoChartView();
     void renderMedalView();

@@ -925,4 +925,32 @@ extern "C"
         setupEntityMatrix(0);
         startAnimation(&TAMER_ENTITY, 0);
     }
+
+    void startFeedingItem(ItemType item)
+    {
+        if (TAMER_ITEM.type != ItemType::NONE) return;
+
+        TAMER_ITEM.type = item;
+        Tamer_setState(6);
+        Partner_setState(5);
+        removeObject(ObjectID::GAME_MENU, 0);
+        IS_IN_MENU = 0;
+        startGameTime();
+    }
+
+    void removeOneSelectedItem()
+    {
+        removeItem(INVENTORY_ITEM_TYPES[INVENTORY_POINTER], 1);
+    }
+
+    void renderFeedingItem(int32_t instanceId)
+    {
+        if (instanceId != 0) return;
+
+        auto& pos                   = TAMER_ENTITY.posData[9].posMatrix.work.t;
+        TAMER_ITEM.spriteLocation.x = pos[0];
+        TAMER_ITEM.spriteLocation.y = pos[1];
+        TAMER_ITEM.spriteLocation.z = pos[2];
+        renderOverworldItem(&TAMER_ITEM);
+    }
 }

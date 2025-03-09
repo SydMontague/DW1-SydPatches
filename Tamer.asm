@@ -1,6 +1,17 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
+.org 0x800db100
+  jal startFeedingItem
+
+.org 0x800de200
+  jal removeOneSelectedItem
+
+.org 0x800de07c
+  li.u a3,renderFeedingItem
+.org 0x800de090
+  li.l a3,renderFeedingItem
+
 .org 0x80105dc4
   jal isTrainingComplete
 
