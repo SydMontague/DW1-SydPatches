@@ -90,6 +90,7 @@ static int8_t selectedCardCol;
 static int8_t selectedCardRow;
 static int8_t selectedMedalRow;
 static int8_t selectedMedalCol;
+static uint8_t playerMenuState;
 
 static Pair<EvoChartBoxData, int32_t> getEvoChartData(uint16_t posX, uint16_t posY)
 {
@@ -307,16 +308,16 @@ void tickPlayerMenu()
 {
     if (MENU_STATE < 2)
     {
-        if (isKeyDownRepeat(InputButtons::BUTTON_LEFT) && PLAYER_MENU_STATE >= 1)
+        if (isKeyDownRepeat(InputButtons::BUTTON_LEFT) && playerMenuState >= 1)
         {
-            PLAYER_MENU_STATE -= 1;
+            playerMenuState -= 1;
             MENU_STATE     = 0;
             MENU_SUB_STATE = 0;
             playSound(0, 2);
         }
-        if (isKeyDownRepeat(InputButtons::BUTTON_RIGHT) && PLAYER_MENU_STATE < 3)
+        if (isKeyDownRepeat(InputButtons::BUTTON_RIGHT) && playerMenuState < 3)
         {
-            PLAYER_MENU_STATE += 1;
+            playerMenuState += 1;
             MENU_STATE     = 0;
             MENU_SUB_STATE = 0;
             playSound(0, 2);
@@ -329,10 +330,10 @@ void tickPlayerMenu()
         }
     }
 
-    if (PLAYER_MENU_STATE == 0) { tickPlayerMenuPlayerView(); }
-    else if (PLAYER_MENU_STATE == 1) { tickPlayerMenuChartView(); }
-    else if (PLAYER_MENU_STATE == 2) { tickPlayerMenuMedalView(); }
-    else if (PLAYER_MENU_STATE == 3) { tickPlayerMenuCardView(); }
+    if (playerMenuState == 0) { tickPlayerMenuPlayerView(); }
+    else if (playerMenuState == 1) { tickPlayerMenuChartView(); }
+    else if (playerMenuState == 2) { tickPlayerMenuMedalView(); }
+    else if (playerMenuState == 3) { tickPlayerMenuCardView(); }
 }
 
 void renderPlayerMenu()
@@ -346,27 +347,32 @@ void renderPlayerMenu()
         drawTextSprite(cardLabel);
     }
 
-    if (PLAYER_MENU_STATE == 0)
+    if (playerMenuState == 0)
         renderPlayerInfoView();
-    else if (PLAYER_MENU_STATE == 1)
+    else if (playerMenuState == 1)
         renderEvoChartView();
-    else if (PLAYER_MENU_STATE == 2)
+    else if (playerMenuState == 2)
         renderMedalView();
-    else if (PLAYER_MENU_STATE == 3)
+    else if (playerMenuState == 3)
         renderCardsView();
 
-    playerLabel.color = PLAYER_MENU_STATE != 0 ? 1 : 0;
-    chartLabel.color  = PLAYER_MENU_STATE != 1 ? 1 : 0;
-    medalLabel.color  = PLAYER_MENU_STATE != 2 ? 1 : 0;
-    cardLabel.color   = PLAYER_MENU_STATE != 3 ? 1 : 0;
+    playerLabel.color = playerMenuState != 0 ? 1 : 0;
+    chartLabel.color  = playerMenuState != 1 ? 1 : 0;
+    medalLabel.color  = playerMenuState != 2 ? 1 : 0;
+    cardLabel.color   = playerMenuState != 3 ? 1 : 0;
 
     renderTextSprite(playerLabel, 0, 0);
     renderTextSprite(chartLabel, 0, 0);
     renderTextSprite(medalLabel, 0, 0);
     renderTextSprite(cardLabel, 0, 0);
 
-    renderMenuTab(-145, 72, PLAYER_MENU_STATE != 0);
-    renderMenuTab(-74, 70, PLAYER_MENU_STATE != 1);
-    renderMenuTab(-5, 60, PLAYER_MENU_STATE != 2);
-    renderMenuTab(54, 60, PLAYER_MENU_STATE != 3);
+    renderMenuTab(-145, 72, playerMenuState != 0);
+    renderMenuTab(-74, 70, playerMenuState != 1);
+    renderMenuTab(-5, 60, playerMenuState != 2);
+    renderMenuTab(54, 60, playerMenuState != 3);
+}
+
+void setPlayerMenuState(uint32_t state)
+{
+    playerMenuState = state;
 }

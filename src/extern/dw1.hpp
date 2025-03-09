@@ -1238,7 +1238,6 @@ extern "C"
     extern int16_t MOVE_SELECT_BOX_X;
     extern uint32_t TRIANGLE_MENU_STATE;
     extern uint8_t MENU_SUB_STATE;
-    extern uint8_t PLAYER_MENU_STATE;
     extern MapDigimonEntity MAP_DIGIMON_TABLE[8];
     extern GsRVIEW2 GS_VIEWPOINT;
     extern Chest CHEST_ARRAY[8];

@@ -515,7 +515,7 @@ extern "C"
                     MENU_STATE          = 0;
                     MENU_SUB_STATE      = 0;
                     TRIANGLE_MENU_STATE = 0xFFFFFFFF;
-                    PLAYER_MENU_STATE   = 0;
+                    setPlayerMenuState(0);
                 }
                 break;
             }
