@@ -5,6 +5,7 @@
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
+#include "PlayerMenu.hpp"
 #include "StatsView.hpp"
 #include "Tamer.hpp"
 #include "UIElements.hpp"
@@ -17,7 +18,6 @@
 extern "C"
 {
     constexpr uint8_t PLAYER_MENU_TABS[]  = "Player   Chart    Med. Card Fish";
-    constexpr uint8_t DIGIMON_MENU_TABS[] = "Status  Tech";
 
     constexpr auto GAME_MENU_X            = -66;
     constexpr auto GAME_MENU_Y            = -80;
@@ -490,11 +490,13 @@ extern "C"
 
             auto oldRow = moveSelectedRow;
             auto oldCol = moveSelectedColumn;
-            if (isKeyDown(InputButtons::BUTTON_RIGHT))
-                moveSelectedColumn = min(moveSelectedColumn + 1, MOVE_COL_COUNT - 1);
-            if (isKeyDown(InputButtons::BUTTON_LEFT)) moveSelectedColumn = max(moveSelectedColumn - 1, 0);
-            if (isKeyDown(InputButtons::BUTTON_DOWN)) moveSelectedRow = min(moveSelectedRow + 1, MOVE_ROW_COUNT - 1);
-            if (isKeyDown(InputButtons::BUTTON_UP)) moveSelectedRow = max(moveSelectedRow - 1, 0);
+            if (isKeyDownRepeat(InputButtons::BUTTON_RIGHT)) moveSelectedColumn += 1;
+            if (isKeyDownRepeat(InputButtons::BUTTON_LEFT)) moveSelectedColumn -= 1;
+            if (isKeyDownRepeat(InputButtons::BUTTON_DOWN)) moveSelectedRow += 1;
+            if (isKeyDownRepeat(InputButtons::BUTTON_UP)) moveSelectedRow -= 1;
+
+            moveSelectedRow    = clamp(moveSelectedRow, 0, MOVE_ROW_COUNT - 1);
+            moveSelectedColumn = clamp(moveSelectedColumn, 0, MOVE_COL_COUNT - 1);
 
             // TODO this belongs into the render
             MOVE_SELECT_BOX_Y = 0x6f + moveSelectedRow * 15;

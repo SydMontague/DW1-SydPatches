@@ -98,7 +98,6 @@
 .definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8
 .definelabel initializeInventoryObject, 0x800dade8
-.definelabel tickPlayerMenu,            0x800b94d4
 .definelabel renderPlayerMenu,          0x800b9fe8
 .definelabel hasFishingRod,             0x800e4da0
 .definelabel closeInventoryBoxes2,      0x800dbb84
@@ -111,7 +110,20 @@
 .definelabel entityGetTechFromAnim,     0x800e6000
 .definelabel renderMenuTab,             0x800bd2e4
 .definelabel renderDigimonMovesView,    0x800bc2e0
+.definelabel renderEvoChartDetail,      0x800ba930
+.definelabel activateMedalTexture,      0x800e24a4
+.definelabel loadCardImage,             0x800bb500
+.definelabel renderCardImage,           0x800bb524
+.definelabel renderCardCount,           0x800bb5a0
 
+.definelabel SELECTED_CARD, 0x80134d3e
+.definelabel SELECTED_MEDAL, 0x80134d3c
+.definelabel MEDAL_SELECTOR_INDEX, 0x80134d3d
+.definelabel CHANGED_INPUT, 0x80134eec
+.definelabel EVOCHART_BOXES, 0x80124544
+.definelabel CHART_SELECTED_DIGIMON, 0x80134d40
+.definelabel CHART_SELECTED_COLUMN, 0x80134d42
+.definelabel CHART_SELECTED_ROW, 0x80134d44
 .definelabel MOVE_SELECT_BOX_Y, 0x80134d38
 .definelabel MOVE_SELECT_BOX_X, 0x80134d3a
 .definelabel EQUIPPED_MOVES, 0x80134234

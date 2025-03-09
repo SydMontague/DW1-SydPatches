@@ -34,6 +34,6 @@ mips-g++ StatsView.cpp -o ../compiled/StatsView.lib $FLAGS
 mips-g++ StatsViewData.cpp -o ../compiled/StatsViewData.lib $FLAGS
 
 mips-g++ Model.cpp Files.cpp Math.cpp Partner.cpp Tamer.cpp Entity.cpp Map.cpp Battle.cpp Effects.cpp EFE.cpp -o ../compiled/Cave1.lib $FLAGS
-mips-g++ Fade.cpp Main.cpp GameObjects.cpp NPCEntity.cpp GUI.cpp GameMenu.cpp -o ../compiled/Cave2.lib $FLAGS
+mips-g++ Fade.cpp Main.cpp GameObjects.cpp NPCEntity.cpp GUI.cpp GameMenu.cpp PlayerMenu.cpp -o ../compiled/Cave2.lib $FLAGS
 
 cd -

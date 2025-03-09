@@ -1211,6 +1211,15 @@ extern "C"
         uint8_t unk5;
     };
 
+    struct EvoChartBoxData
+    {
+        uint16_t posX;
+        uint16_t posY;
+        uint8_t u;
+        uint8_t v;
+        uint8_t clut;
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1218,6 +1227,11 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern EvoChartBoxData EVOCHART_BOXES[61];
+    extern uint16_t CHART_SELECTED_DIGIMON;
+    extern int16_t CHART_SELECTED_COLUMN;
+    extern int16_t CHART_SELECTED_ROW;
+    extern uint16_t CHANGED_INPUT;
     extern Move MOVE_DATA[122];
     extern uint8_t EQUIPPED_MOVES[4];
     extern int16_t MOVE_SELECT_BOX_Y;
@@ -1343,6 +1357,9 @@ extern "C"
     extern LocalMapObjectInstance LOCAL_MAP_OBJECT_INSTANCE[188];
     extern int32_t LOADED_DIGIMON_MODELS[8];
     extern CollisionCode NPC_COLLISION_STATE[8];
+    extern uint8_t SELECTED_MEDAL;
+    extern uint8_t MEDAL_SELECTOR_INDEX;
+    extern uint8_t SELECTED_CARD;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1354,6 +1371,11 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void loadCardImage(int32_t card);
+    void renderCardImage();
+    void renderCardCount();
+    void activateMedalTexture(int32_t medal);
+    void renderEvoChartDetail();
     void renderMenuTab(int32_t posX, int32_t posY, bool isActive);
     void renderDigimonMovesView();
     int32_t getEquippedSlot();
@@ -1365,7 +1387,6 @@ extern "C"
     renderLinePrimitive(uint32_t color, int16_t x1, int16_t y1, int16_t x2, int16_t y2, int32_t layer, uint32_t flag);
     void closeInventoryBoxes2();
     uint32_t hasFishingRod();
-    void tickPlayerMenu();
     void renderPlayerMenu();
     void initializeInventoryObject();
     void initializeLoadedNPCModels();
@@ -1540,3 +1561,4 @@ static_assert(sizeof(MapObjectInstance) == 0x26);
 static_assert(sizeof(MapDigimon) == 0x54);
 static_assert(sizeof(MapDigimonEntity) == 0xC4);
 static_assert(sizeof(Move) == 16);
+static_assert(sizeof(EvoChartBoxData) == 8);

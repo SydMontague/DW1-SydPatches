@@ -157,6 +157,12 @@ extern "C"
     {
         return PARTNER_SUB_STATE;
     }
+
+    inline bool isKeyDownRepeat(uint16_t inputMask)
+    {
+        return (CHANGED_INPUT & inputMask) != 0;
+    }
+
 }
 
 static_assert(getTimeDiff(9, 18) == 9);
