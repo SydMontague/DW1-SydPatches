@@ -103,8 +103,6 @@
 .definelabel renderTrianglePrimitive,   0x800e3d14
 .definelabel initializeFishing,         0x800e4e0c
 .definelabel drawInventoryText,         0x800dac48
-.definelabel getEquippedSlot,           0x800ba4d4
-.definelabel equipMove,                 0x800ba654
 .definelabel entityGetTechFromAnim,     0x800e6000
 .definelabel renderMenuTab,             0x800bd2e4
 .definelabel renderDigimonMovesView,    0x800bc2e0
@@ -119,7 +117,9 @@
 .definelabel renderCardsView,           0x800be35c
 .definelabel renderOverworldItem,       0x800c4e94
 .definelabel removeItem,                0x800c53ec
+.definelabel hasMove,                   0x800e5eb4
 
+.definelabel MOVE_NAMES, 0x80126054
 .definelabel INVENTORY_ITEM_TYPES, 0x8013d474
 .definelabel INVENTORY_POINTER, 0x80134e10
 .definelabel SELECTED_CARD, 0x80134d3e

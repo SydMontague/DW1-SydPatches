@@ -1361,6 +1361,7 @@ extern "C"
     extern uint8_t SELECTED_MEDAL;
     extern uint8_t MEDAL_SELECTOR_INDEX;
     extern uint8_t SELECTED_CARD;
+    extern uint8_t* MOVE_NAMES[122];
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1372,6 +1373,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    bool hasMove(int32_t move);
     void removeItem(ItemType type, int32_t amount);
     void renderOverworldItem(WorldItem* item);
     void renderPlayerInfoView();
@@ -1385,8 +1387,6 @@ extern "C"
     void renderEvoChartDetail();
     void renderMenuTab(int32_t posX, int32_t posY, bool isActive);
     void renderDigimonMovesView();
-    int32_t getEquippedSlot();
-    void equipMove();
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
     void initializeFishing();
     void drawInventoryText();
