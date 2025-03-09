@@ -18,8 +18,6 @@
 
 extern "C"
 {
-    constexpr uint8_t PLAYER_MENU_TABS[] = "Player   Chart    Med. Card Fish";
-
     constexpr auto GAME_MENU_X            = -66;
     constexpr auto GAME_MENU_Y            = -80;
     constexpr auto GAME_MENU_WIDTH        = 132;
@@ -523,9 +521,6 @@ extern "C"
                 if (UI_BOX_DATA[0].frame == 0)
                 {
                     createMenuBox(1, -150, -89, 300, 190, 0, tickPlayerMenu, renderPlayerMenu);
-                    // TODO move this draw into the menu box tick/render
-                    clearTextArea();
-                    drawStringNew(&vanillaFont, PLAYER_MENU_TABS, 704, 256);
                     MENU_STATE          = 0;
                     MENU_SUB_STATE      = 0;
                     TRIANGLE_MENU_STATE = 0xFFFFFFFF;

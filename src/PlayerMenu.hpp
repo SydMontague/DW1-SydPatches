@@ -1,4 +1,3 @@
-extern "C"
-{
-    void tickPlayerMenu();
-}
+
+void tickPlayerMenu();
+void renderPlayerMenu();

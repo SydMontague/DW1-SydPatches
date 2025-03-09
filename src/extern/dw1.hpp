@@ -1371,6 +1371,10 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void renderPlayerInfoView();
+    void renderEvoChartView();
+    void renderMedalView();
+    void renderCardsView();
     void loadCardImage(int32_t card);
     void renderCardImage();
     void renderCardCount();
@@ -1387,7 +1391,6 @@ extern "C"
     renderLinePrimitive(uint32_t color, int16_t x1, int16_t y1, int16_t x2, int16_t y2, int32_t layer, uint32_t flag);
     void closeInventoryBoxes2();
     uint32_t hasFishingRod();
-    void renderPlayerMenu();
     void initializeInventoryObject();
     void initializeLoadedNPCModels();
     void NPCEntity_tickBattle(int32_t instanceId);

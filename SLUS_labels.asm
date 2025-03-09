@@ -98,7 +98,6 @@
 .definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8
 .definelabel initializeInventoryObject, 0x800dade8
-.definelabel renderPlayerMenu,          0x800b9fe8
 .definelabel hasFishingRod,             0x800e4da0
 .definelabel closeInventoryBoxes2,      0x800dbb84
 .definelabel renderLinePrimitive,       0x800e3e7c
@@ -115,6 +114,10 @@
 .definelabel loadCardImage,             0x800bb500
 .definelabel renderCardImage,           0x800bb524
 .definelabel renderCardCount,           0x800bb5a0
+.definelabel renderPlayerInfoView,      0x800bd49c
+.definelabel renderEvoChartView,        0x800bd940
+.definelabel renderMedalView,           0x800bdea8
+.definelabel renderCardsView,           0x800be35c
 
 .definelabel SELECTED_CARD, 0x80134d3e
 .definelabel SELECTED_MEDAL, 0x80134d3c

@@ -1,6 +1,11 @@
 #include "Helper.hpp"
 #include "Math.hpp"
+#include "UIElements.hpp"
+#include "Utils.hpp"
 #include "extern/dw1.hpp"
+
+constexpr auto DIGIMON_MENU_TAB_DRAW_X = 704;
+constexpr auto DIGIMON_MENU_TAB_DRAW_Y = 256;
 
 constexpr auto CHART_COL_COUNT       = 9;
 constexpr int32_t CHART_ROW_COUNT[9] = {8, 8, 9, 8, 7, 7, 7, 8, 7};
@@ -8,6 +13,78 @@ constexpr auto MEDAL_ROW_COUNT       = 3;
 constexpr auto MEDAL_COL_COUNT       = 5;
 constexpr auto CARD_ROW_COUNT        = 6;
 constexpr auto CARD_COL_COUNT        = 11;
+
+static TextSprite playerLabel = {
+    .font       = &vanillaFont,
+    .string     = "Player",
+    .uvX        = DIGIMON_MENU_TAB_DRAW_X + 0,
+    .uvY        = DIGIMON_MENU_TAB_DRAW_Y + 0,
+    .uvWidth    = 0,
+    .uvHeight   = 0,
+    .posX       = -138,
+    .posY       = -101,
+    .boxWidth   = 56,
+    .boxHeight  = 12,
+    .alignmentX = AlignmentX::CENTER,
+    .alignmentY = AlignmentY::CENTER,
+    .color      = 0,
+    .layer      = 5,
+    .hasShadow  = 1,
+};
+
+static TextSprite chartLabel = {
+    .font       = &vanillaFont,
+    .string     = "Chart",
+    .uvX        = DIGIMON_MENU_TAB_DRAW_X + 16,
+    .uvY        = DIGIMON_MENU_TAB_DRAW_Y + 0,
+    .uvWidth    = 0,
+    .uvHeight   = 0,
+    .posX       = -66,
+    .posY       = -101,
+    .boxWidth   = 54,
+    .boxHeight  = 12,
+    .alignmentX = AlignmentX::CENTER,
+    .alignmentY = AlignmentY::CENTER,
+    .color      = 0,
+    .layer      = 5,
+    .hasShadow  = 1,
+};
+
+static TextSprite medalLabel = {
+    .font       = &vanillaFont,
+    .string     = "Medal",
+    .uvX        = DIGIMON_MENU_TAB_DRAW_X + 32,
+    .uvY        = DIGIMON_MENU_TAB_DRAW_Y + 0,
+    .uvWidth    = 0,
+    .uvHeight   = 0,
+    .posX       = 3,
+    .posY       = -101,
+    .boxWidth   = 44,
+    .boxHeight  = 12,
+    .alignmentX = AlignmentX::CENTER,
+    .alignmentY = AlignmentY::CENTER,
+    .color      = 0,
+    .layer      = 5,
+    .hasShadow  = 1,
+};
+
+static TextSprite cardLabel = {
+    .font       = &vanillaFont,
+    .string     = "Card",
+    .uvX        = DIGIMON_MENU_TAB_DRAW_X + 48,
+    .uvY        = DIGIMON_MENU_TAB_DRAW_Y + 0,
+    .uvWidth    = 0,
+    .uvHeight   = 0,
+    .posX       = 62,
+    .posY       = -101,
+    .boxWidth   = 44,
+    .boxHeight  = 12,
+    .alignmentX = AlignmentX::CENTER,
+    .alignmentY = AlignmentY::CENTER,
+    .color      = 0,
+    .layer      = 5,
+    .hasShadow  = 1,
+};
 
 static int8_t selectedCardCol;
 static int8_t selectedCardRow;
@@ -92,8 +169,7 @@ static void tickPlayerMenuChartView()
 
         CHART_SELECTED_DIGIMON = getEvoChartData(posX, posY).second + 1;
 
-        if (isKeyDown(InputButtons::BUTTON_CROSS) &&
-            hasDigimonRaised(static_cast<DigimonType>(CHART_SELECTED_DIGIMON)))
+        if (isKeyDown(InputButtons::BUTTON_CROSS) && hasDigimonRaised(static_cast<DigimonType>(CHART_SELECTED_DIGIMON)))
         {
             if (isUIBoxAvailable(2))
             {
@@ -227,37 +303,70 @@ static void tickPlayerMenuCardView()
     }
 }
 
-extern "C"
+void tickPlayerMenu()
 {
-    void tickPlayerMenu()
+    if (MENU_STATE < 2)
     {
-        if (MENU_STATE < 2)
+        if (isKeyDownRepeat(InputButtons::BUTTON_LEFT) && PLAYER_MENU_STATE >= 1)
         {
-            if (isKeyDownRepeat(InputButtons::BUTTON_LEFT) && PLAYER_MENU_STATE >= 1)
-            {
-                PLAYER_MENU_STATE -= 1;
-                MENU_STATE     = 0;
-                MENU_SUB_STATE = 0;
-                playSound(0, 2);
-            }
-            if (isKeyDownRepeat(InputButtons::BUTTON_RIGHT) && PLAYER_MENU_STATE < 3)
-            {
-                PLAYER_MENU_STATE += 1;
-                MENU_STATE     = 0;
-                MENU_SUB_STATE = 0;
-                playSound(0, 2);
-            }
-
-            if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
-            {
-                TRIANGLE_MENU_STATE = 6;
-                playSound(0, 4);
-            }
+            PLAYER_MENU_STATE -= 1;
+            MENU_STATE     = 0;
+            MENU_SUB_STATE = 0;
+            playSound(0, 2);
+        }
+        if (isKeyDownRepeat(InputButtons::BUTTON_RIGHT) && PLAYER_MENU_STATE < 3)
+        {
+            PLAYER_MENU_STATE += 1;
+            MENU_STATE     = 0;
+            MENU_SUB_STATE = 0;
+            playSound(0, 2);
         }
 
-        if (PLAYER_MENU_STATE == 0) { tickPlayerMenuPlayerView(); }
-        else if (PLAYER_MENU_STATE == 1) { tickPlayerMenuChartView(); }
-        else if (PLAYER_MENU_STATE == 2) { tickPlayerMenuMedalView(); }
-        else if (PLAYER_MENU_STATE == 3) { tickPlayerMenuCardView(); }
+        if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
+        {
+            TRIANGLE_MENU_STATE = 6;
+            playSound(0, 4);
+        }
     }
+
+    if (PLAYER_MENU_STATE == 0) { tickPlayerMenuPlayerView(); }
+    else if (PLAYER_MENU_STATE == 1) { tickPlayerMenuChartView(); }
+    else if (PLAYER_MENU_STATE == 2) { tickPlayerMenuMedalView(); }
+    else if (PLAYER_MENU_STATE == 3) { tickPlayerMenuCardView(); }
+}
+
+void renderPlayerMenu()
+{
+    if (MENU_STATE == 0)
+    {
+        clearTextSubArea2(0, 0, 256, 12);
+        drawTextSprite(playerLabel);
+        drawTextSprite(chartLabel);
+        drawTextSprite(medalLabel);
+        drawTextSprite(cardLabel);
+    }
+
+    if (PLAYER_MENU_STATE == 0)
+        renderPlayerInfoView();
+    else if (PLAYER_MENU_STATE == 1)
+        renderEvoChartView();
+    else if (PLAYER_MENU_STATE == 2)
+        renderMedalView();
+    else if (PLAYER_MENU_STATE == 3)
+        renderCardsView();
+
+    playerLabel.color = PLAYER_MENU_STATE != 0 ? 1 : 0;
+    chartLabel.color  = PLAYER_MENU_STATE != 1 ? 1 : 0;
+    medalLabel.color  = PLAYER_MENU_STATE != 2 ? 1 : 0;
+    cardLabel.color   = PLAYER_MENU_STATE != 3 ? 1 : 0;
+
+    renderTextSprite(playerLabel, 0, 0);
+    renderTextSprite(chartLabel, 0, 0);
+    renderTextSprite(medalLabel, 0, 0);
+    renderTextSprite(cardLabel, 0, 0);
+
+    renderMenuTab(-145, 72, PLAYER_MENU_STATE != 0);
+    renderMenuTab(-74, 70, PLAYER_MENU_STATE != 1);
+    renderMenuTab(-5, 60, PLAYER_MENU_STATE != 2);
+    renderMenuTab(54, 60, PLAYER_MENU_STATE != 3);
 }

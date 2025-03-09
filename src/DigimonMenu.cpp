@@ -114,7 +114,7 @@ void renderDigimonMenu()
 {
     if (MENU_STATE == 0)
     {
-        clearTextSubArea2(0, 0, 256, 16);
+        clearTextSubArea2(0, 0, 256, 12);
         drawTextSprite(statusLabel);
         drawTextSprite(techLabel);
     }
