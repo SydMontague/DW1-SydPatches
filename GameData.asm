@@ -10,11 +10,11 @@
 .endarea
 
 .org 0x800b3d84
-.area 0x800ba930-.
+.area 0x800bb500-.
   .importobj "compiled/Cave2.lib"
 
-  .notice "Empty space left: " + (0x800ba930-.) + " bytes"
-  .fill 0x800ba930-.
+  .notice "Empty space left: " + (0x800bb500-.) + " bytes"
+  .fill 0x800bb500-.
 .endarea
 
 .org 0x8011d46c
@@ -63,6 +63,15 @@ SS_address: ; initializeMusic
 
   .notice "Empty space left: " + (0x80137c00-.) + " bytes"
   .fill 0x80137c00-.
+.endarea
+
+
+; override evo chart detail data
+.org 0x80124944
+.area 0x80124b78-.
+
+  .notice "Empty space left: " + (0x80124b78-.) + " bytes"
+  .fill 0x80124b78-.
 .endarea
 
 ; override some effect data

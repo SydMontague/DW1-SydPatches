@@ -1228,7 +1228,7 @@ extern "C"
     extern EvoRequirements EVO_REQ_DATA[];
 
     extern ItemType INVENTORY_ITEM_TYPES[30];
-    extern uint8_t INVENTORY_POINTER; 
+    extern uint8_t INVENTORY_POINTER;
     extern EvoChartBoxData EVOCHART_BOXES[61];
     extern uint16_t CHART_SELECTED_DIGIMON;
     extern int16_t CHART_SELECTED_COLUMN;
@@ -1373,6 +1373,16 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void renderSpriteBox(int16_t posX,
+                         int16_t posY,
+                         int16_t width,
+                         int16_t height,
+                         uint32_t color1,
+                         uint32_t color2,
+                         uint8_t red,
+                         uint8_t green,
+                         uint8_t blue,
+                         int32_t layer);
     bool hasMove(int32_t move);
     void removeItem(ItemType type, int32_t amount);
     void renderOverworldItem(WorldItem* item);
@@ -1384,7 +1394,6 @@ extern "C"
     void renderCardImage();
     void renderCardCount();
     void activateMedalTexture(int32_t medal);
-    void renderEvoChartDetail();
     void renderMenuTab(int32_t posX, int32_t posY, bool isActive);
     void renderDigimonMovesView();
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);

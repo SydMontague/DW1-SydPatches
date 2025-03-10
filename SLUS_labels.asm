@@ -106,7 +106,6 @@
 .definelabel entityGetTechFromAnim,     0x800e6000
 .definelabel renderMenuTab,             0x800bd2e4
 .definelabel renderDigimonMovesView,    0x800bc2e0
-.definelabel renderEvoChartDetail,      0x800ba930
 .definelabel activateMedalTexture,      0x800e24a4
 .definelabel loadCardImage,             0x800bb500
 .definelabel renderCardImage,           0x800bb524
@@ -118,6 +117,7 @@
 .definelabel renderOverworldItem,       0x800c4e94
 .definelabel removeItem,                0x800c53ec
 .definelabel hasMove,                   0x800e5eb4
+.definelabel renderSpriteBox,           0x800be990
 
 .definelabel MOVE_NAMES, 0x80126054
 .definelabel INVENTORY_ITEM_TYPES, 0x8013d474
