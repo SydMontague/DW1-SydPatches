@@ -1,8 +1,11 @@
+#include "Files.hpp"
+#include "Font.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libgpu.hpp"
 
 /*
  * Forward declarations
@@ -92,6 +95,25 @@ static TextSprite cardLabel = {
     .hasShadow  = 1,
 };
 
+static TextSprite cardCount = {
+    .font       = &vanillaFont,
+    .string     = "1",
+    .uvX        = 640,
+    .uvY        = 496,
+    .uvWidth    = 0,
+    .uvHeight   = 0,
+    .posX       = 79,
+    .posY       = 73,
+    .boxWidth   = 44,
+    .boxHeight  = 16,
+    .alignmentX = AlignmentX::CENTER,
+    .alignmentY = AlignmentY::CENTER,
+    .color      = 0,
+    .layer      = 3,
+    .hasShadow  = 1,
+};
+
+static bool isCardCountDrawn = false;
 static int8_t selectedCardCol;
 static int8_t selectedCardRow;
 static int8_t selectedMedalRow;
@@ -247,6 +269,32 @@ static void tickPlayerMenuMedalView()
     }
 }
 
+static void loadCardImage(int32_t card)
+{
+    loadStackedTIMEntry("\\CARD\\CARD.ALL", TEXTURE_BUFFER, card * 14, 14);
+}
+
+static void renderCardImage()
+{
+    auto clut  = getClut(0x1C0, 0x1FF);
+    auto tpage = libgpu_GetTPage(1, 2, 0x240, 0x100);
+    renderRectPolyFT4(-75, -84, 150, 180, 0, 0, tpage, clut, 4, 0);
+}
+
+static void renderCardCount()
+{
+    if (!isCardCountDrawn)
+    {
+        uint8_t buffer[8];
+        sprintf(buffer, "%d", getCardAmount(SELECTED_CARD));
+        cardCount.string = reinterpret_cast<const char*>(buffer);
+        drawTextSprite(cardCount);
+        isCardCountDrawn = true;
+    }
+
+    renderTextSprite(cardCount, 0, 0);
+}
+
 static void tickPlayerMenuCardView()
 {
     if (MENU_STATE == 3)
@@ -284,6 +332,7 @@ static void tickPlayerMenuCardView()
         SELECTED_CARD = selectedCardRow * CARD_COL_COUNT + selectedCardCol;
         if (oldCard != SELECTED_CARD) playSound(0, 2);
 
+        // vanilla doesn't check for the boxes to be available, causing the card glitch
         if (isKeyDown(InputButtons::BUTTON_CROSS) && getCardAmount(SELECTED_CARD) != 0 && isUIBoxAvailable(2) &&
             isUIBoxAvailable(3))
         {
@@ -296,8 +345,9 @@ static void tickPlayerMenuCardView()
                 .width  = 1,
                 .height = 1,
             };
-            RECT card  = {.x = -75, .y = -83, .width = 150, .height = 180};
-            RECT count = {.x = 74, .y = 69, .width = 54, .height = 24};
+            RECT card        = {.x = -75, .y = -83, .width = 150, .height = 180};
+            RECT count       = {.x = 74, .y = 69, .width = 54, .height = 24};
+            isCardCountDrawn = false;
             createAnimatedUIBox(2, 1, 0, &card, &start, nullptr, renderCardImage);
             createAnimatedUIBox(3, 1, 0, &count, &start, nullptr, renderCardCount);
         }

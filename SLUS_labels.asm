@@ -107,9 +107,6 @@
 .definelabel renderMenuTab,             0x800bd2e4
 .definelabel renderDigimonMovesView,    0x800bc2e0
 .definelabel activateMedalTexture,      0x800e24a4
-.definelabel loadCardImage,             0x800bb500
-.definelabel renderCardImage,           0x800bb524
-.definelabel renderCardCount,           0x800bb5a0
 .definelabel renderPlayerInfoView,      0x800bd49c
 .definelabel renderEvoChartView,        0x800bd940
 .definelabel renderMedalView,           0x800bdea8

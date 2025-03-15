@@ -72,20 +72,20 @@
 ;;; Evo Requirements End
 
 ;;; Evo Paths Start
-.org 0x800ba9d0
-  li v1,EVO_PATHS_DATA+11
-.org 0x800baa24
-  li v1,EVO_PATHS_DATA+0x5+11
+;.org 0x800ba9d0
+;  li v1,EVO_PATHS_DATA+11
+;.org 0x800baa24
+;  li v1,EVO_PATHS_DATA+0x5+11
 
-.org 0x800bab20
-  li v0,EVO_PATHS_DATA+11
-.org 0x800bacf0
-  li v0,EVO_PATHS_DATA+0x5+11
+;.org 0x800bab20
+;  li v0,EVO_PATHS_DATA+11
+;.org 0x800bacf0
+;  li v0,EVO_PATHS_DATA+0x5+11
 
-.org 0x800baff8
-  li v0,EVO_PATHS_DATA+11
-.org 0x800bb13c
-  li v0,EVO_PATHS_DATA+0x5+11
+;.org 0x800baff8
+;  li v0,EVO_PATHS_DATA+11
+;.org 0x800bb13c
+;  li v0,EVO_PATHS_DATA+0x5+11
 
 ; reimplemented in Evolution.cpp
 ;.org 0x800e25c8

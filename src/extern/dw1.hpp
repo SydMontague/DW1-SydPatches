@@ -1390,9 +1390,6 @@ extern "C"
     void renderEvoChartView();
     void renderMedalView();
     void renderCardsView();
-    void loadCardImage(int32_t card);
-    void renderCardImage();
-    void renderCardCount();
     void activateMedalTexture(int32_t medal);
     void renderMenuTab(int32_t posX, int32_t posY, bool isActive);
     void renderDigimonMovesView();

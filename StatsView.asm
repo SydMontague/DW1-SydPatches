@@ -1,14 +1,3 @@
-.open "work/DIGIMON/SLUS_010.32",0x80090000
-.psx
-
-.org 0x800bb610
-.area 0x800bc2e0-.
-  .importobj "compiled/StatsView.lib"
-
-  .notice "Empty space left: " + (0x800bc2e0-.) + " bytes"
-.endarea
-
-.close
 
 .open "work/DIGIMON/ETCDAT/ETCTIM.BIN",0
 

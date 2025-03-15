@@ -10,11 +10,11 @@
 .endarea
 
 .org 0x800b3d84
-.area 0x800bb500-.
+.area 0x800bc2e0-.
   .importobj "compiled/Cave2.lib"
 
-  .notice "Empty space left: " + (0x800bb500-.) + " bytes"
-  .fill 0x800bb500-.
+  .notice "Empty space left: " + (0x800bc2e0-.) + " bytes"
+  .fill 0x800bc2e0-.
 .endarea
 
 .org 0x8011d46c
@@ -49,7 +49,6 @@ SS_address: ; initializeMusic
   .importobj "compiled/utils.lib"
   .importobj "compiled/font.lib"
   .importobj "compiled/CustomUI.lib"
-  .importobj "compiled/StatsViewData.lib"
   .importobj "compiled/CustomInit.lib"
   
   .notice "Empty space left: " + (0x80122cf4-.) + " bytes"

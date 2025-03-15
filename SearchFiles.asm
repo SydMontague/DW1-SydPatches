@@ -77,8 +77,8 @@
 .org 0x800f8130
   jal loadTIMFile
 
-.org 0x800bb51c
-  j loadStackedTIMEntry
+;.org 0x800bb51c
+;  j loadStackedTIMEntry
 
 .org 0x800c5cd4
   jal readFileSectors
