@@ -10,6 +10,9 @@ template<class First, class Second> struct Pair
 
 extern "C"
 {
+    constexpr auto SCREEN_WIDTH  = 320;
+    constexpr auto SCREEN_HEIGHT = 240;
+
     /*
      * Calculates whether a given time is within a given timeframe, where start being larger than end represents the
      * timeframe covering the day-change (or equivalent).
@@ -42,6 +45,22 @@ extern "C"
         if (item == ItemType::RAIN_PLANT) return true;
 
         return false;
+    }
+
+    /*
+     * converts a screen X coordinate to a coordinate relative to the center of the screen
+     */
+    constexpr int32_t toRelativeX(int32_t in)
+    {
+        return in - SCREEN_WIDTH / 2;
+    }
+
+    /*
+     * converts a screen Y coordinate to a coordinate relative to the center of the screen
+     */
+    constexpr int32_t toRelativeY(int32_t in)
+    {
+        return in - SCREEN_HEIGHT / 2;
     }
 
     /*
@@ -113,6 +132,11 @@ extern "C"
         return &ITEM_PARA[static_cast<uint8_t>(type)];
     }
 
+    constexpr Move* getMove(int32_t moveId)
+    {
+        return &MOVE_DATA[moveId];
+    }
+
     /*
      * Sets the UV coordinates of a POLY_FT4. It makes sure that if the resulting coordinates are a multiple of 256,
      * they get reduced by 1. This is necessary because of a PSX hardware limitation.
@@ -162,7 +186,6 @@ extern "C"
     {
         return (CHANGED_INPUT & inputMask) != 0;
     }
-
 }
 
 static_assert(getTimeDiff(9, 18) == 9);

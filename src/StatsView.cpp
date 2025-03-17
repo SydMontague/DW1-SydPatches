@@ -60,16 +60,6 @@ namespace SpriteIndex
     };
 } // namespace SpriteIndex
 
-constexpr int32_t toRelativeX(int32_t in)
-{
-    return in - 160;
-}
-
-constexpr int32_t toRelativeY(int32_t in)
-{
-    return in - 120;
-}
-
 constexpr uint32_t DRAW_OFFSET_X         = 704;
 constexpr uint32_t DRAW_OFFSET_Y         = 256 + 16;
 constexpr int32_t STATS_OFFSET_X         = toRelativeX(187);
@@ -904,10 +894,10 @@ static void drawDigimonStatsViewStrings()
     sprites[SpriteIndex::POOP].height    = PARTNER_PARA.condition.isPoopy ? 12 : 0;
 
     // clang-format off
-        auto happiness1  = clamp((PARTNER_PARA.happiness - HAPPINESS_MIN) * 100 / (HAPPINESS_MAX - HAPPINESS_MID), 0, 100);
-        auto happiness2  = clamp((PARTNER_PARA.happiness - HAPPINESS_MID) * 100 / (HAPPINESS_MAX - HAPPINESS_MID), 0, 100);
-        auto discipline1 = clamp((PARTNER_PARA.discipline - DISCIPLINE_MIN) * 100 / (DISCIPLINE_MAX - DISCIPLINE_MID), 0, 100);
-        auto discipline2 = clamp((PARTNER_PARA.discipline - DISCIPLINE_MID) * 100 / (DISCIPLINE_MAX - DISCIPLINE_MID), 0, 100);
+    auto happiness1  = clamp((PARTNER_PARA.happiness - HAPPINESS_MIN) * 100 / (HAPPINESS_MAX - HAPPINESS_MID), 0, 100);
+    auto happiness2  = clamp((PARTNER_PARA.happiness - HAPPINESS_MID) * 100 / (HAPPINESS_MAX - HAPPINESS_MID), 0, 100);
+    auto discipline1 = clamp((PARTNER_PARA.discipline - DISCIPLINE_MIN) * 100 / (DISCIPLINE_MAX - DISCIPLINE_MID), 0, 100);
+    auto discipline2 = clamp((PARTNER_PARA.discipline - DISCIPLINE_MID) * 100 / (DISCIPLINE_MAX - DISCIPLINE_MID), 0, 100);
     // clang-format on
 
     sprites[SpriteIndex::HAPPINESS_BAR1].width  = happiness2 * 48 / 100;
@@ -1020,12 +1010,12 @@ extern "C"
             renderRectPolyFT4(entry.posX, entry.posY, entry.width, entry.height, entry.uvX + offsetX, entry.uvY, entry.texture_page, entry.clut, 5, 0);
         }
 
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.hp, HP_MAX, 75, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 24);
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.mp, MP_MAX, 75, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 39);
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.off, OFF_MAX, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 54);
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.def, DEF_MAX, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 69);
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.speed, SPEED_MAX, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 84);
-        renderDigimonStatsBar(PARTNER_ENTITY.stats.brain, BRAIN_MAX, 40, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 99);
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.hp, HP_MAX, 77, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 24);
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.mp, MP_MAX, 77, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 39);
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.off, OFF_MAX, 42, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 54);
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.def, DEF_MAX, 42, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 69);
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.speed, SPEED_MAX, 42, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 84);
+        renderDigimonStatsBar(PARTNER_ENTITY.stats.brain, BRAIN_MAX, 42, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 99);
         renderBoxBar(CONDITION_OFFSET_X + 62, CONDITION_OFFSET_Y + 81, (PARTNER_PARA.tiredness * 48 / (TIREDNESS_MAX - TIREDNESS_MIN)), 5, 50, 150, 255, 0, 5);
         renderBoxBar(CONDITION_OFFSET_X + 62, CONDITION_OFFSET_Y + 95, PARTNER_PARA.virusBar * 48 / (VIRUS_MAX - VIRUS_MIN), 5, 200, 200, 60, 0, 5);
         // clang-format on
