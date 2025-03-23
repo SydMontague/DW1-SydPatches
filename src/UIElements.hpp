@@ -65,6 +65,8 @@ extern "C"
         uint8_t flag;
         int8_t texture_page;
         uint16_t clut;
+        
+        void render(int32_t layer) const;
     };
 
     struct SelectionSprite

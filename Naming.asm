@@ -380,10 +380,10 @@ naming_buffer_length equ 20
 ;.endarea
 
 ; Player View: enlargen name box
-.org 0x80124498
-  .halfword 0x70
-.org 0x800bd5cc
-  li a3,0x70
+;.org 0x80124498
+;  .halfword 0x70
+;.org 0x800bd5cc
+;  li a3,0x70
 
 ; Player View: fix lines
 .org 0x80124424

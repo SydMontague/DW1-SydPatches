@@ -213,4 +213,9 @@ extern "C"
 
         renderRectPolyFT4(posX + width - 9, -104, 7, height, 0xDB, 0x8C, 5, getClut(0x60, 0x1EC), 5, isActive);
     }
+
+    void IconSprite::render(int32_t layer) const
+    {
+        renderRectPolyFT4(posX, posY, width, height, uvX, uvY, texture_page, clut, layer, 0);
+    }
 }

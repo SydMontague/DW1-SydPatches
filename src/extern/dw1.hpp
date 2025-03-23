@@ -1245,6 +1245,9 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern int16_t PLAYTIME_HOURS;
+    extern int16_t PLAYTIME_MINUTES;
+    extern int16_t MERIT;
     extern ItemType INVENTORY_ITEM_TYPES[30];
     extern uint8_t INVENTORY_POINTER;
     extern EvoChartBoxData EVOCHART_BOXES[61];
@@ -1402,7 +1405,6 @@ extern "C"
     bool hasMove(int32_t move);
     void removeItem(ItemType type, int32_t amount);
     void renderOverworldItem(WorldItem* item);
-    void renderPlayerInfoView();
     void renderEvoChartView();
     void renderMedalView();
     void renderCardsView();

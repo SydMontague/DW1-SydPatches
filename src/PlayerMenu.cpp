@@ -2,6 +2,7 @@
 #include "Font.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
+#include "PlayerInfoView.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
 #include "extern/dw1.hpp"
@@ -550,7 +551,7 @@ constexpr char const* LEVEL_NAMES[] = {
     "Ultimate",
 };
 
-TextSprite treeText = {
+static TextSprite treeText = {
     .font       = &vanillaFont,
     .string     = "Tree",
     .uvX        = DETAIL_TEXT_X + 64,
@@ -568,7 +569,7 @@ TextSprite treeText = {
     .hasShadow  = 1,
 };
 
-TextSprite levelText = {
+static TextSprite levelText = {
     .font       = &vanillaFont,
     .string     = "",
     .uvX        = DETAIL_TEXT_X + 0,
@@ -586,7 +587,7 @@ TextSprite levelText = {
     .hasShadow  = 1,
 };
 
-TextSprite nameText = {
+static TextSprite nameText = {
     .font       = &vanillaFont,
     .string     = "",
     .uvX        = DETAIL_TEXT_X + 32,
