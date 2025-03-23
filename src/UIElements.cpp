@@ -81,7 +81,7 @@ extern "C"
         }
     }
 
-    void renderTextSprite(TextSprite& entry, int32_t offsetX, int32_t offsetY)
+    void renderTextSprite2(TextSprite& entry, int32_t offsetX, int32_t offsetY)
     {
         switch (entry.alignmentX)
         {
@@ -119,6 +119,11 @@ extern "C"
                             entry.layer,
                             0);
         }
+    }
+
+    void renderTextSprite(TextSprite& entry)
+    {
+        renderTextSprite2(entry, 0, 0);
     }
 
     void initSpecialSprite(IconSprite& sprite, Special special)
@@ -184,5 +189,15 @@ extern "C"
     bool isUIBoxAvailable(int32_t id)
     {
         return UI_BOX_DATA[id].state == 1 || UI_BOX_DATA[id].frame == 0;
+    }
+
+    void Sprite::render(int16_t posX, int16_t posY, uint8_t layer, uint8_t flag) const
+    {
+        renderRectPolyFT4(posX, posY, width, height, uvX, uvV, texture_page, clut, layer, flag);
+    }
+
+    void Inset::render(int32_t order) const
+    {
+        renderInsetBox(posX + SCREEN_WIDTH / 2, posY + SCREEN_HEIGHT / 2, width, height, order);
     }
 }

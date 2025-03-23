@@ -343,11 +343,11 @@ extern "C"
                               sprite.clut,
                               6,
                               option);
-            renderTextSprite(badge, 0, yOffset);
+            renderTextSprite2(badge, 0, yOffset);
         }
 
-        renderTextSprite(yearLabel, 0, 0);
-        renderTextSprite(dayLabel, 0, 0);
+        renderTextSprite(yearLabel);
+        renderTextSprite(dayLabel);
     }
 
     void handleGameMenuSelection(int32_t option)

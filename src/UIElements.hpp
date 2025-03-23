@@ -1,6 +1,7 @@
 #pragma once
 #include "Font.hpp"
 #include "Helper.hpp"
+#include "extern/dw1.hpp"
 #include "extern/stddef.hpp"
 
 extern "C"
@@ -41,6 +42,18 @@ extern "C"
         uint8_t hasShadow;
     };
 
+    struct Sprite
+    {
+        int16_t uvX;
+        int16_t uvV;
+        int16_t width;
+        int16_t height;
+        int8_t texture_page;
+        uint16_t clut;
+
+        void render(int16_t posX, int16_t posY, uint8_t layer, uint8_t flag) const;
+    };
+
     struct IconSprite
     {
         int16_t posX;
@@ -72,10 +85,13 @@ extern "C"
         int16_t posY;
         int16_t width;
         int16_t height;
+
+        void render(int32_t order) const;
     };
 
     void drawTextSprite(TextSprite& entry);
-    void renderTextSprite(TextSprite& entry, int32_t xOffset, int32_t yOffset);
+    void renderTextSprite2(TextSprite& entry, int32_t offsetX, int32_t offsetY);
+    void renderTextSprite(TextSprite& entry);
     void initSpecialSprite(IconSprite& sprite, Special special);
     void renderSeperatorLines(const Line* linePtr, int32_t count, int32_t layer);
     void renderRectPolyFT4(int16_t posX,

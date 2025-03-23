@@ -995,11 +995,11 @@ extern "C"
         sprites[SpriteIndex::POOP].posY    = CONDITION_OFFSET_Y + CONDITION_OFFSETS[PLAYTIME_FRAMES % 16];
 
         for (auto& entry : badges)
-            renderTextSprite(entry, 0, 0);
+            renderTextSprite(entry);
         for (auto& entry : labels)
-            renderTextSprite(entry, 0, 0);
+            renderTextSprite(entry);
         for (auto& entry : values)
-            renderTextSprite(entry, 0, 0);
+            renderTextSprite(entry);
 
         for (auto& entry : sprites)
         {
@@ -1022,7 +1022,7 @@ extern "C"
 
         // profile insets
         for (auto& inset : insets)
-            renderInsetBox(inset.posX + 160, inset.posY + 120, inset.width, inset.height, 5);
+            inset.render(5);
 
         renderSeperatorLines(lines, 6, 5);
 

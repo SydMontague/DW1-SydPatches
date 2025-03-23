@@ -7,10 +7,10 @@ extern "C"
     static CustomFont myFont = {
         .height       = 8,
         .isWide       = true,
-        .mappingCount = 115,
+        .mappingCount = 141,
     };
 
-    static GlyphMapping myMapping[115] = {
+    static GlyphMapping myMapping[141] = {
         {.codepoint = 0x20, .index = 0},    {.codepoint = 0x21, .index = 1},    {.codepoint = 0x22, .index = 2},
         {.codepoint = 0x23, .index = 3},    {.codepoint = 0x25, .index = 4},    {.codepoint = 0x27, .index = 5},
         {.codepoint = 0x28, .index = 6},    {.codepoint = 0x29, .index = 7},    {.codepoint = 0x2a, .index = 8},
@@ -49,7 +49,15 @@ extern "C"
         {.codepoint = 0x8149, .index = 1},  {.codepoint = 0x8147, .index = 25}, {.codepoint = 0x8146, .index = 24},
         {.codepoint = 0x8143, .index = 10}, {.codepoint = 0x8142, .index = 12}, {.codepoint = 0x8140, .index = 0},
         {.codepoint = 0x8196, .index = 8},  {.codepoint = 0x8194, .index = 3},  {.codepoint = 0x8193, .index = 4},
-        {.codepoint = 0x8181, .index = 27},
+        {.codepoint = 0x8181, .index = 27}, {.codepoint = 0x61, .index = 30},   {.codepoint = 0x62, .index = 31},
+        {.codepoint = 0x63, .index = 32},   {.codepoint = 0x64, .index = 33},   {.codepoint = 0x65, .index = 34},
+        {.codepoint = 0x66, .index = 35},   {.codepoint = 0x67, .index = 36},   {.codepoint = 0x68, .index = 37},
+        {.codepoint = 0x69, .index = 38},   {.codepoint = 0x6a, .index = 39},   {.codepoint = 0x6b, .index = 40},
+        {.codepoint = 0x6c, .index = 41},   {.codepoint = 0x6d, .index = 42},   {.codepoint = 0x6e, .index = 43},
+        {.codepoint = 0x6f, .index = 44},   {.codepoint = 0x70, .index = 45},   {.codepoint = 0x71, .index = 46},
+        {.codepoint = 0x72, .index = 47},   {.codepoint = 0x73, .index = 48},   {.codepoint = 0x74, .index = 49},
+        {.codepoint = 0x75, .index = 50},   {.codepoint = 0x76, .index = 51},   {.codepoint = 0x77, .index = 52},
+        {.codepoint = 0x78, .index = 53},   {.codepoint = 0x79, .index = 54},   {.codepoint = 0x7a, .index = 55},
     };
 
     static Glyph7PX myGlyphs[58] = {

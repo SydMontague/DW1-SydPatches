@@ -1195,15 +1195,33 @@ extern "C"
         bool stopAnim;
     };
 
+    enum class Range : uint8_t
+    {
+        UNDEFINED = 0,
+        SHORT     = 1,
+        LARGE     = 2,
+        WIDE      = 3,
+        SELF      = 4,
+    };
+
+    enum class Status : uint8_t
+    {
+        NONE    = 0,
+        POISON  = 1,
+        CONFUSE = 2,
+        STUN    = 3,
+        FLATTEN = 4,
+    };
+
     struct Move
     {
         int32_t distance;
         int16_t power;
         uint8_t mpCost;
         uint8_t iframes;
-        uint8_t range;
+        Range range;
         uint8_t special;
-        uint8_t status;
+        Status status;
         uint8_t accuracy;
         uint8_t statusChance;
         uint8_t unk3;
@@ -1236,8 +1254,6 @@ extern "C"
     extern uint16_t CHANGED_INPUT;
     extern Move MOVE_DATA[122];
     extern uint8_t EQUIPPED_MOVES[4];
-    extern int16_t MOVE_SELECT_BOX_Y;
-    extern int16_t MOVE_SELECT_BOX_X;
     extern uint32_t TRIANGLE_MENU_STATE;
     extern uint8_t MENU_SUB_STATE;
     extern MapDigimonEntity MAP_DIGIMON_TABLE[8];
@@ -1392,7 +1408,6 @@ extern "C"
     void renderCardsView();
     void activateMedalTexture(int32_t medal);
     void renderMenuTab(int32_t posX, int32_t posY, bool isActive);
-    void renderDigimonMovesView();
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
     void initializeFishing();
     void drawInventoryText();

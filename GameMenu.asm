@@ -84,36 +84,36 @@
 ; jal renderRectPolyFT4
 ;.org 0x800bc21c
 ; jal renderRectPolyFT4
-.org 0x800bc370
-  jal renderRectPolyFT4
-.org 0x800bc530
-  jal renderRectPolyFT4
-.org 0x800bc650
-  jal renderRectPolyFT4
-.org 0x800bc6a0
-  jal renderRectPolyFT4
-.org 0x800bc84c
-  jal renderRectPolyFT4
-.org 0x800bcaac
-  jal renderRectPolyFT4
-.org 0x800bcba4
-  jal renderRectPolyFT4
-.org 0x800bcbf4
-  jal renderRectPolyFT4
-.org 0x800bcc34
-  jal renderRectPolyFT4
-.org 0x800bcca0
-  jal renderRectPolyFT4
-.org 0x800bcd0c
-  jal renderRectPolyFT4
-.org 0x800bd068
-  jal renderRectPolyFT4
-.org 0x800bd0a4
-  jal renderRectPolyFT4
-.org 0x800bd0e0
-  jal renderRectPolyFT4
-.org 0x800bd168
-  jal renderRectPolyFT4
+;.org 0x800bc370
+;  jal renderRectPolyFT4
+;.org 0x800bc530
+;  jal renderRectPolyFT4
+;.org 0x800bc650
+;  jal renderRectPolyFT4
+;.org 0x800bc6a0
+;  jal renderRectPolyFT4
+;.org 0x800bc84c
+;  jal renderRectPolyFT4
+;.org 0x800bcaac
+;  jal renderRectPolyFT4
+;.org 0x800bcba4
+;  jal renderRectPolyFT4
+;.org 0x800bcbf4
+;  jal renderRectPolyFT4
+;.org 0x800bcc34
+;  jal renderRectPolyFT4
+;.org 0x800bcca0
+;  jal renderRectPolyFT4
+;.org 0x800bcd0c
+;  jal renderRectPolyFT4
+;.org 0x800bd068
+;  jal renderRectPolyFT4
+;.org 0x800bd0a4
+;  jal renderRectPolyFT4
+;.org 0x800bd0e0
+;  jal renderRectPolyFT4
+;.org 0x800bd168
+;  jal renderRectPolyFT4
 .org 0x800bd378
   jal renderRectPolyFT4
 .org 0x800bd3f8
@@ -185,12 +185,12 @@
 ;  jal renderSeperatorLines
 ;.org 0x800bb690
 ;  jal renderSeperatorLines
-.org 0x800bc560
-  jal renderSeperatorLines
-.org 0x800bc6b4
-  jal renderSeperatorLines
-.org 0x800bca48
-  jal renderSeperatorLines
+;.org 0x800bc560
+;  jal renderSeperatorLines
+;.org 0x800bc6b4
+;  jal renderSeperatorLines
+;.org 0x800bca48
+;  jal renderSeperatorLines
 .org 0x800bd4f4
   jal renderSeperatorLines
 .org 0x800bdfc8

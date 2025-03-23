@@ -292,7 +292,7 @@ static void renderCardCount()
         isCardCountDrawn = true;
     }
 
-    renderTextSprite(cardCount, 0, 0);
+    renderTextSprite(cardCount);
 }
 
 static void tickPlayerMenuCardView()
@@ -419,10 +419,10 @@ void renderPlayerMenu()
     medalLabel.color  = playerMenuState != 2 ? 1 : 0;
     cardLabel.color   = playerMenuState != 3 ? 1 : 0;
 
-    renderTextSprite(playerLabel, 0, 0);
-    renderTextSprite(chartLabel, 0, 0);
-    renderTextSprite(medalLabel, 0, 0);
-    renderTextSprite(cardLabel, 0, 0);
+    renderTextSprite(playerLabel);
+    renderTextSprite(chartLabel);
+    renderTextSprite(medalLabel);
+    renderTextSprite(cardLabel);
 
     renderMenuTab(-145, 72, playerMenuState != 0);
     renderMenuTab(-74, 70, playerMenuState != 1);
@@ -659,9 +659,9 @@ static void renderEvoChartDetail()
         fromLines[i].render(0x65db, 0x794e3, 4);
     }
 
-    renderTextSprite(treeText, 0, 0);
-    renderTextSprite(levelText, 0, 0);
-    renderTextSprite(nameText, 0, 0);
+    renderTextSprite(treeText);
+    renderTextSprite(levelText);
+    renderTextSprite(nameText);
 
     for (auto& val : detailInsets)
         renderInsetBox(val.posX, val.posY, val.width, val.height, 4);

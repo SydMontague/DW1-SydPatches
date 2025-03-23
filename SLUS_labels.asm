@@ -105,7 +105,6 @@
 .definelabel drawInventoryText,         0x800dac48
 .definelabel entityGetTechFromAnim,     0x800e6000
 .definelabel renderMenuTab,             0x800bd2e4
-.definelabel renderDigimonMovesView,    0x800bc2e0
 .definelabel activateMedalTexture,      0x800e24a4
 .definelabel renderPlayerInfoView,      0x800bd49c
 .definelabel renderEvoChartView,        0x800bd940
@@ -127,8 +126,6 @@
 .definelabel CHART_SELECTED_DIGIMON, 0x80134d40
 .definelabel CHART_SELECTED_COLUMN, 0x80134d42
 .definelabel CHART_SELECTED_ROW, 0x80134d44
-.definelabel MOVE_SELECT_BOX_Y, 0x80134d38
-.definelabel MOVE_SELECT_BOX_X, 0x80134d3a
 .definelabel EQUIPPED_MOVES, 0x80134234
 .definelabel MOVE_DATA, 0x8012623c
 .definelabel NPC_COLLISION_STATE, 0x8013d190

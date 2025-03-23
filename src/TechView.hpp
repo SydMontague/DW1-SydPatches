@@ -1,0 +1,3 @@
+
+void tickDigimonMenuTechs();
+void renderDigimonMovesView();
