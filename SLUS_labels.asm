@@ -104,7 +104,6 @@
 .definelabel initializeFishing,         0x800e4e0c
 .definelabel drawInventoryText,         0x800dac48
 .definelabel entityGetTechFromAnim,     0x800e6000
-.definelabel renderMenuTab,             0x800bd2e4
 .definelabel activateMedalTexture,      0x800e24a4
 .definelabel renderPlayerInfoView,      0x800bd49c
 .definelabel renderEvoChartView,        0x800bd940

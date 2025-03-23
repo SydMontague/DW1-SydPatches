@@ -114,4 +114,5 @@ extern "C"
                        BoxRenderFunction renderFunc);
     bool isUIBoxAvailable(int32_t id);
     void closeUIBoxIfOpen(int32_t instanceId);
+    void renderMenuTab(int32_t posX, int32_t width, bool isActive);
 }

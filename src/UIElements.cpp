@@ -1,5 +1,6 @@
 #include "UIElements.hpp"
 
+#include "Helper.hpp"
 #include "extern/dw1.hpp"
 
 extern "C"
@@ -199,5 +200,17 @@ extern "C"
     void Inset::render(int32_t order) const
     {
         renderInsetBox(posX + SCREEN_WIDTH / 2, posY + SCREEN_HEIGHT / 2, width, height, order);
+    }
+
+    void renderMenuTab(int32_t posX, int32_t width, bool isActive)
+    {
+        auto height = isActive ? 15 : 16;
+
+        renderRectPolyFT4(posX, -104, 7, height, 0xD4, 0x8C, 5, getClut(0x60, 0x1EC), 5, isActive);
+
+        for (int32_t i = 0; i < (width - 14) / 4; i++)
+            renderRectPolyFT4(posX + 7 + i * 4, -104, 4, height, 0xE2, 0x8C, 5, getClut(0x60, 0x1EC), 5, isActive);
+
+        renderRectPolyFT4(posX + width - 9, -104, 7, height, 0xDB, 0x8C, 5, getClut(0x60, 0x1EC), 5, isActive);
     }
 }

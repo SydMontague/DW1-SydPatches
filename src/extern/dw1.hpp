@@ -1407,7 +1407,6 @@ extern "C"
     void renderMedalView();
     void renderCardsView();
     void activateMedalTexture(int32_t medal);
-    void renderMenuTab(int32_t posX, int32_t posY, bool isActive);
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
     void initializeFishing();
     void drawInventoryText();
