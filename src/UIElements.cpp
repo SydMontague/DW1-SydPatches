@@ -218,4 +218,22 @@ extern "C"
     {
         renderRectPolyFT4(posX, posY, width, height, uvX, uvY, texture_page, clut, layer, 0);
     }
+
+    void SpriteBox::render() const
+    {
+        renderSpriteBox(posX, posY, width, height, color1, color2, red, green, blue, layer);
+    }
+
+    void Line4Points::render(uint32_t color1, uint32_t color2, int32_t layer) const
+    {
+        // TODO: diagonal lines don't connect neatly to one side
+        renderTrianglePrimitive(color1, x1, y1 - 1, x2, y2 - 1, x3, y3 - 1, layer, 0);
+        renderLinePrimitive(color1, x3, y3 - 1, x4, y4 - 1, layer, 0);
+
+        renderTrianglePrimitive(color2, x1, y1, x2, y2, x3, y3, layer, 0);
+        renderLinePrimitive(color2, x3, y3, x4, y4, layer, 0);
+
+        renderTrianglePrimitive(color1, x1, y1 + 1, x2, y2 + 1, x3, y3 + 1, layer, 0);
+        renderLinePrimitive(color1, x3, y3 + 1, x4, y4 + 1, layer, 0);
+    }
 }

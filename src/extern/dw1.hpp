@@ -1251,9 +1251,6 @@ extern "C"
     extern ItemType INVENTORY_ITEM_TYPES[30];
     extern uint8_t INVENTORY_POINTER;
     extern EvoChartBoxData EVOCHART_BOXES[61];
-    extern uint16_t CHART_SELECTED_DIGIMON;
-    extern int16_t CHART_SELECTED_COLUMN;
-    extern int16_t CHART_SELECTED_ROW;
     extern uint16_t CHANGED_INPUT;
     extern Move MOVE_DATA[122];
     extern uint8_t EQUIPPED_MOVES[4];
@@ -1405,7 +1402,6 @@ extern "C"
     bool hasMove(int32_t move);
     void removeItem(ItemType type, int32_t amount);
     void renderOverworldItem(WorldItem* item);
-    void renderEvoChartView();
     void renderMedalView();
     void renderCardsView();
     void activateMedalTexture(int32_t medal);

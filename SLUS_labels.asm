@@ -105,7 +105,6 @@
 .definelabel drawInventoryText,         0x800dac48
 .definelabel entityGetTechFromAnim,     0x800e6000
 .definelabel activateMedalTexture,      0x800e24a4
-.definelabel renderEvoChartView,        0x800bd940
 .definelabel renderMedalView,           0x800bdea8
 .definelabel renderCardsView,           0x800be35c
 .definelabel renderOverworldItem,       0x800c4e94
@@ -124,9 +123,6 @@
 .definelabel MEDAL_SELECTOR_INDEX, 0x80134d3d
 .definelabel CHANGED_INPUT, 0x80134eec
 .definelabel EVOCHART_BOXES, 0x80124544
-.definelabel CHART_SELECTED_DIGIMON, 0x80134d40
-.definelabel CHART_SELECTED_COLUMN, 0x80134d42
-.definelabel CHART_SELECTED_ROW, 0x80134d44
 .definelabel EQUIPPED_MOVES, 0x80134234
 .definelabel MOVE_DATA, 0x8012623c
 .definelabel NPC_COLLISION_STATE, 0x8013d190

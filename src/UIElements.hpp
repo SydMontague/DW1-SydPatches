@@ -54,6 +54,22 @@ extern "C"
         void render(int16_t posX, int16_t posY, uint8_t layer, uint8_t flag) const;
     };
 
+    struct SpriteBox
+    {
+        int16_t posX;
+        int16_t posY;
+        int16_t width;
+        int16_t height;
+        uint32_t color1;
+        uint32_t color2;
+        uint8_t red;
+        uint8_t green;
+        uint8_t blue;
+        uint8_t layer;
+
+        void render() const;
+    };
+
     struct IconSprite
     {
         int16_t posX;
@@ -65,7 +81,7 @@ extern "C"
         uint8_t flag;
         int8_t texture_page;
         uint16_t clut;
-        
+
         void render(int32_t layer) const;
     };
 
@@ -89,6 +105,20 @@ extern "C"
         int16_t height;
 
         void render(int32_t order) const;
+    };
+
+    struct Line4Points
+    {
+        int16_t x1;
+        int16_t x2;
+        int16_t x3;
+        int16_t x4;
+        int16_t y1;
+        int16_t y2;
+        int16_t y3;
+        int16_t y4;
+
+        void render(uint32_t color1, uint32_t color2, int32_t layer) const;
     };
 
     void drawTextSprite(TextSprite& entry);
