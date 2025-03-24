@@ -332,6 +332,7 @@ template<int32_t drawY, int32_t offsetY> struct MoveEntry
 
     void setMove(uint8_t moveId)
     {
+        uint8_t buffer1[8];
         clearTextSubArea2(0, 16 + drawY, 256, 12);
 
         if (moveId == 0xFF)
@@ -346,7 +347,6 @@ template<int32_t drawY, int32_t offsetY> struct MoveEntry
             auto* move        = getMove(moveId);
             nameSprite.string = reinterpret_cast<char*>(MOVE_NAMES[moveId]);
 
-            uint8_t buffer1[8];
             sprintf(buffer1, "%d", move->power);
             powerSprite.string = reinterpret_cast<const char*>(buffer1);
             rangeSprite.string = getRangeString(move->range);
@@ -404,6 +404,8 @@ template<int32_t drawY, int32_t offsetY> struct MoveRegularEntry : MoveEntry<dra
 
     void setMove(uint8_t moveId)
     {
+        uint8_t buffer2[8];
+
         Parent::setMove(moveId);
 
         if (moveId == 0xFF)
@@ -411,7 +413,6 @@ template<int32_t drawY, int32_t offsetY> struct MoveRegularEntry : MoveEntry<dra
         else
         {
             auto* move = getMove(moveId);
-            uint8_t buffer2[8];
             sprintf(buffer2, "%d", move->mpCost * 3);
             costSprite.string = reinterpret_cast<const char*>(buffer2);
         }
