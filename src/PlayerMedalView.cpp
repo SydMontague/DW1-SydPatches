@@ -187,44 +187,6 @@ static TextSprite descriptionLine = {
     .hasShadow  = 1,
 };
 
-static int8_t selectedMedalRow;
-static int8_t selectedMedalCol;
-static Medal selectedMedal;
-
-void renderMedalView()
-{
-    if (MENU_STATE == 0)
-    {
-        clearTextSubArea2(0, 16, 256, 240);
-        for (auto& text : textLabels)
-            drawTextSprite(text);
-        MENU_STATE = 1;
-    }
-
-    if (MENU_STATE == 2) { selector.render(selectedMedalCol * 0x26 - 0x7E, selectedMedalRow * 24 - 0x3D, 1, 0); }
-
-    for (int32_t i = 0; i < MEDAL_COL_COUNT; i++)
-        for (int32_t j = 0; j < MEDAL_ROW_COUNT; j++)
-        {
-            if (!hasMedal(static_cast<Medal>(j * MEDAL_COL_COUNT + i)))
-                medalEmpty.render(i * 0x26 - 0x7C, j * 24 - 0x3D, 5, 0);
-
-            medalFull.render(i * 0x26 - 0x7A, j * 24 - 0x3D, 5, 0);
-        }
-
-    if (hasMedal(selectedMedal)) renderDigiviceMedals();
-
-    renderSeperatorLines(lines, 12, 5);
-
-    for (auto& text : textLabels)
-        renderTextSprite(text);
-
-    renderTextSprite(title);
-    renderTextSprite(descriptionLine);
-
-    inset.render(5);
-}
-
 constexpr char const* getMedalName(Medal medal)
 {
     switch (medal)
@@ -288,6 +250,45 @@ static void updateMedal(Medal medal)
 
     drawTextSprite(title);
     drawTextSprite(descriptionLine);
+}
+
+static int8_t selectedMedalRow;
+static int8_t selectedMedalCol;
+static Medal selectedMedal;
+
+void renderMedalView()
+{
+    if (MENU_STATE == 0)
+    {
+        clearTextSubArea2(0, 16, 256, 240);
+        for (auto& text : textLabels)
+            drawTextSprite(text);
+        MENU_STATE = 1;
+    }
+
+    if (MENU_STATE == 2) { selector.render(selectedMedalCol * 0x26 - 0x7E, selectedMedalRow * 24 - 0x3D, 1, 0); }
+
+    for (int32_t i = 0; i < MEDAL_COL_COUNT; i++)
+        for (int32_t j = 0; j < MEDAL_ROW_COUNT; j++)
+        {
+            if (!hasMedal(static_cast<Medal>(j * MEDAL_COL_COUNT + i)))
+                medalEmpty.render(i * 0x26 - 0x7C, j * 24 - 0x3D, 5, 0);
+
+            medalFull.render(i * 0x26 - 0x7A, j * 24 - 0x3D, 5, 0);
+        }
+
+    if (hasMedal(selectedMedal)) renderDigiviceMedals();
+
+    renderSeperatorLines(lines, 12, 5);
+
+    for (auto& text : textLabels)
+        renderTextSprite(text);
+
+    // vanilla doesn't display text for medals you haven't unlocked yet
+    renderTextSprite(title);
+    renderTextSprite(descriptionLine);
+
+    inset.render(5);
 }
 
 void tickPlayerMenuMedalView()
