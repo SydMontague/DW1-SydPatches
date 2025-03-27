@@ -10,11 +10,11 @@
 .endarea
 
 .org 0x800b3d84
-.area 0x800be35c-.
+.area 0x800be734-.
   .importobj "compiled/Cave2.lib"
 
-  .notice "Empty space left: " + (0x800be35c-.) + " bytes"
-  .fill 0x800be35c-.
+  .notice "Empty space left: " + (0x800be734-.) + " bytes"
+  .fill 0x800be734-.
 .endarea
 
 .org 0x8011d46c
@@ -140,5 +140,9 @@ SS_address: ; initializeMusic
   li.u a0,vanillaFont
   j drawStringNew
   li.l a0,vanillaFont
+
+; fix CARD_DATA entry for Machinedramon not having set the correct digimonId
+.org 0x801300dc
+.byte 115
 
 .close

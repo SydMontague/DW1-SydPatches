@@ -1238,6 +1238,13 @@ extern "C"
         uint8_t clut;
     };
 
+    struct CardEntry
+    {
+        uint8_t type;
+        uint8_t rarity;
+        uint16_t meritValue;
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1245,6 +1252,7 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern CardEntry CARD_DATA[66];
     extern int16_t PLAYTIME_HOURS;
     extern int16_t PLAYTIME_MINUTES;
     extern int16_t MERIT;
@@ -1402,7 +1410,6 @@ extern "C"
     bool hasMove(int32_t move);
     void removeItem(ItemType type, int32_t amount);
     void renderOverworldItem(WorldItem* item);
-    void renderCardsView();
     void activateMedalTexture(Medal medal);
     void renderDigiviceMedals();
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
@@ -1585,3 +1592,4 @@ static_assert(sizeof(MapDigimon) == 0x54);
 static_assert(sizeof(MapDigimonEntity) == 0xC4);
 static_assert(sizeof(Move) == 16);
 static_assert(sizeof(EvoChartBoxData) == 8);
+static_assert(sizeof(CardEntry) == 4);

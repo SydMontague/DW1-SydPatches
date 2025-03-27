@@ -5,6 +5,7 @@
 #include "Math.hpp"
 #include "UIElements.hpp"
 #include "extern/dw1.hpp"
+#include "DigimonSprite.hpp"
 
 /*
  * Chart
@@ -14,75 +15,9 @@ static int16_t selectedCol;
 static int16_t selectedRow;
 static DigimonType selectedDigimon;
 
-constexpr uint16_t EVO_CLUTS[]      = {0x7A07, 0x7A47, 0x7A87, 0x7AC7, 0x7B07};
 constexpr auto CHART_COL_COUNT      = 12;
 constexpr auto CHART_ENTRY_BASE_Y   = toRelativeY(43);
 constexpr auto CHART_ENTRY_OFFSET_Y = 19;
-
-struct DigimonSprite
-{
-    int16_t uvX;
-    int16_t uvV;
-    uint16_t clut;
-    uint16_t tpage;
-
-    void render(int16_t posX, int16_t posY, uint8_t layer, uint8_t flag, int32_t frame) const
-    {
-        auto finalU = uvX;
-        auto finalV = uvV;
-        if ((frame & 1) != 0) finalU += 16;
-        if ((frame & 2) != 0) finalU += 16;
-
-        renderRectPolyFT4(posX, posY, 16, 16, finalU, finalV, tpage, EVO_CLUTS[clut], layer, flag);
-    }
-};
-
-constexpr DigimonSprite digimonSprites[] = {
-    {.uvX = 0x00, .uvV = 0x00, .clut = 0x0, .tpage = 24}, {.uvX = 0x40, .uvV = 0x90, .clut = 0x0, .tpage = 24},
-    {.uvX = 0x60, .uvV = 0x90, .clut = 0x0, .tpage = 24}, {.uvX = 0x40, .uvV = 0x80, .clut = 0x0, .tpage = 24},
-    {.uvX = 0x60, .uvV = 0x80, .clut = 0x1, .tpage = 24}, {.uvX = 0x40, .uvV = 0x30, .clut = 0x1, .tpage = 24},
-    {.uvX = 0x60, .uvV = 0x30, .clut = 0x3, .tpage = 24}, {.uvX = 0x80, .uvV = 0x30, .clut = 0x1, .tpage = 24},
-    {.uvX = 0xA0, .uvV = 0x30, .clut = 0x0, .tpage = 24}, {.uvX = 0xC0, .uvV = 0x30, .clut = 0x0, .tpage = 24},
-    {.uvX = 0xE0, .uvV = 0x30, .clut = 0x1, .tpage = 24}, {.uvX = 0xA0, .uvV = 0x70, .clut = 0x1, .tpage = 24},
-    {.uvX = 0xC0, .uvV = 0x00, .clut = 0x0, .tpage = 24}, {.uvX = 0xE0, .uvV = 0x00, .clut = 0x0, .tpage = 24},
-    {.uvX = 0x00, .uvV = 0x10, .clut = 0x0, .tpage = 24}, {.uvX = 0x80, .uvV = 0x90, .clut = 0x0, .tpage = 24},
-    {.uvX = 0xA0, .uvV = 0x90, .clut = 0x0, .tpage = 24}, {.uvX = 0x80, .uvV = 0x80, .clut = 0x2, .tpage = 24},
-    {.uvX = 0xA0, .uvV = 0x80, .clut = 0x0, .tpage = 24}, {.uvX = 0x00, .uvV = 0x40, .clut = 0x0, .tpage = 24},
-    {.uvX = 0x20, .uvV = 0x40, .clut = 0x0, .tpage = 24}, {.uvX = 0x40, .uvV = 0x40, .clut = 0x0, .tpage = 24},
-    {.uvX = 0x60, .uvV = 0x40, .clut = 0x2, .tpage = 24}, {.uvX = 0x80, .uvV = 0x40, .clut = 0x0, .tpage = 24},
-    {.uvX = 0xA0, .uvV = 0x40, .clut = 0x0, .tpage = 24}, {.uvX = 0xC0, .uvV = 0x70, .clut = 0x1, .tpage = 24},
-    {.uvX = 0x20, .uvV = 0x10, .clut = 0x0, .tpage = 24}, {.uvX = 0x40, .uvV = 0x10, .clut = 0x0, .tpage = 24},
-    {.uvX = 0x60, .uvV = 0x10, .clut = 0x0, .tpage = 24}, {.uvX = 0xC0, .uvV = 0x90, .clut = 0x2, .tpage = 24},
-    {.uvX = 0xE0, .uvV = 0x90, .clut = 0x0, .tpage = 24}, {.uvX = 0xC0, .uvV = 0x80, .clut = 0x0, .tpage = 24},
-    {.uvX = 0xE0, .uvV = 0x80, .clut = 0x0, .tpage = 24}, {.uvX = 0xC0, .uvV = 0x40, .clut = 0x0, .tpage = 24},
-    {.uvX = 0xE0, .uvV = 0x40, .clut = 0x1, .tpage = 24}, {.uvX = 0x00, .uvV = 0x50, .clut = 0x2, .tpage = 24},
-    {.uvX = 0x20, .uvV = 0x50, .clut = 0x0, .tpage = 24}, {.uvX = 0x40, .uvV = 0x50, .clut = 0x0, .tpage = 24},
-    {.uvX = 0x60, .uvV = 0x50, .clut = 0x0, .tpage = 24}, {.uvX = 0xE0, .uvV = 0x70, .clut = 0x0, .tpage = 24},
-    {.uvX = 0x80, .uvV = 0x10, .clut = 0x3, .tpage = 24}, {.uvX = 0xA0, .uvV = 0x10, .clut = 0x0, .tpage = 24},
-    {.uvX = 0xC0, .uvV = 0x10, .clut = 0x0, .tpage = 24}, {.uvX = 0x00, .uvV = 0xA0, .clut = 0x0, .tpage = 24},
-    {.uvX = 0x20, .uvV = 0xA0, .clut = 0x1, .tpage = 24}, {.uvX = 0x00, .uvV = 0x90, .clut = 0x2, .tpage = 24},
-    {.uvX = 0x20, .uvV = 0x90, .clut = 0x2, .tpage = 24}, {.uvX = 0x80, .uvV = 0x50, .clut = 0x3, .tpage = 24},
-    {.uvX = 0xA0, .uvV = 0x50, .clut = 0x3, .tpage = 24}, {.uvX = 0xC0, .uvV = 0x50, .clut = 0x3, .tpage = 24},
-    {.uvX = 0xE0, .uvV = 0x50, .clut = 0x0, .tpage = 24}, {.uvX = 0x00, .uvV = 0x60, .clut = 0x0, .tpage = 24},
-    {.uvX = 0x20, .uvV = 0x60, .clut = 0x0, .tpage = 24}, {.uvX = 0x00, .uvV = 0x80, .clut = 0x0, .tpage = 24},
-    {.uvX = 0xE0, .uvV = 0x10, .clut = 0x0, .tpage = 24}, {.uvX = 0x00, .uvV = 0x20, .clut = 0x0, .tpage = 24},
-    {.uvX = 0x20, .uvV = 0x20, .clut = 0x1, .tpage = 24}, {.uvX = 0x60, .uvV = 0x60, .clut = 0x0, .tpage = 24},
-    {.uvX = 0x40, .uvV = 0x60, .clut = 0x0, .tpage = 24}, {.uvX = 0x20, .uvV = 0x00, .clut = 0x0, .tpage = 24},
-    {.uvX = 0x40, .uvV = 0x00, .clut = 0x4, .tpage = 24}, {.uvX = 0x60, .uvV = 0x00, .clut = 0x3, .tpage = 24},
-};
-
-constexpr bool hasValidSprite(DigimonType type)
-{
-    if (type == DigimonType::INVALID) return false;
-    if (type >= DigimonType::WEREGARURUMON) return false;
-
-    return true;
-}
-
-constexpr DigimonSprite const& getDigimonSprite(DigimonType type)
-{
-    return digimonSprites[static_cast<int32_t>(type)];
-}
 
 struct ChartBoxColumn
 {
@@ -547,9 +482,9 @@ void renderEvoChartDetail()
         if (val != 0xFF) toCount++;
     }
 
-    auto& data = digimonSprites[static_cast<int32_t>(selectedDigimon)];
+    auto& data = getDigimonSprite(selectedDigimon);
 
-    centerSprite.render(data.uvX, data.uvV, EVO_CLUTS[data.clut], data.tpage, 4, true);
+    centerSprite.render(data.uvX, data.uvV, DIGIMON_SPRITE_CLUTS[data.clut], data.tpage, 4, true);
 
     auto* toLines        = (toCount & 1) == 0 ? toLinesEven : toLinesOdd;
     auto* toSprite       = (toCount & 1) == 0 ? toEven : toOdd;
@@ -565,7 +500,7 @@ void renderEvoChartDetail()
         auto type  = static_cast<DigimonType>(digi);
         auto& data = getDigimonSprite(type);
 
-        toSprite[i].render(data.uvX, data.uvV, EVO_CLUTS[data.clut], data.tpage, 4, hasDigimonRaised(type));
+        toSprite[i].render(data.uvX, data.uvV, DIGIMON_SPRITE_CLUTS[data.clut], data.tpage, 4, hasDigimonRaised(type));
         toLines[i].render(TO_COLORS[i][1].asUint32(), TO_COLORS[i][0].asUint32(), 4);
     }
 
@@ -576,7 +511,7 @@ void renderEvoChartDetail()
         auto type  = static_cast<DigimonType>(digi);
         auto& data = getDigimonSprite(type);
 
-        fromSprite[i].render(data.uvX, data.uvV, EVO_CLUTS[data.clut], data.tpage, 4, hasDigimonRaised(type));
+        fromSprite[i].render(data.uvX, data.uvV, DIGIMON_SPRITE_CLUTS[data.clut], data.tpage, 4, hasDigimonRaised(type));
         fromLines[i].render(0x65db, 0x794e3, 4);
     }
 
