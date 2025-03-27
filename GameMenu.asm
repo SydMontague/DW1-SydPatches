@@ -130,12 +130,12 @@
 ;  jal renderRectPolyFT4
 ;.org 0x800bdb94
 ;  jal renderRectPolyFT4
-.org 0x800bdfb4
-  jal renderRectPolyFT4
-.org 0x800be168
-  jal renderRectPolyFT4
-.org 0x800be1f8
-  jal renderRectPolyFT4
+;.org 0x800bdfb4
+;  jal renderRectPolyFT4
+;.org 0x800be168
+;  jal renderRectPolyFT4
+;.org 0x800be1f8
+;  jal renderRectPolyFT4
 .org 0x800be484
   jal renderRectPolyFT4
 .org 0x800be568
@@ -193,8 +193,8 @@
 ;  jal renderSeperatorLines
 ;.org 0x800bd4f4
 ;  jal renderSeperatorLines
-.org 0x800bdfc8
-  jal renderSeperatorLines
+;.org 0x800bdfc8
+;  jal renderSeperatorLines
 .org 0x800bf530
   jal renderSeperatorLines
 .org 0x800bf54c

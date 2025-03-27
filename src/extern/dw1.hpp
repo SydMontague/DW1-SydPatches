@@ -1402,9 +1402,9 @@ extern "C"
     bool hasMove(int32_t move);
     void removeItem(ItemType type, int32_t amount);
     void renderOverworldItem(WorldItem* item);
-    void renderMedalView();
     void renderCardsView();
-    void activateMedalTexture(int32_t medal);
+    void activateMedalTexture(Medal medal);
+    void renderDigiviceMedals();
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
     void initializeFishing();
     void drawInventoryText();

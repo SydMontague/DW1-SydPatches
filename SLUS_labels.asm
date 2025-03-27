@@ -105,12 +105,12 @@
 .definelabel drawInventoryText,         0x800dac48
 .definelabel entityGetTechFromAnim,     0x800e6000
 .definelabel activateMedalTexture,      0x800e24a4
-.definelabel renderMedalView,           0x800bdea8
 .definelabel renderCardsView,           0x800be35c
 .definelabel renderOverworldItem,       0x800c4e94
 .definelabel removeItem,                0x800c53ec
 .definelabel hasMove,                   0x800e5eb4
 .definelabel renderSpriteBox,           0x800be990
+.definelabel renderDigiviceMedals,      0x800c0394
 
 .definelabel PLAYTIME_HOURS, 0x80134efe
 .definelabel PLAYTIME_MINUTES, 0x80134efc

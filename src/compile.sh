@@ -26,12 +26,12 @@ FLAGS="-O3 -T linker.ld -mabi=32 -march=r3000 -r -mel -nostdlib -mexplicit-reloc
 mips-g++ Utils.cpp UIElements.cpp -o ../compiled/utils.lib $FLAGS
 mips-g++ Font.cpp Font5px.cpp Font7px.cpp -o ../compiled/font.lib $FLAGS
 mips-g++ ItemEffects.cpp -o ../compiled/ItemEffects.lib $FLAGS
-mips-g++ ItemFunctions.cpp -o ../compiled/ItemFunctions.lib $FLAGS
+mips-g++ ItemFunctions.cpp Fade.cpp -o ../compiled/ItemFunctions.lib $FLAGS
 mips-g++ CustomUI.cpp -o ../compiled/CustomUI.lib $FLAGS
 mips-g++ CustomInit.cpp -o ../compiled/CustomInit.lib $FLAGS
 mips-g++ Evolution.cpp -o ../compiled/Evolution.lib $FLAGS
 
 mips-g++ Model.cpp Files.cpp Math.cpp Partner.cpp Tamer.cpp Entity.cpp Map.cpp Battle.cpp Effects.cpp EFE.cpp -o ../compiled/Cave1.lib $FLAGS
-mips-g++ Fade.cpp Main.cpp GameObjects.cpp NPCEntity.cpp GUI.cpp GameMenu.cpp PlayerMenu.cpp DigimonMenu.cpp StatsView.cpp TechView.cpp PlayerInfoView.cpp PlayerChartView.cpp -o ../compiled/Cave2.lib $FLAGS
+mips-g++ Main.cpp GameObjects.cpp NPCEntity.cpp GUI.cpp GameMenu.cpp PlayerMenu.cpp DigimonMenu.cpp StatsView.cpp TechView.cpp PlayerInfoView.cpp PlayerChartView.cpp PlayerMedalView.cpp -o ../compiled/Cave2.lib $FLAGS
 
 cd -

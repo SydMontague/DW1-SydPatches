@@ -4,6 +4,7 @@
 #include "Math.hpp"
 #include "PlayerChartView.hpp"
 #include "PlayerInfoView.hpp"
+#include "PlayerMedalView.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
 #include "extern/dw1.hpp"
@@ -12,8 +13,6 @@
 constexpr auto DIGIMON_MENU_TAB_DRAW_X = 704;
 constexpr auto DIGIMON_MENU_TAB_DRAW_Y = 256;
 
-constexpr auto MEDAL_ROW_COUNT = 3;
-constexpr auto MEDAL_COL_COUNT = 5;
 constexpr auto CARD_ROW_COUNT  = 6;
 constexpr auto CARD_COL_COUNT  = 11;
 
@@ -110,8 +109,6 @@ static TextSprite cardCount = {
 static bool isCardCountDrawn = false;
 static int8_t selectedCardCol;
 static int8_t selectedCardRow;
-static int8_t selectedMedalRow;
-static int8_t selectedMedalCol;
 static uint8_t playerMenuState;
 
 static Pair<EvoChartBoxData, int32_t> getEvoChartData(uint16_t posX, uint16_t posY)
@@ -128,47 +125,6 @@ static Pair<EvoChartBoxData, int32_t> getEvoChartData(uint16_t posX, uint16_t po
 
 static void tickPlayerMenuPlayerView() {}
 
-static void tickPlayerMenuMedalView()
-{
-    if (MENU_STATE == 2 || MENU_STATE == 3)
-    {
-        if (MENU_STATE == 2 && isKeyDown(InputButtons::BUTTON_TRIANGLE))
-        {
-            playSound(0, 4);
-            MENU_STATE = 1;
-        }
-
-        auto oldMedal = MEDAL_SELECTOR_INDEX;
-
-        if (isKeyDownRepeat(InputButtons::BUTTON_LEFT)) selectedMedalCol -= 1;
-        if (isKeyDownRepeat(InputButtons::BUTTON_RIGHT)) selectedMedalCol += 1;
-        if (isKeyDownRepeat(InputButtons::BUTTON_UP)) selectedMedalRow -= 1;
-        if (isKeyDownRepeat(InputButtons::BUTTON_DOWN)) selectedMedalRow += 1;
-
-        selectedMedalCol = clamp(selectedMedalCol, 0, MEDAL_COL_COUNT - 1);
-        selectedMedalRow = clamp(selectedMedalRow, 0, MEDAL_ROW_COUNT - 1);
-
-        MEDAL_SELECTOR_INDEX = selectedMedalRow * MEDAL_COL_COUNT + selectedMedalCol;
-        if (MEDAL_SELECTOR_INDEX != oldMedal)
-        {
-            if (hasMedal(static_cast<Medal>(MEDAL_SELECTOR_INDEX)))
-            {
-                activateMedalTexture(MEDAL_SELECTOR_INDEX);
-                MENU_STATE = 3;
-            }
-            playSound(0, 2);
-        }
-        SELECTED_MEDAL = MEDAL_SELECTOR_INDEX;
-    }
-    else if (MENU_STATE == 1)
-    {
-        if (isKeyDown(InputButtons::BUTTON_CROSS))
-        {
-            MENU_STATE = 2;
-            playSound(0, 3);
-        }
-    }
-}
 
 static void loadCardImage(int32_t card)
 {
