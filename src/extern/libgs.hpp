@@ -102,6 +102,18 @@ extern "C"
         int32_t rotate;
     };
 
+    struct GsBOXF
+    {
+        uint32_t attribute;
+        int16_t x;
+        int16_t y;
+        uint16_t width;
+        uint16_t height;
+        uint8_t r;
+        uint8_t g;
+        uint8_t b;
+    };
+
     extern Matrix libgs_REFERENCE_MATRIX;
     extern Matrix libgs_GsLIGHTWSMATRIX;
 
@@ -118,6 +130,7 @@ extern "C"
     int32_t libgs_GsGetActiveBuffer();
     void libgs_GsClearOt(uint16_t offset, uint16_t point, GsOT* ot);
     void libgs_GsSortSprite(GsSPRITE* sprite, GsOT* ot, uint16_t depth);
+    void libgs_GsSortBoxFill(GsBOXF* box, GsOT* ot, uint16_t layer);
 }
 
 static_assert(sizeof(GsOT) == 20);

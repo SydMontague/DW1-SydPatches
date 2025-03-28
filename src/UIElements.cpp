@@ -192,6 +192,60 @@ extern "C"
         return UI_BOX_DATA[id].state == 1 || UI_BOX_DATA[id].frame == 0;
     }
 
+    void renderBox(int16_t posX,
+                   int16_t posY,
+                   uint16_t width,
+                   uint16_t height,
+                   uint8_t red,
+                   uint8_t green,
+                   uint8_t blue,
+                   uint8_t flag,
+                   int32_t layer)
+    {
+        GsBOXF box;
+
+        box.attribute = 0;
+        if ((flag & 1) != 0) box.attribute |= 0x40000000;
+        if ((flag & 2) != 0) box.attribute |= 0x20000000;
+
+        box.r      = red;
+        box.g      = green;
+        box.b      = blue;
+        box.x      = posX;
+        box.y      = posY;
+        box.width  = width;
+        box.height = height;
+        libgs_GsSortBoxFill(&box, ACTIVE_ORDERING_TABLE, layer);
+        // vanilla has flag 0x80 here, that draws a 13x14 px border around, only used for moves, but this functionality
+        // can be implemented in better ways
+    }
+
+    void renderBorderBox(int16_t posX,
+                         int16_t posY,
+                         int16_t width,
+                         int16_t height,
+                         uint32_t color1,
+                         uint32_t color2,
+                         uint8_t red,
+                         uint8_t green,
+                         uint8_t blue,
+                         int32_t layer)
+    {
+        auto x1 = posX;
+        auto x2 = posX + width;
+        auto y1 = posY;
+        auto y2 = posY + height;
+
+        renderTrianglePrimitive(color1, x1, y2, x1, y1, x2, y1, layer, 0);
+        renderTrianglePrimitive(color2, x1, y2, x2, y2, x2, y1, layer, 0);
+        renderBox(x1, y1, width, height, red, green, blue, 0, layer);
+    }
+
+    void renderDigimonStatsBar(int32_t value, int32_t maxValue, int32_t width, int32_t posX, int32_t posY)
+    {
+        renderBox(posX, posY, (width * value) / maxValue, 2, 50, 200, 200, 0, 5);
+    }
+
     void Sprite::render(int16_t posX, int16_t posY, uint8_t layer, uint8_t flag) const
     {
         renderRectPolyFT4(posX, posY, width, height, uvX, uvV, texture_page, clut, layer, flag);
@@ -199,7 +253,7 @@ extern "C"
 
     void Inset::render(int32_t order) const
     {
-        renderInsetBox(posX + SCREEN_WIDTH / 2, posY + SCREEN_HEIGHT / 2, width, height, order);
+        renderBorderBox(posX, posY, width, height, 0x020202, 0xa08769, 0x35, 0x4B, 0x5C, order);
     }
 
     void renderMenuTab(int32_t posX, int32_t width, bool isActive)
@@ -219,9 +273,9 @@ extern "C"
         renderRectPolyFT4(posX, posY, width, height, uvX, uvY, texture_page, clut, layer, 0);
     }
 
-    void SpriteBox::render() const
+    void BorderBox::render() const
     {
-        renderSpriteBox(posX, posY, width, height, color1, color2, red, green, blue, layer);
+        renderBorderBox(posX, posY, width, height, color1, color2, red, green, blue, layer);
     }
 
     void Line4Points::render(uint32_t color1, uint32_t color2, int32_t layer) const

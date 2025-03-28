@@ -1016,8 +1016,8 @@ extern "C"
         renderDigimonStatsBar(PARTNER_ENTITY.stats.def, DEF_MAX, 42, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 69);
         renderDigimonStatsBar(PARTNER_ENTITY.stats.speed, SPEED_MAX, 42, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 84);
         renderDigimonStatsBar(PARTNER_ENTITY.stats.brain, BRAIN_MAX, 42, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 99);
-        renderBoxBar(CONDITION_OFFSET_X + 62, CONDITION_OFFSET_Y + 81, (PARTNER_PARA.tiredness * 48 / (TIREDNESS_MAX - TIREDNESS_MIN)), 5, 50, 150, 255, 0, 5);
-        renderBoxBar(CONDITION_OFFSET_X + 62, CONDITION_OFFSET_Y + 95, PARTNER_PARA.virusBar * 48 / (VIRUS_MAX - VIRUS_MIN), 5, 200, 200, 60, 0, 5);
+        renderBox(CONDITION_OFFSET_X + 62, CONDITION_OFFSET_Y + 81, (PARTNER_PARA.tiredness * 48 / (TIREDNESS_MAX - TIREDNESS_MIN)), 5, 50, 150, 255, 0, 5);
+        renderBox(CONDITION_OFFSET_X + 62, CONDITION_OFFSET_Y + 95, PARTNER_PARA.virusBar * 48 / (VIRUS_MAX - VIRUS_MIN), 5, 200, 200, 60, 0, 5);
         // clang-format on
 
         // profile insets

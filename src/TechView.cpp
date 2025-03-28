@@ -133,7 +133,7 @@ struct MoveDetail
         .uvHeight   = 0,
         .posX       = static_cast<int16_t>(nameInset.posX + 3),
         .posY       = static_cast<int16_t>(nameInset.posY + 2),
-        .boxWidth   = static_cast<uint16_t>(nameInset.width - 2),
+        .boxWidth   = static_cast<uint16_t>(nameInset.width - 4),
         .boxHeight  = static_cast<uint16_t>(nameInset.height - 2),
         .alignmentX = AlignmentX::LEFT,
         .alignmentY = AlignmentY::CENTER,
@@ -151,7 +151,7 @@ struct MoveDetail
         .uvHeight   = 0,
         .posX       = static_cast<int16_t>(powerInset.posX + 3),
         .posY       = static_cast<int16_t>(powerInset.posY + 2),
-        .boxWidth   = static_cast<uint16_t>(powerInset.width - 2),
+        .boxWidth   = static_cast<uint16_t>(powerInset.width - 4),
         .boxHeight  = static_cast<uint16_t>(powerInset.height - 2),
         .alignmentX = AlignmentX::LEFT,
         .alignmentY = AlignmentY::CENTER,
@@ -169,7 +169,7 @@ struct MoveDetail
         .uvHeight   = 0,
         .posX       = static_cast<int16_t>(costInset.posX + 3),
         .posY       = static_cast<int16_t>(costInset.posY + 2),
-        .boxWidth   = static_cast<uint16_t>(costInset.width - 2),
+        .boxWidth   = static_cast<uint16_t>(costInset.width - 4),
         .boxHeight  = static_cast<uint16_t>(costInset.height - 2),
         .alignmentX = AlignmentX::LEFT,
         .alignmentY = AlignmentY::CENTER,
@@ -187,7 +187,7 @@ struct MoveDetail
         .uvHeight   = 0,
         .posX       = static_cast<int16_t>(rangeInset.posX + 3),
         .posY       = static_cast<int16_t>(rangeInset.posY + 2),
-        .boxWidth   = static_cast<uint16_t>(rangeInset.width - 2),
+        .boxWidth   = static_cast<uint16_t>(rangeInset.width - 4),
         .boxHeight  = static_cast<uint16_t>(rangeInset.height - 2),
         .alignmentX = AlignmentX::LEFT,
         .alignmentY = AlignmentY::CENTER,
@@ -205,7 +205,7 @@ struct MoveDetail
         .uvHeight   = 0,
         .posX       = static_cast<int16_t>(statusInset.posX + 3),
         .posY       = static_cast<int16_t>(statusInset.posY + 2),
-        .boxWidth   = static_cast<uint16_t>(statusInset.width - 2),
+        .boxWidth   = static_cast<uint16_t>(statusInset.width - 4),
         .boxHeight  = static_cast<uint16_t>(statusInset.height - 2),
         .alignmentX = AlignmentX::LEFT,
         .alignmentY = AlignmentY::CENTER,
@@ -283,7 +283,7 @@ template<int32_t drawY, int32_t offsetY> struct MoveEntry
         .uvHeight   = 0,
         .posX       = static_cast<int16_t>(nameInset.posX + 3),
         .posY       = static_cast<int16_t>(nameInset.posY + 2),
-        .boxWidth   = static_cast<uint16_t>(nameInset.width - 2),
+        .boxWidth   = static_cast<uint16_t>(nameInset.width - 4),
         .boxHeight  = static_cast<uint16_t>(nameInset.height - 2),
         .alignmentX = AlignmentX::LEFT,
         .alignmentY = AlignmentY::CENTER,
@@ -301,7 +301,7 @@ template<int32_t drawY, int32_t offsetY> struct MoveEntry
         .uvHeight   = 0,
         .posX       = static_cast<int16_t>(powerInset.posX + 3),
         .posY       = static_cast<int16_t>(powerInset.posY + 2),
-        .boxWidth   = static_cast<uint16_t>(powerInset.width - 2),
+        .boxWidth   = static_cast<uint16_t>(powerInset.width - 4),
         .boxHeight  = static_cast<uint16_t>(powerInset.height - 2),
         .alignmentX = AlignmentX::RIGHT,
         .alignmentY = AlignmentY::CENTER,
@@ -319,7 +319,7 @@ template<int32_t drawY, int32_t offsetY> struct MoveEntry
         .uvHeight   = 0,
         .posX       = static_cast<int16_t>(rangeInset.posX + 3),
         .posY       = static_cast<int16_t>(rangeInset.posY + 2),
-        .boxWidth   = static_cast<uint16_t>(rangeInset.width - 2),
+        .boxWidth   = static_cast<uint16_t>(rangeInset.width - 4),
         .boxHeight  = static_cast<uint16_t>(rangeInset.height - 2),
         .alignmentX = AlignmentX::CENTER,
         .alignmentY = AlignmentY::CENTER,
@@ -393,7 +393,7 @@ template<int32_t drawY, int32_t offsetY> struct MoveRegularEntry : MoveEntry<dra
         .uvHeight   = 0,
         .posX       = static_cast<int16_t>(mpInset.posX + 3),
         .posY       = static_cast<int16_t>(mpInset.posY + 2),
-        .boxWidth   = static_cast<uint16_t>(mpInset.width - 2),
+        .boxWidth   = static_cast<uint16_t>(mpInset.width - 4),
         .boxHeight  = static_cast<uint16_t>(mpInset.height - 2),
         .alignmentX = AlignmentX::RIGHT,
         .alignmentY = AlignmentY::CENTER,
@@ -939,10 +939,11 @@ struct MoveBox
         auto index = getSpriteId(moveId) * 2;
         if (PLAYTIME_FRAMES % 20 < 10) index += 1;
 
-        if (hasMoveEquipped(&PARTNER_ENTITY, moveId)) renderBoxBar(posX, posY, 12, 12, 200, 0, 40, 1, 5);
-        if (!canUseMove(PARTNER_ENTITY.type, moveId)) renderBoxBar(posX, posY, 12, 12, 0x68, 0x68, 0x68, 3, 5);
+        if (hasMoveEquipped(&PARTNER_ENTITY, moveId)) renderBox(posX, posY, 12, 12, 200, 0, 40, 1, 5);
+        if (!canUseMove(PARTNER_ENTITY.type, moveId)) renderBox(posX, posY, 12, 12, 0x68, 0x68, 0x68, 3, 5);
         if (hasMove(moveId)) specialSprites[index].render(posX, posY, 5, 0);
-        renderBoxBar(posX, posY, 12, 12, 0x4E, 0x60, 0x6E, 0x80, 5);
+
+        renderBorderBox(posX - 1, posY - 1, 13, 13, 0x020202, 0x20202, 0x4E, 0x60, 0x6E, 5);
     }
 };
 

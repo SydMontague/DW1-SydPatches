@@ -19,10 +19,7 @@
 .definelabel removeTamerItem,           0x800c55fc
 .definelabel hasDigimonRaised,          0x800ff824
 ;.definelabel Partner_setState,          0x800df4d0 ; use constexpr version instead
-.definelabel renderInsetBox,            0x800be734
-.definelabel renderdigimonstatsbar,     0x800bec28
 .definelabel renderDigiviceEntity,      0x800beebc
-.definelabel renderBoxBar,              0x800be85c
 .definelabel updateConditionAnimation,  0x800df2d0
 .definelabel unsetButterfly,            0x800e9fb4
 .definelabel advanceToTime,             0x800dd678
@@ -108,7 +105,6 @@
 .definelabel renderOverworldItem,       0x800c4e94
 .definelabel removeItem,                0x800c53ec
 .definelabel hasMove,                   0x800e5eb4
-.definelabel renderSpriteBox,           0x800be990
 .definelabel renderDigiviceMedals,      0x800c0394
 
 .definelabel CARD_DATA, 0x8012ffd8
@@ -326,6 +322,7 @@
 .definelabel libgs_GsClearOt, 0x80098838
 .definelabel libgs_GsGetActiveBuffer, 0x80097af8
 .definelabel libgs_GsSortSprite, 0x80096f90
+.definelabel libgs_GsSortBoxFill, 0x80096ce0
 
 .definelabel libgs_REFERENCE_MATRIX, 0x80136f84
 .definelabel libgs_GsLIGHTWSMATRIX, 0x80136f24

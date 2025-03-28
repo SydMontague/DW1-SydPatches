@@ -1397,16 +1397,6 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
-    void renderSpriteBox(int16_t posX,
-                         int16_t posY,
-                         int16_t width,
-                         int16_t height,
-                         uint32_t color1,
-                         uint32_t color2,
-                         uint8_t red,
-                         uint8_t green,
-                         uint8_t blue,
-                         int32_t layer);
     bool hasMove(int32_t move);
     void removeItem(ItemType type, int32_t amount);
     void renderOverworldItem(WorldItem* item);
@@ -1528,15 +1518,6 @@ extern "C"
                                  int16_t y3,
                                  int32_t order,
                                  uint32_t flag);
-    extern void renderBoxBar(int16_t posX,
-                             int16_t posY,
-                             uint16_t width,
-                             uint16_t height,
-                             uint8_t red,
-                             uint8_t green,
-                             uint8_t blue,
-                             uint8_t flag,
-                             int32_t layer);
 
     extern void setTrigger(uint32_t triggerId);
     extern void clearTextArea();
@@ -1546,8 +1527,6 @@ extern "C"
     extern void removeTamerItem();
     extern void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
     extern bool hasDigimonRaised(DigimonType type);
-    extern void renderInsetBox(int32_t posX, int32_t posY, int32_t width, int32_t height, int32_t order);
-    extern void renderDigimonStatsBar(int32_t value, int32_t maxValue, int32_t width, int32_t posX, int32_t posY);
     extern void renderDigiviceEntity(Entity* entity, int32_t entityId);
 
     extern void updateConditionAnimation();

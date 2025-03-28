@@ -54,7 +54,7 @@ extern "C"
         void render(int16_t posX, int16_t posY, uint8_t layer, uint8_t flag) const;
     };
 
-    struct SpriteBox
+    struct BorderBox
     {
         int16_t posX;
         int16_t posY;
@@ -147,4 +147,24 @@ extern "C"
     bool isUIBoxAvailable(int32_t id);
     void closeUIBoxIfOpen(int32_t instanceId);
     void renderMenuTab(int32_t posX, int32_t width, bool isActive);
+    void renderBox(int16_t posX,
+                   int16_t posY,
+                   uint16_t width,
+                   uint16_t height,
+                   uint8_t red,
+                   uint8_t green,
+                   uint8_t blue,
+                   uint8_t flag,
+                   int32_t layer);
+    void renderBorderBox(int16_t posX,
+                         int16_t posY,
+                         int16_t width,
+                         int16_t height,
+                         uint32_t color1,
+                         uint32_t color2,
+                         uint8_t red,
+                         uint8_t green,
+                         uint8_t blue,
+                         int32_t layer);
+    void renderDigimonStatsBar(int32_t value, int32_t maxValue, int32_t width, int32_t posX, int32_t posY);
 }

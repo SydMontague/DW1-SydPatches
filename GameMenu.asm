@@ -140,10 +140,10 @@
 ;  jal renderRectPolyFT4
 ;.org 0x800be568
 ;  jal renderRectPolyFT4
-.org 0x800bee20
-  jal renderRectPolyFT4
-.org 0x800bee8c
-  jal renderRectPolyFT4
+;.org 0x800bee20
+;  jal renderRectPolyFT4
+;.org 0x800bee8c
+;  jal renderRectPolyFT4
 .org 0x800bf5a4
   jal renderRectPolyFT4
 .org 0x800bf5e8

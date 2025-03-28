@@ -189,7 +189,7 @@ void renderCardsView()
                 if (type != 0xFF) getDigimonSprite(static_cast<DigimonType>(type)).render(posX, posY, 5, 0, 0);
             }
 
-            renderSpriteBox(160 + posX - 1, 120 + posY - 1, 17, 17, 0xBEBEBE, 0x3C3C3C, 0x67, 0x67, 0x67, 5);
+            renderBorderBox(posX - 1, posY - 1, 17, 17, 0xBEBEBE, 0x3C3C3C, 0x67, 0x67, 0x67, 5);
         }
 
     for (auto& label : textLabels)

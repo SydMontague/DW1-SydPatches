@@ -1,11 +1,11 @@
 
 #include "PlayerChartView.hpp"
 
+#include "DigimonSprite.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
 #include "UIElements.hpp"
 #include "extern/dw1.hpp"
-#include "DigimonSprite.hpp"
 
 /*
  * Chart
@@ -38,15 +38,15 @@ struct ChartBoxColumn
                 if (selectedDigimon == type && PLAYTIME_FRAMES % 10 < 5) frame = 1;
                 getDigimonSprite(type).render(posX, posY, 5, 0, frame);
             }
-            renderSpriteBox(160 + posX - 1, 120 + posY - 1, 17, 17, 0xBEBEBE, 0x3C3C3C, 0x87, 0x87, 0x87, 5);
+            renderBorderBox(posX - 1, posY - 1, 17, 17, 0xBEBEBE, 0x3C3C3C, 0x87, 0x87, 0x87, 5);
         }
     }
 };
 
-constexpr SpriteBox boxes[] = {
+constexpr BorderBox boxes[] = {
     {
-        .posX   = 17,
-        .posY   = 39,
+        .posX   = toRelativeX(17),
+        .posY   = toRelativeY(39),
         .width  = 25,
         .height = 175,
         .color1 = 0xaaa0c8,
@@ -57,8 +57,8 @@ constexpr SpriteBox boxes[] = {
         .layer  = 5,
     },
     {
-        .posX   = 45,
-        .posY   = 39,
+        .posX   = toRelativeX(45),
+        .posY   = toRelativeY(39),
         .width  = 25,
         .height = 175,
         .color1 = 0xa078a5,
@@ -69,8 +69,8 @@ constexpr SpriteBox boxes[] = {
         .layer  = 5,
     },
     {
-        .posX   = 73,
-        .posY   = 39,
+        .posX   = toRelativeX(73),
+        .posY   = toRelativeY(39),
         .width  = 25,
         .height = 175,
         .color1 = 0xc88250,
@@ -81,8 +81,8 @@ constexpr SpriteBox boxes[] = {
         .layer  = 5,
     },
     {
-        .posX   = 101,
-        .posY   = 39,
+        .posX   = toRelativeX(101),
+        .posY   = toRelativeY(39),
         .width  = 109,
         .height = 175,
         .color1 = 0x6eaf5a,
@@ -93,8 +93,8 @@ constexpr SpriteBox boxes[] = {
         .layer  = 5,
     },
     {
-        .posX   = 214,
-        .posY   = 39,
+        .posX   = toRelativeX(214),
+        .posY   = toRelativeY(39),
         .width  = 88,
         .height = 175,
         .color1 = 0x6996d2,
@@ -330,7 +330,7 @@ struct ChartSprite
     {
         if (spriteVisible) renderRectPolyFT4(posX, posY, 16, 16, texX, texY, tpage, clut, layer, 0);
         // vanilla is 18x18, resulting in a 19x19 box
-        renderSpriteBox(160 + posX - 1, 120 + posY - 1, 17, 17, 0xBEBEBE, 0x3C3C3C, 0x87, 0x87, 0x87, layer);
+        renderBorderBox(posX - 1, posY - 1, 17, 17, 0xBEBEBE, 0x3C3C3C, 0x87, 0x87, 0x87, layer);
     }
 };
 
@@ -511,7 +511,8 @@ void renderEvoChartDetail()
         auto type  = static_cast<DigimonType>(digi);
         auto& data = getDigimonSprite(type);
 
-        fromSprite[i].render(data.uvX, data.uvV, DIGIMON_SPRITE_CLUTS[data.clut], data.tpage, 4, hasDigimonRaised(type));
+        fromSprite[i]
+            .render(data.uvX, data.uvV, DIGIMON_SPRITE_CLUTS[data.clut], data.tpage, 4, hasDigimonRaised(type));
         fromLines[i].render(0x65db, 0x794e3, 4);
     }
 
@@ -520,7 +521,7 @@ void renderEvoChartDetail()
     renderTextSprite(nameText);
 
     for (auto& val : detailInsets)
-      val.render(4);
+        val.render(4);
 }
 
 /*
