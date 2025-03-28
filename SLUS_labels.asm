@@ -19,7 +19,6 @@
 .definelabel removeTamerItem,           0x800c55fc
 .definelabel hasDigimonRaised,          0x800ff824
 ;.definelabel Partner_setState,          0x800df4d0 ; use constexpr version instead
-.definelabel renderDigiviceEntity,      0x800beebc
 .definelabel updateConditionAnimation,  0x800df2d0
 .definelabel unsetButterfly,            0x800e9fb4
 .definelabel advanceToTime,             0x800dd678
@@ -256,6 +255,10 @@
 .definelabel LOCAL_MAP_OBJECTS, 0x8013c060
 .definelabel MAP_OBJECT_INSTANCE_COUNT, 0x80134d1c
 .definelabel MAP_OBJECT_MOVE_TO_DATA, 0x8013c038
+.definelabel FRAMEBUFFER_OT, 0x801344ec
+.definelabel FRAMEBUFFER0_ORIGIN, 0x801344e4
+.definelabel FRAMEBUFFER1_ORIGIN, 0x801344e8
+.definelabel LIGHT_DATA, 0x801b1c24
 
 // BTL_REL
 .definelabel BTL_battleMain, 0x8005b5f4
@@ -323,6 +326,10 @@
 .definelabel libgs_GsGetActiveBuffer, 0x80097af8
 .definelabel libgs_GsSortSprite, 0x80096f90
 .definelabel libgs_GsSortBoxFill, 0x80096ce0
+.definelabel libgs_GsSetProjection, 0x800981c8
+.definelabel libgs_GsSetRefView2, 0x80098e18
+.definelabel libgs_GsSetFlatLight, 0x800982a0
+.definelabel libgs_GsSortOt, 0x80098898
 
 .definelabel libgs_REFERENCE_MATRIX, 0x80136f84
 .definelabel libgs_GsLIGHTWSMATRIX, 0x80136f24

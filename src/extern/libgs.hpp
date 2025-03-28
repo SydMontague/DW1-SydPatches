@@ -114,6 +114,16 @@ extern "C"
         uint8_t b;
     };
 
+    struct GsF_LIGHT
+    {
+        int32_t x;
+        int32_t y;
+        int32_t z;
+        uint8_t r;
+        uint8_t g;
+        uint8_t b;
+    };
+
     extern Matrix libgs_REFERENCE_MATRIX;
     extern Matrix libgs_GsLIGHTWSMATRIX;
 
@@ -131,6 +141,10 @@ extern "C"
     void libgs_GsClearOt(uint16_t offset, uint16_t point, GsOT* ot);
     void libgs_GsSortSprite(GsSPRITE* sprite, GsOT* ot, uint16_t depth);
     void libgs_GsSortBoxFill(GsBOXF* box, GsOT* ot, uint16_t layer);
+    void libgs_GsSetProjection(uint32_t distance);
+    int32_t libgs_GsSetRefView2(GsRVIEW2* view);
+    void libgs_GsSetFlatLight(uint32_t id, const GsF_LIGHT* light);
+    GsOT* libgs_GsSortOt(GsOT* src, GsOT* dest);
 }
 
 static_assert(sizeof(GsOT) == 20);

@@ -1,3 +1,4 @@
+#include "Entity.hpp"
 #include "Helper.hpp"
 #include "UIElements.hpp"
 #include "extern/dw1.hpp"
@@ -448,7 +449,7 @@ void renderPlayerInfoView()
 {
     if (MENU_STATE == 1)
     {
-        renderDigiviceEntity(&TAMER_ENTITY, 0);
+        renderDigiviceEntity(&TAMER_ENTITY, 0, 0);
 
         renderTextSprite(nameText);
         renderTextSprite(levelNumber);
@@ -474,7 +475,6 @@ void renderPlayerInfoView()
 
     if (MENU_STATE == 0)
     {
-        DIGIVICE_ENTITY_VIEW.refpointX = 0;
         for (auto& label : labels)
             drawTextSprite(label);
 

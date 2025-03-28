@@ -1386,6 +1386,10 @@ extern "C"
     extern uint8_t MEDAL_SELECTOR_INDEX;
     extern uint8_t SELECTED_CARD;
     extern uint8_t* MOVE_NAMES[122];
+    extern GsOT* FRAMEBUFFER_OT[2];
+    extern uint32_t* FRAMEBUFFER0_ORIGIN;
+    extern uint32_t* FRAMEBUFFER1_ORIGIN;
+    extern GsF_LIGHT LIGHT_DATA[3];
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1527,7 +1531,6 @@ extern "C"
     extern void removeTamerItem();
     extern void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
     extern bool hasDigimonRaised(DigimonType type);
-    extern void renderDigiviceEntity(Entity* entity, int32_t entityId);
 
     extern void updateConditionAnimation();
     extern void unsetButterfly(uint32_t id);

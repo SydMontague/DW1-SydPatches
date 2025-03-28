@@ -3,8 +3,5 @@
 #include "extern/stddef.hpp"
 
 Pair<Entity*, uint8_t> getEntityFromScriptId(uint8_t scriptId);
-
-extern "C"
-{
-    bool hasAttackEquipped(DigimonEntity* entity);
-}
+void renderDigiviceEntity(Entity* entity, int32_t entityId, int32_t refX);
+bool hasAttackEquipped(DigimonEntity* entity);

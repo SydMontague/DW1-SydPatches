@@ -1,3 +1,4 @@
+#include "Entity.hpp"
 #include "Font.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
@@ -870,9 +871,8 @@ static TextSprite badges[] = {
 
 static void drawDigimonStatsViewStrings()
 {
-    DIGIVICE_ENTITY_VIEW.refpointX = -350; // TODO activate once the Tamer view has been re-implemented
-    auto* para                     = getDigimonData(PARTNER_ENTITY.type);
-    auto* raisePara                = getRaiseData(PARTNER_ENTITY.type);
+    auto* para      = getDigimonData(PARTNER_ENTITY.type);
+    auto* raisePara = getRaiseData(PARTNER_ENTITY.type);
 
     sprites[SpriteIndex::TYPE].uvX = static_cast<uint32_t>(para->type) * 12 - 12;
     initSpecialSprite(sprites[SpriteIndex::SPECIAL1], para->special[0]);
@@ -1026,6 +1026,6 @@ extern "C"
 
         renderSeperatorLines(lines, 6, 5);
 
-        renderDigiviceEntity(&PARTNER_ENTITY, 1);
+        renderDigiviceEntity(&PARTNER_ENTITY, 1, -350);
     }
 }

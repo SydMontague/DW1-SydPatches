@@ -65,10 +65,10 @@
 ;  jal setupEntityMatrix
 ;.org 0x800b6240
 ;  jal setupEntityMatrix
-.org 0x800bf078
-  jal setupEntityMatrix
-.org 0x800bf1c8
-  jal setupEntityMatrix
+;.org 0x800bf078
+;  jal setupEntityMatrix
+;.org 0x800bf1c8
+;  jal setupEntityMatrix
 .org 0x800f14e4
   jal setupEntityMatrix
 .org 0x800f15a8
@@ -85,10 +85,10 @@
 ;  jal setEntityPosition
 ;.org 0x800b6214
 ;  jal setEntityPosition
-.org 0x800bf05c
-  jal setEntityPosition
-.org 0x800bf1ac
-  jal setEntityPosition
+;.org 0x800bf05c
+;  jal setEntityPosition
+;.org 0x800bf1ac
+;  jal setEntityPosition
 .org 0x800f158c
   jal setEntityPosition
 .org 0x800f1af8
@@ -103,10 +103,10 @@
 ;  jal setEntityRotation
 ;.org 0x800b6238
 ;  jal setEntityRotation
-.org 0x800bf070
-  jal setEntityRotation
-.org 0x800bf1c0
-  jal setEntityRotation
+;.org 0x800bf070
+;  jal setEntityRotation
+;.org 0x800bf1c0
+;  jal setEntityRotation
 .org 0x800f14dc
   jal setEntityRotation
 .org 0x800f15a0

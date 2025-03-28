@@ -5,6 +5,8 @@
 #include "Model.hpp"
 #include "Utils.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libgs.hpp"
+#include "extern/psx.hpp"
 #include "extern/stddef.hpp"
 
 Pair<Entity*, uint8_t> getEntityFromScriptId(uint8_t entityId)
@@ -247,16 +249,76 @@ extern "C"
 
         return false;
     }
+}
 
-    bool hasAttackEquipped(DigimonEntity* entity)
+bool hasAttackEquipped(DigimonEntity* entity)
+{
+    for (int32_t i = 0; i < 3; i++)
     {
-        for (int32_t i = 0; i < 3; i++)
-        {
-            auto move = entity->stats.moves[i];
-            auto tech = entityGetTechFromAnim(entity, move);
-            if (move != 0xFF && tech != 0xFF && MOVE_DATA[tech].power != 0) return true;
-        }
-
-        return false;
+        auto move = entity->stats.moves[i];
+        auto tech = entityGetTechFromAnim(entity, move);
+        if (move != 0xFF && tech != 0xFF && MOVE_DATA[tech].power != 0) return true;
     }
+
+    return false;
+}
+
+void renderDigiviceEntity(Entity* entity, int32_t entityId, int32_t refX)
+{
+    FRAMEBUFFER_OT[0]->length = 9;
+    FRAMEBUFFER_OT[0]->origin = FRAMEBUFFER0_ORIGIN;
+    FRAMEBUFFER_OT[1]->length = 9;
+    FRAMEBUFFER_OT[1]->origin = FRAMEBUFFER1_ORIGIN;
+
+    DIGIVICE_ENTITY_VIEW.refpointX = refX;
+
+    libgs_GsSetProjection(0x200);
+    libgs_GsSetRefView2(&DIGIVICE_ENTITY_VIEW);
+    libgs_GsClearOt(0, 5, FRAMEBUFFER_OT[ACTIVE_FRAMEBUFFER]);
+
+    constexpr GsF_LIGHT light1{.x = 100, .y = 100, .z = 100, .r = 128, .g = 128, .b = 128};
+    constexpr GsF_LIGHT light2{.x = 0, .y = 0, .z = 0, .r = 128, .g = 128, .b = 128};
+    libgs_GsSetFlatLight(0, &light1);
+    libgs_GsSetFlatLight(1, &light2);
+    libgs_GsSetFlatLight(2, &light2);
+
+    auto data     = getRaiseData(entity->type);
+    auto digiData = getDigimonData(entity->type);
+    auto oldLoc   = entity->posData->location;
+    auto oldRot   = entity->posData->rotation;
+    auto animId   = entity->animId;
+
+    setEntityPosition(entityId, data->viewX, data->viewY, data->viewZ);
+    setEntityRotation(entityId, 0, 0, 0);
+    setupEntityMatrix(entityId);
+    startAnimation(entity, 0);
+    tickAnimation(entity);
+
+    Matrix lw = libgs_REFERENCE_MATRIX;
+    Matrix ls = libgs_REFERENCE_MATRIX;
+
+    for (int32_t i = 0; i < digiData->boneCount; i++)
+    {
+        auto posData = entity->posData[i];
+        if (posData.obj.tmd == nullptr) continue;
+
+        libgs_GsGetLws(posData.obj.coord2, &lw, &ls);
+        libgs_GsSetLightMatrix(&lw);
+        libgs_GsSetLsMatrix(&ls);
+        libgs_GsSortObject4(&posData.obj, FRAMEBUFFER_OT[ACTIVE_FRAMEBUFFER], 5, &SCRATCHPAD);
+    }
+
+    libgs_GsSortOt(FRAMEBUFFER_OT[ACTIVE_FRAMEBUFFER], ACTIVE_ORDERING_TABLE);
+    libgs_GsSetProjection(VIEWPORT_DISTANCE);
+    libgs_GsSetRefView2(&GS_VIEWPOINT);
+
+    libgs_GsSetFlatLight(0, &LIGHT_DATA[0]);
+    libgs_GsSetFlatLight(1, &LIGHT_DATA[1]);
+    libgs_GsSetFlatLight(2, &LIGHT_DATA[2]);
+
+    setEntityPosition(entityId, oldLoc.x, oldLoc.y, oldLoc.z);
+    setEntityRotation(entityId, oldRot.x, oldRot.y, oldRot.z);
+    setupEntityMatrix(entityId);
+    startAnimation(entity, animId);
+    tickAnimation(entity);
 }
