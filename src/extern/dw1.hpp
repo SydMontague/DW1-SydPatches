@@ -1390,6 +1390,8 @@ extern "C"
     extern uint32_t* FRAMEBUFFER0_ORIGIN;
     extern uint32_t* FRAMEBUFFER1_ORIGIN;
     extern GsF_LIGHT LIGHT_DATA[3];
+    extern GsDOBJ2 MEDAL_OBJECT;
+    extern GsCOORDINATE2 MEDAL_COORDINATES;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1405,7 +1407,6 @@ extern "C"
     void removeItem(ItemType type, int32_t amount);
     void renderOverworldItem(WorldItem* item);
     void activateMedalTexture(Medal medal);
-    void renderDigiviceMedals();
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
     void initializeFishing();
     void drawInventoryText();

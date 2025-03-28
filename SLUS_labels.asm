@@ -104,7 +104,6 @@
 .definelabel renderOverworldItem,       0x800c4e94
 .definelabel removeItem,                0x800c53ec
 .definelabel hasMove,                   0x800e5eb4
-.definelabel renderDigiviceMedals,      0x800c0394
 
 .definelabel CARD_DATA, 0x8012ffd8
 .definelabel PLAYTIME_HOURS, 0x80134efe
@@ -259,6 +258,8 @@
 .definelabel FRAMEBUFFER0_ORIGIN, 0x801344e4
 .definelabel FRAMEBUFFER1_ORIGIN, 0x801344e8
 .definelabel LIGHT_DATA, 0x801b1c24
+.definelabel MEDAL_OBJECT, 0x801546a0
+.definelabel MEDAL_COORDINATES, 0x801546b0
 
 // BTL_REL
 .definelabel BTL_battleMain, 0x8005b5f4

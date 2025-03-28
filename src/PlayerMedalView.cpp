@@ -3,6 +3,8 @@
 #include "UIElements.hpp"
 #include "Utils.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libgs.hpp"
+#include "extern/libgte.hpp"
 
 constexpr auto DRAW_X = 704;
 constexpr auto DRAW_Y = 272;
@@ -243,6 +245,11 @@ constexpr char const* getMedalDescription(Medal medal)
     }
 };
 
+static SVector medalRotation{};
+static int8_t selectedMedalRow;
+static int8_t selectedMedalCol;
+static Medal selectedMedal;
+
 static void updateMedal(Medal medal)
 {
     title.string           = getMedalName(medal);
@@ -252,9 +259,37 @@ static void updateMedal(Medal medal)
     drawTextSprite(descriptionLine);
 }
 
-static int8_t selectedMedalRow;
-static int8_t selectedMedalCol;
-static Medal selectedMedal;
+static GsRVIEW2 MEDAL_VIEW = {
+    .viewpointX      = -1050,
+    .viewpointY      = 220,
+    .viewpointZ      = -10000,
+    .refpointX       = -1050,
+    .refpointY       = 220,
+    .refpointZ       = 0,
+    .viewpoint_twist = 0,
+    .super           = nullptr,
+};
+
+static void renderDigiviceMedals()
+{
+    FRAMEBUFFER_OT[0]->length = 9;
+    FRAMEBUFFER_OT[0]->origin = FRAMEBUFFER0_ORIGIN;
+    FRAMEBUFFER_OT[1]->length = 9;
+    FRAMEBUFFER_OT[1]->origin = FRAMEBUFFER1_ORIGIN;
+
+    libgs_GsSetProjection(0x400);
+    libgs_GsSetRefView2(&MEDAL_VIEW);
+    libgs_GsClearOt(0, 1, FRAMEBUFFER_OT[ACTIVE_FRAMEBUFFER]);
+
+    medalRotation.y += 100;
+    printf("%d\n", medalRotation.y);
+    libgte_RotMatrix(&medalRotation, &MEDAL_COORDINATES.coord);
+    MEDAL_COORDINATES.flag = 0;
+    renderObject(&MEDAL_OBJECT, FRAMEBUFFER_OT[ACTIVE_FRAMEBUFFER], 5);
+    libgs_GsSortOt(FRAMEBUFFER_OT[ACTIVE_FRAMEBUFFER], ACTIVE_ORDERING_TABLE);
+    libgs_GsSetProjection(VIEWPORT_DISTANCE);
+    libgs_GsSetRefView2(&GS_VIEWPOINT);
+}
 
 void renderMedalView()
 {
