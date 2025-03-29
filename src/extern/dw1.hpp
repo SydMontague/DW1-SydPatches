@@ -1403,6 +1403,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void unsetUIBoxStatic(int32_t instanceId);
     bool hasMove(int32_t move);
     void removeItem(ItemType type, int32_t amount);
     void renderOverworldItem(WorldItem* item);
@@ -1440,9 +1441,7 @@ extern "C"
     uint8_t getCardAmount(uint8_t cardId);
     CollisionCode entityCheckCollision(Entity* ignore, Entity* self, int32_t width, int32_t height);
     void collisionGrace(Entity* ignore, Entity* self, int32_t dx, int32_t dy);
-    void removeTriangleMenu();
     void closeInventoryBoxes();
-    void removeUIBox1();
     void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileReadCallback callback, int32_t param);
     int32_t isSoundLoaded(bool isAsync, int32_t soundId);
     void setMapLayerEnabled(int32_t val);

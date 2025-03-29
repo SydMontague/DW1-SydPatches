@@ -549,4 +549,17 @@ extern "C"
         TRIANGLE_MENU_STATE   = 0;
         addObject(ObjectID::GAME_MENU, 0, tickTriangleMenu, nullptr);
     }
+
+    void removeTriangleMenu()
+    {
+        unsetUIBoxStatic(0);
+        removeObject(ObjectID::GAME_MENU, 0);
+    }
+
+    void removeUIBox1()
+    {
+        UI_BOX_DATA[1].state = 0;
+        UI_BOX_DATA[1].frame = 0;
+        removeObject(ObjectID::UI_BOX, 1);
+    }
 }

@@ -67,9 +67,7 @@
 .definelabel isSoundLoaded,             0x800e90cc
 .definelabel loadDynamicLibrary,        0x800e61e4
 .definelabel entityCheckCollision,      0x800d45ec
-.definelabel removeTriangleMenu,        0x800c0510
 .definelabel closeInventoryBoxes,       0x800db238
-.definelabel removeUIBox1,              0x800c053c
 .definelabel collisionGrace,            0x800d4884
 .definelabel unlockMedal,               0x800ff830
 .definelabel hasMedal,                  0x800ff85c
@@ -104,6 +102,7 @@
 .definelabel renderOverworldItem,       0x800c4e94
 .definelabel removeItem,                0x800c53ec
 .definelabel hasMove,                   0x800e5eb4
+.definelabel unsetUIBoxStatic,          0x800c2fd8
 
 .definelabel CARD_DATA, 0x8012ffd8
 .definelabel PLAYTIME_HOURS, 0x80134efe
