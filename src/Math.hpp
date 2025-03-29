@@ -31,11 +31,11 @@ extern "C"
         return rand() % limit;
     }
 
-    extern int32_t random(int32_t limit);
-    extern int16_t sin(uint32_t input);
-    extern int16_t cos(uint32_t input);
-    extern int16_t atan(int32_t dx, int32_t dy);
-    extern void setRotTransMatrix(Matrix* matrix);
+    int32_t random(int32_t limit);
+    int16_t sin(uint32_t input);
+    int16_t cos(uint32_t input);
+    int16_t atan(int32_t dx, int32_t dy);
+    void setRotTransMatrix(Matrix* matrix);
     bool hasAABBOverlap(AABB* aabb1, AABB* aabb2);
     int32_t findAABBHitEntity(AABB* aabb, Entity* ignoreEntity, int32_t startId);
     void getRotationDifference(PositionData* pos, Vector* target, int16_t* outAngle, int16_t* ccDiff, int16_t* cwDiff);

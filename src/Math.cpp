@@ -3,6 +3,7 @@
 #include "Helper.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libc.hpp"
+#include "extern/libgs.hpp"
 #include "extern/libgte.hpp"
 #include "extern/psx.hpp"
 #include "extern/stddef.hpp"
@@ -121,17 +122,7 @@ extern "C"
 
     void setRotTransMatrix(Matrix* matrix)
     {
-        // TODO this is just libgs_GsSetLsMatrix...
-        auto* vals = reinterpret_cast<uint32_t*>(matrix);
-
-        gte_rot1   = vals[0];
-        gte_rot2   = vals[1];
-        gte_rot3   = vals[2];
-        gte_rot4   = vals[3];
-        gte_rot5   = vals[4];
-        gte_transX = matrix->t[0];
-        gte_transY = matrix->t[1];
-        gte_transZ = matrix->t[2];
+        libgs_GsSetLsMatrix(matrix);
     }
 
     void worldPosToScreenPos2(int16_t* x, int16_t* y, int16_t* z)

@@ -42,7 +42,6 @@
 .definelabel add3DSpritePrim,           0x800da1fc
 .definelabel setupModelMatrix,          0x800c19a4
 .definelabel addFileReadRequest2,       0x800e3938
-.definelabel getTileTrigger,            0x800c0acc
 .definelabel main,                      0x800ee800
 .definelabel Tamer_tickBattle,          0x800f1214
 .definelabel tickAnimation,             0x800c1c64
@@ -104,6 +103,7 @@
 .definelabel hasMove,                   0x800e5eb4
 .definelabel unsetUIBoxStatic,          0x800c2fd8
 
+.definelabel MAP_COLLISION_DATA, 0x801af398
 .definelabel CARD_DATA, 0x8012ffd8
 .definelabel PLAYTIME_HOURS, 0x80134efe
 .definelabel PLAYTIME_MINUTES, 0x80134efc

@@ -66,6 +66,9 @@
 .org 0x800d5d04
   jal clearMapDigimon
 
+.org 0x800d5d90
+  jal loadMapCollisionData
+
 .close
 
 

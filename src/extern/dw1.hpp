@@ -1392,6 +1392,7 @@ extern "C"
     extern GsF_LIGHT LIGHT_DATA[3];
     extern GsDOBJ2 MEDAL_OBJECT;
     extern GsCOORDINATE2 MEDAL_COORDINATES;
+    extern uint8_t MAP_COLLISION_DATA[10000];
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1476,7 +1477,6 @@ extern "C"
     void tickAnimation(Entity* entity);
     extern void Tamer_tickBattle(int32_t instanceId);
     extern int32_t main();
-    extern int32_t getTileTrigger(Vector* position);
     extern void addFileReadRequest2(const uint8_t* path,
                                     uint8_t* buffer,
                                     int32_t* readComplete,

@@ -688,4 +688,26 @@ extern "C"
 
         return false;
     }
+
+    void loadMapCollisionData(uint8_t* data)
+    {
+        memcpy(MAP_COLLISION_DATA, data, 10000);
+    }
+
+    int32_t getTileTrigger(Vector* position)
+    {
+        auto tileX = (position->x / 100) + 50;
+        auto tileZ = 50 - (position->z / 100);
+
+        if (position->x < 0) tileX--;
+        if (position->z > 0) tileZ--;
+
+        if (tileX < 0 || tileX >= 100) return -1;
+        if (tileZ < 0 || tileZ >= 100) return -1;
+
+        auto data = MAP_COLLISION_DATA[tileZ * 100 + tileX];
+        if (data == 0x80) return -1;
+
+        return data;
+    }
 }

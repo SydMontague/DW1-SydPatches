@@ -5,6 +5,7 @@
 #include "Files.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
+#include "Map.hpp"
 #include "Math.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libapi.hpp"
@@ -92,7 +93,7 @@ extern "C"
         prim->u3    = 127;
         prim->v3    = 191;
 
-        setRotTransMatrix(&libgs_REFERENCE_MATRIX);
+        libgs_GsSetLsMatrix(&libgs_REFERENCE_MATRIX);
         ScreenCoord sXY0;
         ScreenCoord sXY1;
         ScreenCoord sXY2;
@@ -597,7 +598,7 @@ extern "C"
         libgte_MulMatrix0(&libgs_GsLIGHTWSMATRIX, &coord->work, &combinedMatrix);
         libgte_SetLightMatrix(&combinedMatrix);
         libgte_CompMatrix(&libgs_REFERENCE_MATRIX, &coord->work, &combinedMatrix);
-        setRotTransMatrix(&combinedMatrix);
+        libgs_GsSetLsMatrix(&combinedMatrix);
 
         auto* primPtr = libgs_GsGetWorkBase();
 
