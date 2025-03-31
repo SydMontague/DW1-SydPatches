@@ -69,6 +69,12 @@
 .org 0x800d5d90
   jal loadMapCollisionData
 
+.org 0x800e1a48
+  jal setImpassableSquare
+
+.org 0x80104edc
+  jal setImpassableRect
+
 .close
 
 

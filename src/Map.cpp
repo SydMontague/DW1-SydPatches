@@ -698,10 +698,32 @@ extern "C"
     {
         auto tileX = getTileX(position->x);
         auto tileZ = getTileZ(position->z);
-        auto data = getTile(tileX, tileZ); 
+        auto data  = getTile(tileX, tileZ);
 
         if (data == 0x80) return -1;
 
         return data;
+    }
+
+    void setImpassableRect(int32_t tileX, int32_t tileY, int32_t width, int32_t height)
+    {
+        for (int32_t y = 0; y < height; y++)
+        {
+            auto curY = tileY + y;
+            if (curY < 0 || curY >= 100) continue;
+
+            for (int32_t x = 0; x < width; x++)
+            {
+                auto curX = tileX + x;
+                if (curX < 0 || curX >= 100) continue;
+
+                MAP_COLLISION_DATA[curY * 100 + curX] = 0x80;
+            }
+        }
+    }
+
+    void setImpassableSquare(int32_t tileX, int32_t tileY, int32_t radius)
+    {
+        setImpassableRect(tileX - radius, tileY - radius, radius * 2, radius * 2);
     }
 }
