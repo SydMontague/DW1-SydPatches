@@ -279,6 +279,12 @@ extern "C"
 
         return false;
     }
+
+    void getModelTile(Vector* location, int16_t* tileX, int16_t* tileY)
+    {
+        *tileX = getTileX(location->x);
+        *tileY = getTileZ(location->z);
+    }
 }
 
 bool hasAttackEquipped(DigimonEntity* entity)

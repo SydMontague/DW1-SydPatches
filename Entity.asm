@@ -42,14 +42,70 @@
   jal checkMapCollisionX
 .org 0x800d5060
   jal checkMapCollisionX
-  
+
 .org 0x800d5084
   jal checkMapCollisionZ
 .org 0x800d50a8
   jal checkMapCollisionZ
 
+;.org 0x800a66a8
+;  jal getModelTile
+;.org 0x800ab284
+;  jal getModelTile
+;.org 0x800ac1c4
+;  jal getModelTile
+;.org 0x800ac1d4
+;  jal getModelTile
+;.org 0x800acb1c
+;  jal getModelTile
+;.org 0x800b71b8
+;  jal getModelTile
+;.org 0x800b71c8
+;  jal getModelTile
+;.org 0x800b7318
+;  jal getModelTile
+;.org 0x800b7328
+;  jal getModelTile
+;.org 0x800b753c
+;  jal getModelTile
+;.org 0x800b754c
+;  jal getModelTile
+;.org 0x800b77d4
+;  jal getModelTile
+;.org 0x800b77e4
+;  jal getModelTile
+.org 0x800c4c48
+  jal getModelTile
+.org 0x800d3a1c
+  jal getModelTile
+.org 0x800d3aa8
+  jal getModelTile
+.org 0x800d3b10
+  jal getModelTile
+.org 0x800d439c
+  jal getModelTile
+.org 0x800d4d20
+  jal getModelTile
+.org 0x800d4e2c
+  jal getModelTile
+.org 0x800de62c
+  jal getModelTile
+.org 0x800e1a38
+  jal getModelTile
+.org 0x800f0e68
+  jal getModelTile
+.org 0x800f1050
+  jal getModelTile
+
 .close 
 
+.open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
+.psx
+
+.org 0x80057564
+  jal getModelTile
+
+.close
 
 .open "work/DIGIMON/TRN_REL.BIN",0x80088800
 .psx

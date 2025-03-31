@@ -1,3 +1,4 @@
+#include "Entity.hpp"
 #include "Evolution.hpp"
 #include "Fade.hpp"
 #include "Font.hpp"

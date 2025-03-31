@@ -1,6 +1,7 @@
 #include "Partner.hpp"
 
 #include "Effects.hpp"
+#include "Entity.hpp"
 #include "Evolution.hpp"
 #include "Files.hpp"
 #include "Font.hpp"
@@ -40,7 +41,8 @@ extern "C"
     static uint8_t conditionBubbleId     = -1;
     static uint16_t conditionBubbleTimer = 0;
 
-    void setPartnerIdling() {
+    void setPartnerIdling()
+    {
         startAnimation(&PARTNER_ENTITY, 0);
     }
 

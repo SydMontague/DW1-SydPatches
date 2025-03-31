@@ -22,7 +22,6 @@
 .definelabel updateConditionAnimation,  0x800df2d0
 .definelabel unsetButterfly,            0x800e9fb4
 .definelabel advanceToTime,             0x800dd678
-.definelabel getModelTile,              0x800c0f28
 .definelabel getItemCount,              0x800c51e0
 .definelabel setTrigger,                0x801065c0
 .definelabel unsetBubble,               0x800ece20
