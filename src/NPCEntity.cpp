@@ -487,8 +487,8 @@ extern "C"
             Partner_setState(mode == 0 ? 1 : 11);
         else
         {
-            MAP_DIGIMON_TABLE[entityId].stopAnim = mode;
-            if (mode == 1) clearMapAITable(entityId);
+            MAP_DIGIMON_TABLE[entityId - 2].stopAnim = mode;
+            if (mode == 1) clearMapAITable(entityId - 2);
         }
     }
 
