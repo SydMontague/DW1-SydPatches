@@ -36,6 +36,7 @@ extern "C"
         BUTTERFLY            = 2062,
         STUN_EFFECT          = 2063,
         STUN_SUB_FX          = 2064,
+        HEALING_PARTICLES    = 2071,
         BTL_ITEM_PARTICLES   = 2072,
         MAP                  = 4000,
         MAP_NAME             = 4001,

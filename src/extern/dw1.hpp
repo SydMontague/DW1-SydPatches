@@ -1427,7 +1427,7 @@ extern "C"
     int32_t worldPosToScreenPos(SVector* worldPos, Position* screenPos);
     void renderParticleFlash(ParticleFlashData* data);
     int32_t lerp(int32_t start, int32_t end, int32_t tMin, int32_t tMax, int32_t tCurrent);
-    void renderFXParticle(SVector* pos, int16_t scale, RGB8* color);
+    void renderFXParticle(SVector* pos, int16_t scale, const RGB8* color);
     void addEntityParticleFX(Entity* entity, int32_t counter);
     void moveCameraByDiff(Vector* start, Vector* end);
     void updateMinuteHand(int32_t hour, int32_t minute);
@@ -1527,7 +1527,6 @@ extern "C"
     extern void clearTextArea();
     extern void setTextColor(int32_t color);
     extern void addWithLimit(int16_t* valuePtr, int16_t value, int32_t limit);
-    extern void addHealingParticleEffect(Entity* entity, int32_t param);
     extern void removeTamerItem();
     extern void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
     extern bool hasDigimonRaised(DigimonType type);

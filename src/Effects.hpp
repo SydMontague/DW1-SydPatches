@@ -4,4 +4,5 @@
 extern "C"
 {
     void createCloudFX(SVector* position);
+    void addHealingParticleEffect(Entity* entity, int32_t param);
 }

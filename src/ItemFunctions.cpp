@@ -1,5 +1,6 @@
 #include "ItemFunctions.hpp"
 
+#include "Effects.hpp"
 #include "Helper.hpp"
 #include "ItemEffects.hpp"
 #include "Tamer.hpp"

@@ -116,8 +116,8 @@
 ;  jal sin
 ;.org 0x800aec6c
 ;  jal sin
-.org 0x800c12d8
-  jal sin
+;.org 0x800c12d8
+;  jal sin
 .org 0x800e9e58
   jal sin
 .org 0x800e9ef8
@@ -127,8 +127,8 @@
 
 ;.org 0x800adb04
 ;  jal cos
-.org 0x800c1320
-  jal cos
+;.org 0x800c1320
+;  jal cos
 .org 0x800e9e98
   jal cos
 

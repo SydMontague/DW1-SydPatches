@@ -15,7 +15,6 @@
 .definelabel setTextColor,              0x8010cc0c
 .definelabel callScriptSection,         0x80105b14
 .definelabel addWithLimit,              0x800c563c
-.definelabel addHealingParticleEffect,  0x800c1560
 .definelabel removeTamerItem,           0x800c55fc
 .definelabel hasDigimonRaised,          0x800ff824
 ;.definelabel Partner_setState,          0x800df4d0 ; use constexpr version instead
