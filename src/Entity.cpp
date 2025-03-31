@@ -249,6 +249,36 @@ extern "C"
 
         return false;
     }
+
+    bool checkMapCollisionX(Entity* entity, bool isMaxZ)
+    {
+        auto& pos   = entity->posData->location;
+        auto radius = getDigimonData(entity->type)->radius;
+
+        auto tileXMin = getTileX(pos.x - radius / 2);
+        auto tileXMax = getTileX(pos.x + radius / 2);
+        auto tileZ    = isMaxZ ? getTileZ(pos.z - radius) : getTileZ(pos.z + radius);
+
+        for (auto i = tileXMin; i <= tileXMax; i++)
+            if ((getTile(i, tileZ) & 0x80) != 0) return true;
+
+        return false;
+    }
+
+    bool checkMapCollisionZ(Entity* entity, bool isMaxX)
+    {
+        auto& pos   = entity->posData->location;
+        auto radius = getDigimonData(entity->type)->radius;
+
+        auto tileZMin = getTileZ(pos.z + radius / 2);
+        auto tileZMax = getTileZ(pos.z - radius / 2);
+        auto tileX    = isMaxX ? getTileX(pos.x + radius) : getTileX(pos.x - radius);
+
+        for (auto i = tileZMin; i <= tileZMax; i++)
+            if ((getTile(tileX, i) & 0x80) != 0) return true;
+
+        return false;
+    }
 }
 
 bool hasAttackEquipped(DigimonEntity* entity)

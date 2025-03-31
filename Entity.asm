@@ -38,6 +38,16 @@
 .org 0x80105930
   jal tickEntityMoveToAxis
 
+.org 0x800d503c
+  jal checkMapCollisionX
+.org 0x800d5060
+  jal checkMapCollisionX
+  
+.org 0x800d5084
+  jal checkMapCollisionZ
+.org 0x800d50a8
+  jal checkMapCollisionZ
+
 .close 
 
 

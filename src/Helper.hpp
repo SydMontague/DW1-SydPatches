@@ -64,6 +64,39 @@ extern "C"
     }
 
     /*
+     * Converts a world X coordinate to a tile coordinate.
+     */
+    constexpr int32_t getTileX(int32_t posX)
+    {
+        auto tileX = (posX / 100) + 50;
+        if (posX < 0) tileX--;
+
+        return tileX;
+    }
+
+    /*
+     * Converts a world Z coordinate to a tile coordinate.
+     */
+    constexpr int32_t getTileZ(int32_t posZ)
+    {
+        auto tileZ = 50 - (posZ / 100);
+        if (posZ > 0) tileZ--;
+
+        return tileZ;
+    }
+
+    /*
+     * Gets the collision value of a given tile. If the tile is out of range 0x80 (impassable) is returned.
+     */
+    constexpr uint8_t getTile(int32_t tileX, int32_t tileZ)
+    {
+        if (tileX < 0 || tileX >= 100) return 0x80;
+        if (tileZ < 0 || tileZ >= 100) return 0x80;
+
+        return MAP_COLLISION_DATA[tileX + tileZ * 100];
+    }
+
+    /*
      * Convert a tile coordinate to a world coordinate.
      */
     constexpr int32_t tileToPos(int16_t tile)
