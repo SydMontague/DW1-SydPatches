@@ -130,6 +130,19 @@
 .org 0x800c1a80
   jal getEntityType
 
+.org 0x800c2248
+  jal calculatePosMatrix
+.org 0x800c2284
+  jal calculatePosMatrix
+
+.org 0x800c1b40
+  jal resetMomentumData
+.org 0x800c1c10
+  jal resetMomentumData
+
+.org 0x800c1f94
+  jal animateEntityTexture
+
 .close
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0

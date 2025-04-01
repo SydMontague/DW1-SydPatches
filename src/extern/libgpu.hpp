@@ -198,6 +198,7 @@ extern "C"
     void libgpu_StoreImage(RECT* rect, uint32_t* buffer);
     uint32_t libgpu_OpenTIM(uint8_t* buffer);
     TIM_IMAGE* libgpu_ReadTIM(TIM_IMAGE* image);
+    int32_t libgpu_MoveImage(RECT* rect, int32_t x, int32_t y);
 }
 
 // validation

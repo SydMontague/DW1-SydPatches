@@ -348,6 +348,7 @@
 .definelabel libgpu_SetSemiTrans, 0x80092b10
 .definelabel libgpu_OpenTIM, 0x80096bcc
 .definelabel libgpu_ReadTIM, 0x80096bdc
+.definelabel libgpu_MoveImage, 0x80094968
 
 // libgte
 .definelabel libgte_setRotMatrix, 0x8009b200

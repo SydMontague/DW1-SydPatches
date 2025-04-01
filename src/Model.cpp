@@ -920,4 +920,57 @@ extern "C"
                              PARTNER_MODEL.pixelOffsetY,
                              PARTNER_MODEL.clutPage - 0x7a00);
     }
+
+    void calculatePosMatrix(PositionData* posData, bool hasScale, bool hasRotation, bool hasTranslation)
+    {
+        // TODO hasRotation and hasScale are not used if used break animations?
+        if (hasTranslation) libgte_TransMatrix(&posData->posMatrix.coord, &posData->location);
+        libgte_RotMatrix(&posData->rotation, &posData->posMatrix.coord);
+        libgte_ScaleMatrix(&posData->posMatrix.coord, &posData->scale);
+        posData->posMatrix.flag = 0;
+    }
+
+    void resetMomentumData(MomentumData* data)
+    {
+        memset(data->delta, 0, sizeof(data->delta));
+        memset(data->subDelta, 0, sizeof(data->subDelta));
+    }
+
+    constexpr int32_t getAnimatedTextureHeight(DigimonType type)
+    {
+        switch (type)
+        {
+            case DigimonType::DEMIMERAMON: return 44;
+            case DigimonType::FLAREIZAMON: [[fallthrough]];
+            case DigimonType::DARKRIZAMON: return 16;
+            case DigimonType::BIRDRAMON: [[fallthrough]];
+            case DigimonType::SABERDRAMON: [[fallthrough]];
+            case DigimonType::NPC_BIRDRAMON: return 40;
+            case DigimonType::MERAMON: [[fallthrough]];
+            case DigimonType::NPC_MERAMON: [[fallthrough]];
+            case DigimonType::BLUEMERAMON: return 30;
+            default: return -1;
+        }
+    }
+
+    void animateEntityTexture(DigimonEntity* entity, MomentumData* data)
+    {
+        auto width = getAnimatedTextureHeight(entity->type);
+        if (width <= 0) return;
+        if ((PLAYTIME_FRAMES % 2) != 0) return;
+
+        auto frame = 0;
+        if ((PLAYTIME_FRAMES % 6) == 0)
+            frame = 2;
+        else if ((PLAYTIME_FRAMES % 4) == 0)
+            frame = 1;
+
+        RECT rect{
+            .x      = data->subDelta[6],
+            .y      = static_cast<int16_t>(data->subDelta[7] + 32 + (frame * 32)),
+            .width  = static_cast<int16_t>(width),
+            .height = 32,
+        };
+        libgpu_MoveImage(&rect, data->subDelta[6], data->subDelta[7]);
+    }
 }
