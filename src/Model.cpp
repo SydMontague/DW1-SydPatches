@@ -973,4 +973,73 @@ extern "C"
         };
         libgpu_MoveImage(&rect, data->subDelta[6], data->subDelta[7]);
     }
+
+    void setupModelMatrix(PositionData* node)
+    {
+        libgte_TransMatrix(&node->posMatrix.coord, &node->location);
+        libgte_RotMatrix(&node->rotation, &node->posMatrix.coord);
+        libgte_ScaleMatrix(&node->posMatrix.coord, &node->scale);
+        node->posMatrix.flag = 0;
+    }
+
+    void startAnimation(Entity* entity, uint32_t animId)
+    {
+        auto animOffset = entity->animPtr[animId];
+
+        if (animOffset == 0) return;
+
+        auto entityType        = getEntityType(entity);
+        auto model             = getEntityModelComponent(static_cast<int32_t>(entity->type), entityType);
+        auto boneCount         = getDigimonData(entity->type)->boneCount;
+        auto nodePtr           = entity->posData;
+        ReadBuffer animDataPtr = {reinterpret_cast<uint8_t*>(entity->animPtr) + animOffset};
+        auto frameCount        = animDataPtr.read<uint16_t>();
+        auto momentumPtr       = entity->momentum;
+        auto hasScale          = (frameCount & 0x8000) != 0;
+
+        entity->textureX     = (model->pixelPage - 16) * 64;
+        entity->textureY     = model->pixelOffsetY + 256;
+        entity->loopEndFrame = 1;
+        entity->animId       = animId;
+        entity->animFrame    = 1;
+        entity->animFlag     = 1;
+        entity->loopCount    = 0;
+        entity->frameCount   = frameCount & 0x7FFF;
+        entity->locX         = nodePtr->location.x << 15;
+        entity->locY         = nodePtr->location.y << 15;
+        entity->locZ         = nodePtr->location.z << 15;
+
+        resetMomentumData(momentumPtr);
+        setupModelMatrix(nodePtr);
+
+        for (int32_t i = 1; i < boneCount; i++)
+        {
+            auto& node = nodePtr[i];
+
+            if (hasScale)
+            {
+                node.scale.x = animDataPtr.read<int16_t>();
+                node.scale.y = animDataPtr.read<int16_t>();
+                node.scale.z = animDataPtr.read<int16_t>();
+            }
+            else
+            {
+                node.scale.x = 4096;
+                node.scale.y = 4096;
+                node.scale.z = 4096;
+            }
+
+            node.rotation.x = animDataPtr.read<int16_t>();
+            node.rotation.y = animDataPtr.read<int16_t>();
+            node.rotation.z = animDataPtr.read<int16_t>();
+            node.location.x = animDataPtr.read<int16_t>();
+            node.location.y = animDataPtr.read<int16_t>();
+            node.location.z = animDataPtr.read<int16_t>();
+
+            resetMomentumData(&momentumPtr[i]);
+            setupModelMatrix(&node);
+        }
+
+        entity->animInstrPtr = reinterpret_cast<int16_t*>(animDataPtr.buffer);
+    }
 }

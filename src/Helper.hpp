@@ -8,6 +8,18 @@ template<class First, class Second> struct Pair
     Second second;
 };
 
+struct ReadBuffer
+{
+    uint8_t* buffer;
+
+    template<class T> constexpr T read()
+    {
+        T val = *reinterpret_cast<T*>(buffer);
+        buffer += sizeof(T);
+        return val;
+    }
+};
+
 extern "C"
 {
     constexpr auto SCREEN_WIDTH  = 320;

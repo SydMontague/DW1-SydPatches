@@ -26,7 +26,6 @@
 .definelabel unsetBubble,               0x800ece20
 .definelabel addConditionBubble,        0x800ec538
 .definelabel setButterfly,              0x800e9d24
-.definelabel startAnimation,            0x800c1a04
 .definelabel writePStat,                0x80106474
 .definelabel updateTimeOfDay,           0x800d676c
 .definelabel isInDaytimeTransition,     0x800d7618
@@ -38,7 +37,6 @@
 .definelabel initializeConditionBubbles,0x800ec520
 .definelabel initializeButterfly,       0x800e9ce8
 .definelabel add3DSpritePrim,           0x800da1fc
-.definelabel setupModelMatrix,          0x800c19a4
 .definelabel addFileReadRequest2,       0x800e3938
 .definelabel main,                      0x800ee800
 .definelabel Tamer_tickBattle,          0x800f1214

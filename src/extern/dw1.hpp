@@ -1483,7 +1483,6 @@ extern "C"
                                     FileReadCallback callback,
                                     int32_t param);
     extern void renderDropShadow(Entity* entity);
-    extern void setupModelMatrix(PositionData* data);
     extern void Partner_tick(int32_t);
     extern void projectPosition(GsCOORDINATE2* position, Vector* translation, SVector* rotation, Vector* scale);
     extern void renderObject(GsDOBJ2* obj, GsOT* ot, int32_t shift);
@@ -1495,7 +1494,6 @@ extern "C"
     extern bool isInDaytimeTransition();
     extern void updateTimeOfDay();
     extern void writePStat(int32_t address, uint8_t value);
-    extern void startAnimation(Entity*, uint32_t animId);
     extern void unsetBubble(uint32_t id);
     extern uint8_t addConditionBubble(uint32_t type, Entity* entity);
     extern uint32_t setButterfly(Entity* entity);

@@ -13,4 +13,6 @@ extern "C"
     void applyMMD(DigimonType digimonType, EntityType entityType, EvoModelData* modelData);
     void removeEntity(DigimonType type, int32_t instanceId);
     void unloadModel(int32_t id, EntityType type);
+    void setupModelMatrix(PositionData* data);
+    void startAnimation(Entity*, uint32_t animId);
 }
