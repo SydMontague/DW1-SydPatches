@@ -374,6 +374,33 @@
 .org 0x800f6d90
   j startAnimation
 
+;.org 0x800a9de0
+;  jal tickAnimation
+;.org 0x800b6b44
+;  jal tickAnimation
+;.org 0x800bf08c
+;  jal tickAnimation
+;.org 0x800bf1dc
+;  jal tickAnimation
+.org 0x800dd880
+  jal tickAnimation
+.org 0x800dd9a8
+  jal tickAnimation
+.org 0x800f13f8
+  jal tickAnimation
+.org 0x800f1428
+  j tickAnimation
+.org 0x800f1450
+  jal tickAnimation
+.org 0x800f1480
+  jal tickAnimation
+.org 0x800f1510
+  jal tickAnimation
+.org 0x800f7a9c
+  j tickAnimation
+.org 0x800f7ab8
+  j tickAnimation
+
 .close
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
@@ -612,6 +639,12 @@
   jal startAnimation
 .org 0x8006c3cc
   jal startAnimation
+
+
+.org 0x800696f8
+  j tickAnimation
+.org 0x80069714
+  j tickAnimation
 
 .close
 

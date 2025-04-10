@@ -15,4 +15,5 @@ extern "C"
     void unloadModel(int32_t id, EntityType type);
     void setupModelMatrix(PositionData* data);
     void startAnimation(Entity*, uint32_t animId);
+    void tickAnimation(Entity* entity);
 }

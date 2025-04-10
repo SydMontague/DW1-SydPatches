@@ -953,7 +953,7 @@ extern "C"
         }
     }
 
-    void animateEntityTexture(DigimonEntity* entity, MomentumData* data)
+    void animateEntityTexture(Entity* entity)
     {
         auto width = getAnimatedTextureHeight(entity->type);
         if (width <= 0) return;
@@ -966,12 +966,12 @@ extern "C"
             frame = 1;
 
         RECT rect{
-            .x      = data->subDelta[6],
-            .y      = static_cast<int16_t>(data->subDelta[7] + 32 + (frame * 32)),
+            .x      = entity->textureX,
+            .y      = static_cast<int16_t>(entity->textureY + 32 + (frame * 32)),
             .width  = static_cast<int16_t>(width),
             .height = 32,
         };
-        libgpu_MoveImage(&rect, data->subDelta[6], data->subDelta[7]);
+        libgpu_MoveImage(&rect, entity->textureX, entity->textureY);
     }
 
     void setupModelMatrix(PositionData* node)
@@ -1041,5 +1041,130 @@ extern "C"
         }
 
         entity->animInstrPtr = reinterpret_cast<int16_t*>(animDataPtr.buffer);
+    }
+
+    // this function blows up in size otherwise
+    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
+    __attribute__((optimize("Os"))) void handleKeyFrameInstruction(MomentumData* momentum, int16_t*& instructionPtrPtr)
+    {
+        while ((instructionPtrPtr[0] & 0x8000) != 0)
+        {
+            auto nodeId   = instructionPtrPtr[0] & 0x3F;
+            auto axisMask = (instructionPtrPtr[0] >> 6) & 0x1FF;
+            auto scale    = instructionPtrPtr[1];
+            auto& data    = momentum[nodeId];
+
+            instructionPtrPtr += 2;
+
+            for (int32_t i = 0; i < 9; i++)
+            {
+                if ((axisMask & (0x100 >> i)) != 0)
+                {
+                    auto value       = instructionPtrPtr[0];
+                    data.delta[i]    = value / scale;
+                    int16_t subDelta = value % scale;
+                    if (subDelta != 0)
+                    {
+                        data.subValue[i] = subDelta < 1 ? -1 : 1;
+                        data.scale1[i]   = scale;
+                        data.subScale[i] = scale;
+                    }
+                    data.subDelta[i] = abs(subDelta);
+                    instructionPtrPtr += 1;
+                }
+            }
+        }
+    }
+
+    void tickAnimation(Entity* entity)
+    {
+        if ((entity->animFlag & 1) == 0) return;
+
+        auto momentum           = entity->momentum;
+        auto& instructionPtrPtr = entity->animInstrPtr;
+
+        tickMomentum(entity, momentum);
+
+        // vanilla checks for "& 0x1000 == 0", but this would detect 0x3000 as start
+        if ((*instructionPtrPtr & 0xF000) == 0x1000)
+        {
+            entity->loopCount = instructionPtrPtr[0] & 0xFF;
+
+            instructionPtrPtr += 1;
+            entity->loopStart    = instructionPtrPtr;
+            entity->loopEndFrame = instructionPtrPtr[0] & 0xFFF;
+        }
+
+        while (entity->animFrame == entity->loopEndFrame)
+        {
+            auto opCode = *instructionPtrPtr & 0xF000;
+
+            switch (opCode)
+            {
+                case 0x4000: // play sound
+                {
+                    auto soundId = instructionPtrPtr[1] & 0xFF;
+                    auto vabId   = instructionPtrPtr[1] >> 8;
+
+                    // TODO this is invalid for the tamer? Only seems to matter
+                    // is this even used correctly by the game?
+                    if (vabId == 4 && entity->isOnScreen) vabId = ((DigimonEntity*)entity)->vabId;
+
+                    playSound(vabId, soundId);
+                    instructionPtrPtr += 2;
+                    break;
+                }
+                case 0x3000: // change texture
+                {
+                    auto timecode = instructionPtrPtr[0] & 0x0FFF;
+                    RECT rect;
+                    rect.x      = entity->textureX + (instructionPtrPtr[1] >> 8);
+                    rect.y      = entity->textureY + (instructionPtrPtr[1] & 0xFF);
+                    rect.width  = instructionPtrPtr[2] >> 8;
+                    rect.height = instructionPtrPtr[2] & 0xFF;
+                    auto destX  = entity->textureX + (instructionPtrPtr[3] >> 8);
+                    auto destY  = entity->textureY + (instructionPtrPtr[3] & 0xFF);
+                    libgpu_MoveImage(&rect, destX, destY);
+                    instructionPtrPtr += 4;
+                    break;
+                }
+                case 0x2000: // loop end
+                {
+                    if (entity->loopCount != 0xFF) entity->loopCount--;
+
+                    if (entity->loopCount == 0)
+                        instructionPtrPtr += 2;
+                    else
+                    {
+                        entity->animFrame = instructionPtrPtr[1];
+                        instructionPtrPtr = reinterpret_cast<int16_t*>(entity->loopStart);
+                    }
+                    break;
+                }
+                case 0x1000: // loop start
+                {
+                    entity->loopCount = instructionPtrPtr[0] & 0xFF;
+
+                    instructionPtrPtr += 1;
+                    entity->loopStart = instructionPtrPtr;
+                    break;
+                }
+                case 0x0000: // keyframe
+                {
+                    instructionPtrPtr += 1;
+                    handleKeyFrameInstruction(momentum, instructionPtrPtr);
+                    break;
+                }
+            }
+
+            entity->loopEndFrame = instructionPtrPtr[0] & 0x0FFF;
+        }
+
+        if (entity->animFrame == entity->frameCount)
+            entity->animFlag &= 0xFE;
+        else
+            entity->animFrame = entity->animFrame + 1;
+
+        animateEntityTexture(entity);
     }
 }

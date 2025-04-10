@@ -1404,6 +1404,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void tickMomentum(Entity* entity, MomentumData* momentum);
     void dailyPStatTrigger();
     void unsetUIBoxStatic(int32_t instanceId);
     bool hasMove(int32_t move);
@@ -1475,7 +1476,6 @@ extern "C"
     void unsetCameraFollowPlayer();
     void stopGameTime();
     void Tamer_tickFishing();
-    void tickAnimation(Entity* entity);
     extern void Tamer_tickBattle(int32_t instanceId);
     extern int32_t main();
     extern void addFileReadRequest2(const uint8_t* path,

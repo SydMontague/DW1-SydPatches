@@ -40,7 +40,6 @@
 .definelabel addFileReadRequest2,       0x800e3938
 .definelabel main,                      0x800ee800
 .definelabel Tamer_tickBattle,          0x800f1214
-.definelabel tickAnimation,             0x800c1c64
 .definelabel Tamer_tickFishing,         0x800e4e18
 .definelabel isKeyDown,                 0x800fc054
 .definelabel tickTamerWaypoints,        0x800d4adc
@@ -99,6 +98,7 @@
 .definelabel hasMove,                   0x800e5eb4
 .definelabel unsetUIBoxStatic,          0x800c2fd8
 .definelabel dailyPStatTrigger,         0x800fc374
+.definelabel tickMomentum,              0x800c1fbc
 
 .definelabel MAP_COLLISION_DATA, 0x801af398
 .definelabel CARD_DATA, 0x8012ffd8
