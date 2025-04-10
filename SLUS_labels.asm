@@ -98,6 +98,7 @@
 .definelabel removeItem,                0x800c53ec
 .definelabel hasMove,                   0x800e5eb4
 .definelabel unsetUIBoxStatic,          0x800c2fd8
+.definelabel dailyPStatTrigger,         0x800fc374
 
 .definelabel MAP_COLLISION_DATA, 0x801af398
 .definelabel CARD_DATA, 0x8012ffd8

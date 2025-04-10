@@ -485,7 +485,7 @@ extern "C"
         NPC_ELECMON         = 140,
         NPC_KABUTERIMON     = 141,
         NPC_ANGEMON         = 142,
-        NPC_BIRDRAMON        = 143,
+        NPC_BIRDRAMON       = 143,
         NPC_GARURUMON       = 144,
         NPC_FRIGIMON        = 145,
         NPC_WHAMON          = 146,
@@ -1404,6 +1404,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void dailyPStatTrigger();
     void unsetUIBoxStatic(int32_t instanceId);
     bool hasMove(int32_t move);
     void removeItem(ItemType type, int32_t amount);

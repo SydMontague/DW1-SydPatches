@@ -13,12 +13,20 @@ extern "C"
         CURRENT_FRAME += 400;
         MINUTE += 20;
 
+        // TODO add more missing time mechanics from tickGameClock/unify the code
         if (MINUTE >= 60)
         {
             // TODO this is missing a lot of hourly mechanics
             HOUR += 1;
             MINUTE = MINUTE % 60;
             PARTNER_PARA.remainingLifetime -= 1;
+            // vanilla updates neither evo timer
+            PARTNER_PARA.evoTimer += 1;
+
+            // vanilla doesn't perform happiness lifetime penalty
+            if ((HOUR % 4) == 0 && PARTNER_PARA.happiness < 80)
+                PARTNER_PARA.remainingLifetime -= getHappinessLifetimePenalty(PARTNER_PARA.happiness);
+
             if (PARTNER_PARA.remainingLifetime < 0) PARTNER_PARA.remainingLifetime = 0;
 
             if (PARTNER_PARA.condition.isSleepy)
@@ -38,6 +46,9 @@ extern "C"
                 DAY += 1;
                 CURRENT_FRAME = MINUTE * 20;
                 HOUR          = HOUR % 24;
+                // vanilla doesn't update age
+                PARTNER_PARA.age += 1;
+                dailyPStatTrigger();
 
                 if (DAY >= 30)
                 {
@@ -48,15 +59,9 @@ extern "C"
             }
         }
 
+        // vanilla checks if the starvation timer is negative here, leading to a duplicate care mistake
         if (PARTNER_PARA.condition.isHungry)
-        {
             PARTNER_PARA.starvationTimer -= 40;
-            if (PARTNER_PARA.starvationTimer <= 0 &&
-                PARTNER_PARA.energyLevel < getRaiseData(PARTNER_ENTITY.type)->energyThreshold)
-            {
-                PARTNER_PARA.careMistakes += 1;
-            }
-        }
         else
             PARTNER_PARA.foodLevel -= 20;
 
