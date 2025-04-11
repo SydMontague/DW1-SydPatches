@@ -1404,7 +1404,6 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
-    void tickMomentum(Entity* entity, MomentumData* momentum);
     void dailyPStatTrigger();
     void unsetUIBoxStatic(int32_t instanceId);
     bool hasMove(int32_t move);

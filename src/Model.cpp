@@ -921,7 +921,7 @@ extern "C"
                              PARTNER_MODEL.clutPage - 0x7a00);
     }
 
-    void calculatePosMatrix(PositionData* posData, bool hasScale, bool hasRotation, bool hasTranslation)
+    static void calculatePosMatrix(PositionData* posData, bool hasTranslation)
     {
         // TODO hasRotation and hasScale are not used if used break animations?
         if (hasTranslation) libgte_TransMatrix(&posData->posMatrix.coord, &posData->location);
@@ -1076,6 +1076,122 @@ extern "C"
         }
     }
 
+    static constexpr Pair<int32_t, int32_t>
+    calculateMomentum(int16_t delta, int16_t scale, int16_t subDelta, int16_t scale2, int8_t subValue)
+    {
+        auto newValue  = delta;
+        auto newScale2 = scale2;
+
+        if (subDelta != 0)
+        {
+            newScale2 -= subDelta;
+            if (newScale2 < 1)
+            {
+                newScale2 += scale;
+                newValue += subValue;
+            }
+        }
+
+        return {newValue, newScale2};
+    }
+
+    static void applyRootMomentum(Entity* entity)
+    {
+        auto& momentum = entity->momentum[0];
+
+        Vector vel;
+        for (int32_t i = 0; i < 3; i++)
+        {
+            if (i == 0 && (entity->animId == 0x23 || entity->animId == 0x24))
+            {
+                vel.x = 0;
+                continue;
+            }
+
+            momentum.subScale[6 + i] -= momentum.subDelta[6 + i];
+            if (momentum.subDelta[6 + i] == 0 || momentum.subScale[6 + i] > 0)
+            {
+                vel[i] = momentum.delta[6 + i] << 0x0F;
+                continue;
+            }
+
+            vel[i] = (momentum.delta[6 + i] + momentum.subValue[6 + i]) << 0x0F;
+            momentum.subScale[6 + i] += momentum.scale1[6 + i];
+        }
+
+        if ((entity->animFlag & 2) == 0)
+        {
+            Vector result;
+            auto& posData = entity->posData[0];
+            libgte_ApplyMatrixLV(&posData.posMatrix.coord, &vel, &result);
+
+            if ((entity->animFlag & 0x08) && (result.z < 0)) result.z = 0;
+            if ((entity->animFlag & 0x10) && (result.x < 0)) result.x = 0;
+            if ((entity->animFlag & 0x20) && (result.z > 0)) result.z = 0;
+            if ((entity->animFlag & 0x40) && (result.x > 0)) result.x = 0;
+
+            entity->locX += result.x;
+            entity->locY += result.y;
+            entity->locZ += result.z;
+            posData.location.x = entity->locX >> 0x0F;
+            posData.location.y = entity->locY >> 0x0F;
+            posData.location.z = entity->locZ >> 0x0F;
+        }
+    }
+
+    static void tickMomentum(Entity* entity, MomentumData* momentum)
+    {
+        auto boneCount = getDigimonData(entity->type)->boneCount;
+
+        for (int32_t i = 0; i < boneCount; i++)
+        {
+            auto& node          = entity->momentum[i];
+            auto& posData       = entity->posData[i];
+            auto hasScale       = false;
+            auto hasRotation    = false;
+            auto hasTranslation = false;
+
+            for (int32_t j = 0; j < 9; j++)
+            {
+                auto delta    = node.delta[j];
+                auto subDelta = node.subDelta[j];
+                auto scale    = node.scale1[j];
+                auto subScale = node.subScale[j];
+                auto subValue = node.subValue[j];
+
+                if (delta == 0 && subDelta == 0) continue;
+
+                auto newVals     = calculateMomentum(delta, scale, subDelta, subScale, subValue);
+                node.subScale[j] = newVals.second;
+
+                if (j < 3)
+                {
+                    posData.scale[j] += newVals.first;
+                    hasScale = true;
+                }
+                else if (j < 6)
+                {
+                    posData.rotation[j - 3] += newVals.first;
+                    hasRotation = true;
+                }
+                else if (j < 9 && i != 0)
+                {
+                    posData.location[j - 6] += newVals.first;
+                    hasTranslation = true;
+                }
+            }
+
+            if (i == 0)
+            {
+                calculatePosMatrix(&posData, false);
+                applyRootMomentum(entity);
+                setupModelMatrix(&posData);
+            }
+            else
+                calculatePosMatrix(&posData, hasTranslation);
+        }
+    }
+
     void tickAnimation(Entity* entity)
     {
         if ((entity->animFlag & 1) == 0) return;
@@ -1106,7 +1222,7 @@ extern "C"
                     auto soundId = instructionPtrPtr[1] & 0xFF;
                     auto vabId   = instructionPtrPtr[1] >> 8;
 
-                    // TODO this is invalid for the tamer? Only seems to matter
+                    // TODO this is invalid for the tamer? Only seems to matter in VS?
                     // is this even used correctly by the game?
                     if (vabId == 4 && entity->isOnScreen) vabId = ((DigimonEntity*)entity)->vabId;
 

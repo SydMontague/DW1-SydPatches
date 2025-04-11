@@ -24,6 +24,19 @@ extern "C"
         int16_t y;
         int16_t z;
         int16_t pad;
+
+        constexpr int16_t& operator[](int32_t index)
+        {
+            switch (index)
+            {
+                case 0: return x;
+                case 1: return y;
+                case 2: return z;
+                default:
+                // impossible
+                case 3: return pad;
+            }
+        }
     };
 
     struct Vector
@@ -32,6 +45,19 @@ extern "C"
         int32_t y;
         int32_t z;
         int32_t pad;
+
+        constexpr int32_t& operator[](int32_t index)
+        {
+            switch (index)
+            {
+                case 0: return x;
+                case 1: return y;
+                case 2: return z;
+                default:
+                // impossible
+                case 3: return pad;
+            }
+        }
     };
 
     struct CVector
@@ -99,6 +125,7 @@ extern "C"
                                         int32_t* interpolValue,
                                         int32_t* flag);
     void libgte_RotMatrixZYX(SVector* rotation, Matrix* matrix);
+    Vector* libgte_ApplyMatrixLV(Matrix* matrix, Vector* vector, Vector* result);
 
     // TODO: use proper signature
     using GsTMDFunction = void* (*)();

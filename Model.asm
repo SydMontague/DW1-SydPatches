@@ -130,25 +130,25 @@
 ;.org 0x800c1a80
 ;  jal getEntityType
 
-.org 0x800c2248
-  jal calculatePosMatrix
-.org 0x800c2284
-  jal calculatePosMatrix
+;.org 0x800c2248
+;  jal calculatePosMatrix
+;.org 0x800c2284
+;  jal calculatePosMatrix
 
 ;.org 0x800c1b40
 ;  jal resetMomentumData
 ;.org 0x800c1c10
 ;  jal resetMomentumData
 
-.org 0x800c1f94
-  jal animateEntityTexture
+;.org 0x800c1f94
+;  jal animateEntityTexture
 
 ;.org 0x800c1b4c
 ;  jal setupModelMatrix
 ;.org 0x800c1c18
 ;  jal setupModelMatrix
-.org 0x800c2264
-  jal setupModelMatrix
+;.org 0x800c2264
+;  jal setupModelMatrix
 
 ;.org 0x800a1150
 ;  jal startAnimation

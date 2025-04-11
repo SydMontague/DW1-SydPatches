@@ -98,7 +98,6 @@
 .definelabel hasMove,                   0x800e5eb4
 .definelabel unsetUIBoxStatic,          0x800c2fd8
 .definelabel dailyPStatTrigger,         0x800fc374
-.definelabel tickMomentum,              0x800c1fbc
 
 .definelabel MAP_COLLISION_DATA, 0x801af398
 .definelabel CARD_DATA, 0x8012ffd8
@@ -367,6 +366,7 @@
 .definelabel libgte_RotTransPers3, 0x8009b404
 .definelabel libgte_RotTransPers4, 0x8009b464
 .definelabel libgte_RotMatrixZYX, 0x8009bd24
+.definelabel libgte_ApplyMatrixLV, 0x8009ab10
 
 .definelabel libgte_GsTMDdivTNF3, 0x8009de78
 .definelabel libgte_GsTMDdivTF3NL, 0x8009dbc8
