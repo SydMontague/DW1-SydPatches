@@ -13,19 +13,6 @@
 .org 0x800f03a8
   jal initializeHealingParticles
 
-;.org 0x800c47ec
-;  jal addHealingParticleEffect
-;.org 0x800c481c
-;  jal addHealingParticleEffect
-.org 0x800c4934
-  jal addHealingParticleEffect
-.org 0x800c49f0
-  jal addHealingParticleEffect
-.org 0x800c4aa4
-  jal addHealingParticleEffect
-.org 0x800c4b58
-  jal addHealingParticleEffect
-
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

@@ -3,7 +3,9 @@
 #include "Effects.hpp"
 #include "Helper.hpp"
 #include "ItemEffects.hpp"
+#include "Model.hpp"
 #include "Tamer.hpp"
+#include "extern/BTL.hpp"
 #include "extern/dw1.hpp"
 
 extern "C"
@@ -434,7 +436,7 @@ extern "C"
     void handleEvoItem(ItemType item)
     {
         auto target = getEvoItemTarget(item);
-        
+
         if (target == DigimonType::INVALID) return;
 
         EVOLUTION_TARGET = static_cast<int16_t>(target);
@@ -445,8 +447,166 @@ extern "C"
         Partner_setState(13);
     }
 
+    static void handleVarious(ItemType item)
+    {
+        if (PARTNER_ENTITY.stats.currentHP == 0) return;
+
+        BTL_healStatusEffect(true);
+    }
+
+    static void handleDoubleFloppy(ItemType item)
+    {
+        if (PARTNER_ENTITY.stats.currentHP == 0) return;
+
+        addWithLimit(&PARTNER_ENTITY.stats.currentHP, 1500, PARTNER_ENTITY.stats.hp);
+        addWithLimit(&PARTNER_ENTITY.stats.currentMP, 1500, PARTNER_ENTITY.stats.mp);
+        addHealingParticleEffect(&PARTNER_ENTITY, 0);
+        if (GAME_STATE == 1)
+        {
+            addEntityText(&PARTNER_ENTITY, 0, 11, 1500, 1);
+            addEntityText(&PARTNER_ENTITY, 0, 11, 1500, 2);
+        }
+    }
+
+    static void handleOmnipotent(ItemType item)
+    {
+        if (PARTNER_ENTITY.stats.currentHP == 0) return;
+
+        BTL_healStatusEffect(false);
+        handleDoubleFloppy(item);
+    }
+
+    static void handleProtection(ItemType item)
+    {
+        COMBAT_DATA_PTR->fighter[0].flags.isProtected = true;
+    }
+
+    static void handleRestoreItem(int32_t healAmount, bool removeStatus)
+    {
+        if (PARTNER_ENTITY.stats.currentHP == 0) startAnimation(&PARTNER_ENTITY, 0x2C);
+
+        addWithLimit(&PARTNER_ENTITY.stats.currentHP, healAmount, PARTNER_ENTITY.stats.hp);
+        addHealingParticleEffect(&PARTNER_ENTITY, 1);
+
+        if (GAME_STATE == 1)
+        {
+            BTL_removeDeathCountdown();
+            addEntityText(&PARTNER_ENTITY, 0, 11, healAmount, 1);
+            if (removeStatus) BTL_healStatusEffect(false);
+        }
+    }
+
+    static void handleRestore(ItemType item)
+    {
+        handleRestoreItem(PARTNER_ENTITY.stats.hp / 2, false);
+    }
+
+    static void handleSuperRestore(ItemType item)
+    {
+        handleRestoreItem(9999, true);
+    }
+
+    static void handleHPHealingItem(int32_t amount, int32_t particleEffect)
+    {
+        if (PARTNER_ENTITY.stats.currentHP == 0) return;
+
+        addWithLimit(&PARTNER_ENTITY.stats.currentHP, amount, PARTNER_ENTITY.stats.hp);
+        addHealingParticleEffect(&PARTNER_ENTITY, particleEffect);
+
+        if (GAME_STATE == 1) addEntityText(&PARTNER_ENTITY, 0, 11, amount, 1);
+    }
+
+    static void handleMPHealingItem(int32_t amount, int32_t particleEffect)
+    {
+        if (PARTNER_ENTITY.stats.currentHP == 0) return;
+
+        addWithLimit(&PARTNER_ENTITY.stats.currentHP, amount, PARTNER_ENTITY.stats.hp);
+        addHealingParticleEffect(&PARTNER_ENTITY, particleEffect);
+
+        if (GAME_STATE == 1) addEntityText(&PARTNER_ENTITY, 0, 11, amount, 2);
+    }
+
+    static void handleSmallHP(ItemType item)
+    {
+        handleHPHealingItem(500, 0);
+    }
+
+    static void handleMediumHP(ItemType item)
+    {
+        handleHPHealingItem(1500, 0);
+    }
+
+    static void handleLargeHP(ItemType item)
+    {
+        handleHPHealingItem(5000, 1);
+    }
+
+    static void handleSuperHP(ItemType item)
+    {
+        handleHPHealingItem(9999, 1);
+    }
+
+    static void handleSmallMP(ItemType item)
+    {
+        handleMPHealingItem(500, 0);
+    }
+
+    static void handleMediumMP(ItemType item)
+    {
+        handleMPHealingItem(1500, 0);
+    }
+
+    static void handleLargeMP(ItemType item)
+    {
+        handleMPHealingItem(5000, 1);
+    }
+
+    static void handleNothing(ItemType item) {}
+
     void fillItemTable()
     {
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SMALL_RECOVERY)]  = handleSmallHP;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MEDIUM_RECOVERY)] = handleMediumHP;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::LARGE_RECOVERY)]  = handleLargeHP;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SUPER_RECOVERY)]  = handleSuperHP;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MP_FLOPPY)]       = handleSmallMP;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MEDIUM_MP)]       = handleMediumMP;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::LARGE_MP)]        = handleLargeMP;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DOUBLE_FLOPPY)]   = handleDoubleFloppy;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::VARIOUS)]         = handleVarious;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::OMNIPOTENT)]      = handleOmnipotent;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::PROTECTION)]      = handleProtection;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::RESTORE)]         = handleRestore;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SUPER_RESTORE)]   = handleSuperRestore;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::BANDAGE)]         = handleBandage;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MEDICINE)]        = handleMedicine;
+
+        // TODO discs
+
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::AUTOPILOT)]       = handleAutopilot;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::OFFENSE_CHIP)]    = handleOffChip;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DEFENSE_CHIP)]    = handleDefChip;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::BRAIN_SHIP)]      = handleBrainChip;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SPEED_CHIP)]      = handleSpeedChip;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::HP_CHIP)]         = handleHPChip;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MP_CHIP)]         = handleMPChip;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DV_CHIP_A)]       = handleDVChipA;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DV_CHIP_D)]       = handleDVChipD;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DV_CHIP_E)]       = handleDVChipE;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::PORTA_POTTY)]     = handlePortaPottyItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::TRAINING_MANUAL)] = handleNothing;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::REST_PILLOW)]     = handleNothing;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::ENEMY_REPEL)]     = handleNothing;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::ENEMY_BELL)]      = handleNothing;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::HEALTH_SHOE)]     = handleNothing;
+
+        for (uint32_t type = static_cast<uint32_t>(ItemType::MEAT);
+             type <= static_cast<uint32_t>(ItemType::CHAIN_MELON);
+             type++)
+        {
+            ITEM_FUNCTIONS[type] = handleFood;
+        }
+
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::GREY_CLAWS)]   = handleEvoItem;
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::FIREBALL)]     = handleEvoItem;
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::FLAMEWING)]    = handleEvoItem;
@@ -491,31 +651,18 @@ extern "C"
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::BETTLEPEARL)]  = handleEvoItem;
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::CORAL_CHARM)]  = handleEvoItem;
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MOON_MIRROR)]  = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::BLUE_FLUTE)]   = handleNothing;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::OLD_ROD)]      = handleNothing;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::AMAZING_ROD)]  = handleNothing;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::LEOMONSTONE)]  = handleNothing;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MANSION_KEY)]  = handleNothing;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::GEAR)]         = handleNothing;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::RAIN_PLANT)]   = handleFood;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::STEAK)]        = handleFood;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::FRIDGE_KEY)]   = handleFood;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::AS_DECODER)]   = handleFood;
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::GIGA_HAND)]    = handleEvoItem;
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::NOBLE_MANE)]   = handleEvoItem;
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::METAL_BANANA)] = handleEvoItem;
-
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::AUTOPILOT)]    = handleAutopilot;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::BANDAGE)]      = handleBandage;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MEDICINE)]     = handleMedicine;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::OFFENSE_CHIP)] = handleOffChip;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DEFENSE_CHIP)] = handleDefChip;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SPEED_CHIP)]   = handleSpeedChip;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::BRAIN_SHIP)]   = handleBrainChip;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::HP_CHIP)]      = handleHPChip;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MP_CHIP)]      = handleMPChip;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DV_CHIP_A)]    = handleDVChipA;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DV_CHIP_D)]    = handleDVChipD;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DV_CHIP_E)]    = handleDVChipE;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::PORTA_POTTY)]  = handlePortaPottyItem;
-
-        for (uint32_t type = static_cast<uint32_t>(ItemType::MEAT);
-             type <= static_cast<uint32_t>(ItemType::CHAIN_MELON);
-             type++)
-        {
-            ITEM_FUNCTIONS[type] = handleFood;
-        }
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::RAIN_PLANT)] = handleFood;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::STEAK)]      = handleFood;
     }
 }

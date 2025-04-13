@@ -1245,6 +1245,139 @@ extern "C"
         uint16_t meritValue;
     };
 
+    struct BattleFlags
+    {
+        bool isPoisoned     : 1;
+        bool isConfused     : 1;
+        bool isStunned      : 1;
+        bool isFlattened    : 1;
+        bool isKnockedBack  : 1;
+        bool isAttacking    : 1;
+        bool isTransforming : 1;
+        bool isBlocking     : 1;
+        bool isProtected    : 1;
+        bool unkFlag1       : 1;
+        bool unkFlag2       : 1;
+        bool isOnChargeup   : 1;
+        bool isOnCooldown   : 1;
+        bool isSenile       : 1;
+        bool unkFlag3       : 1;
+        bool isDead         : 1;
+    };
+
+    struct FighterData
+    {
+        int32_t statusFxId;
+        int32_t effectSlot[4];
+        int32_t unk11;
+        int16_t finisherGoal;
+        int16_t finisherProgress;
+        int16_t poisonTimer;
+        int16_t confusionTimer;
+        int16_t stunTimer;
+        int16_t flatTimer;
+        int16_t flatAttackTimer;
+        int16_t invulnerableTimer;
+        int16_t cooldown;
+        int16_t senileTimer;
+        int16_t unk15;
+        int16_t hpDamageBuffer;
+        int16_t mpDamageBuffer;
+        int16_t speedBuffer;
+        BattleFlags flags;
+        uint8_t moveRange;
+        uint8_t targetId;
+        uint8_t queuedAnim;
+        uint8_t buffsRemaining;
+        uint8_t buffPrioTimer;
+        uint8_t unk16;
+        uint8_t table1[150];
+        uint8_t table2[150];
+    };
+
+    struct PlayerDataSub
+    {
+        int32_t unk1;
+        Position pos;
+        int16_t unk2;
+        int16_t unk3;
+        int16_t unk4;
+        uint8_t unk5;
+        uint8_t unk6;
+        int16_t unk7;
+        int16_t unk8;
+        uint8_t unk9;
+        uint8_t unk10;
+        uint8_t unk11;
+        uint8_t unk12;
+        uint8_t unk13;
+        uint8_t unk14;
+        uint8_t unk15;
+        uint8_t unk16;
+        uint8_t unk17;
+        uint8_t unk18;
+        uint8_t unk19;
+        uint8_t unk20;
+        uint8_t unk21;
+        uint8_t unk22;
+        uint8_t unk23;
+        uint8_t unk24;
+        uint8_t unk25;
+        uint8_t unk26;
+        uint8_t unk27;
+        uint8_t unk28;
+    };
+
+    enum class BattleCommand : uint8_t
+    {
+        RUN       = 1,
+        ATTACK    = 2,
+        YOUR_CALL = 3,
+        MODERATOR = 4,
+        DISTANCE  = 5,
+        DEFEND    = 6,
+        CHANGE    = 7,
+        ATTACK1   = 8,
+        ATTACK2   = 9,
+        ATTACK3   = 10,
+        FINISHER  = 11,
+    };
+
+    struct PlayerData
+    {
+        PlayerDataSub unk1[4];
+
+        int16_t hitCount;
+        int16_t blockedCount;
+        int16_t statusedCount;
+        int16_t unk2;
+        int16_t startingHP;
+        int16_t unk3;
+        BattleCommand currentCommand[2];
+        BattleCommand buffereCommand[2];
+        BattleCommand hoveredCommand[2];
+        BattleCommand availableCommands[2][9];
+        uint8_t numCommands[2];
+        uint8_t finisherChargeup[2];
+        uint8_t remainingChargeupTime[2];
+        uint8_t entityIds[4];
+        uint8_t unk4;
+        uint8_t unk5;
+        uint8_t unk6;
+        uint8_t unk7;
+        uint8_t changeTarget;
+        uint8_t usedMoves[12];
+        uint8_t unk8;
+        uint8_t unk9;
+        uint8_t unk10;
+    };
+
+    struct CombatData
+    {
+        FighterData fighter[4];
+        PlayerData player;
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1252,6 +1385,7 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern CombatData* COMBAT_DATA_PTR;
     extern CardEntry CARD_DATA[66];
     extern int16_t PLAYTIME_HOURS;
     extern int16_t PLAYTIME_MINUTES;
@@ -1403,6 +1537,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void addEntityText(DigimonEntity* entity, int32_t entityId, int8_t color, int32_t amount, int8_t icon);
     void dailyPStatTrigger();
     bool hasMove(int32_t move);
     void removeItem(ItemType type, int32_t amount);
@@ -1561,3 +1696,8 @@ static_assert(sizeof(MapDigimonEntity) == 0xC4);
 static_assert(sizeof(Move) == 16);
 static_assert(sizeof(EvoChartBoxData) == 8);
 static_assert(sizeof(CardEntry) == 4);
+static_assert(sizeof(BattleFlags) == 2);
+static_assert(sizeof(FighterData) == 0x168);
+static_assert(sizeof(PlayerDataSub) == 0x28);
+static_assert(sizeof(PlayerData) == 0xe4);
+static_assert(sizeof(CombatData) == 0x684);

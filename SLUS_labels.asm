@@ -95,6 +95,7 @@
 .definelabel removeItem,                0x800c53ec
 .definelabel hasMove,                   0x800e5eb4
 .definelabel dailyPStatTrigger,         0x800fc374
+.definelabel addEntityText,             0x800df868
 
 .definelabel MAP_COLLISION_DATA, 0x801af398
 .definelabel CARD_DATA, 0x8012ffd8
@@ -251,9 +252,12 @@
 .definelabel LIGHT_DATA, 0x801b1c24
 .definelabel MEDAL_OBJECT, 0x801546a0
 .definelabel MEDAL_COORDINATES, 0x801546b0
+.definelabel COMBAT_DATA_PTR, 0x80134d4c
 
 // BTL_REL
 .definelabel BTL_battleMain, 0x8005b5f4
+.definelabel BTL_healStatusEffect, 0x8005ed08
+.definelabel BTL_removeDeathCountdown, 0x80062874
 
 // ENDI_REL
 .definelabel ENDI_tickEnding, 0x80060d00
