@@ -41,6 +41,23 @@ extern "C"
         uint16_t pad2;
     };
 
+    struct POLY_F4
+    {
+        uint8_t tag[4];
+        uint8_t r0;
+        uint8_t g0;
+        uint8_t b0;
+        uint8_t code;
+        int16_t x0;
+        int16_t y0;
+        int16_t x1;
+        int16_t y1;
+        int16_t x2;
+        int16_t y2;
+        int16_t x3;
+        int16_t y3;
+    };
+
     struct POLY_GT3
     {
         uint8_t tag[4];
@@ -184,6 +201,7 @@ extern "C"
     }
 
     void libgpu_SetPolyFT4(POLY_FT4* prim);
+    void libgpu_SetPolyF4(POLY_F4* prim);
     void libgpu_SetLineF2(LINE_F2* prim);
     void libgpu_SetLineF3(LINE_F3* prim);
     void libgpu_SetLineF4(LINE_F4* prim);
@@ -206,3 +224,4 @@ static_assert(sizeof(RECT) == 8);
 static_assert(sizeof(POLY_FT4) == 0x28);
 static_assert(sizeof(POLY_GT3) == 10 * 4);
 static_assert(sizeof(POLY_GT4) == 13 * 4);
+static_assert(sizeof(POLY_F4) == 24);

@@ -552,14 +552,12 @@ extern "C"
 
     void removeTriangleMenu()
     {
-        unsetUIBoxStatic(0);
+        removeStaticUIBox(0);
         removeObject(ObjectID::GAME_MENU, 0);
     }
 
     void removeUIBox1()
     {
-        UI_BOX_DATA[1].state = 0;
-        UI_BOX_DATA[1].frame = 0;
-        removeObject(ObjectID::UI_BOX, 1);
+        removeStaticUIBox(1);
     }
 }

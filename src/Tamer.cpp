@@ -411,7 +411,7 @@ extern "C"
                 .height = 10,
             };
 
-            unsetUIBoxAnimated(1, &target);
+            removeAnimatedUIBox(1, &target);
 
             Tamer_setState(0);
             Partner_setState(1);
@@ -507,7 +507,7 @@ extern "C"
                 .height = 10,
             };
 
-            unsetUIBoxAnimated(1, &target);
+            removeAnimatedUIBox(1, &target);
 
             pickupItem(pickedDropId);
 
@@ -587,7 +587,7 @@ extern "C"
                 .height = 10,
             };
 
-            unsetUIBoxAnimated(1, &target);
+            removeAnimatedUIBox(1, &target);
             Tamer_setState(0);
             Partner_setState(1);
             setCameraFollowPlayer();

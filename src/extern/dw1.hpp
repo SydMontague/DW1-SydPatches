@@ -885,8 +885,8 @@ extern "C"
     using ItemFunction     = void (*)(ItemType itemId);
     using FileReadCallback = void (*)(int32_t);
 
-    using BoxTickFunction   = void();
-    using BoxRenderFunction = void();
+    using BoxTickFunction   = void (*)();
+    using BoxRenderFunction = void (*)();
 
     union ScreenCoord
     {
@@ -909,8 +909,8 @@ extern "C"
         uint16_t totalRows;
         uint8_t features; // flag, 1 -> header separator, 2 -> transparent bg, 3 -> scroll bar
         uint8_t color;
-        TickFunction tick;
-        RenderFunction render;
+        BoxTickFunction tick;
+        BoxRenderFunction render;
     };
 
     struct MapEntry
@@ -1405,7 +1405,6 @@ extern "C"
     extern SectionData SECTION_DATA;
 
     void dailyPStatTrigger();
-    void unsetUIBoxStatic(int32_t instanceId);
     bool hasMove(int32_t move);
     void removeItem(ItemType type, int32_t amount);
     void renderOverworldItem(WorldItem* item);
@@ -1450,18 +1449,10 @@ extern "C"
     void entityLookAtLocation(Entity* entity, Vector* location);
     bool tickOpenChestTray(uint32_t chestId);
     bool tickCloseChestTray(uint32_t chestId);
-    void createAnimatedUIBox(int32_t instanceId,
-                             uint8_t color,
-                             uint8_t features,
-                             RECT* finalPos,
-                             RECT* startPos,
-                             BoxTickFunction tickFunc,
-                             BoxRenderFunction renderFunc);
     void playSound(int32_t vabId, uint32_t note);
     bool giveItem(ItemType type, uint8_t amount);
     void setCameraFollowPlayer();
     bool pickupItem(int32_t dropId);
-    void unsetUIBoxAnimated(int32_t boxId, RECT* target);
     void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos);
     void addMapNameObject(int32_t mapId);
     void changeMap(uint32_t map, uint32_t exit);

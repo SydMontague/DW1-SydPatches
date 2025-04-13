@@ -1,13 +1,16 @@
 #include "UIElements.hpp"
 
+#include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libgpu.hpp"
+#include "extern/libgs.hpp"
 
 extern "C"
 {
     constexpr RGB8 UILINE_COLORS[] = {
-        {.red = 2, .green = 2, .blue = 2},
-        {.red = 144, .green = 217, .blue = 250},
+        {.red = 8, .green = 8, .blue = 8},       // 2, 2, 2
+        {.red = 132, .green = 239, .blue = 250}, // 144, 217, 250
         {.red = 74, .green = 159, .blue = 197},
         {.red = 180, .green = 150, .blue = 105},
     };
@@ -62,8 +65,8 @@ extern "C"
 
         if ((flag & 0x80) != 0)
         {
-            renderTrianglePrimitive(0x202020, posX - 1, posY - 1, posX + 13, posY - 1, posX + 13, posY + 12, 2, 0);
-            renderTrianglePrimitive(0x202020, posX - 1, posY - 1, posX - 1, posY + 12, posX + 13, posY + 12, 2, 0);
+            renderTrianglePrimitive(0x20202, posX - 1, posY - 1, posX + 13, posY - 1, posX + 13, posY + 12, 2, 0);
+            renderTrianglePrimitive(0x20202, posX - 1, posY - 1, posX - 1, posY + 12, posX + 13, posY + 12, 2, 0);
         }
     }
 
@@ -184,7 +187,7 @@ extern "C"
         if (UI_BOX_DATA[instanceId].state != 1) return;
 
         // vanilla calls getEntityScreenPos here, but it's results are unused?
-        unsetUIBoxAnimated(instanceId, nullptr);
+        removeAnimatedUIBox(instanceId, nullptr);
     }
 
     bool isUIBoxAvailable(int32_t id)
@@ -289,5 +292,270 @@ extern "C"
 
         renderTrianglePrimitive(color1, x1, y1 + 1, x2, y2 + 1, x3, y3 + 1, layer, 0);
         renderLinePrimitive(color1, x3, y3 + 1, x4, y4 + 1, layer, 0);
+    }
+
+    constexpr Sprite BORDER_CORNER_SPRITES[] = {
+        {.uvX = 0x78, .uvV = 0x90, .width = 4, .height = 4, .texture_page = 5, .clut = getClut(0x60, 0x1ec)},
+        {.uvX = 0x7C, .uvV = 0x90, .width = 4, .height = 4, .texture_page = 5, .clut = getClut(0x60, 0x1ec)},
+        {.uvX = 0x78, .uvV = 0x94, .width = 4, .height = 4, .texture_page = 5, .clut = getClut(0x60, 0x1ec)},
+        {.uvX = 0x7C, .uvV = 0x94, .width = 4, .height = 4, .texture_page = 5, .clut = getClut(0x60, 0x1ec)},
+    };
+
+    constexpr uint32_t BORDER_BLACK  = 0x080808; // 0x020202
+    constexpr uint32_t BORDER_COLOR1 = 0xcea400; // 0xc59f4a
+    constexpr uint32_t BORDER_COLOR2 = 0xffef84; // 0xfad990
+
+    static void tickUIBox(int32_t instanceId)
+    {
+        if (UI_BOX_DATA[instanceId].state != 1 && UI_BOX_DATA[instanceId].state != 4) return;
+        if (UI_BOX_DATA[instanceId].tick == nullptr) return;
+
+        UI_BOX_DATA[instanceId].tick();
+    }
+
+    void renderUIBoxBorder(RECT* size, int32_t layer)
+    {
+        BORDER_CORNER_SPRITES[0].render(size->x, size->y, layer, 0);
+        BORDER_CORNER_SPRITES[1].render(size->x + size->width - 4, size->y, layer, 0);
+        BORDER_CORNER_SPRITES[2].render(size->x, size->y + size->height - 4, layer, 0);
+        BORDER_CORNER_SPRITES[3].render(size->x + size->width - 4, size->y + size->height - 4, layer, 0);
+
+        auto xMin = size->x;
+        auto xMax = size->x + size->width - 4;
+        auto yMin = size->y;
+        auto yMax = size->y + size->height - 3;
+
+        renderLinePrimitive(BORDER_BLACK, xMin + 4, yMin + 0, xMax + 0, yMin + 0, layer, 0);
+        // renderLinePrimitive(BORDER_COLOR1, xMin + 4, yMin + 1, xMax + 0, yMin + 1, layer, 0);
+        renderLinePrimitive(BORDER_COLOR2, xMin + 4, yMin + 1, xMax + 0, yMin + 1, layer, 0);
+        renderLinePrimitive(BORDER_BLACK, xMin + 4, yMin + 2, xMax + 0, yMin + 2, layer, 0);
+
+        renderLinePrimitive(BORDER_BLACK, xMin + 4, yMax + 0, xMax + 0, yMax + 0, layer, 0);
+        renderLinePrimitive(BORDER_COLOR2, xMin + 4, yMax + 1, xMax + 0, yMax + 1, layer, 0);
+        // renderLinePrimitive(BORDER_COLOR1, xMin + 4, yMax + 2, xMax + 0, yMax + 2, layer, 0);
+        renderLinePrimitive(BORDER_BLACK, xMin + 4, yMax + 2, xMax + 0, yMax + 2, layer, 0);
+
+        renderLinePrimitive(BORDER_BLACK, xMin + 0, yMin + 4, xMin + 0, yMax + 0, layer, 0);
+        renderLinePrimitive(BORDER_COLOR1, xMin + 1, yMin + 4, xMin + 1, yMax + 0, layer, 0);
+        renderLinePrimitive(BORDER_COLOR2, xMin + 2, yMin + 4, xMin + 2, yMax + 0, layer, 0);
+        renderLinePrimitive(BORDER_BLACK, xMin + 3, yMin + 4, xMin + 3, yMax + 0, layer, 0);
+
+        renderLinePrimitive(BORDER_BLACK, xMax + 0, yMin + 4, xMax + 0, yMax + 0, layer, 0);
+        renderLinePrimitive(BORDER_COLOR2, xMax + 1, yMin + 4, xMax + 1, yMax + 0, layer, 0);
+        renderLinePrimitive(BORDER_COLOR1, xMax + 2, yMin + 4, xMax + 2, yMax + 0, layer, 0);
+        renderLinePrimitive(BORDER_BLACK, xMax + 3, yMin + 4, xMax + 3, yMax + 0, layer, 0);
+    }
+
+    static void renderUIBoxStatic(int32_t instanceId)
+    {
+        auto& data       = UI_BOX_DATA[instanceId];
+        const auto layer = 6 - instanceId;
+
+        if (data.render != nullptr) data.render();
+
+        renderUIBoxBorder(&data.finalPos, layer);
+
+        // horizontal line
+        // TODO deprecate, this line should be drawn by the render func
+        if ((data.features & 1) != 0)
+        {
+            auto minX  = data.finalPos.x + 3;
+            auto maxX  = data.finalPos.x + data.finalPos.width - 3;
+            auto baseY = data.finalPos.y + 13;
+
+            renderLinePrimitive(BORDER_BLACK, minX, baseY + 0, maxX, baseY + 0, layer, 0);
+            renderLinePrimitive(BORDER_COLOR2, minX, baseY + 1, maxX, baseY + 1, layer, 0);
+            renderLinePrimitive(BORDER_BLACK, minX, baseY + 2, maxX, baseY + 2, layer, 0);
+        }
+
+        // scroll bar
+        if ((data.features & 4) != 0)
+        {
+            auto minX = data.finalPos.x;
+            auto minY = data.finalPos.y;
+            auto maxX = data.finalPos.x + data.finalPos.width;
+            auto maxY = data.finalPos.y + data.finalPos.height;
+
+            renderTrianglePrimitive(0x020202,
+                                    maxX - 13,
+                                    maxY - 10,
+                                    maxX - 13,
+                                    minY + 13,
+                                    maxX - 6,
+                                    minY + 13,
+                                    layer,
+                                    0);
+            renderTrianglePrimitive(0xa08769, maxX - 6, minY + 14, maxX - 6, maxY - 10, maxX - 12, maxY - 10, layer, 0);
+
+            auto barHeight = data.finalPos.height - 25;
+            auto rowHeight = (barHeight * data.visibleRows) / data.totalRows;
+            auto rowOffset =
+                data.finalPos.y + 14 + ((barHeight - rowHeight) * data.rowOffset) / (data.totalRows - data.visibleRows);
+            auto barStart = rowOffset + rowHeight;
+
+            renderTrianglePrimitive(0x020202, maxX - 7, rowOffset, maxX - 7, barStart, maxX - 13, barStart, layer, 0);
+            renderTrianglePrimitive(0xa08769, maxX - 12, barStart, maxX - 12, rowOffset, maxX - 6, rowOffset, layer, 0);
+
+            POLY_F4* prim = reinterpret_cast<POLY_F4*>(libgs_GsGetWorkBase());
+            libgpu_SetPolyF4(prim);
+            prim[0].r0 = 0x5b;
+            prim[0].g0 = 0x70;
+            prim[0].b0 = 0x80;
+            prim[0].x0 = maxX - 11;
+            prim[0].x1 = maxX - 7;
+            prim[0].x2 = maxX - 11;
+            prim[0].x3 = maxX - 7;
+            prim[0].y0 = rowOffset + 1;
+            prim[0].y1 = rowOffset + 1;
+            prim[0].y2 = rowOffset + rowHeight;
+            prim[0].y3 = rowOffset + rowHeight;
+            libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + layer, prim);
+
+            libgpu_SetPolyF4(prim + 1);
+            prim[1].r0 = 0x35;
+            prim[1].g0 = 0x4b;
+            prim[1].b0 = 0x5c;
+            prim[1].x0 = maxX - 12;
+            prim[1].x1 = maxX - 6;
+            prim[1].x2 = maxX - 12;
+            prim[1].x3 = maxX - 6;
+            prim[1].y0 = minY + 14;
+            prim[1].y1 = minY + 14;
+            prim[1].y2 = maxY - 10;
+            prim[1].y3 = maxY - 10;
+            libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + layer, prim + 1);
+            libgs_GsSetWorkBase(prim + 2);
+        }
+
+        GsBOXF box;
+        if ((data.features & 2) != 0)
+            box.attribute = 0x40000000;
+        else
+            box.attribute = 0;
+
+        constexpr RGB8 boxColors[] = {
+            {0, 0, 0},
+            {45, 56, 64},
+            {0, 0, 0},
+            {0, 0, 0},
+            {0, 0, 0},
+        };
+
+        box.r      = boxColors[data.color].red;
+        box.g      = boxColors[data.color].green;
+        box.b      = boxColors[data.color].blue;
+        box.x      = data.finalPos.x + 4;
+        box.y      = data.finalPos.y + 3;
+        box.width  = data.finalPos.width - 8;
+        box.height = data.finalPos.height - 3;
+        libgs_GsSortBoxFill(&box, ACTIVE_ORDERING_TABLE, layer);
+    }
+
+    static void renderUIBoxAnim(int32_t instanceId, int32_t frame)
+    {
+        auto& data       = UI_BOX_DATA[instanceId];
+        const auto layer = 6 - instanceId;
+
+        if (data.state == 3 && data.frame == 4) playSound(0, 1);
+
+        auto startMinX = data.startPos.x;
+        auto startMaxX = data.startPos.x + data.startPos.width;
+        auto startMinY = data.startPos.y;
+        auto startMaxY = data.startPos.y + data.startPos.height;
+
+        auto finalMinX = data.finalPos.x;
+        auto finalMaxX = data.finalPos.x + data.finalPos.width;
+        auto finalMinY = data.finalPos.y;
+        auto finalMaxY = data.finalPos.y + data.finalPos.height;
+
+        auto diffMinX = frame * (finalMinX - startMinX);
+        auto diffMaxX = frame * (finalMaxX - startMaxX);
+        auto diffMinY = frame * (finalMinY - startMinY);
+        auto diffMaxY = frame * (finalMaxY - startMaxY);
+
+        auto x1 = startMinX + (diffMinX / 4);
+        auto x2 = startMaxX + (diffMaxX / 4);
+        auto y1 = startMinY + (diffMinY / 4);
+        auto y2 = startMaxY + (diffMaxY / 4);
+
+        renderTrianglePrimitive(0x808080, x1, y1, x2, y1, x2, y2, layer, 0);
+        renderTrianglePrimitive(0x808080, x2, y2, x1, y2, x1, y1, layer, 0);
+    }
+
+    static void renderUIBoxAnimated(int32_t instanceId)
+    {
+        auto& data = UI_BOX_DATA[instanceId];
+
+        if (data.state == 2 || data.state == 3)
+        {
+            auto currentFrame = 0;
+            if (data.state == 2)
+                currentFrame = data.frame++;
+            else
+                currentFrame = --data.frame;
+
+            renderUIBoxAnim(instanceId, currentFrame);
+            if (data.frame > 4) data.state = 1;
+            if (data.frame == 0) removeStaticUIBox(instanceId);
+        }
+        else { renderUIBoxStatic(instanceId); }
+    }
+
+    void createStaticUIBox(int32_t id,
+                           uint8_t color,
+                           uint8_t features,
+                           RECT* pos,
+                           BoxTickFunction tickFunc,
+                           BoxRenderFunction renderFunc)
+    {
+        UI_BOX_DATA[id].state    = 1;
+        UI_BOX_DATA[id].color    = color;
+        UI_BOX_DATA[id].features = features;
+        UI_BOX_DATA[id].render   = renderFunc;
+        UI_BOX_DATA[id].tick     = tickFunc;
+        UI_BOX_DATA[id].finalPos = *pos;
+        addObject(ObjectID::UI_BOX, id, tickUIBox, renderUIBoxStatic);
+    }
+
+    void createAnimatedUIBox(int32_t instanceId,
+                             uint8_t color,
+                             uint8_t features,
+                             RECT* finalPos,
+                             RECT* startPos,
+                             BoxTickFunction tickFunc,
+                             BoxRenderFunction renderFunc)
+    {
+        playSound(0, 0);
+        UI_BOX_DATA[instanceId].state    = 2;
+        UI_BOX_DATA[instanceId].color    = color;
+        UI_BOX_DATA[instanceId].features = features;
+        UI_BOX_DATA[instanceId].startPos = *startPos;
+        UI_BOX_DATA[instanceId].finalPos = *finalPos;
+        UI_BOX_DATA[instanceId].render   = renderFunc;
+        UI_BOX_DATA[instanceId].tick     = tickFunc;
+        addObject(ObjectID::UI_BOX, instanceId, tickUIBox, renderUIBoxAnimated);
+    }
+
+    void removeStaticUIBox(int32_t id)
+    {
+        UI_BOX_DATA[id].state = 0;
+        UI_BOX_DATA[id].frame = 0;
+        removeObject(ObjectID::UI_BOX, id);
+    }
+
+    void removeAnimatedUIBox(int32_t id, RECT* target)
+    {
+        if (target != nullptr) UI_BOX_DATA[id].startPos = *target;
+
+        UI_BOX_DATA[id].state = 3;
+    }
+
+    void initializeUIBoxData()
+    {
+        for (auto& data : UI_BOX_DATA)
+        {
+            data.frame = 0;
+            data.state = 0;
+        }
     }
 }

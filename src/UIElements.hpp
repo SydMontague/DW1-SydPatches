@@ -121,6 +121,7 @@ extern "C"
         void render(uint32_t color1, uint32_t color2, int32_t layer) const;
     };
 
+    void removeStaticUIBox(int32_t id);
     void drawTextSprite(TextSprite& entry);
     void renderTextSprite2(TextSprite& entry, int32_t offsetX, int32_t offsetY);
     void renderTextSprite(TextSprite& entry);
@@ -167,4 +168,12 @@ extern "C"
                          uint8_t blue,
                          int32_t layer);
     void renderDigimonStatsBar(int32_t value, int32_t maxValue, int32_t width, int32_t posX, int32_t posY);
+    void createAnimatedUIBox(int32_t instanceId,
+                             uint8_t color,
+                             uint8_t features,
+                             RECT* finalPos,
+                             RECT* startPos,
+                             BoxTickFunction tickFunc,
+                             BoxRenderFunction renderFunc);
+    void removeAnimatedUIBox(int32_t boxId, RECT* target);
 }

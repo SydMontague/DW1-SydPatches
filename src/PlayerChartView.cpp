@@ -543,7 +543,7 @@ void tickPlayerMenuChartView()
                 .width  = 10,
                 .height = 10,
             };
-            unsetUIBoxAnimated(2, &start);
+            removeAnimatedUIBox(2, &start);
             playSound(0, 3);
             MENU_STATE = 2;
         }

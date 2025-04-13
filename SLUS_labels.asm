@@ -49,11 +49,9 @@
 .definelabel changeMap,                 0x800d9020
 .definelabel startGameTime,             0x800dd7a0
 .definelabel getEntityScreenPos,        0x800e52d8
-.definelabel createAnimatedUIBox,       0x800c3014
 .definelabel giveItem,                  0x800c5240
 .definelabel setCameraFollowPlayer,     0x800d8b44
 .definelabel pickupItem,                0x800c5490
-.definelabel unsetUIBoxAnimated,        0x800c31fc
 .definelabel entityLookAtLocation,      0x800d459c
 .definelabel tickOpenChestTray,         0x800e21d0
 .definelabel tickCloseChestTray,        0x800e223c
@@ -96,7 +94,6 @@
 .definelabel renderOverworldItem,       0x800c4e94
 .definelabel removeItem,                0x800c53ec
 .definelabel hasMove,                   0x800e5eb4
-.definelabel unsetUIBoxStatic,          0x800c2fd8
 .definelabel dailyPStatTrigger,         0x800fc374
 
 .definelabel MAP_COLLISION_DATA, 0x801af398
@@ -338,6 +335,7 @@
 .definelabel libgpu_AddPrim, 0x80092ad4
 .definelabel libgpu_GetClut, 0x80092abc
 .definelabel libgpu_SetPolyFT4, 0x80092b88
+.definelabel libgpu_SetPolyF4, 0x80092b74
 .definelabel libgpu_SetLineF2, 0x80092bc4
 .definelabel libgpu_SetLineF3, 0x80092bd8
 .definelabel libgpu_SetLineF4, 0x80092bf8

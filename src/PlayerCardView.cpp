@@ -210,8 +210,8 @@ void tickPlayerMenuCardView()
                 .height = 1,
             };
             MENU_STATE = 2;
-            unsetUIBoxAnimated(2, &start);
-            unsetUIBoxAnimated(3, &start);
+            removeAnimatedUIBox(2, &start);
+            removeAnimatedUIBox(3, &start);
         }
     }
     else if (MENU_STATE == 2)
