@@ -8,6 +8,7 @@
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "ItemEffects.hpp"
+#include "ItemFunctions.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
 #include "Tamer.hpp"
@@ -785,14 +786,10 @@ extern "C"
         if (itemType > ItemType::METAL_BANANA) return true;
 
         // evolution items
-        auto level = getDigimonData(type)->level;
-        if (itemType == ItemType::METAL_BANANA && level != Level::CHAMPION) return true;
-        if (itemType == ItemType::GIGA_HAND && level != Level::CHAMPION) return true;
-        if (itemType == ItemType::NOBLE_MANE && level != Level::ROOKIE) return true;
-        if (itemType >= ItemType::GREY_CLAWS && itemType <= ItemType::MOON_MIRROR)
+        auto level  = getDigimonData(type)->level;
+        auto target = getEvoItemTarget(itemType);
+        if (target != DigimonType::INVALID)
         {
-            auto target =
-                EVOLUTION_ITEM_TARGET[static_cast<uint32_t>(itemType) - static_cast<uint32_t>(ItemType::GREY_CLAWS)];
             auto targetLevel = getDigimonData(target)->level;
             auto levelDiff   = static_cast<int32_t>(targetLevel) - static_cast<int32_t>(level);
             if (levelDiff != 1) return true;

@@ -1304,7 +1304,6 @@ extern "C"
     extern uint8_t CURRENT_POOP_ID;
     extern uint8_t PARTNER_AREA_RESPONSE;
     extern TamerItem TAMER_ITEM;
-    extern DigimonType EVOLUTION_ITEM_TARGET[44];
     extern uint8_t PARTNER_STATE;
     extern uint8_t PARTNER_SUB_STATE;
     extern uint8_t PARTNER_ANIMATION;

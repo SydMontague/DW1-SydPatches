@@ -8,10 +8,4 @@
   .notice "Empty space left: " + (0x800c5ad8-.) + " bytes"
 .endarea
 
-.org 0x800c396c
-.area 0x800c4728-.
-  .importobj "compiled/ItemFunctions.lib"
-
-  .notice "Empty space left: " + (0x800c4728-.) + " bytes"
-.endarea
 .close

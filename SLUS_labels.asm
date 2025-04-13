@@ -204,7 +204,6 @@
 .definelabel CURRENT_POOP_ID, 0x80134c58
 .definelabel PARTNER_AREA_RESPONSE, 0x80150c3e
 .definelabel TAMER_ITEM, 0x8013d4d0
-.definelabel EVOLUTION_ITEM_TARGET, 0x80127c5c
 .definelabel PARTNER_STATE, 0x80134c5b
 .definelabel PARTNER_SUB_STATE, 0x80134c5c
 .definelabel PARTNER_ANIMATION, 0x80134e2c

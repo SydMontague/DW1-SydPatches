@@ -111,7 +111,7 @@ extern "C"
             int16_t addedBrain;
         };
 
-        FoodData foodData[36] = {
+        constexpr FoodData foodData[36] = {
             {
                 .itemId         = ItemType::STEAK,
                 .energy         = 32,
@@ -375,8 +375,126 @@ extern "C"
         addWithLimit(&PARTNER_ENTITY.stats.brain, data.addedBrain, 999);
     }
 
+    DigimonType getEvoItemTarget(ItemType item)
+    {
+        switch (item)
+        {
+            case ItemType::GREY_CLAWS: return DigimonType::GREYMON;
+            case ItemType::FIREBALL: return DigimonType::MERAMON;
+            case ItemType::FLAMEWING: return DigimonType::BIRDRAMON;
+            case ItemType::IRON_HOOF: return DigimonType::CENTARUMON;
+            case ItemType::MONO_STONE: return DigimonType::MONOCHROMON;
+            case ItemType::STEEL_DRILL: return DigimonType::DRIMOGEMON;
+            case ItemType::WHITE_FANG: return DigimonType::TYRANNOMON;
+            case ItemType::BLACK_WING: return DigimonType::DEVIMON;
+            case ItemType::SPIKE_CLUB: return DigimonType::OGREMON;
+            case ItemType::FLAMEINGMANE: return DigimonType::LEOMON;
+            case ItemType::WHITE_WING: return DigimonType::ANGEMON;
+            case ItemType::TORN_TATTER: return DigimonType::BAKEMON;
+            case ItemType::ELECTRO_RING: return DigimonType::INVALID;
+            case ItemType::RAINBOWHORN: return DigimonType::AIRDRAMON;
+            case ItemType::ROOSTER: return DigimonType::KOKATORIMON;
+            case ItemType::UNIHORN: return DigimonType::UNIMON;
+            case ItemType::HORN_HELMET: return DigimonType::KABUTERIMON;
+            case ItemType::SCISSOR_JAW: return DigimonType::KUWAGAMON;
+            case ItemType::FERTILIZER: return DigimonType::VEGIEMON;
+            case ItemType::KOGA_LAWS: return DigimonType::NINJAMON;
+            case ItemType::WATERBOTTLE: return DigimonType::SEADRAMON;
+            case ItemType::NORTH_STAR: return DigimonType::WHAMON;
+            case ItemType::RED_SHELL: return DigimonType::SHELLMON;
+            case ItemType::HARD_SCALE: return DigimonType::COELAMON;
+            case ItemType::BLUECRYSTAL: return DigimonType::GARURUMON;
+            case ItemType::ICE_CRYSTAL: return DigimonType::FRIGIMON;
+            case ItemType::HAIR_GROWER: return DigimonType::MOJYAMON;
+            case ItemType::SUNGLASSES: return DigimonType::NANIMON;
+            case ItemType::METAL_PART: return DigimonType::METALGREYMON;
+            case ItemType::FATAL_BONE: return DigimonType::SKULLGREYMON;
+            case ItemType::CYBER_PART: return DigimonType::ANDROMON;
+            case ItemType::MEGA_HAND: return DigimonType::MEGADRAMON;
+            case ItemType::SILVER_BALL: return DigimonType::MAMEMON;
+            case ItemType::METAL_ARMOR: return DigimonType::METALMAMEMON;
+            case ItemType::CHAINSAW: return DigimonType::GIROMON;
+            case ItemType::SMALL_SPEAR: return DigimonType::PIXIMON;
+            case ItemType::X_BANDAGE: return DigimonType::MONZAEMON;
+            case ItemType::RAY_GUN: return DigimonType::VADEMON;
+            case ItemType::GOLD_BANANA: return DigimonType::ETEMON;
+            case ItemType::MYSTY_EGG: return DigimonType::DIGITAMAMON;
+            case ItemType::RED_RUBY: return DigimonType::PHOENIXMON;
+            case ItemType::BETTLEPEARL: return DigimonType::HERCULESKABUTERIMON;
+            case ItemType::CORAL_CHARM: return DigimonType::MEGASEADRAMON;
+            case ItemType::MOON_MIRROR: return DigimonType::WEREGARURUMON;
+            case ItemType::GIGA_HAND: return DigimonType::GIGADRAMON;
+            case ItemType::NOBLE_MANE: return DigimonType::PANJYAMON;
+            case ItemType::METAL_BANANA: return DigimonType::METALETEMON;
+
+            default: return DigimonType::INVALID;
+        }
+    }
+
+    void handleEvoItem(ItemType item)
+    {
+        auto target = getEvoItemTarget(item);
+        
+        if (target == DigimonType::INVALID) return;
+
+        EVOLUTION_TARGET = static_cast<int16_t>(target);
+        HAS_USED_EVOITEM = true;
+        removeTamerItem();
+        closeInventoryBoxes();
+        Tamer_setState(6);
+        Partner_setState(13);
+    }
+
     void fillItemTable()
     {
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::GREY_CLAWS)]   = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::FIREBALL)]     = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::FLAMEWING)]    = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::IRON_HOOF)]    = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MONO_STONE)]   = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::STEEL_DRILL)]  = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::WHITE_FANG)]   = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::BLACK_WING)]   = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SPIKE_CLUB)]   = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::FLAMEINGMANE)] = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::WHITE_WING)]   = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::TORN_TATTER)]  = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::ELECTRO_RING)] = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::RAINBOWHORN)]  = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::ROOSTER)]      = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::UNIHORN)]      = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::HORN_HELMET)]  = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SCISSOR_JAW)]  = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::FERTILIZER)]   = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::KOGA_LAWS)]    = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::WATERBOTTLE)]  = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::NORTH_STAR)]   = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::RED_SHELL)]    = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::HARD_SCALE)]   = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::BLUECRYSTAL)]  = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::ICE_CRYSTAL)]  = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::HAIR_GROWER)]  = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SUNGLASSES)]   = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::METAL_PART)]   = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::FATAL_BONE)]   = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::CYBER_PART)]   = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MEGA_HAND)]    = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SILVER_BALL)]  = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::METAL_ARMOR)]  = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::CHAINSAW)]     = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SMALL_SPEAR)]  = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::X_BANDAGE)]    = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::RAY_GUN)]      = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::GOLD_BANANA)]  = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MYSTY_EGG)]    = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::RED_RUBY)]     = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::BETTLEPEARL)]  = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::CORAL_CHARM)]  = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MOON_MIRROR)]  = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::GIGA_HAND)]    = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::NOBLE_MANE)]   = handleEvoItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::METAL_BANANA)] = handleEvoItem;
+
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::AUTOPILOT)]    = handleAutopilot;
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::BANDAGE)]      = handleBandage;
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MEDICINE)]     = handleMedicine;
