@@ -70,4 +70,17 @@ extern "C"
             }
         }
     }
+
+    void initializeInventory()
+    {
+        for (int32_t i = 0; i < 30; i++)
+        {
+            INVENTORY_ITEM_AMOUNTS[i] = 0;
+            INVENTORY_ITEM_TYPES[i]   = ItemType::NONE;
+            INVENTORY_ITEM_NAMES[i]   = 0xFF;
+        }
+        INVENTORY_SIZE = 10;
+
+        // vanilla initializes the debug inventory here, but we don't need that anymore
+    }
 }

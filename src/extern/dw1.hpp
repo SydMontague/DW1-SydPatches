@@ -1648,8 +1648,6 @@ extern "C"
     extern void setTrigger(uint32_t triggerId);
     extern void clearTextArea();
     extern void setTextColor(int32_t color);
-    extern void addWithLimit(int16_t* valuePtr, int16_t value, int32_t limit);
-    extern void removeTamerItem();
     extern void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
     extern bool hasDigimonRaised(DigimonType type);
 

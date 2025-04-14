@@ -14,8 +14,6 @@
 .definelabel clearTextArea,             0x8010cb90
 .definelabel setTextColor,              0x8010cc0c
 .definelabel callScriptSection,         0x80105b14
-.definelabel addWithLimit,              0x800c563c
-.definelabel removeTamerItem,           0x800c55fc
 .definelabel hasDigimonRaised,          0x800ff824
 ;.definelabel Partner_setState,          0x800df4d0 ; use constexpr version instead
 .definelabel updateConditionAnimation,  0x800df2d0

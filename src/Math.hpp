@@ -40,6 +40,7 @@ extern "C"
     int32_t findAABBHitEntity(AABB* aabb, Entity* ignoreEntity, int32_t startId);
     void getRotationDifference(PositionData* pos, Vector* target, int16_t* outAngle, int16_t* ccDiff, int16_t* cwDiff);
     bool rotateEntity(SVector* rotVector, int16_t targetAngle, int16_t ccDiff, int16_t cwDiff, int16_t speed);
+    void addWithLimit(int16_t* valuePtr, int16_t value, int32_t limit);
 }
 
 template<class T> constexpr auto clamp(T val, decltype(val) min, decltype(val) max) -> decltype(val)

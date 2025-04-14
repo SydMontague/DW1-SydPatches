@@ -1,13 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800c566c
-.area 0x800c5ad8-.
-  .importobj "compiled/ItemEffects.lib"
-
-  .notice "Empty space left: " + (0x800c5ad8-.) + " bytes"
-.endarea
-
 .org 0x80102d04
   jal setInventorySize
 
@@ -67,6 +60,20 @@
   jal getItemCount
 .org 0x80108b28
   jal getItemCount
+
+.org 0x800f03ec
+  jal initializeInventory
+
+;.org 0x800c393c
+;  jal removeTamerItem
+;.org 0x800c455c
+;  jal removeTamerItem
+.org 0x800de208
+  jal removeTamerItem
+.org 0x800de2a0
+  jal removeTamerItem
+.org 0x800f06cc
+  jal removeTamerItem
 
 .close
 

@@ -3,6 +3,7 @@
 #include "Effects.hpp"
 #include "Helper.hpp"
 #include "ItemEffects.hpp"
+#include "Math.hpp"
 #include "Model.hpp"
 #include "Tamer.hpp"
 #include "extern/BTL.hpp"

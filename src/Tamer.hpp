@@ -9,4 +9,5 @@ extern "C"
     uint8_t Tamer_getState();
     uint8_t Tamer_getSubState();
     void addTamerLevel(int32_t chance, int32_t amount);
+    void removeTamerItem();
 }

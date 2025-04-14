@@ -266,4 +266,10 @@ extern "C"
 
         return false;
     }
+
+    void addWithLimit(int16_t* valuePtr, int16_t value, int32_t limit)
+    {
+        *valuePtr += value;
+        if (*valuePtr > limit) *valuePtr = limit;
+    }
 }

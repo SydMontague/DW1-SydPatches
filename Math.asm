@@ -146,6 +146,9 @@
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
 
+.org 0x8005cf74
+  jal addWithLimit
+
 .org 0x80066678
   jal findAABBHitEntity
 .org 0x8006ab58
@@ -295,6 +298,9 @@
 
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
 .psx
+
+.org 0x8006472c
+  jal addWithLimit
 
 .org 0x8006ec70
   jal findAABBHitEntity
@@ -493,6 +499,9 @@
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
+
+.org 0x8005c334
+  jal addWithLimit
 
 .org 0x80064d40
   jal findAABBHitEntity
