@@ -15,4 +15,5 @@ extern "C"
     int32_t getTileTrigger(Vector* position);
 
     void renderOverworldItem(WorldItem* item);
+    bool pickupItem(int32_t dropId);
 }

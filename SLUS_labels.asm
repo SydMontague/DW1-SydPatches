@@ -21,7 +21,6 @@
 .definelabel updateConditionAnimation,  0x800df2d0
 .definelabel unsetButterfly,            0x800e9fb4
 .definelabel advanceToTime,             0x800dd678
-.definelabel getItemCount,              0x800c51e0
 .definelabel setTrigger,                0x801065c0
 .definelabel unsetBubble,               0x800ece20
 .definelabel addConditionBubble,        0x800ec538
@@ -49,9 +48,7 @@
 .definelabel changeMap,                 0x800d9020
 .definelabel startGameTime,             0x800dd7a0
 .definelabel getEntityScreenPos,        0x800e52d8
-.definelabel giveItem,                  0x800c5240
 .definelabel setCameraFollowPlayer,     0x800d8b44
-.definelabel pickupItem,                0x800c5490
 .definelabel entityLookAtLocation,      0x800d459c
 .definelabel tickOpenChestTray,         0x800e21d0
 .definelabel tickCloseChestTray,        0x800e223c
@@ -91,7 +88,6 @@
 .definelabel drawInventoryText,         0x800dac48
 .definelabel entityGetTechFromAnim,     0x800e6000
 .definelabel activateMedalTexture,      0x800e24a4
-.definelabel removeItem,                0x800c53ec
 .definelabel hasMove,                   0x800e5eb4
 .definelabel dailyPStatTrigger,         0x800fc374
 .definelabel addEntityText,             0x800df868
@@ -104,6 +100,8 @@
 .definelabel MERIT, 0x80134fc4
 .definelabel MOVE_NAMES, 0x80126054
 .definelabel INVENTORY_ITEM_TYPES, 0x8013d474
+.definelabel INVENTORY_ITEM_AMOUNTS, 0x8013d492
+.definelabel INVENTORY_ITEM_NAMES, 0x8013d4b0
 .definelabel INVENTORY_POINTER, 0x80134e10
 .definelabel SELECTED_CARD, 0x80134d3e
 .definelabel SELECTED_MEDAL, 0x80134d3c

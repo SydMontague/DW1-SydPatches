@@ -85,9 +85,6 @@
 .org 0x800d9044
   jal clearDroppedItems
 
-.org 0x800c54cc
-  jal deleteDroppedItem
-
 .org 0x80104d40
   jal spawnItem
 

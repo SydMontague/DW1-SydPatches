@@ -1,6 +1,7 @@
 #include "Entity.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
+#include "Inventory.hpp"
 #include "Math.hpp"
 #include "Partner.hpp"
 #include "Tamer.hpp"
@@ -852,5 +853,15 @@ extern "C"
     {
         for (int32_t i = 0; i < 10; i++)
             if (DROPPED_ITEMS[i].type != ItemType::NONE) deleteDroppedItem(i);
+    }
+
+    bool pickupItem(int32_t dropId)
+    {
+        if (giveItem(DROPPED_ITEMS[dropId].type, 1))
+        {
+            deleteDroppedItem(dropId);
+            return true;
+        }
+        return false;
     }
 }

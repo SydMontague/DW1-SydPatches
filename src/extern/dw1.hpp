@@ -1391,6 +1391,8 @@ extern "C"
     extern int16_t PLAYTIME_MINUTES;
     extern int16_t MERIT;
     extern ItemType INVENTORY_ITEM_TYPES[30];
+    extern uint8_t INVENTORY_ITEM_AMOUNTS[30];
+    extern uint8_t INVENTORY_ITEM_NAMES[30];
     extern uint8_t INVENTORY_POINTER;
     extern EvoChartBoxData EVOCHART_BOXES[61];
     extern uint16_t CHANGED_INPUT;
@@ -1542,7 +1544,6 @@ extern "C"
     void addEntityText(DigimonEntity* entity, int32_t entityId, int8_t color, int32_t amount, int8_t icon);
     void dailyPStatTrigger();
     bool hasMove(int32_t move);
-    void removeItem(ItemType type, int32_t amount);
     void activateMedalTexture(Medal medal);
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
     void initializeFishing();
@@ -1585,9 +1586,7 @@ extern "C"
     bool tickOpenChestTray(uint32_t chestId);
     bool tickCloseChestTray(uint32_t chestId);
     void playSound(int32_t vabId, uint32_t note);
-    bool giveItem(ItemType type, uint8_t amount);
     void setCameraFollowPlayer();
-    bool pickupItem(int32_t dropId);
     void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos);
     void addMapNameObject(int32_t mapId);
     void changeMap(uint32_t map, uint32_t exit);
@@ -1623,7 +1622,6 @@ extern "C"
     extern void unsetBubble(uint32_t id);
     extern uint8_t addConditionBubble(uint32_t type, Entity* entity);
     extern uint32_t setButterfly(Entity* entity);
-    extern uint8_t getItemCount(ItemType item);
     extern uint16_t convertAsciiToJis(uint8_t input);
     extern void clearTextSubArea(RECT* rect);
     extern void renderString(int32_t colorId,

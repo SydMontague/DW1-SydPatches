@@ -5,6 +5,7 @@
 #include "GameMenu.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
+#include "Inventory.hpp"
 #include "Map.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
