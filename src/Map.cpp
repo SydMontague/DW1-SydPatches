@@ -726,4 +726,131 @@ extern "C"
     {
         setImpassableRect(tileX - radius, tileY - radius, radius * 2, radius * 2);
     }
+
+    static void renderDroppedItemShadow(WorldItem* item)
+    {
+        auto posX = item->spriteLocation.x;
+        auto posZ = item->spriteLocation.z;
+
+        SVector point1 = {.x = static_cast<int16_t>(posX - 100), .y = 0, .z = static_cast<int16_t>(posZ - 100)};
+        SVector point2 = {.x = static_cast<int16_t>(posX + 100), .y = 0, .z = static_cast<int16_t>(posZ - 100)};
+        SVector point3 = {.x = static_cast<int16_t>(posX - 100), .y = 0, .z = static_cast<int16_t>(posZ + 100)};
+        SVector point4 = {.x = static_cast<int16_t>(posX + 100), .y = 0, .z = static_cast<int16_t>(posZ + 100)};
+
+        ScreenCoord pos1;
+        ScreenCoord pos2;
+        ScreenCoord pos3;
+        Position screenPos;
+        int32_t interpolVal;
+        int32_t flag;
+
+        libgte_RotTransPers3(&point1, &point2, &point3, &pos1.raw, &pos2.raw, &pos3.raw, &interpolVal, &flag);
+        worldPosToScreenPos(&point4, &screenPos);
+
+        POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+        libgpu_SetPolyFT4(prim);
+        libgpu_SetSemiTrans(prim, 1);
+        setPolyFT4UV(prim, 64, 128, 63, 63);
+        prim->tpage = 0xDD;
+        prim->clut  = getClut(0, 0x1e7);
+        prim->r0    = 0x30;
+        prim->g0    = 0x30;
+        prim->b0    = 0x30;
+        prim->x0    = pos1.x;
+        prim->y0    = pos1.y;
+        prim->x1    = pos2.x;
+        prim->y1    = pos2.y;
+        prim->x2    = pos3.x;
+        prim->y2    = pos3.y;
+        prim->x3    = screenPos.x;
+        prim->y3    = screenPos.y;
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 0xFFD, prim);
+        libgs_GsSetWorkBase(prim + 1);
+    }
+
+    void renderOverworldItem(WorldItem* item)
+    {
+        Position screenPos;
+
+        auto depth = worldPosToScreenPos(&item->spriteLocation, &screenPos);
+        auto width = (VIEWPORT_DISTANCE << 7) / depth;
+        auto layer = depth >> 4;
+
+        if (layer >= 0x1000 && layer <= 0) return;
+
+        POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+        libgpu_SetPolyFT4(prim);
+        prim->r0    = 0x80;
+        prim->g0    = 0x80;
+        prim->b0    = 0x80;
+        prim->tpage = 5;
+        setItemTexture(prim, item->type);
+        // vanilla modifies the UV when width is larger than 32, but that seems to be redundant?
+
+        setPosDataPolyFT4(prim, screenPos.x - width / 2, screenPos.y - width / 2, width, width);
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + layer, prim);
+        libgs_GsSetWorkBase(prim + 1);
+    }
+
+    void initializeDroppedItems()
+    {
+        TAMER_ITEM.type = ItemType::NONE;
+        for (auto& item : DROPPED_ITEMS)
+            item.type = ItemType::NONE;
+    }
+
+    static void renderDroppedItem(int32_t instanceId)
+    {
+        if (!MAP_LAYER_ENABLED) return;
+
+        renderOverworldItem(&DROPPED_ITEMS[instanceId]);
+        renderDroppedItemShadow(&DROPPED_ITEMS[instanceId]);
+    }
+
+    void spawnDroppedItem(Entity* entity, ItemType item)
+    {
+        for (int32_t i = 0; i < 10; i++)
+        {
+            auto& data = DROPPED_ITEMS[i];
+            if (data.type != ItemType::NONE) continue;
+
+            data.type             = item;
+            data.spriteLocation.x = entity->posData->location.x;
+            data.spriteLocation.y = 0;
+            data.spriteLocation.z = entity->posData->location.z;
+            getModelTile(&entity->posData->location, &data.tileX, &data.tileY);
+            addObject(ObjectID::DROPPED_ITEM, i, nullptr, renderDroppedItem);
+            return;
+        }
+    }
+
+    void spawnItem(ItemType itemId, int16_t tileX, int16_t tileY)
+    {
+        for (int32_t i = 0; i < 10; i++)
+        {
+            auto& data = DROPPED_ITEMS[i];
+            if (data.type != ItemType::NONE) continue;
+
+            data.type             = itemId;
+            data.tileX            = tileX;
+            data.tileY            = tileY;
+            data.spriteLocation.x = (tileX - 50) * 100 + 50;
+            data.spriteLocation.y = TAMER_ENTITY.posData->location.y; // why not 0?
+            data.spriteLocation.z = (50 - tileY) * 100 - 50;
+            addObject(ObjectID::DROPPED_ITEM, i, nullptr, renderDroppedItem);
+            return;
+        }
+    }
+
+    void deleteDroppedItem(int32_t instanceId)
+    {
+        removeObject(ObjectID::DROPPED_ITEM, instanceId);
+        DROPPED_ITEMS[instanceId].type = ItemType::NONE;
+    }
+
+    void clearDroppedItems()
+    {
+        for (int32_t i = 0; i < 10; i++)
+            if (DROPPED_ITEMS[i].type != ItemType::NONE) deleteDroppedItem(i);
+    }
 }

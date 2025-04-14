@@ -8,4 +8,7 @@
   .notice "Empty space left: " + (0x800c5ad8-.) + " bytes"
 .endarea
 
+.org 0x80102d04
+  jal setInventorySize
+
 .close

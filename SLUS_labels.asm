@@ -91,11 +91,11 @@
 .definelabel drawInventoryText,         0x800dac48
 .definelabel entityGetTechFromAnim,     0x800e6000
 .definelabel activateMedalTexture,      0x800e24a4
-.definelabel renderOverworldItem,       0x800c4e94
 .definelabel removeItem,                0x800c53ec
 .definelabel hasMove,                   0x800e5eb4
 .definelabel dailyPStatTrigger,         0x800fc374
 .definelabel addEntityText,             0x800df868
+.definelabel setItemTexture,            0x800e5dfc
 
 .definelabel MAP_COLLISION_DATA, 0x801af398
 .definelabel CARD_DATA, 0x8012ffd8
@@ -253,6 +253,7 @@
 .definelabel MEDAL_OBJECT, 0x801546a0
 .definelabel MEDAL_COORDINATES, 0x801546b0
 .definelabel COMBAT_DATA_PTR, 0x80134d4c
+.definelabel INVENTORY_SIZE, 0x80013d4ce
 
 // BTL_REL
 .definelabel BTL_battleMain, 0x8005b5f4

@@ -1526,6 +1526,7 @@ extern "C"
     extern GsDOBJ2 MEDAL_OBJECT;
     extern GsCOORDINATE2 MEDAL_COORDINATES;
     extern uint8_t MAP_COLLISION_DATA[10000];
+    extern uint8_t INVENTORY_SIZE;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1537,11 +1538,11 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void setItemTexture(POLY_FT4* prim, ItemType item);
     void addEntityText(DigimonEntity* entity, int32_t entityId, int8_t color, int32_t amount, int8_t icon);
     void dailyPStatTrigger();
     bool hasMove(int32_t move);
     void removeItem(ItemType type, int32_t amount);
-    void renderOverworldItem(WorldItem* item);
     void activateMedalTexture(Medal medal);
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
     void initializeFishing();
