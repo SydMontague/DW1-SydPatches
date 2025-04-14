@@ -237,41 +237,40 @@ extern "C"
 
         if (entity->isOnMap != 2 && (entity->isOnMap == 0 || entity->isOnScreen == 0)) return;
 
-        if (entity->flatSprite != 0xFF)
-            renderFlatDigimon(entity);
-        else
+        auto boneCount = getDigimonData(entity->type)->boneCount;
+        for (int i = 0; i < boneCount; i++)
         {
-            auto boneCount = getDigimonData(entity->type)->boneCount;
-            for (int i = 0; i < boneCount; i++)
+            auto* posData = &entity->posData[i];
+            if (posData->obj.tmd == nullptr) continue;
+
+            Matrix worldMatrix;
+            Matrix screenMatrix;
+
+            libgs_GsGetLws(posData->obj.coord2, &worldMatrix, &screenMatrix);
+            libgs_GsSetLightMatrix(&worldMatrix);
+            libgs_GsSetLsMatrix(&screenMatrix);
+
+            if (entity->flatSprite != 0xFF) continue;
+
+            auto wireFrameVal = 0x10;
+
+            if (instanceId == 1)
             {
-                auto* posData = &entity->posData[i];
-                if (posData->obj.tmd == nullptr) continue;
-
-                Matrix worldMatrix;
-                Matrix screenMatrix;
-
-                libgs_GsGetLws(posData->obj.coord2, &worldMatrix, &screenMatrix);
-                libgs_GsSetLightMatrix(&worldMatrix);
-                libgs_GsSetLsMatrix(&screenMatrix);
-
-                auto wireFrameVal = 0x10;
-
-                if (instanceId == 1)
-                {
-                    if (PARTNER_WIREFRAME_TOTAL == 0x10)
-                        wireFrameVal = PARTNER_WIREFRAME_SUB[i];
-                    else
-                        wireFrameVal = PARTNER_WIREFRAME_TOTAL;
-                }
-                else if (instanceId == 2)
-                    wireFrameVal = ENTITY1_WIREFRAME_TOTAL;
-
-                if (wireFrameVal == 0x10)
-                    libgs_GsSortObject4(&posData->obj, ACTIVE_ORDERING_TABLE, 2, &SCRATCHPAD);
+                if (PARTNER_WIREFRAME_TOTAL == 0x10)
+                    wireFrameVal = PARTNER_WIREFRAME_SUB[i];
                 else
-                    renderWireframed(&posData->obj, wireFrameVal);
+                    wireFrameVal = PARTNER_WIREFRAME_TOTAL;
             }
+            else if (instanceId == 2)
+                wireFrameVal = ENTITY1_WIREFRAME_TOTAL;
+
+            if (wireFrameVal == 0x10)
+                libgs_GsSortObject4(&posData->obj, ACTIVE_ORDERING_TABLE, 2, &SCRATCHPAD);
+            else
+                renderWireframed(&posData->obj, wireFrameVal);
         }
+
+        if (entity->flatSprite != 0xFF) renderFlatDigimon(entity);
 
         if (instanceId != 0)
             renderDropShadow(entity);
