@@ -183,7 +183,6 @@
 .definelabel CURRENT_SCREEN, 0x80134da8
 .definelabel MENU_STATE, 0x80134d34
 .definelabel MENU_SUB_STATE, 0x80134d35
-.definelabel SLEEP_PATTERN, 0x80122cf4
 .definelabel PLAYTIME_FRAMES, 0x80134f00
 .definelabel DIGIVICE_ENTITY_VIEW, 0x80123860
 .definelabel CURRENT_FRAME, 0x80134f08

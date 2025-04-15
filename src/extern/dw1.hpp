@@ -647,16 +647,6 @@ extern "C"
         uint8_t pad;
     };
 
-    struct SleepPattern
-    {
-        uint8_t sleepyHour;
-        uint8_t sleepyMinute;
-        uint8_t wakeupHour;
-        uint8_t wakeupMinute;
-        uint8_t wakeupDefault;
-        uint8_t sleepyDefault;
-    };
-
     struct PoopPile
     {
         uint8_t map;
@@ -1421,7 +1411,6 @@ extern "C"
     extern int32_t NANIMON_TRIGGER;
     extern int16_t EVOLUTION_TARGET;
     extern uint8_t CURRENT_SCREEN;
-    extern SleepPattern SLEEP_PATTERN[8];
     extern uint8_t MENU_STATE;
     extern uint16_t PLAYTIME_FRAMES;
     extern uint16_t LAST_HANDLED_FRAME;

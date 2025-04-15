@@ -1,5 +1,6 @@
 #include "Entity.hpp"
 #include "Font.hpp"
+#include "GameData.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
 #include "UIElements.hpp"
@@ -929,7 +930,7 @@ static void drawDigimonStatsViewStrings()
     sprintf(buffer4, "%d", PARTNER_PARA.careMistakes);
     values[ValueIndex::CARE].string = reinterpret_cast<const char*>(buffer4);
 
-    SleepPattern& pattern = SLEEP_PATTERN[raisePara->sleepCycle];
+    auto& pattern = SLEEP_PATTERN[raisePara->sleepCycle];
     uint8_t activeTimes[32];
     sprintf(activeTimes,
             "%02d:%02d - %02d:%02d",

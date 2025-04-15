@@ -18,7 +18,8 @@
 .endarea
 
 .org 0x8011d46c
-.area 0x80122cf4-.
+.area 0x80122d24-.
+  .importobj "compiled/GameData.lib"
 ;;;
 ; Relocated game data start. 
 ; Everything placed in here must only be referenced from code that can deal with it changing its address.
@@ -51,8 +52,8 @@ SS_address: ; initializeMusic
   .importobj "compiled/CustomUI.lib"
   .importobj "compiled/CustomInit.lib"
   
-  .notice "Empty space left: " + (0x80122cf4-.) + " bytes"
-  .fill 0x80122cf4-.
+  .notice "Empty space left: " + (0x80122d24-.) + " bytes"
+  .fill 0x80122d24-.
 .endarea
 
 

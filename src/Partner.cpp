@@ -5,6 +5,7 @@
 #include "Evolution.hpp"
 #include "Files.hpp"
 #include "Font.hpp"
+#include "GameData.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Inventory.hpp"
@@ -86,10 +87,10 @@ extern "C"
 
             para->sleepyHour         = (HOUR + awakeTime) % 24;
             para->sleepyMinute       = 0;
-            para->wakeupHour         = (para->sleepyHour + pattern.sleepyDefault) % 24;
+            para->wakeupHour         = (para->sleepyHour + pattern.sleepyHours) % 24;
             para->wakeupMinute       = para->sleepyMinute;
             para->hoursAwakeDefault  = awakeTime;
-            para->hoursAsleepDefault = pattern.sleepyDefault;
+            para->hoursAsleepDefault = pattern.sleepyHours;
         }
         else
         {
@@ -97,8 +98,8 @@ extern "C"
             para->sleepyMinute       = pattern.sleepyMinute;
             para->wakeupHour         = pattern.wakeupHour;
             para->wakeupMinute       = pattern.wakeupMinute;
-            para->hoursAwakeDefault  = pattern.wakeupMinute;
-            para->hoursAsleepDefault = pattern.sleepyDefault;
+            para->hoursAwakeDefault  = pattern.awakeHours;
+            para->hoursAsleepDefault = pattern.sleepyHours;
         }
 
         para->timeAwakeToday      = para->hoursAwakeDefault * 6;
