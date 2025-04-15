@@ -88,18 +88,6 @@ static TextSprite cardLabel = {
 
 static uint8_t playerMenuState;
 
-static Pair<EvoChartBoxData, int32_t> getEvoChartData(uint16_t posX, uint16_t posY)
-{
-    int32_t i = 0;
-    for (auto& data : EVOCHART_BOXES)
-    {
-        if (data.posX == posX + 2 && data.posY == posY) return {data, i};
-        i++;
-    }
-
-    return {{}, -1};
-}
-
 static void tickPlayerMenuPlayerView() {}
 
 void tickPlayerMenu()

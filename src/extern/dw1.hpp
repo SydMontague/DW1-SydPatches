@@ -1384,10 +1384,8 @@ extern "C"
     extern uint8_t INVENTORY_ITEM_AMOUNTS[30];
     extern uint8_t INVENTORY_ITEM_NAMES[30];
     extern uint8_t INVENTORY_POINTER;
-    extern EvoChartBoxData EVOCHART_BOXES[61];
     extern uint16_t CHANGED_INPUT;
     extern Move MOVE_DATA[122];
-    extern uint8_t EQUIPPED_MOVES[4];
     extern uint32_t TRIANGLE_MENU_STATE;
     extern uint8_t MENU_SUB_STATE;
     extern MapDigimonEntity MAP_DIGIMON_TABLE[8];
@@ -1421,7 +1419,6 @@ extern "C"
     extern uint16_t YEAR;
     extern int32_t HAS_BUTTERFLY;
     extern uint32_t BUTTERFLY_ID;
-    extern GsRVIEW2 DIGIVICE_ENTITY_VIEW;
     extern uint8_t ITEM_SCOLD_FLAG;
     extern uint32_t HAS_IMMORTAL_HOUR;
     extern uint8_t IMMORTAL_HOUR;
@@ -1521,7 +1518,6 @@ extern "C"
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
-    extern uint8_t UNKNOWN_TAMER_DATA[10];
     // TODO: can be non-extern, but large
     extern PositionData PARTNER_POSITION_DATA[34];
     extern MomentumData PARTNER_MOMENTUM_DATA[34];

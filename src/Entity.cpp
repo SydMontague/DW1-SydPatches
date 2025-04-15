@@ -299,6 +299,17 @@ bool hasAttackEquipped(DigimonEntity* entity)
     return false;
 }
 
+static GsRVIEW2 digiviceView = {
+    .viewpointX = 1300,
+    .viewpointY = 0,
+    .viewpointZ = -3280,
+    .refpointX = 0,
+    .refpointY = 0,
+    .refpointZ = 0,
+    .viewpoint_twist = 0,
+    .super = nullptr,
+};
+
 void renderDigiviceEntity(Entity* entity, int32_t entityId, int32_t refX)
 {
     FRAMEBUFFER_OT[0]->length = 9;
@@ -306,10 +317,10 @@ void renderDigiviceEntity(Entity* entity, int32_t entityId, int32_t refX)
     FRAMEBUFFER_OT[1]->length = 9;
     FRAMEBUFFER_OT[1]->origin = FRAMEBUFFER1_ORIGIN;
 
-    DIGIVICE_ENTITY_VIEW.refpointX = refX;
+    digiviceView.refpointX = refX;
 
     libgs_GsSetProjection(0x200);
-    libgs_GsSetRefView2(&DIGIVICE_ENTITY_VIEW);
+    libgs_GsSetRefView2(&digiviceView);
     libgs_GsClearOt(0, 5, FRAMEBUFFER_OT[ACTIVE_FRAMEBUFFER]);
 
     constexpr GsF_LIGHT light1{.x = 100, .y = 100, .z = 100, .r = 128, .g = 128, .b = 128};

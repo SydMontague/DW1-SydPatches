@@ -65,15 +65,6 @@ SS_address: ; initializeMusic
   .fill 0x80137c00-.
 .endarea
 
-
-; override evo chart detail data
-.org 0x80124944
-.area 0x80124b78-.
-
-  .notice "Empty space left: " + (0x80124b78-.) + " bytes"
-  .fill 0x80124b78-.
-.endarea
-
 ; override some effect data
 .org 0x80123370
 .area 0x8012342c-.
@@ -83,11 +74,11 @@ SS_address: ; initializeMusic
 .endarea
 
 ; override some menu data
-.org 0x80123e88
-.area 0x80124424-.
+.org 0x80123860
+.area 0x80124c0c-.
 
-  .notice "Empty space left: " + (0x80124424-.) + " bytes"
-  .fill 0x80124424-.
+  .notice "Empty space left: " + (0x80124c0c-.) + " bytes"
+  .fill 0x80124c0c-.
 .endarea
 
 
