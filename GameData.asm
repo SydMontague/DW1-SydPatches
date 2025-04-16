@@ -10,11 +10,11 @@
 .endarea
 
 .org 0x800b3d84
-.area 0x800c5ad8-.
+.area 0x800c67b4-.
   .importobj "compiled/Cave2.lib"
 
-  .notice "Empty space left: " + (0x800c5ad8-.) + " bytes"
-  .fill 0x800c5ad8-.
+  .notice "Empty space left: " + (0x800c67b4-.) + " bytes"
+  .fill 0x800c67b4-.
 .endarea
 
 .org 0x8011d46c
@@ -37,14 +37,8 @@ NAMING_DATA:
   .include "NamingData.asm"
 
 .align 4
-SB_address: ; loadSounds, 0x800e8f80
+SB_address: ; 0x800e8f80
 .ascii "SOUND\\VHB\\SB",0
-.align 4
-SL_address: ; initializeMusic
-.ascii "SOUND\\VHB\\SL",0
-.align 4
-SS_address: ; initializeMusic
-.ascii "SOUND\\VHB\\SS",0
 
 .align 4
   .importobj "compiled/utils.lib"

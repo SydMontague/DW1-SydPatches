@@ -1,7 +1,6 @@
 .definelabel global_pointer, 0x8013bb2c
 .definelabel padWithSpaces, 0x800ff51c
 .definelabel updateNamingPreview, 0x8010aa60
-.definelabel playSound, 0x800c6374
 .definelabel clearTextSubArea, 0x8010cbc4
 .definelabel renderNumber, 0x800e5444
 .definelabel drawString, 0x8010cf24
@@ -29,7 +28,6 @@
 .definelabel Partner_tick,              0x800dd7ac
 .definelabel projectPosition,           0x800e1074
 .definelabel renderObject,              0x800e215c
-.definelabel loadPartnerSounds,         0x800c64e0
 .definelabel learnMove,                 0x800e5f14
 .definelabel initializeConditionBubbles,0x800ec520
 .definelabel initializeButterfly,       0x800e9ce8
@@ -91,6 +89,14 @@
 .definelabel addEntityText,             0x800df868
 .definelabel setItemTexture,            0x800e5dfc
 
+.definelabel GENERAL_BUFFER, 0x80010000
+.definelabel DIGIMON_VLALL_SOUND_ID, 0x80127efc
+.definelabel DIGIMON_VBALL_SOUND_ID, 0x80127f40
+.definelabel MAP_SOUND_PARA, 0x80127ff4
+.definelabel VHB_SOUNDBUFFER_START, 0x80127ed4
+.definelabel VHB_HEADER_ADDR, 0x80127eac
+.definelabel ACTIVE_MAP_SOUND_ID, 0x80134394
+.definelabel SEQ_BUFFER, 0x80148574
 .definelabel MAP_COLLISION_DATA, 0x801af398
 .definelabel CARD_DATA, 0x8012ffd8
 .definelabel PLAYTIME_HOURS, 0x80134efe
@@ -298,6 +304,7 @@
 
 // libetc
 .definelabel libetc_InterruptCallback, 0x8009237c
+.definelabel libetc_ResetCallback, 0x8009234c
 
 // libgs
 .definelabel libgs_GsGetWorkBase, 0x80098c38
@@ -390,6 +397,37 @@
 .definelabel libgte_GsTMDfastF3L, 0x8009bfb4
 
 .definelabel GS_TMD_MAP, 0x80137000
+
+// libsnd
+.definelabel libsnd_SsVabClose, 0x800d2b08
+.definelabel libsnd_SsVabOpenHeadSticky, 0x800d2f58
+.definelabel libsnd_SsVabTransBody, 0x800d2f88
+.definelabel libsnd_SsVabTransCompleted, 0x800d3048
+.definelabel libsnd_SsSeqStop, 0x800cdd74
+.definelabel libsnd_SsSeqClose, 0x800cd2a8
+.definelabel libsnd_SsSeqOpen, 0x800cd49c
+.definelabel libsnd_SsSeqSetVol, 0x800ce19c
+.definelabel libsnd_SsSeqPlay, 0x800cd73c
+.definelabel libsnd_SsUtGetVBaddrInSB, 0x800ce9b4
+.definelabel libsnd_SsUtAutoVol, 0x800ce5f4
+.definelabel libsnd_SsUtKeyOffV, 0x800ced64
+.definelabel libsnd_SsUtAllKeyOff, 0x800ce4b4
+.definelabel libsnd_SsUtKeyOnV, 0x800cea04
+.definelabel libsnd_SsInit, 0x800cd46c
+.definelabel libsnd_SsSetTableSize, 0x800cdd9c
+.definelabel libsnd_SsSetTicKMode, 0x800cdfbc
+.definelabel libsnd_SsStart, 0x800cdbd4
+.definelabel libsnd_SsSetMVol, 0x800cd8b4
+.definelabel libsnd_SsEnd, 0x800cd2cc
+.definelabel libsnd_SsQuit, 0x800cd774
+
+// libspu
+.definelabel libspu_SpuSetReverbModeParam, 0x800c7fe8
+.definelabel libspu_SpuSetReverbDepth, 0x800c8998
+.definelabel libspu_SpuSetReverbVoice, 0x800c8a18
+.definelabel libspu_SpuSetReverb, 0x800c7f18
+.definelabel libspu_SpuClearReverbWorkArea, 0x800c8a48
+.definelabel libspu_SpuGetKeyStatus, 0x800c8da8
 
 // PSX internal
 .definelabel TIMER0, 0x1F801100

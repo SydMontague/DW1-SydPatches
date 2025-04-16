@@ -29,3 +29,4 @@
 .include "NPCEntity.asm"
 .include "GameMenu.asm"
 .include "UIElements.asm"
+.include "Sound.asm"

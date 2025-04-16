@@ -4,6 +4,7 @@
 #include "Files.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
+#include "Sound.hpp"
 #include "UIElements.hpp"
 #include "extern/dw1.hpp"
 

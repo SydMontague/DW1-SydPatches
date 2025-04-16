@@ -7,6 +7,7 @@
 #include "Helper.hpp"
 #include "Math.hpp"
 #include "PlayerMenu.hpp"
+#include "Sound.hpp"
 #include "StatsView.hpp"
 #include "Tamer.hpp"
 #include "UIElements.hpp"

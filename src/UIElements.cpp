@@ -2,6 +2,7 @@
 
 #include "GameObjects.hpp"
 #include "Helper.hpp"
+#include "Sound.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"

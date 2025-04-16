@@ -3,5 +3,7 @@
 extern "C"
 {
     using IRQCallback = void (*)();
-    extern void libetc_InterruptCallback(uint32_t irq, IRQCallback callback);
+
+    void libetc_InterruptCallback(uint32_t irq, IRQCallback callback);
+    void libetc_ResetCallback();
 }

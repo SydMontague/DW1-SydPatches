@@ -2,6 +2,7 @@
 #include "Font.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
+#include "Sound.hpp"
 #include "StatsView.hpp"
 #include "TechView.hpp"
 #include "UIElements.hpp"
@@ -48,7 +49,6 @@ static TextSprite techLabel = {
 };
 
 static uint8_t digimonMenuState;
-
 
 void renderDigimonMenu()
 {

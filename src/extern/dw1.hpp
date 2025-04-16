@@ -1368,6 +1368,12 @@ extern "C"
         PlayerData player;
     };
 
+    struct MapSoundPara
+    {
+        int16_t sectorId;
+        int16_t sectorCount;
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1375,6 +1381,13 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern uint8_t GENERAL_BUFFER;
+    extern dtl::array<uint8_t, 66> DIGIMON_VLALL_SOUND_ID;
+    extern dtl::array<uint8_t, 180> DIGIMON_VBALL_SOUND_ID;
+    extern dtl::array<MapSoundPara, 22> MAP_SOUND_PARA;
+    extern dtl::array<uint32_t, 10> VHB_SOUNDBUFFER_START;
+    extern dtl::array<uint8_t*, 10> VHB_HEADER_ADDR;
+    extern int32_t ACTIVE_MAP_SOUND_ID;
     extern CombatData* COMBAT_DATA_PTR;
     extern CardEntry CARD_DATA[66];
     extern int16_t PLAYTIME_HOURS;
@@ -1519,6 +1532,7 @@ extern "C"
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
     // TODO: can be non-extern, but large
+    extern dtl::array<uint8_t, 22136> SEQ_BUFFER;
     extern PositionData PARTNER_POSITION_DATA[34];
     extern MomentumData PARTNER_MOMENTUM_DATA[34];
     extern PositionData TAMER_POSITION_DATA[22];
@@ -1570,7 +1584,6 @@ extern "C"
     void entityLookAtLocation(Entity* entity, Vector* location);
     bool tickOpenChestTray(uint32_t chestId);
     bool tickCloseChestTray(uint32_t chestId);
-    void playSound(int32_t vabId, uint32_t note);
     void setCameraFollowPlayer();
     void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos);
     void addMapNameObject(int32_t mapId);
@@ -1596,7 +1609,6 @@ extern "C"
     extern void Partner_tick(int32_t);
     extern void projectPosition(GsCOORDINATE2* position, Vector* translation, SVector* rotation, Vector* scale);
     extern void renderObject(GsDOBJ2* obj, GsOT* ot, int32_t shift);
-    extern void loadPartnerSounds(DigimonType type);
     extern void learnMove(uint8_t move);
     extern void initializeConditionBubbles();
     extern void initializeButterfly();

@@ -13,6 +13,7 @@
 #include "ItemFunctions.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
+#include "Sound.hpp"
 #include "Tamer.hpp"
 #include "constants.hpp"
 #include "extern/dw1.hpp"

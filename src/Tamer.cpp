@@ -10,6 +10,7 @@
 #include "Math.hpp"
 #include "Model.hpp"
 #include "Partner.hpp"
+#include "Sound.hpp"
 #include "UIElements.hpp"
 #include "constants.hpp"
 #include "extern/DOOA.hpp"

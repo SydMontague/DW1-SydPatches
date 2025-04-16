@@ -7,6 +7,7 @@
 #include "Helper.hpp"
 #include "Map.hpp"
 #include "Math.hpp"
+#include "Sound.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libapi.hpp"
 #include "extern/libgpu.hpp"
