@@ -29,6 +29,8 @@
 .org 0x8005cca8
   jal createParticleFX
 
+.org 0x8006c63c
+  jal renderParticleFlash
 .close
 
 
@@ -46,6 +48,9 @@
 .org 0x80064d38
   jal createParticleFX
 
+.org 0x80074c48
+  jal renderParticleFlash
+
 .close
 
 
@@ -62,6 +67,9 @@
   jal createParticleFX
 .org 0x8005c88c
   jal createParticleFX
+
+.org 0x8006ad18
+  jal renderParticleFlash
 
 .close
 
@@ -123,5 +131,21 @@
   jal createParticleFX
 .org 0x8008a3e8
   jal createParticleFX
+
+.close
+
+.open "work/DIGIMON/DOOA_REL.BIN",0x80080000
+.psx
+
+.org 0x80081cb4
+  jal renderParticleFlash
+
+.close
+
+.open "work/DIGIMON/MURD_REL.BIN",0x8007C000
+.psx
+
+.org 0x8007cfdc
+  jal renderParticleFlash
 
 .close
