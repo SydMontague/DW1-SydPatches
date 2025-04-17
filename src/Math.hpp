@@ -3,6 +3,13 @@
 #include "extern/libgte.hpp"
 #include "extern/stddef.hpp"
 
+struct ScreenPos
+{
+    int16_t screenX;
+    int16_t screenY;
+    int16_t depth;
+};
+
 extern "C"
 {
     struct AABB
@@ -43,6 +50,48 @@ extern "C"
     void addWithLimit(int16_t* valuePtr, int16_t value, int32_t limit);
 }
 
+/*
+ * Gets the 2D screen position of a 3D position.
+ * The returned coordinates are relative to the center of the visibale screen area.
+ */
+ScreenPos getScreenPosition(int16_t x, int16_t y, int16_t z);
+/*
+ * Gets the 2D screen position of a 3D position.
+ * The returned coordinates are relative to the center of the visibale screen area.
+ */
+ScreenPos getScreenPosition(SVector pos);
+/*
+ * Gets the 2D screen position of a 3D position.
+ * The returned coordinates are relative to the center of the visibale screen area.
+ */
+ScreenPos getScreenPosition(Vector pos);
+/*
+ * Gets the 2D screen position of a 3D position.
+ * The returned coordinates are relative to the center of the visibale screen area.
+ */
+ScreenPos getScreenPosition(int16_t tileX, int16_t tileZ);
+
+/*
+ * Gets the 2D map position of a 3D position.
+ * The returned coordinates are relative to the center of the map.
+ */
+ScreenPos getMapPosition(int16_t x, int16_t y, int16_t z);
+/*
+ * Gets the 2D map position of a 3D position.
+ * The returned coordinates are relative to the center of the map.
+ */
+ScreenPos getMapPosition(SVector pos);
+/*
+ * Gets the 2D map position of a 3D position.
+ * The returned coordinates are relative to the center of the map.
+ */
+ScreenPos getMapPosition(Vector pos);
+/*
+ * Gets the 2D map position of a 3D position.
+ * The returned coordinates are relative to the center of the map.
+ */
+ScreenPos getMapPosition(int16_t tileX, int16_t tileZ);
+
 template<class T> constexpr auto clamp(T val, decltype(val) min, decltype(val) max) -> decltype(val)
 {
     if (min > val) return min;
@@ -61,6 +110,16 @@ template<class T> constexpr auto ring(T val, decltype(val) min, decltype(val) ma
         val += diff;
 
     return val;
+}
+
+constexpr int16_t convertTileToPosX(int16_t tileX)
+{
+    return (tileX - 50) * 100 + 50;
+}
+
+constexpr int16_t convertTileToPosZ(int16_t tileZ)
+{
+    return (50 - tileZ) * 100 - 50;
 }
 
 static_assert(max(100, 200) == 200);

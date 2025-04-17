@@ -94,6 +94,15 @@
 .org 0x800f03dc
   jal initializeDroppedItems
 
+.org 0x800d3498
+  jal isTileOffScreen
+.org 0x800d35d8
+  jal isTileOffScreen
+.org 0x800d4284
+  jal isTileOffScreen
+.org 0x800d4d9c
+  jal isTileOffScreen
+
 .close
 
 

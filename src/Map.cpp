@@ -864,4 +864,11 @@ extern "C"
         }
         return false;
     }
+
+    bool isTileOffScreen(int16_t tileX, int16_t tileZ)
+    {
+        auto pos = getScreenPosition(tileX, tileZ);
+
+        return abs(pos.screenX) > 200 || abs(pos.screenY) > 160;
+    }
 }

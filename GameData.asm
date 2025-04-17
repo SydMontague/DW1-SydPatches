@@ -17,6 +17,14 @@
   .fill 0x800c67b4-.
 .endarea
 
+.org 0x800d3078
+.area 0x800d3174-.
+;  .importobj "compiled/Cave3.lib"
+
+  .notice "Empty space left: " + (0x800d3174-.) + " bytes"
+  .fill 0x800d3174-.
+.endarea
+
 .org 0x8011d46c
 .area 0x80122d24-.
   .importobj "compiled/GameData.lib"

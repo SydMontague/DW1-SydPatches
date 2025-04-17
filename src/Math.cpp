@@ -273,3 +273,60 @@ extern "C"
         if (*valuePtr > limit) *valuePtr = limit;
     }
 }
+
+ScreenPos getScreenPosition(int16_t x, int16_t y, int16_t z)
+{
+    auto mapPos = getMapPosition(x, y, z);
+
+    return {
+        .screenX = static_cast<int16_t>(mapPos.screenX - ((SCREEN_WIDTH / 2) - DRAWING_OFFSET_X)),
+        .screenY = static_cast<int16_t>(mapPos.screenY - ((SCREEN_HEIGHT / 2) - DRAWING_OFFSET_Y)),
+        .depth   = mapPos.depth,
+    };
+}
+
+ScreenPos getScreenPosition(Vector pos)
+{
+    return getScreenPosition(pos.x, pos.y, pos.z);
+}
+
+ScreenPos getScreenPosition(SVector pos)
+{
+    return getScreenPosition(pos.x, pos.y, pos.z);
+}
+
+ScreenPos getScreenPosition(int16_t tileX, int16_t tileZ)
+{
+    return getScreenPosition(convertTileToPosX(tileX), 0, convertTileToPosZ(tileZ));
+}
+
+ScreenPos getMapPosition(int16_t x, int16_t y, int16_t z)
+{
+    libgs_GsSetLsMatrix(&libgs_REFERENCE_MATRIX);
+
+    cop2_v0xy = x | (y << 16);
+    cop2_v0z  = z;
+
+    asm volatile("cop2 0x180001");
+
+    return {
+        .screenX = static_cast<int16_t>(cop2_sxy2),
+        .screenY = static_cast<int16_t>(cop2_sxy2 >> 0x10),
+        .depth   = static_cast<int16_t>(cop2_sz3 & 0xFFFFFFFC),
+    };
+}
+
+ScreenPos getMapPosition(Vector pos)
+{
+    return getMapPosition(pos.x, pos.y, pos.z);
+}
+
+ScreenPos getMapPosition(SVector pos)
+{
+    return getMapPosition(pos.x, pos.y, pos.z);
+}
+
+ScreenPos getMapPosition(int16_t tileX, int16_t tileZ)
+{
+    return getMapPosition(convertTileToPosX(tileX), 0, convertTileToPosZ(tileZ));
+}
