@@ -9,10 +9,6 @@
 
 extern "C"
 {
-    /*
-     * Finds a file on the disc and writes its position and size into the passed FileLookup struct.
-     * If the file couldn't be found false gets returned.
-     */
     bool lookupFileTable(FileLookup* lookup, const char* filename)
     {
         uint8_t buffer[256];
@@ -27,9 +23,6 @@ extern "C"
         return true;
     }
 
-    /*
-     * Gets the size of a file or zero if it isn't found.
-     */
     uint32_t lookupFileSize(const char* path)
     {
         FileLookup lookup;
@@ -40,6 +33,8 @@ extern "C"
 
     void loadTexture(uint8_t* buffer, uint32_t* outTexPage, uint32_t* outCLUT)
     {
+        if (!buffer) return;
+
         GsIMAGE imageData;
         libgs_GsGetTimInfo(reinterpret_cast<uint32_t*>(buffer + 4), &imageData);
         RECT pixelRect = {
@@ -73,15 +68,10 @@ extern "C"
         loadTexture(TEXTURE_BUFFER, outTexPage, outCLUT);
     }
 
-    /*
-     * Reads given file from disc into the given buffer.
-     * The buffer must be large enough to hold all the *sectors* of the file, meaning that it's always a multiple of
-     * 2048. If the file is larger, your memory is busted.
-     *
-     * TODO: write safe version of this function 
-     */
     void readFile(const char* file, void* buffer)
     {
+        if(!buffer) return;
+
         FileLookup lookup;
 
         if (!lookupFileTable(&lookup, file)) return;
@@ -109,7 +99,7 @@ extern "C"
         loadTexture(buffer, nullptr, nullptr);
     }
 
-    void readFileSectors(const char* path, void* buffer, uint32_t offset, uint32_t count)
+    void readFileSectors(const char* path, void* buffer, uint32_t offset, uint32_t sectors)
     {
         FileLookup lookup;
 
@@ -122,7 +112,7 @@ extern "C"
         while (!libcd_CdControl(CdCommand::CdlSetloc, reinterpret_cast<uint8_t*>(&lookup.pos), nullptr))
             ;
         // start reading
-        while (!libcd_CdRead(count, buffer, 0x80))
+        while (!libcd_CdRead(sectors, buffer, 0x80))
             ;
         // wait for reading to complete
         while (libcd_CdReadSync(0, nullptr) > 0)
