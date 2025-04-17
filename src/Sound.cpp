@@ -22,8 +22,6 @@ static int32_t readVHBFile(int32_t vabId, const char* filename, uint8_t* buffer)
     auto size1 = *reinterpret_cast<uint32_t*>(buffer);
     auto size2 = *reinterpret_cast<uint32_t*>(buffer + 4);
 
-    printf("%x %x\n", VHB_HEADER_ADDR[vabId], VHB_SOUNDBUFFER_START[vabId]);
-
     memcpy(VHB_HEADER_ADDR[vabId], buffer + (size1 & 0xFFFFFFFC), size2 - size1);
 
     libsnd_SsVabClose(vabId);
@@ -159,7 +157,6 @@ extern "C"
 {
     bool initializeMusic()
     {
-        printf("%s\n", __FUNCTION__);
         libetc_ResetCallback();
         libsnd_SsInit();
         libsnd_SsSetTableSize(SEQ_TABLE.data(), 1, 1);
@@ -184,7 +181,6 @@ extern "C"
 
     void finalizeMusic()
     {
-        printf("%s\n", __FUNCTION__);
         seqStop();
         seqClose();
 
@@ -197,7 +193,6 @@ extern "C"
 
     void stopSoundMask(uint32_t mask)
     {
-        printf("%s\n", __FUNCTION__);
         for (int32_t i = 0; i < 0x18; i++)
         {
             if ((mask & (1 << i)) == 0) continue;
@@ -209,7 +204,6 @@ extern "C"
 
     uint32_t playSound(int32_t vabId, uint32_t val)
     {
-        printf("%s %d %d\n", __FUNCTION__, vabId, val);
         if (vabId == 0 || vabId == 1 || vabId == 8)
             return startSound(vabId, val / 16, static_cast<uint8_t>((val % 16) + 60));
         else if (vabId > 2 && vabId < 8)
@@ -220,7 +214,6 @@ extern "C"
 
     void stopSound()
     {
-        printf("%s\n", __FUNCTION__);
         libsnd_SsUtAllKeyOff(0);
 
         // TODO why 10?
@@ -236,13 +229,11 @@ extern "C"
 
     uint32_t playSound2(int32_t vabId, uint32_t value)
     {
-        printf("%s\n", __FUNCTION__);
         return startSound(vabId, value / 16, static_cast<uint8_t>((value % 16) + 60));
     }
 
     void loadDigimonSounds(int32_t vabId, DigimonType type)
     {
-        printf("%s\n", __FUNCTION__);
         if (vabId < 4 || vabId > 7) return;
 
         readVHBFileSectors(vabId,
@@ -254,7 +245,6 @@ extern "C"
 
     void loadPartnerSounds(DigimonType type)
     {
-        printf("%s\n", __FUNCTION__);
         auto result = readVHBFileSectors(3, "SOUND\\VHB\\VLALL", &GENERAL_BUFFER, getSoundBank(type) * 15, 15);
         if (result == -1) return;
 
@@ -263,14 +253,12 @@ extern "C"
 
     bool VS_loadSounds()
     {
-        printf("%s\n", __FUNCTION__);
         ACTIVE_MAP_SOUND_ID = -1;
         return readVHBFile(8, "SOUND\\VHB\\SB", &GENERAL_BUFFER) != -1;
     }
 
     bool loadMapSounds(int32_t mapSoundId)
     {
-        printf("%s\n", __FUNCTION__);
         if (ACTIVE_MAP_SOUND_ID == mapSoundId) return true;
 
         ACTIVE_MAP_SOUND_ID = mapSoundId;
@@ -283,7 +271,6 @@ extern "C"
 
     bool playMusic(int32_t font, int32_t track)
     {
-        printf("%s\n", __FUNCTION__);
         if (font < 1 || font > 0x21) return false;
 
         if (font == CURRENT_SEQ_FONT && track == CURRENT_SEQ_TRACK) return true;
@@ -304,8 +291,6 @@ extern "C"
 
     void stopBGM()
     {
-        printf("%s\n", __FUNCTION__);
-
         seqStop();
         seqClose();
         CURRENT_SEQ_TRACK = -1;
