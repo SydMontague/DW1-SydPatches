@@ -283,7 +283,6 @@ static void renderDigiviceMedals()
     libgs_GsClearOt(0, 1, FRAMEBUFFER_OT[ACTIVE_FRAMEBUFFER]);
 
     medalRotation.y += 100;
-    printf("%d\n", medalRotation.y);
     libgte_RotMatrix(&medalRotation, &MEDAL_COORDINATES.coord);
     MEDAL_COORDINATES.flag = 0;
     renderObject(&MEDAL_OBJECT, FRAMEBUFFER_OT[ACTIVE_FRAMEBUFFER], 5);
