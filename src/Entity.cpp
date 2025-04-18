@@ -285,6 +285,23 @@ extern "C"
         *tileX = getTileX(location->x);
         *tileY = getTileZ(location->z);
     }
+
+    bool entityIsInEntity(Entity* self, Entity* other)
+    {
+        auto selfRadius  = getDigimonData(self->type)->radius;
+        auto selfX       = self->posData->location.x;
+        auto selfZ       = self->posData->location.z;
+        auto otherRadius = getDigimonData(other->type)->radius;
+        auto otherX      = other->posData->location.x;
+        auto otherZ      = other->posData->location.z;
+
+        if (otherX + otherRadius < selfX - selfRadius) return false;
+        if (otherX - otherRadius > selfX + selfRadius) return false;
+        if (otherZ + otherRadius < selfZ - selfRadius) return false;
+        if (otherZ - otherRadius > selfZ + selfRadius) return false;
+
+        return true;
+    }
 }
 
 bool hasAttackEquipped(DigimonEntity* entity)
@@ -300,14 +317,14 @@ bool hasAttackEquipped(DigimonEntity* entity)
 }
 
 static GsRVIEW2 digiviceView = {
-    .viewpointX = 1300,
-    .viewpointY = 0,
-    .viewpointZ = -3280,
-    .refpointX = 0,
-    .refpointY = 0,
-    .refpointZ = 0,
+    .viewpointX      = 1300,
+    .viewpointY      = 0,
+    .viewpointZ      = -3280,
+    .refpointX       = 0,
+    .refpointY       = 0,
+    .refpointZ       = 0,
     .viewpoint_twist = 0,
-    .super = nullptr,
+    .super           = nullptr,
 };
 
 void renderDigiviceEntity(Entity* entity, int32_t entityId, int32_t refX)

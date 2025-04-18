@@ -97,6 +97,11 @@
 .org 0x800f1050
   jal getModelTile
 
+.org 0x800d4508
+  jal entityIsInEntity
+.org 0x800d5328
+  jal entityIsInEntity
+
 .close 
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
