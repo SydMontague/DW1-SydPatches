@@ -91,6 +91,14 @@
 .org 0x800eea7c
   jal initializePartner
 
+.org 0x800d4350
+  jal popPartnerWaypoint
+.org 0x800d441c
+  jal popPartnerWaypoint
+.org 0x800d4df8
+  jal popPartnerWaypoint
+.org 0x800d4e10
+  jal popPartnerWaypoint
 
 .close 
 

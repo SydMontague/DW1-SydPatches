@@ -89,6 +89,8 @@
 .definelabel addEntityText,             0x800df868
 .definelabel setItemTexture,            0x800e5dfc
 
+.definelabel PARTNER_WAYPOINT_COUNT, 0x80134d59
+.definelabel PARTNER_CURRENT_WAYPOINT, 0x80134d5a
 .definelabel GENERAL_BUFFER, 0x80010000
 .definelabel DIGIMON_VLALL_SOUND_ID, 0x80127efc
 .definelabel DIGIMON_VBALL_SOUND_ID, 0x80127f40

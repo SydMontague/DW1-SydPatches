@@ -5,7 +5,7 @@
 .area 0x800afd78-.
   .importobj "compiled/Cave1.lib"
 
-  .notice "Empty space left: " + (0x800afd78-.) + " bytes"
+  .notice "Cave1 Empty space left: " + (0x800afd78-.) + " bytes"
   .fill 0x800afd78-.
 .endarea
 
@@ -13,16 +13,16 @@
 .area 0x800c67b4-.
   .importobj "compiled/Cave2.lib"
 
-  .notice "Empty space left: " + (0x800c67b4-.) + " bytes"
+  .notice "Cave2 Empty space left: " + (0x800c67b4-.) + " bytes"
   .fill 0x800c67b4-.
 .endarea
 
 .org 0x800d3078
-.area 0x800d3174-.
+.area 0x800d31ac-.
 ;  .importobj "compiled/Cave3.lib"
 
-  .notice "Empty space left: " + (0x800d3174-.) + " bytes"
-  .fill 0x800d3174-.
+  .notice "Cave3 Empty space left: " + (0x800d31ac-.) + " bytes"
+  .fill 0x800d31ac-.
 .endarea
 
 .org 0x8011d46c

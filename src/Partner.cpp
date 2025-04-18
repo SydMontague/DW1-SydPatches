@@ -1301,4 +1301,10 @@ extern "C"
         HAS_IMMORTAL_HOUR = 1;
         IMMORTAL_HOUR     = HOUR;
     }
+
+    void popPartnerWaypoint()
+    {
+        PARTNER_WAYPOINT_COUNT--;
+        PARTNER_CURRENT_WAYPOINT = (PARTNER_CURRENT_WAYPOINT + 1) % 30;
+    }
 }

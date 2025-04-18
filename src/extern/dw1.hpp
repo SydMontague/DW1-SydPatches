@@ -1381,6 +1381,8 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern int8_t PARTNER_WAYPOINT_COUNT;
+    extern int8_t PARTNER_CURRENT_WAYPOINT;
     extern uint8_t GENERAL_BUFFER;
     extern dtl::array<uint8_t, 66> DIGIMON_VLALL_SOUND_ID;
     extern dtl::array<uint8_t, 180> DIGIMON_VBALL_SOUND_ID;
