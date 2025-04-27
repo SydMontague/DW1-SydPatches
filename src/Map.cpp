@@ -871,4 +871,85 @@ extern "C"
 
         return abs(pos.screenX) > 200 || abs(pos.screenY) > 160;
     }
+
+    void getClosestTileOffScreen(int8_t* startX, int8_t* startY, int8_t* targetX, int8_t* targetY)
+    {
+        auto diffX    = *targetX - *startX;
+        auto diffY    = *targetY - *startY;
+        auto currentX = *startX;
+        auto currentY = *startY;
+        auto absX     = abs(diffX);
+        auto absY     = abs(diffY);
+
+        if (absX < absY)
+        {
+            auto direction = diffX < 0 ? -1 : 1;
+            auto remainder = abs(diffX % absY);
+            auto progress  = absY;
+
+            for (int32_t i = 0; i < absY; i++)
+            {
+                if (remainder == 0)
+                    currentX += (diffX / absY);
+                else
+                {
+                    progress -= remainder;
+                    if (progress < 1)
+                    {
+                        currentX += direction;
+                        progress += absY;
+                    }
+                }
+
+                if (diffY < 1)
+                    currentY--;
+                else
+                    currentY++;
+
+                if (isTileOffScreen(currentX, currentY))
+                {
+                    *startX = currentX;
+                    *startY = currentY;
+                    return;
+                }
+            }
+        }
+        else
+        {
+            {
+                auto direction = diffY < 0 ? -1 : 1;
+                auto remainder = abs(diffY % absX);
+                auto progress  = absX;
+
+                for (int32_t i = 0; i < absX; i++)
+                {
+                    if (remainder == 0)
+                        currentY += (diffY / absX);
+                    else
+                    {
+                        progress -= remainder;
+                        if (progress < 1)
+                        {
+                            currentY += direction;
+                            progress += absX;
+                        }
+                    }
+
+                    if (diffX < 1)
+                        currentX--;
+                    else
+                        currentX++;
+
+                    if (isTileOffScreen(currentX, currentY))
+                    {
+                        *startX = currentX;
+                        *startY = currentY;
+                        return;
+                    }
+                }
+            }
+        }
+
+        *startX = -1;
+    }
 }

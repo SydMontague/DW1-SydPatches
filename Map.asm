@@ -103,6 +103,9 @@
 .org 0x800d4d9c
   jal isTileOffScreen
 
+.org 0x800d4e50
+  jal getClosestTileOffScreen
+
 .close
 
 
