@@ -80,8 +80,8 @@
 ;  jal getModelTile
 ;.org 0x800d3aa8
 ;  jal getModelTile
-.org 0x800d3b10
-  jal getModelTile
+;.org 0x800d3b10
+;  jal getModelTile
 .org 0x800d439c
   jal getModelTile
 .org 0x800d4d20
@@ -122,6 +122,19 @@
 .org 0x800d53e8
   jal isRectInRect
 
+.org 0x800d4054
+  jal getEntityTile
+.org 0x800d4090
+  jal getEntityTile
+.org 0x800d4af0
+  jal getEntityTile
+.org 0x800e86e0
+  jal getEntityTile
+.org 0x800e86fc
+  jal getEntityTile
+.org 0x800e8748
+  jal getEntityTile
+
 .close 
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
@@ -129,6 +142,13 @@
 
 .org 0x80057564
   jal getModelTile
+
+.org 0x80058ab8
+  jal getEntityTile
+.org 0x80058af4
+  jal getEntityTile
+.org 0x8005b1b8
+  j getEntityTile
 
 .close
 

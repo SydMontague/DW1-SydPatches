@@ -287,6 +287,12 @@ extern "C"
         *tileY = getTileZ(location->z);
     }
 
+    void getEntityTile(Entity* entity, int8_t* tileX, int8_t* tileY)
+    {
+        *tileX = getTileX(entity->posData->location.x);
+        *tileY = getTileZ(entity->posData->location.z);
+    }
+
     bool entityIsInEntity(Entity* self, Entity* other)
     {
         auto selfRadius  = getDigimonData(self->type)->radius;
