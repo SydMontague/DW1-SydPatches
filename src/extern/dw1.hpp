@@ -1387,6 +1387,8 @@ extern "C"
     extern int8_t TAMER_WAYPOINT_ACTIVE;
     extern uint8_t TAMER_PREVIOUS_TILE_X;
     extern uint8_t TAMER_PREVIOUS_TILE_Y;
+    extern uint8_t PARTNER_TAMER_PREVIOUS_TILE_X;
+    extern uint8_t PARTNER_TAMER_PREVIOUS_TILE_Y;
     extern dtl::array<int8_t, 30> PARTNER_WAYPOINT_X;
     extern dtl::array<int8_t, 30> PARTNER_WAYPOINT_Y;
     extern dtl::array<int8_t, 32> TAMER_WAYPOINT_X;

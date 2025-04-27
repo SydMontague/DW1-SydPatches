@@ -1311,11 +1311,11 @@ extern "C"
 
     void initializePartnerWaypoint()
     {
-        PARTNER_WAYPOINT_COUNT   = 0;
-        PARTNER_WAYPOINT_CURRENT = 0;
-        TAMER_PREVIOUS_TILE_X    = getTileX(TAMER_ENTITY.posData->location.x);
-        TAMER_PREVIOUS_TILE_Y    = getTileZ(TAMER_ENTITY.posData->location.z);
-        PARTNER_WAYPOINT_X       = {};
-        PARTNER_WAYPOINT_Y       = {};
+        PARTNER_WAYPOINT_COUNT        = 0;
+        PARTNER_WAYPOINT_CURRENT      = 0;
+        PARTNER_TAMER_PREVIOUS_TILE_X = getTileX(TAMER_ENTITY.posData->location.x);
+        PARTNER_TAMER_PREVIOUS_TILE_Y = getTileZ(TAMER_ENTITY.posData->location.z);
+        PARTNER_WAYPOINT_X            = {};
+        PARTNER_WAYPOINT_Y            = {};
     }
 }
