@@ -102,6 +102,26 @@
 .org 0x800d5328
   jal entityIsInEntity
 
+.org 0x800d46dc
+  jal entityCheckCombatArea
+
+.org 0x800d5298
+  jal isRectInRect
+.org 0x800d52c0
+  jal isRectInRect
+.org 0x800d52e8
+  jal isRectInRect
+.org 0x800d5310
+  jal isRectInRect
+.org 0x800d5358
+  jal isRectInRect
+.org 0x800d5388
+  jal isRectInRect
+.org 0x800d53b8
+  jal isRectInRect
+.org 0x800d53e8
+  jal isRectInRect
+
 .close 
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

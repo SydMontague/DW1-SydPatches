@@ -6,6 +6,7 @@
 #include "Utils.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgs.hpp"
+#include "extern/libgte.hpp"
 #include "extern/psx.hpp"
 #include "extern/stddef.hpp"
 
@@ -301,6 +302,66 @@ extern "C"
         if (otherZ - otherRadius > selfZ + selfRadius) return false;
 
         return true;
+    }
+
+    bool isRectInRect(RECT* rect, int32_t minX, int32_t minY, int32_t maxX, int32_t maxY)
+    {
+        if (rect->x + rect->width < minX) return false;
+        if (rect->x > maxX) return false;
+        if (rect->y - rect->height > minY) return false;
+        if (rect->y < maxY) return false;
+
+        return true;
+    }
+
+    constexpr bool hasMovedOutsideOfArea(ScreenPos oldPos, ScreenPos newPos, int16_t width, int16_t height)
+    {
+        if (newPos.screenX < -width / 2 && newPos.screenX < oldPos.screenX) return true;
+        if (newPos.screenX > width / 2 && oldPos.screenX < newPos.screenX) return true;
+        if (newPos.screenY < -height / 2 && newPos.screenY < oldPos.screenY) return true;
+        if (newPos.screenY > height / 2 && oldPos.screenY < newPos.screenY) return true;
+
+        return false;
+    }
+
+    bool entityCheckCombatArea(Entity* entity, Vector* oldPos, int16_t width, int16_t height)
+    {
+        if (GAME_STATE == 4) return false;
+
+        auto& newPos = entity->posData->location;
+        auto radius  = getDigimonData(entity->type)->radius;
+
+        struct AreaPoint
+        {
+            int16_t height;
+            int8_t modX;
+            int8_t modY;
+        };
+
+        constexpr AreaPoint points[] = {
+            {.height = 0, .modX = -1, .modY = 1},
+            {.height = 0, .modX = 1, .modY = 1},
+            {.height = 0, .modX = -1, .modY = -1},
+            {.height = 0, .modX = 1, .modY = -1},
+            {.height = -200, .modX = -1, .modY = 1},
+            {.height = -200, .modX = 1, .modY = 1},
+            {.height = -200, .modX = -1, .modY = -1},
+            {.height = -200, .modX = 1, .modY = -1},
+        };
+
+        for (auto point : points)
+        {
+            auto screenNew = getScreenPosition(newPos.x + radius * point.modX,
+                                               newPos.y + point.height,
+                                               newPos.z + radius * point.modY);
+            auto screenOld = getScreenPosition(oldPos->x + radius * point.modX,
+                                               oldPos->y + point.height,
+                                               oldPos->z + radius * point.modY);
+
+            if (hasMovedOutsideOfArea(screenOld, screenNew, width, height)) return true;
+        }
+
+        return false;
     }
 }
 
