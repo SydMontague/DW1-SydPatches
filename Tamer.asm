@@ -178,6 +178,11 @@
 .org 0x80105968
   jal Tamer_startAnimation
 
+.org 0x800d4bcc
+  jal addTamerWaypoint
+.org 0x800d4be4
+  jal addTamerWaypoint
+
 .close
 
 .open "work/DIGIMON/FISH_REL.BIN",0x80070000

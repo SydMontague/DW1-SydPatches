@@ -89,6 +89,9 @@
 .definelabel addEntityText,             0x800df868
 .definelabel setItemTexture,            0x800e5dfc
 
+.definelabel TAMER_WAYPOINT_X, 0x8013d5b0
+.definelabel TAMER_WAYPOINT_Y, 0x8013d590
+.definelabel TAMER_WAYPOINT_COUNT, 0x80134d53
 .definelabel PARTNER_WAYPOINT_COUNT, 0x80134d59
 .definelabel PARTNER_CURRENT_WAYPOINT, 0x80134d5a
 .definelabel GENERAL_BUFFER, 0x80010000

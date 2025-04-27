@@ -1381,6 +1381,9 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern int8_t TAMER_WAYPOINT_X[32];
+    extern int8_t TAMER_WAYPOINT_Y[32];
+    extern int8_t TAMER_WAYPOINT_COUNT;
     extern int8_t PARTNER_WAYPOINT_COUNT;
     extern int8_t PARTNER_CURRENT_WAYPOINT;
     extern uint8_t GENERAL_BUFFER;

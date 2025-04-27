@@ -964,4 +964,11 @@ extern "C"
         removeObject(ObjectID::TAMER_ITEM, 0);
         TAMER_ITEM.type = ItemType::NONE;
     }
+
+    void addTamerWaypoint(uint32_t index, int8_t tileX, int8_t tileY)
+    {
+        TAMER_WAYPOINT_X[index] = tileX;
+        TAMER_WAYPOINT_Y[index] = tileY;
+        TAMER_WAYPOINT_COUNT++;
+    }
 }
