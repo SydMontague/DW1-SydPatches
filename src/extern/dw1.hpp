@@ -1381,11 +1381,19 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
-    extern int8_t TAMER_WAYPOINT_X[32];
-    extern int8_t TAMER_WAYPOINT_Y[32];
+    extern int8_t TAMER_START_TILE_X;
+    extern int8_t TAMER_START_TILE_Y;
+    extern int8_t TAMER_WAYPOINT_CURRENT;
+    extern int8_t TAMER_WAYPOINT_ACTIVE;
+    extern uint8_t TAMER_PREVIOUS_TILE_X;
+    extern uint8_t TAMER_PREVIOUS_TILE_Y;
+    extern dtl::array<int8_t, 30> PARTNER_WAYPOINT_X;
+    extern dtl::array<int8_t, 30> PARTNER_WAYPOINT_Y;
+    extern dtl::array<int8_t, 32> TAMER_WAYPOINT_X;
+    extern dtl::array<int8_t, 32> TAMER_WAYPOINT_Y;
     extern int8_t TAMER_WAYPOINT_COUNT;
     extern int8_t PARTNER_WAYPOINT_COUNT;
-    extern int8_t PARTNER_CURRENT_WAYPOINT;
+    extern int8_t PARTNER_WAYPOINT_CURRENT;
     extern uint8_t GENERAL_BUFFER;
     extern dtl::array<uint8_t, 66> DIGIMON_VLALL_SOUND_ID;
     extern dtl::array<uint8_t, 180> DIGIMON_VBALL_SOUND_ID;

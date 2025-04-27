@@ -971,4 +971,22 @@ extern "C"
         TAMER_WAYPOINT_Y[index] = tileY;
         TAMER_WAYPOINT_COUNT++;
     }
+
+    void initializeTamerWaypoints()
+    {
+        TAMER_START_TILE_X     = getTileX(TAMER_ENTITY.posData->location.x);
+        TAMER_START_TILE_Y     = getTileZ(TAMER_ENTITY.posData->location.z);
+        TAMER_PREVIOUS_TILE_X  = TAMER_START_TILE_X;
+        TAMER_PREVIOUS_TILE_Y  = TAMER_START_TILE_Y;
+        TAMER_WAYPOINT_COUNT   = 0;
+        TAMER_WAYPOINT_ACTIVE  = 0;
+        TAMER_WAYPOINT_CURRENT = 0;
+    }
+
+    void clearTamerWaypoints()
+    {
+        TAMER_WAYPOINT_COUNT   = 0;
+        TAMER_WAYPOINT_ACTIVE  = 0;
+        TAMER_WAYPOINT_CURRENT = 0;
+    }
 }

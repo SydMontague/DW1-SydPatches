@@ -100,7 +100,24 @@
 .org 0x800d4e10
   jal popPartnerWaypoint
 
+.org 0x800d415c
+  jal initializePartnerWaypoint
+.org 0x800d4180
+  jal initializePartnerWaypoint
+.org 0x800d5dbc
+  jal initializePartnerWaypoint
+
 .close 
+
+.open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
+.psx
+
+.org 0x80058c14
+  jal initializePartnerWaypoint
+.org 0x80058c38
+  jal initializePartnerWaypoint
+
+.close
 
 .open "work/DIGIMON/EVL_REL.BIN",0x80060000
 .psx

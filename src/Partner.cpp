@@ -20,6 +20,7 @@
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
 #include "extern/libgte.hpp"
+#include "extern/stddef.hpp"
 
 constexpr auto FRESH_EVOLUTION_TIME       = 6;
 constexpr auto IN_TRAINING_EVOLUTION_TIME = 24;
@@ -1305,6 +1306,16 @@ extern "C"
     void popPartnerWaypoint()
     {
         PARTNER_WAYPOINT_COUNT--;
-        PARTNER_CURRENT_WAYPOINT = (PARTNER_CURRENT_WAYPOINT + 1) % 30;
+        PARTNER_WAYPOINT_CURRENT = (PARTNER_WAYPOINT_CURRENT + 1) % 30;
+    }
+
+    void initializePartnerWaypoint()
+    {
+        PARTNER_WAYPOINT_COUNT   = 0;
+        PARTNER_WAYPOINT_CURRENT = 0;
+        TAMER_PREVIOUS_TILE_X    = getTileX(TAMER_ENTITY.posData->location.x);
+        TAMER_PREVIOUS_TILE_Y    = getTileZ(TAMER_ENTITY.posData->location.z);
+        PARTNER_WAYPOINT_X       = {};
+        PARTNER_WAYPOINT_Y       = {};
     }
 }

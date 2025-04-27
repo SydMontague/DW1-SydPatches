@@ -76,10 +76,10 @@
 ;  jal getModelTile
 ;.org 0x800c4c48
 ;  jal getModelTile
-.org 0x800d3a1c
-  jal getModelTile
-.org 0x800d3aa8
-  jal getModelTile
+;.org 0x800d3a1c
+;  jal getModelTile
+;.org 0x800d3aa8
+;  jal getModelTile
 .org 0x800d3b10
   jal getModelTile
 .org 0x800d439c

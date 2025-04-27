@@ -89,11 +89,19 @@
 .definelabel addEntityText,             0x800df868
 .definelabel setItemTexture,            0x800e5dfc
 
+.definelabel TAMER_WAYPOINT_ACTIVE, 0x80134d50
+.definelabel TAMER_START_TILE_X, 0x80134d51
+.definelabel TAMER_START_TILE_Y, 0x80134d52
+.definelabel TAMER_WAYPOINT_COUNT, 0x80134d53
+.definelabel TAMER_WAYPOINT_CURRENT, 0x80134d54
+.definelabel TAMER_PREVIOUS_TILE_X, 0x80134d55
+.definelabel TAMER_PREVIOUS_TILE_Y, 0x80134d56
+.definelabel PARTNER_WAYPOINT_X, 0x8013d5f0
+.definelabel PARTNER_WAYPOINT_Y, 0x8013d5d0
 .definelabel TAMER_WAYPOINT_X, 0x8013d5b0
 .definelabel TAMER_WAYPOINT_Y, 0x8013d590
-.definelabel TAMER_WAYPOINT_COUNT, 0x80134d53
 .definelabel PARTNER_WAYPOINT_COUNT, 0x80134d59
-.definelabel PARTNER_CURRENT_WAYPOINT, 0x80134d5a
+.definelabel PARTNER_WAYPOINT_CURRENT, 0x80134d5a
 .definelabel GENERAL_BUFFER, 0x80010000
 .definelabel DIGIMON_VLALL_SOUND_ID, 0x80127efc
 .definelabel DIGIMON_VBALL_SOUND_ID, 0x80127f40
