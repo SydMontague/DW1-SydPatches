@@ -1,3 +1,5 @@
+#include "Map.hpp"
+
 #include "Entity.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
@@ -909,7 +911,7 @@ extern "C"
         return false;
     }
 
-    bool isFiveTileWidePathOpen(int32_t tileX1, int32_t tileY1, int32_t tileX2, int32_t tileY2)
+    bool isFiveTileWidePathBlocked(int32_t tileX1, int32_t tileY1, int32_t tileX2, int32_t tileY2)
     {
         if (abs(tileX2 - tileX1) < abs(tileY2 - tileY1))
         {

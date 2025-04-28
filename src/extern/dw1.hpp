@@ -1554,6 +1554,8 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void handleBattleIdle(DigimonEntity* entity, Stats* stats, BattleFlags flags);
+    void startBattleIdleAnimation(Entity* entity, Stats* stats, BattleFlags flags);
     void setItemTexture(POLY_FT4* prim, ItemType item);
     void addEntityText(DigimonEntity* entity, int32_t entityId, int8_t color, int32_t amount, int8_t icon);
     void dailyPStatTrigger();
@@ -1597,6 +1599,7 @@ extern "C"
     int32_t isSoundLoaded(bool isAsync, int32_t soundId);
     void setMapLayerEnabled(int32_t val);
     void entityLookAtLocation(Entity* entity, Vector* location);
+    void entityLookAtTile(Entity* entity, int8_t tileX, int8_t tileY);
     bool tickOpenChestTray(uint32_t chestId);
     bool tickCloseChestTray(uint32_t chestId);
     void setCameraFollowPlayer();

@@ -11,6 +11,7 @@
 #include "Inventory.hpp"
 #include "ItemEffects.hpp"
 #include "ItemFunctions.hpp"
+#include "Map.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
 #include "Sound.hpp"
@@ -1317,5 +1318,122 @@ extern "C"
         PARTNER_TAMER_PREVIOUS_TILE_Y = getTileZ(TAMER_ENTITY.posData->location.z);
         PARTNER_WAYPOINT_X            = {};
         PARTNER_WAYPOINT_Y            = {};
+    }
+
+    void setPartnerWaypoint(int32_t index, int8_t tileX, int8_t tileY)
+    {
+        PARTNER_WAYPOINT_X[index] = tileX;
+        PARTNER_WAYPOINT_Y[index] = tileY;
+        PARTNER_WAYPOINT_COUNT++;
+    }
+
+    void tickPartnerCollision()
+    {
+        auto tamerTileX   = getTileX(TAMER_ENTITY.posData->location.x);
+        auto tamerTileZ   = getTileZ(TAMER_ENTITY.posData->location.z);
+        auto partnerTileX = getTileX(PARTNER_ENTITY.posData->location.x);
+        auto partnerTileZ = getTileZ(PARTNER_ENTITY.posData->location.z);
+
+        if (tamerTileX != PARTNER_TAMER_PREVIOUS_TILE_X || tamerTileZ != PARTNER_TAMER_PREVIOUS_TILE_Y)
+        {
+            if (!isFiveTileWidePathBlocked(tamerTileX, tamerTileZ, partnerTileX, partnerTileZ))
+            {
+                initializePartnerWaypoint();
+            }
+            else
+            {
+                if (PARTNER_WAYPOINT_COUNT == 0)
+                {
+                    initializePartnerWaypoint();
+                    setPartnerWaypoint(PARTNER_WAYPOINT_CURRENT,
+                                       PARTNER_TAMER_PREVIOUS_TILE_X,
+                                       PARTNER_TAMER_PREVIOUS_TILE_Y);
+                }
+                else
+                {
+                    auto lastPoint = PARTNER_WAYPOINT_CURRENT + PARTNER_WAYPOINT_COUNT - 1;
+
+                    if (isFiveTileWidePathBlocked(tamerTileX,
+                                                  tamerTileZ,
+                                                  PARTNER_WAYPOINT_X[lastPoint],
+                                                  PARTNER_WAYPOINT_Y[lastPoint]))
+                    {
+                        setPartnerWaypoint((PARTNER_WAYPOINT_CURRENT + PARTNER_WAYPOINT_COUNT) % 30,
+                                           PARTNER_TAMER_PREVIOUS_TILE_X,
+                                           PARTNER_TAMER_PREVIOUS_TILE_Y);
+                    }
+                }
+            }
+        }
+
+        if (PARTNER_WAYPOINT_COUNT > 1)
+        {
+            for (int32_t i = 0; i < 3; i++)
+            {
+                auto pointId = (PARTNER_WAYPOINT_CURRENT + PARTNER_WAYPOINT_COUNT - 2 - i) % 30;
+
+                if (!isFiveTileWidePathBlocked(tamerTileX,
+                                               tamerTileZ,
+                                               PARTNER_WAYPOINT_X[pointId],
+                                               PARTNER_WAYPOINT_Y[pointId]))
+                {
+                    PARTNER_WAYPOINT_COUNT -= (i + 1);
+                    break;
+                }
+                if (i == PARTNER_WAYPOINT_CURRENT) break;
+            }
+        }
+
+        if (PARTNER_WAYPOINT_COUNT != 0)
+        {
+            auto tileX = PARTNER_WAYPOINT_X[PARTNER_WAYPOINT_CURRENT];
+            auto tileY = PARTNER_WAYPOINT_Y[PARTNER_WAYPOINT_CURRENT];
+            if (isTileOffScreen(tileX, tileY) && PARTNER_ENTITY.isOnScreen == 0)
+            {
+                auto x = convertTileToPosX(tileX);
+                auto z = convertTileToPosZ(tileY);
+
+                PARTNER_ENTITY.locX                = x << 15;
+                PARTNER_ENTITY.locZ                = z << 15;
+                PARTNER_ENTITY.posData->location.x = x;
+                PARTNER_ENTITY.posData->location.z = z;
+                popPartnerWaypoint();
+            }
+        }
+
+        auto prevRotY = PARTNER_ENTITY.posData->rotation.y;
+        if (GAME_STATE == 0 || GAME_STATE == 3)
+        {
+            if (PARTNER_WAYPOINT_COUNT == 0)
+                entityLookAtLocation(&PARTNER_ENTITY, &TAMER_ENTITY.posData->location);
+            else
+            {
+                auto tileX = PARTNER_WAYPOINT_X[PARTNER_WAYPOINT_CURRENT];
+                auto tileY = PARTNER_WAYPOINT_Y[PARTNER_WAYPOINT_CURRENT];
+
+                entityLookAtTile(&PARTNER_ENTITY, tileX, tileY);
+                if (tileX == partnerTileX && tileY == partnerTileZ) popPartnerWaypoint();
+            }
+        }
+
+        auto collision = entityCheckCollision(nullptr, &PARTNER_ENTITY, 0, 0);
+
+        if (collision < CollisionCode::TAMER || collision > CollisionCode::NPC8)
+        {
+            if (GAME_STATE == 3 && entityIsInEntity(&TAMER_ENTITY, &PARTNER_ENTITY))
+                handleBattleIdle(&PARTNER_ENTITY, &PARTNER_ENTITY.stats, {});
+        }
+        else if (GAME_STATE == 3)
+        {
+            if (collision == CollisionCode::TAMER) startBattleIdleAnimation(&PARTNER_ENTITY, &PARTNER_ENTITY.stats, {});
+        }
+        else
+        {
+            PARTNER_ENTITY.posData->rotation.y = prevRotY;
+            collisionGrace(&TAMER_ENTITY, &PARTNER_ENTITY, 0, 0);
+        }
+
+        PARTNER_TAMER_PREVIOUS_TILE_X = tamerTileX;
+        PARTNER_TAMER_PREVIOUS_TILE_Y = tamerTileZ;
     }
 }

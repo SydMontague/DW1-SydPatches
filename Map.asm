@@ -98,20 +98,20 @@
 ;  jal isTileOffScreen
 ;.org 0x800d35d8
 ;  jal isTileOffScreen
-.org 0x800d4284
-  jal isTileOffScreen
+;.org 0x800d4284
+;  jal isTileOffScreen
 .org 0x800d4d9c
   jal isTileOffScreen
 
 .org 0x800d4e50
   jal getClosestTileOffScreen
 
-.org 0x800d40a8
-  jal isFiveTileWidePathOpen
-.org 0x800d4114
-  jal isFiveTileWidePathOpen
-.org 0x800d41f8
-  jal isFiveTileWidePathOpen
+;.org 0x800d40a8
+;  jal isFiveTileWidePathBlocked
+;.org 0x800d4114
+;  jal isFiveTileWidePathBlocked
+;.org 0x800d41f8
+;  jal isFiveTileWidePathBlocked
 
 ;.org 0x800d3bbc
 ;  jal isLinearPathBlocked
@@ -135,9 +135,9 @@
 .psx
 
 .org 0x80058b0c
-  jal isFiveTileWidePathOpen
+  jal isFiveTileWidePathBlocked
 .org 0x80058b5c
-  jal isFiveTileWidePathOpen
+  jal isFiveTileWidePathBlocked
 
 .close
 

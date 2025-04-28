@@ -88,6 +88,9 @@
 .definelabel dailyPStatTrigger,         0x800fc374
 .definelabel addEntityText,             0x800df868
 .definelabel setItemTexture,            0x800e5dfc
+.definelabel handleBattleIdle,          0x800e7d40
+.definelabel entityLookAtTile,          0x800e6078
+.definelabel startBattleIdleAnimation,  0x800e8970
 
 .definelabel TAMER_WAYPOINT_ACTIVE, 0x80134d50
 .definelabel TAMER_START_TILE_Y, 0x80134d51

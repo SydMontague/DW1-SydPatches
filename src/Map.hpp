@@ -16,4 +16,6 @@ extern "C"
 
     void renderOverworldItem(WorldItem* item);
     bool pickupItem(int32_t dropId);
+    bool isFiveTileWidePathBlocked(int32_t tileX1, int32_t tileY1, int32_t tileX2, int32_t tileY2);
+    bool isTileOffScreen(int16_t tileX, int16_t tileZ);
 }

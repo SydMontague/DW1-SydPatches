@@ -91,21 +91,40 @@
 .org 0x800eea7c
   jal initializePartner
 
-.org 0x800d4350
-  jal popPartnerWaypoint
-.org 0x800d441c
-  jal popPartnerWaypoint
+;.org 0x800d4350
+;  jal popPartnerWaypoint
+;.org 0x800d441c
+;  jal popPartnerWaypoint
 .org 0x800d4df8
   jal popPartnerWaypoint
 .org 0x800d4e10
   jal popPartnerWaypoint
 
-.org 0x800d415c
-  jal initializePartnerWaypoint
-.org 0x800d4180
-  jal initializePartnerWaypoint
+;.org 0x800d415c
+;  jal initializePartnerWaypoint
+;.org 0x800d4180
+;  jal initializePartnerWaypoint
 .org 0x800d5dbc
   jal initializePartnerWaypoint
+
+.org 0x800dd9c8
+  jal tickPartnerCollision
+.org 0x800e7734
+  jal tickPartnerCollision
+.org 0x800e7834
+  jal tickPartnerCollision
+.org 0x800e788c
+  jal tickPartnerCollision
+.org 0x800e78c0
+  jal tickPartnerCollision
+.org 0x800e78ec
+  jal tickPartnerCollision
+.org 0x800e7918
+  jal tickPartnerCollision
+.org 0x800e794c
+  jal tickPartnerCollision
+.org 0x800e7b10
+  jal tickPartnerCollision
 
 .close 
 
@@ -116,6 +135,14 @@
   jal initializePartnerWaypoint
 .org 0x80058c38
   jal initializePartnerWaypoint
+
+.org 0x80058c04
+  jal setPartnerWaypoint
+.org 0x80058c28
+  jal setPartnerWaypoint
+
+.org 0x80057780
+  jal tickPartnerCollision
 
 .close
 

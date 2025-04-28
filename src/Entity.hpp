@@ -9,4 +9,5 @@ bool hasAttackEquipped(DigimonEntity* entity);
 extern "C"
 {
     void getModelTile(Vector* location, int16_t* tileX, int16_t* tileY);
+    bool entityIsInEntity(Entity* self, Entity* other);
 }

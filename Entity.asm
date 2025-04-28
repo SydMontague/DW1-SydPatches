@@ -82,8 +82,8 @@
 ;  jal getModelTile
 ;.org 0x800d3b10
 ;  jal getModelTile
-.org 0x800d439c
-  jal getModelTile
+;.org 0x800d439c
+;  jal getModelTile
 .org 0x800d4d20
   jal getModelTile
 .org 0x800d4e2c
@@ -97,8 +97,8 @@
 .org 0x800f1050
   jal getModelTile
 
-.org 0x800d4508
-  jal entityIsInEntity
+;.org 0x800d4508
+;  jal entityIsInEntity
 .org 0x800d5328
   jal entityIsInEntity
 
@@ -122,10 +122,10 @@
 .org 0x800d53e8
   jal isRectInRect
 
-.org 0x800d4054
-  jal getEntityTile
-.org 0x800d4090
-  jal getEntityTile
+;.org 0x800d4054
+;  jal getEntityTile
+;.org 0x800d4090
+;  jal getEntityTile
 .org 0x800d4af0
   jal getEntityTile
 .org 0x800e86e0
