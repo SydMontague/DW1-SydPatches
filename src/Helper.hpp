@@ -20,6 +20,38 @@ struct ReadBuffer
     }
 };
 
+struct TileCoord
+{
+    int8_t tileX;
+    int8_t tileY;
+};
+
+struct TileIterator
+{
+private:
+    int8_t stepCount;
+    int8_t endX;
+    int8_t endY;
+    int8_t absX;
+    int8_t absY;
+    int8_t currentX;
+    int8_t currentY;
+
+    int8_t stepX;
+    int8_t stepY;
+    int8_t subStepX;
+    int8_t subStepY;
+    int8_t progressX;
+    int8_t progressY;
+
+public:
+    TileIterator(int8_t startX, int8_t startY, int8_t endX, int8_t endY);
+
+    TileCoord operator*();
+    bool hasNext();
+    TileIterator& operator++();
+};
+
 extern "C"
 {
     constexpr auto SCREEN_WIDTH  = 320;

@@ -874,82 +874,58 @@ extern "C"
 
     void getClosestTileOffScreen(int8_t* startX, int8_t* startY, int8_t* targetX, int8_t* targetY)
     {
-        auto diffX    = *targetX - *startX;
-        auto diffY    = *targetY - *startY;
-        auto currentX = *startX;
-        auto currentY = *startY;
-        auto absX     = abs(diffX);
-        auto absY     = abs(diffY);
+        TileIterator itr(*startX, *startY, *targetX, *targetY);
 
-        if (absX < absY)
+        for (; itr.hasNext(); ++itr)
         {
-            auto direction = diffX < 0 ? -1 : 1;
-            auto remainder = abs(diffX % absY);
-            auto progress  = absY;
-
-            for (int32_t i = 0; i < absY; i++)
+            auto val = *itr;
+            if (isTileOffScreen(val.tileX, val.tileY))
             {
-                if (remainder == 0)
-                    currentX += (diffX / absY);
-                else
-                {
-                    progress -= remainder;
-                    if (progress < 1)
-                    {
-                        currentX += direction;
-                        progress += absY;
-                    }
-                }
+                *startX = val.tileX;
+                *startY = val.tileY;
+                return;
+            }
+        }
+        *startX = -1;
+    }
 
-                if (diffY < 1)
-                    currentY--;
-                else
-                    currentY++;
+    bool isLinearPathBlocked(int32_t tileX1, int32_t tileY1, int32_t tileX2, int32_t tileY2)
+    {
+        tileX1 = clamp(tileX1, 0, 99);
+        tileY1 = clamp(tileY1, 0, 99);
+        tileX2 = clamp(tileX2, 0, 99);
+        tileY2 = clamp(tileY2, 0, 99);
 
-                if (isTileOffScreen(currentX, currentY))
-                {
-                    *startX = currentX;
-                    *startY = currentY;
-                    return;
-                }
+        if (tileX1 == tileX2 && tileY1 == tileY2) return false;
+
+        TileIterator itr(tileX1, tileY1, tileX2, tileY2);
+        for (; itr.hasNext(); ++itr)
+        {
+            auto val = *itr;
+
+            if ((getTile(val.tileX, val.tileY) & 0x80) != 0) return true;
+        }
+
+        return false;
+    }
+
+    bool isFiveTileWidePathOpen(int32_t tileX1, int32_t tileY1, int32_t tileX2, int32_t tileY2)
+    {
+        if (abs(tileX2 - tileX1) < abs(tileY2 - tileY1))
+        {
+            for (int32_t i = -2; i < 3; i++)
+            {
+                if (isLinearPathBlocked(tileX1 + i, tileY1, tileX2 + i, tileY2)) return true;
             }
         }
         else
         {
+            for (int32_t i = -2; i < 3; i++)
             {
-                auto direction = diffY < 0 ? -1 : 1;
-                auto remainder = abs(diffY % absX);
-                auto progress  = absX;
-
-                for (int32_t i = 0; i < absX; i++)
-                {
-                    if (remainder == 0)
-                        currentY += (diffY / absX);
-                    else
-                    {
-                        progress -= remainder;
-                        if (progress < 1)
-                        {
-                            currentY += direction;
-                            progress += absX;
-                        }
-                    }
-
-                    if (diffX < 1)
-                        currentX--;
-                    else
-                        currentX++;
-
-                    if (isTileOffScreen(currentX, currentY))
-                    {
-                        *startX = currentX;
-                        *startY = currentY;
-                        return;
-                    }
-                }
+                if (isLinearPathBlocked(tileX1, tileY1 + i, tileX2, tileY2 + i)) return true;
             }
         }
 
-        *startX = -1;
+        return false;
     }
 }

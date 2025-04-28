@@ -106,8 +106,40 @@
 .org 0x800d4e50
   jal getClosestTileOffScreen
 
+.org 0x800d40a8
+  jal isFiveTileWidePathOpen
+.org 0x800d4114
+  jal isFiveTileWidePathOpen
+.org 0x800d41f8
+  jal isFiveTileWidePathOpen
+
+;.org 0x800d3bbc
+;  jal isLinearPathBlocked
+;.org 0x800d3c0c
+;  jal isLinearPathBlocked
+.org 0x800d4b30
+  jal isLinearPathBlocked
+.org 0x800d4b98
+  jal isLinearPathBlocked
+.org 0x800d4c3c
+  jal isLinearPathBlocked
+.org 0x800e8714
+  jal isLinearPathBlocked
+.org 0x800e8760
+  jal isLinearPathBlocked
+
 .close
 
+
+.open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
+.psx
+
+.org 0x80058b0c
+  jal isFiveTileWidePathOpen
+.org 0x80058b5c
+  jal isFiveTileWidePathOpen
+
+.close
 
 .open "work/DIGIMON/KAR_REL.BIN",0x80053800
 .psx
