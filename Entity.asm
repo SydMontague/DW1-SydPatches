@@ -135,6 +135,95 @@
 .org 0x800e8748
   jal getEntityTile
 
+;.org 0x800aa6f4
+;  jal entityLookAtLocation
+;.org 0x800aaae8
+;  jal entityLookAtLocation
+;.org 0x800ac1e0
+;  jal entityLookAtLocation
+;.org 0x800d443c
+;  jal entityLookAtLocation
+.org 0x800dda9c
+  jal entityLookAtLocation
+.org 0x800ddab4
+  jal entityLookAtLocation
+.org 0x800ddda0
+  jal entityLookAtLocation
+.org 0x800dddb8
+  jal entityLookAtLocation
+.org 0x800ddf8c
+  jal entityLookAtLocation
+.org 0x800ddfe0
+  jal entityLookAtLocation
+.org 0x800ddff8
+  jal entityLookAtLocation
+.org 0x800de050
+  jal entityLookAtLocation
+.org 0x800de3fc
+  jal entityLookAtLocation
+.org 0x800de444
+  jal entityLookAtLocation
+.org 0x800de4f4
+  jal entityLookAtLocation
+.org 0x800de59c
+  jal entityLookAtLocation
+.org 0x800de5c8
+  jal entityLookAtLocation
+.org 0x800de728
+  jal entityLookAtLocation
+.org 0x800de780
+  jal entityLookAtLocation
+.org 0x800de980
+  jal entityLookAtLocation
+.org 0x800dead0
+  jal entityLookAtLocation
+.org 0x800deb04
+  jal entityLookAtLocation
+.org 0x800e60c8
+  jal entityLookAtLocation
+.org 0x800e7714
+  jal entityLookAtLocation
+.org 0x800e7814
+  jal entityLookAtLocation
+.org 0x800e7af0
+  jal entityLookAtLocation
+.org 0x800f0f54
+  jal entityLookAtLocation
+.org 0x800f11e0
+  jal entityLookAtLocation
+.org 0x800f12a8
+  jal entityLookAtLocation
+.org 0x800f3530
+  jal entityLookAtLocation
+.org 0x800f3560
+  jal entityLookAtLocation
+.org 0x800f4e60
+  jal entityLookAtLocation
+.org 0x800f4f4c
+  jal entityLookAtLocation
+.org 0x800f5784
+  jal entityLookAtLocation
+.org 0x800f5824
+  jal entityLookAtLocation
+.org 0x800f5c14
+  jal entityLookAtLocation
+.org 0x800f5cc4
+  jal entityLookAtLocation
+.org 0x800f5e04
+  jal entityLookAtLocation
+.org 0x800f5f10
+  jal entityLookAtLocation
+.org 0x800f5f58
+  jal entityLookAtLocation
+.org 0x800f6230
+  jal entityLookAtLocation
+.org 0x800f6378
+  jal entityLookAtLocation
+.org 0x800f663c
+  jal entityLookAtLocation
+.org 0x800f6b34
+  jal entityLookAtLocation
+
 .close 
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
@@ -149,6 +238,120 @@
   jal getEntityTile
 .org 0x8005b1b8
   j getEntityTile
+
+.org 0x800573d8
+  jal entityLookAtLocation
+.org 0x800574bc
+  jal entityLookAtLocation
+.org 0x8005770c
+  jal entityLookAtLocation
+.org 0x800577b4
+  jal entityLookAtLocation
+.org 0x8005784c
+  jal entityLookAtLocation
+.org 0x80059494
+  jal entityLookAtLocation
+.org 0x80059a8c
+  jal entityLookAtLocation
+.org 0x80059b2c
+  jal entityLookAtLocation
+.org 0x80059f8c
+  jal entityLookAtLocation
+.org 0x8005a03c
+  jal entityLookAtLocation
+.org 0x8005a17c
+  jal entityLookAtLocation
+.org 0x8005a298
+  jal entityLookAtLocation
+.org 0x8005a2e0
+  jal entityLookAtLocation
+.org 0x8005a57c
+  jal entityLookAtLocation
+.org 0x8005a624
+  jal entityLookAtLocation
+.org 0x8005a764
+  jal entityLookAtLocation
+.org 0x8005aeb0
+  jal entityLookAtLocation
+.org 0x8005ceb0
+  jal entityLookAtLocation
+.org 0x8005d7f4
+  jal entityLookAtLocation
+.org 0x8005d86c
+  jal entityLookAtLocation
+.org 0x8005d8f0
+  jal entityLookAtLocation
+.org 0x80066d0c
+  jal entityLookAtLocation
+
+.close
+
+.open "work/DIGIMON/STD_REL.BIN",0x80052ae0
+.psx
+
+.org 0x8005efe4
+  jal entityLookAtLocation
+.org 0x8005f050
+  jal entityLookAtLocation
+.org 0x80060e8c
+  jal entityLookAtLocation
+.org 0x800616e0
+  jal entityLookAtLocation
+.org 0x80061780
+  jal entityLookAtLocation
+.org 0x80061b54
+  jal entityLookAtLocation
+.org 0x80061c04
+  jal entityLookAtLocation
+.org 0x80061d44
+  jal entityLookAtLocation
+.org 0x80061e60
+  jal entityLookAtLocation
+.org 0x80061ea8
+  jal entityLookAtLocation
+.org 0x8006217c
+  jal entityLookAtLocation
+.org 0x800622c4
+  jal entityLookAtLocation
+.org 0x80062588
+  jal entityLookAtLocation
+.org 0x80062ab0
+  jal entityLookAtLocation
+.org 0x80064f40
+  jal entityLookAtLocation
+.org 0x80065598
+  jal entityLookAtLocation
+.org 0x80065610
+  jal entityLookAtLocation
+.org 0x80065694
+  jal entityLookAtLocation
+.org 0x8006f304
+  jal entityLookAtLocation
+
+.close
+
+.open "work/DIGIMON/STD_REL.BIN",0x80052ae0
+.psx
+
+.org 0x8005ca94
+  jal entityLookAtLocation
+.org 0x8005cf50
+  jal entityLookAtLocation
+.org 0x8005cfdc
+  jal entityLookAtLocation
+.org 0x8005d060
+  jal entityLookAtLocation
+.org 0x800653d4
+  jal entityLookAtLocation
+
+.close
+
+
+.open "work/DIGIMON/DOOA_REL.BIN",0x80080000
+.psx
+
+.org 0x800805bc
+  jal entityLookAtLocation
 
 .close
 
@@ -183,6 +386,19 @@
   jal tickEntityWalkTo
 .org 0x8008d114
   jal tickEntityWalkTo
+
+.org 0x8008d0d8
+  jal entityLookAtLocation
+.org 0x8008d140
+  jal entityLookAtLocation
+.org 0x8008d158
+  jal entityLookAtLocation
+.org 0x8008d19c
+  jal entityLookAtLocation
+.org 0x8008d1b4
+  jal entityLookAtLocation
+.org 0x8008d1cc
+  jal entityLookAtLocation
 
 .close
 
@@ -222,5 +438,14 @@
   jal tickEntityWalkTo
 .org 0x8008a9e4
   jal tickEntityWalkTo
+
+.org 0x80088dac
+  jal entityLookAtLocation
+.org 0x80088ee8
+  jal entityLookAtLocation
+.org 0x8008907c
+  jal entityLookAtLocation
+.org 0x8008a598
+  jal entityLookAtLocation
 
 .close

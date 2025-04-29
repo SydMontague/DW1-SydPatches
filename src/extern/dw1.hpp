@@ -1598,7 +1598,6 @@ extern "C"
     void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileReadCallback callback, int32_t param);
     int32_t isSoundLoaded(bool isAsync, int32_t soundId);
     void setMapLayerEnabled(int32_t val);
-    void entityLookAtLocation(Entity* entity, Vector* location);
     void entityLookAtTile(Entity* entity, int8_t tileX, int8_t tileY);
     bool tickOpenChestTray(uint32_t chestId);
     bool tickCloseChestTray(uint32_t chestId);

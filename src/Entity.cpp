@@ -369,6 +369,15 @@ extern "C"
 
         return false;
     }
+
+    void entityLookAtLocation(Entity* entity, Vector* location)
+    {
+        if (entity == nullptr || location == nullptr) return;
+
+        auto& entityLoc = entity->posData->location;
+
+        entity->posData->rotation.y = atan(location->z - entityLoc.z, location->x - entityLoc.x);
+    }
 }
 
 bool hasAttackEquipped(DigimonEntity* entity)

@@ -10,4 +10,5 @@ extern "C"
 {
     void getModelTile(Vector* location, int16_t* tileX, int16_t* tileY);
     bool entityIsInEntity(Entity* self, Entity* other);
+    void entityLookAtLocation(Entity* entity, Vector* location);
 }

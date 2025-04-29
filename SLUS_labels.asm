@@ -45,7 +45,6 @@
 .definelabel startGameTime,             0x800dd7a0
 .definelabel getEntityScreenPos,        0x800e52d8
 .definelabel setCameraFollowPlayer,     0x800d8b44
-.definelabel entityLookAtLocation,      0x800d459c
 .definelabel tickOpenChestTray,         0x800e21d0
 .definelabel tickCloseChestTray,        0x800e223c
 .definelabel setMapLayerEnabled,        0x800e65b8
