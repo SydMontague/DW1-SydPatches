@@ -251,36 +251,6 @@ extern "C"
         return false;
     }
 
-    bool checkMapCollisionX(Entity* entity, bool isMaxZ)
-    {
-        auto& pos   = entity->posData->location;
-        auto radius = getDigimonData(entity->type)->radius;
-
-        auto tileXMin = getTileX(pos.x - radius / 2);
-        auto tileXMax = getTileX(pos.x + radius / 2);
-        auto tileZ    = isMaxZ ? getTileZ(pos.z - radius) : getTileZ(pos.z + radius);
-
-        for (auto i = tileXMin; i <= tileXMax; i++)
-            if ((getTile(i, tileZ) & 0x80) != 0) return true;
-
-        return false;
-    }
-
-    bool checkMapCollisionZ(Entity* entity, bool isMaxX)
-    {
-        auto& pos   = entity->posData->location;
-        auto radius = getDigimonData(entity->type)->radius;
-
-        auto tileZMin = getTileZ(pos.z + radius / 2);
-        auto tileZMax = getTileZ(pos.z - radius / 2);
-        auto tileX    = isMaxX ? getTileX(pos.x + radius) : getTileX(pos.x - radius);
-
-        for (auto i = tileZMin; i <= tileZMax; i++)
-            if ((getTile(tileX, i) & 0x80) != 0) return true;
-
-        return false;
-    }
-
     void getModelTile(Vector* location, int16_t* tileX, int16_t* tileY)
     {
         *tileX = getTileX(location->x);
@@ -310,14 +280,13 @@ extern "C"
         return true;
     }
 
-    bool isRectInRect(RECT* rect, int32_t minX, int32_t minY, int32_t maxX, int32_t maxY)
+    void entityLookAtLocation(Entity* entity, Vector* location)
     {
-        if (rect->x + rect->width < minX) return false;
-        if (rect->x > maxX) return false;
-        if (rect->y - rect->height > minY) return false;
-        if (rect->y < maxY) return false;
+        if (entity == nullptr || location == nullptr) return;
 
-        return true;
+        auto& entityLoc = entity->posData->location;
+
+        entity->posData->rotation.y = atan(location->z - entityLoc.z, location->x - entityLoc.x);
     }
 
     constexpr bool hasMovedOutsideOfArea(ScreenPos oldPos, ScreenPos newPos, int16_t width, int16_t height)
@@ -330,12 +299,13 @@ extern "C"
         return false;
     }
 
-    bool entityCheckCombatArea(Entity* entity, Vector* oldPos, int16_t width, int16_t height)
+    static bool
+    entityCheckCombatArea(Entity* entity, const Vector& newPos, const Vector& oldPos, int16_t width, int16_t height)
     {
+        if (width == 0 || height == 0) return false;
         if (GAME_STATE == 4) return false;
 
-        auto& newPos = entity->posData->location;
-        auto radius  = getDigimonData(entity->type)->radius;
+        auto radius = getDigimonData(entity->type)->radius;
 
         struct AreaPoint
         {
@@ -360,9 +330,9 @@ extern "C"
             auto screenNew = getScreenPosition(newPos.x + radius * point.modX,
                                                newPos.y + point.height,
                                                newPos.z + radius * point.modY);
-            auto screenOld = getScreenPosition(oldPos->x + radius * point.modX,
-                                               oldPos->y + point.height,
-                                               oldPos->z + radius * point.modY);
+            auto screenOld = getScreenPosition(oldPos.x + radius * point.modX,
+                                               oldPos.y + point.height,
+                                               oldPos.z + radius * point.modY);
 
             if (hasMovedOutsideOfArea(screenOld, screenNew, width, height)) return true;
         }
@@ -370,13 +340,137 @@ extern "C"
         return false;
     }
 
-    void entityLookAtLocation(Entity* entity, Vector* location)
+    static Vector entityMoveForward(const Entity* entity)
     {
-        if (entity == nullptr || location == nullptr) return;
+        Vector vec{};
+        Vector movement;
+        Matrix rotMatrix;
 
-        auto& entityLoc = entity->posData->location;
+        const auto& momentum = entity->momentum[0];
 
-        entity->posData->rotation.y = atan(location->z - entityLoc.z, location->x - entityLoc.x);
+        if (momentum.subDelta[8] != 0 && (momentum.subScale[8] - momentum.subDelta[8] < 1))
+            vec.z = (momentum.delta[8] + momentum.subValue[8]) << 15;
+        else
+            vec.z = momentum.delta[8] << 15;
+
+        libgte_RotMatrix(&entity->posData[0].rotation, &rotMatrix);
+        libgte_ApplyMatrixLV(&rotMatrix, &vec, &movement);
+
+        return {
+            .x = (entity->locX + movement.x) >> 15,
+            .y = 0,
+            .z = (entity->locZ + movement.z) >> 15,
+        };
+    }
+
+    static bool checkMapCollisionX(Entity* entity, const Vector& pos, bool isMaxZ)
+    {
+        auto radius = getDigimonData(entity->type)->radius;
+
+        auto tileXMin = getTileX(pos.x - radius / 2);
+        auto tileXMax = getTileX(pos.x + radius / 2);
+        auto tileZ    = isMaxZ ? getTileZ(pos.z - radius) : getTileZ(pos.z + radius);
+
+        for (auto i = tileXMin; i <= tileXMax; i++)
+            if ((getTile(i, tileZ) & 0x80) != 0) return true;
+
+        return false;
+    }
+
+    static bool checkMapCollisionZ(Entity* entity, const Vector& pos, bool isMaxX)
+    {
+        auto radius = getDigimonData(entity->type)->radius;
+
+        auto tileZMin = getTileZ(pos.z + radius / 2);
+        auto tileZMax = getTileZ(pos.z - radius / 2);
+        auto tileX    = isMaxX ? getTileX(pos.x + radius) : getTileX(pos.x - radius);
+
+        for (auto i = tileZMin; i <= tileZMax; i++)
+            if ((getTile(tileX, i) & 0x80) != 0) return true;
+
+        return false;
+    }
+
+    static bool checkMapCollision(Entity* entity, const Vector& pos, int32_t diffX, int32_t diffZ)
+    {
+        if (diffX < 0 && checkMapCollisionZ(entity, pos, false)) return true;
+        if (diffX > 0 && checkMapCollisionZ(entity, pos, true)) return true;
+        if (diffZ < 0 && checkMapCollisionX(entity, pos, true)) return true;
+        if (diffZ > 0 && checkMapCollisionX(entity, pos, false)) return true;
+
+        return false;
+    }
+
+    static bool
+    entityCheckEntityCollision(Entity* self, const Vector& selfLoc, Entity* other, int32_t diffX, int32_t diffZ)
+    {
+        // TODO refactor, this code is kinda ugly and entity collision sucks in vanilla
+        auto selfRadius  = getDigimonData(self->type)->radius;
+        auto otherRadius = getDigimonData(other->type)->radius;
+
+        const auto& otherLoc = other->posData[0].location;
+
+        BoundingBox2D selfBB(selfLoc.x, selfLoc.z, selfRadius);
+        BoundingBox2D otherBB(otherLoc.x, otherLoc.z, otherRadius);
+
+        if (GAME_STATE == 0 && self == &TAMER_ENTITY)
+        {
+            if ((POLLED_INPUT & BUTTON_CROSS) != 0 && self->animId == 0)
+            {
+                auto rot = self->posData[0].rotation.y;
+                if (rot > 0 && rot < 0x800) selfBB.minX -= 50;
+                if (rot > 0x800 && rot < 0x1000) selfBB.maxX += 50;
+                if (rot < 0x400 && rot > 0xC00) selfBB.minY -= 50;
+                if (rot > 0x400 && rot < 0xC00) selfBB.maxY += 50;
+            }
+
+            if (otherBB.overlaps(selfBB.minX, selfBB.maxY, selfBB.minX, selfBB.minY)) return true;
+            if (otherBB.overlaps(selfBB.maxX, selfBB.maxY, selfBB.maxX, selfBB.minY)) return true;
+            if (otherBB.overlaps(selfBB.minX, selfBB.minY, selfBB.maxX, selfBB.minY)) return true;
+            if (otherBB.overlaps(selfBB.minX, selfBB.maxY, selfBB.maxX, selfBB.maxY)) return true;
+
+            return selfBB.overlaps(otherBB);
+        }
+        else
+        {
+            if (diffX < 0 && otherBB.overlaps(selfBB.minX, selfBB.maxY, selfBB.minX, selfBB.minY)) return true;
+            if (diffX > 0 && otherBB.overlaps(selfBB.maxX, selfBB.maxY, selfBB.maxX, selfBB.minY)) return true;
+            if (diffZ < 0 && otherBB.overlaps(selfBB.minX, selfBB.minY, selfBB.maxX, selfBB.minY)) return true;
+            if (diffZ > 0 && otherBB.overlaps(selfBB.minX, selfBB.maxY, selfBB.maxX, selfBB.maxY)) return true;
+        }
+
+        return false;
+    }
+
+    CollisionCode entityCheckCollision(Entity* ignore, Entity* self, int32_t width, int32_t height)
+    {
+        self->animFlag &= 5;
+        const auto& oldLoc = self->posData[0].location;
+        auto newLoc        = entityMoveForward(self);
+
+        auto diffX    = newLoc.x - oldLoc.x;
+        auto diffZ    = newLoc.z - oldLoc.z;
+        auto rotation = self->posData->rotation.y;
+        if (rotation == 0x400 || rotation == 0xC00) diffZ = 0;
+        if (rotation == 0 || rotation == 0x800) diffX = 0;
+
+        if (entityCheckCombatArea(self, newLoc, oldLoc, width, height)) return CollisionCode::SCREEN;
+        if (checkMapCollision(self, newLoc, diffX, diffZ)) return CollisionCode::MAP;
+
+        for (int32_t i = 0; i < 10; i++)
+        {
+            auto* other = ENTITY_TABLE.getEntityById(i);
+
+            if (isInvisible(other)) continue;
+            if (other == self) continue;
+            if (other == ignore) continue;
+            if (i == 0 && GAME_STATE == 1 && (self->animId == 0x24 || self->animId == 0x23)) continue;
+            if (i != 0 && static_cast<DigimonEntity*>(other)->stats.currentHP == 0) continue;
+
+            if (entityCheckEntityCollision(self, newLoc, other, diffX, diffZ)) return static_cast<CollisionCode>(i);
+        }
+
+        return CollisionCode::NONE;
     }
 }
 

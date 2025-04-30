@@ -136,8 +136,8 @@
 ;  jal atan
 ;.org 0x800b6f28
 ;  jal atan
-.org 0x800d45d0
-  jal atan
+;.org 0x800d45d0
+;  jal atan
 .org 0x800e81f8
   jal atan
 

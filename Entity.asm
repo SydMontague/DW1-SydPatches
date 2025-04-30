@@ -38,16 +38,6 @@
 .org 0x80105930
   jal tickEntityMoveToAxis
 
-.org 0x800d503c
-  jal checkMapCollisionX
-.org 0x800d5060
-  jal checkMapCollisionX
-
-.org 0x800d5084
-  jal checkMapCollisionZ
-.org 0x800d50a8
-  jal checkMapCollisionZ
-
 ;.org 0x800a66a8
 ;  jal getModelTile
 ;.org 0x800ab284
@@ -101,26 +91,6 @@
 ;  jal entityIsInEntity
 .org 0x800d5328
   jal entityIsInEntity
-
-.org 0x800d46dc
-  jal entityCheckCombatArea
-
-.org 0x800d5298
-  jal isRectInRect
-.org 0x800d52c0
-  jal isRectInRect
-.org 0x800d52e8
-  jal isRectInRect
-.org 0x800d5310
-  jal isRectInRect
-.org 0x800d5358
-  jal isRectInRect
-.org 0x800d5388
-  jal isRectInRect
-.org 0x800d53b8
-  jal isRectInRect
-.org 0x800d53e8
-  jal isRectInRect
 
 ;.org 0x800d4054
 ;  jal getEntityTile
@@ -224,6 +194,53 @@
 .org 0x800f6b34
   jal entityLookAtLocation
 
+;.org 0x800ab394
+;  jal entityCheckCollision
+;.org 0x800ac250
+;  jal entityCheckCollision
+;.org 0x800b69d0
+;  jal entityCheckCollision
+;.org 0x800d4454
+;  jal entityCheckCollision
+.org 0x800d48cc
+  jal entityCheckCollision
+.org 0x800d4944
+  jal entityCheckCollision
+.org 0x800def24
+  jal entityCheckCollision
+.org 0x800ef4cc
+  jal entityCheckCollision
+.org 0x800f5fb0
+  jal entityCheckCollision
+.org 0x800f63b4
+  jal entityCheckCollision
+.org 0x800f6428
+  jal entityCheckCollision
+.org 0x800f645c
+  jal entityCheckCollision
+.org 0x800f6480
+  jal entityCheckCollision
+.org 0x800f659c
+  jal entityCheckCollision
+.org 0x800f65c0
+  jal entityCheckCollision
+.org 0x800f6658
+  jal entityCheckCollision
+.org 0x800f670c
+  jal entityCheckCollision
+.org 0x800f6ef0
+  jal entityCheckCollision
+.org 0x800f6f70
+  jal entityCheckCollision
+.org 0x800f6fe8
+  jal entityCheckCollision
+.org 0x800f705c
+  jal entityCheckCollision
+.org 0x800f70ac
+  jal entityCheckCollision
+.org 0x800f710c
+  jal entityCheckCollision
+
 .close 
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
@@ -284,6 +301,41 @@
 .org 0x80066d0c
   jal entityLookAtLocation
 
+.org 0x80057614
+  jal entityCheckCollision
+.org 0x8005768c
+  jal entityCheckCollision
+.org 0x8005a338
+  jal entityCheckCollision
+.org 0x8005a640
+  jal entityCheckCollision
+.org 0x8005a7a0
+  jal entityCheckCollision
+.org 0x8005a814
+  jal entityCheckCollision
+.org 0x8005a848
+  jal entityCheckCollision
+.org 0x8005a86c
+  jal entityCheckCollision
+.org 0x8005a988
+  jal entityCheckCollision
+.org 0x8005a9ac
+  jal entityCheckCollision
+.org 0x8005aa58
+  jal entityCheckCollision
+.org 0x8005b364
+  jal entityCheckCollision
+.org 0x8005b3e4
+  jal entityCheckCollision
+.org 0x8005b45c
+  jal entityCheckCollision
+.org 0x8005b4d0
+  jal entityCheckCollision
+.org 0x8005b520
+  jal entityCheckCollision
+.org 0x8005b580
+  jal entityCheckCollision
+
 .close
 
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
@@ -327,6 +379,37 @@
   jal entityLookAtLocation
 .org 0x8006f304
   jal entityLookAtLocation
+
+.org 0x80061f00
+  jal entityCheckCollision
+.org 0x80062300
+  jal entityCheckCollision
+.org 0x80062374
+  jal entityCheckCollision
+.org 0x800623a8
+  jal entityCheckCollision
+.org 0x800623cc
+  jal entityCheckCollision
+.org 0x800624e8
+  jal entityCheckCollision
+.org 0x8006250c
+  jal entityCheckCollision
+.org 0x800625a4
+  jal entityCheckCollision
+.org 0x80062658
+  jal entityCheckCollision
+.org 0x80062ebc
+  jal entityCheckCollision
+.org 0x80062f3c
+  jal entityCheckCollision
+.org 0x80062fb4
+  jal entityCheckCollision
+.org 0x80063028
+  jal entityCheckCollision
+.org 0x80063078
+  jal entityCheckCollision
+.org 0x800630d8
+  jal entityCheckCollision
 
 .close
 

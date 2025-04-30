@@ -50,7 +50,6 @@
 .definelabel setMapLayerEnabled,        0x800e65b8
 .definelabel isSoundLoaded,             0x800e90cc
 .definelabel loadDynamicLibrary,        0x800e61e4
-.definelabel entityCheckCollision,      0x800d45ec
 .definelabel closeInventoryBoxes,       0x800db238
 .definelabel collisionGrace,            0x800d4884
 .definelabel unlockMedal,               0x800ff830
@@ -90,6 +89,7 @@
 .definelabel handleBattleIdle,          0x800e7d40
 .definelabel entityLookAtTile,          0x800e6078
 .definelabel startBattleIdleAnimation,  0x800e8970
+.definelabel isInvisible,               0x800e61ac
 
 .definelabel TAMER_WAYPOINT_ACTIVE, 0x80134d50
 .definelabel TAMER_START_TILE_Y, 0x80134d51

@@ -11,4 +11,5 @@ extern "C"
     void getModelTile(Vector* location, int16_t* tileX, int16_t* tileY);
     bool entityIsInEntity(Entity* self, Entity* other);
     void entityLookAtLocation(Entity* entity, Vector* location);
+    CollisionCode entityCheckCollision(Entity* ignore, Entity* self, int32_t width, int32_t height);
 }

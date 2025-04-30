@@ -1554,6 +1554,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    bool isInvisible(Entity* entity);
     void handleBattleIdle(DigimonEntity* entity, Stats* stats, BattleFlags flags);
     void startBattleIdleAnimation(Entity* entity, Stats* stats, BattleFlags flags);
     void setItemTexture(POLY_FT4* prim, ItemType item);
@@ -1592,7 +1593,6 @@ extern "C"
     bool hasMedal(Medal medal);
     void unlockMedal(Medal medal);
     uint8_t getCardAmount(uint8_t cardId);
-    CollisionCode entityCheckCollision(Entity* ignore, Entity* self, int32_t width, int32_t height);
     void collisionGrace(Entity* ignore, Entity* self, int32_t dx, int32_t dy);
     void closeInventoryBoxes();
     void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileReadCallback callback, int32_t param);

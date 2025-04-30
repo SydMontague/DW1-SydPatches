@@ -18,6 +18,49 @@ extern "C"
         SVector extent;
     };
 
+    struct BoundingBox2D
+    {
+        int32_t minX;
+        int32_t maxX;
+        int32_t minY;
+        int32_t maxY;
+
+        constexpr BoundingBox2D(int32_t minX, int32_t maxX, int32_t minY, int32_t maxY)
+            : minX(minX)
+            , maxX(maxX)
+            , minY(minY)
+            , maxY(maxY)
+        {
+        }
+
+        constexpr BoundingBox2D(int32_t centerX, int32_t centerY, int32_t extend)
+            : minX(centerX - extend)
+            , maxX(centerX + extend)
+            , minY(centerY - extend)
+            , maxY(centerY + extend)
+        {
+        }
+
+        constexpr bool overlaps(int32_t minX2, int32_t maxY2, int32_t maxX2, int32_t minY2) {
+            if (maxX < minX2) return false;
+            if (minX > maxX2) return false;
+            if (minY > maxY2) return false;
+            if (maxY < minY2) return false;
+
+            return true;
+        }
+
+        constexpr bool overlaps(const BoundingBox2D& other)
+        {
+            if (minX > other.maxX) return false;
+            if (maxX < other.minX) return false;
+            if (minY > other.maxY) return false;
+            if (maxY < other.minY) return false;
+
+            return true;
+        }
+    };
+
     constexpr int32_t abs(int32_t val)
     {
         return val < 0 ? -val : val;
