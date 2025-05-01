@@ -1593,7 +1593,6 @@ extern "C"
     bool hasMedal(Medal medal);
     void unlockMedal(Medal medal);
     uint8_t getCardAmount(uint8_t cardId);
-    void collisionGrace(Entity* ignore, Entity* self, int32_t dx, int32_t dy);
     void closeInventoryBoxes();
     void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileReadCallback callback, int32_t param);
     int32_t isSoundLoaded(bool isAsync, int32_t soundId);

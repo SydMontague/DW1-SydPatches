@@ -472,6 +472,56 @@ extern "C"
 
         return CollisionCode::NONE;
     }
+
+    constexpr uint16_t COLLISION_GRACE_ROTATION[8][4] = {
+        {0x000, 0x400, 0xC00, 0x800},
+        {0x400, 0x000, 0x800, 0xC00},
+        {0x400, 0x800, 0x000, 0xC00},
+        {0x800, 0x400, 0xC00, 0x000},
+        {0x800, 0xC00, 0x400, 0x000},
+        {0xC00, 0x800, 0x000, 0x400},
+        {0xC00, 0x000, 0x800, 0x400},
+        {0x000, 0xC00, 0x400, 0x800},
+    };
+
+    void collisionGrace(Entity* ignore, Entity* self, int32_t dx, int32_t dy)
+    {
+        self->animFlag &= 5;
+
+        auto collision = entityCheckCollision(ignore, self, dx, dy);
+        if (collision == CollisionCode::NONE) return;
+
+        auto baseRotation = posmod(self->posData->rotation.y, 4096);
+        uint8_t flag      = 0;
+
+        for (int32_t i = 0; i < 4; i++)
+        {
+            auto graceRotation        = COLLISION_GRACE_ROTATION[baseRotation >> 9][i];
+            self->posData->rotation.y = graceRotation;
+
+            if (entityCheckCollision(ignore, self, dx, dy) == CollisionCode::NONE)
+            {
+                auto diffLeft  = posmod((baseRotation - graceRotation), 4096);
+                auto diffRight = posmod((graceRotation - baseRotation), 4096);
+
+                auto finalRot = baseRotation;
+                if ((diffLeft - diffRight) < 0)
+                    finalRot -= (min(0x50, diffLeft));
+                else
+                    finalRot += (min(0x50, diffRight));
+
+                self->posData->rotation.y = posmod(finalRot, 4096);
+                self->animFlag |= flag;
+                return;
+            }
+
+            auto val = posmod(self->posData->rotation.y, 4096);
+            flag |= (8 << ((val >> 10) & 0x1F));
+        }
+
+        self->posData->rotation.y = posmod(baseRotation + 0x20, 4096);
+        self->animFlag |= 2;
+    }
 }
 
 bool hasAttackEquipped(DigimonEntity* entity)

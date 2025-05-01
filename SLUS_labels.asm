@@ -51,7 +51,6 @@
 .definelabel isSoundLoaded,             0x800e90cc
 .definelabel loadDynamicLibrary,        0x800e61e4
 .definelabel closeInventoryBoxes,       0x800db238
-.definelabel collisionGrace,            0x800d4884
 .definelabel unlockMedal,               0x800ff830
 .definelabel hasMedal,                  0x800ff85c
 .definelabel getCardAmount,             0x801067ec

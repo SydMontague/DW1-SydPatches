@@ -202,10 +202,10 @@
 ;  jal entityCheckCollision
 ;.org 0x800d4454
 ;  jal entityCheckCollision
-.org 0x800d48cc
-  jal entityCheckCollision
-.org 0x800d4944
-  jal entityCheckCollision
+;.org 0x800d48cc
+;  jal entityCheckCollision
+;.org 0x800d4944
+;  jal entityCheckCollision
 .org 0x800def24
   jal entityCheckCollision
 .org 0x800ef4cc
@@ -240,6 +240,29 @@
   jal entityCheckCollision
 .org 0x800f710c
   jal entityCheckCollision
+
+;.org 0x800ab4a8
+;  jal collisionGrace
+;.org 0x800b6afc
+;  jal collisionGrace
+;.org 0x800d44b0
+;  jal collisionGrace
+.org 0x800f54e4
+  jal collisionGrace
+.org 0x800f5554
+  jal collisionGrace
+.org 0x800f560c
+  jal collisionGrace
+.org 0x800f5ab4
+  jal collisionGrace
+.org 0x800f6680
+  jal collisionGrace
+.org 0x800f70dc
+  jal collisionGrace
+.org 0x800f7130
+  jal collisionGrace
+.org 0x800f7150
+  jal collisionGrace
 
 .close 
 
@@ -336,6 +359,23 @@
 .org 0x8005b580
   jal entityCheckCollision
 
+.org 0x800597e8
+  jal collisionGrace
+.org 0x80059858
+  jal collisionGrace
+.org 0x80059904
+  jal collisionGrace
+.org 0x80059dbc
+  jal collisionGrace
+.org 0x8005a668
+  jal collisionGrace
+.org 0x8005b550
+  jal collisionGrace
+.org 0x8005b5a4
+  jal collisionGrace
+.org 0x8005b5c4
+  jal collisionGrace
+
 .close
 
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
@@ -410,6 +450,23 @@
   jal entityCheckCollision
 .org 0x800630d8
   jal entityCheckCollision
+
+.org 0x80061448
+  jal collisionGrace
+.org 0x800614b8
+  jal collisionGrace
+.org 0x80061564
+  jal collisionGrace
+.org 0x80061a10
+  jal collisionGrace
+.org 0x800625cc
+  jal collisionGrace
+.org 0x800630a8
+  jal collisionGrace
+.org 0x800630fc
+  jal collisionGrace
+.org 0x8006311c
+  jal collisionGrace
 
 .close
 

@@ -12,4 +12,5 @@ extern "C"
     bool entityIsInEntity(Entity* self, Entity* other);
     void entityLookAtLocation(Entity* entity, Vector* location);
     CollisionCode entityCheckCollision(Entity* ignore, Entity* self, int32_t width, int32_t height);
+    void collisionGrace(Entity* ignore, Entity* self, int32_t dx, int32_t dy);
 }

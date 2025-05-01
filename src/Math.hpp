@@ -41,7 +41,8 @@ extern "C"
         {
         }
 
-        constexpr bool overlaps(int32_t minX2, int32_t maxY2, int32_t maxX2, int32_t minY2) {
+        constexpr bool overlaps(int32_t minX2, int32_t maxY2, int32_t maxX2, int32_t minY2)
+        {
             if (maxX < minX2) return false;
             if (minX > maxX2) return false;
             if (minY > maxY2) return false;
@@ -165,6 +166,14 @@ constexpr int16_t convertTileToPosZ(int16_t tileZ)
     return (50 - tileZ) * 100 - 50;
 }
 
+constexpr int32_t posmod(int32_t val, int32_t mod)
+{
+    auto newVal = val % mod;
+    if (newVal < 0) newVal += mod;
+
+    return newVal;
+}
+
 static_assert(max(100, 200) == 200);
 static_assert(max(100, -200) == 100);
 static_assert(max(-300, -200) == -200);
@@ -191,3 +200,10 @@ static_assert(clamp(1024, 64, 256) == 256);
 static_assert(clamp(256, 64, 256) == 256);
 static_assert(clamp(-10, 64, 256) == 64);
 static_assert(clamp(64, 64, 256) == 64);
+
+static_assert(posmod(2048, 4096) == 2048);
+static_assert(posmod(6144, 4096) == 2048);
+static_assert(posmod(128, 4096) == 128);
+static_assert(posmod(-1, 4096) == 4095);
+static_assert(posmod(-2048, 4096) == 2048);
+static_assert(posmod(-4095, 4096) == 1);
