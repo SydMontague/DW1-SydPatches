@@ -178,16 +178,11 @@
 .org 0x80105968
   jal Tamer_startAnimation
 
-.org 0x800d4bcc
-  jal addTamerWaypoint
-.org 0x800d4be4
-  jal addTamerWaypoint
-
 .org 0x800d5dc4
   jal initializeTamerWaypoints
 
-.org 0x800d4bf4
-  jal clearTamerWaypoints
+;.org 0x800d4bf4
+;  jal clearTamerWaypoints
 
 .close
 

@@ -74,10 +74,10 @@
 ;  jal getModelTile
 ;.org 0x800d439c
 ;  jal getModelTile
-.org 0x800d4d20
-  jal getModelTile
-.org 0x800d4e2c
-  jal getModelTile
+;.org 0x800d4d20
+;  jal getModelTile
+;.org 0x800d4e2c
+;  jal getModelTile
 .org 0x800de62c
   jal getModelTile
 .org 0x800e1a38
@@ -87,17 +87,12 @@
 .org 0x800f1050
   jal getModelTile
 
-;.org 0x800d4508
-;  jal entityIsInEntity
-.org 0x800d5328
-  jal entityIsInEntity
-
 ;.org 0x800d4054
 ;  jal getEntityTile
 ;.org 0x800d4090
 ;  jal getEntityTile
-.org 0x800d4af0
-  jal getEntityTile
+;.org 0x800d4af0
+;  jal getEntityTile
 .org 0x800e86e0
   jal getEntityTile
 .org 0x800e86fc

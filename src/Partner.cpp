@@ -1436,4 +1436,36 @@ extern "C"
         PARTNER_TAMER_PREVIOUS_TILE_X = tamerTileX;
         PARTNER_TAMER_PREVIOUS_TILE_Y = tamerTileZ;
     }
+
+    void tickPartnerWaypoints()
+    {
+        if (PARTNER_ENTITY.isOnScreen == 1) return;
+
+        auto id = 0;
+        for (int32_t i = PARTNER_WAYPOINT_COUNT; i > 0; i--)
+        {
+            id = (PARTNER_WAYPOINT_CURRENT + i - 1) % 30;
+            if (isTileOffScreen(PARTNER_WAYPOINT_X[id], PARTNER_WAYPOINT_Y[id]))
+            {
+                while (PARTNER_WAYPOINT_CURRENT != id)
+                    popPartnerWaypoint();
+                popPartnerWaypoint();
+                break;
+            }
+        }
+
+        auto tamerTileX   = getTileX(TAMER_ENTITY.posData->location.x);
+        auto tamerTileZ   = getTileZ(TAMER_ENTITY.posData->location.z);
+        auto partnerTileX = getTileX(PARTNER_ENTITY.posData->location.x);
+        auto partnerTileZ = getTileZ(PARTNER_ENTITY.posData->location.z);
+
+        auto tile = getClosestTileOffScreen(tamerTileX, tamerTileZ, partnerTileX, partnerTileZ);
+        if (tile.tileX != -1)
+        {
+            PARTNER_ENTITY.posData[0].location.x = tileToPos(tile.tileX);
+            PARTNER_ENTITY.posData[0].location.z = tileToPos(tile.tileY);
+            PARTNER_ENTITY.locX                  = tileToPos(tile.tileX) << 15;
+            PARTNER_ENTITY.locZ                  = tileToPos(tile.tileY) << 15;
+        }
+    }
 }

@@ -94,17 +94,6 @@
 .org 0x800f03dc
   jal initializeDroppedItems
 
-;.org 0x800d3498
-;  jal isTileOffScreen
-;.org 0x800d35d8
-;  jal isTileOffScreen
-;.org 0x800d4284
-;  jal isTileOffScreen
-.org 0x800d4d9c
-  jal isTileOffScreen
-
-.org 0x800d4e50
-  jal getClosestTileOffScreen
 
 ;.org 0x800d40a8
 ;  jal isFiveTileWidePathBlocked
@@ -117,12 +106,12 @@
 ;  jal isLinearPathBlocked
 ;.org 0x800d3c0c
 ;  jal isLinearPathBlocked
-.org 0x800d4b30
-  jal isLinearPathBlocked
-.org 0x800d4b98
-  jal isLinearPathBlocked
-.org 0x800d4c3c
-  jal isLinearPathBlocked
+;.org 0x800d4b30
+;  jal isLinearPathBlocked
+;.org 0x800d4b98
+;  jal isLinearPathBlocked
+;.org 0x800d4c3c
+;  jal isLinearPathBlocked
 .org 0x800e8714
   jal isLinearPathBlocked
 .org 0x800e8760

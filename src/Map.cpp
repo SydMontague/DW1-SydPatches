@@ -874,21 +874,18 @@ extern "C"
         return abs(pos.screenX) > 200 || abs(pos.screenY) > 160;
     }
 
-    void getClosestTileOffScreen(int8_t* startX, int8_t* startY, int8_t* targetX, int8_t* targetY)
+    TileCoord getClosestTileOffScreen(int8_t startX, int8_t startY, int8_t targetX, int8_t targetY)
     {
-        TileIterator itr(*startX, *startY, *targetX, *targetY);
+        TileIterator itr(startX, startY, targetX, targetY);
 
         for (; itr.hasNext(); ++itr)
         {
             auto val = *itr;
             if (isTileOffScreen(val.tileX, val.tileY))
-            {
-                *startX = val.tileX;
-                *startY = val.tileY;
-                return;
-            }
+                return val;
         }
-        *startX = -1;
+
+        return {-1,-1};
     }
 
     bool isLinearPathBlocked(int32_t tileX1, int32_t tileY1, int32_t tileX2, int32_t tileY2)
