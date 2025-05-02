@@ -314,6 +314,7 @@ extern "C"
             int8_t modY;
         };
 
+        // TODO shouldn't this be the Digimon type height instead of a fixed value?
         constexpr AreaPoint points[] = {
             {.height = 0, .modX = -1, .modY = 1},
             {.height = 0, .modX = 1, .modY = 1},
@@ -338,6 +339,53 @@ extern "C"
         }
 
         return false;
+    }
+
+    bool isOffScreen(Position* pos, int32_t width, int32_t height)
+    {
+        // TODO: remove once all users have been migrated to isInScreenRect directly
+        ScreenPos newPos = {
+            .screenX = static_cast<int16_t>(pos->x - (160 - DRAWING_OFFSET_X)),
+            .screenY = static_cast<int16_t>(pos->y - (120 - DRAWING_OFFSET_Y)),
+            .depth   = 0,
+        };
+
+        return !isInScreenRect(newPos, width, height);
+    }
+
+    bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height)
+    {
+        if (entity->type == DigimonType::NPC_KUNEMON && entity->animId == 0x1C) return false;
+
+        auto digiRadius = getDigimonData(entity->type)->radius;
+        auto digiHeight = getDigimonData(entity->type)->height;
+        const auto& pos = entity->posData[0].location;
+
+        struct AreaPoint
+        {
+            int8_t modX;
+            int8_t modY;
+        };
+
+        constexpr AreaPoint points[] = {
+            {.modX = -1, .modY = 1},
+            {.modX = 1, .modY = 1},
+            {.modX = -1, .modY = -1},
+            {.modX = 1, .modY = -1},
+        };
+
+        for (auto point : points)
+        {
+            auto screenPos = getScreenPosition(pos.x + digiRadius * point.modX, pos.y, pos.z + digiRadius * point.modY);
+
+            if (isInScreenRect(screenPos, width, height)) return false;
+
+            auto screenPos2 =
+                getScreenPosition(pos.x + digiRadius * point.modX, pos.y + digiHeight, pos.z + digiRadius * point.modY);
+
+            if (isInScreenRect(screenPos2, width, height)) return false;
+        }
+        return true;
     }
 
     static Vector entityMoveForward(const Entity* entity)

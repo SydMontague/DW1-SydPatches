@@ -32,8 +32,8 @@ mips-g++ CustomInit.cpp -o ../compiled/CustomInit.lib $FLAGS
 mips-g++ Evolution.cpp -o ../compiled/Evolution.lib $FLAGS
 mips-g++ GameData.cpp -o ../compiled/GameData.lib $FLAGS
 
-mips-g++ Helper.cpp Files.cpp Sound.cpp Partner.cpp Tamer.cpp Map.cpp Effects.cpp -o ../compiled/Cave1.lib $FLAGS
-mips-g++ Model.cpp Inventory.cpp ItemEffects.cpp ItemFunctions.cpp Fade.cpp EFE.cpp Battle.cpp Main.cpp GameObjects.cpp Entity.cpp NPCEntity.cpp GUI.cpp GameMenu.cpp PlayerMenu.cpp DigimonMenu.cpp StatsView.cpp TechView.cpp PlayerInfoView.cpp PlayerChartView.cpp PlayerMedalView.cpp PlayerCardView.cpp DigimonSprite.cpp -o ../compiled/Cave2.lib $FLAGS
+mips-g++ GameObjects.cpp Helper.cpp Files.cpp Sound.cpp Partner.cpp Tamer.cpp Map.cpp Effects.cpp -o ../compiled/Cave1.lib $FLAGS
+mips-g++ Model.cpp Inventory.cpp ItemEffects.cpp ItemFunctions.cpp Fade.cpp EFE.cpp Battle.cpp Main.cpp Entity.cpp NPCEntity.cpp GUI.cpp GameMenu.cpp PlayerMenu.cpp DigimonMenu.cpp StatsView.cpp TechView.cpp PlayerInfoView.cpp PlayerChartView.cpp PlayerMedalView.cpp PlayerCardView.cpp DigimonSprite.cpp -o ../compiled/Cave2.lib $FLAGS
 mips-g++ Math.cpp -o ../compiled/Cave3.lib $FLAGS
 
 cd -

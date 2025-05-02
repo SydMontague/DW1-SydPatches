@@ -68,7 +68,6 @@
 .definelabel isTamerOnScreen,           0x800e67ec
 .definelabel getDrawingOffsetCopy,      0x800d969c
 .definelabel isTriggerSet,              0x8010643c
-.definelabel entityIsOffScreen,         0x800d5430
 .definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8
 .definelabel initializeInventoryObject, 0x800dade8

@@ -259,6 +259,18 @@
 .org 0x800f7150
   jal collisionGrace
 
+;.org 0x800b62b4
+;  jal entityIsOffScreen
+;.org 0x800b6b34
+;  jal entityIsOffScreen
+.org 0x800dd988
+  jal entityIsOffScreen
+
+;.org 0x800d5598
+;  jal isOffScreen
+.org 0x800e20f0
+  jal isOffScreen
+
 .close 
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
@@ -370,6 +382,16 @@
   jal collisionGrace
 .org 0x8005b5c4
   jal collisionGrace
+
+.org 0x80057748
+  jal entityIsOffScreen
+.org 0x800594a4
+  jal entityIsOffScreen
+.org 0x80059f04
+  jal entityIsOffScreen
+
+.org 0x800587f0
+  jal isOffScreen
 
 .close
 

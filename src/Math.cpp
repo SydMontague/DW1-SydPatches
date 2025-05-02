@@ -300,7 +300,7 @@ ScreenPos getScreenPosition(int16_t tileX, int16_t tileZ)
     return getScreenPosition(convertTileToPosX(tileX), 0, convertTileToPosZ(tileZ));
 }
 
-ScreenPos getMapPosition(int16_t x, int16_t y, int16_t z)
+MapPos getMapPosition(int16_t x, int16_t y, int16_t z)
 {
     libgs_GsSetLsMatrix(&libgs_REFERENCE_MATRIX);
 
@@ -316,17 +316,17 @@ ScreenPos getMapPosition(int16_t x, int16_t y, int16_t z)
     };
 }
 
-ScreenPos getMapPosition(Vector pos)
+MapPos getMapPosition(Vector pos)
 {
     return getMapPosition(pos.x, pos.y, pos.z);
 }
 
-ScreenPos getMapPosition(SVector pos)
+MapPos getMapPosition(SVector pos)
 {
     return getMapPosition(pos.x, pos.y, pos.z);
 }
 
-ScreenPos getMapPosition(int16_t tileX, int16_t tileZ)
+MapPos getMapPosition(int16_t tileX, int16_t tileZ)
 {
     return getMapPosition(convertTileToPosX(tileX), 0, convertTileToPosZ(tileZ));
 }

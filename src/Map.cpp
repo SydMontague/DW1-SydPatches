@@ -871,7 +871,7 @@ extern "C"
     {
         auto pos = getScreenPosition(tileX, tileZ);
 
-        return abs(pos.screenX) > 200 || abs(pos.screenY) > 160;
+        return !isInScreenRect(pos, 400, 320);
     }
 
     TileCoord getClosestTileOffScreen(int8_t startX, int8_t startY, int8_t targetX, int8_t targetY)

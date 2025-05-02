@@ -3,12 +3,17 @@
 #include "extern/libgte.hpp"
 #include "extern/stddef.hpp"
 
-struct ScreenPos
+struct _CoordinateType
 {
     int16_t screenX;
     int16_t screenY;
     int16_t depth;
 };
+
+// represents screen coordinates, relative to the center of the visible screen
+using ScreenPos = _CoordinateType;
+// represents map coordinates, relative to the center of the map background
+using MapPos = _CoordinateType;
 
 extern "C"
 {
@@ -119,22 +124,33 @@ ScreenPos getScreenPosition(int16_t tileX, int16_t tileZ);
  * Gets the 2D map position of a 3D position.
  * The returned coordinates are relative to the center of the map.
  */
-ScreenPos getMapPosition(int16_t x, int16_t y, int16_t z);
+MapPos getMapPosition(int16_t x, int16_t y, int16_t z);
 /*
  * Gets the 2D map position of a 3D position.
  * The returned coordinates are relative to the center of the map.
  */
-ScreenPos getMapPosition(SVector pos);
+MapPos getMapPosition(SVector pos);
 /*
  * Gets the 2D map position of a 3D position.
  * The returned coordinates are relative to the center of the map.
  */
-ScreenPos getMapPosition(Vector pos);
+MapPos getMapPosition(Vector pos);
 /*
  * Gets the 2D map position of a 3D position.
  * The returned coordinates are relative to the center of the map.
  */
-ScreenPos getMapPosition(int16_t tileX, int16_t tileZ);
+MapPos getMapPosition(int16_t tileX, int16_t tileZ);
+
+/*
+ * Checks whether a screen position is within a given rectangle centered on the screen.
+ */
+constexpr bool isInScreenRect(ScreenPos pos, int32_t width, int32_t height)
+{
+    if (abs(pos.screenX) > (width / 2)) return false;
+    if (abs(pos.screenY) > (height / 2)) return false;
+
+    return true;
+}
 
 template<class T> constexpr auto clamp(T val, decltype(val) min, decltype(val) max) -> decltype(val)
 {
