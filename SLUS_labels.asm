@@ -37,7 +37,6 @@
 .definelabel Tamer_tickBattle,          0x800f1214
 .definelabel Tamer_tickFishing,         0x800e4e18
 .definelabel isKeyDown,                 0x800fc054
-.definelabel tickTamerWaypoints,        0x800d4adc
 .definelabel unsetCameraFollowPlayer,   0x800d8b3c
 .definelabel stopGameTime,              0x800dd798
 .definelabel addMapNameObject,          0x800d8fb0

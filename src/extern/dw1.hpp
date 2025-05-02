@@ -1610,7 +1610,6 @@ extern "C"
      * tick return false).
      */
     bool isKeyDown(uint16_t keyMask);
-    void tickTamerWaypoints();
     void unsetCameraFollowPlayer();
     void stopGameTime();
     void Tamer_tickFishing();

@@ -13,4 +13,5 @@ extern "C"
     void entityLookAtLocation(Entity* entity, Vector* location);
     CollisionCode entityCheckCollision(Entity* ignore, Entity* self, int32_t width, int32_t height);
     void collisionGrace(Entity* ignore, Entity* self, int32_t dx, int32_t dy);
+    bool isLinearPathBlocked(int32_t tileX1, int32_t tileY1, int32_t tileX2, int32_t tileY2);
 }

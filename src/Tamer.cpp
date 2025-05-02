@@ -23,6 +23,8 @@
 #include "extern/libgpu.hpp"
 #include "extern/libgte.hpp"
 
+static void tickTamerWaypoints();
+
 extern "C"
 {
     constexpr uint8_t findItemStr[]       = "Woah!";
@@ -989,4 +991,49 @@ extern "C"
         TAMER_WAYPOINT_ACTIVE  = 0;
         TAMER_WAYPOINT_CURRENT = 0;
     }
+}
+
+static void tickTamerWaypoints()
+{
+    auto tileX = getTileX(TAMER_ENTITY.posData->location.x);
+    auto tileZ = getTileX(TAMER_ENTITY.posData->location.z);
+
+    if (tileX != TAMER_PREVIOUS_TILE_X || tileZ != TAMER_PREVIOUS_TILE_Y)
+    {
+        if (!isLinearPathBlocked(tileX, tileZ, TAMER_START_TILE_X, TAMER_START_TILE_Y)) { clearTamerWaypoints(); }
+        else if (TAMER_WAYPOINT_COUNT == 0)
+        {
+            // Vanilla swaps X and Y here? That should be a bug?
+            addTamerWaypoint(0, TAMER_PREVIOUS_TILE_X, TAMER_PREVIOUS_TILE_Y);
+        }
+        else
+        {
+            auto id = (TAMER_WAYPOINT_CURRENT + TAMER_WAYPOINT_COUNT - 1) % 30;
+
+            if (isLinearPathBlocked(tileX, tileZ, TAMER_WAYPOINT_X[id], TAMER_WAYPOINT_Y[id]))
+                addTamerWaypoint((TAMER_WAYPOINT_CURRENT + TAMER_WAYPOINT_COUNT) % 30,
+                                 TAMER_PREVIOUS_TILE_X,
+                                 TAMER_PREVIOUS_TILE_Y);
+        }
+    }
+
+    if (TAMER_WAYPOINT_COUNT > 1)
+    {
+        if (isLinearPathBlocked(tileX,
+                                tileZ,
+                                TAMER_WAYPOINT_X[TAMER_WAYPOINT_ACTIVE],
+                                TAMER_WAYPOINT_Y[TAMER_WAYPOINT_ACTIVE]))
+        {
+            TAMER_WAYPOINT_ACTIVE--;
+            if (TAMER_WAYPOINT_ACTIVE < 0) TAMER_WAYPOINT_ACTIVE = TAMER_WAYPOINT_COUNT - 2;
+        }
+        else
+        {
+            TAMER_WAYPOINT_COUNT = TAMER_WAYPOINT_ACTIVE + 1;
+            if (TAMER_WAYPOINT_COUNT > 1) TAMER_WAYPOINT_ACTIVE--;
+        }
+    }
+
+    TAMER_PREVIOUS_TILE_X = tileX;
+    TAMER_PREVIOUS_TILE_Y = tileZ;
 }
