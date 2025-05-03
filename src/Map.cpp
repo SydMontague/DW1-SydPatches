@@ -881,11 +881,10 @@ extern "C"
         for (; itr.hasNext(); ++itr)
         {
             auto val = *itr;
-            if (isTileOffScreen(val.tileX, val.tileY))
-                return val;
+            if (isTileOffScreen(val.tileX, val.tileY)) return val;
         }
 
-        return {-1,-1};
+        return {-1, -1};
     }
 
     bool isLinearPathBlocked(int32_t tileX1, int32_t tileY1, int32_t tileX2, int32_t tileY2)
@@ -926,5 +925,35 @@ extern "C"
         }
 
         return false;
+    }
+
+    void initializeMap()
+    {
+        for (auto& val : MAP_TILES)
+            val = 0xFF;
+
+        for (auto& val : MAP_TILE_DATA)
+        {
+            val.imagePtr = nullptr;
+            val.posX     = 0;
+            val.posY     = 0;
+            val.texU     = 0;
+            val.texV     = 0;
+        }
+
+        CURRENT_SCREEN = 0xCC;
+        PREVIOUS_SCREEN = 0xCC;
+        CURRENT_EXIT = 9;
+        PREVIOUS_EXIT = 9;
+        CAMERA_REACHED_TARGET = 0xFF;
+        CAMERA_HAS_TARGET = false;
+        DAYTIME_TRANSITION_FRAME= 25;
+        CURRENT_TIME_OF_DAY = 0;
+        CAMERA_UPDATE_TILES = 0;
+        SKIP_MAP_FILE_READ = 0; // TODO remove, useless
+        DAYTIME_TRANSITION_ACTIVE = false;
+        SKIP_DAYTIME_TRANSITION = 0;
+
+        addObject(ObjectID::MAP, 0, nullptr, renderMap);
     }
 }

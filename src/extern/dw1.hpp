@@ -1374,6 +1374,18 @@ extern "C"
         int16_t sectorCount;
     };
 
+    struct MapTileData
+    {
+        uint32_t* imagePtr;
+        int16_t tileId;
+        int16_t posX;
+        int16_t posY;
+        int16_t texU;
+        int16_t texV;
+        int16_t tpage;
+        int16_t clut;
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1543,6 +1555,16 @@ extern "C"
     extern GsCOORDINATE2 MEDAL_COORDINATES;
     extern uint8_t MAP_COLLISION_DATA[10000];
     extern uint8_t INVENTORY_SIZE;
+    extern dtl::array<uint8_t, 35> MAP_TILES;
+    extern dtl::array<MapTileData, 35> MAP_TILE_DATA;
+    extern uint8_t PREVIOUS_SCREEN;
+    extern int8_t CAMERA_REACHED_TARGET;
+    extern bool CAMERA_HAS_TARGET;
+    extern uint8_t DAYTIME_TRANSITION_FRAME;
+    extern uint8_t CURRENT_TIME_OF_DAY;
+    extern uint32_t CAMERA_UPDATE_TILES;
+    extern uint32_t SKIP_MAP_FILE_READ;
+    extern bool DAYTIME_TRANSITION_ACTIVE;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1554,6 +1576,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void renderMap(int32_t instanceId);
     bool isInvisible(Entity* entity);
     void handleBattleIdle(DigimonEntity* entity, Stats* stats, BattleFlags flags);
     void startBattleIdleAnimation(Entity* entity, Stats* stats, BattleFlags flags);
@@ -1710,3 +1733,4 @@ static_assert(sizeof(FighterData) == 0x168);
 static_assert(sizeof(PlayerDataSub) == 0x28);
 static_assert(sizeof(PlayerData) == 0xe4);
 static_assert(sizeof(CombatData) == 0x684);
+static_assert(sizeof(MapTileData) == 0x14);

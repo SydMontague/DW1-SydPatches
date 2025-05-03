@@ -117,6 +117,13 @@
 .org 0x800e8760
   jal isLinearPathBlocked
 
+.org 0x800eea04
+  jal initializeMap
+.org 0x800eea84
+  jal initializeMap
+.org 0x800eeb40
+  jal initializeMap
+
 .close
 
 

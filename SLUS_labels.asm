@@ -87,7 +87,18 @@
 .definelabel entityLookAtTile,          0x800e6078
 .definelabel startBattleIdleAnimation,  0x800e8970
 .definelabel isInvisible,               0x800e61ac
+.definelabel renderMap,                 0x800d57ec
 
+.definelabel CAMERA_HAS_TARGET, 0x80134dad
+.definelabel DAYTIME_TRANSITION_FRAME, 0x80134d9c
+.definelabel CURRENT_TIME_OF_DAY, 0x80134d9d
+.definelabel CAMERA_UPDATE_TILES, 0x80134db0
+.definelabel SKIP_MAP_FILE_READ, 0x80134da0
+.definelabel DAYTIME_TRANSITION_ACTIVE, 0x80134da4
+.definelabel PREVIOUS_SCREEN, 0x80134da9
+.definelabel CAMERA_REACHED_TARGET, 0x80134dac
+.definelabel MAP_TILE_DATA, 0x8014f084
+.definelabel MAP_TILES, 0x8014f060
 .definelabel TAMER_WAYPOINT_ACTIVE, 0x80134d50
 .definelabel TAMER_START_TILE_Y, 0x80134d51
 .definelabel TAMER_START_TILE_X, 0x80134d52
