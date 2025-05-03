@@ -927,6 +927,55 @@ extern "C"
         return false;
     }
 
+    static void setMapTilePosData(POLY_FT4* prim, const MapTileData& data, int32_t offsetX, int32_t offsetY)
+    {
+        auto posX = (data.posX - 160) - (offsetX - (160 - DRAWING_OFFSET_X));
+        auto posY = (data.posY - 120) - (offsetY - (120 - DRAWING_OFFSET_Y));
+
+        setPosDataPolyFT4(prim, posX, posY, 128, 128);
+    }
+
+    static void renderMap(int32_t instanceId)
+    {
+        tickCameraFollowPlayer();
+
+        auto& mapEntry = MAP_ENTRIES[CURRENT_SCREEN];
+
+        if ((mapEntry.flags & 0x40) == 0 && (CURRENT_FRAME % 1200) == 0)
+        {
+            if (HOUR == 16) initializeDaytimeTransition(0);
+            if (HOUR == 20) initializeDaytimeTransition(1);
+            if (HOUR == 6) initializeDaytimeTransition(2);
+        }
+
+        for (int32_t i = 0; i < 3; i++)
+        {
+            for (int32_t j = 0; j < min(4, MAP_WIDTH); j++)
+            {
+                auto tileId    = (MAP_TILE_X + MAP_TILE_Y * MAP_WIDTH) + (MAP_WIDTH * i) + j;
+                auto& tileData = MAP_TILE_DATA[tileId];
+
+                POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+                libgpu_SetPolyFT4(prim);
+
+                prim->r0 = MAP_TILES[tileId] == 0xFF ? 0 : 128;
+                prim->g0 = MAP_TILES[tileId] == 0xFF ? 0 : 128;
+                prim->b0 = MAP_TILES[tileId] == 0xFF ? 0 : 128;
+                setUVDataPolyFT4(prim, 0, tileData.texV, 128, (tileData.texV % 256) == 0 ? 128 : 127);
+                prim->tpage = tileData.tpage;
+                prim->clut  = tileData.clut;
+                setMapTilePosData(prim, tileData, CAMERA_X, CAMERA_Y);
+
+                libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 0xFFF, prim);
+                libgs_GsSetWorkBase(prim + 1);
+            }
+        }
+
+        renderMapOverlays(LOCAL_MAP_OBJECT_INSTANCE, CAMERA_X, CAMERA_Y);
+        CAMERA_X_PREVIOUS = CAMERA_X;
+        CAMERA_Y_PREVIOUS = CAMERA_Y;
+    }
+
     void initializeMap()
     {
         for (auto& val : MAP_TILES)
@@ -941,18 +990,18 @@ extern "C"
             val.texV     = 0;
         }
 
-        CURRENT_SCREEN = 0xCC;
-        PREVIOUS_SCREEN = 0xCC;
-        CURRENT_EXIT = 9;
-        PREVIOUS_EXIT = 9;
-        CAMERA_REACHED_TARGET = 0xFF;
-        CAMERA_HAS_TARGET = false;
-        DAYTIME_TRANSITION_FRAME= 25;
-        CURRENT_TIME_OF_DAY = 0;
-        CAMERA_UPDATE_TILES = 0;
-        SKIP_MAP_FILE_READ = 0; // TODO remove, useless
+        CURRENT_SCREEN            = 0xCC;
+        PREVIOUS_SCREEN           = 0xCC;
+        CURRENT_EXIT              = 9;
+        PREVIOUS_EXIT             = 9;
+        CAMERA_REACHED_TARGET     = 0xFF;
+        CAMERA_HAS_TARGET         = false;
+        DAYTIME_TRANSITION_FRAME  = 25;
+        CURRENT_TIME_OF_DAY       = 0;
+        CAMERA_UPDATE_TILES       = 0;
+        SKIP_MAP_FILE_READ        = 0; // TODO remove, useless
         DAYTIME_TRANSITION_ACTIVE = false;
-        SKIP_DAYTIME_TRANSITION = 0;
+        SKIP_DAYTIME_TRANSITION   = 0;
 
         addObject(ObjectID::MAP, 0, nullptr, renderMap);
     }

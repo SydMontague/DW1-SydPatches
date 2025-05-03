@@ -1565,6 +1565,10 @@ extern "C"
     extern uint32_t CAMERA_UPDATE_TILES;
     extern uint32_t SKIP_MAP_FILE_READ;
     extern bool DAYTIME_TRANSITION_ACTIVE;
+    extern uint8_t MAP_WIDTH;
+    extern uint8_t MAP_HEIGHT;
+    extern uint8_t MAP_TILE_X;
+    extern uint8_t MAP_TILE_Y;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1576,7 +1580,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
-    void renderMap(int32_t instanceId);
+    void tickCameraFollowPlayer();
     bool isInvisible(Entity* entity);
     void handleBattleIdle(DigimonEntity* entity, Stats* stats, BattleFlags flags);
     void startBattleIdleAnimation(Entity* entity, Stats* stats, BattleFlags flags);
@@ -1669,7 +1673,7 @@ extern "C"
                              int32_t offset,
                              int32_t hasShadow);
     extern void setUVDataPolyFT4(POLY_FT4* prim, int16_t uvX, int16_t uvY, int16_t uvWidth, int16_t uvHeight);
-    extern void setPosDataPolyFT4(POLY_FT4* prim, int16_t posX, int16_t posY, int16_t uvWidth, int16_t uvHeight);
+    extern void setPosDataPolyFT4(POLY_FT4* prim, int16_t posX, int16_t posY, int16_t width, int16_t height);
     void renderTrianglePrimitive(uint32_t color,
                                  int16_t x1,
                                  int16_t y1,

@@ -22,9 +22,6 @@
 .org 0x800d5c44
   jal loadMapImage1
 
-.org 0x800d5b00
-  jal renderMapOverlays
-
 .org 0x8010435c
   jal createNinjamonEffect
 

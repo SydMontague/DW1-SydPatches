@@ -87,8 +87,12 @@
 .definelabel entityLookAtTile,          0x800e6078
 .definelabel startBattleIdleAnimation,  0x800e8970
 .definelabel isInvisible,               0x800e61ac
-.definelabel renderMap,                 0x800d57ec
+.definelabel tickCameraFollowPlayer,    0x800d6f64
 
+.definelabel MAP_WIDTH, 0x80150c3c
+.definelabel MAP_HEIGHT, 0x80150c3d
+.definelabel MAP_TILE_X, 0x80134dc2
+.definelabel MAP_TILE_Y, 0x80134dc4
 .definelabel CAMERA_HAS_TARGET, 0x80134dad
 .definelabel DAYTIME_TRANSITION_FRAME, 0x80134d9c
 .definelabel CURRENT_TIME_OF_DAY, 0x80134d9d
