@@ -9,3 +9,5 @@ compiled/
 *.out
 *.in
 *.o
+
+syms.txt

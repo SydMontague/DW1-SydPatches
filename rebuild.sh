@@ -12,7 +12,7 @@ mv ./work/DIGIMON/ETCDAT/SYSTEM_W.TIM ./work/DIGIMON/STDDAT/SYSTEM_W.TIM
 sh ./src/compile.sh
 
 # Apply patches
-./tools/linux/armips patches.asm
+./tools/linux/armips patches.asm -sym syms.txt
 
 # create ISO
 ./tools/linux/mkpsxiso ./work/BUILD.XML -y -q

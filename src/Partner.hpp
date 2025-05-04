@@ -14,4 +14,5 @@ extern "C"
     void tickConditionBoundaries();
     void handlePostBattleTiredness();
     void setPartnerIdling();
+    void initializePartnerWaypoint();
 }

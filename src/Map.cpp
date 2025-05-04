@@ -1,11 +1,14 @@
 #include "Map.hpp"
 
 #include "Entity.hpp"
+#include "Files.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Inventory.hpp"
 #include "Math.hpp"
+#include "NPCEntity.hpp"
 #include "Partner.hpp"
+#include "Sound.hpp"
 #include "Tamer.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
@@ -139,10 +142,10 @@ extern "C"
         }
     }
 
-    void loadMapObjects(LocalMapObjectInstance* mapObjects, int16_t* data, uint32_t mapId)
+    void loadMapObjects(LocalMapObjectInstance* mapObjects, uint8_t* data, uint32_t mapId)
     {
-        int16_t count  = *data;
-        MapObject* obj = reinterpret_cast<MapObject*>(data + 1);
+        int16_t count  = *reinterpret_cast<int16_t*>(data);
+        MapObject* obj = reinterpret_cast<MapObject*>(data + 2);
 
         for (int32_t i = 0; i < count; i++)
             LOCAL_MAP_OBJECTS[i] = obj[i];
@@ -1004,5 +1007,102 @@ extern "C"
         SKIP_DAYTIME_TRANSITION   = 0;
 
         addObject(ObjectID::MAP, 0, nullptr, renderMap);
+    }
+
+    uint8_t getMapSoundId(uint32_t mapId)
+    {
+        return MAP_ENTRIES[mapId].flags & 0x1F;
+    }
+
+    void buildMapPath(uint8_t* out, uint8_t* mapName, uint8_t* extension, int32_t mapId)
+    {
+        sprintf(out, "\\MAP\\MAP%d\\%s%s", (mapId / 15) + 1, mapName, extension);
+    }
+
+    static void loadMapSetup(MapSetup* map)
+    {
+        GS_VIEWPOINT.viewpointX = map->viewpoint.x * 2;
+        GS_VIEWPOINT.viewpointY = map->viewpoint.y * 2;
+        GS_VIEWPOINT.viewpointZ = map->viewpoint.z * 2;
+        GS_VIEWPOINT.refpointX  = map->referencePoint.x * 2;
+        GS_VIEWPOINT.refpointY  = map->referencePoint.y * 2;
+        GS_VIEWPOINT.refpointZ  = map->referencePoint.z * 2;
+        libgs_GsSetRefView2(&GS_VIEWPOINT);
+
+        for (int32_t i = 0; i < map->lights.size(); i++)
+        {
+            LIGHT_DATA[i].r = map->lights[i].red;
+            LIGHT_DATA[i].g = map->lights[i].green;
+            LIGHT_DATA[i].b = map->lights[i].blue;
+            LIGHT_DATA[i].x = map->lights[i].pos.x;
+            LIGHT_DATA[i].y = map->lights[i].pos.y;
+            LIGHT_DATA[i].z = map->lights[i].pos.z;
+            libgs_GsSetFlatLight(i, &LIGHT_DATA[i]);
+            MAP_LIGHT[i] = LIGHT_DATA[i];
+        }
+
+        // TODO read from unk1-3?
+        libgs_GsSetAmbient(2048, 2048, 2048);
+
+        VIEWPORT_DISTANCE = map->viewDistance;
+        libgs_GsSetProjection(VIEWPORT_DISTANCE);
+
+        // TODO this should be extracted into the partner code somehow
+        auto region           = getRaiseData(PARTNER_ENTITY.type)->favoredRegion;
+        PARTNER_AREA_RESPONSE = 0;
+        for (int32_t i = 0; i < map->likedArea.size(); i++)
+        {
+            if (map->likedArea[i] == region) PARTNER_AREA_RESPONSE = 1;
+            if (map->dislikedArea[i] == region) PARTNER_AREA_RESPONSE = 2;
+        }
+
+        MAP_WIDTH  = map->width;
+        MAP_HEIGHT = map->height;
+        for (int32_t i = 0; i < MAP_WIDTH * MAP_HEIGHT; i++)
+            MAP_TILES[i] = map->tiles[i];
+    }
+
+    void loadMap(uint32_t mapId)
+    {
+        auto& entry = MAP_ENTRIES[mapId];
+        uint8_t path[64];
+
+        sprintf(path, "\\MAP\\MAP%d\\%s.MAP", (mapId / 15) + 1, entry.filename);
+        readFile(reinterpret_cast<char*>(path), &GENERAL_BUFFER);
+
+        uint32_t* headerPtr = reinterpret_cast<uint32_t*>(&GENERAL_BUFFER);
+        MapSetup* setup     = reinterpret_cast<MapSetup*>(&GENERAL_BUFFER + *headerPtr++);
+
+        loadMapSetup(setup);
+        clearMapObjects(LOCAL_MAP_OBJECT_INSTANCE);
+
+        if (entry.num4bppImages != 0 || entry.num8bppImages != 0)
+        {
+            for (int32_t i = 0; i < entry.num8bppImages; i++)
+                loadMapImage1(&GENERAL_BUFFER + *headerPtr++);
+            for (int32_t i = 0; i < entry.num4bppImages; i++)
+                loadMapImage2(&GENERAL_BUFFER + *headerPtr++, i);
+
+            loadMapObjects(LOCAL_MAP_OBJECT_INSTANCE, &GENERAL_BUFFER + *headerPtr++, mapId);
+        }
+
+        clearMapDigimon();
+        loadMapEntities(&GENERAL_BUFFER + *headerPtr++, mapId, CURRENT_EXIT);
+
+        if (entry.doorsId != 0) { loadDoors(entry.doorsId - 1); }
+        if (mapId > 100 && mapId < 104) initializeWarpCrystals(mapId);
+        if (mapId == 165) initializeTrainingPoop();
+
+        loadMapCollisionData(&GENERAL_BUFFER + *headerPtr++);
+
+        loadMapSounds(getMapSoundId(mapId));
+        initializePartnerWaypoint();
+        initializeTamerWaypoints();
+        checkFishingMap(mapId);
+        checkCurlingMap(mapId);
+        // checkShopMap(mapId); // unused as of vanilla 1.1
+        checkArenaMap(mapId);
+
+        CURRENT_SCREEN = mapId;
     }
 }

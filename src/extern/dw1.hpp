@@ -939,6 +939,37 @@ extern "C"
         int16_t z;
     };
 
+    struct Position3D
+    {
+        int32_t x;
+        int32_t y;
+        int32_t z;
+    };
+
+    struct MapLight
+    {
+        Position3D pos;
+        int32_t red;
+        int32_t green;
+        int32_t blue;
+    };
+
+    struct MapSetup
+    {
+        Position3D viewpoint;
+        Position3D referencePoint;
+        dtl::array<MapLight, 3> lights;
+        int32_t unk1;
+        int32_t unk2;
+        int32_t unk3;
+        int32_t viewDistance;
+        dtl::array<int32_t, 4> likedArea;
+        dtl::array<int32_t, 4> dislikedArea;
+        int32_t width;
+        int32_t height;
+        uint32_t tiles[0];
+    };
+
     enum InputButtons : uint16_t
     {
         BUTTON_L2       = 0x0001,
@@ -1569,6 +1600,7 @@ extern "C"
     extern uint8_t MAP_HEIGHT;
     extern uint8_t MAP_TILE_X;
     extern uint8_t MAP_TILE_Y;
+    extern dtl::array<GsF_LIGHT, 3> MAP_LIGHT;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1580,6 +1612,12 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void loadDoors(int32_t doorEntryId);
+    void initializeWarpCrystals(int32_t mapId);
+    void initializeTrainingPoop();
+    void checkFishingMap(int32_t mapId);
+    void checkCurlingMap(int32_t mapId);
+    void checkArenaMap(int32_t mapId);
     void tickCameraFollowPlayer();
     bool isInvisible(Entity* entity);
     void handleBattleIdle(DigimonEntity* entity, Stats* stats, BattleFlags flags);
@@ -1738,3 +1776,5 @@ static_assert(sizeof(PlayerDataSub) == 0x28);
 static_assert(sizeof(PlayerData) == 0xe4);
 static_assert(sizeof(CombatData) == 0x684);
 static_assert(sizeof(MapTileData) == 0x14);
+static_assert(sizeof(MapLight) == 24);
+static_assert(sizeof(MapSetup) == 0x98);

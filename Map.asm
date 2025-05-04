@@ -121,6 +121,21 @@
 .org 0x800eeb40
   jal initializeMap
 
+;.org 0x800d5da8
+;  jal getMapSoundId
+.org 0x800deb90
+  jal getMapSoundId
+.org 0x800dec60
+  jal getMapSoundId
+
+;.org 0x800d5ba4
+;  jal buildMapPath
+.org 0x800d6328
+  jal buildMapPath
+
+.org 0x801028f4
+  jal loadMap
+
 .close
 
 
@@ -132,6 +147,9 @@
 .org 0x80058b5c
   jal isFiveTileWidePathBlocked
 
+.org 0x800591a0
+  jal getMapSoundId
+  
 .close
 
 .open "work/DIGIMON/KAR_REL.BIN",0x80053800
@@ -334,5 +352,13 @@
   jal moveMapObjectsWithLimit
 .org 0x800895e4
   jal moveMapObjectsWithLimit
+
+.close
+
+.open "work/DIGIMON/EVL_REL.BIN",0x80060000
+.psx
+
+.org 0x80061014
+  jal getMapSoundId
 
 .close

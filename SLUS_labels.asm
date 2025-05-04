@@ -88,7 +88,14 @@
 .definelabel startBattleIdleAnimation,  0x800e8970
 .definelabel isInvisible,               0x800e61ac
 .definelabel tickCameraFollowPlayer,    0x800d6f64
+.definelabel loadDoors,                 0x800dfefc
+.definelabel initializeWarpCrystals,    0x800e0af8
+.definelabel initializeTrainingPoop,    0x800e172c
+.definelabel checkFishingMap,           0x800e4ee4
+.definelabel checkCurlingMap,           0x800e89c8
+.definelabel checkArenaMap,             0x800ff9dc
 
+.definelabel MAP_LIGHT, 0x80150c40
 .definelabel MAP_WIDTH, 0x80150c3c
 .definelabel MAP_HEIGHT, 0x80150c3d
 .definelabel MAP_TILE_X, 0x80134dc2
@@ -354,6 +361,7 @@
 .definelabel libgs_GsSetRefView2, 0x80098e18
 .definelabel libgs_GsSetFlatLight, 0x800982a0
 .definelabel libgs_GsSortOt, 0x80098898
+.definelabel libgs_GsSetAmbient, 0x800987d8
 
 .definelabel libgs_REFERENCE_MATRIX, 0x80136f84
 .definelabel libgs_GsLIGHTWSMATRIX, 0x80136f24

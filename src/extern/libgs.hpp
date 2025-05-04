@@ -127,16 +127,16 @@ extern "C"
     extern Matrix libgs_REFERENCE_MATRIX;
     extern Matrix libgs_GsLIGHTWSMATRIX;
 
-    extern void* libgs_GsGetWorkBase();
-    extern void libgs_GsSetWorkBase(void* newBase);
-    extern void libgs_GsMapModelingData(uint32_t* p);
-    extern void libgs_GsLinkObject4(uint32_t* p, GsDOBJ2* objBase, int32_t index);
-    extern void libgs_GsInitCoordinate2(GsCOORDINATE2* super, GsCOORDINATE2* base);
-    extern void libgs_GsGetLws(GsCOORDINATE2* coord, Matrix* worldMatrix, Matrix* screenMatrix);
-    extern void libgs_GsSetLightMatrix(Matrix* worldMatrix);
-    extern void libgs_GsSetLsMatrix(Matrix* screenMatrix);
-    extern void libgs_GsSortObject4(GsDOBJ2* objp, GsOT* otp, int32_t shift, uint32_t* scratch);
-    extern void libgs_GsGetTimInfo(uint32_t* tim, GsIMAGE* image);
+    void* libgs_GsGetWorkBase();
+    void libgs_GsSetWorkBase(void* newBase);
+    void libgs_GsMapModelingData(uint32_t* p);
+    void libgs_GsLinkObject4(uint32_t* p, GsDOBJ2* objBase, int32_t index);
+    void libgs_GsInitCoordinate2(GsCOORDINATE2* super, GsCOORDINATE2* base);
+    void libgs_GsGetLws(GsCOORDINATE2* coord, Matrix* worldMatrix, Matrix* screenMatrix);
+    void libgs_GsSetLightMatrix(Matrix* worldMatrix);
+    void libgs_GsSetLsMatrix(Matrix* screenMatrix);
+    void libgs_GsSortObject4(GsDOBJ2* objp, GsOT* otp, int32_t shift, uint32_t* scratch);
+    void libgs_GsGetTimInfo(uint32_t* tim, GsIMAGE* image);
     int32_t libgs_GsGetActiveBuffer();
     void libgs_GsClearOt(uint16_t offset, uint16_t point, GsOT* ot);
     void libgs_GsSortSprite(GsSPRITE* sprite, GsOT* ot, uint16_t depth);
@@ -145,6 +145,7 @@ extern "C"
     int32_t libgs_GsSetRefView2(GsRVIEW2* view);
     void libgs_GsSetFlatLight(uint32_t id, const GsF_LIGHT* light);
     GsOT* libgs_GsSortOt(GsOT* src, GsOT* dest);
+    void libgs_GsSetAmbient(uint32_t red, uint32_t green, uint32_t blue);
 }
 
 static_assert(sizeof(GsOT) == 20);
