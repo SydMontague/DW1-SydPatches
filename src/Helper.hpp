@@ -18,6 +18,8 @@ struct ReadBuffer
         buffer += sizeof(T);
         return val;
     }
+
+    constexpr void skip(uint32_t val) { buffer += val; }
 };
 
 struct TileCoord

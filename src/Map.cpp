@@ -1109,4 +1109,73 @@ extern "C"
         sprintf(path, "\\MAP\\MAP%d\\%s.TFS", (mapId / 15) + 1, entry.filename);
         readFile(reinterpret_cast<char*>(path), &GENERAL_BUFFER);
     }
+
+    void setupMap()
+    {
+        ReadBuffer buff{&GENERAL_BUFFER};
+
+        auto width        = buff.read<uint16_t>();
+        auto height       = buff.read<uint16_t>();
+        auto paletteCount = buff.read<uint32_t>();
+
+        for (int32_t i = 0; i < paletteCount; i++)
+        {
+            MAP_CLUTS[i] = reinterpret_cast<uint16_t*>(buff.buffer);
+            libgpu_LoadClut(buff.buffer, 0, 0x1E1 + i);
+            buff.skip(sizeof(uint16_t) * 256);
+        }
+
+        updateTimeOfDay();
+
+        for (int32_t y = 0; y < MAP_HEIGHT; y++)
+        {
+            for (int32_t x = 0; x < MAP_WIDTH; x++)
+            {
+                auto& tileData  = MAP_TILE_DATA[y * MAP_WIDTH + x];
+                tileData.tileId = MAP_TILES[y * MAP_WIDTH + x];
+
+                buff.skip(4); // tile X/Y offset? Unused?
+                uint8_t* tileBuffer = nullptr;
+
+                if (tileData.tileId != -1)
+                {
+                    tileBuffer = buff.buffer;
+                    buff.skip(128 * 128);
+                }
+                fillTileData(&tileData, tileBuffer, x % 4 * 0x40 + 0x300, (y % 3) * 128, x * 128, y * 128);
+            }
+        }
+
+        DRAW_OFFSET_LIMIT_X_MAX = MAP_WIDTH * 0x80 / 2;
+        DRAW_OFFSET_LIMIT_Y_MAX = MAP_HEIGHT * 0x80 / 2;
+        DRAW_OFFSET_LIMIT_X_MIN = -((MAP_WIDTH * 0x80 - 320) - DRAW_OFFSET_LIMIT_X_MAX);
+        DRAW_OFFSET_LIMIT_Y_MIN = -((MAP_HEIGHT * 0x80 - 240) - DRAW_OFFSET_LIMIT_Y_MAX);
+        CAMERA_X                = DRAW_OFFSET_LIMIT_X_MAX - 160;
+        CAMERA_Y                = DRAW_OFFSET_LIMIT_Y_MAX - 120;
+
+        DRAWING_OFFSET_X = 160;
+        DRAWING_OFFSET_Y = 120;
+        PLAYER_OFFSET_X  = 160;
+        PLAYER_OFFSET_Y  = 120;
+        initializeDrawingOffsets();
+
+        MAP_TILE_X = CAMERA_X / 128;
+        if (MAP_WIDTH < 5)
+            MAP_TILE_X = 0;
+        else if (MAP_TILE_X + 4 > MAP_WIDTH)
+            MAP_TILE_X -= (MAP_TILE_X + 4 - MAP_WIDTH);
+
+        MAP_TILE_Y = CAMERA_Y / 128;
+        if (MAP_HEIGHT < 4)
+            MAP_TILE_Y = 0;
+        else if (MAP_TILE_Y + 3 > MAP_HEIGHT)
+            MAP_TILE_Y -= (MAP_TILE_Y + 3 - MAP_HEIGHT);
+
+        PREV_TILE_X = MAP_TILE_X;
+        PREV_TILE_Y = MAP_TILE_Y;
+
+        uploadMapTileImages(MAP_TILE_DATA.data(), MAP_TILE_X + MAP_TILE_Y * MAP_WIDTH);
+        calcMapObjectOrder(LOCAL_MAP_OBJECT_INSTANCE);
+        CAMERA_FOLLOW_PLAYER = 1;
+    }
 }

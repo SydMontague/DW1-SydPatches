@@ -217,6 +217,7 @@ extern "C"
     uint32_t libgpu_OpenTIM(uint8_t* buffer);
     TIM_IMAGE* libgpu_ReadTIM(TIM_IMAGE* image);
     int32_t libgpu_MoveImage(RECT* rect, int32_t x, int32_t y);
+    void libgpu_LoadClut(void* buffer, int32_t x, int32_t y);
 }
 
 // validation

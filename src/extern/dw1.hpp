@@ -1424,6 +1424,16 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern int16_t DRAW_OFFSET_LIMIT_X_MAX;
+    extern int16_t DRAW_OFFSET_LIMIT_Y_MAX;
+    extern int16_t DRAW_OFFSET_LIMIT_X_MIN;
+    extern int16_t DRAW_OFFSET_LIMIT_Y_MIN;
+    extern dtl::array<uint16_t*, 3> MAP_CLUTS;
+    extern int16_t PLAYER_OFFSET_X;
+    extern int16_t PLAYER_OFFSET_Y;
+    extern uint8_t PREV_TILE_X;
+    extern uint8_t PREV_TILE_Y;
+    extern uint32_t CAMERA_FOLLOW_PLAYER;
     extern int8_t TAMER_START_TILE_X;
     extern int8_t TAMER_START_TILE_Y;
     extern int8_t TAMER_WAYPOINT_CURRENT;
@@ -1612,6 +1622,9 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void fillTileData(MapTileData* tileData, uint8_t* imagePtr, int32_t texU, int32_t texV, int16_t posX, int16_t posY);
+    void initializeDrawingOffsets();
+    void uploadMapTileImages(MapTileData* tileData, int32_t tileOffset);
     void loadDoors(int32_t doorEntryId);
     void initializeWarpCrystals(int32_t mapId);
     void initializeTrainingPoop();

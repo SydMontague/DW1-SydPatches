@@ -146,6 +146,9 @@
 .org 0x8010c1fc
   jal readMapTFS
 
+.org 0x80104fe4
+  jal setupMap
+
 .close
 
 

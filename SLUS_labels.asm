@@ -93,7 +93,20 @@
 .definelabel checkFishingMap,           0x800e4ee4
 .definelabel checkCurlingMap,           0x800e89c8
 .definelabel checkArenaMap,             0x800ff9dc
+.definelabel fillTileData,              0x800d69bc
+.definelabel initializeDrawingOffsets,  0x800d6a4c
+.definelabel uploadMapTileImages,       0x800d6c74
 
+.definelabel DRAW_OFFSET_LIMIT_X_MAX, 0x80134db6
+.definelabel DRAW_OFFSET_LIMIT_X_MIN, 0x80134db8
+.definelabel DRAW_OFFSET_LIMIT_Y_MAX, 0x80134dba
+.definelabel DRAW_OFFSET_LIMIT_Y_MIN, 0x80134dbc
+.definelabel MAP_CLUTS, 0x80150c70
+.definelabel PLAYER_OFFSET_X, 0x80134dbe
+.definelabel PLAYER_OFFSET_Y, 0x80134dc0
+.definelabel PREV_TILE_X, 0x80134dc3
+.definelabel PREV_TILE_Y, 0x80134dc5
+.definelabel CAMERA_FOLLOW_PLAYER, 0x80134dc8
 .definelabel MAP_LIGHT, 0x80150c40
 .definelabel MAP_WIDTH, 0x80150c3c
 .definelabel MAP_HEIGHT, 0x80150c3d
@@ -383,6 +396,7 @@
 .definelabel libgpu_OpenTIM, 0x80096bcc
 .definelabel libgpu_ReadTIM, 0x80096bdc
 .definelabel libgpu_MoveImage, 0x80094968
+.definelabel libgpu_LoadClut, 0x8009292c
 
 // libgte
 .definelabel libgte_setRotMatrix, 0x8009b200
