@@ -1407,7 +1407,7 @@ extern "C"
 
     struct MapTileData
     {
-        uint32_t* imagePtr;
+        uint8_t* imagePtr;
         int16_t tileId;
         int16_t posX;
         int16_t posY;
@@ -1623,7 +1623,6 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
-    void fillTileData(MapTileData* tileData, uint8_t* imagePtr, int32_t texU, int32_t texV, int16_t posX, int16_t posY);
     void initializeDrawingOffsets();
     void uploadMapTileImages(MapTileData* tileData, int32_t tileOffset);
     void loadDoors(int32_t doorEntryId);

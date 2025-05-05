@@ -1110,6 +1110,18 @@ extern "C"
         readFile(reinterpret_cast<char*>(path), &GENERAL_BUFFER);
     }
 
+    constexpr void
+    fillTileData(MapTileData* tileData, uint8_t* imagePtr, int32_t texU, int32_t texV, int16_t posX, int16_t posY)
+    {
+        tileData->tpage    = getTPage(1, 0, texU, texV);
+        tileData->clut     = getClut(0, 0x1E0);
+        tileData->posX     = posX;
+        tileData->posY     = posY;
+        tileData->imagePtr = imagePtr;
+        tileData->texU     = texU;
+        tileData->texV     = texV;
+    }
+
     void setupMap()
     {
         ReadBuffer buff{&GENERAL_BUFFER};
