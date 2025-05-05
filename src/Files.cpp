@@ -1,5 +1,6 @@
 #include "Files.hpp"
 
+#include "Helper.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libc.hpp"
 #include "extern/libcd.hpp"
@@ -44,7 +45,7 @@ extern "C"
             .height = static_cast<int16_t>(imageData.pixelHeight),
         };
         libgpu_LoadImage(&pixelRect, imageData.pixelPtr);
-        if (outTexPage) *outTexPage = libgpu_GetTPage(imageData.pixelMode & 3, 0, imageData.pixelX, imageData.pixelY);
+        if (outTexPage) *outTexPage = getTPage(imageData.pixelMode & 3, 0, imageData.pixelX, imageData.pixelY);
 
         // if has CLUT
         if ((imageData.pixelMode >> 3 & 1) != 0)
@@ -70,7 +71,7 @@ extern "C"
 
     void readFile(const char* file, void* buffer)
     {
-        if(!buffer) return;
+        if (!buffer) return;
 
         FileLookup lookup;
 

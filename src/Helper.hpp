@@ -189,11 +189,19 @@ extern "C"
     }
 
     /*
-     * Gets the CLUT address of the given point in VRAM
+     * Gets the CLUT address of the given point in VRAM, implements libgpu_GetClut
      */
     constexpr uint16_t getClut(uint32_t dx, uint32_t dy)
     {
         return (dy & 0x3ff) << 6 | dx >> 4 & 0x3fU;
+    }
+
+    /*
+     * Get the texture page parameter for given parameter, implements libgpu_GetTPage
+     */
+    constexpr uint16_t getTPage(uint32_t pixelMode, uint32_t abr, uint32_t dx, uint32_t dy)
+    {
+        return (pixelMode & 3) << 7 | (abr & 3) << 5 | (dy & 0x100) >> 4 | (dx & 0x3FF) >> 6 | (dy & 0x200) << 2;
     }
 
     constexpr DigimonData* getDigimonData(DigimonType type)

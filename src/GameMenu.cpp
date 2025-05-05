@@ -263,7 +263,7 @@ extern "C"
             prim->r0    = 128;
             prim->g0    = 128;
             prim->b0    = 128;
-            prim->tpage = libgpu_GetTPage(0, 0, 896, 448);
+            prim->tpage = getTPage(0, 0, 896, 448);
             prim->clut  = getClut(0x100, 0x1FC);
             libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 5, prim);
             libgs_GsSetWorkBase(prim + 1);

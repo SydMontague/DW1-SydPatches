@@ -279,17 +279,17 @@ extern "C"
         auto clut = object->clut;
         if (clut == 0xFF)
         {
-            prim->tpage = libgpu_GetTPage(1, object->transparency, (object->texX / 256) * 128 + 384, 0);
+            prim->tpage = getTPage(1, object->transparency, (object->texX / 256) * 128 + 384, 0);
             prim->clut  = getClut(0, 480);
         }
         else if (clut < 16)
         {
-            prim->tpage = libgpu_GetTPage(0, object->transparency, (object->texX / 256) * 64 + 384, 0);
+            prim->tpage = getTPage(0, object->transparency, (object->texX / 256) * 64 + 384, 0);
             prim->clut  = getClut(object->clut * 16, 486);
         }
         else
         {
-            prim->tpage = libgpu_GetTPage(1, object->transparency, (object->texX / 256) * 128 + 384, 0);
+            prim->tpage = getTPage(1, object->transparency, (object->texX / 256) * 128 + 384, 0);
             prim->clut  = getClut(0, 468 + object->clut);
         }
     }
@@ -330,7 +330,7 @@ extern "C"
         prim->r0    = 128;
         prim->b0    = 128;
         prim->g0    = 128;
-        prim->tpage = libgpu_GetTPage(0, object->transparency, (object->texX / 256) * 64 + 384, 0);
+        prim->tpage = getTPage(0, object->transparency, (object->texX / 256) * 64 + 384, 0);
         prim->clut  = getClut(object->clut * 16, 486);
         instance->y += yOffset;
         if (firstSprite != 2 && instance->y > 130)
@@ -413,7 +413,7 @@ extern "C"
             libgpu_SetSemiTrans(prim, 1);
             if (i < 0)
             {
-                prim->tpage = libgpu_GetTPage(0, 3, 704, 0);
+                prim->tpage = getTPage(0, 3, 704, 0);
                 prim->clut  = getClut(0, 486);
 
                 setPosDataPolyFT4(prim, mistOffsetX[abs(i + 4) % 2], mistOffsetY[abs(i + 4) / 2], 320, 240);
@@ -423,7 +423,7 @@ extern "C"
             }
             else
             {
-                prim->tpage = libgpu_GetTPage(0, 1, 704, 0);
+                prim->tpage = getTPage(0, 1, 704, 0);
                 if (CURRENT_SCREEN == 163 || CURRENT_SCREEN == 220)
                     prim->clut = getClut(0, 486);
                 else if (CURRENT_SCREEN == 119)
@@ -1213,5 +1213,4 @@ extern "C"
         DAYTIME_TRANSITION_ACTIVE = false;
         SKIP_DAYTIME_TRANSITION   = 0;
     }
-
 }

@@ -144,7 +144,7 @@ static void loadCardImage(int32_t card)
 static void renderCardImage()
 {
     auto clut  = getClut(0x1C0, 0x1FF);
-    auto tpage = libgpu_GetTPage(1, 2, 0x240, 0x100);
+    auto tpage = getTPage(1, 2, 0x240, 0x100);
     renderRectPolyFT4(-75, -84, 150, 180, 0, 0, tpage, clut, 4, 0);
 }
 

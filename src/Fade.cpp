@@ -22,7 +22,7 @@ extern "C"
         POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
         libgpu_SetPolyFT4(prim);
         libgpu_SetSemiTrans(prim, 1);
-        prim->tpage = libgpu_GetTPage(0, static_cast<int32_t>(FADE_DATA.fadeMode), 896, 448);
+        prim->tpage = getTPage(0, static_cast<int32_t>(FADE_DATA.fadeMode), 896, 448);
         prim->clut  = getClut(256, 502);
         setPosDataPolyFT4(prim, -160, -120, 320, 240);
         setUVDataPolyFT4(prim, 250, 253, 2, 2);
