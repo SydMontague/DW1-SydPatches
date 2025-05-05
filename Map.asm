@@ -128,13 +128,23 @@
 .org 0x800dec60
   jal getMapSoundId
 
-;.org 0x800d5ba4
-;  jal buildMapPath
-.org 0x800d6328
-  jal buildMapPath
-
 .org 0x801028f4
   jal loadMap
+
+;.org 0x800abba4
+;  jal readMapTFS
+.org 0x800debbc
+  jal readMapTFS
+.org 0x800dec74
+  jal readMapTFS
+.org 0x800e2424
+  jal readMapTFS
+.org 0x801042f0
+  jal readMapTFS
+.org 0x80104fd8
+  jal readMapTFS
+.org 0x8010c1fc
+  jal readMapTFS
 
 .close
 

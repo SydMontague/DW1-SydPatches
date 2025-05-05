@@ -1653,7 +1653,6 @@ extern "C"
     uint32_t handleBattleStart(uint32_t talkedToEntity);
     void loadBattleData(uint32_t talkedToEntity, uint32_t enemyCount);
     void playBGM(uint8_t soundFont);
-    void readMapTFS(uint8_t map);
     void renderUIBox(int32_t instanceId);
     bool hasMedal(Medal medal);
     void unlockMedal(Medal medal);

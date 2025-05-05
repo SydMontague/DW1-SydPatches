@@ -1014,11 +1014,6 @@ extern "C"
         return MAP_ENTRIES[mapId].flags & 0x1F;
     }
 
-    void buildMapPath(uint8_t* out, uint8_t* mapName, uint8_t* extension, int32_t mapId)
-    {
-        sprintf(out, "\\MAP\\MAP%d\\%s%s", (mapId / 15) + 1, mapName, extension);
-    }
-
     static void loadMapSetup(MapSetup* map)
     {
         GS_VIEWPOINT.viewpointX = map->viewpoint.x * 2;
@@ -1104,5 +1099,14 @@ extern "C"
         checkArenaMap(mapId);
 
         CURRENT_SCREEN = mapId;
+    }
+
+    void readMapTFS(uint8_t mapId)
+    {
+        auto& entry = MAP_ENTRIES[mapId];
+        uint8_t path[64];
+
+        sprintf(path, "\\MAP\\MAP%d\\%s.TFS", (mapId / 15) + 1, entry.filename);
+        readFile(reinterpret_cast<char*>(path), &GENERAL_BUFFER);
     }
 }

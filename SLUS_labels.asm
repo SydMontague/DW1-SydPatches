@@ -54,7 +54,6 @@
 .definelabel hasMedal,                  0x800ff85c
 .definelabel getCardAmount,             0x801067ec
 .definelabel renderUIBox,               0x80101440
-.definelabel readMapTFS,                0x800d6308
 .definelabel playBGM,                   0x80106a80
 .definelabel loadBattleData,            0x800e74d0
 .definelabel handleBattleStart,         0x800e847c

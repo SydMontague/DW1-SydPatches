@@ -1,4 +1,5 @@
 #include "GameMenu.hpp"
+#include "Map.hpp"
 #include "Helper.hpp"
 #include "Partner.hpp"
 #include "extern/BTL.hpp"
