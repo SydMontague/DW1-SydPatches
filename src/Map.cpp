@@ -1178,4 +1178,40 @@ extern "C"
         calcMapObjectOrder(LOCAL_MAP_OBJECT_INSTANCE);
         CAMERA_FOLLOW_PLAYER = 1;
     }
+
+    void updateTimeOfDay()
+    {
+        if (DAYTIME_TRANSITION_ACTIVE) removeObject(ObjectID::DAYTIME_TRANSITION, DAYTIME_TRANSITION_TARGET);
+
+        if ((MAP_ENTRIES[CURRENT_SCREEN].flags & 0x40) != 0) { libgpu_LoadClut(MAP_CLUTS[0], 0, 0x1E0); }
+        else
+        {
+            auto factor = 10;
+
+            if (HOUR >= 16 && HOUR <= 19)
+            {
+                libgpu_LoadClut(MAP_CLUTS[1], 0, 0x1E0);
+                factor              = 7;
+                CURRENT_TIME_OF_DAY = 0;
+            }
+            else if (HOUR < 6 || HOUR > 19)
+            {
+                factor = 5;
+                libgpu_LoadClut(MAP_CLUTS[2], 0, 0x1E0);
+                CURRENT_TIME_OF_DAY = 1;
+            }
+            else
+            {
+                factor = 10;
+
+                libgpu_LoadClut(MAP_CLUTS[0], 0, 0x1E0);
+                CURRENT_TIME_OF_DAY = 2;
+            }
+        }
+
+        DAYTIME_TRANSITION_FRAME  = 0x19;
+        DAYTIME_TRANSITION_ACTIVE = false;
+        SKIP_DAYTIME_TRANSITION   = 0;
+    }
+
 }

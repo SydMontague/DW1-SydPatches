@@ -1424,6 +1424,7 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern int16_t DAYTIME_TRANSITION_TARGET;
     extern int16_t DRAW_OFFSET_LIMIT_X_MAX;
     extern int16_t DRAW_OFFSET_LIMIT_Y_MAX;
     extern int16_t DRAW_OFFSET_LIMIT_X_MIN;
@@ -1706,7 +1707,6 @@ extern "C"
     extern void initializeButterfly();
     extern void initializePoop();
     extern bool isInDaytimeTransition();
-    extern void updateTimeOfDay();
     extern void writePStat(int32_t address, uint8_t value);
     extern void unsetBubble(uint32_t id);
     extern uint8_t addConditionBubble(uint32_t type, Entity* entity);

@@ -23,7 +23,6 @@
 .definelabel addConditionBubble,        0x800ec538
 .definelabel setButterfly,              0x800e9d24
 .definelabel writePStat,                0x80106474
-.definelabel updateTimeOfDay,           0x800d676c
 .definelabel isInDaytimeTransition,     0x800d7618
 .definelabel Partner_tick,              0x800dd7ac
 .definelabel projectPosition,           0x800e1074
@@ -97,6 +96,7 @@
 .definelabel initializeDrawingOffsets,  0x800d6a4c
 .definelabel uploadMapTileImages,       0x800d6c74
 
+.definelabel DAYTIME_TRANSITION_TARGET, 0x8014da6
 .definelabel DRAW_OFFSET_LIMIT_X_MAX, 0x80134db6
 .definelabel DRAW_OFFSET_LIMIT_X_MIN, 0x80134db8
 .definelabel DRAW_OFFSET_LIMIT_Y_MAX, 0x80134dba

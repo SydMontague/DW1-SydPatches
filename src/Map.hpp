@@ -21,4 +21,5 @@ extern "C"
     bool isTileOffScreen(int16_t tileX, int16_t tileZ);
     TileCoord getClosestTileOffScreen(int8_t startX, int8_t startY, int8_t targetX, int8_t targetY);
     void readMapTFS(uint8_t map);
+    void updateTimeOfDay();
 }
