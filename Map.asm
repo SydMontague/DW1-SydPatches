@@ -174,6 +174,9 @@
 .org 0x800ef9f0
   jal uploadMapTileImages
 
+.org 0x800d9034
+  jal unloadMap
+
 .close
 
 

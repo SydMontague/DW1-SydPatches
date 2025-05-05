@@ -1283,4 +1283,24 @@ extern "C"
         DAYTIME_TRANSITION_ACTIVE = false;
         SKIP_DAYTIME_TRANSITION   = 0;
     }
+
+    void unloadMap()
+    {
+        for (auto& val : MAP_TILE_DATA)
+        {
+            val.imagePtr = nullptr;
+            val.posX     = 0;
+            val.posY     = 0;
+            val.texU     = 0;
+            val.texV     = 0;
+        }
+
+        MAP_HEIGHT       = 0;
+        MAP_WIDTH        = 0;
+        CAMERA_X         = 0;
+        CAMERA_Y         = 0;
+        DRAWING_OFFSET_X = 0;
+        DRAWING_OFFSET_Y = 0;
+        unloadMapParts();
+    }
 }

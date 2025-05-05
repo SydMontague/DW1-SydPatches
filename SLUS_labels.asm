@@ -93,6 +93,7 @@
 .definelabel checkCurlingMap,           0x800e89c8
 .definelabel checkArenaMap,             0x800ff9dc
 .definelabel fillTileData,              0x800d69bc
+.definelabel unloadMapParts,            0x800e1bf0
 
 .definelabel DAYTIME_TRANSITION_TARGET, 0x8014da6
 .definelabel DRAW_OFFSET_LIMIT_X_MAX, 0x80134db6

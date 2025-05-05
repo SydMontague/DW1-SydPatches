@@ -1623,6 +1623,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void unloadMapParts();
     void loadDoors(int32_t doorEntryId);
     void initializeWarpCrystals(int32_t mapId);
     void initializeTrainingPoop();
