@@ -1122,6 +1122,46 @@ extern "C"
         tileData->texV     = texV;
     }
 
+    void initializeDrawingOffsets()
+    {
+        auto refPos   = getMapPosition(GS_VIEWPOINT.refpointX, GS_VIEWPOINT.refpointY, GS_VIEWPOINT.refpointZ);
+        auto tamerPos = getMapPosition(TAMER_ENTITY.posData->location);
+        auto offsetX  = refPos.screenX - tamerPos.screenX;
+        auto offsetY  = refPos.screenY - tamerPos.screenY;
+
+        CAMERA_X += -offsetX;
+        CAMERA_Y += -offsetY;
+        DRAWING_OFFSET_X += offsetX;
+        DRAWING_OFFSET_Y += offsetY;
+        PLAYER_OFFSET_X += offsetX;
+        PLAYER_OFFSET_Y += offsetY;
+
+        auto maxX = MAP_WIDTH * 128 - 320;
+        auto maxY = MAP_HEIGHT * 128 - 240;
+
+        if (CAMERA_X < 0)
+        {
+            DRAWING_OFFSET_X = DRAW_OFFSET_LIMIT_X_MAX;
+            CAMERA_X         = 0;
+        }
+        else if (CAMERA_X > maxX)
+        {
+            DRAWING_OFFSET_X = DRAW_OFFSET_LIMIT_X_MIN;
+            CAMERA_X         = maxX;
+        }
+
+        if (CAMERA_Y < 0)
+        {
+            DRAWING_OFFSET_Y = DRAW_OFFSET_LIMIT_Y_MAX;
+            CAMERA_Y         = 0;
+        }
+        else if (CAMERA_Y > maxY)
+        {
+            DRAWING_OFFSET_Y = DRAW_OFFSET_LIMIT_Y_MIN;
+            CAMERA_Y         = maxY;
+        }
+    }
+
     void setupMap()
     {
         ReadBuffer buff{&GENERAL_BUFFER};

@@ -158,6 +158,13 @@
 .org 0x800ddc9c
   jal updateTimeOfDay
 
+;.org 0x800d6620
+;  jal initializeDrawingOffsets
+.org 0x800ef438
+  jal initializeDrawingOffsets
+.org 0x800ef8ec
+  jal initializeDrawingOffsets
+
 .close
 
 
