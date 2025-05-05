@@ -1162,6 +1162,24 @@ extern "C"
         }
     }
 
+    void uploadMapTileImages(MapTileData* tileData, int32_t tileOffset)
+    {
+        for (int32_t i = 0; i < min(MAP_WIDTH, 4); i++)
+        {
+            for (int32_t j = 0; j < min(MAP_HEIGHT, 3); j++)
+            {
+                auto& tile = tileData[tileOffset + i + j * MAP_WIDTH];
+                RECT rect{.x = tile.texU, .y = tile.texV, .width = 64, .height = 128};
+
+                if (tile.tileId == -1)
+                    libgpu_ClearImage(&rect, 0, 0, 0);
+                else
+                    libgpu_LoadImage(&rect, reinterpret_cast<uint32_t*>(tile.imagePtr));
+                libgpu_DrawSync(0);
+            }
+        }
+    }
+
     void setupMap()
     {
         ReadBuffer buff{&GENERAL_BUFFER};

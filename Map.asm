@@ -165,6 +165,15 @@
 .org 0x800ef8ec
   jal initializeDrawingOffsets
 
+;.org 0x800d672c
+;  jal uploadMapTileImages
+.org 0x800d7f48
+  jal uploadMapTileImages
+.org 0x800d875c
+  jal uploadMapTileImages
+.org 0x800ef9f0
+  jal uploadMapTileImages
+
 .close
 
 
@@ -190,6 +199,17 @@
   jal setMapObjectsFlag
 .org 0x800569a8
   jal setMapObjectsFlag
+
+.org 0x80054e10
+  jal uploadMapTileImages
+.org 0x80055520
+  jal uploadMapTileImages
+.org 0x800556e0
+  jal uploadMapTileImages
+.org 0x800558bc
+  jal uploadMapTileImages
+.org 0x80059520
+  jal uploadMapTileImages
 
 .close
 
