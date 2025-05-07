@@ -144,8 +144,8 @@
 ;  jal Tamer_getState
 ;.org 0x800b69fc
 ;  jal Tamer_getState
-.org 0x800d6f88
-  jal Tamer_getState
+;.org 0x800d6f88
+;  jal Tamer_getState
 .org 0x800d7130
   jal Tamer_getState
 .org 0x800d7144
@@ -177,9 +177,6 @@
   jal Tamer_startAnimation
 .org 0x80105968
   jal Tamer_startAnimation
-
-.org 0x800d5dc4
-  jal initializeTamerWaypoints
 
 ;.org 0x800d4bf4
 ;  jal clearTamerWaypoints

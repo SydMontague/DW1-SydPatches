@@ -3,8 +3,8 @@
 
 ;.org 0x800bf040
 ;  li v0,RAISE_DATA
-.org 0x800d61e4
-  li v0,RAISE_DATA+0x13
+;.org 0x800d61e4
+;  li v0,RAISE_DATA+0x13
 .org 0x80105354
   li v0,RAISE_DATA+0x08
 .org 0x80105394

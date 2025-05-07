@@ -85,15 +85,15 @@
 .definelabel entityLookAtTile,          0x800e6078
 .definelabel startBattleIdleAnimation,  0x800e8970
 .definelabel isInvisible,               0x800e61ac
-.definelabel tickCameraFollowPlayer,    0x800d6f64
 .definelabel loadDoors,                 0x800dfefc
 .definelabel initializeWarpCrystals,    0x800e0af8
 .definelabel initializeTrainingPoop,    0x800e172c
 .definelabel checkFishingMap,           0x800e4ee4
 .definelabel checkCurlingMap,           0x800e89c8
 .definelabel checkArenaMap,             0x800ff9dc
-.definelabel fillTileData,              0x800d69bc
 .definelabel unloadMapParts,            0x800e1bf0
+.definelabel updateDrawingOffsets,      0x800d763c
+.definelabel handleTileUpdate,          0x800d78bc
 
 .definelabel DAYTIME_TRANSITION_TARGET, 0x8014da6
 .definelabel DRAW_OFFSET_LIMIT_X_MAX, 0x80134db6

@@ -95,8 +95,8 @@
 ;  jal initializePartnerWaypoint
 ;.org 0x800d4180
 ;  jal initializePartnerWaypoint
-.org 0x800d5dbc
-  jal initializePartnerWaypoint
+;.org 0x800d5dbc
+;  jal initializePartnerWaypoint
 
 .org 0x800dd9c8
   jal tickPartnerCollision

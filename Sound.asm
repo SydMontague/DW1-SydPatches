@@ -85,8 +85,8 @@
 .org 0x8010927c
   jal playMusic
 
-.org 0x800d5db0
-  jal loadMapSounds
+;.org 0x800d5db0
+;  jal loadMapSounds
 .org 0x800deb98
   jal loadMapSounds
 .org 0x800dec68

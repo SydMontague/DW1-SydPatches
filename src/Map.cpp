@@ -98,7 +98,7 @@ extern "C"
         }
     }
 
-    void loadMapEntities(uint8_t* buffer, uint32_t mapId, uint32_t exitId)
+    static void loadMapEntities(uint8_t* buffer, uint32_t mapId, uint32_t exitId)
     {
         memcpy(&MAP_WARPS, buffer, sizeof(MapWarps));
 
@@ -126,7 +126,7 @@ extern "C"
         return atan(diffZ, diffX);
     }
 
-    void clearMapObjects(LocalMapObjectInstance* instances)
+    static void clearMapObjects(LocalMapObjectInstance* instances)
     {
         for (uint32_t i = 0; i < 188; i++)
         {
@@ -142,7 +142,7 @@ extern "C"
         }
     }
 
-    void loadMapObjects(LocalMapObjectInstance* mapObjects, uint8_t* data, uint32_t mapId)
+    static void loadMapObjects(LocalMapObjectInstance* mapObjects, uint8_t* data, uint32_t mapId)
     {
         int16_t count  = *reinterpret_cast<int16_t*>(data);
         MapObject* obj = reinterpret_cast<MapObject*>(data + 2);
@@ -179,7 +179,7 @@ extern "C"
             val = 0;
     }
 
-    void loadMapImage1(uint8_t* buffer)
+    static void loadMapImage1(uint8_t* buffer)
     {
         TIM_IMAGE image;
         libgpu_OpenTIM(buffer);
@@ -193,7 +193,7 @@ extern "C"
         }
     }
 
-    void loadMapImage2(uint8_t* buffer, int32_t id)
+    static void loadMapImage2(uint8_t* buffer, int32_t id)
     {
         TIM_IMAGE image;
         libgpu_OpenTIM(buffer);
@@ -211,7 +211,7 @@ extern "C"
         }
     }
 
-    void calcMapObjectOrder(LocalMapObjectInstance* instances)
+    static void calcMapObjectOrder(LocalMapObjectInstance* instances)
     {
         for (int32_t i = 0; i < MAP_OBJECT_INSTANCE_COUNT; i++)
         {
@@ -547,7 +547,7 @@ extern "C"
         }
     }
 
-    void renderNinjamonEffect(int32_t instanceId)
+    static void renderNinjamonEffect(int32_t instanceId)
     {
         for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++)
         {
@@ -695,7 +695,7 @@ extern "C"
         return false;
     }
 
-    void loadMapCollisionData(uint8_t* data)
+    static void loadMapCollisionData(uint8_t* data)
     {
         memcpy(MAP_COLLISION_DATA, data, 10000);
     }
@@ -936,6 +936,28 @@ extern "C"
         auto posY = (data.posY - 120) - (offsetY - (120 - DRAWING_OFFSET_Y));
 
         setPosDataPolyFT4(prim, posX, posY, 128, 128);
+    }
+
+    static void tickCameraFollowPlayer()
+    {
+        if (GAME_STATE != 0) return;
+        if (CAMERA_FOLLOW_PLAYER != 1) return;
+        if (Tamer_getState() != 0) return;
+
+        if ((POLLED_INPUT & (InputButtons::BUTTON_DOWN | InputButtons::BUTTON_UP | InputButtons::BUTTON_LEFT |
+                             InputButtons::BUTTON_RIGHT)) == 0)
+            return;
+
+        auto oldPos = getMapPosition(STORED_TAMER_POS);
+        auto newPos = getMapPosition(TAMER_ENTITY.posData->location);
+
+        CAMERA_X += (oldPos.screenX - newPos.screenX);
+        CAMERA_Y += (oldPos.screenY - newPos.screenY);
+
+        ScreenCoord oldCoord{.x = oldPos.screenX, .y = oldPos.screenY};
+        ScreenCoord newCoord{.x = newPos.screenX, .y = newPos.screenY};
+        updateDrawingOffsets(&newCoord, &oldCoord);
+        handleTileUpdate(POLLED_INPUT, false);
     }
 
     static void renderMap(int32_t instanceId)

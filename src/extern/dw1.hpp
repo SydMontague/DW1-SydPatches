@@ -1623,6 +1623,8 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void updateDrawingOffsets(ScreenCoord* pos1, ScreenCoord* pos2);
+    void handleTileUpdate(uint32_t input, bool updateAll);
     void unloadMapParts();
     void loadDoors(int32_t doorEntryId);
     void initializeWarpCrystals(int32_t mapId);
@@ -1630,7 +1632,6 @@ extern "C"
     void checkFishingMap(int32_t mapId);
     void checkCurlingMap(int32_t mapId);
     void checkArenaMap(int32_t mapId);
-    void tickCameraFollowPlayer();
     bool isInvisible(Entity* entity);
     void handleBattleIdle(DigimonEntity* entity, Stats* stats, BattleFlags flags);
     void startBattleIdleAnimation(Entity* entity, Stats* stats, BattleFlags flags);
