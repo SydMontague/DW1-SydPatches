@@ -951,12 +951,12 @@ extern "C"
         auto oldPos = getMapPosition(STORED_TAMER_POS);
         auto newPos = getMapPosition(TAMER_ENTITY.posData->location);
 
-        CAMERA_X += (oldPos.screenX - newPos.screenX);
-        CAMERA_Y += (oldPos.screenY - newPos.screenY);
+        CAMERA_X += (newPos.screenX - oldPos.screenX);
+        CAMERA_Y += (newPos.screenY - oldPos.screenY);
 
         ScreenCoord oldCoord{.x = oldPos.screenX, .y = oldPos.screenY};
         ScreenCoord newCoord{.x = newPos.screenX, .y = newPos.screenY};
-        updateDrawingOffsets(&newCoord, &oldCoord);
+        updateDrawingOffsets(&oldCoord, &newCoord);
         handleTileUpdate(POLLED_INPUT, false);
     }
 
