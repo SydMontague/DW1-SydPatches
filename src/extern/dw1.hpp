@@ -340,6 +340,14 @@ extern "C"
         }
     };
 
+    struct RGB5551
+    {
+        uint16_t red   : 5;
+        uint16_t green : 5;
+        uint16_t blue  : 5;
+        uint16_t alpha : 1;
+    };
+
     enum class DigimonType : int32_t
     {
         TAMER               = 0,
@@ -1424,12 +1432,10 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
-    extern int16_t DAYTIME_TRANSITION_TARGET;
     extern int16_t DRAW_OFFSET_LIMIT_X_MAX;
     extern int16_t DRAW_OFFSET_LIMIT_Y_MAX;
     extern int16_t DRAW_OFFSET_LIMIT_X_MIN;
     extern int16_t DRAW_OFFSET_LIMIT_Y_MIN;
-    extern dtl::array<uint16_t*, 3> MAP_CLUTS;
     extern int16_t PLAYER_OFFSET_X;
     extern int16_t PLAYER_OFFSET_Y;
     extern uint8_t PREV_TILE_X;
@@ -1602,16 +1608,12 @@ extern "C"
     extern uint8_t PREVIOUS_SCREEN;
     extern int8_t CAMERA_REACHED_TARGET;
     extern bool CAMERA_HAS_TARGET;
-    extern uint8_t DAYTIME_TRANSITION_FRAME;
-    extern uint8_t CURRENT_TIME_OF_DAY;
     extern uint32_t CAMERA_UPDATE_TILES;
     extern uint32_t SKIP_MAP_FILE_READ;
-    extern bool DAYTIME_TRANSITION_ACTIVE;
     extern uint8_t MAP_WIDTH;
     extern uint8_t MAP_HEIGHT;
     extern uint8_t MAP_TILE_X;
     extern uint8_t MAP_TILE_Y;
-    extern dtl::array<GsF_LIGHT, 3> MAP_LIGHT;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1662,7 +1664,6 @@ extern "C"
     void addEntityParticleFX(Entity* entity, int32_t counter);
     void moveCameraByDiff(Vector* start, Vector* end);
     void updateMinuteHand(int32_t hour, int32_t minute);
-    void initializeDaytimeTransition(int32_t mode);
     uint32_t handleBattleStart(uint32_t talkedToEntity);
     void loadBattleData(uint32_t talkedToEntity, uint32_t enemyCount);
     void playBGM(uint8_t soundFont);
@@ -1705,7 +1706,6 @@ extern "C"
     extern void initializeConditionBubbles();
     extern void initializeButterfly();
     extern void initializePoop();
-    extern bool isInDaytimeTransition();
     extern void writePStat(int32_t address, uint8_t value);
     extern void unsetBubble(uint32_t id);
     extern uint8_t addConditionBubble(uint32_t type, Entity* entity);
@@ -1759,6 +1759,7 @@ static_assert(sizeof(PartnerPara) == 0x84);
 static_assert(sizeof(Position) == 4);
 static_assert(sizeof(GlyphData) == 24);
 static_assert(sizeof(RGB8) == 3);
+static_assert(sizeof(RGB5551) == 2);
 static_assert(sizeof(EvolutionPath) == 11);
 static_assert(sizeof(NPCEntity) == 0x68);
 static_assert(sizeof(EvoSequenceData) == 0x34);

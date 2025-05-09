@@ -278,6 +278,13 @@
 .org 0x8008bed8
   jal resetMapObjectAnimation
 
+.org 0x8008a468
+  jal initializeDaytimeTransition
+.org 0x8008a484
+  jal initializeDaytimeTransition
+.org 0x8008a4a0
+  jal initializeDaytimeTransition
+
 .close
 
 

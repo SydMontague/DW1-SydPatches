@@ -22,4 +22,6 @@ extern "C"
     TileCoord getClosestTileOffScreen(int8_t startX, int8_t startY, int8_t targetX, int8_t targetY);
     void readMapTFS(uint8_t map);
     void updateTimeOfDay();
+    bool isInDaytimeTransition();
+    void initializeDaytimeTransition(int32_t mode);
 }

@@ -23,7 +23,6 @@
 .definelabel addConditionBubble,        0x800ec538
 .definelabel setButterfly,              0x800e9d24
 .definelabel writePStat,                0x80106474
-.definelabel isInDaytimeTransition,     0x800d7618
 .definelabel Partner_tick,              0x800dd7ac
 .definelabel projectPosition,           0x800e1074
 .definelabel renderObject,              0x800e215c
@@ -57,7 +56,6 @@
 .definelabel loadBattleData,            0x800e74d0
 .definelabel handleBattleStart,         0x800e847c
 .definelabel updateMinuteHand,          0x800dd780
-.definelabel initializeDaytimeTransition,0x800d7104
 .definelabel moveCameraByDiff,          0x800d892c
 .definelabel worldPosToScreenPos,       0x800da2ec
 .definelabel lerp,                      0x800d990c
@@ -95,7 +93,6 @@
 .definelabel updateDrawingOffsets,      0x800d763c
 .definelabel handleTileUpdate,          0x800d78bc
 
-.definelabel DAYTIME_TRANSITION_TARGET, 0x8014da6
 .definelabel DRAW_OFFSET_LIMIT_X_MAX, 0x80134db6
 .definelabel DRAW_OFFSET_LIMIT_X_MIN, 0x80134db8
 .definelabel DRAW_OFFSET_LIMIT_Y_MAX, 0x80134dba
@@ -112,11 +109,9 @@
 .definelabel MAP_TILE_X, 0x80134dc2
 .definelabel MAP_TILE_Y, 0x80134dc4
 .definelabel CAMERA_HAS_TARGET, 0x80134dad
-.definelabel DAYTIME_TRANSITION_FRAME, 0x80134d9c
 .definelabel CURRENT_TIME_OF_DAY, 0x80134d9d
 .definelabel CAMERA_UPDATE_TILES, 0x80134db0
 .definelabel SKIP_MAP_FILE_READ, 0x80134da0
-.definelabel DAYTIME_TRANSITION_ACTIVE, 0x80134da4
 .definelabel PREVIOUS_SCREEN, 0x80134da9
 .definelabel CAMERA_REACHED_TARGET, 0x80134dac
 .definelabel MAP_TILE_DATA, 0x8014f084

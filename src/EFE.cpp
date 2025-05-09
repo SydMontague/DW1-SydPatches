@@ -21,16 +21,6 @@ extern "C"
         int32_t blue;
     };
 
-    struct RGB5551
-    {
-        uint16_t red   : 5;
-        uint16_t green : 5;
-        uint16_t blue  : 5;
-        uint16_t alpha : 1;
-    };
-
-    static_assert(sizeof(RGB5551) == 2);
-
     constexpr uint8_t flashBaseU[4] = {64, 0, 0, 0};
 
     static int32_t EFEDAT_CD_LOCATION;

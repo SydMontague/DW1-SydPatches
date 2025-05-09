@@ -31,6 +31,13 @@ extern "C"
     static int8_t ninjamonEffecXOffset[NINJAMON_EFFECT_COUNT];
     static int8_t ninjamonEffecYOffset[NINJAMON_EFFECT_COUNT];
 
+    static bool daytimeTransitionActive;
+    static uint8_t daytimeTransitionFrame;
+    static uint8_t daytimeTransitionTarget;
+    static uint8_t currentTimeOfDay;
+    static dtl::array<RGB5551*, 3> mapCluts;
+    static dtl::array<GsF_LIGHT, 3> mapLights;
+
     void loadMapDigimon(uint8_t* buffer, uint32_t mapId)
     {
         auto digimonCount = *reinterpret_cast<int16_t*>(buffer);
@@ -1015,18 +1022,18 @@ extern "C"
             val.texV     = 0;
         }
 
-        CURRENT_SCREEN            = 0xCC;
-        PREVIOUS_SCREEN           = 0xCC;
-        CURRENT_EXIT              = 9;
-        PREVIOUS_EXIT             = 9;
-        CAMERA_REACHED_TARGET     = 0xFF;
-        CAMERA_HAS_TARGET         = false;
-        DAYTIME_TRANSITION_FRAME  = 25;
-        CURRENT_TIME_OF_DAY       = 0;
-        CAMERA_UPDATE_TILES       = 0;
-        SKIP_MAP_FILE_READ        = 0; // TODO remove, useless
-        DAYTIME_TRANSITION_ACTIVE = false;
-        SKIP_DAYTIME_TRANSITION   = 0;
+        CURRENT_SCREEN          = 0xCC;
+        PREVIOUS_SCREEN         = 0xCC;
+        CURRENT_EXIT            = 9;
+        PREVIOUS_EXIT           = 9;
+        CAMERA_REACHED_TARGET   = 0xFF;
+        CAMERA_HAS_TARGET       = false;
+        daytimeTransitionFrame  = 25;
+        currentTimeOfDay        = 0;
+        CAMERA_UPDATE_TILES     = 0;
+        SKIP_MAP_FILE_READ      = 0; // TODO remove, useless
+        daytimeTransitionActive = false;
+        SKIP_DAYTIME_TRANSITION = 0;
 
         addObject(ObjectID::MAP, 0, nullptr, renderMap);
     }
@@ -1055,7 +1062,7 @@ extern "C"
             LIGHT_DATA[i].y = map->lights[i].pos.y;
             LIGHT_DATA[i].z = map->lights[i].pos.z;
             libgs_GsSetFlatLight(i, &LIGHT_DATA[i]);
-            MAP_LIGHT[i] = LIGHT_DATA[i];
+            mapLights[i] = LIGHT_DATA[i];
         }
 
         // TODO read from unk1-3?
@@ -1212,7 +1219,7 @@ extern "C"
 
         for (int32_t i = 0; i < paletteCount; i++)
         {
-            MAP_CLUTS[i] = reinterpret_cast<uint16_t*>(buff.buffer);
+            mapCluts[i] = reinterpret_cast<RGB5551*>(buff.buffer);
             libgpu_LoadClut(buff.buffer, 0, 0x1E1 + i);
             buff.skip(sizeof(uint16_t) * 256);
         }
@@ -1273,37 +1280,45 @@ extern "C"
 
     void updateTimeOfDay()
     {
-        if (DAYTIME_TRANSITION_ACTIVE) removeObject(ObjectID::DAYTIME_TRANSITION, DAYTIME_TRANSITION_TARGET);
+        if (daytimeTransitionActive) removeObject(ObjectID::DAYTIME_TRANSITION, 0);
 
-        if ((MAP_ENTRIES[CURRENT_SCREEN].flags & 0x40) != 0) { libgpu_LoadClut(MAP_CLUTS[0], 0, 0x1E0); }
+        if ((MAP_ENTRIES[CURRENT_SCREEN].flags & 0x40) != 0) { libgpu_LoadClut(mapCluts[0], 0, 0x1E0); }
         else
         {
             auto factor = 10;
 
             if (HOUR >= 16 && HOUR <= 19)
             {
-                libgpu_LoadClut(MAP_CLUTS[1], 0, 0x1E0);
-                factor              = 7;
-                CURRENT_TIME_OF_DAY = 0;
+                libgpu_LoadClut(mapCluts[1], 0, 0x1E0);
+                factor           = 7;
+                currentTimeOfDay = 0;
             }
             else if (HOUR < 6 || HOUR > 19)
             {
                 factor = 5;
-                libgpu_LoadClut(MAP_CLUTS[2], 0, 0x1E0);
-                CURRENT_TIME_OF_DAY = 1;
+                libgpu_LoadClut(mapCluts[2], 0, 0x1E0);
+                currentTimeOfDay = 1;
             }
             else
             {
                 factor = 10;
 
-                libgpu_LoadClut(MAP_CLUTS[0], 0, 0x1E0);
-                CURRENT_TIME_OF_DAY = 2;
+                libgpu_LoadClut(mapCluts[0], 0, 0x1E0);
+                currentTimeOfDay = 2;
+            }
+
+            for (int32_t i = 0; i < 3; i++)
+            {
+                LIGHT_DATA[i].r = (mapLights[i].r * factor) / 10;
+                LIGHT_DATA[i].g = (mapLights[i].g * factor) / 10;
+                LIGHT_DATA[i].b = (mapLights[i].b * factor) / 10;
+                libgs_GsSetFlatLight(i, &LIGHT_DATA[i]);
             }
         }
 
-        DAYTIME_TRANSITION_FRAME  = 0x19;
-        DAYTIME_TRANSITION_ACTIVE = false;
-        SKIP_DAYTIME_TRANSITION   = 0;
+        daytimeTransitionFrame  = 25;
+        daytimeTransitionActive = false;
+        SKIP_DAYTIME_TRANSITION = 0;
     }
 
     void unloadMap()
@@ -1324,5 +1339,85 @@ extern "C"
         DRAWING_OFFSET_X = 0;
         DRAWING_OFFSET_Y = 0;
         unloadMapParts();
+    }
+
+    bool isInDaytimeTransition()
+    {
+        return daytimeTransitionFrame > 24;
+    }
+
+    void tickDaytimeTransition(int32_t instance)
+    {
+        daytimeTransitionActive = true;
+
+        if (GAME_STATE != 0) return;
+        if (SKIP_DAYTIME_TRANSITION == true) return;
+        if (Partner_getState() == 8) return;
+        if (Partner_getState() == 13) return;
+        if (Tamer_getState() == 17) return;
+        if (Tamer_getState() == 19) return;
+
+        auto& clut1 = mapCluts[daytimeTransitionTarget];
+        auto& clut2 = mapCluts[(daytimeTransitionTarget + 1) % mapCluts.size()];
+
+        if (daytimeTransitionFrame < 25)
+        {
+            auto frame = (6 - daytimeTransitionFrame / 5);
+            RGB5551 newClut[256];
+
+            for (int32_t i = 0; i < 256; i++)
+            {
+                newClut[i].red   = clut1[i].red - ((clut1[i].red - clut2[i].red) / frame);
+                newClut[i].green = clut1[i].green - ((clut1[i].green - clut2[i].green) / frame);
+                newClut[i].blue  = clut1[i].blue - ((clut1[i].blue - clut2[i].blue) / frame);
+                newClut[i].alpha = clut1->alpha;
+            }
+
+            libgpu_LoadClut(&newClut, 0, 0x1E0);
+            libgpu_DrawSync(0);
+            daytimeTransitionFrame++;
+            return;
+        }
+
+        libgpu_LoadClut(clut2, 0, 0x1E0);
+
+        for (int32_t i = 0; i < 3; i++)
+        {
+            if (daytimeTransitionTarget == 0)
+            {
+                // vanilla doesn't seem to do red here, but updateTimeOfDay does
+                LIGHT_DATA[i].r = (mapLights[i].r * 7) / 10;
+                LIGHT_DATA[i].g = (mapLights[i].g * 7) / 10;
+                LIGHT_DATA[i].b = (mapLights[i].b * 7) / 10;
+            }
+            else if (daytimeTransitionTarget == 1)
+            {
+                LIGHT_DATA[i].r = mapLights[i].r / 2;
+                LIGHT_DATA[i].g = mapLights[i].g / 2;
+                LIGHT_DATA[i].b = mapLights[i].b / 2;
+            }
+            else
+                LIGHT_DATA[i] = mapLights[i];
+
+            libgs_GsSetFlatLight(i, &LIGHT_DATA[i]);
+        }
+
+        removeObject(ObjectID::DAYTIME_TRANSITION, 0);
+        daytimeTransitionActive = false;
+        SKIP_DAYTIME_TRANSITION = false;
+    }
+
+    void initializeDaytimeTransition(int32_t mode)
+    {
+        if (Partner_getState() == 8) return;
+        if (Partner_getState() == 13) return;
+        if (Tamer_getState() == 17) return;
+        if (Tamer_getState() == 19) return;
+        if (currentTimeOfDay == mode) return;
+
+        currentTimeOfDay        = mode;
+        daytimeTransitionTarget = mode;
+        daytimeTransitionFrame  = 0;
+        addObject(ObjectID::DAYTIME_TRANSITION, 0, tickDaytimeTransition, nullptr);
     }
 }
