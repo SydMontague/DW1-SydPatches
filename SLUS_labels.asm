@@ -90,8 +90,8 @@
 .definelabel checkCurlingMap,           0x800e89c8
 .definelabel checkArenaMap,             0x800ff9dc
 .definelabel unloadMapParts,            0x800e1bf0
-.definelabel updateDrawingOffsets,      0x800d763c
 .definelabel handleTileUpdate,          0x800d78bc
+.definelabel cameraIsAtEdge,            0x800d7f68
 
 .definelabel DRAW_OFFSET_LIMIT_X_MAX, 0x80134db6
 .definelabel DRAW_OFFSET_LIMIT_X_MIN, 0x80134db8

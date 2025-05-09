@@ -1625,6 +1625,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void cameraIsAtEdge(uint32_t* canMoveX, uint32_t* canMoveY);
     void updateDrawingOffsets(ScreenCoord* pos1, ScreenCoord* pos2);
     void handleTileUpdate(uint32_t input, bool updateAll);
     void unloadMapParts();

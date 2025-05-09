@@ -285,6 +285,11 @@
 .org 0x8008a4a0
   jal initializeDaytimeTransition
 
+;.org 0x800d70e0
+;  jal updateDrawingOffsets
+.org 0x800d8a9c
+  jal updateDrawingOffsets
+
 .close
 
 

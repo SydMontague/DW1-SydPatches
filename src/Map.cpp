@@ -1420,4 +1420,46 @@ extern "C"
         daytimeTransitionFrame  = 0;
         addObject(ObjectID::DAYTIME_TRANSITION, 0, tickDaytimeTransition, nullptr);
     }
+
+    void updateDrawingOffsets(ScreenCoord* oldPos, ScreenCoord* newPos)
+    {
+        uint32_t canMoveX;
+        uint32_t canMoveY;
+
+        cameraIsAtEdge(&canMoveX, &canMoveY);
+        auto diffX = oldPos->x - newPos->x;
+        auto diffY = oldPos->y - newPos->y;
+
+        PLAYER_OFFSET_X += diffX;
+        PLAYER_OFFSET_Y += diffY;
+
+        if (canMoveX)
+        {
+            DRAWING_OFFSET_X += diffX;
+            if ((POLLED_INPUT & InputButtons::BUTTON_LEFT) != 0 && PLAYER_OFFSET_X < DRAWING_OFFSET_X)
+            {
+                DRAWING_OFFSET_X -= diffX;
+                CAMERA_X += diffX;
+            }
+            else if ((POLLED_INPUT & InputButtons::BUTTON_RIGHT) != 0 && DRAWING_OFFSET_X < PLAYER_OFFSET_X)
+            {
+                DRAWING_OFFSET_X -= diffX;
+                CAMERA_X += diffX;
+            }
+        }
+        if (canMoveY)
+        {
+            DRAWING_OFFSET_Y += diffY;
+            if ((POLLED_INPUT & InputButtons::BUTTON_UP) != 0 && PLAYER_OFFSET_Y < DRAWING_OFFSET_Y)
+            {
+                DRAWING_OFFSET_Y -= diffY;
+                CAMERA_Y += diffY;
+            }
+            else if ((POLLED_INPUT & InputButtons::BUTTON_DOWN) != 0 && DRAWING_OFFSET_Y < PLAYER_OFFSET_Y)
+            {
+                DRAWING_OFFSET_Y -= diffY;
+                CAMERA_Y += diffY;
+            }
+        }
+    }
 }
