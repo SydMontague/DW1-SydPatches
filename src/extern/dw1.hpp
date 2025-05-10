@@ -1627,7 +1627,6 @@ extern "C"
 
     void updateTileRow(int32_t val);
     void updateTileCol(int32_t val);
-    void cameraIsAtEdge(uint32_t* canMoveX, uint32_t* canMoveY);
     void updateDrawingOffsets(ScreenCoord* pos1, ScreenCoord* pos2);
     void handleTileUpdate(uint32_t input, bool updateAll);
     void unloadMapParts();

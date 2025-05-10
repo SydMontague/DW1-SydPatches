@@ -90,7 +90,6 @@
 .definelabel checkCurlingMap,           0x800e89c8
 .definelabel checkArenaMap,             0x800ff9dc
 .definelabel unloadMapParts,            0x800e1bf0
-.definelabel cameraIsAtEdge,            0x800d7f68
 .definelabel updateTileRow,             0x800d8b50
 .definelabel updateTileCol,             0x800d8cd8
 

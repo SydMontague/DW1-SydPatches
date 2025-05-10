@@ -1325,6 +1325,38 @@ extern "C"
         SKIP_DAYTIME_TRANSITION = 0;
     }
 
+    void cameraIsAtEdge(uint32_t* canMoveX, uint32_t* canMoveY)
+    {
+        *canMoveX = 1;
+        *canMoveY = 1;
+
+        if (CAMERA_X < 0)
+        {
+            DRAWING_OFFSET_X = DRAW_OFFSET_LIMIT_X_MAX;
+            CAMERA_X         = 0;
+            *canMoveX        = false;
+        }
+        else if (CAMERA_X > (MAP_WIDTH * 128 - SCREEN_WIDTH))
+        {
+            DRAWING_OFFSET_X = DRAW_OFFSET_LIMIT_X_MIN;
+            CAMERA_X         = (MAP_WIDTH * 128 - SCREEN_WIDTH);
+            *canMoveX        = false;
+        }
+
+        if (CAMERA_Y < 0)
+        {
+            DRAWING_OFFSET_Y = DRAW_OFFSET_LIMIT_Y_MAX;
+            CAMERA_Y         = 0;
+            *canMoveY        = false;
+        }
+        else if (CAMERA_Y > (MAP_HEIGHT * 128 - SCREEN_HEIGHT))
+        {
+            DRAWING_OFFSET_Y = DRAW_OFFSET_LIMIT_Y_MIN;
+            CAMERA_Y         = (MAP_HEIGHT * 128 - SCREEN_HEIGHT);
+            *canMoveY        = false;
+        }
+    }
+
     void unloadMap()
     {
         for (auto& val : MAP_TILE_DATA)
