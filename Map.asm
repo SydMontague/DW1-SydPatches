@@ -140,8 +140,8 @@
 
 ;.org 0x800d672c
 ;  jal uploadMapTileImages
-.org 0x800d7f48
-  jal uploadMapTileImages
+;.org 0x800d7f48
+;  jal uploadMapTileImages
 .org 0x800d875c
   jal uploadMapTileImages
 .org 0x800ef9f0
@@ -149,6 +149,17 @@
 
 .org 0x800d9034
   jal unloadMap
+
+;.org 0x800d70ec
+;  jal handleTileUpdate
+.org 0x800d8678
+  jal handleTileUpdate
+.org 0x800d86cc
+  jal handleTileUpdate
+.org 0x800d8aa8
+  jal handleTileUpdate
+.org 0x800d8b24
+  jal handleTileUpdate
 
 .close
 
@@ -397,5 +408,13 @@
 
 .org 0x80061014
   jal getMapSoundId
+
+.close
+
+.open "work/DIGIMON/FISH_REL.BIN",0x80070000
+.psx
+
+.org 0x80079e70
+  jal handleTileUpdate
 
 .close

@@ -82,8 +82,8 @@
 ;  jal removeObject
 ;.org 0x800d6794
 ;  jal removeObject
-.org 0x800d74b8
-  jal removeObject
+;.org 0x800d74b8
+;  jal removeObject
 .org 0x800d871c
   jal removeObject
 .org 0x800d8f44
@@ -209,8 +209,8 @@
 ;  jal addObject
 ;.org 0x800d57cc
 ;  jal addObject
-.org 0x800d7180
-  jal addObject
+;.org 0x800d7180
+;  jal addObject
 .org 0x800d8080
   jal addObject
 .org 0x800d888c

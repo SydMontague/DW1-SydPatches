@@ -146,14 +146,14 @@
 ;  jal Tamer_getState
 ;.org 0x800d6f88
 ;  jal Tamer_getState
-.org 0x800d7130
-  jal Tamer_getState
-.org 0x800d7144
-  jal Tamer_getState
-.org 0x800d7268
-  jal Tamer_getState
-.org 0x800d727c
-  jal Tamer_getState
+;.org 0x800d7130
+;  jal Tamer_getState
+;.org 0x800d7144
+;  jal Tamer_getState
+;.org 0x800d7268
+;  jal Tamer_getState
+;.org 0x800d727c
+;  jal Tamer_getState
 ;.org 0x800e3264
 ;  jal Tamer_getState
 .org 0x800e6dcc

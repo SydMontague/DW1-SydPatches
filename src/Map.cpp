@@ -1209,6 +1209,21 @@ extern "C"
         }
     }
 
+    static void updateMapTile()
+    {
+        MAP_TILE_X = (CAMERA_X - 32) / 128;
+        if (MAP_WIDTH < 5)
+            MAP_TILE_X = 0;
+        else if (MAP_TILE_X + 4 > MAP_WIDTH)
+            MAP_TILE_X -= (MAP_TILE_X + 4 - MAP_WIDTH);
+
+        MAP_TILE_Y = (CAMERA_Y - 8) / 128;
+        if (MAP_HEIGHT < 4)
+            MAP_TILE_Y = 0;
+        else if (MAP_TILE_Y + 3 > MAP_HEIGHT)
+            MAP_TILE_Y -= (MAP_TILE_Y + 3 - MAP_HEIGHT);
+    }
+
     void setupMap()
     {
         ReadBuffer buff{&GENERAL_BUFFER};
@@ -1257,18 +1272,7 @@ extern "C"
         PLAYER_OFFSET_X  = 160;
         PLAYER_OFFSET_Y  = 120;
         initializeDrawingOffsets();
-
-        MAP_TILE_X = CAMERA_X / 128;
-        if (MAP_WIDTH < 5)
-            MAP_TILE_X = 0;
-        else if (MAP_TILE_X + 4 > MAP_WIDTH)
-            MAP_TILE_X -= (MAP_TILE_X + 4 - MAP_WIDTH);
-
-        MAP_TILE_Y = CAMERA_Y / 128;
-        if (MAP_HEIGHT < 4)
-            MAP_TILE_Y = 0;
-        else if (MAP_TILE_Y + 3 > MAP_HEIGHT)
-            MAP_TILE_Y -= (MAP_TILE_Y + 3 - MAP_HEIGHT);
+        updateMapTile();
 
         PREV_TILE_X = MAP_TILE_X;
         PREV_TILE_Y = MAP_TILE_Y;
@@ -1461,5 +1465,28 @@ extern "C"
                 CAMERA_Y += diffY;
             }
         }
+    }
+
+    void handleTileUpdate(uint32_t input, bool updateAll)
+    {
+        // vanilla is a lot more complex here, checking inputs and doing more spagehtti,
+        // but this code seems to work just fine with a lot less complexity?
+
+        updateMapTile();
+
+        if (!updateAll)
+        {
+            if (CAMERA_Y_PREVIOUS < CAMERA_Y)
+                updateTileRow(1);
+            else if (CAMERA_Y_PREVIOUS > CAMERA_Y)
+                updateTileRow(0);
+
+            if (CAMERA_X_PREVIOUS < CAMERA_X)
+                updateTileCol(1);
+            else if (CAMERA_X_PREVIOUS > CAMERA_X)
+                updateTileCol(0);
+        }
+        else
+            uploadMapTileImages(MAP_TILE_DATA.data(), MAP_TILE_X + MAP_TILE_Y * MAP_WIDTH);
     }
 }
