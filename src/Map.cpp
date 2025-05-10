@@ -985,14 +985,18 @@ extern "C"
             for (int32_t j = 0; j < min(4, MAP_WIDTH); j++)
             {
                 auto tileId    = (MAP_TILE_X + MAP_TILE_Y * MAP_WIDTH) + (MAP_WIDTH * i) + j;
+                
+                // vanilla draws a transparent primitive, but we can just skip it
+                if(MAP_TILES[tileId] == -1) continue;
+                
                 auto& tileData = MAP_TILE_DATA[tileId];
 
                 POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
                 libgpu_SetPolyFT4(prim);
 
-                prim->r0 = MAP_TILES[tileId] == 0xFF ? 0 : 128;
-                prim->g0 = MAP_TILES[tileId] == 0xFF ? 0 : 128;
-                prim->b0 = MAP_TILES[tileId] == 0xFF ? 0 : 128;
+                prim->r0 = 128;
+                prim->g0 = 128;
+                prim->b0 = 128;
                 setUVDataPolyFT4(prim, 0, tileData.texV, 128, (tileData.texV % 256) == 0 ? 128 : 127);
                 prim->tpage = tileData.tpage;
                 prim->clut  = tileData.clut;
@@ -1011,7 +1015,7 @@ extern "C"
     void initializeMap()
     {
         for (auto& val : MAP_TILES)
-            val = 0xFF;
+            val = -1;
 
         for (auto& val : MAP_TILE_DATA)
         {
@@ -1248,11 +1252,11 @@ extern "C"
                 auto& tileData  = MAP_TILE_DATA[y * MAP_WIDTH + x];
                 tileData.tileId = MAP_TILES[y * MAP_WIDTH + x];
 
-                buff.skip(4); // tile X/Y offset? Unused?
                 uint8_t* tileBuffer = nullptr;
 
                 if (tileData.tileId != -1)
                 {
+                    buff.skip(4); // tile X/Y offset? Unused?
                     tileBuffer = buff.buffer;
                     buff.skip(128 * 128);
                 }

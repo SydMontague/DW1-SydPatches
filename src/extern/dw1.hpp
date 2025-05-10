@@ -1603,7 +1603,7 @@ extern "C"
     extern GsCOORDINATE2 MEDAL_COORDINATES;
     extern uint8_t MAP_COLLISION_DATA[10000];
     extern uint8_t INVENTORY_SIZE;
-    extern dtl::array<uint8_t, 35> MAP_TILES;
+    extern dtl::array<int8_t, 35> MAP_TILES;
     extern dtl::array<MapTileData, 35> MAP_TILE_DATA;
     extern uint8_t PREVIOUS_SCREEN;
     extern int8_t CAMERA_REACHED_TARGET;
