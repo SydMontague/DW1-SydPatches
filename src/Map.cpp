@@ -1,5 +1,6 @@
 #include "Map.hpp"
 
+#include "Camera.hpp"
 #include "Entity.hpp"
 #include "Files.hpp"
 #include "GameObjects.hpp"
@@ -984,11 +985,11 @@ extern "C"
         {
             for (int32_t j = 0; j < min(4, MAP_WIDTH); j++)
             {
-                auto tileId    = (MAP_TILE_X + MAP_TILE_Y * MAP_WIDTH) + (MAP_WIDTH * i) + j;
-                
+                auto tileId = (MAP_TILE_X + MAP_TILE_Y * MAP_WIDTH) + (MAP_WIDTH * i) + j;
+
                 // vanilla draws a transparent primitive, but we can just skip it
-                if(MAP_TILES[tileId] == -1) continue;
-                
+                if (MAP_TILES[tileId] == -1) continue;
+
                 auto& tileData = MAP_TILE_DATA[tileId];
 
                 POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
@@ -1327,38 +1328,6 @@ extern "C"
         daytimeTransitionFrame  = 25;
         daytimeTransitionActive = false;
         SKIP_DAYTIME_TRANSITION = 0;
-    }
-
-    void cameraIsAtEdge(uint32_t* canMoveX, uint32_t* canMoveY)
-    {
-        *canMoveX = 1;
-        *canMoveY = 1;
-
-        if (CAMERA_X < 0)
-        {
-            DRAWING_OFFSET_X = DRAW_OFFSET_LIMIT_X_MAX;
-            CAMERA_X         = 0;
-            *canMoveX        = false;
-        }
-        else if (CAMERA_X > (MAP_WIDTH * 128 - SCREEN_WIDTH))
-        {
-            DRAWING_OFFSET_X = DRAW_OFFSET_LIMIT_X_MIN;
-            CAMERA_X         = (MAP_WIDTH * 128 - SCREEN_WIDTH);
-            *canMoveX        = false;
-        }
-
-        if (CAMERA_Y < 0)
-        {
-            DRAWING_OFFSET_Y = DRAW_OFFSET_LIMIT_Y_MAX;
-            CAMERA_Y         = 0;
-            *canMoveY        = false;
-        }
-        else if (CAMERA_Y > (MAP_HEIGHT * 128 - SCREEN_HEIGHT))
-        {
-            DRAWING_OFFSET_Y = DRAW_OFFSET_LIMIT_Y_MIN;
-            CAMERA_Y         = (MAP_HEIGHT * 128 - SCREEN_HEIGHT);
-            *canMoveY        = false;
-        }
     }
 
     void unloadMap()

@@ -93,6 +93,7 @@
 .definelabel updateTileRow,             0x800d8b50
 .definelabel updateTileCol,             0x800d8cd8
 
+.definelabel CAMERA_TARGET, 0x80150c7c
 .definelabel DRAW_OFFSET_LIMIT_X_MAX, 0x80134db6
 .definelabel DRAW_OFFSET_LIMIT_X_MIN, 0x80134db8
 .definelabel DRAW_OFFSET_LIMIT_Y_MAX, 0x80134dba

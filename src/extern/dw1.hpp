@@ -1432,6 +1432,7 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern Vector CAMERA_TARGET;
     extern int16_t DRAW_OFFSET_LIMIT_X_MAX;
     extern int16_t DRAW_OFFSET_LIMIT_Y_MAX;
     extern int16_t DRAW_OFFSET_LIMIT_X_MIN;

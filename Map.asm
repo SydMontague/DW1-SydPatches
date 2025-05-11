@@ -142,8 +142,8 @@
 ;  jal uploadMapTileImages
 ;.org 0x800d7f48
 ;  jal uploadMapTileImages
-.org 0x800d875c
-  jal uploadMapTileImages
+;.org 0x800d875c
+;  jal uploadMapTileImages
 .org 0x800ef9f0
   jal uploadMapTileImages
 
@@ -152,10 +152,10 @@
 
 ;.org 0x800d70ec
 ;  jal handleTileUpdate
-.org 0x800d8678
-  jal handleTileUpdate
-.org 0x800d86cc
-  jal handleTileUpdate
+;.org 0x800d8678
+;  jal handleTileUpdate
+;.org 0x800d86cc
+;  jal handleTileUpdate
 .org 0x800d8aa8
   jal handleTileUpdate
 .org 0x800d8b24
@@ -163,8 +163,8 @@
 
 ;.org 0x800d7658
 ;  jal cameraIsAtEdge
-.org 0x800d84e4
-  jal cameraIsAtEdge
+;.org 0x800d84e4
+;  jal cameraIsAtEdge
 .org 0x800d8b18
   jal cameraIsAtEdge
 

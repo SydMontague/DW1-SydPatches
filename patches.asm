@@ -30,3 +30,4 @@
 .include "GameMenu.asm"
 .include "UIElements.asm"
 .include "Sound.asm"
+.include "Camera.asm"

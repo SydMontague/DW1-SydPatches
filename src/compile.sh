@@ -34,6 +34,6 @@ mips-g++ GameData.cpp -o ../compiled/GameData.lib $FLAGS
 
 mips-g++ Main.cpp Fade.cpp GameObjects.cpp Helper.cpp Files.cpp NPCEntity.cpp Entity.cpp Partner.cpp Tamer.cpp Effects.cpp -o ../compiled/Cave1.lib $FLAGS
 mips-g++ Map.cpp Model.cpp Inventory.cpp ItemEffects.cpp ItemFunctions.cpp EFE.cpp Battle.cpp GUI.cpp GameMenu.cpp PlayerMenu.cpp DigimonMenu.cpp StatsView.cpp TechView.cpp PlayerInfoView.cpp PlayerChartView.cpp PlayerMedalView.cpp PlayerCardView.cpp DigimonSprite.cpp -o ../compiled/Cave2.lib $FLAGS
-mips-g++ Sound.cpp Math.cpp -o ../compiled/Cave3.lib $FLAGS
+mips-g++ Sound.cpp Math.cpp Camera.cpp -o ../compiled/Cave3.lib $FLAGS
 
 cd -
