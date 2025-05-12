@@ -1625,9 +1625,6 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
-    void updateTileRow(int32_t val);
-    void updateTileCol(int32_t val);
-    void handleTileUpdate(uint32_t input, bool updateAll);
     void unloadMapParts();
     void loadDoors(int32_t doorEntryId);
     void initializeWarpCrystals(int32_t mapId);

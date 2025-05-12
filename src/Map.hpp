@@ -25,4 +25,5 @@ extern "C"
     bool isInDaytimeTransition();
     void initializeDaytimeTransition(int32_t mode);
     void uploadMapTileImages(MapTileData* tileData, int32_t tileOffset);
+    void handleTileUpdate(uint32_t input, bool updateAll);
 }

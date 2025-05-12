@@ -1428,6 +1428,46 @@ extern "C"
         addObject(ObjectID::DAYTIME_TRANSITION, 0, tickDaytimeTransition, nullptr);
     }
 
+    static void updateTileRow(int32_t yOffset)
+    {
+        if (MAP_TILE_Y == PREV_TILE_Y) return;
+
+        for (int32_t i = 0; i < min(MAP_WIDTH, 4); i++)
+        {
+            auto offset = MAP_TILE_X + (MAP_TILE_Y + yOffset * 2) * MAP_WIDTH + i;
+            auto& data  = MAP_TILE_DATA[offset];
+
+            RECT rect = {.x = data.texU, .y = data.texV, .width = 64, .height = 128};
+            if (data.tileId == -1)
+                libgpu_ClearImage(&rect, 0, 0, 0);
+            else
+                libgpu_LoadImage(&rect, reinterpret_cast<uint32_t*>(data.imagePtr));
+            libgpu_DrawSync(0);
+        }
+
+        PREV_TILE_Y = MAP_TILE_Y;
+    }
+
+    static void updateTileCol(int32_t xOffset)
+    {
+        if (MAP_TILE_X == PREV_TILE_X) return;
+
+        for (int32_t i = 0; i < min(MAP_HEIGHT, 3); i++)
+        {
+            auto offset = MAP_TILE_X + (MAP_TILE_Y + i) * MAP_WIDTH + xOffset * 3;
+            auto& data  = MAP_TILE_DATA[offset];
+
+            RECT rect = {.x = data.texU, .y = data.texV, .width = 64, .height = 128};
+            if (data.tileId == -1)
+                libgpu_ClearImage(&rect, 0, 0, 0);
+            else
+                libgpu_LoadImage(&rect, reinterpret_cast<uint32_t*>(data.imagePtr));
+            libgpu_DrawSync(0);
+        }
+
+        PREV_TILE_X = MAP_TILE_X;
+    }
+
     void handleTileUpdate(uint32_t input, bool updateAll)
     {
         // vanilla is a lot more complex here, checking inputs and doing more spagehtti,
