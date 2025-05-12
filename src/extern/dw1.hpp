@@ -1614,6 +1614,7 @@ extern "C"
     extern uint8_t MAP_HEIGHT;
     extern uint8_t MAP_TILE_X;
     extern uint8_t MAP_TILE_Y;
+    extern uint16_t SCRIPT_MAP_CHANGE_STATE;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];

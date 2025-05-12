@@ -2,6 +2,7 @@
 
 #include "Camera.hpp"
 #include "Entity.hpp"
+#include "Fade.hpp"
 #include "Files.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
@@ -1489,5 +1490,42 @@ extern "C"
         }
         else
             uploadMapTileImages(MAP_TILE_DATA.data(), MAP_TILE_X + MAP_TILE_Y * MAP_WIDTH);
+    }
+
+    bool scriptTickChangeMap(uint32_t mapId, uint8_t exit, bool showMapName)
+    {
+        if (SCRIPT_MAP_CHANGE_STATE == 0)
+        {
+            SCRIPT_MAP_CHANGE_STATE = 1;
+            fadeToBlack(20);
+            PREVIOUS_EXIT = CURRENT_EXIT;
+            return false;
+        }
+
+        if (SCRIPT_MAP_CHANGE_STATE == 1)
+        {
+            if (showMapName && FADE_DATA.fadeOutCurrent == 10) addMapNameObject(mapId);
+
+            if (FADE_DATA.fadeOutCurrent < 20) return false;
+
+            changeMap(mapId, exit);
+            STORED_TAMER_POS = TAMER_ENTITY.posData->location;
+
+            if (showMapName) removeObject(ObjectID::MAP_NAME, mapId);
+
+            Tamer_setState(6);
+            fadeFromBlack(20);
+            SCRIPT_MAP_CHANGE_STATE = 0;
+            if (IS_SCRIPT_PAUSED == 1)
+            {
+                Tamer_setState(0);
+                Partner_setState(1);
+                setCameraFollowPlayer();
+            }
+            checkMapInteraction();
+            return true;
+        }
+
+        return false;
     }
 }

@@ -11,4 +11,5 @@ extern "C"
     void addTamerLevel(int32_t chance, int32_t amount);
     void removeTamerItem();
     void initializeTamerWaypoints();
+    void checkMapInteraction();
 }

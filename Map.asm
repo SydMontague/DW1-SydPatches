@@ -1,9 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800d8f84
-  jal checkMapInteraction
-
 .org 0x8010435c
   jal createNinjamonEffect
 
@@ -160,6 +157,9 @@
 ;  jal handleTileUpdate
 ;.org 0x800d8b24
 ;  jal handleTileUpdate
+
+.org 0x80105c2c
+  jal scriptTickChangeMap
 
 .close
 
