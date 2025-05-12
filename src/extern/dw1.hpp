@@ -1615,6 +1615,7 @@ extern "C"
     extern uint8_t MAP_TILE_X;
     extern uint8_t MAP_TILE_Y;
     extern uint16_t SCRIPT_MAP_CHANGE_STATE;
+    extern dtl::array<const char*, 70> MAP_NAME_PTR;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1677,7 +1678,6 @@ extern "C"
     bool tickOpenChestTray(uint32_t chestId);
     bool tickCloseChestTray(uint32_t chestId);
     void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos);
-    void addMapNameObject(int32_t mapId);
     void changeMap(uint32_t map, uint32_t exit);
     void startGameTime();
     /*

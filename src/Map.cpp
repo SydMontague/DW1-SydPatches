@@ -4,6 +4,7 @@
 #include "Entity.hpp"
 #include "Fade.hpp"
 #include "Files.hpp"
+#include "Font.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Inventory.hpp"
@@ -12,6 +13,7 @@
 #include "Partner.hpp"
 #include "Sound.hpp"
 #include "Tamer.hpp"
+#include "UIElements.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
@@ -39,6 +41,25 @@ extern "C"
     static uint8_t currentTimeOfDay;
     static dtl::array<RGB5551*, 3> mapCluts;
     static dtl::array<GsF_LIGHT, 3> mapLights;
+
+    static uint8_t mapNameState;
+    static TextSprite mapNameText = {
+        .font       = &vanillaFont,
+        .string     = "",
+        .uvX        = 704,
+        .uvY        = 256,
+        .uvWidth    = 0,
+        .uvHeight   = 0,
+        .posX       = -SCREEN_WIDTH / 2,
+        .posY       = -SCREEN_HEIGHT / 2,
+        .boxWidth   = SCREEN_WIDTH,
+        .boxHeight  = SCREEN_HEIGHT,
+        .alignmentX = AlignmentX::CENTER,
+        .alignmentY = AlignmentY::CENTER,
+        .color      = 0,
+        .layer      = 0,
+        .hasShadow  = 0,
+    };
 
     void loadMapDigimon(uint8_t* buffer, uint32_t mapId)
     {
@@ -1527,5 +1548,25 @@ extern "C"
         }
 
         return false;
+    }
+
+    void renderMapName(int32_t mapId)
+    {
+        if (mapNameState == 0)
+        {
+            mapNameText.string = MAP_NAME_PTR[MAP_ENTRIES[mapId].loadingName];
+            clearTextArea();
+            drawTextSprite(mapNameText);
+            mapNameState = 1;
+        }
+
+        renderTextSprite(mapNameText);
+    }
+
+    void addMapNameObject(int32_t mapId)
+    {
+        // vanilla draws the string in here, but we can also do it within the object render
+        mapNameState = 0;
+        addObject(ObjectID::MAP_NAME, mapId, nullptr, renderMapName);
     }
 }

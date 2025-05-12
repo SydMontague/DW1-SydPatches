@@ -36,7 +36,6 @@
 .definelabel Tamer_tickFishing,         0x800e4e18
 .definelabel isKeyDown,                 0x800fc054
 .definelabel stopGameTime,              0x800dd798
-.definelabel addMapNameObject,          0x800d8fb0
 .definelabel changeMap,                 0x800d9020
 .definelabel startGameTime,             0x800dd7a0
 .definelabel getEntityScreenPos,        0x800e52d8
@@ -88,7 +87,8 @@
 .definelabel checkArenaMap,             0x800ff9dc
 .definelabel unloadMapParts,            0x800e1bf0
 
-.definelabel SCRIPT_MAP_CHANGE_STATE, 0x800134dde
+.definelabel MAP_NAME_PTR, 0x801291bc
+.definelabel SCRIPT_MAP_CHANGE_STATE, 0x80134dde
 .definelabel CAMERA_TARGET, 0x80150c7c
 .definelabel DRAW_OFFSET_LIMIT_X_MAX, 0x80134db6
 .definelabel DRAW_OFFSET_LIMIT_X_MIN, 0x80134db8
