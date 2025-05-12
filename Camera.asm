@@ -8,16 +8,29 @@
 .org 0x800ef8d8
   jal createCameraMovement
 
-.org 0x800d890c
-  jal storeEntityLocation
+.org 0x801057c0
+  jal tickCameraMoveTo
 
-.org 0x800d88f4
-  j checkCameraMovement
-.org 0x800d8914
-  jal checkCameraMovement
+.org 0x801057d8
+  jal tickCameraMoveToEntity
 
 .close
 
+.open "work/DIGIMON/KAR_REL.BIN",0x80053800
+.psx
+
+.org 0x80054db4
+  jal tickCameraMoveTo
+.org 0x800554c4
+  jal tickCameraMoveTo
+.org 0x80055684
+  jal tickCameraMoveTo
+.org 0x80055860
+  jal tickCameraMoveTo
+.org 0x800594c4
+  jal tickCameraMoveTo
+
+.close
 
 .open "work/DIGIMON/TRN_REL.BIN",0x80088800
 .psx

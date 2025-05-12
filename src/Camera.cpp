@@ -19,28 +19,49 @@ struct CameraData
     int16_t deltaY;
 };
 
+// data
+static CameraData data;
+
+// forward declarations
 extern "C"
 {
-    static CameraData data;
+    void tickCameraMovement(int32_t speed);
+}
 
-    void storeEntityLocation(uint32_t entityId, Vector* buffer)
+// translation unit local functions
+namespace
+{
+    Vector getEntityLocation(uint32_t entityId)
     {
-        if (entityId == 0xfd)
-            *buffer = TAMER_ENTITY.posData->location;
-        else if (entityId == 0xfc)
-            *buffer = PARTNER_ENTITY.posData->location;
-        else
-        {
-            for (auto& entity : NPC_ENTITIES)
-            {
-                if (entity.scriptId == entityId)
-                {
-                    *buffer = entity.posData->location;
-                    return;
-                }
-            }
-        }
+        if (entityId == 0xfd) return TAMER_ENTITY.posData->location;
+        if (entityId == 0xfc) return PARTNER_ENTITY.posData->location;
+
+        for (auto& entity : NPC_ENTITIES)
+            if (entity.scriptId == entityId) return entity.posData->location;
+
+        return {};
     }
+
+    bool checkCameraMovement(int32_t speed)
+    {
+        if (CAMERA_REACHED_TARGET == -1)
+        {
+            CAMERA_REACHED_TARGET = 0;
+            addObject(ObjectID::CAMERA_MOVEMENT, speed, tickCameraMovement, nullptr);
+            return false;
+        }
+        if (CAMERA_REACHED_TARGET == 1)
+        {
+            CAMERA_REACHED_TARGET = -1;
+            return true;
+        }
+
+        return false;
+    }
+} // namespace
+
+extern "C"
+{
 
     void cameraIsAtEdge(uint32_t* canMoveX, uint32_t* canMoveY)
     {
@@ -185,20 +206,15 @@ extern "C"
         CAMERA_REACHED_TARGET = -1;
     }
 
-    bool checkCameraMovement(int32_t speed)
+    bool tickCameraMoveTo(int32_t posX, int32_t posZ, int32_t speed)
     {
-        if (CAMERA_REACHED_TARGET == -1)
-        {
-            CAMERA_REACHED_TARGET = 0;
-            addObject(ObjectID::CAMERA_MOVEMENT, speed, tickCameraMovement, nullptr);
-            return false;
-        }
-        if (CAMERA_REACHED_TARGET == 1)
-        {
-            CAMERA_REACHED_TARGET = -1;
-            return true;
-        }
+        CAMERA_TARGET = {.x = posX, .y = TAMER_ENTITY.posData->location.y, .z = posZ};
+        return checkCameraMovement(speed);
+    }
 
-        return false;
+    bool tickCameraMoveToEntity(uint32_t entityId, int32_t speed)
+    {
+        CAMERA_TARGET = getEntityLocation(entityId);
+        return checkCameraMovement(speed);
     }
 }
