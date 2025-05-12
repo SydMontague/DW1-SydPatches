@@ -156,22 +156,10 @@
 ;  jal handleTileUpdate
 ;.org 0x800d86cc
 ;  jal handleTileUpdate
-.org 0x800d8aa8
-  jal handleTileUpdate
-.org 0x800d8b24
-  jal handleTileUpdate
-
-;.org 0x800d7658
-;  jal cameraIsAtEdge
-;.org 0x800d84e4
-;  jal cameraIsAtEdge
-.org 0x800d8b18
-  jal cameraIsAtEdge
-
-;.org 0x800d70e0
-;  jal updateDrawingOffsets
-.org 0x800d8a9c
-  jal updateDrawingOffsets
+;.org 0x800d8aa8
+;  jal handleTileUpdate
+;.org 0x800d8b24
+;  jal handleTileUpdate
 
 .close
 

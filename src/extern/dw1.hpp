@@ -1628,7 +1628,6 @@ extern "C"
 
     void updateTileRow(int32_t val);
     void updateTileCol(int32_t val);
-    void updateDrawingOffsets(ScreenCoord* pos1, ScreenCoord* pos2);
     void handleTileUpdate(uint32_t input, bool updateAll);
     void unloadMapParts();
     void loadDoors(int32_t doorEntryId);
@@ -1665,7 +1664,6 @@ extern "C"
     int32_t lerp(int32_t start, int32_t end, int32_t tMin, int32_t tMax, int32_t tCurrent);
     void renderFXParticle(SVector* pos, int16_t scale, const RGB8* color);
     void addEntityParticleFX(Entity* entity, int32_t counter);
-    void moveCameraByDiff(Vector* start, Vector* end);
     void updateMinuteHand(int32_t hour, int32_t minute);
     uint32_t handleBattleStart(uint32_t talkedToEntity);
     void loadBattleData(uint32_t talkedToEntity, uint32_t enemyCount);

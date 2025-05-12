@@ -19,6 +19,12 @@ struct CameraData
     int16_t deltaY;
 };
 
+struct CameraAtEdge
+{
+    bool canMoveX;
+    bool canMoveY;
+};
+
 // data
 static CameraData data;
 
@@ -58,43 +64,82 @@ namespace
 
         return false;
     }
-} // namespace
 
-extern "C"
-{
-
-    void cameraIsAtEdge(uint32_t* canMoveX, uint32_t* canMoveY)
+    CameraAtEdge cameraIsAtEdge()
     {
-        *canMoveX = 1;
-        *canMoveY = 1;
+        CameraAtEdge result{.canMoveX = true, .canMoveY = true};
 
         if (CAMERA_X < 0)
         {
             DRAWING_OFFSET_X = DRAW_OFFSET_LIMIT_X_MAX;
             CAMERA_X         = 0;
-            *canMoveX        = false;
+            result.canMoveX  = false;
         }
         else if (CAMERA_X > (MAP_WIDTH * 128 - SCREEN_WIDTH))
         {
             DRAWING_OFFSET_X = DRAW_OFFSET_LIMIT_X_MIN;
             CAMERA_X         = (MAP_WIDTH * 128 - SCREEN_WIDTH);
-            *canMoveX        = false;
+            result.canMoveX  = false;
         }
 
         if (CAMERA_Y < 0)
         {
             DRAWING_OFFSET_Y = DRAW_OFFSET_LIMIT_Y_MAX;
             CAMERA_Y         = 0;
-            *canMoveY        = false;
+            result.canMoveY  = false;
         }
         else if (CAMERA_Y > (MAP_HEIGHT * 128 - SCREEN_HEIGHT))
         {
             DRAWING_OFFSET_Y = DRAW_OFFSET_LIMIT_Y_MIN;
             CAMERA_Y         = (MAP_HEIGHT * 128 - SCREEN_HEIGHT);
-            *canMoveY        = false;
+            result.canMoveY  = false;
+        }
+
+        return result;
+    }
+} // namespace
+
+void updateDrawingOffsets(const MapPos& oldPos, const MapPos& newPos)
+{
+    auto result = cameraIsAtEdge();
+    auto diffX  = oldPos.screenX - newPos.screenX;
+    auto diffY  = oldPos.screenY - newPos.screenY;
+
+    PLAYER_OFFSET_X += diffX;
+    PLAYER_OFFSET_Y += diffY;
+
+    if (result.canMoveX)
+    {
+        DRAWING_OFFSET_X += diffX;
+        if ((POLLED_INPUT & InputButtons::BUTTON_LEFT) != 0 && PLAYER_OFFSET_X < DRAWING_OFFSET_X)
+        {
+            DRAWING_OFFSET_X -= diffX;
+            CAMERA_X += diffX;
+        }
+        else if ((POLLED_INPUT & InputButtons::BUTTON_RIGHT) != 0 && DRAWING_OFFSET_X < PLAYER_OFFSET_X)
+        {
+            DRAWING_OFFSET_X -= diffX;
+            CAMERA_X += diffX;
         }
     }
+    if (result.canMoveY)
+    {
+        DRAWING_OFFSET_Y += diffY;
+        if ((POLLED_INPUT & InputButtons::BUTTON_UP) != 0 && PLAYER_OFFSET_Y < DRAWING_OFFSET_Y)
+        {
+            DRAWING_OFFSET_Y -= diffY;
+            CAMERA_Y += diffY;
+        }
+        else if ((POLLED_INPUT & InputButtons::BUTTON_DOWN) != 0 && DRAWING_OFFSET_Y < PLAYER_OFFSET_Y)
+        {
+            DRAWING_OFFSET_Y -= diffY;
+            CAMERA_Y += diffY;
+        }
+    }
+}
 
+extern "C"
+{
     void tickCameraMovement(int32_t speed)
     {
         if (!CAMERA_HAS_TARGET)
@@ -144,11 +189,9 @@ extern "C"
             data.deltaY--;
         }
 
-        uint32_t canMoveX;
-        uint32_t canMoveY;
-        cameraIsAtEdge(&canMoveX, &canMoveY);
+        auto result = cameraIsAtEdge();
 
-        if (canMoveX)
+        if (result.canMoveX)
         {
             if (drawDiffX < 0)
                 DRAWING_OFFSET_X = max(DRAWING_OFFSET_X, data.diffX);
@@ -160,12 +203,12 @@ extern "C"
 
             if (DRAWING_OFFSET_X == data.diffX)
             {
-                CAMERA_X = data.finalX;
-                canMoveX = false;
+                CAMERA_X        = data.finalX;
+                result.canMoveX = false;
             }
         }
 
-        if (canMoveY)
+        if (result.canMoveY)
         {
             if (drawDiffY < 0)
                 DRAWING_OFFSET_Y = max(DRAWING_OFFSET_Y, data.diffY);
@@ -177,14 +220,14 @@ extern "C"
 
             if (DRAWING_OFFSET_Y == data.diffY)
             {
-                CAMERA_Y = data.finalY;
-                canMoveY = false;
+                CAMERA_Y        = data.finalY;
+                result.canMoveY = false;
             }
         }
 
         handleTileUpdate(0, (cameraDiffX / speed) >= 80);
 
-        if (!canMoveX && !canMoveY)
+        if (!result.canMoveX && !result.canMoveY)
         {
             CAMERA_HAS_TARGET = false;
             setCameraFollowPlayer();
@@ -216,5 +259,27 @@ extern "C"
     {
         CAMERA_TARGET = getEntityLocation(entityId);
         return checkCameraMovement(speed);
+    }
+
+    void moveCameraByDiff(Vector* start, Vector* end)
+    {
+        auto startPos = getMapPosition(*start);
+        auto endPos   = getMapPosition(*end);
+
+        CAMERA_X += (endPos.screenX - startPos.screenX);
+        CAMERA_Y += (endPos.screenY - startPos.screenY);
+
+        updateDrawingOffsets(startPos, endPos);
+        handleTileUpdate(0, false);
+    }
+
+    void moveCameraByOffset(int32_t diffX, int32_t diffY)
+    {
+        CAMERA_X += diffX;
+        CAMERA_Y += diffY;
+        DRAWING_OFFSET_X -= diffX;
+        DRAWING_OFFSET_Y -= diffY;
+
+        handleTileUpdate(0, true);
     }
 }

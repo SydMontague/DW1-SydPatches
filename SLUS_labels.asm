@@ -56,7 +56,6 @@
 .definelabel loadBattleData,            0x800e74d0
 .definelabel handleBattleStart,         0x800e847c
 .definelabel updateMinuteHand,          0x800dd780
-.definelabel moveCameraByDiff,          0x800d892c
 .definelabel worldPosToScreenPos,       0x800da2ec
 .definelabel lerp,                      0x800d990c
 .definelabel renderFXParticle,          0x800daa00

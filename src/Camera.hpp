@@ -1,6 +1,11 @@
+#pragma once
+
+#include "Math.hpp"
 #include "extern/stddef.hpp"
+
+void updateDrawingOffsets(const MapPos& oldPos, const MapPos& newPos);
 
 extern "C"
 {
-    void cameraIsAtEdge(uint32_t* canMoveX, uint32_t* canMoveY);
+    void moveCameraByDiff(Vector* start, Vector* end);
 }

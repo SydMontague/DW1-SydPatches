@@ -1,5 +1,6 @@
 #include "Entity.hpp"
 
+#include "Camera.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
