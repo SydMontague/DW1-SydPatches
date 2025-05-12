@@ -1441,7 +1441,6 @@ extern "C"
     extern int16_t PLAYER_OFFSET_Y;
     extern uint8_t PREV_TILE_X;
     extern uint8_t PREV_TILE_Y;
-    extern uint32_t CAMERA_FOLLOW_PLAYER;
     extern int8_t TAMER_START_TILE_X;
     extern int8_t TAMER_START_TILE_Y;
     extern int8_t TAMER_WAYPOINT_CURRENT;
@@ -1679,7 +1678,6 @@ extern "C"
     void entityLookAtTile(Entity* entity, int8_t tileX, int8_t tileY);
     bool tickOpenChestTray(uint32_t chestId);
     bool tickCloseChestTray(uint32_t chestId);
-    void setCameraFollowPlayer();
     void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos);
     void addMapNameObject(int32_t mapId);
     void changeMap(uint32_t map, uint32_t exit);
@@ -1689,7 +1687,6 @@ extern "C"
      * tick return false).
      */
     bool isKeyDown(uint16_t keyMask);
-    void unsetCameraFollowPlayer();
     void stopGameTime();
     void Tamer_tickFishing();
     extern void Tamer_tickBattle(int32_t instanceId);

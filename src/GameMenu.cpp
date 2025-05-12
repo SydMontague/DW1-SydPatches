@@ -1,5 +1,6 @@
 #include "GameMenu.hpp"
 
+#include "Camera.hpp"
 #include "DigimonMenu.hpp"
 #include "Entity.hpp"
 #include "Font.hpp"

@@ -1,6 +1,7 @@
+#include "Camera.hpp"
 #include "GameMenu.hpp"
-#include "Map.hpp"
 #include "Helper.hpp"
+#include "Map.hpp"
 #include "Partner.hpp"
 #include "extern/BTL.hpp"
 #include "extern/dw1.hpp"

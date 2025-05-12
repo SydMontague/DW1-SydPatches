@@ -949,7 +949,7 @@ extern "C"
     static void tickCameraFollowPlayer()
     {
         if (GAME_STATE != 0) return;
-        if (CAMERA_FOLLOW_PLAYER != 1) return;
+        if (!isCameraFollowingPlayer()) return;
         if (Tamer_getState() != 0) return;
 
         if ((POLLED_INPUT & (InputButtons::BUTTON_DOWN | InputButtons::BUTTON_UP | InputButtons::BUTTON_LEFT |
@@ -1282,7 +1282,7 @@ extern "C"
 
         uploadMapTileImages(MAP_TILE_DATA.data(), MAP_TILE_X + MAP_TILE_Y * MAP_WIDTH);
         calcMapObjectOrder(LOCAL_MAP_OBJECT_INSTANCE);
-        CAMERA_FOLLOW_PLAYER = 1;
+        setCameraFollowPlayer();
     }
 
     void updateTimeOfDay()

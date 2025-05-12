@@ -1,3 +1,4 @@
+#include "Camera.hpp"
 #include "Entity.hpp"
 #include "Evolution.hpp"
 #include "Fade.hpp"

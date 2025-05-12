@@ -27,6 +27,7 @@ struct CameraAtEdge
 
 // data
 static CameraData data;
+static bool cameraFollowPlayer;
 
 // forward declarations
 extern "C"
@@ -281,5 +282,20 @@ extern "C"
         DRAWING_OFFSET_Y -= diffY;
 
         handleTileUpdate(0, true);
+    }
+
+    bool isCameraFollowingPlayer()
+    {
+        return cameraFollowPlayer;
+    }
+    
+    void unsetCameraFollowPlayer()
+    {
+        cameraFollowPlayer = false;
+    }
+
+    void setCameraFollowPlayer()
+    {
+        cameraFollowPlayer = true;
     }
 }

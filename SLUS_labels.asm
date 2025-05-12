@@ -35,13 +35,11 @@
 .definelabel Tamer_tickBattle,          0x800f1214
 .definelabel Tamer_tickFishing,         0x800e4e18
 .definelabel isKeyDown,                 0x800fc054
-.definelabel unsetCameraFollowPlayer,   0x800d8b3c
 .definelabel stopGameTime,              0x800dd798
 .definelabel addMapNameObject,          0x800d8fb0
 .definelabel changeMap,                 0x800d9020
 .definelabel startGameTime,             0x800dd7a0
 .definelabel getEntityScreenPos,        0x800e52d8
-.definelabel setCameraFollowPlayer,     0x800d8b44
 .definelabel tickOpenChestTray,         0x800e21d0
 .definelabel tickCloseChestTray,        0x800e223c
 .definelabel setMapLayerEnabled,        0x800e65b8
@@ -102,7 +100,6 @@
 .definelabel PLAYER_OFFSET_Y, 0x80134dc0
 .definelabel PREV_TILE_X, 0x80134dc3
 .definelabel PREV_TILE_Y, 0x80134dc5
-.definelabel CAMERA_FOLLOW_PLAYER, 0x80134dc8
 .definelabel MAP_LIGHT, 0x80150c40
 .definelabel MAP_WIDTH, 0x80150c3c
 .definelabel MAP_HEIGHT, 0x80150c3d
