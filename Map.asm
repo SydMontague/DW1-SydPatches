@@ -163,6 +163,33 @@
 
 .close
 
+.open "work/DIGIMON/DOOA_REL.BIN",0x80080000
+.psx
+
+.org 0x800801fc
+  jal changeToDeathMap
+
+.org 0x800801f4
+  jal waitForDeathMapLoading
+
+.org 0x800847ec
+  jal setDeathMap
+
+.close
+
+.open "work/DIGIMON/MURD_REL.BIN",0x8007C000
+.psx
+
+.org 0x8007c3e4
+  jal changeToDeathMap
+  
+.org 0x8007c3dc
+  jal waitForDeathMapLoading
+
+.org 0x8007d6ec
+  jal setDeathMap
+
+.close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx

@@ -3,4 +3,5 @@
 extern "C"
 {
     void clearMapDigimon();
+    void removeMapEntities();
 }

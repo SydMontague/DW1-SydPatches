@@ -1627,6 +1627,7 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void runMapHeadScript(uint8_t mapId);
     void unloadMapParts();
     void loadDoors(int32_t doorEntryId);
     void initializeWarpCrystals(int32_t mapId);
@@ -1678,7 +1679,6 @@ extern "C"
     bool tickOpenChestTray(uint32_t chestId);
     bool tickCloseChestTray(uint32_t chestId);
     void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos);
-    void changeMap(uint32_t map, uint32_t exit);
     void startGameTime();
     /*
      * Checks if a button has been pressed and consumes it (i.e. subsequent checks for the same button within the same

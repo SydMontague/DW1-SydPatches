@@ -27,4 +27,5 @@ extern "C"
     void uploadMapTileImages(MapTileData* tileData, int32_t tileOffset);
     void handleTileUpdate(uint32_t input, bool updateAll);
     void addMapNameObject(int32_t mapId);
+    void changeMap(uint32_t map, uint32_t exit);
 }

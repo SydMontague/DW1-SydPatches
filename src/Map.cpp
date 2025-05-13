@@ -23,6 +23,22 @@
 
 extern "C"
 {
+    struct QuickTravelData
+    {
+        uint32_t map;
+        uint32_t previousMap;
+        uint32_t previousExit;
+    };
+
+    constexpr QuickTravelData quickTravelData[] = {
+        {.map = 38, .previousMap = 88, .previousExit = 2},
+        {.map = 70, .previousMap = 69, .previousExit = 2},
+        {.map = 79, .previousMap = 17, .previousExit = 1},
+        {.map = 93, .previousMap = 90, .previousExit = 0},
+        {.map = 119, .previousMap = 118, .previousExit = 1},
+        {.map = 105, .previousMap = 106, .previousExit = 0},
+    };
+
     constexpr auto NINJAMON_EFFECT_COUNT = 41;
 
     static int16_t mistOffsetX[4] = {-160, 160, 160, -160};
@@ -60,6 +76,9 @@ extern "C"
         .layer      = 0,
         .hasShadow  = 0,
     };
+
+    static uint16_t deathMap;
+    static uint16_t deathMapExit;
 
     void loadMapDigimon(uint8_t* buffer, uint32_t mapId)
     {
@@ -1568,5 +1587,70 @@ extern "C"
         // vanilla draws the string in here, but we can also do it within the object render
         mapNameState = 0;
         addObject(ObjectID::MAP_NAME, mapId, nullptr, renderMapName);
+    }
+
+    void changeMap(uint32_t map, uint32_t exit)
+    {
+        unloadMap();
+        removeMapEntities();
+        clearDroppedItems();
+        PREVIOUS_SCREEN = CURRENT_SCREEN;
+
+        // birdra transport
+        for (auto data : quickTravelData)
+        {
+            if (map == data.map)
+            {
+                PREVIOUS_SCREEN = data.previousMap;
+                PREVIOUS_EXIT   = data.previousExit;
+                break;
+            }
+        }
+
+        // canyon, falling off the cliff
+        if (CURRENT_SCREEN == 43 && map == 42)
+        {
+            PREVIOUS_SCREEN = 41;
+            PREVIOUS_EXIT   = 1;
+        }
+
+        // seadramon to beetleland
+        if (CURRENT_SCREEN == 6 && map == 105) { PREVIOUS_SCREEN = 106; }
+
+        // Whamon's cave back to Freezeland
+        if (CURRENT_SCREEN == 142 && map == 135)
+        {
+            PREVIOUS_SCREEN = 132;
+            PREVIOUS_EXIT   = 1;
+        }
+
+        // coelamon to jungle
+        if (CURRENT_SCREEN == 5 && map == 12)
+        {
+            PREVIOUS_SCREEN = 13;
+            PREVIOUS_EXIT   = 1;
+        }
+
+        CURRENT_EXIT = exit;
+        runMapHeadScript(map);
+    }
+
+    void changeToDeathMap() {
+        changeMap(deathMap, deathMapExit);
+    }
+
+    void setDeathMap(uint32_t map, uint32_t exit)
+    {
+        deathMap      = map;
+        deathMapExit = exit;
+    }
+
+    bool waitForDeathMapLoading(int32_t param)
+    {
+        // vanilla potentially waits for a file read operation, but all users of this function
+        // a) return immediately, never actually ticking the file read queue
+        // b) ignore the return value
+        // TODO: remove when all callers are implemented
+        return false;
     }
 }

@@ -36,7 +36,6 @@
 .definelabel Tamer_tickFishing,         0x800e4e18
 .definelabel isKeyDown,                 0x800fc054
 .definelabel stopGameTime,              0x800dd798
-.definelabel changeMap,                 0x800d9020
 .definelabel startGameTime,             0x800dd7a0
 .definelabel getEntityScreenPos,        0x800e52d8
 .definelabel tickOpenChestTray,         0x800e21d0
@@ -86,6 +85,7 @@
 .definelabel checkCurlingMap,           0x800e89c8
 .definelabel checkArenaMap,             0x800ff9dc
 .definelabel unloadMapParts,            0x800e1bf0
+.definelabel runMapHeadScript,          0x80105ae4
 
 .definelabel MAP_NAME_PTR, 0x801291bc
 .definelabel SCRIPT_MAP_CHANGE_STATE, 0x80134dde
