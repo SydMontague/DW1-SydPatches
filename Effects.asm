@@ -13,6 +13,9 @@
 .org 0x800f03a8
   jal initializeHealingParticles
 
+.org 0x801042cc
+  jal createMeramonShake
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
