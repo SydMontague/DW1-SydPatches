@@ -119,4 +119,14 @@ extern "C"
         while (libcd_CdReadSync(0, nullptr) > 0)
             ;
     }
+
+    void loadTrainingLibrary(int32_t map)
+    {
+        if (map == 0x70 || map == 0x4E || map == 0x77)
+            loadDynamicLibrary(Overlay::TRN_REL, &TRN_LOADING_COMPLETE, true, nullptr, 0);
+        else if (map == 0x6B || map == 0x6C || map == 0xA5 || map == 0x63)
+            loadDynamicLibrary(Overlay::TRN2_REL, &TRN_LOADING_COMPLETE, true, nullptr, 0);
+
+        TRAINING_COMPLETE = 0;
+    }
 }

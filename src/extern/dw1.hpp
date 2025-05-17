@@ -1616,6 +1616,7 @@ extern "C"
     extern uint8_t MAP_TILE_Y;
     extern uint16_t SCRIPT_MAP_CHANGE_STATE;
     extern dtl::array<const char*, 70> MAP_NAME_PTR;
+    extern uint8_t TRN_LOADING_COMPLETE;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1627,6 +1628,8 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
 
+    void tickGameClock(int32_t instanceId);
+    void renderGameClock(int32_t instanceId);
     void runMapHeadScript(uint8_t mapId);
     void unloadMapParts();
     void loadDoors(int32_t doorEntryId);

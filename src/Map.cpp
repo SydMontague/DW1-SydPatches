@@ -1007,7 +1007,7 @@ extern "C"
         handleTileUpdate(POLLED_INPUT, false);
     }
 
-    static void renderMap(int32_t instanceId)
+    void renderMap(int32_t instanceId)
     {
         tickCameraFollowPlayer();
 

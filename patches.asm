@@ -31,3 +31,4 @@
 .include "UIElements.asm"
 .include "Sound.asm"
 .include "Camera.asm"
+.include "Tournament.asm"

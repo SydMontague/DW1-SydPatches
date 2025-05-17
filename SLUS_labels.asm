@@ -86,7 +86,10 @@
 .definelabel checkArenaMap,             0x800ff9dc
 .definelabel unloadMapParts,            0x800e1bf0
 .definelabel runMapHeadScript,          0x80105ae4
+.definelabel tickGameClock,             0x800dcf84
+.definelabel renderGameClock,           0x800dd2a4
 
+.definelabel TRN_LOADING_COMPLETE, 0x80134de1
 .definelabel MAP_NAME_PTR, 0x801291bc
 .definelabel SCRIPT_MAP_CHANGE_STATE, 0x80134dde
 .definelabel CAMERA_TARGET, 0x80150c7c
