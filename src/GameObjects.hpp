@@ -44,6 +44,7 @@ extern "C"
         MAIN_MENU_SCREEN     = 4003,
         GAME_MENU            = 4004,
         FADE                 = 4005,
+        UNUSED               = 4006,
         FEEDING_ITEM         = 4007,
         POOP                 = 4008,
         DOORS                = 4009,

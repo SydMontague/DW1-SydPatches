@@ -1,12 +1,13 @@
 #include "Main.hpp"
 
+#include "GameObjects.hpp"
+#include "Model.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgte.hpp"
 #include "extern/psx.hpp"
 
 extern "C"
 {
-
     void initializeGsTMDMap(void)
     {
         GS_TMD_MAP[0]  = libgte_GsTMDfastF3L;
@@ -39,7 +40,8 @@ extern "C"
         return;
     }
 
-    void EntryPoint() {
+    void EntryPoint()
+    {
         // vanilla resets r2-27 and r30 here
         gp = SECTION_DATA.globalPointer;
         sp = SECTION_DATA.stackTop;
@@ -50,7 +52,29 @@ extern "C"
         cop0_status = 0x40000000;
 
         main();
-        
+
         asm volatile("break 0x20, 0x201");
+    }
+
+    void cleanupGame()
+    {
+        removeObject(ObjectID::MAP, 0);
+        removeObject(ObjectID::POOP, 0);
+        // vanilla removes 0xFA6, but it seems to be never added anywhere?
+        removeObject(ObjectID::PLAYTIME, 0);
+        removeObject(ObjectID::GAME_CLOCK, 0);
+        removeObject(ObjectID::CHEST, 0);
+
+        for (int32_t i = 0; i < 10; i++)
+        {
+            auto* entity = ENTITY_TABLE.getEntityById(i);
+            if (entity != nullptr)
+            {
+                removeEntity(entity->type, i);
+                unloadModel(static_cast<int32_t>(entity->type), getEntityTypeById(i));
+            }
+        }
+
+        initializeLoadedNPCModels();
     }
 }

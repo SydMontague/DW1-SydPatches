@@ -9,6 +9,7 @@ extern "C"
     void loadMMD(DigimonType digimonType, EntityType entityType);
     void renderWireframed(GsDOBJ2* obj, int32_t wireFrameShare);
     ModelComponent* getEntityModelComponent(int32_t instance, EntityType entityType);
+    EntityType getEntityTypeById(int32_t entityId);
     EntityType getEntityType(Entity* entity);
     void applyMMD(DigimonType digimonType, EntityType entityType, EvoModelData* modelData);
     void removeEntity(DigimonType type, int32_t instanceId);

@@ -856,16 +856,24 @@ extern "C"
         return nullptr;
     }
 
+    EntityType getEntityTypeById(int32_t entityId)
+    {
+        if (entityId == 0) return EntityType::PLAYER;
+        if (entityId == 1) return EntityType::PARTNER;
+        if (entityId < 10) return EntityType::NPC;
+        return EntityType::NONE;
+    }
+
     EntityType getEntityType(Entity* entity)
     {
-        int32_t i = 0;
-        while (ENTITY_TABLE.table[i] != entity)
-            i++;
+        for (int32_t i = 0; i < ENTITY_TABLE.table.size(); i++)
+        {
+            if (ENTITY_TABLE.table[i] != entity) continue;
 
-        if (i == 0) return EntityType::PLAYER;
-        if (i == 1) return EntityType::PARTNER;
-        if (i == 10) return EntityType::NONE;
-        return EntityType::NPC;
+            return getEntityTypeById(i);
+        }
+
+        return EntityType::NONE;
     }
 
     void loadMMDAsync(DigimonType digimonType,

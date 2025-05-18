@@ -15,12 +15,12 @@
 ;  j unloadModel
 ;.org 0x800b6634
 ;  jal unloadModel
-.org 0x800d9764
-  jal unloadModel
-.org 0x800d9770
-  jal unloadModel
-.org 0x800d97a0
-  jal unloadModel
+;.org 0x800d9764
+;  jal unloadModel
+;.org 0x800d9770
+;  jal unloadModel
+;.org 0x800d97a0
+;  jal unloadModel
 .org 0x800e3624
   jal unloadModel
 .org 0x800f172c
@@ -47,8 +47,8 @@
 ;  jal removeEntity
 ;.org 0x800b65e0		
 ;  jal removeEntity
-.org 0x800d9744		
-  jal removeEntity
+;.org 0x800d9744		
+;  jal removeEntity
 .org 0x800e3610		
   jal removeEntity
 .org 0x800f1720		

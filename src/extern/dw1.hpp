@@ -745,7 +745,7 @@ extern "C"
                 NPCEntity* npc7;
                 NPCEntity* npc8;
             };
-            Entity* table[10];
+            dtl::array<Entity*, 10> table;
         };
 
         /*

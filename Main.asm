@@ -17,6 +17,9 @@
 .org 0x800ee87c
   jal initializeAttackObjects
 
+.org 0x800eebb8
+  jal cleanupGame
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
