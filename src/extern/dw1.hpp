@@ -1666,7 +1666,6 @@ extern "C"
     void addFXPrim(POLY_FT4* prim, short x, short y, uint32_t scaleX, int16_t scaleY, uint32_t distance);
     int32_t worldPosToScreenPos(SVector* worldPos, Position* screenPos);
     void renderParticleFlash(ParticleFlashData* data);
-    int32_t lerp(int32_t start, int32_t end, int32_t tMin, int32_t tMax, int32_t tCurrent);
     void renderFXParticle(SVector* pos, int16_t scale, const RGB8* color);
     void addEntityParticleFX(Entity* entity, int32_t counter);
     void updateMinuteHand(int32_t hour, int32_t minute);
@@ -1708,6 +1707,7 @@ extern "C"
     extern void initializeConditionBubbles();
     extern void initializeButterfly();
     extern void initializePoop();
+    extern uint8_t readPStat(int32_t address);
     extern void writePStat(int32_t address, uint8_t value);
     extern void unsetBubble(uint32_t id);
     extern uint8_t addConditionBubble(uint32_t type, Entity* entity);

@@ -22,6 +22,7 @@
 .definelabel unsetBubble,               0x800ece20
 .definelabel addConditionBubble,        0x800ec538
 .definelabel setButterfly,              0x800e9d24
+.definelabel readPStat,                0x801062e0
 .definelabel writePStat,                0x80106474
 .definelabel Partner_tick,              0x800dd7ac
 .definelabel projectPosition,           0x800e1074
@@ -53,7 +54,6 @@
 .definelabel handleBattleStart,         0x800e847c
 .definelabel updateMinuteHand,          0x800dd780
 .definelabel worldPosToScreenPos,       0x800da2ec
-.definelabel lerp,                      0x800d990c
 .definelabel renderFXParticle,          0x800daa00
 .definelabel addFXPrim,                 0x800da3fc
 .definelabel isTamerOnScreen,           0x800e67ec

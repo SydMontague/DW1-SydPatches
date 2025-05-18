@@ -1635,13 +1635,14 @@ extern "C"
         runMapHeadScript(map);
     }
 
-    void changeToDeathMap() {
+    void changeToDeathMap()
+    {
         changeMap(deathMap, deathMapExit);
     }
 
     void setDeathMap(uint32_t map, uint32_t exit)
     {
-        deathMap      = map;
+        deathMap     = map;
         deathMapExit = exit;
     }
 
@@ -1652,5 +1653,47 @@ extern "C"
         // b) ignore the return value
         // TODO: remove when all callers are implemented
         return false;
+    }
+
+    uint32_t getFileCityTopMap()
+    {
+        // I think vanilla doesn't return the correct value here. It doesn't consider PP and seems to only give the new
+        // house map if you have Monzaemon AND Angemon. It also doesn't check for Agumon
+        bool hasAgumon    = isTriggerSet(203);
+        bool hasAngemon   = isTriggerSet(220);
+        bool hasBirdramon = isTriggerSet(221);
+        bool hasMonzaemon = isTriggerSet(214);
+        bool hasVegimon   = isTriggerSet(225);
+        bool hasPalmon    = isTriggerSet(246);
+        bool hasNewHouse  = hasMonzaemon || hasAngemon || (readPStat(1) >= 50);
+
+        if (!hasAgumon) return 204;
+
+        if (hasNewHouse)
+        {
+            if (hasBirdramon)
+            {
+                if (hasVegimon) return 179;
+                if (hasPalmon) return 178;
+                return 177;
+            }
+
+            if (hasVegimon) return 176;
+            if (hasPalmon) return 175;
+            return 174;
+        }
+        else
+        {
+            if (hasBirdramon)
+            {
+                if (hasVegimon) return 173;
+                if (hasPalmon) return 172;
+                return 171;
+            }
+
+            if (hasVegimon) return 170;
+            if (hasPalmon) return 169;
+            return 168;
+        }
     }
 }

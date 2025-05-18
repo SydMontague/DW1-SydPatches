@@ -87,6 +87,7 @@ extern "C"
         return rand() % limit;
     }
 
+    int32_t lerp(int32_t start, int32_t end, int32_t tMin, int32_t tMax, int32_t tCurrent);
     int32_t random(int32_t limit);
     int16_t sin(uint32_t input);
     int16_t cos(uint32_t input);

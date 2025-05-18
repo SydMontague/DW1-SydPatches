@@ -120,6 +120,29 @@ extern "C"
         return (tmpVal + 0x800) & 0xFFF;
     }
 
+    int32_t lerp(int32_t start, int32_t end, int32_t tMin, int32_t tMax, int32_t tCurrent)
+    {
+        auto diff     = end - start;
+        auto tDiff    = tMax - tMin;
+        auto progress = tCurrent - tMin;
+
+        if (tDiff == 0) return 0;
+
+        auto val = (end * progress) / tDiff;
+        if (diff < 0)
+        {
+            val %= (diff - 1);
+            if (val > 0) val += diff;
+        }
+        else
+        {
+            val %= (diff + 1);
+            if (val < 0) val += diff;
+        }
+
+        return start + val;
+    }
+
     void setRotTransMatrix(Matrix* matrix)
     {
         libgs_GsSetLsMatrix(matrix);

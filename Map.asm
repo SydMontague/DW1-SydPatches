@@ -161,6 +161,9 @@
 .org 0x80105c2c
   jal scriptTickChangeMap
 
+.org 0x801139d4
+  jal getFileCityTopMap
+
 .close
 
 .open "work/DIGIMON/DOOA_REL.BIN",0x80080000

@@ -141,6 +141,43 @@
 .org 0x800e81f8
   jal atan
 
+;.org 0x800add78
+;  jal lerp
+;.org 0x800add94
+;  jal lerp
+;.org 0x800addb0
+;  jal lerp
+;.org 0x800addcc
+;  jal lerp
+;.org 0x800aeb54
+;  jal lerp
+;.org 0x800aeb74
+;  jal lerp
+;.org 0x800aeb94
+;  jal lerp
+;.org 0x800aebb4
+;  jal lerp
+;.org 0x800aec20
+;  jal lerp
+;.org 0x800aec64
+;  jal lerp
+;.org 0x800c11bc
+;  jal lerp
+;.org 0x800c1284
+;  jal lerp
+;.org 0x800c1378
+;  jal lerp
+.org 0x800e9e4c
+  jal lerp
+.org 0x800e9eec
+  jal lerp
+.org 0x800ecd04
+  jal lerp
+.org 0x800ecd30
+  jal lerp
+.org 0x800ecd78
+  jal lerp
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
@@ -292,6 +329,43 @@
   jal atan
 .org 0x8006e79c
   jal atan
+
+.org 0x8006d024
+  jal lerp
+.org 0x8006d040
+  jal lerp
+.org 0x8006d05c
+  jal lerp
+.org 0x8006eef0
+  jal lerp
+.org 0x8006ef3c
+  jal lerp
+.org 0x8006f754
+  jal lerp
+.org 0x8006fc54
+  jal lerp
+.org 0x8006fd08
+  jal lerp
+.org 0x80070118
+  jal lerp
+.org 0x800701c0
+  jal lerp
+.org 0x80071434
+  jal lerp
+.org 0x80071b6c
+  jal lerp
+.org 0x80071ba0
+  jal lerp
+.org 0x80071c08
+  jal lerp
+.org 0x80071c4c
+  jal lerp
+.org 0x800724b8
+  jal lerp
+.org 0x8007251c
+  jal lerp
+.org 0x800726f8
+  jal lerp
 
 .close
 
@@ -494,6 +568,41 @@
 .org 0x80076d78
   jal atan
 
+.org 0x8005ac64
+  jal lerp
+.org 0x8005ac80
+  jal lerp
+.org 0x8005acb0
+  jal lerp
+.org 0x8005acd0
+  jal lerp
+.org 0x8005afc0
+  jal lerp
+.org 0x8005afe0
+  jal lerp
+.org 0x8005b4ec
+  jal lerp
+.org 0x80075600
+  jal lerp
+.org 0x8007561c
+  jal lerp
+.org 0x80075638
+  jal lerp
+.org 0x80077490
+  jal lerp
+.org 0x800774dc
+  jal lerp
+.org 0x80077cf4
+  jal lerp
+.org 0x800781f4
+  jal lerp
+.org 0x800782a8
+  jal lerp
+.org 0x800786b8
+  jal lerp
+.org 0x80078760
+  jal lerp
+
 .close
 
 
@@ -637,6 +746,42 @@
 .org 0x8006ce48
   jal atan
 
+.org 0x80059ee0
+  jal lerp
+.org 0x80059efc
+  jal lerp
+.org 0x80059f2c
+  jal lerp
+.org 0x80059f4c
+  jal lerp
+.org 0x8005a23c
+  jal lerp
+.org 0x8005a25c
+  jal lerp
+.org 0x8005a768
+  jal lerp
+.org 0x8006b6d0
+  jal lerp
+.org 0x8006b6ec
+  jal lerp
+.org 0x8006b708
+  jal lerp
+.org 0x8006d560
+  jal lerp
+.org 0x8006d5ac
+  jal lerp
+.org 0x8006ddc4
+  jal lerp
+.org 0x8006e2c4
+  jal lerp
+.org 0x8006e378
+  jal lerp
+.org 0x8006e788
+  jal lerp
+.org 0x8006e830
+  jal lerp
+
+
 .close
 
 
@@ -663,14 +808,183 @@
 .org 0x800609c4
   jal sin
 
+.org 0x80060304
+  jal lerp
+.org 0x80060328
+  jal lerp
+.org 0x80060554
+  jal lerp
+.org 0x80060578
+  jal lerp
+.org 0x80060858
+  jal lerp
+.org 0x800608e8
+  jal lerp
+.org 0x80060908
+  jal lerp
+.org 0x800609b4
+  jal lerp
+.org 0x80060a40
+  jal lerp
+.org 0x80060a80
+  jal lerp
+.org 0x80060aa0
+  jal lerp
+.org 0x80061238
+  jal lerp
+.org 0x800613b0
+  jal lerp
+.org 0x800613d0
+  jal lerp
+.org 0x800613f0
+  jal lerp
+
 .close
 
+.open "work/DIGIMON/ENDI_REL.BIN",0x80060000
+.psx
+
+.org 0x800603fc
+  jal lerp
+.org 0x8006041c
+  jal lerp
+
+.close
+
+.open "work/DIGIMON/EVL_REL.BIN",0x80060000
+.psx
+
+.org 0x80060310
+  jal lerp
+.org 0x8006055c
+  jal lerp
+.org 0x80060908
+  jal lerp
+.org 0x80060928
+  jal lerp
+.org 0x80060994
+  jal lerp
+.org 0x800609f4
+  jal lerp
+.org 0x80060a54
+  jal lerp
+.org 0x80060afc
+  jal lerp
+.org 0x80060c58
+  jal lerp
+.org 0x80060cd0
+  jal lerp
+.org 0x80060cfc
+  jal lerp
+.org 0x80060e60
+  jal lerp
+.org 0x800616bc
+  jal lerp
+.org 0x800616e0
+  jal lerp
+.org 0x80061704
+  jal lerp
+.org 0x8006172c
+  jal lerp
+.org 0x80061748
+  jal lerp
+.org 0x80061778
+  jal lerp
+.org 0x8006179c
+  jal lerp
+.org 0x800617c0
+  jal lerp
+.org 0x80061808
+  jal lerp
+.org 0x80061820
+  jal lerp
+.org 0x8006183c
+  jal lerp
+.org 0x80062b7c
+  jal lerp
+.org 0x80062cf4
+  jal lerp
+.org 0x80062d14
+  jal lerp
+.org 0x80062d34
+  jal lerp
+
+.close
+
+.open "work/DIGIMON/MURD_REL.BIN",0x8007C000
+.psx
+
+.org 0x8007c2fc
+  jal lerp
+.org 0x8007c4c4
+  jal lerp
+.org 0x8007c7cc
+  jal lerp
+.org 0x8007ceec
+  jal lerp
+.org 0x8007d074
+  jal lerp
+
+.close
 
 .open "work/DIGIMON/DOOA_REL.BIN",0x80080000
 .psx
 
 .org 0x80080c88
   jal sin
+
+.org 0x800808a4
+  jal lerp
+.org 0x8008098c
+  jal lerp
+.org 0x80080a50
+  jal lerp
+.org 0x80080b54
+  jal lerp
+.org 0x80080c80
+  jal lerp
+.org 0x80080eb8
+  jal lerp
+.org 0x80081148
+  jal lerp
+.org 0x80081638
+  jal lerp
+.org 0x8008165c
+  jal lerp
+.org 0x80081680
+  jal lerp
+.org 0x800816a8
+  jal lerp
+.org 0x800816c4
+  jal lerp
+.org 0x8008172c
+  jal lerp
+.org 0x80081750
+  jal lerp
+.org 0x80081774
+  jal lerp
+.org 0x80081794
+  jal lerp
+.org 0x800817ac
+  jal lerp
+.org 0x800817c8
+  jal lerp
+.org 0x80081bc4
+  jal lerp
+.org 0x80081d4c
+  jal lerp
+.org 0x80082234
+  jal lerp
+.org 0x800822f4
+  jal lerp
+.org 0x800823a0
+  jal lerp
+.org 0x80082400
+  jal lerp
+.org 0x800826bc
+  jal lerp
+.org 0x80083244
+  jal lerp
 
 .close
 
