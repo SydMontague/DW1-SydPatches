@@ -98,6 +98,7 @@ extern "C"
     void getRotationDifference(PositionData* pos, Vector* target, int16_t* outAngle, int16_t* ccDiff, int16_t* cwDiff);
     bool rotateEntity(SVector* rotVector, int16_t targetAngle, int16_t ccDiff, int16_t cwDiff, int16_t speed);
     void addWithLimit(int16_t* valuePtr, int16_t value, int32_t limit);
+    int32_t worldPosToScreenPos(SVector* worldPos, Position* screenPos);
 }
 
 /*
@@ -109,12 +110,12 @@ ScreenPos getScreenPosition(int16_t x, int16_t y, int16_t z);
  * Gets the 2D screen position of a 3D position.
  * The returned coordinates are relative to the center of the visibale screen area.
  */
-ScreenPos getScreenPosition(SVector pos);
+ScreenPos getScreenPosition(const SVector& pos);
 /*
  * Gets the 2D screen position of a 3D position.
  * The returned coordinates are relative to the center of the visibale screen area.
  */
-ScreenPos getScreenPosition(Vector pos);
+ScreenPos getScreenPosition(const Vector& pos);
 /*
  * Gets the 2D screen position of a 3D position.
  * The returned coordinates are relative to the center of the visibale screen area.
@@ -130,12 +131,12 @@ MapPos getMapPosition(int16_t x, int16_t y, int16_t z);
  * Gets the 2D map position of a 3D position.
  * The returned coordinates are relative to the center of the map.
  */
-MapPos getMapPosition(SVector pos);
+MapPos getMapPosition(const SVector& pos);
 /*
  * Gets the 2D map position of a 3D position.
  * The returned coordinates are relative to the center of the map.
  */
-MapPos getMapPosition(Vector pos);
+MapPos getMapPosition(const Vector& pos);
 /*
  * Gets the 2D map position of a 3D position.
  * The returned coordinates are relative to the center of the map.

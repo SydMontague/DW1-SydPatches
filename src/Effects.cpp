@@ -125,14 +125,10 @@ extern "C"
 
     void renderEntityParticleFX(int32_t instanceId)
     {
-        auto& data     = entityParticleFXData[instanceId];
-        auto& modeData = entityParticleFXModes[data.mode];
-        SVector bonePos;
-        Position screenPos;
-        bonePos.x  = data.entity->posData->posMatrix.work.t[0];
-        bonePos.y  = data.entity->posData->posMatrix.work.t[1];
-        bonePos.z  = data.entity->posData->posMatrix.work.t[2];
-        auto depth = worldPosToScreenPos(&bonePos, &screenPos);
+        auto& data          = entityParticleFXData[instanceId];
+        auto& modeData      = entityParticleFXModes[data.mode];
+        const auto& bonePos = data.entity->posData->posMatrix.work.t;
+        auto mapPos         = getMapPosition(bonePos[0], bonePos[1], bonePos[2]);
 
         POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
         libgpu_SetPolyFT4(prim);
@@ -157,7 +153,7 @@ extern "C"
         prim->u3 = modeData.x + (modeData.width + 1) * (counter + 1);
         prim->v3 = modeData.y + modeData.height;
 
-        addFXPrim(prim, screenPos.x, screenPos.y, modeData.scaleX, modeData.scaleY, depth);
+        addFXPrim(prim, mapPos.screenX, mapPos.screenY, modeData.scaleX, modeData.scaleY, mapPos.depth);
     }
 
     void tickEntityParticleFX(int32_t instanceId)
@@ -417,26 +413,25 @@ extern "C"
         {
             for (int32_t i = 0; i < flashCount; i++)
             {
-                SVector worldPos;
-                Position screenPos;
                 ParticleFlashData flashData;
-                worldPos.x = data.pos.x + data.flashX[i];
-                worldPos.y = data.pos.y + data.flashY[i];
-                worldPos.z = data.pos.z + data.flashZ[i];
-                auto depth = worldPosToScreenPos(&worldPos, &flashData.screenPos);
+                auto mapPos = getMapPosition(data.pos.x + data.flashX[i],
+                                             data.pos.y + data.flashY[i],
+                                             data.pos.z + data.flashZ[i]);
 
-                flashData.sizeX      = 64;
-                flashData.sizeY      = 64;
-                flashData.tpage      = 0xbd;
-                flashData.clut       = 0x79C0;
-                flashData.uBase      = 64;
-                flashData.vBase      = 192;
-                flashData.red        = data.r;
-                flashData.green      = data.g;
-                flashData.blue       = data.b;
-                flashData.colorScale = 0x80;
-                flashData.scale      = (data.flashScale[i] * VIEWPORT_DISTANCE * 8) / depth;
-                flashData.depth      = depth / 16;
+                flashData.screenPos.x = mapPos.screenX;
+                flashData.screenPos.y = mapPos.screenY;
+                flashData.sizeX       = 64;
+                flashData.sizeY       = 64;
+                flashData.tpage       = 0xbd;
+                flashData.clut        = 0x79C0;
+                flashData.uBase       = 64;
+                flashData.vBase       = 192;
+                flashData.red         = data.r;
+                flashData.green       = data.g;
+                flashData.blue        = data.b;
+                flashData.colorScale  = 0x80;
+                flashData.scale       = (data.flashScale[i] * VIEWPORT_DISTANCE * 8) / mapPos.depth;
+                flashData.depth       = mapPos.depth / 16;
                 if (flashData.depth > 32 && flashData.depth < 4096) renderParticleFlash(&flashData);
             }
         }
@@ -587,25 +582,21 @@ extern "C"
 
     void renderCloudFX(int32_t instanceId)
     {
-        auto& data = cloudFXData[instanceId];
-        SVector worldPos;
-        Position screenPos;
-        worldPos.x           = data.posX;
-        worldPos.y           = cloudYData[data.frame];
-        worldPos.z           = data.posZ;
-        auto depth           = worldPosToScreenPos(&worldPos, &screenPos);
+        auto& data  = cloudFXData[instanceId];
+        auto mapPos = getMapPosition(data.posX, cloudYData[data.frame], data.posZ);
+
         cloudFXSprite.u      = cloudUData[data.frame];
         cloudFXSprite.r      = cloudColorData[data.frame];
         cloudFXSprite.g      = cloudColorData[data.frame];
         cloudFXSprite.b      = cloudColorData[data.frame];
-        cloudFXSprite.x      = screenPos.x;
-        cloudFXSprite.y      = screenPos.y;
-        cloudFXSprite.scaleX = (cloudScaleData[data.frame] * VIEWPORT_DISTANCE) / depth;
-        cloudFXSprite.scaleY = (cloudScaleData[data.frame] * VIEWPORT_DISTANCE) / depth;
+        cloudFXSprite.x      = mapPos.screenX;
+        cloudFXSprite.y      = mapPos.screenY;
+        cloudFXSprite.scaleX = (cloudScaleData[data.frame] * VIEWPORT_DISTANCE) / mapPos.depth;
+        cloudFXSprite.scaleY = (cloudScaleData[data.frame] * VIEWPORT_DISTANCE) / mapPos.depth;
 
         // vanilla calls renderSprite (0x800da36c) here, but we inlined it.
         // It modified the passed sprite, which is kinda dirty.
-        auto origin = depth / 16;
+        auto origin = mapPos.depth / 16;
         if (origin >= 0 && origin < 0x1000) libgs_GsSortSprite(&cloudFXSprite, ACTIVE_ORDERING_TABLE, origin);
     }
 

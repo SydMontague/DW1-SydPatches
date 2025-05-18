@@ -1666,7 +1666,6 @@ extern "C"
     bool isTriggerSet(int32_t trigger);
     bool isTamerOnScreen();
     void addFXPrim(POLY_FT4* prim, short x, short y, uint32_t scaleX, int16_t scaleY, uint32_t distance);
-    int32_t worldPosToScreenPos(SVector* worldPos, Position* screenPos);
     void renderParticleFlash(ParticleFlashData* data);
     void renderFXParticle(SVector* pos, int16_t scale, const RGB8* color);
     void addEntityParticleFX(Entity* entity, int32_t counter);

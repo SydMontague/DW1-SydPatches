@@ -74,8 +74,10 @@ extern "C"
         if (data.progress < 0) return;
 
         ParticleFlashData flashData;
+        auto mapPos = getMapPosition(data.worldPos);
 
-        auto depth = worldPosToScreenPos(&data.worldPos, &flashData.screenPos);
+        flashData.screenPos.x = mapPos.screenX;
+        flashData.screenPos.y = mapPos.screenY;
         if (data.mode < 0)
         {
             flashData.screenPos.x += data.offsetX;
@@ -83,8 +85,8 @@ extern "C"
         }
         else
         {
-            flashData.screenPos.x += ((data.offsetX * VIEWPORT_DISTANCE) / depth);
-            flashData.screenPos.y += ((data.offsetY * VIEWPORT_DISTANCE) / depth);
+            flashData.screenPos.x += ((data.offsetX * VIEWPORT_DISTANCE) / mapPos.depth);
+            flashData.screenPos.y += ((data.offsetY * VIEWPORT_DISTANCE) / mapPos.depth);
         }
         flashData.sizeX = 64;
         flashData.sizeY = 64;
@@ -105,12 +107,12 @@ extern "C"
         flashData.colorScale = 0x80;
 
         auto scale       = lerp(data.scaleMin, data.scaleMax, 0, data.tMax, data.progress);
-        scale            = (VIEWPORT_DISTANCE * scale * 10) / depth;
+        scale            = (VIEWPORT_DISTANCE * scale * 10) / mapPos.depth;
         auto factorScale = sin(lerp(0, 491, 0, 23, data.progress));
         flashData.scale  = scale + (factorScale * 300 / 4096) + 1;
 
         if (flashData.scale > 32767) return;
-        flashData.depth = data.fixedDepth > 0 ? data.fixedDepth : (depth / 16);
+        flashData.depth = data.fixedDepth > 0 ? data.fixedDepth : (mapPos.depth / 16);
         if (flashData.depth > 32 && flashData.depth < 4096) renderParticleFlash(&flashData);
     }
 

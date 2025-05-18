@@ -274,7 +274,6 @@ extern "C"
             }
 
             SVector worldPos;
-            Position screenPos;
             for (auto val : data.animSprites)
             {
                 if (val == -1 || val == -2) continue;
@@ -285,7 +284,7 @@ extern "C"
                 break;
             }
 
-            auto depth = worldPosToScreenPos(&worldPos, &screenPos) / 16;
+            auto depth = getMapPosition(worldPos).depth / 16;
             if (depth < 35) depth = 35;
             if (depth > 4095) depth = 4086;
             if (worldPos.y == 10000) depth = 4094;
@@ -795,12 +794,11 @@ extern "C"
         ScreenCoord pos1;
         ScreenCoord pos2;
         ScreenCoord pos3;
-        Position screenPos;
         int32_t interpolVal;
         int32_t flag;
 
         libgte_RotTransPers3(&point1, &point2, &point3, &pos1.raw, &pos2.raw, &pos3.raw, &interpolVal, &flag);
-        worldPosToScreenPos(&point4, &screenPos);
+        auto mapPos = getMapPosition(point4);
 
         POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
         libgpu_SetPolyFT4(prim);
@@ -817,19 +815,17 @@ extern "C"
         prim->y1    = pos2.y;
         prim->x2    = pos3.x;
         prim->y2    = pos3.y;
-        prim->x3    = screenPos.x;
-        prim->y3    = screenPos.y;
+        prim->x3    = mapPos.screenX;
+        prim->y3    = mapPos.screenY;
         libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 0xFFD, prim);
         libgs_GsSetWorkBase(prim + 1);
     }
 
     void renderOverworldItem(WorldItem* item)
     {
-        Position screenPos;
-
-        auto depth = worldPosToScreenPos(&item->spriteLocation, &screenPos);
-        auto width = (VIEWPORT_DISTANCE << 7) / depth;
-        auto layer = depth >> 4;
+        auto mapPos = getMapPosition(item->spriteLocation);
+        auto width  = (VIEWPORT_DISTANCE << 7) / mapPos.depth;
+        auto layer  = mapPos.depth >> 4;
 
         if (layer >= 0x1000 && layer <= 0) return;
 
@@ -842,7 +838,7 @@ extern "C"
         setItemTexture(prim, item->type);
         // vanilla modifies the UV when width is larger than 32, but that seems to be redundant?
 
-        setPosDataPolyFT4(prim, screenPos.x - width / 2, screenPos.y - width / 2, width, width);
+        setPosDataPolyFT4(prim, mapPos.screenX - width / 2, mapPos.screenY - width / 2, width, width);
         libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + layer, prim);
         libgs_GsSetWorkBase(prim + 1);
     }

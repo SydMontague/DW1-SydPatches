@@ -178,6 +178,25 @@
 .org 0x800ecd78
   jal lerp
 
+;.org 0x800adc6c
+;  jal worldPosToScreenPos
+;.org 0x800ae164
+;  jal worldPosToScreenPos
+;.org 0x800ae530
+;  jal worldPosToScreenPos
+;.org 0x800aea1c
+;  jal worldPosToScreenPos
+.org 0x800daa30
+  jal worldPosToScreenPos
+.org 0x800e7f40
+  jal worldPosToScreenPos
+.org 0x800e9f40
+  jal worldPosToScreenPos
+.org 0x800ec6ac
+  jal worldPosToScreenPos
+.org 0x800fbee8
+  jal worldPosToScreenPos
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
@@ -366,6 +385,21 @@
   jal lerp
 .org 0x800726f8
   jal lerp
+
+.org 0x80065d50
+  jal worldPosToScreenPos
+.org 0x8006715c
+  jal worldPosToScreenPos
+.org 0x8006c6e0
+  jal worldPosToScreenPos
+.org 0x8006e96c
+  jal worldPosToScreenPos
+.org 0x8006e998
+  jal worldPosToScreenPos
+.org 0x8006ef20
+  jal worldPosToScreenPos
+.org 0x8006f808
+  jal worldPosToScreenPos
 
 .close
 
@@ -603,6 +637,21 @@
 .org 0x80078760
   jal lerp
 
+.org 0x8006e438
+  jal worldPosToScreenPos
+.org 0x8006f754
+  jal worldPosToScreenPos
+.org 0x80074cec
+  jal worldPosToScreenPos
+.org 0x80076f38
+  jal worldPosToScreenPos
+.org 0x80076f60
+  jal worldPosToScreenPos
+.org 0x800774c0
+  jal worldPosToScreenPos
+.org 0x80077da8
+  jal worldPosToScreenPos
+
 .close
 
 
@@ -781,6 +830,20 @@
 .org 0x8006e830
   jal lerp
 
+.org 0x80064508
+  jal worldPosToScreenPos
+.org 0x80065824
+  jal worldPosToScreenPos
+.org 0x8006adbc
+  jal worldPosToScreenPos
+.org 0x8006d008
+  jal worldPosToScreenPos
+.org 0x8006d030
+  jal worldPosToScreenPos
+.org 0x8006d590
+  jal worldPosToScreenPos
+.org 0x8006de78
+  jal worldPosToScreenPos
 
 .close
 
@@ -793,8 +856,18 @@
 .org 0x8008a930
   jal random
 
+.org 0x8008e02c
+  jal worldPosToScreenPos
+
 .close
 
+.open "work/DIGIMON/TRN2_REL.BIN",0x80088800
+.psx
+
+.org 0x8008ca04
+  jal worldPosToScreenPos
+
+.close
 
 .open "work/DIGIMON/EAB_REL.BIN",0x80060000
 .psx
@@ -838,6 +911,9 @@
   jal lerp
 .org 0x800613f0
   jal lerp
+
+.org 0x800612e8
+  jal worldPosToScreenPos
 
 .close
 
@@ -909,6 +985,11 @@
 .org 0x80062d34
   jal lerp
 
+.org 0x800615bc
+  jal worldPosToScreenPos
+.org 0x80062c2c
+  jal worldPosToScreenPos
+
 .close
 
 .open "work/DIGIMON/MURD_REL.BIN",0x8007C000
@@ -924,6 +1005,15 @@
   jal lerp
 .org 0x8007d074
   jal lerp
+
+.org 0x8007c7f0
+  jal worldPosToScreenPos
+.org 0x8007c9cc
+  jal worldPosToScreenPos
+.org 0x8007cac4
+  jal worldPosToScreenPos
+.org 0x8007cf10
+  jal worldPosToScreenPos
 
 .close
 
@@ -985,6 +1075,13 @@
   jal lerp
 .org 0x80083244
   jal lerp
+
+.org 0x8008116c
+  jal worldPosToScreenPos
+.org 0x800815bc
+  jal worldPosToScreenPos
+.org 0x80081be8
+  jal worldPosToScreenPos
 
 .close
 

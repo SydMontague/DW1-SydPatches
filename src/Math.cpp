@@ -148,18 +148,19 @@ extern "C"
         libgs_GsSetLsMatrix(matrix);
     }
 
+    int32_t worldPosToScreenPos(SVector* worldPos, Position* screenPos)
+    {
+        auto pos = getMapPosition(*worldPos);
+        screenPos->x = pos.screenX;
+        screenPos->y = pos.screenY;
+        return pos.depth;
+    }
+
     void worldPosToScreenPos2(int16_t* x, int16_t* y, int16_t* z)
     {
-        libgs_GsSetLsMatrix(&libgs_REFERENCE_MATRIX);
-
-        cop2_v0xy = *x | (*y << 16);
-        cop2_v0z  = *z;
-
-        asm volatile("cop2 0x180001");
-        ScreenCoord val{.raw = static_cast<int32_t>(cop2_sxy2)};
-
-        *x = val.x - (160 - DRAWING_OFFSET_X);
-        *y = val.y - (120 - DRAWING_OFFSET_Y);
+        auto pos = getScreenPosition(*x, *y, *z);
+        *x       = pos.screenX;
+        *y       = pos.screenY;
     }
 
     bool hasAABBOverlap(AABB* aabb1, AABB* aabb2)
@@ -308,12 +309,12 @@ ScreenPos getScreenPosition(int16_t x, int16_t y, int16_t z)
     };
 }
 
-ScreenPos getScreenPosition(Vector pos)
+ScreenPos getScreenPosition(const Vector& pos)
 {
     return getScreenPosition(pos.x, pos.y, pos.z);
 }
 
-ScreenPos getScreenPosition(SVector pos)
+ScreenPos getScreenPosition(const SVector& pos)
 {
     return getScreenPosition(pos.x, pos.y, pos.z);
 }
@@ -327,24 +328,25 @@ MapPos getMapPosition(int16_t x, int16_t y, int16_t z)
 {
     libgs_GsSetLsMatrix(&libgs_REFERENCE_MATRIX);
 
-    cop2_v0xy = x | (y << 16);
+    ScreenCoord raw{.x = x, .y = y};
+    cop2_v0xy = raw.raw;
     cop2_v0z  = z;
 
     asm volatile("cop2 0x180001");
 
     return {
-        .screenX = static_cast<int16_t>(cop2_sxy2),
+        .screenX = static_cast<int16_t>(cop2_sxy2 & 0xFFFF),
         .screenY = static_cast<int16_t>(cop2_sxy2 >> 0x10),
         .depth   = static_cast<int16_t>(cop2_sz3 & 0xFFFFFFFC),
     };
 }
 
-MapPos getMapPosition(Vector pos)
+MapPos getMapPosition(const Vector& pos)
 {
     return getMapPosition(pos.x, pos.y, pos.z);
 }
 
-MapPos getMapPosition(SVector pos)
+MapPos getMapPosition(const SVector& pos)
 {
     return getMapPosition(pos.x, pos.y, pos.z);
 }

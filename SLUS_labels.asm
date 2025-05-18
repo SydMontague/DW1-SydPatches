@@ -52,7 +52,6 @@
 .definelabel loadBattleData,            0x800e74d0
 .definelabel handleBattleStart,         0x800e847c
 .definelabel updateMinuteHand,          0x800dd780
-.definelabel worldPosToScreenPos,       0x800da2ec
 .definelabel renderFXParticle,          0x800daa00
 .definelabel addFXPrim,                 0x800da3fc
 .definelabel isTamerOnScreen,           0x800e67ec
