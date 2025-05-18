@@ -1,6 +1,6 @@
 #include "PlayerCardView.hpp"
 
-#include "DigimonSprite.hpp"
+#include "DigimonData.hpp"
 #include "Files.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"

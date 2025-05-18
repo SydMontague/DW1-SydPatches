@@ -18,3 +18,8 @@ struct DigimonSprite
 bool hasValidSprite(DigimonType type);
 
 DigimonSprite const& getDigimonSprite(DigimonType type);
+
+extern "C"
+{
+    DigimonType getOriginalType(DigimonType type);
+}

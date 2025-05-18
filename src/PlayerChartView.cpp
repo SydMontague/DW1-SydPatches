@@ -1,7 +1,7 @@
 
 #include "PlayerChartView.hpp"
 
-#include "DigimonSprite.hpp"
+#include "DigimonData.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
 #include "Sound.hpp"

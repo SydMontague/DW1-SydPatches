@@ -1,5 +1,6 @@
 #include "Effects.hpp"
 
+#include "DigimonData.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
@@ -894,5 +895,17 @@ extern "C"
     {
         *offsetX = DRAWING_OFFSET_X_COPY;
         *offsetY = DRAWING_OFFSET_Y_COPY;
+    }
+
+    void translateConditionFXToEntity(Entity* entity, SVector* out)
+    {
+        auto type    = getOriginalType(entity->type);
+        auto& offset = CONDITION_FX_OFFSETS[static_cast<int32_t>(type)];
+        auto& node   = entity->posData[offset.pad].posMatrix.work;
+
+        libgte_ApplyMatrixSV(&node, &offset, out);
+        out->x += node.t[0];
+        out->y += node.t[1];
+        out->z += node.t[2];
     }
 }

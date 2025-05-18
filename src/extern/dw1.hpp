@@ -423,7 +423,7 @@ extern "C"
         WARUMONZAEMON       = 70,
         SNOWAGUMON          = 71,
         HYOGAMON            = 72,
-        PLATINUMNUMEMON     = 73,
+        PLATINUMSUKAMON     = 73,
         DOKUNEMON           = 74,
         SHIMAUNIMON         = 75,
         TANKMON             = 76,
@@ -457,7 +457,7 @@ extern "C"
         BLUEMERAMON         = 104,
         GURURUMON           = 105,
         SABERDRAMON         = 106,
-        SOULDMON            = 107,
+        SOULMON             = 107,
         ROCKMON             = 108,
         OTAMAMON            = 109,
         GEKOMON             = 110,
@@ -1631,6 +1631,7 @@ extern "C"
     extern PositionData TAMER_POSITION_DATA[22];
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
+    extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
 
     void tickGameClock(int32_t instanceId);
     void renderGameClock(int32_t instanceId);

@@ -32,3 +32,4 @@
 .include "Sound.asm"
 .include "Camera.asm"
 .include "Tournament.asm"
+.include "DigimonData.asm"

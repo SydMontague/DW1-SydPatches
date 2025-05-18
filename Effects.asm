@@ -16,6 +16,13 @@
 .org 0x801042cc
   jal createMeramonShake
 
+.org 0x800e9e30
+  jal translateConditionFXToEntity
+.org 0x800ec684
+  jal translateConditionFXToEntity
+.org 0x800fbedc
+  jal translateConditionFXToEntity
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
@@ -52,6 +59,11 @@
 .org 0x8006e9a8
   jal getDrawingOffsetCopy
 
+.org 0x8006eec4
+  jal translateConditionFXToEntity
+.org 0x8006f2a0
+  jal translateConditionFXToEntity
+
 .close
 
 
@@ -72,6 +84,11 @@
 .org 0x80074c48
   jal renderParticleFlash
 
+.org 0x80077464
+  jal translateConditionFXToEntity
+.org 0x80077840
+  jal translateConditionFXToEntity
+
 .close
 
 
@@ -91,6 +108,11 @@
 
 .org 0x8006ad18
   jal renderParticleFlash
+
+.org 0x8006d534
+  jal translateConditionFXToEntity
+.org 0x8006d910
+  jal translateConditionFXToEntity
 
 .close
 
