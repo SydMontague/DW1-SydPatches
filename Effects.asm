@@ -34,6 +34,24 @@
 
 .org 0x8006c63c
   jal renderParticleFlash
+
+.org 0x80069d3c
+  jal getRViewCopy
+
+.org 0x80069d44
+  jal getViewportDistanceCopy
+
+.org 0x8006648c
+  jal getDrawingOffsetCopy
+.org 0x800693e0
+  jal getDrawingOffsetCopy
+.org 0x80069d50
+  jal getDrawingOffsetCopy
+.org 0x8006c8b4
+  jal getDrawingOffsetCopy
+.org 0x8006e9a8
+  jal getDrawingOffsetCopy
+
 .close
 
 

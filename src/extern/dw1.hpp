@@ -1478,6 +1478,7 @@ extern "C"
     extern uint8_t MENU_SUB_STATE;
     extern MapDigimonEntity MAP_DIGIMON_TABLE[8];
     extern GsRVIEW2 GS_VIEWPOINT;
+    extern GsRVIEW2 GS_VIEWPOINT_COPY;
     extern Chest CHEST_ARRAY[8];
     extern Item ITEM_PARA[128];
     extern DroppedItem DROPPED_ITEMS[10];
@@ -1570,8 +1571,11 @@ extern "C"
     extern int8_t NPC_IS_WALKING_TOWARDS[8];
     extern int32_t DRAWING_OFFSET_X;
     extern int32_t DRAWING_OFFSET_Y;
+    extern int32_t DRAWING_OFFSET_X_COPY;
+    extern int32_t DRAWING_OFFSET_Y_COPY;
     extern uint32_t TRAINING_COMPLETE;
     extern uint32_t VIEWPORT_DISTANCE;
+    extern uint32_t VIEWPORT_DISTANCE_COPY;
     extern EFEFlashData* EFE_FLASH_DATA;
     extern int32_t FLASH_INSTANCE;
     extern uint8_t* EFE_DATA_STACK;
@@ -1659,7 +1663,6 @@ extern "C"
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
     bool isTriggerSet(int32_t trigger);
     bool isTamerOnScreen();
-    void getDrawingOffsetCopy(int32_t* offsetX, int32_t* offsetY);
     void addFXPrim(POLY_FT4* prim, short x, short y, uint32_t scaleX, int16_t scaleY, uint32_t distance);
     int32_t worldPosToScreenPos(SVector* worldPos, Position* screenPos);
     void renderParticleFlash(ParticleFlashData* data);

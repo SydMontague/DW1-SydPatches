@@ -57,7 +57,6 @@
 .definelabel renderFXParticle,          0x800daa00
 .definelabel addFXPrim,                 0x800da3fc
 .definelabel isTamerOnScreen,           0x800e67ec
-.definelabel getDrawingOffsetCopy,      0x800d969c
 .definelabel isTriggerSet,              0x8010643c
 .definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8
@@ -170,6 +169,7 @@
 .definelabel EFE_LOADED_MOVE_DATA, 0x80139a0c
 .definelabel SOME_IMAGE_DATA, 0x80138c0c
 .definelabel VIEWPORT_DISTANCE, 0x80134ed4
+.definelabel VIEWPORT_DISTANCE_COPY, 0x80134ed8
 .definelabel TRAINING_COMPLETE, 0x80134ca0
 .definelabel PREVIOUS_CAMERA_POS, 0x801387a8
 .definelabel NPC_IS_WALKING_TOWARDS, 0x8013d170
@@ -179,6 +179,7 @@
 .definelabel CURRENT_SCRIPT_ID, 0x80134fc0
 .definelabel TALKED_TO_ENTITY, 0x80134c9c
 .definelabel GS_VIEWPOINT, 0x80185ba8
+.definelabel GS_VIEWPOINT_COPY, 0x80185bc8
 .definelabel SOME_SCRIPT_SYNC_BIT, 0x80134e30
 .definelabel DOOA_DATA_PTR, 0x8005b000
 .definelabel CHEST_ARRAY, 0x80150f00
@@ -278,6 +279,8 @@
 .definelabel MAP_ENTRIES, 0x801292d4
 .definelabel DRAWING_OFFSET_X, 0x80134ec0
 .definelabel DRAWING_OFFSET_Y, 0x80134ec4
+.definelabel DRAWING_OFFSET_X_COPY, 0x80134edc
+.definelabel DRAWING_OFFSET_Y_COPY, 0x80134ee0
 .definelabel EFE_DATA_STACK, 0x80134cc8
 .definelabel EFE_FLASH_DATA, 0x80134cc0
 .definelabel FLASH_INSTANCE, 0x80134cc4

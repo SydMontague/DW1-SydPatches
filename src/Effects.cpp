@@ -879,4 +879,20 @@ extern "C"
         meramonShakeData.posY          = 0;
         addObject(ObjectID::MERAMON_SHAKE, 0, tickMeramonShake, nullptr);
     }
+
+    void getRViewCopy(GsRVIEW2* val)
+    {
+        *val = GS_VIEWPOINT_COPY;
+    }
+
+    void getViewportDistanceCopy(uint32_t* val)
+    {
+        *val = VIEWPORT_DISTANCE_COPY;
+    }
+
+    void getDrawingOffsetCopy(int32_t* offsetX, int32_t* offsetY)
+    {
+        *offsetX = DRAWING_OFFSET_X_COPY;
+        *offsetY = DRAWING_OFFSET_Y_COPY;
+    }
 }
