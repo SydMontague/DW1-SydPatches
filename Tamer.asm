@@ -71,12 +71,12 @@
 ;  jal Tamer_setState
 ;.org 0x800c5a7c	
 ;  jal Tamer_setState
-.org 0x800d8f4c	
-  jal Tamer_setState
-.org 0x800d8f74	
-  jal Tamer_setState
-.org 0x800d9340	
-  jal Tamer_setState
+;.org 0x800d8f4c	
+;  jal Tamer_setState
+;.org 0x800d8f74	
+;  jal Tamer_setState
+;.org 0x800d9340	
+;  jal Tamer_setState
 .org 0x800dda70	
   jal Tamer_setState
 .org 0x800ddccc	

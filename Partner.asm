@@ -76,11 +76,6 @@
 .org 0x800e3644
   jal initializeReincarnatedPartner
 
-.org 0x800d9328
-  li.u a3,renderPoop
-.org 0x800d933c
-  li.l a3,renderPoop
-
 .org 0x801053cc
   jal setFoodTimer
 

@@ -49,8 +49,8 @@
 .org 0x800f06e8
   j renderOverworldItem
 
-.org 0x800d9044
-  jal clearDroppedItems
+;.org 0x800d9044
+;  jal clearDroppedItems
 
 .org 0x80104d40
   jal spawnItem
@@ -144,8 +144,8 @@
 .org 0x800ef9f0
   jal uploadMapTileImages
 
-.org 0x800d9034
-  jal unloadMap
+;.org 0x800d9034
+;  jal unloadMap
 
 ;.org 0x800d70ec
 ;  jal handleTileUpdate
