@@ -2,6 +2,7 @@
 
 #include "Model.hpp"
 
+#include "Effects.hpp"
 #include "Files.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
@@ -228,7 +229,7 @@ extern "C"
             outVecs[i].z += posData->location.z;
         }
 
-        add3DSpritePrim(prim, &outVecs[0], &outVecs[1], &outVecs[2], &outVecs[3]);
+        addScreenPolyFT4(prim, &outVecs[0], &outVecs[1], &outVecs[2], &outVecs[3]);
     }
 
     void renderDigimon(int32_t instanceId)

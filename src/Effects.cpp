@@ -908,4 +908,52 @@ extern "C"
         out->y += node.t[1];
         out->z += node.t[2];
     }
+
+    void addScreenPolyFT3(POLY_FT3* prim, SVector* pos1, SVector* pos2, SVector* pos3)
+    {
+        setRotTransMatrix(&libgs_REFERENCE_MATRIX);
+
+        int32_t dummy1;
+        int32_t dummy2;
+        ScreenCoord xy0;
+        ScreenCoord xy1;
+        ScreenCoord xy2;
+        auto screenZ = libgte_RotTransPers3(pos1, pos2, pos3, &xy0.raw, &xy1.raw, &xy2.raw, &dummy1, &dummy2);
+
+        if (screenZ <= 0x20 || screenZ >= 0x1000) return;
+
+        prim->x0 = xy0.x;
+        prim->x1 = xy1.x;
+        prim->x2 = xy2.x;
+        prim->y0 = xy0.y;
+        prim->y1 = xy1.y;
+        prim->y2 = xy2.y;
+
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + screenZ, prim);
+        libgs_GsSetWorkBase(prim + 1);
+    }
+
+    void addScreenPolyFT4(POLY_FT4* prim, SVector* pos1, SVector* pos2, SVector* pos3, SVector* pos4)
+    {
+        setRotTransMatrix(&libgs_REFERENCE_MATRIX);
+        int32_t emp;
+        int32_t ty;
+        ScreenCoord xy0;
+        ScreenCoord xy1;
+        ScreenCoord xy2;
+        ScreenCoord xy3;
+        auto screenZ = libgte_RotTransPers4(pos1, pos2, pos3, pos4, &xy0.raw, &xy1.raw, &xy2.raw, &xy3.raw, &emp, &ty);
+
+        prim->x0 = xy0.x;
+        prim->x1 = xy1.x;
+        prim->x2 = xy2.x;
+        prim->x3 = xy3.x;
+        prim->y0 = xy0.y;
+        prim->y1 = xy1.y;
+        prim->y2 = xy2.y;
+        prim->y3 = xy3.y;
+
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + screenZ, prim);
+        libgs_GsSetWorkBase(prim + 1);
+    }
 }

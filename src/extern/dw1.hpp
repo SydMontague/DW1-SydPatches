@@ -1746,8 +1746,6 @@ extern "C"
     extern void updateConditionAnimation();
     extern void unsetButterfly(uint32_t id);
     extern void advanceToTime(uint32_t hour, uint32_t minute);
-
-    extern void add3DSpritePrim(POLY_FT4* prim, SVector* vec1, SVector* vec2, SVector* vec3, SVector* vec4);
 }
 
 static_assert(sizeof(PositionData) == 0x88);

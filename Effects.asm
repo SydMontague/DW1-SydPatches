@@ -64,6 +64,18 @@
 .org 0x8006f2a0
   jal translateConditionFXToEntity
 
+.org 0x8006914c
+  jal addScreenPolyFT4
+.org 0x8007102c
+  jal addScreenPolyFT4
+.org 0x80072194
+  jal addScreenPolyFT4
+
+.org 0x80070854
+  jal addScreenPolyFT3
+.org 0x80072a14
+  jal addScreenPolyFT3
+
 .close
 
 
@@ -89,6 +101,13 @@
 .org 0x80077840
   jal translateConditionFXToEntity
 
+.org 0x80078df4
+  jal addScreenPolyFT3
+.org 0x800716e4
+  jal addScreenPolyFT4
+.org 0x800795cc
+  jal addScreenPolyFT4
+
 .close
 
 
@@ -113,6 +132,13 @@
   jal translateConditionFXToEntity
 .org 0x8006d910
   jal translateConditionFXToEntity
+
+.org 0x8006eec4
+  jal addScreenPolyFT3
+.org 0x800677b4
+  jal addScreenPolyFT4
+.org 0x8006f69c
+  jal addScreenPolyFT4
 
 .close
 
@@ -183,6 +209,25 @@
 .org 0x80081cb4
   jal renderParticleFlash
 
+.org 0x80083718
+  jal addScreenPolyFT3
+
+.org 0x80083b90
+  jal addScreenPolyFT4
+
+.close
+
+.open "work/DIGIMON/DOO2_REL.BIN",0x80070000
+.psx
+
+.org 0x80070520
+  jal addScreenPolyFT3
+.org 0x800713ec
+  jal addScreenPolyFT3
+
+.org 0x8007087c
+  jal addScreenPolyFT4
+
 .close
 
 .open "work/DIGIMON/MURD_REL.BIN",0x8007C000
@@ -190,5 +235,18 @@
 
 .org 0x8007cfdc
   jal renderParticleFlash
+
+.close
+
+.open "work/DIGIMON/EVL_REL.BIN",0x80060000
+.psx
+
+.org 0x800627e8
+  jal addScreenPolyFT3
+.org 0x80063028
+  jal addScreenPolyFT3
+
+.org 0x80062aac
+  jal addScreenPolyFT4
 
 .close
