@@ -128,7 +128,7 @@ extern "C"
 
         if (tDiff == 0) return 0;
 
-        auto val = (end * progress) / tDiff;
+        auto val = (diff * progress) / tDiff;
         if (diff < 0)
         {
             val %= (diff - 1);
