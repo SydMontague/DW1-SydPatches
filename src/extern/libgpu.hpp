@@ -206,17 +206,17 @@ extern "C"
     void libgpu_SetLineF3(LINE_F3* prim);
     void libgpu_SetLineF4(LINE_F4* prim);
     void libgpu_AddPrim(void* ot, void* prim);
-    void libgpu_ClearImage(RECT* rect, uint32_t red, uint32_t green, uint32_t blue);
-    int32_t libgpu_LoadImage(RECT* rect, uint32_t* data);
-    int32_t libgpu_LoadImage2(RECT* rect, uint32_t* data);
+    void libgpu_ClearImage(const RECT* rect, uint32_t red, uint32_t green, uint32_t blue);
+    int32_t libgpu_LoadImage(const RECT* rect, uint32_t* data);
+    int32_t libgpu_LoadImage2(const RECT* rect, uint32_t* data);
     uint16_t libgpu_GetClut(int32_t x, int32_t y);
     void libgpu_DrawSync(int32_t mode);
     uint16_t libgpu_GetTPage(int32_t textureMode, int32_t transparency, int32_t x, int32_t y);
     void libgpu_SetSemiTrans(void* prim, int32_t abe);
-    void libgpu_StoreImage(RECT* rect, uint32_t* buffer);
+    void libgpu_StoreImage(const RECT* rect, uint32_t* buffer);
     uint32_t libgpu_OpenTIM(uint8_t* buffer);
     TIM_IMAGE* libgpu_ReadTIM(TIM_IMAGE* image);
-    int32_t libgpu_MoveImage(RECT* rect, int32_t x, int32_t y);
+    int32_t libgpu_MoveImage(const RECT* rect, int32_t x, int32_t y);
     void libgpu_LoadClut(void* buffer, int32_t x, int32_t y);
 }
 

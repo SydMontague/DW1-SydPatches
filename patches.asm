@@ -33,3 +33,4 @@
 .include "Camera.asm"
 .include "Tournament.asm"
 .include "DigimonData.asm"
+.include "Transformation.asm"
