@@ -1633,6 +1633,7 @@ extern "C"
     extern SectionData SECTION_DATA;
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
 
+    void calculatePosition(GsCOORDINATE2* coord, Matrix* matrix);
     void tickGameClock(int32_t instanceId);
     void renderGameClock(int32_t instanceId);
     void runMapHeadScript(uint8_t mapId);

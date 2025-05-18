@@ -1291,4 +1291,18 @@ extern "C"
 
         animateEntityTexture(entity);
     }
+
+    void calculateBoneMatrix(Entity* entity, int32_t boneId, Matrix* out)
+    {
+        auto data = getDigimonData(entity->type);
+
+        if (data->boneCount <= boneId) boneId = 0;
+
+        auto& posData = entity->posData;
+        auto& lMatrix = posData->posMatrix.coord;
+        libgte_RotMatrix(&posData[0].rotation, &lMatrix);
+        libgte_ScaleMatrix(&lMatrix, &posData[0].scale);
+        libgte_TransMatrix(&lMatrix, &posData[0].location);
+        calculatePosition(&posData[boneId].posMatrix, out);
+    }
 }

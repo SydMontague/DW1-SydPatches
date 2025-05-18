@@ -467,6 +467,17 @@
 .org 0x8005e18c
   jal startAnimation
 
+.org 0x80059c7c
+  jal calculateBoneMatrix
+.org 0x80059cfc
+  jal calculateBoneMatrix
+.org 0x80067810
+  jal calculateBoneMatrix
+.org 0x80068540
+  jal calculateBoneMatrix
+.org 0x8006a498
+  jal calculateBoneMatrix
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
@@ -534,6 +545,13 @@
   jal startAnimation
 .org 0x8005ea60
   jal startAnimation
+
+.org 0x800691a8
+  jal calculateBoneMatrix
+.org 0x80069e64
+  jal calculateBoneMatrix
+.org 0x8006bdbc
+  jal calculateBoneMatrix
 
 .close
 
@@ -645,6 +663,17 @@
   j tickAnimation
 .org 0x80069714
   j tickAnimation
+
+.org 0x8005aa00
+  jal calculateBoneMatrix
+.org 0x8005aa80
+  jal calculateBoneMatrix
+.org 0x80071740
+  jal calculateBoneMatrix
+.org 0x80072470
+  jal calculateBoneMatrix
+.org 0x800743c8
+  jal calculateBoneMatrix
 
 .close
 
@@ -848,6 +877,17 @@
 .org 0x80061000
   jal startAnimation
 
+.org 0x80061e30
+  jal calculateBoneMatrix
+.org 0x80061e48
+  jal calculateBoneMatrix
+.org 0x800622ac
+  jal calculateBoneMatrix
+.org 0x80062df4
+  jal calculateBoneMatrix
+.org 0x80062e24
+  jal calculateBoneMatrix
+
 .close
 
 
@@ -907,8 +947,10 @@
 .org 0x80084794
   jal startAnimation
 
-.close
+.org 0x80083c7c
+  jal calculateBoneMatrix
 
+.close
 
 .open "work/DIGIMON/MURD_REL.BIN",0x8007C000
 .psx
@@ -930,6 +972,12 @@
 
 .org 0x800601ac
   jal getEntityModelComponent
+
+
+.org 0x80060800
+  jal calculateBoneMatrix
+.org 0x80060858
+  jal calculateBoneMatrix
 
 .close
 
@@ -1010,5 +1058,8 @@
   jal startAnimation
 .org 0x80060820
   jal startAnimation
+
+.org 0x80061078
+  jal calculateBoneMatrix
 
 .close

@@ -87,6 +87,7 @@
 .definelabel runMapHeadScript,          0x80105ae4
 .definelabel tickGameClock,             0x800dcf84
 .definelabel renderGameClock,           0x800dd2a4
+.definelabel calculatePosition,         0x800e4adc
 
 .definelabel CONDITION_FX_OFFSETS, 0x8012a2c4
 .definelabel TRN_LOADING_COMPLETE, 0x80134de1
