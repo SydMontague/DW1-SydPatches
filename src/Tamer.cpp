@@ -997,16 +997,12 @@ extern "C"
 static void tickTamerWaypoints()
 {
     auto tileX = getTileX(TAMER_ENTITY.posData->location.x);
-    auto tileZ = getTileX(TAMER_ENTITY.posData->location.z);
+    auto tileZ = getTileZ(TAMER_ENTITY.posData->location.z);
 
     if (tileX != TAMER_PREVIOUS_TILE_X || tileZ != TAMER_PREVIOUS_TILE_Y)
     {
         if (!isLinearPathBlocked(tileX, tileZ, TAMER_START_TILE_X, TAMER_START_TILE_Y)) { clearTamerWaypoints(); }
-        else if (TAMER_WAYPOINT_COUNT == 0)
-        {
-            // Vanilla swaps X and Y here? That should be a bug?
-            addTamerWaypoint(0, TAMER_PREVIOUS_TILE_X, TAMER_PREVIOUS_TILE_Y);
-        }
+        else if (TAMER_WAYPOINT_COUNT == 0) { addTamerWaypoint(0, TAMER_PREVIOUS_TILE_X, TAMER_PREVIOUS_TILE_Y); }
         else
         {
             auto id = (TAMER_WAYPOINT_CURRENT + TAMER_WAYPOINT_COUNT - 1) % 30;
