@@ -34,3 +34,5 @@
 .include "Tournament.asm"
 .include "DigimonData.asm"
 .include "Transformation.asm"
+.include "CombatCommon.asm"
+.include "DOOA.asm"

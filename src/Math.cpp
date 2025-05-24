@@ -150,7 +150,7 @@ extern "C"
 
     int32_t worldPosToScreenPos(SVector* worldPos, Position* screenPos)
     {
-        auto pos = getMapPosition(*worldPos);
+        auto pos     = getMapPosition(*worldPos);
         screenPos->x = pos.screenX;
         screenPos->y = pos.screenY;
         return pos.depth;
@@ -295,6 +295,18 @@ extern "C"
     {
         *valuePtr += value;
         if (*valuePtr > limit) *valuePtr = limit;
+    }
+
+    /*
+     * Sets a int16_t 'count' times every 'step' bytes to 'value', starting at 'ptr'.
+     */
+    void setInt16WithStride(int16_t* ptr, int16_t value, int32_t count, int32_t step)
+    {
+        for (int32_t i = 0; i < count; i++)
+        {
+            *ptr = value;
+            ptr  = reinterpret_cast<int16_t*>(reinterpret_cast<uint8_t*>(ptr) + step);
+        }
     }
 }
 

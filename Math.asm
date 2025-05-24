@@ -186,8 +186,8 @@
 ;  jal worldPosToScreenPos
 ;.org 0x800aea1c
 ;  jal worldPosToScreenPos
-.org 0x800daa30
-  jal worldPosToScreenPos
+;.org 0x800daa30
+;  jal worldPosToScreenPos
 .org 0x800e7f40
   jal worldPosToScreenPos
 .org 0x800e9f40
@@ -196,6 +196,9 @@
   jal worldPosToScreenPos
 .org 0x800fbee8
   jal worldPosToScreenPos
+
+.org 0x800ec530
+  j setInt16WithStride
 
 .close
 
@@ -400,6 +403,15 @@
   jal worldPosToScreenPos
 .org 0x8006f808
   jal worldPosToScreenPos
+
+.org 0x8006ed34
+  j setInt16WithStride
+.org 0x8006f3e8
+  jal setInt16WithStride
+.org 0x80071690
+  jal setInt16WithStride
+.org 0x80072a5c
+  jal setInt16WithStride
 
 .close
 
@@ -652,8 +664,12 @@
 .org 0x80077da8
   jal worldPosToScreenPos
 
-.close
+.org 0x800772d4
+  j setInt16WithStride
+.org 0x80077988
+  jal setInt16WithStride
 
+.close
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
@@ -844,6 +860,11 @@
   jal worldPosToScreenPos
 .org 0x8006de78
   jal worldPosToScreenPos
+
+.org 0x8006d3a4
+  j setInt16WithStride
+.org 0x8006da58
+  jal setInt16WithStride
 
 .close
 

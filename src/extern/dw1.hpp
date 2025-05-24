@@ -1665,10 +1665,6 @@ extern "C"
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
     bool isTriggerSet(int32_t trigger);
     bool isTamerOnScreen();
-    void addFXPrim(POLY_FT4* prim, short x, short y, uint32_t scaleX, int16_t scaleY, uint32_t distance);
-    void renderParticleFlash(ParticleFlashData* data);
-    void renderFXParticle(SVector* pos, int16_t scale, const RGB8* color);
-    void addEntityParticleFX(Entity* entity, int32_t counter);
     void updateMinuteHand(int32_t hour, int32_t minute);
     uint32_t handleBattleStart(uint32_t talkedToEntity);
     void loadBattleData(uint32_t talkedToEntity, uint32_t enemyCount);

@@ -8,6 +8,7 @@
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
 #include "extern/libgte.hpp"
+#include "extern/psx.hpp"
 #include "extern/stddef.hpp"
 
 extern "C"
@@ -121,6 +122,30 @@ extern "C"
     {
         entityParticleFXData[instanceId].counter = -1;
         removeObject(ObjectID::ENTITY_PARTICLE_FX, instanceId);
+    }
+
+    void addFXPrim(POLY_FT4* prim, int16_t x, int16_t y, uint32_t scaleX, int16_t scaleY, uint32_t distance)
+    {
+        const auto scaledX = (scaleX * VIEWPORT_DISTANCE) / distance;
+        const auto scaledY = (scaleY * VIEWPORT_DISTANCE) / distance;
+        const auto minX    = x - scaledX / 2;
+        const auto maxX    = x + scaledX / 2;
+        const auto minY    = y - scaledY / 2;
+        const auto maxY    = y + scaledY / 2;
+        const auto depth   = distance / 16;
+
+        prim->x0 = minX;
+        prim->x1 = maxX;
+        prim->x2 = minX;
+        prim->x3 = maxX;
+        prim->y0 = minY;
+        prim->y1 = minY;
+        prim->y2 = maxY;
+        prim->y3 = maxY;
+        if (depth <= 32 || depth >= 4096) return;
+
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + depth, prim);
+        libgs_GsSetWorkBase(prim + 1);
     }
 
     void renderEntityParticleFX(int32_t instanceId)
@@ -399,6 +424,30 @@ extern "C"
                                        blue);
 
         libgs_GsSetWorkBase(prim);
+    }
+
+    void renderFXParticle(SVector* pos, int16_t scale, const RGB8* color)
+    {
+        auto* prim  = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+        auto mapPos = getMapPosition(*pos);
+        libgpu_SetPolyFT4(prim);
+        libgpu_SetSemiTrans(prim, 1);
+
+        prim->code |= 2;
+        prim->r0    = color->red;
+        prim->g0    = color->green;
+        prim->b0    = color->blue;
+        prim->tpage = 0x3C;
+        prim->clut  = 0x7A4C;
+        prim->u0    = 0;
+        prim->u1    = 15;
+        prim->u2    = 0;
+        prim->u3    = 15;
+        prim->v0    = 160;
+        prim->v1    = 160;
+        prim->v2    = 175;
+        prim->v3    = 175;
+        addFXPrim(prim, mapPos.screenX, mapPos.screenY, scale, scale, mapPos.depth);
     }
 
     void renderParticleFX(int32_t instanceId)
@@ -946,5 +995,46 @@ extern "C"
 
         libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + screenZ, prim);
         libgs_GsSetWorkBase(prim + 1);
+    }
+
+    void renderSprite(GsSPRITE* sprite, int16_t x, int16_t y, uint32_t distance, int32_t scaleX, int32_t scaleY)
+    {
+        auto depth     = distance / 16;
+        sprite->x      = x;
+        sprite->y      = y;
+        sprite->scaleX = (scaleX * VIEWPORT_DISTANCE) / distance;
+        sprite->scaleY = (scaleY * VIEWPORT_DISTANCE) / distance;
+        if (depth <= 0 || depth >= 4096) return;
+
+        libgs_GsSortSprite(sprite, ACTIVE_ORDERING_TABLE, depth);
+    }
+
+    void renderTMDModel(TMDModel* model,
+                        int32_t objId,
+                        GsCOORDINATE2* baseCoord,
+                        GsCOORDINATE2* superCoord,
+                        Vector* translation,
+                        SVector* rotation,
+                        Vector* scale)
+    {
+        Matrix lw;
+        Matrix ls;
+        GsDOBJ2 obj;
+        libgs_GsLinkObject4(reinterpret_cast<uint32_t*>(model->objects), &obj, objId);
+        libgs_GsInitCoordinate2(superCoord, baseCoord);
+
+        baseCoord->flag = 0;
+        obj.attribute   = 0;
+        obj.coord2      = baseCoord;
+
+        libgte_RotMatrix(rotation, &baseCoord->coord);
+        libgte_ScaleMatrix(&baseCoord->coord, scale);
+        libgte_TransMatrix(&baseCoord->coord, translation);
+
+        libgs_GsGetLws(obj.coord2, &lw, &ls);
+        libgs_GsSetLightMatrix(&lw);
+        libgs_GsSetLsMatrix(&ls);
+
+        libgs_GsSortObject4(&obj, ACTIVE_ORDERING_TABLE, 2, &SCRATCHPAD);
     }
 }

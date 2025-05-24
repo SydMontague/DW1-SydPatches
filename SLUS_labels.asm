@@ -52,8 +52,6 @@
 .definelabel loadBattleData,            0x800e74d0
 .definelabel handleBattleStart,         0x800e847c
 .definelabel updateMinuteHand,          0x800dd780
-.definelabel renderFXParticle,          0x800daa00
-.definelabel addFXPrim,                 0x800da3fc
 .definelabel isTamerOnScreen,           0x800e67ec
 .definelabel isTriggerSet,              0x8010643c
 .definelabel NPCEntity_tickBattle,      0x800f1430
@@ -173,7 +171,7 @@
 .definelabel TRAINING_COMPLETE, 0x80134ca0
 .definelabel PREVIOUS_CAMERA_POS, 0x801387a8
 .definelabel NPC_IS_WALKING_TOWARDS, 0x8013d170
-.definelabel TEXTBOX_OPEN_TIMER, 0x800135012
+.definelabel TEXTBOX_OPEN_TIMER, 0x80135012
 .definelabel MONEY, 0x80134eb8
 .definelabel PREVIOUS_EXIT, 0x80134dab
 .definelabel CURRENT_SCRIPT_ID, 0x80134fc0
@@ -294,7 +292,7 @@
 .definelabel MEDAL_OBJECT, 0x801546a0
 .definelabel MEDAL_COORDINATES, 0x801546b0
 .definelabel COMBAT_DATA_PTR, 0x80134d4c
-.definelabel INVENTORY_SIZE, 0x80013d4ce
+.definelabel INVENTORY_SIZE, 0x8013d4ce
 
 // BTL_REL
 .definelabel BTL_battleMain, 0x8005b5f4

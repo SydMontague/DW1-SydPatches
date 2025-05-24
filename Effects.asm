@@ -23,6 +23,31 @@
 .org 0x800fbedc
   jal translateConditionFXToEntity
 
+;.org 0x800ae5b0
+;  jal renderSprite
+.org 0x800e9f98
+  jal renderSprite
+.org 0x800ec7c4
+  jal renderSprite
+.org 0x800ec898
+  jal renderSprite
+.org 0x800ec970
+  jal renderSprite
+.org 0x800ec9e4
+  jal renderSprite
+.org 0x800eca40
+  jal renderSprite
+.org 0x800eca98
+  jal renderSprite
+.org 0x800ecb0c
+  jal renderSprite
+.org 0x800ecbd0
+  jal renderSprite
+.org 0x800ecc0c
+  jal renderSprite
+.org 0x800ecc40
+  jal renderSprite
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
@@ -76,8 +101,30 @@
 .org 0x80072a14
   jal addScreenPolyFT3
 
-.close
+.org 0x8006eff8
+  jal renderSprite
 
+.org 0x8006f378
+  jal renderTMDModel
+.org 0x8006fda0
+  jal renderTMDModel
+.org 0x800703b4
+  jal renderTMDModel
+.org 0x800703e0
+  jal renderTMDModel
+.org 0x80070450
+  jal renderTMDModel
+.org 0x80071ce8
+  jal renderTMDModel
+.org 0x800726b0
+  jal renderTMDModel
+
+.org 0x80065e0c
+  jal renderFXParticle
+.org 0x80071648
+  jal renderFXParticle
+
+.close
 
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
 .psx
@@ -108,8 +155,24 @@
 .org 0x800795cc
   jal addScreenPolyFT4
 
-.close
+.org 0x80077598
+  jal renderSprite
 
+.org 0x80077918
+  jal renderTMDModel
+.org 0x80078340
+  jal renderTMDModel
+.org 0x80078954
+  jal renderTMDModel
+.org 0x80078980
+  jal renderTMDModel
+.org 0x800789f0
+  jal renderTMDModel
+
+.org 0x8006e4f4
+  jal renderFXParticle
+
+.close
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
@@ -139,6 +202,23 @@
   jal addScreenPolyFT4
 .org 0x8006f69c
   jal addScreenPolyFT4
+
+.org 0x8006d668
+  jal renderSprite
+
+.org 0x8006d9e8
+  jal renderTMDModel
+.org 0x8006e410
+  jal renderTMDModel
+.org 0x8006ea24
+  jal renderTMDModel
+.org 0x8006ea50
+  jal renderTMDModel
+.org 0x8006eac0
+  jal renderTMDModel
+
+.org 0x800645c4
+  jal renderFXParticle
 
 .close
 
@@ -248,5 +328,23 @@
 
 .org 0x80062aac
   jal addScreenPolyFT4
+
+.close
+
+.open "work/DIGIMON/EAB_REL.BIN",0x80060000
+.psx
+
+.org 0x800603b4
+  jal renderTMDModel
+.org 0x80060604
+  jal renderTMDModel
+
+.close
+
+.open "work/DIGIMON/ENDI_REL.BIN",0x80060000
+.psx
+
+.org 0x80060cd0
+  jal renderFXParticle
 
 .close
