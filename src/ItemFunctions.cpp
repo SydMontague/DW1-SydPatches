@@ -521,7 +521,7 @@ extern "C"
     {
         if (PARTNER_ENTITY.stats.currentHP == 0) return;
 
-        addWithLimit(&PARTNER_ENTITY.stats.currentHP, amount, PARTNER_ENTITY.stats.hp);
+        addWithLimit(&PARTNER_ENTITY.stats.currentMP, amount, PARTNER_ENTITY.stats.mp);
         addHealingParticleEffect(&PARTNER_ENTITY, particleEffect);
 
         if (GAME_STATE == 1) addEntityText(&PARTNER_ENTITY, 0, 11, amount, 2);
