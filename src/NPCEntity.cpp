@@ -1,6 +1,7 @@
 #include "Entity.hpp"
 #include "GameMenu.hpp"
 #include "Helper.hpp"
+#include "InventoryUI.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
 #include "Tamer.hpp"

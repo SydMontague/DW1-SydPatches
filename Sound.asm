@@ -107,26 +107,26 @@
 .org 0x800f492c
   jal stopSound
 
-.org 0x800daf8c
-  jal playSound
-.org 0x800db524
-  jal playSound
-.org 0x800db56c
-  jal playSound
-.org 0x800db5b8
-  jal playSound
-.org 0x800db604
-  jal playSound
-.org 0x800dc418
-  jal playSound
-.org 0x800dc454
-  jal playSound
-.org 0x800dc998
-  jal playSound
-.org 0x800dcd98
-  jal playSound
-.org 0x800dcdd8
-  jal playSound
+;.org 0x800daf8c
+;  jal playSound
+;.org 0x800db524
+;  jal playSound
+;.org 0x800db56c
+;  jal playSound
+;.org 0x800db5b8
+;  jal playSound
+;.org 0x800db604
+;  jal playSound
+;.org 0x800dc418
+;  jal playSound
+;.org 0x800dc454
+;  jal playSound
+;.org 0x800dc998
+;  jal playSound
+;.org 0x800dcd98
+;  jal playSound
+;.org 0x800dcdd8
+;  jal playSound
 .org 0x800ddad4
   jal playSound
 .org 0x800dddf4

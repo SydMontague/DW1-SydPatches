@@ -2,7 +2,9 @@
 
 #include "GameObjects.hpp"
 #include "Helper.hpp"
+#include "Math.hpp"
 #include "Sound.hpp"
+#include "Utils.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
@@ -505,7 +507,7 @@ extern "C"
     void createStaticUIBox(int32_t id,
                            uint8_t color,
                            uint8_t features,
-                           RECT* pos,
+                           const RECT* pos,
                            BoxTickFunction tickFunc,
                            BoxRenderFunction renderFunc)
     {
@@ -521,8 +523,8 @@ extern "C"
     void createAnimatedUIBox(int32_t instanceId,
                              uint8_t color,
                              uint8_t features,
-                             RECT* finalPos,
-                             RECT* startPos,
+                             const RECT* finalPos,
+                             const RECT* startPos,
                              BoxTickFunction tickFunc,
                              BoxRenderFunction renderFunc)
     {
@@ -559,4 +561,26 @@ extern "C"
             data.state = 0;
         }
     }
+}
+
+void SimpleTextSprite::draw(Font* font, const uint8_t* string)
+{
+    uvWidth  = drawStringNew(font, string, uvX, uvY);
+    uvWidth  = min(uvX | 0xFF, uvWidth);
+    uvHeight = font->height;
+}
+
+void SimpleTextSprite::draw(Font* font, const char* string)
+{
+    draw(font, reinterpret_cast<const uint8_t*>(string));
+}
+
+void SimpleTextSprite::render(int32_t posX, int32_t posY, int32_t color, int32_t offset, bool hasShadow)
+{
+    renderStringNew(color, posX, posY, uvWidth, uvHeight, uvX, uvY, offset, hasShadow);
+}
+
+void SimpleTextSprite::clear()
+{
+    clearTextSubArea2(uvX, uvY, uvWidth, uvHeight);
 }

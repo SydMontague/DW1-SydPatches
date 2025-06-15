@@ -18,6 +18,8 @@ static_assert(sizeof(uint8_t) == 1);
 // Digimon Template Library
 namespace dtl
 {
+    template<typename T> using Comparator = bool(const T& left, const T& right);
+
     /*
      * A basic array implementation, analogous to std::array, but with fewer features
      */
@@ -42,6 +44,48 @@ namespace dtl
         constexpr const T* end() const { return elements + elem_count; }
         constexpr const T* cend() const { return elements + elem_count; }
     };
+
+    template<typename T> constexpr void swap(T& left, T& right)
+    {
+        T tmp = left;
+        left  = right;
+        right = tmp;
+    }
+
+    template<typename T> constexpr bool less(const T& left, const T& right)
+    {
+        return left < right;
+    }
+
+    template<typename T> constexpr void swap(T* left, T* right)
+    {
+        swap(*left, *right);
+    }
+
+    template<typename T> T* __sort_partition(T* first, T* last, Comparator<T> compare)
+    {
+        auto* pivot = last - 1;
+        auto* i     = first;
+        auto* j     = first;
+
+        while (j != pivot)
+        {
+            if (compare(*j, *pivot)) swap(i++, j);
+            j++;
+        }
+
+        swap(i, pivot);
+        return i;
+    }
+
+    template<typename T> void sort(T* first, T* last, Comparator<T> compare = less)
+    {
+        if (first >= last - 1) return;
+
+        auto* partition = __sort_partition(first, last, compare);
+        sort(first, partition, compare);
+        sort(partition + 1, last, compare);
+    }
 
     static_assert(sizeof(array<uint32_t, 64>) == sizeof(uint32_t[64]));
 } // namespace dtl

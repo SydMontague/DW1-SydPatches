@@ -1,3 +1,4 @@
+#include "extern/dw1.hpp"
 #include "extern/stddef.hpp"
 
 extern "C"
@@ -12,4 +13,5 @@ extern "C"
     void removeTamerItem();
     void initializeTamerWaypoints();
     void checkMapInteraction();
+    void startFeedingItem(ItemType item);
 }

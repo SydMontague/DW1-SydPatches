@@ -15,6 +15,7 @@ extern "C"
         VS_WIN_LOSS_WINDOW   = 413,
         PLAYER_MARKER        = 419,
         UI_BOX               = 420,
+        INVENTORY            = 421,
         BATTLE_TEXT          = 422,
         ARENA_MESH           = 423,
         VS_CAMERA            = 424,

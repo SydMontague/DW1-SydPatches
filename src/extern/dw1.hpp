@@ -1468,9 +1468,9 @@ extern "C"
     extern int16_t PLAYTIME_HOURS;
     extern int16_t PLAYTIME_MINUTES;
     extern int16_t MERIT;
-    extern ItemType INVENTORY_ITEM_TYPES[30];
-    extern uint8_t INVENTORY_ITEM_AMOUNTS[30];
-    extern uint8_t INVENTORY_ITEM_NAMES[30];
+    extern dtl::array<ItemType, 30> INVENTORY_ITEM_TYPES;
+    extern dtl::array<uint8_t, 30> INVENTORY_ITEM_AMOUNTS;
+    extern dtl::array<uint8_t, 30> INVENTORY_ITEM_NAMES;
     extern uint8_t INVENTORY_POINTER;
     extern uint16_t CHANGED_INPUT;
     extern Move MOVE_DATA[122];
@@ -1484,6 +1484,7 @@ extern "C"
     extern DroppedItem DROPPED_ITEMS[10];
     extern UIBoxData UI_BOX_DATA[6];
     extern uint32_t POLLED_INPUT;
+    extern uint32_t POLLED_INPUT_PREVIOUS;
     extern MapWarps MAP_WARPS;
     extern uint16_t CHAR_TO_GLYPH_TABLE[80];
     extern GlyphData GLYPH_DATA[79];
@@ -1621,6 +1622,7 @@ extern "C"
     extern uint16_t SCRIPT_MAP_CHANGE_STATE;
     extern dtl::array<const char*, 70> MAP_NAME_PTR;
     extern uint8_t TRN_LOADING_COMPLETE;
+    extern dtl::array<const char*, 128> ITEM_DESC_PTR;
 
     // TODO can be relocated
     extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
@@ -1633,6 +1635,9 @@ extern "C"
     extern SectionData SECTION_DATA;
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
 
+    void startThrowingItem();
+    void renderItemSprite(ItemType type, int16_t posX, int16_t posY, int32_t depth);
+    void renderSelectionCursor(int16_t x, int16_t y, int16_t width, int16_t height, int32_t depth);
     void calculatePosition(GsCOORDINATE2* coord, Matrix* matrix);
     void tickGameClock(int32_t instanceId);
     void renderGameClock(int32_t instanceId);
@@ -1654,12 +1659,10 @@ extern "C"
     void activateMedalTexture(Medal medal);
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
     void initializeFishing();
-    void drawInventoryText();
     void
     renderLinePrimitive(uint32_t color, int16_t x1, int16_t y1, int16_t x2, int16_t y2, int32_t layer, uint32_t flag);
     void closeInventoryBoxes2();
     uint32_t hasFishingRod();
-    void initializeInventoryObject();
     void initializeLoadedNPCModels();
     void NPCEntity_tickBattle(int32_t instanceId);
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
@@ -1673,7 +1676,6 @@ extern "C"
     bool hasMedal(Medal medal);
     void unlockMedal(Medal medal);
     uint8_t getCardAmount(uint8_t cardId);
-    void closeInventoryBoxes();
     void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileReadCallback callback, int32_t param);
     int32_t isSoundLoaded(bool isAsync, int32_t soundId);
     void setMapLayerEnabled(int32_t val);

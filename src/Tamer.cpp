@@ -5,6 +5,7 @@
 #include "Font.hpp"
 #include "GameMenu.hpp"
 #include "GameObjects.hpp"
+#include "InventoryUI.hpp"
 #include "Helper.hpp"
 #include "Inventory.hpp"
 #include "Map.hpp"

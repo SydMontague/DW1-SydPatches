@@ -233,10 +233,10 @@
 
 ;.org 0x800c4878
 ;  jal startAnimation
-.org 0x800db02c
-  jal startAnimation
-.org 0x800db080
-  jal startAnimation
+;.org 0x800db02c
+;  jal startAnimation
+;.org 0x800db080
+;  jal startAnimation
 .org 0x800dda68
   jal startAnimation
 .org 0x800ddae4

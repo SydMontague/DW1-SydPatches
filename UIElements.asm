@@ -21,8 +21,8 @@
 ;  j removeStaticUIBox
 ;.org 0x800c31d0
 ;  jal removeStaticUIBox
-.org 0x800db288
-  jal removeStaticUIBox
+;.org 0x800db288
+;  jal removeStaticUIBox
 .org 0x800e6440
   jal removeStaticUIBox
 .org 0x800f7ffc
@@ -49,14 +49,14 @@
 ;  jal removeAnimatedUIBox
 ;.org 0x800b9f98
 ;  jal removeAnimatedUIBox
-.org 0x800dbc60
-  jal removeAnimatedUIBox
-.org 0x800dbcd0
-  jal removeAnimatedUIBox
-.org 0x800dc020
-  jal removeAnimatedUIBox
-.org 0x800dc2c0
-  jal removeAnimatedUIBox
+;.org 0x800dbc60
+;  jal removeAnimatedUIBox
+;.org 0x800dbcd0
+;  jal removeAnimatedUIBox
+;.org 0x800dc020
+;  jal removeAnimatedUIBox
+;.org 0x800dc2c0
+;  jal removeAnimatedUIBox
 .org 0x800ee7e8
   jal removeAnimatedUIBox
 .org 0x800f4dd8
@@ -80,16 +80,16 @@
 ;  jal createAnimatedUIBox
 ;.org 0x800b9e08
 ;  jal createAnimatedUIBox
-.org 0x800db3fc
-  jal createAnimatedUIBox
-.org 0x800db4a8
-  jal createAnimatedUIBox
-.org 0x800dbe50
-  jal createAnimatedUIBox
-.org 0x800dc138
-  jal createAnimatedUIBox
-.org 0x800dc3cc
-  jal createAnimatedUIBox
+;.org 0x800db3fc
+;  jal createAnimatedUIBox
+;.org 0x800db4a8
+;  jal createAnimatedUIBox
+;.org 0x800dbe50
+;  jal createAnimatedUIBox
+;.org 0x800dc138
+;  jal createAnimatedUIBox
+;.org 0x800dc3cc
+;  jal createAnimatedUIBox
 .org 0x800ed654
   jal createAnimatedUIBox
 .org 0x800ed6f8

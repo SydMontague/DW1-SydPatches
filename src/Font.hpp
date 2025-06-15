@@ -31,7 +31,7 @@ extern "C"
         uint8_t width;
         uint8_t rows[8]; // height
     };
-    
+
     struct Font
     {
         uint8_t height;
@@ -40,9 +40,16 @@ extern "C"
         GetCodePointFn getCodePoint;
     };
 
+    struct FixedGlyph
+    {
+        uint8_t width;
+        uint8_t rows[12]; // height
+    };
+
     extern Font vanillaFont;
     extern Font myFont5px;
     extern Font myFont7px;
+    extern Font fixedNumbersFont;
 
     GlyphData* getGlyphVanilla(uint16_t codepoint);
     uint8_t getWidthVanilla(uint16_t codepoint);

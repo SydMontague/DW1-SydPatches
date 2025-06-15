@@ -8,6 +8,7 @@
 #include "Helper.hpp"
 #include "Math.hpp"
 #include "PlayerMenu.hpp"
+#include "InventoryUI.hpp"
 #include "Sound.hpp"
 #include "StatsView.hpp"
 #include "Tamer.hpp"
@@ -358,7 +359,6 @@ extern "C"
         {
             case 0:
                 TRIANGLE_MENU_STATE = 2;
-                drawInventoryText();
                 break;
             case 1: TRIANGLE_MENU_STATE = 3; break;
             case 2: TRIANGLE_MENU_STATE = 5; break;
@@ -453,7 +453,6 @@ extern "C"
     void closeTriangleMenu()
     {
         closeUIBoxIfOpen(1);
-        closeInventoryBoxes2();
         closeUIBoxIfOpen(0);
         removeObject(ObjectID::GAME_MENU, 0);
     }
@@ -482,7 +481,7 @@ extern "C"
                 closeUIBoxIfOpen(0);
                 if (UI_BOX_DATA[0].frame == 0)
                 {
-                    initializeInventoryObject();
+                    addInventoryUI();
                     TRIANGLE_MENU_STATE = 0xFFFFFFFF;
                 }
                 break;

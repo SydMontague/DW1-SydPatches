@@ -43,7 +43,6 @@
 .definelabel setMapLayerEnabled,        0x800e65b8
 .definelabel isSoundLoaded,             0x800e90cc
 .definelabel loadDynamicLibrary,        0x800e61e4
-.definelabel closeInventoryBoxes,       0x800db238
 .definelabel unlockMedal,               0x800ff830
 .definelabel hasMedal,                  0x800ff85c
 .definelabel getCardAmount,             0x801067ec
@@ -56,13 +55,10 @@
 .definelabel isTriggerSet,              0x8010643c
 .definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8
-.definelabel initializeInventoryObject, 0x800dade8
 .definelabel hasFishingRod,             0x800e4da0
-.definelabel closeInventoryBoxes2,      0x800dbb84
 .definelabel renderLinePrimitive,       0x800e3e7c
 .definelabel renderTrianglePrimitive,   0x800e3d14
 .definelabel initializeFishing,         0x800e4e0c
-.definelabel drawInventoryText,         0x800dac48
 .definelabel entityGetTechFromAnim,     0x800e6000
 .definelabel activateMedalTexture,      0x800e24a4
 .definelabel hasMove,                   0x800e5eb4
@@ -84,7 +80,11 @@
 .definelabel tickGameClock,             0x800dcf84
 .definelabel renderGameClock,           0x800dd2a4
 .definelabel calculatePosition,         0x800e4adc
+.definelabel renderItemSprite,          0x800e5d18
+.definelabel renderSelectionCursor,     0x800e5a3c
+.definelabel startThrowingItem,         0x800f0490
 
+.definelabel ITEM_DESC_PTR, 0x801279dc
 .definelabel CONDITION_FX_OFFSETS, 0x8012a2c4
 .definelabel TRN_LOADING_COMPLETE, 0x80134de1
 .definelabel MAP_NAME_PTR, 0x801291bc
@@ -201,6 +201,7 @@
 .definelabel MAP_WARPS, 0x80138730
 .definelabel UI_BOX_DATA, 0x8013d390
 .definelabel POLLED_INPUT, 0x80134ee4
+.definelabel POLLED_INPUT_PREVIOUS, 0x80134ee8
 .definelabel TARGET_MAP, 0x80134de0
 .definelabel CURRENT_EXIT, 0x80134daa
 

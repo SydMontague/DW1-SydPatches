@@ -36,3 +36,4 @@
 .include "Transformation.asm"
 .include "CombatCommon.asm"
 .include "DOOA.asm"
+.include "InventoryUI.asm"
