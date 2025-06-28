@@ -1565,7 +1565,7 @@ extern "C"
         return false;
     }
 
-    void renderMapName(int32_t mapId)
+    void tickMapName(int32_t mapId)
     {
         if (mapNameState == 0)
         {
@@ -1574,7 +1574,11 @@ extern "C"
             drawTextSprite(mapNameText);
             mapNameState = 1;
         }
+    }
 
+    void renderMapName(int32_t mapId)
+    {
+        if (mapNameState == 0) return;
         renderTextSprite(mapNameText);
     }
 
@@ -1582,7 +1586,7 @@ extern "C"
     {
         // vanilla draws the string in here, but we can also do it within the object render
         mapNameState = 0;
-        addObject(ObjectID::MAP_NAME, mapId, nullptr, renderMapName);
+        addObject(ObjectID::MAP_NAME, mapId, tickMapName, renderMapName);
     }
 
     void changeMap(uint32_t map, uint32_t exit)

@@ -89,10 +89,17 @@ static TextSprite cardLabel = {
 
 static uint8_t playerMenuState;
 
-static void tickPlayerMenuPlayerView() {}
-
 void tickPlayerMenu()
 {
+    if (MENU_STATE == 0)
+    {
+        clearTextSubArea2(0, 0, 256, 12);
+        drawTextSprite(playerLabel);
+        drawTextSprite(chartLabel);
+        drawTextSprite(medalLabel);
+        drawTextSprite(cardLabel);
+    }
+
     if (MENU_STATE < 2)
     {
         if (isKeyDownRepeat(InputButtons::BUTTON_LEFT) && playerMenuState >= 1)
@@ -125,15 +132,6 @@ void tickPlayerMenu()
 
 void renderPlayerMenu()
 {
-    if (MENU_STATE == 0)
-    {
-        clearTextSubArea2(0, 0, 256, 12);
-        drawTextSprite(playerLabel);
-        drawTextSprite(chartLabel);
-        drawTextSprite(medalLabel);
-        drawTextSprite(cardLabel);
-    }
-
     if (playerMenuState == 0)
         renderPlayerInfoView();
     else if (playerMenuState == 1)

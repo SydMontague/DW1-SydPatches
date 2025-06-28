@@ -293,14 +293,6 @@ static void renderDigiviceMedals()
 
 void renderMedalView()
 {
-    if (MENU_STATE == 0)
-    {
-        clearTextSubArea2(0, 16, 256, 240);
-        for (auto& text : textLabels)
-            drawTextSprite(text);
-        MENU_STATE = 1;
-    }
-
     if (MENU_STATE == 2) { selector.render(selectedMedalCol * 0x26 - 0x7E, selectedMedalRow * 24 - 0x3D, 1, 0); }
 
     for (int32_t i = 0; i < MEDAL_COL_COUNT; i++)
@@ -362,5 +354,12 @@ void tickPlayerMenuMedalView()
             MENU_STATE = 2;
             playSound(0, 3);
         }
+    }
+    else if (MENU_STATE == 0)
+    {
+        clearTextSubArea2(0, 16, 256, 240);
+        for (auto& text : textLabels)
+            drawTextSprite(text);
+        MENU_STATE = 1;
     }
 }

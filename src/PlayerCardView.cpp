@@ -148,7 +148,7 @@ static void renderCardImage()
     renderRectPolyFT4(-75, -84, 150, 180, 0, 0, tpage, clut, 4, 0);
 }
 
-static void renderCardCount()
+static void tickCardCount()
 {
     if (!isCardCountDrawn)
     {
@@ -158,19 +158,20 @@ static void renderCardCount()
         drawTextSprite(cardCount);
         isCardCountDrawn = true;
     }
+}
 
+static void renderCardCount()
+{
+    if (!isCardCountDrawn) return;
     renderTextSprite(cardCount);
+}
+
+static void tickCardsView()
+{
 }
 
 void renderCardsView()
 {
-    if (MENU_STATE == 0)
-    {
-        for (auto& label : textLabels)
-            drawTextSprite(label);
-        MENU_STATE = 1;
-    }
-
     if (MENU_STATE == 2)
         selector.render(CARD_BASE_X + selectedCardCol * CARD_OFFSET_X - 4,
                         CARD_BASE_Y + selectedCardRow * CARD_OFFSET_Y - 2,
@@ -193,8 +194,11 @@ void renderCardsView()
             renderBorderBox(posX - 1, posY - 1, 17, 17, 0xBEBEBE, 0x3C3C3C, 0x67, 0x67, 0x67, 5);
         }
 
-    for (auto& label : textLabels)
-        renderTextSprite(label);
+    if (MENU_STATE != 0)
+    {
+        for (auto& label : textLabels)
+            renderTextSprite(label);
+    }
 }
 
 void tickPlayerMenuCardView()
@@ -251,7 +255,7 @@ void tickPlayerMenuCardView()
             RECT count       = {.x = 74, .y = 69, .width = 54, .height = 24};
             isCardCountDrawn = false;
             createAnimatedUIBox(2, 1, 0, &card, &start, nullptr, renderCardImage);
-            createAnimatedUIBox(3, 1, 0, &count, &start, nullptr, renderCardCount);
+            createAnimatedUIBox(3, 1, 0, &count, &start, tickCardCount, renderCardCount);
         }
     }
     else if (MENU_STATE == 1)
@@ -261,5 +265,11 @@ void tickPlayerMenuCardView()
             MENU_STATE = 2;
             playSound(0, 3);
         }
+    }
+    else if (MENU_STATE == 0)
+    {
+        for (auto& label : textLabels)
+            drawTextSprite(label);
+        MENU_STATE = 1;
     }
 }

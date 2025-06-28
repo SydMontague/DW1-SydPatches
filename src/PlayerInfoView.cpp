@@ -445,80 +445,81 @@ static int32_t getMedalCount()
     return medalCount;
 }
 
+void tickPlayerMenuPlayerView()
+{
+    if (MENU_STATE != 0) return;
+
+    for (auto& label : labels)
+        drawTextSprite(label);
+
+    nameText.string = reinterpret_cast<const char*>(getDigimonData(DigimonType::TAMER)->name);
+
+    uint8_t buffer[8];
+    sprintf(buffer, "%d", TAMER_ENTITY.tamerLevel);
+    levelNumber.string = reinterpret_cast<const char*>(buffer);
+    levelName.string   = getTamerLevelName(TAMER_ENTITY.tamerLevel);
+
+    uint8_t buffer2[12];
+    sprintf(buffer2, "%d", MONEY);
+    bitsNumber.string = reinterpret_cast<const char*>(buffer2);
+
+    uint8_t buffer3[12];
+    sprintf(buffer3, "%d", MERIT);
+    meritNumber.string = reinterpret_cast<const char*>(buffer3);
+
+    uint8_t buffer4[12];
+    sprintf(buffer4, "%d : %02d", PLAYTIME_HOURS, PLAYTIME_MINUTES);
+    playtimeNumber.string = reinterpret_cast<const char*>(buffer4);
+
+    uint8_t buffer5[8];
+    sprintf(buffer5, "%d", PARTNER_PARA.fishCaught);
+    fishNumber.string = reinterpret_cast<const char*>(buffer5);
+
+    uint8_t buffer7[8];
+    sprintf(buffer7, "%d", TAMER_ENTITY.raisedCount);
+    raisedNumber.string = reinterpret_cast<const char*>(buffer7);
+
+    uint8_t buffer6[8];
+    sprintf(buffer6, "%d", getMedalCount());
+    medalNumber.string = reinterpret_cast<const char*>(buffer6);
+
+    drawTextSprite(nameText);
+    drawTextSprite(levelNumber);
+    drawTextSprite(levelName);
+    drawTextSprite(raisedNumber);
+    drawTextSprite(bitsNumber);
+    drawTextSprite(meritNumber);
+    drawTextSprite(playtimeNumber);
+    drawTextSprite(fishNumber);
+    drawTextSprite(medalNumber);
+
+    MENU_STATE = 1;
+}
+
 void renderPlayerInfoView()
 {
-    if (MENU_STATE == 1)
-    {
-        renderDigiviceEntity(&TAMER_ENTITY, 0, 0);
+    if (MENU_STATE != 1) return;
 
-        renderTextSprite(nameText);
-        renderTextSprite(levelNumber);
-        renderTextSprite(levelName);
-        renderTextSprite(raisedNumber);
-        renderTextSprite(bitsNumber);
-        renderTextSprite(meritNumber);
-        renderTextSprite(playtimeNumber);
-        renderTextSprite(fishNumber);
-        renderTextSprite(medalNumber);
+    renderDigiviceEntity(&TAMER_ENTITY, 0, 0);
 
-        if (isTriggerSet(45)) oldRodSprite.render(5);
-        if (isTriggerSet(46)) amazingRodSprite.render(5);
-        if (isTriggerSet(47)) keychain1Sprite.render(5);
-        if (isTriggerSet(48)) keychain2Sprite.render(5);
+    renderTextSprite(nameText);
+    renderTextSprite(levelNumber);
+    renderTextSprite(levelName);
+    renderTextSprite(raisedNumber);
+    renderTextSprite(bitsNumber);
+    renderTextSprite(meritNumber);
+    renderTextSprite(playtimeNumber);
+    renderTextSprite(fishNumber);
+    renderTextSprite(medalNumber);
 
-        for (auto& label : labels)
-            renderTextSprite(label);
-        for (auto& inset : insets)
-            inset.render(5);
-        renderSeperatorLines(lines, 9, 5);
-    }
+    if (isTriggerSet(45)) oldRodSprite.render(5);
+    if (isTriggerSet(46)) amazingRodSprite.render(5);
+    if (isTriggerSet(47)) keychain1Sprite.render(5);
+    if (isTriggerSet(48)) keychain2Sprite.render(5);
 
-    if (MENU_STATE == 0)
-    {
-        for (auto& label : labels)
-            drawTextSprite(label);
-
-        nameText.string = reinterpret_cast<const char*>(getDigimonData(DigimonType::TAMER)->name);
-
-        uint8_t buffer[8];
-        sprintf(buffer, "%d", TAMER_ENTITY.tamerLevel);
-        levelNumber.string = reinterpret_cast<const char*>(buffer);
-        levelName.string   = getTamerLevelName(TAMER_ENTITY.tamerLevel);
-
-        uint8_t buffer2[12];
-        sprintf(buffer2, "%d", MONEY);
-        bitsNumber.string = reinterpret_cast<const char*>(buffer2);
-
-        uint8_t buffer3[12];
-        sprintf(buffer3, "%d", MERIT);
-        meritNumber.string = reinterpret_cast<const char*>(buffer3);
-
-        uint8_t buffer4[12];
-        sprintf(buffer4, "%d : %02d", PLAYTIME_HOURS, PLAYTIME_MINUTES);
-        playtimeNumber.string = reinterpret_cast<const char*>(buffer4);
-
-        uint8_t buffer5[8];
-        sprintf(buffer5, "%d", PARTNER_PARA.fishCaught);
-        fishNumber.string = reinterpret_cast<const char*>(buffer5);
-
-        uint8_t buffer7[8];
-        sprintf(buffer7, "%d", TAMER_ENTITY.raisedCount);
-        raisedNumber.string = reinterpret_cast<const char*>(buffer7);
-
-        uint8_t buffer6[8];
-        sprintf(buffer6, "%d", getMedalCount());
-        medalNumber.string = reinterpret_cast<const char*>(buffer6);
-
-        drawTextSprite(nameText);
-        drawTextSprite(levelNumber);
-        drawTextSprite(levelName);
-        drawTextSprite(raisedNumber);
-        drawTextSprite(bitsNumber);
-        drawTextSprite(meritNumber);
-        drawTextSprite(playtimeNumber);
-        drawTextSprite(fishNumber);
-        drawTextSprite(medalNumber);
-
-        MENU_STATE = 1;
-    }
+    for (auto& label : labels)
+        renderTextSprite(label);
+    for (auto& inset : insets)
+        inset.render(5);
+    renderSeperatorLines(lines, 9, 5);
 }

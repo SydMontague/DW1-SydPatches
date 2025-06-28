@@ -2,6 +2,7 @@
 #include "GameObjects.hpp"
 
 #include "extern/dw1.hpp"
+#include "extern/libgpu.hpp"
 
 extern "C"
 {
@@ -56,6 +57,9 @@ extern "C"
     {
         for (auto& obj : WORLD_OBJECTS)
             if (obj.objectId != ObjectID::NONE && obj.tick) obj.tick(obj.instanceId);
+
+        // sync all draw operations to make sure they're finished before the game tries to render them
+        libgpu_DrawSync(0);
     }
 
     void renderObjects()

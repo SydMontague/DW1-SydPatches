@@ -1097,29 +1097,6 @@ static int32_t getEquippedSlot()
 
 void renderDigimonMovesView()
 {
-    if (MENU_STATE == 0)
-    {
-        clearTextSubArea2(0, 16, 256, 192);
-        MENU_STATE = 1;
-        drawTextSprite(techsetLabel);
-        drawTextSprite(finisherLabel);
-        drawTextSprite(techDetailsLabel);
-
-        for (auto& label : tableLabels)
-            drawTextSprite(label);
-        for (auto& label : tableLabels2)
-            drawTextSprite(label);
-
-        for (auto& label : matrixLabels)
-            drawTextSprite(label);
-
-        move0.setMove(entityGetTechFromAnim(&PARTNER_ENTITY, PARTNER_ENTITY.stats.moves[0]));
-        move1.setMove(entityGetTechFromAnim(&PARTNER_ENTITY, PARTNER_ENTITY.stats.moves[1]));
-        move2.setMove(entityGetTechFromAnim(&PARTNER_ENTITY, PARTNER_ENTITY.stats.moves[2]));
-        moveFinish.setMove(entityGetTechFromAnim(&PARTNER_ENTITY, PARTNER_ENTITY.stats.moves[3]));
-        detail.setMove(MOVE_MATRIX[moveSelectedRow][moveSelectedColumn]);
-    }
-
     if (MENU_STATE == 6)
     {
         renderTextSprite(techDetailsLabel);
@@ -1184,6 +1161,29 @@ void renderDigimonMovesView()
 
 void tickDigimonMenuTechs()
 {
+    if (MENU_STATE == 0)
+    {
+        clearTextSubArea2(0, 16, 256, 192);
+        MENU_STATE = 1;
+        drawTextSprite(techsetLabel);
+        drawTextSprite(finisherLabel);
+        drawTextSprite(techDetailsLabel);
+
+        for (auto& label : tableLabels)
+            drawTextSprite(label);
+        for (auto& label : tableLabels2)
+            drawTextSprite(label);
+
+        for (auto& label : matrixLabels)
+            drawTextSprite(label);
+
+        move0.setMove(entityGetTechFromAnim(&PARTNER_ENTITY, PARTNER_ENTITY.stats.moves[0]));
+        move1.setMove(entityGetTechFromAnim(&PARTNER_ENTITY, PARTNER_ENTITY.stats.moves[1]));
+        move2.setMove(entityGetTechFromAnim(&PARTNER_ENTITY, PARTNER_ENTITY.stats.moves[2]));
+        moveFinish.setMove(entityGetTechFromAnim(&PARTNER_ENTITY, PARTNER_ENTITY.stats.moves[3]));
+        detail.setMove(MOVE_MATRIX[moveSelectedRow][moveSelectedColumn]);
+    }
+
     if (MENU_STATE == 1 && isKeyDown(InputButtons::BUTTON_CROSS))
     {
         MENU_STATE = 2;

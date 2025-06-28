@@ -978,7 +978,7 @@ static void drawDigimonStatsViewStrings()
 
 extern "C"
 {
-    void renderDigimonStatsView()
+    void tickDigimonStatsView()
     {
         if (MENU_STATE == 0)
         {
@@ -986,7 +986,10 @@ extern "C"
             drawDigimonStatsViewStrings();
             return;
         }
+    }
 
+    void renderDigimonStatsView()
+    {
         sprites[SpriteIndex::SICK].posY    = CONDITION_OFFSET_Y + CONDITION_OFFSETS[PLAYTIME_FRAMES % 16];
         sprites[SpriteIndex::INJURY].posY  = CONDITION_OFFSET_Y + CONDITION_OFFSETS[PLAYTIME_FRAMES % 16];
         sprites[SpriteIndex::HUNGER].posY  = CONDITION_OFFSET_Y + CONDITION_OFFSETS[PLAYTIME_FRAMES % 16];

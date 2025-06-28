@@ -456,19 +456,23 @@ static TextSprite nameText = {
     .hasShadow  = 1,
 };
 
+void tickEvoChartDetail()
+{
+    if (isDetailRendered) return;
+
+    auto* para       = getDigimonData(selectedDigimon);
+    nameText.string  = reinterpret_cast<const char*>(para->name);
+    levelText.string = LEVEL_NAMES[static_cast<int32_t>(para->level) - 1];
+
+    drawTextSprite(treeText);
+    drawTextSprite(levelText);
+    drawTextSprite(nameText);
+    isDetailRendered = true;
+}
+
 void renderEvoChartDetail()
 {
-    if (!isDetailRendered)
-    {
-        auto* para       = getDigimonData(selectedDigimon);
-        nameText.string  = reinterpret_cast<const char*>(para->name);
-        levelText.string = LEVEL_NAMES[static_cast<int32_t>(para->level) - 1];
-
-        drawTextSprite(treeText);
-        drawTextSprite(levelText);
-        drawTextSprite(nameText);
-        isDetailRendered = true;
-    }
+    if (!isDetailRendered) return;
 
     uint32_t toCount   = 0;
     uint32_t fromCount = 0;
@@ -598,7 +602,7 @@ void tickPlayerMenuChartView()
                       .width  = 10,
                       .height = 10,
                 };
-                createAnimatedUIBox(2, 1, 0, &full, &start, nullptr, renderEvoChartDetail);
+                createAnimatedUIBox(2, 1, 0, &full, &start, tickEvoChartDetail, renderEvoChartDetail);
                 playSound(0, 3);
                 MENU_STATE       = 3;
                 isDetailRendered = false;

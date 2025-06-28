@@ -52,13 +52,6 @@ static uint8_t digimonMenuState;
 
 void renderDigimonMenu()
 {
-    if (MENU_STATE == 0)
-    {
-        clearTextSubArea2(0, 0, 256, 12);
-        drawTextSprite(statusLabel);
-        drawTextSprite(techLabel);
-    }
-
     if (digimonMenuState == 0)
         renderDigimonStatsView();
     else if (digimonMenuState == 1)
@@ -74,8 +67,18 @@ void renderDigimonMenu()
 
 void tickDigimonMenu()
 {
+    if (MENU_STATE == 0)
+    {
+        clearTextSubArea2(0, 0, 256, 12);
+        drawTextSprite(statusLabel);
+        drawTextSprite(techLabel);
+    }
+
     // stats menu doesn't need special interaction
-    if (digimonMenuState == 1) tickDigimonMenuTechs();
+    if (digimonMenuState == 0)
+        tickDigimonStatsView();
+    else if (digimonMenuState == 1)
+        tickDigimonMenuTechs();
 
     if (MENU_STATE == 1)
     {
