@@ -2,6 +2,7 @@
 #include "ItemFunctions.hpp"
 #include "extern/dw1.hpp"
 #include "Partner.hpp"
+#include "Timestamp.hpp"
 
 extern "C"
 {
@@ -9,6 +10,7 @@ extern "C"
     {
         initializeStatusObjects();
 
+        initTimestamp();
         initCustomUI();
         fillItemTable();
     }
