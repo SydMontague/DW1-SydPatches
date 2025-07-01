@@ -367,7 +367,7 @@ extern "C"
         MONZAEMON           = 14,
         PUNIMON             = 15,
         TSUNOMON            = 16,
-        GABUMON             = 17,
+        GABUMON             = 17, // the best
         ELECMON             = 18,
         KABUTERIMON         = 19,
         ANGEMON             = 20,
@@ -1639,8 +1639,6 @@ extern "C"
     void renderItemSprite(ItemType type, int16_t posX, int16_t posY, int32_t depth);
     void renderSelectionCursor(int16_t x, int16_t y, int16_t width, int16_t height, int32_t depth);
     void calculatePosition(GsCOORDINATE2* coord, Matrix* matrix);
-    void tickGameClock(int32_t instanceId);
-    void renderGameClock(int32_t instanceId);
     void runMapHeadScript(uint8_t mapId);
     void unloadMapParts();
     void loadDoors(int32_t doorEntryId);
