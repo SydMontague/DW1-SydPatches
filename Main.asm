@@ -20,6 +20,16 @@
 .org 0x800eebb8
   jal cleanupGame
 
+.org 0x800ee8cc
+  jal initializeClockData
+
+.org 0x800eea1c
+  jal addClock
+.org 0x800eeaac
+  jal addClock
+.org 0x800eeb68
+  jal addClock
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

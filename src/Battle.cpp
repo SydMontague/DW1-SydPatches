@@ -1,5 +1,6 @@
 #include "Camera.hpp"
 #include "GameMenu.hpp"
+#include "GameTime.hpp"
 #include "Helper.hpp"
 #include "Map.hpp"
 #include "Partner.hpp"

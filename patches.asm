@@ -37,3 +37,4 @@
 .include "CombatCommon.asm"
 .include "DOOA.asm"
 .include "InventoryUI.asm"
+.include "GameTime.asm"

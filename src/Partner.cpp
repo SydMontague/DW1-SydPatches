@@ -7,6 +7,7 @@
 #include "Font.hpp"
 #include "GameData.hpp"
 #include "GameObjects.hpp"
+#include "GameTime.hpp"
 #include "Helper.hpp"
 #include "Inventory.hpp"
 #include "ItemEffects.hpp"

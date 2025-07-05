@@ -17,7 +17,6 @@
 ;.definelabel Partner_setState,          0x800df4d0 ; use constexpr version instead
 .definelabel updateConditionAnimation,  0x800df2d0
 .definelabel unsetButterfly,            0x800e9fb4
-.definelabel advanceToTime,             0x800dd678
 .definelabel setTrigger,                0x801065c0
 .definelabel unsetBubble,               0x800ece20
 .definelabel addConditionBubble,        0x800ec538
@@ -35,8 +34,6 @@
 .definelabel Tamer_tickBattle,          0x800f1214
 .definelabel Tamer_tickFishing,         0x800e4e18
 .definelabel isKeyDown,                 0x800fc054
-.definelabel stopGameTime,              0x800dd798
-.definelabel startGameTime,             0x800dd7a0
 .definelabel getEntityScreenPos,        0x800e52d8
 .definelabel tickOpenChestTray,         0x800e21d0
 .definelabel tickCloseChestTray,        0x800e223c
@@ -50,7 +47,6 @@
 .definelabel playBGM,                   0x80106a80
 .definelabel loadBattleData,            0x800e74d0
 .definelabel handleBattleStart,         0x800e847c
-.definelabel updateMinuteHand,          0x800dd780
 .definelabel isTamerOnScreen,           0x800e67ec
 .definelabel isTriggerSet,              0x8010643c
 .definelabel NPCEntity_tickBattle,      0x800f1430
@@ -77,12 +73,12 @@
 .definelabel checkArenaMap,             0x800ff9dc
 .definelabel unloadMapParts,            0x800e1bf0
 .definelabel runMapHeadScript,          0x80105ae4
-.definelabel tickGameClock,             0x800dcf84
-.definelabel renderGameClock,           0x800dd2a4
 .definelabel calculatePosition,         0x800e4adc
 .definelabel renderItemSprite,          0x800e5d18
 .definelabel renderSelectionCursor,     0x800e5a3c
 .definelabel startThrowingItem,         0x800f0490
+.definelabel isFishing,                 0x800e4e7c
+.definelabel updateBGM,                 0x80106af0
 
 .definelabel ITEM_DESC_PTR, 0x801279dc
 .definelabel CONDITION_FX_OFFSETS, 0x8012a2c4

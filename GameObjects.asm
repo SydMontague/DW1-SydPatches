@@ -227,10 +227,10 @@
 ;  j addObject
 ;.org 0x800dae40
 ;  jal addObject
-.org 0x800dcf54
-  jal addObject
-.org 0x800dcf6c
-  jal addObject
+;.org 0x800dcf54
+;  jal addObject
+;.org 0x800dcf6c
+;  jal addObject
 .org 0x800ddc54
   jal addObject
 .org 0x800de08c

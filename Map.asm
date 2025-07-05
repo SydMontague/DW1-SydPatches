@@ -123,8 +123,8 @@
 ;  jal updateTimeOfDay
 ;.org 0x800d63d0
 ;  jal updateTimeOfDay
-.org 0x800dd764
-  jal updateTimeOfDay
+;.org 0x800dd764
+;  jal updateTimeOfDay
 .org 0x800ddc9c
   jal updateTimeOfDay
 

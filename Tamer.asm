@@ -14,10 +14,10 @@
 
 .org 0x800de6a8
   jal addTamerLevel
-.org 0x800dd254
-  jal addTamerLevel
-.org 0x800dd238
-  jal addTamerLevel
+;.org 0x800dd254
+;  jal addTamerLevel
+;.org 0x800dd238
+;  jal addTamerLevel
 ;.org 0x800c46f4
 ;  jal addTamerLevel
 ;.org 0x800a5db0

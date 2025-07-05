@@ -1635,6 +1635,8 @@ extern "C"
     extern SectionData SECTION_DATA;
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
 
+    bool isFishing();
+    void updateBGM();
     void startThrowingItem();
     void renderItemSprite(ItemType type, int16_t posX, int16_t posY, int32_t depth);
     void renderSelectionCursor(int16_t x, int16_t y, int16_t width, int16_t height, int32_t depth);
@@ -1666,7 +1668,6 @@ extern "C"
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
     bool isTriggerSet(int32_t trigger);
     bool isTamerOnScreen();
-    void updateMinuteHand(int32_t hour, int32_t minute);
     uint32_t handleBattleStart(uint32_t talkedToEntity);
     void loadBattleData(uint32_t talkedToEntity, uint32_t enemyCount);
     void playBGM(uint8_t soundFont);
@@ -1740,7 +1741,6 @@ extern "C"
 
     extern void updateConditionAnimation();
     extern void unsetButterfly(uint32_t id);
-    extern void advanceToTime(uint32_t hour, uint32_t minute);
 }
 
 static_assert(sizeof(PositionData) == 0x88);
