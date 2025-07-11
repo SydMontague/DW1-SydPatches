@@ -249,10 +249,10 @@
 ;  jal startAnimation
 ;.org 0x800ddc94
 ;  jal startAnimation
-.org 0x800ddd6c
-  jal startAnimation
-.org 0x800ddddc
-  jal startAnimation
+;.org 0x800ddd6c
+;  jal startAnimation
+;.org 0x800ddddc
+;  jal startAnimation
 .org 0x800ddf48
   jal startAnimation
 .org 0x800de074

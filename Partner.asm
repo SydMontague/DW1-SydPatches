@@ -4,9 +4,6 @@
 .org 0x800ef8e0
   jal setImmortalHour
 
-.org 0x800dde34
-  jal handlePraiseScold
-
 .org 0x800de63c
   jal createPoopPile
 
@@ -68,8 +65,8 @@
 
 ;.org 0x800dda78
 ;  jal tickPartnerWaypoints
-.org 0x800ddd48
-  jal tickPartnerWaypoints
+;.org 0x800ddd48
+;  jal tickPartnerWaypoints
 .org 0x800ddf6c
   jal tickPartnerWaypoints
 .org 0x800de95c

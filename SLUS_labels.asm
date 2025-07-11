@@ -83,8 +83,6 @@
 .definelabel tickMainMenu,              0x8010ff1c
 .definelabel renderMainMenu,            0x80113458
 
-.definelabel tickNormal,                0x800dd9c0
-.definelabel partnerPraiseScold,        0x800ddd04
 .definelabel partnerFeedItem,           0x800ddec0
 .definelabel tickPartnerToilet,         0x800de2c0
 .definelabel partnerWildPoop,           0x800de540

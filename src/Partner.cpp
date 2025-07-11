@@ -703,6 +703,102 @@ static void tickSleep()
     }
 }
 
+static void handlePraise()
+{
+    PARTNER_PARA.happiness += 2 + PARTNER_PARA.discipline / 10;
+    PARTNER_PARA.discipline -= 5;
+}
+
+static void handleScold()
+{
+    auto deltaDisc = 0;
+    if (ITEM_SCOLD_FLAG == 1)
+    {
+        PARTNER_PARA.discipline += 8;
+        ITEM_SCOLD_FLAG = 2;
+    }
+    else
+    {
+        PARTNER_PARA.happiness -= 10;
+        PARTNER_PARA.discipline += 2;
+    }
+
+    PARTNER_PARA.refusedFavFood      = 0; // TODO unused mechanic
+    PARTNER_PARA.condition.isUnhappy = false;
+    NANIMON_TRIGGER                  = 0;
+    if (HAS_BUTTERFLY == 0)
+    {
+        unsetButterfly(BUTTERFLY_ID);
+        HAS_BUTTERFLY = -1;
+    }
+
+    if (getDigimonData(PARTNER_ENTITY.type)->level != Level::ROOKIE) return;
+    if (PARTNER_PARA.happiness != HAPPINESS_MIN) return;
+    if (PARTNER_PARA.discipline == 0) return;
+
+    NANIMON_TRIGGER = 1;
+}
+
+static void tickPraiseScold(bool isScold)
+{
+    switch (PARTNER_SUB_STATE)
+    {
+        case 0:
+        {
+            unsetCameraFollowPlayer();
+            tickPartnerWaypoints();
+            if (getPartnerTamerCloseness() != Closeness::STOP_DISTANCE) startAnimation(&PARTNER_ENTITY, 2);
+            PARTNER_SUB_STATE = 1;
+            break;
+        }
+        case 1:
+        {
+            entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
+            entityLookAtLocation(&PARTNER_ENTITY, &TAMER_ENTITY.posData->location);
+
+            if (getPartnerTamerCloseness() == Closeness::STOP_DISTANCE)
+            {
+                startAnimation(&PARTNER_ENTITY, 0);
+
+                if (isScold)
+                    Tamer_setState(9);
+                else
+                {
+                    playSound(0, 14);
+                    Tamer_setState(13);
+                }
+
+                PARTNER_SUB_STATE = 2;
+            }
+            break;
+        }
+        case 2:
+        {
+            if (TAMER_ENTITY.animId != 0) return;
+
+            if (isScold)
+                handleScold();
+            else
+                handlePraise();
+            PARTNER_SUB_STATE = 3;
+            break;
+        }
+        case 3:
+        {
+            if (PARTNER_ENTITY.loopCount == 0xFF) PARTNER_ENTITY.loopCount = 1;
+
+            if (PARTNER_ENTITY.frameCount <= PARTNER_ENTITY.animFrame)
+            {
+                Partner_setState(1);
+                Tamer_setState(0);
+                setCameraFollowPlayer();
+                handleSpecialEvolutionPraise(3, &PARTNER_ENTITY);
+            }
+            break;
+        }
+    }
+}
+
 static void tickOverworld(int32_t instanceId)
 {
     if (IS_IN_MENU == 1)
@@ -715,8 +811,8 @@ static void tickOverworld(int32_t instanceId)
     {
         case 1: tickNormal(); break;
         case 3: tickSleep(); break;
-        case 4:
-        case 15: partnerPraiseScold(PARTNER_STATE); break;
+        case 4: tickPraiseScold(true); break;
+        case 15: tickPraiseScold(false); break;
         case 5: partnerFeedItem(); break;
         case 6: tickPartnerToilet(); break;
         case 7: partnerWildPoop(); break;
@@ -1100,50 +1196,6 @@ extern "C"
 
         if (PARTNER_PARA.weight > WEIGHT_MAX) PARTNER_PARA.weight = WEIGHT_MAX;
         if (PARTNER_PARA.weight < WEIGHT_MIN) PARTNER_PARA.weight = WEIGHT_MIN;
-    }
-
-    inline void handlePraise()
-    {
-        PARTNER_PARA.happiness += 2 + PARTNER_PARA.discipline / 10;
-        PARTNER_PARA.discipline -= 5;
-    }
-
-    inline void handleScold()
-    {
-        auto deltaDisc = 0;
-        if (ITEM_SCOLD_FLAG == 1)
-        {
-            PARTNER_PARA.discipline += 8;
-            ITEM_SCOLD_FLAG = 2;
-        }
-        else
-        {
-            PARTNER_PARA.happiness -= 10;
-            PARTNER_PARA.discipline += 2;
-        }
-
-        PARTNER_PARA.refusedFavFood      = 0; // TODO unused mechanic
-        PARTNER_PARA.condition.isUnhappy = false;
-        NANIMON_TRIGGER                  = 0;
-        if (HAS_BUTTERFLY == 0)
-        {
-            unsetButterfly(BUTTERFLY_ID);
-            HAS_BUTTERFLY = -1;
-        }
-
-        if (getDigimonData(PARTNER_ENTITY.type)->level != Level::ROOKIE) return;
-        if (PARTNER_PARA.happiness != HAPPINESS_MIN) return;
-        if (PARTNER_PARA.discipline == 0) return;
-
-        NANIMON_TRIGGER = 1;
-    }
-
-    void handlePraiseScold(int32_t action)
-    {
-        if (action == 4)
-            handleScold();
-        else
-            handlePraise();
     }
 
     inline bool hasSpotPoop(int16_t tileX, int16_t tileY, uint8_t map)

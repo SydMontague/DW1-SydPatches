@@ -19,8 +19,8 @@
 ;.org 0x800a9274
 ;  jal handleSpecialEvolutionPraise
 
-.org 0x800ddea8
-  jal handleSpecialEvolutionPraise
+;.org 0x800ddea8
+;  jal handleSpecialEvolutionPraise
 ;.org 0x800ddce4
 ;  jal handleSpecialEvolutionSleep
 

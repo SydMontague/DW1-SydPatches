@@ -112,10 +112,10 @@
 ;  jal entityLookAtLocation
 ;.org 0x800ddab4
 ;  jal entityLookAtLocation
-.org 0x800ddda0
-  jal entityLookAtLocation
-.org 0x800dddb8
-  jal entityLookAtLocation
+;.org 0x800ddda0
+;  jal entityLookAtLocation
+;.org 0x800dddb8
+;  jal entityLookAtLocation
 .org 0x800ddf8c
   jal entityLookAtLocation
 .org 0x800ddfe0
