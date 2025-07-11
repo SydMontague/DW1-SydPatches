@@ -7,14 +7,8 @@
 .org 0x800dde34
   jal handlePraiseScold
 
-.org 0x800ddbd4
-  jal handleSleeping
-
 .org 0x800de63c
   jal createPoopPile
-
-.org 0x800ddbcc
-  jal sleepRegen
 
 .org 0x800de0b8
   jal partnerWillRefuseItem
@@ -72,8 +66,8 @@
 .org 0x800e7b10
   jal Partner_tickCollision
 
-.org 0x800dda78
-  jal tickPartnerWaypoints
+;.org 0x800dda78
+;  jal tickPartnerWaypoints
 .org 0x800ddd48
   jal tickPartnerWaypoints
 .org 0x800ddf6c

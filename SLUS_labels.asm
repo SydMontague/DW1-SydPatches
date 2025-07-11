@@ -80,9 +80,10 @@
 .definelabel updateBGM,                 0x80106af0
 .definelabel Partner_tickBattle,        0x800f1414
 .definelabel Partner_tickWalking,       0x800ded10
+.definelabel tickMainMenu,              0x8010ff1c
+.definelabel renderMainMenu,            0x80113458
 
 .definelabel tickNormal,                0x800dd9c0
-.definelabel partnerSleep,              0x800dda08
 .definelabel partnerPraiseScold,        0x800ddd04
 .definelabel partnerFeedItem,           0x800ddec0
 .definelabel tickPartnerToilet,         0x800de2c0
@@ -92,7 +93,14 @@
 .definelabel partnerIdling,             0x800dea2c
 .definelabel partnerEvolving,           0x800dea68
 .definelabel partnerDying2,             0x800dea10
+.definelabel getPartnerTamerCloseness,  0x800df174
 
+.definelabel CHECKED_MEMORY_CARD, 0x80135064
+.definelabel MEMORY_CARD_ID, 0x80135044
+.definelabel MEMORY_CARD_SLOT, 0x8013503c
+.definelabel CURRENT_MENU, 0x8013504c
+.definelabel TARGET_MENU, 0x80135068
+.definelabel MAIN_STATE, 0x80134eb4
 .definelabel ITEM_DESC_PTR, 0x801279dc
 .definelabel CONDITION_FX_OFFSETS, 0x8012a2c4
 .definelabel TRN_LOADING_COMPLETE, 0x80134de1

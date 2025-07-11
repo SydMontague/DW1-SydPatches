@@ -237,18 +237,18 @@
 ;  jal startAnimation
 ;.org 0x800db080
 ;  jal startAnimation
-.org 0x800dda68
-  jal startAnimation
-.org 0x800ddae4
-  jal startAnimation
-.org 0x800ddaf4
-  jal startAnimation
-.org 0x800ddb30
-  jal startAnimation
-.org 0x800ddb6c
-  jal startAnimation
-.org 0x800ddc94
-  jal startAnimation
+;.org 0x800dda68
+;  jal startAnimation
+;.org 0x800ddae4
+;  jal startAnimation
+;.org 0x800ddaf4
+;  jal startAnimation
+;.org 0x800ddb30
+;  jal startAnimation
+;.org 0x800ddb6c
+;  jal startAnimation
+;.org 0x800ddc94
+;  jal startAnimation
 .org 0x800ddd6c
   jal startAnimation
 .org 0x800ddddc

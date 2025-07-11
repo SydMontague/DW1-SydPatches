@@ -21,8 +21,8 @@
 
 .org 0x800ddea8
   jal handleSpecialEvolutionPraise
-.org 0x800ddce4
-  jal handleSpecialEvolutionSleep
+;.org 0x800ddce4
+;  jal handleSpecialEvolutionSleep
 
 ;;; Evo Requirements Start
 ; reimplemented in Evolution.cpp

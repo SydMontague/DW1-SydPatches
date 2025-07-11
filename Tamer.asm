@@ -74,10 +74,10 @@
 ;  jal Tamer_setState
 ;.org 0x800d9340	
 ;  jal Tamer_setState
-.org 0x800dda70	
-  jal Tamer_setState
-.org 0x800ddccc	
-  jal Tamer_setState
+;.org 0x800dda70	
+;  jal Tamer_setState
+;.org 0x800ddccc	
+;  jal Tamer_setState
 .org 0x800dddfc	
   jal Tamer_setState
 .org 0x800dde0c	

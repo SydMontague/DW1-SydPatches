@@ -127,8 +127,8 @@
 ;  jal playSound
 ;.org 0x800dcdd8
 ;  jal playSound
-.org 0x800ddad4
-  jal playSound
+;.org 0x800ddad4
+;  jal playSound
 .org 0x800dddf4
   jal playSound
 .org 0x800de064

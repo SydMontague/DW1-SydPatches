@@ -16,4 +16,5 @@ extern "C"
     void setPartnerIdling();
     void initializePartnerWaypoint();
     void Partner_tickCollision();
+    void tickPartnerWaypoints();
 }

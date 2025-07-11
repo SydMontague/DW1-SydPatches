@@ -119,15 +119,6 @@
 .org 0x80104fe4
   jal setupMap
 
-;.org 0x800a8b7c
-;  jal updateTimeOfDay
-;.org 0x800d63d0
-;  jal updateTimeOfDay
-;.org 0x800dd764
-;  jal updateTimeOfDay
-.org 0x800ddc9c
-  jal updateTimeOfDay
-
 ;.org 0x800d6620
 ;  jal initializeDrawingOffsets
 .org 0x800ef438

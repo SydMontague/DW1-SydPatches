@@ -16,8 +16,8 @@
 ;  jal stopGameTime
 ;.org 0x800acdf0
 ;  jal stopGameTime
-.org 0x800dda3c
-  jal stopGameTime
+;.org 0x800dda3c
+;  jal stopGameTime
 .org 0x800dea90
   jal stopGameTime
 .org 0x800eea24
@@ -41,8 +41,8 @@
 ;  jal startGameTime
 ;.org 0x800ba458
 ;  jal startGameTime
-.org 0x800ddcec
-  jal startGameTime
+;.org 0x800ddcec
+;  jal startGameTime
 .org 0x800deb7c
   jal startGameTime
 .org 0x800e4fe4

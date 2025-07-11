@@ -1,8 +1,10 @@
 #include "Partner.hpp"
 
+#include "Camera.hpp"
 #include "Effects.hpp"
 #include "Entity.hpp"
 #include "Evolution.hpp"
+#include "Fade.hpp"
 #include "Files.hpp"
 #include "Font.hpp"
 #include "GameData.hpp"
@@ -512,6 +514,195 @@ static void tickNormal()
     tickConditionBubble();
 }
 
+static void sleepRegen()
+{
+    auto hoursSlept = getTimeDiff(HOUR, PARTNER_PARA.wakeupHour);
+    if (MINUTE > 0 && HOUR != PARTNER_PARA.sleepyHour) hoursSlept++;
+
+    uint32_t sleepFactor = (hoursSlept * 100) / PARTNER_PARA.hoursAsleepDefault;
+    if (getItemCount(ItemType::REST_PILLOW) > 0) sleepFactor = (sleepFactor * 12) / 10;
+    if (PARTNER_AREA_RESPONSE == 1) sleepFactor = (sleepFactor * 12) / 10;
+    if (PARTNER_AREA_RESPONSE == 2) sleepFactor = (sleepFactor * 8) / 10;
+
+    auto randomHealFactor = random(10) + 70;
+    auto healHP           = (PARTNER_ENTITY.stats.hp * randomHealFactor * sleepFactor) / 10000;
+    auto healMP           = (PARTNER_ENTITY.stats.mp * randomHealFactor * sleepFactor) / 10000;
+    PARTNER_ENTITY.stats.currentHP += healHP;
+    PARTNER_ENTITY.stats.currentMP += healMP;
+    if (PARTNER_ENTITY.stats.currentHP > PARTNER_ENTITY.stats.hp)
+        PARTNER_ENTITY.stats.currentHP = PARTNER_ENTITY.stats.hp;
+    if (PARTNER_ENTITY.stats.currentMP > PARTNER_ENTITY.stats.mp)
+        PARTNER_ENTITY.stats.currentMP = PARTNER_ENTITY.stats.mp;
+
+    auto randomTirednessFactor = random(20) + 80;
+    auto reduceTiredness       = (sleepFactor * PARTNER_PARA.tiredness * randomTirednessFactor) / 10000;
+    PARTNER_PARA.tiredness -= reduceTiredness;
+    if (PARTNER_PARA.tiredness < TIREDNESS_MIN) PARTNER_PARA.tiredness = TIREDNESS_MIN;
+
+    PARTNER_PARA.weight -= getRaiseData(PARTNER_ENTITY.type)->defaultWeight / 10;
+    if (PARTNER_PARA.weight < WEIGHT_MIN) PARTNER_PARA.weight = WEIGHT_MIN;
+}
+
+static void handleSleeping()
+{
+    auto type       = PARTNER_ENTITY.type;
+    auto hoursSlept = getTimeDiff(HOUR, PARTNER_PARA.wakeupHour);
+
+    advanceToTime(PARTNER_PARA.wakeupHour, PARTNER_PARA.wakeupMinute);
+
+    PARTNER_PARA.evoTimer += hoursSlept;
+    PARTNER_PARA.remainingLifetime -= hoursSlept;
+    if (PARTNER_PARA.remainingLifetime < 0) PARTNER_PARA.remainingLifetime = 0;
+    updateSleepingTimes();
+
+    setFoodTimer(type);
+    PARTNER_PARA.starvationTimer     = 0;
+    PARTNER_PARA.timeAwakeToday      = PARTNER_PARA.hoursAwakeDefault * 6;
+    PARTNER_PARA.tirednessSleepTimer = 0;
+    PARTNER_PARA.sicknessCounter     = 0;
+    PARTNER_PARA.condition.isSleepy  = false;
+    HAS_IMMORTAL_HOUR                = 1;
+    IMMORTAL_HOUR                    = HOUR;
+    // vanilla sets the menu opion to disabled here, but the logic moved to tickGameMenu
+
+    if (PARTNER_PARA.condition.isPoopy)
+    {
+        int16_t tileX;
+        int16_t tileY;
+        getModelTile(&PARTNER_ENTITY.posData->location, &tileX, &tileY);
+        createPoopPile(tileX, tileY);
+        PARTNER_PARA.poopingTimer = -1;
+        // fixes lack of care mistakes and doubles the poop level
+        handleWildPoop();
+        addTamerLevel(1, -1);
+    }
+
+    if (PARTNER_PARA.condition.isHungry)
+    {
+        PARTNER_PARA.weight -= 1;
+        // TODO care mistakes? reset condition?
+    }
+
+    if (PARTNER_PARA.condition.isSick)
+    {
+        PARTNER_PARA.sicknessTimer += hoursSlept;
+        PARTNER_PARA.happiness -= 20;
+        PARTNER_PARA.discipline -= 10;
+        PARTNER_PARA.tiredness += 10;
+    }
+
+    if (PARTNER_PARA.condition.isInjured)
+    {
+        PARTNER_PARA.injuryTimer += hoursSlept;
+        PARTNER_PARA.happiness -= 10;
+        PARTNER_PARA.discipline -= 5;
+        PARTNER_PARA.tiredness += 5;
+    }
+}
+
+static void tickSleep()
+{
+    switch (PARTNER_SUB_STATE)
+    {
+        case 0:
+        {
+            stopGameTime();
+            unsetCameraFollowPlayer();
+            if (getPartnerTamerCloseness() != Closeness::STOP_DISTANCE) startAnimation(&PARTNER_ENTITY, 2);
+            Tamer_setState(6);
+            tickPartnerWaypoints();
+            PARTNER_SUB_STATE = 1;
+            break;
+        }
+        case 1:
+        {
+            entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
+            entityLookAtLocation(&PARTNER_ENTITY, &TAMER_ENTITY.posData->location);
+            if (getPartnerTamerCloseness() == Closeness::STOP_DISTANCE)
+            {
+                playSound(0, 15);
+                startAnimation(&TAMER_ENTITY, 8);
+                startAnimation(&PARTNER_ENTITY, 0);
+                PARTNER_SUB_STATE = 2;
+            }
+            break;
+        }
+        case 2:
+        {
+            if (TAMER_ENTITY.frameCount > TAMER_ENTITY.animFrame) return;
+
+            startAnimation(&PARTNER_ENTITY, 11);
+            PARTNER_SUB_STATE = 3;
+            break;
+        }
+        case 3:
+        {
+            if (PARTNER_ENTITY.frameCount > PARTNER_ENTITY.animFrame) return;
+            startAnimation(&PARTNER_ENTITY, 9);
+            PARTNER_SUB_STATE = 4;
+            break;
+        }
+        case 4:
+        {
+            if (PARTNER_ENTITY.frameCount - 5 > PARTNER_ENTITY.animFrame) return;
+
+            fadeToBlack(40);
+            PARTNER_SUB_STATE = 5;
+            break;
+        }
+        case 5:
+        {
+            if (FADE_DATA.fadeOutCurrent < 40) return;
+
+            sleepRegen();
+            handleSleeping();
+
+            if (UI_BOX_DATA[0].state == 0)
+            {
+                CHECKED_MEMORY_CARD = 0x10;
+                if (MEMORY_CARD_ID == -1 || MEMORY_CARD_SLOT == -1)
+                {
+                    CURRENT_MENU = -1;
+                    TARGET_MENU  = -1;
+                }
+                else
+                {
+                    CURRENT_MENU = -2;
+                    TARGET_MENU  = 40;
+                    MAIN_STATE   = 1;
+                }
+
+                addObject(ObjectID::MAIN_MENU, 0, tickMainMenu, renderMainMenu);
+                PARTNER_SUB_STATE = 6;
+            }
+
+            break;
+        }
+        case 6:
+        {
+            if (CURRENT_MENU != -1) return;
+
+            removeObject(ObjectID::MAIN_MENU, 0);
+            fadeFromBlack(40);
+            startAnimation(&PARTNER_ENTITY, 0);
+            updateTimeOfDay();
+            PARTNER_SUB_STATE = 7;
+            break;
+        }
+        case 7:
+        {
+            if (FADE_DATA.fadeInCurrent < 35) return;
+
+            PARTNER_STATE = 1;
+            Tamer_setState(0);
+            setCameraFollowPlayer();
+            handleSpecialEvolutionSleep(2, &PARTNER_ENTITY);
+            startGameTime();
+            break;
+        }
+    }
+}
+
 static void tickOverworld(int32_t instanceId)
 {
     if (IS_IN_MENU == 1)
@@ -523,7 +714,7 @@ static void tickOverworld(int32_t instanceId)
     switch (PARTNER_STATE)
     {
         case 1: tickNormal(); break;
-        case 3: partnerSleep(); break;
+        case 3: tickSleep(); break;
         case 4:
         case 15: partnerPraiseScold(PARTNER_STATE); break;
         case 5: partnerFeedItem(); break;
@@ -955,63 +1146,6 @@ extern "C"
             handlePraise();
     }
 
-    void handleSleeping()
-    {
-        auto type       = PARTNER_ENTITY.type;
-        auto hoursSlept = getTimeDiff(HOUR, PARTNER_PARA.wakeupHour);
-
-        advanceToTime(PARTNER_PARA.wakeupHour, PARTNER_PARA.wakeupMinute);
-
-        PARTNER_PARA.evoTimer += hoursSlept;
-        PARTNER_PARA.remainingLifetime -= hoursSlept;
-        if (PARTNER_PARA.remainingLifetime < 0) PARTNER_PARA.remainingLifetime = 0;
-        updateSleepingTimes();
-
-        setFoodTimer(type);
-        PARTNER_PARA.starvationTimer     = 0;
-        PARTNER_PARA.timeAwakeToday      = PARTNER_PARA.hoursAwakeDefault * 6;
-        PARTNER_PARA.tirednessSleepTimer = 0;
-        PARTNER_PARA.sicknessCounter     = 0;
-        PARTNER_PARA.condition.isSleepy  = false;
-        HAS_IMMORTAL_HOUR                = 1;
-        IMMORTAL_HOUR                    = HOUR;
-        // vanilla sets the menu opion to disabled here, but the logic moved to tickGameMenu
-
-        if (PARTNER_PARA.condition.isPoopy)
-        {
-            int16_t tileX;
-            int16_t tileY;
-            getModelTile(&PARTNER_ENTITY.posData->location, &tileX, &tileY);
-            createPoopPile(tileX, tileY);
-            PARTNER_PARA.poopingTimer = -1;
-            // fixes lack of care mistakes and doubles the poop level
-            handleWildPoop();
-            addTamerLevel(1, -1);
-        }
-
-        if (PARTNER_PARA.condition.isHungry)
-        {
-            PARTNER_PARA.weight -= 1;
-            // TODO care mistakes? reset condition?
-        }
-
-        if (PARTNER_PARA.condition.isSick)
-        {
-            PARTNER_PARA.sicknessTimer += hoursSlept;
-            PARTNER_PARA.happiness -= 20;
-            PARTNER_PARA.discipline -= 10;
-            PARTNER_PARA.tiredness += 10;
-        }
-
-        if (PARTNER_PARA.condition.isInjured)
-        {
-            PARTNER_PARA.injuryTimer += hoursSlept;
-            PARTNER_PARA.happiness -= 10;
-            PARTNER_PARA.discipline -= 5;
-            PARTNER_PARA.tiredness += 5;
-        }
-    }
-
     inline bool hasSpotPoop(int16_t tileX, int16_t tileY, uint8_t map)
     {
         for (auto& poop : WORLD_POOP)
@@ -1084,35 +1218,6 @@ extern "C"
             .z = static_cast<int16_t>((50 - tileY) * 100 - 50),
         };
         createCloudFX(&pos);
-    }
-
-    void sleepRegen()
-    {
-        auto hoursSlept = getTimeDiff(HOUR, PARTNER_PARA.wakeupHour);
-        if (MINUTE > 0 && HOUR != PARTNER_PARA.sleepyHour) hoursSlept++;
-
-        uint32_t sleepFactor = (hoursSlept * 100) / PARTNER_PARA.hoursAsleepDefault;
-        if (getItemCount(ItemType::REST_PILLOW) > 0) sleepFactor = (sleepFactor * 12) / 10;
-        if (PARTNER_AREA_RESPONSE == 1) sleepFactor = (sleepFactor * 12) / 10;
-        if (PARTNER_AREA_RESPONSE == 2) sleepFactor = (sleepFactor * 8) / 10;
-
-        auto randomHealFactor = random(10) + 70;
-        auto healHP           = (PARTNER_ENTITY.stats.hp * randomHealFactor * sleepFactor) / 10000;
-        auto healMP           = (PARTNER_ENTITY.stats.mp * randomHealFactor * sleepFactor) / 10000;
-        PARTNER_ENTITY.stats.currentHP += healHP;
-        PARTNER_ENTITY.stats.currentMP += healMP;
-        if (PARTNER_ENTITY.stats.currentHP > PARTNER_ENTITY.stats.hp)
-            PARTNER_ENTITY.stats.currentHP = PARTNER_ENTITY.stats.hp;
-        if (PARTNER_ENTITY.stats.currentMP > PARTNER_ENTITY.stats.mp)
-            PARTNER_ENTITY.stats.currentMP = PARTNER_ENTITY.stats.mp;
-
-        auto randomTirednessFactor = random(20) + 80;
-        auto reduceTiredness       = (sleepFactor * PARTNER_PARA.tiredness * randomTirednessFactor) / 10000;
-        PARTNER_PARA.tiredness -= reduceTiredness;
-        if (PARTNER_PARA.tiredness < TIREDNESS_MIN) PARTNER_PARA.tiredness = TIREDNESS_MIN;
-
-        PARTNER_PARA.weight -= getRaiseData(PARTNER_ENTITY.type)->defaultWeight / 10;
-        if (PARTNER_PARA.weight < WEIGHT_MIN) PARTNER_PARA.weight = WEIGHT_MIN;
     }
 
     uint32_t partnerWillRefuseItem()

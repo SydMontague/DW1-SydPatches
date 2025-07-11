@@ -1425,6 +1425,13 @@ extern "C"
         int16_t clut;
     };
 
+    enum class Closeness
+    {
+        SPRINT_DISTANCE,
+        WALK_DISTANCE,
+        STOP_DISTANCE,
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1432,6 +1439,12 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern int32_t CHECKED_MEMORY_CARD;
+    extern int32_t MEMORY_CARD_ID;
+    extern int32_t MEMORY_CARD_SLOT;
+    extern int32_t CURRENT_MENU;
+    extern int32_t TARGET_MENU;
+    extern uint8_t MAIN_STATE;
     extern Vector CAMERA_TARGET;
     extern int16_t DRAW_OFFSET_LIMIT_X_MAX;
     extern int16_t DRAW_OFFSET_LIMIT_Y_MAX;
@@ -1635,7 +1648,6 @@ extern "C"
     extern SectionData SECTION_DATA;
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
 
-    void partnerSleep();
     void partnerPraiseScold(int32_t state);
     void partnerFeedItem();
     void tickPartnerToilet();
@@ -1645,7 +1657,10 @@ extern "C"
     void partnerIdling();
     void partnerEvolving();
     void partnerDying2();
+    Closeness getPartnerTamerCloseness();
 
+    void tickMainMenu(int32_t instanceId);
+    void renderMainMenu(int32_t instanceId);
     void Partner_tickWalking();
     void Partner_tickBattle(int32_t instanceId);
     bool isFishing();
