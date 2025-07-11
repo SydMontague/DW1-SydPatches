@@ -1,6 +1,7 @@
 
 #include "GameObjects.hpp"
 
+#include "Timestamp.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 
@@ -55,17 +56,25 @@ extern "C"
 
     void tickObjects()
     {
+        auto start = getTimestamp();
+
         for (auto& obj : WORLD_OBJECTS)
             if (obj.objectId != ObjectID::NONE && obj.tick) obj.tick(obj.instanceId);
 
+        uint32_t diff1 = getTimestamp() - start;
         // sync all draw operations to make sure they're finished before the game tries to render them
         libgpu_DrawSync(0);
+        uint32_t diff2 = getTimestamp() - start;
+        printf("Tick  : %dµs | %dµs\n", diff2, diff2 - diff1);
     }
 
     void renderObjects()
     {
+        auto start = getTimestamp();
         for (auto& obj : WORLD_OBJECTS)
             if (obj.objectId != ObjectID::NONE && obj.render) obj.render(obj.instanceId);
+        uint32_t diff = getTimestamp() - start;
+        printf("Render: %dµs\n", diff);
     }
 
     void initializeAttackObjects()

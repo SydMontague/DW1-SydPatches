@@ -79,6 +79,7 @@
 .definelabel isFishing,                 0x800e4e7c
 .definelabel updateBGM,                 0x80106af0
 .definelabel Partner_tickBattle,        0x800f1414
+.definelabel Partner_tickWalking,       0x800ded10
 
 .definelabel tickNormal,                0x800dd9c0
 .definelabel partnerSleep,              0x800dda08

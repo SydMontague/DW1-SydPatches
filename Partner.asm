@@ -19,19 +19,8 @@
 .org 0x800de0b8
   jal partnerWillRefuseItem
 
-;.org 0x800dd944
-;  jal handleConditionBubble
-.org 0x800dd9f0
-  jal handleConditionBubble
-
 .org 0x800de210
   jal partnerHandleFoodFeed
-
-.org 0x800dd9e0
-  jal tickPartnerPoopingMechanic
-
-.org 0x800dd9e8
-  jal detectEdiblePoop
 
 .org 0x800de4b4
   jal handleToilet
@@ -51,9 +40,6 @@
 .org 0x8010334c
   jal skipHours
 
-.org 0x800dd9d8
-  jal tickPartner
-
 .org 0x800e3644
   jal initializeReincarnatedPartner
 
@@ -67,24 +53,24 @@
 .org 0x800eea7c
   jal initializePartner
 
-.org 0x800dd9c8
-  jal tickPartnerCollision
+;.org 0x800dd9c8
+;  jal Partner_tickCollision
 .org 0x800e7734
-  jal tickPartnerCollision
+  jal Partner_tickCollision
 .org 0x800e7834
-  jal tickPartnerCollision
+  jal Partner_tickCollision
 .org 0x800e788c
-  jal tickPartnerCollision
+  jal Partner_tickCollision
 .org 0x800e78c0
-  jal tickPartnerCollision
+  jal Partner_tickCollision
 .org 0x800e78ec
-  jal tickPartnerCollision
+  jal Partner_tickCollision
 .org 0x800e7918
-  jal tickPartnerCollision
+  jal Partner_tickCollision
 .org 0x800e794c
-  jal tickPartnerCollision
+  jal Partner_tickCollision
 .org 0x800e7b10
-  jal tickPartnerCollision
+  jal Partner_tickCollision
 
 .org 0x800dda78
   jal tickPartnerWaypoints
@@ -113,7 +99,7 @@
   jal setPartnerWaypoint
 
 .org 0x80057780
-  jal tickPartnerCollision
+  jal Partner_tickCollision
 
 .close
 

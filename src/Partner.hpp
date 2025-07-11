@@ -5,7 +5,7 @@ extern "C"
 {
     void initializeStatusObjects();
     void createPoopPile(int16_t tileX, int16_t tileY);
-    void handleConditionBubble();
+    void tickConditionBubble();
     void handlePoopWeightLoss(DigimonType type);
     void handleWildPoop();
     void setFoodTimer(DigimonType type);
@@ -15,4 +15,5 @@ extern "C"
     void handlePostBattleTiredness();
     void setPartnerIdling();
     void initializePartnerWaypoint();
+    void Partner_tickCollision();
 }
