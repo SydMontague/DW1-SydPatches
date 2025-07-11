@@ -1682,13 +1682,11 @@ extern "C"
     bool tickOpenChestTray(uint32_t chestId);
     bool tickCloseChestTray(uint32_t chestId);
     void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos);
-    void startGameTime();
     /*
      * Checks if a button has been pressed and consumes it (i.e. subsequent checks for the same button within the same
      * tick return false).
      */
     bool isKeyDown(uint16_t keyMask);
-    void stopGameTime();
     void Tamer_tickFishing();
     extern void Tamer_tickBattle(int32_t instanceId);
     extern int32_t main();

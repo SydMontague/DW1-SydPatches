@@ -67,6 +67,7 @@ extern "C"
 
         // Custom Objects
         DEBUG_OVERLAY = 20000,
+        STATUS_BAR = 20001,
 
         NONE = 0xFFFF,
     };

@@ -9,4 +9,5 @@ extern "C"
     void updateMinuteHand(int32_t hour, int32_t minute);
     void startGameTime();
     void stopGameTime();
+    void renderStatusBars(int32_t instanceId);
 }

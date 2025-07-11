@@ -5,10 +5,11 @@
 #include "Entity.hpp"
 #include "Font.hpp"
 #include "GameObjects.hpp"
+#include "GameTime.hpp"
 #include "Helper.hpp"
+#include "InventoryUI.hpp"
 #include "Math.hpp"
 #include "PlayerMenu.hpp"
-#include "InventoryUI.hpp"
 #include "Sound.hpp"
 #include "StatsView.hpp"
 #include "Tamer.hpp"
@@ -357,9 +358,7 @@ extern "C"
     {
         switch (option)
         {
-            case 0:
-                TRIANGLE_MENU_STATE = 2;
-                break;
+            case 0: TRIANGLE_MENU_STATE = 2; break;
             case 1: TRIANGLE_MENU_STATE = 3; break;
             case 2: TRIANGLE_MENU_STATE = 5; break;
             case 3:

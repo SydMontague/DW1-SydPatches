@@ -68,10 +68,13 @@ namespace
             PLAYTIME_MINUTES = 59;
         }
     }
+} // namespace
 
-    void renderStatusBars(bool isTimeRunning)
+extern "C"
+{
+    void renderStatusBars(int32_t instanceId)
     {
-        if (isTimeRunning)
+        if (IS_GAMETIME_RUNNING == 1)
             STATUS_UI_OFFSET_X -= 50;
         else
             STATUS_UI_OFFSET_X += 50;
@@ -117,10 +120,7 @@ namespace
             }
         }
     }
-} // namespace
 
-extern "C"
-{
     void initializeClockData()
     {
         CURRENT_FRAME       = 9600;
@@ -267,18 +267,16 @@ extern "C"
                           getClut(0x100, 0x1F1),
                           9,
                           0);
-
-        renderStatusBars(IS_GAMETIME_RUNNING);
     }
 
     void stopGameTime()
     {
-        IS_GAMETIME_RUNNING = false;
+        IS_GAMETIME_RUNNING = 0;
     }
 
     void startGameTime()
     {
-        IS_GAMETIME_RUNNING = true;
+        IS_GAMETIME_RUNNING = 1;
     }
 
     void updateMinuteHand(int32_t hour, int32_t minute)
@@ -310,6 +308,7 @@ extern "C"
     void addClock()
     {
         addObject(ObjectID::GAME_CLOCK, 0, tickGameClock, renderGameClock);
+        addObject(ObjectID::STATUS_BAR, 0, nullptr, renderStatusBars);
         addObject(ObjectID::PLAYTIME, 0, tickPlaytime, nullptr);
     }
 }

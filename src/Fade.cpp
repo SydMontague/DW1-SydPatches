@@ -1,4 +1,5 @@
 #include "GameObjects.hpp"
+#include "GameTime.hpp"
 #include "Helper.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
