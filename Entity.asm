@@ -259,12 +259,6 @@
 .org 0x800f7150
   jal collisionGrace
 
-;.org 0x800b62b4
-;  jal entityIsOffScreen
-;.org 0x800b6b34
-;  jal entityIsOffScreen
-.org 0x800dd988
-  jal entityIsOffScreen
 
 ;.org 0x800d5598
 ;  jal isOffScreen

@@ -4,19 +4,6 @@
 .org 0x800ef8e0
   jal setImmortalHour
 
-.org 0x800dd99c
-  jal tickConditionBoundaries
-;.org 0x800abc28
-;  jal tickConditionBoundaries
-;.org 0x800a8fc8
-;  jal tickConditionBoundaries
-
-;.org 0x800a8fa0
-;  jal tickSleepMechanics
-
-;.org 0x800a8fc0
-;  jal tickUnhappinessMechanics
-
 .org 0x800dde34
   jal handlePraiseScold
 
@@ -29,17 +16,11 @@
 .org 0x800ddbcc
   jal sleepRegen
 
-;.org 0x800a8fb0
-;  jal tickTirednessMechanics
-
 .org 0x800de0b8
   jal partnerWillRefuseItem
 
-;.org 0x800a8fb8
-;  jal tickHungerMechanics
-
-.org 0x800dd944
-  jal handleConditionBubble
+;.org 0x800dd944
+;  jal handleConditionBubble
 .org 0x800dd9f0
   jal handleConditionBubble
 
@@ -85,13 +66,6 @@
   jal initializePartner
 .org 0x800eea7c
   jal initializePartner
-
-;.org 0x800d415c
-;  jal initializePartnerWaypoint
-;.org 0x800d4180
-;  jal initializePartnerWaypoint
-;.org 0x800d5dbc
-;  jal initializePartnerWaypoint
 
 .org 0x800dd9c8
   jal tickPartnerCollision

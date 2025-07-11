@@ -23,7 +23,6 @@
 .definelabel setButterfly,              0x800e9d24
 .definelabel readPStat,                0x801062e0
 .definelabel writePStat,                0x80106474
-.definelabel Partner_tick,              0x800dd7ac
 .definelabel projectPosition,           0x800e1074
 .definelabel renderObject,              0x800e215c
 .definelabel learnMove,                 0x800e5f14
@@ -79,6 +78,19 @@
 .definelabel startThrowingItem,         0x800f0490
 .definelabel isFishing,                 0x800e4e7c
 .definelabel updateBGM,                 0x80106af0
+.definelabel Partner_tickBattle,        0x800f1414
+
+.definelabel tickNormal,                0x800dd9c0
+.definelabel partnerSleep,              0x800dda08
+.definelabel partnerPraiseScold,        0x800ddd04
+.definelabel partnerFeedItem,           0x800ddec0
+.definelabel tickPartnerToilet,         0x800de2c0
+.definelabel partnerWildPoop,           0x800de540
+.definelabel partnerDying,              0x800de6c0
+.definelabel partnerEatShit,            0x800de88c
+.definelabel partnerIdling,             0x800dea2c
+.definelabel partnerEvolving,           0x800dea68
+.definelabel partnerDying2,             0x800dea10
 
 .definelabel ITEM_DESC_PTR, 0x801279dc
 .definelabel CONDITION_FX_OFFSETS, 0x8012a2c4
@@ -311,6 +323,7 @@
 // STD_REL
 .definelabel STD_Tamer_tickTournament, 0x80069688
 .definelabel STD_NPCEntity_tickTournament, 0x80069700
+.definelabel STD_Partner_tickTournament, 0x800696e4
 
 // KAR_REL
 .definelabel KAR_tick, 0x800545c8

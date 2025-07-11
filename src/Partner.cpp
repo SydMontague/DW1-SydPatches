@@ -18,6 +18,7 @@
 #include "Sound.hpp"
 #include "Tamer.hpp"
 #include "constants.hpp"
+#include "extern/STD.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
@@ -37,6 +38,55 @@ constexpr auto START_DISCIPLINE = 50;
 
 constexpr auto FRESH_AWAKE_TIME       = 3;
 constexpr auto IN_TRAINING_AWAKE_TIME = 7;
+
+static void tickOverworld(int32_t instanceId)
+{
+    if (IS_IN_MENU == 1)
+    {
+        tickAnimation(&PARTNER_ENTITY);
+        return;
+    }
+
+    switch (PARTNER_STATE)
+    {
+        case 1: tickNormal(); break;
+        case 3: partnerSleep(); break;
+        case 4:
+        case 15: partnerPraiseScold(PARTNER_STATE); break;
+        case 5: partnerFeedItem(); break;
+        case 6: tickPartnerToilet(); break;
+        case 7: partnerWildPoop(); break;
+        case 8: partnerDying(); break;
+        case 9: partnerEatShit(); break;
+        case 10: handleConditionBubble(); break;
+        case 11: partnerIdling(); break;
+        case 13: partnerEvolving(); break;
+        case 14: partnerDying2(); break;
+    }
+
+    PARTNER_ENTITY.isOnScreen = 1 ^ entityIsOffScreen(&PARTNER_ENTITY, SCREEN_WIDTH, SCREEN_HEIGHT);
+    tickConditionBoundaries();
+    tickAnimation(&PARTNER_ENTITY);
+}
+
+static void tick(int32_t instanceId)
+{
+    if ((GAME_STATE != 0 || PARTNER_STATE != 1) && HAS_BUTTERFLY == 0)
+    {
+        unsetButterfly(BUTTERFLY_ID);
+        HAS_BUTTERFLY = -1;
+    }
+
+    switch (GAME_STATE)
+    {
+        case 0: tickOverworld(instanceId); break;
+        case 1:
+        case 2:
+        case 3: Partner_tickBattle(instanceId); break;
+        case 4:
+        case 5: STD_Partner_tickTournament(instanceId); break;
+    }
+}
 
 extern "C"
 {
@@ -121,7 +171,7 @@ extern "C"
     {
         loadMMD(type, EntityType::PARTNER);
         ENTITY_TABLE.partner = &PARTNER_ENTITY;
-        initializeDigimonObject(type, 1, Partner_tick);
+        initializeDigimonObject(type, 1, tick);
         setEntityPosition(1, posX, posY, posZ);
         setEntityRotation(1, rotX, rotY, rotZ);
         setupEntityMatrix(1);
@@ -280,7 +330,7 @@ extern "C"
         removeObject(static_cast<ObjectID>(type), 1);
         applyMMD(type, EntityType::PARTNER, &EVO_SEQUENCE_DATA.modelData);
         ENTITY_TABLE.partner = &PARTNER_ENTITY;
-        initializeDigimonObject(type, 1, Partner_tick);
+        initializeDigimonObject(type, 1, tick);
         setEntityPosition(1, posX, posY, posZ);
         setEntityRotation(1, rotX, rotY, rotZ);
         setupEntityMatrix(1);
@@ -319,7 +369,7 @@ extern "C"
         removeObject(static_cast<ObjectID>(type), 1);
         applyMMD(type, EntityType::PARTNER, &REINCARNATION_MODEL_DATA);
         ENTITY_TABLE.partner = &PARTNER_ENTITY;
-        initializeDigimonObject(type, 1, Partner_tick);
+        initializeDigimonObject(type, 1, tick);
         setEntityPosition(1, posX, posY, posZ);
         setEntityRotation(1, rotX, rotY, rotZ);
         setupEntityMatrix(1);

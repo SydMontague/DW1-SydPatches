@@ -1635,6 +1635,19 @@ extern "C"
     extern SectionData SECTION_DATA;
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
 
+    void tickNormal();
+    void partnerSleep();
+    void partnerPraiseScold(int32_t state);
+    void partnerFeedItem();
+    void tickPartnerToilet();
+    void partnerWildPoop();
+    void partnerDying();
+    void partnerEatShit();
+    void partnerIdling();
+    void partnerEvolving();
+    void partnerDying2();
+
+    void Partner_tickBattle(int32_t instanceId);
     bool isFishing();
     void updateBGM();
     void startThrowingItem();

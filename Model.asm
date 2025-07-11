@@ -382,10 +382,10 @@
 ;  jal tickAnimation
 ;.org 0x800bf1dc
 ;  jal tickAnimation
-.org 0x800dd880
-  jal tickAnimation
-.org 0x800dd9a8
-  jal tickAnimation
+;.org 0x800dd880
+;  jal tickAnimation
+;.org 0x800dd9a8
+;  jal tickAnimation
 .org 0x800f13f8
   jal tickAnimation
 .org 0x800f1428
