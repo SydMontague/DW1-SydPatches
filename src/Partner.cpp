@@ -1218,7 +1218,7 @@ extern "C"
                 // the vanilla game does this differently, but the vanilla game also has a bug here
                 if (time == -1) continue;
                 auto diff = getTimeDiff(hour, time);
-                if (diff < minDiff)
+                if (diff > 0 & diff < minDiff)
                 {
                     minDiff                     = diff;
                     PARTNER_PARA.nextHungerHour = time;
