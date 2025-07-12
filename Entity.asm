@@ -1,12 +1,12 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800de41c
-  jal tickEntityWalkTo
-.org 0x800de464
-  jal tickEntityWalkTo
-.org 0x800de514
-  jal tickEntityWalkTo
+;.org 0x800de41c
+;  jal tickEntityWalkTo
+;.org 0x800de464
+;  jal tickEntityWalkTo
+;.org 0x800de514
+;  jal tickEntityWalkTo
 .org 0x800de998
   jal tickEntityWalkTo
 .org 0x8010573c
@@ -124,12 +124,12 @@
 ;  jal entityLookAtLocation
 ;.org 0x800de050
 ;  jal entityLookAtLocation
-.org 0x800de3fc
-  jal entityLookAtLocation
-.org 0x800de444
-  jal entityLookAtLocation
-.org 0x800de4f4
-  jal entityLookAtLocation
+;.org 0x800de3fc
+;  jal entityLookAtLocation
+;.org 0x800de444
+;  jal entityLookAtLocation
+;.org 0x800de4f4
+;  jal entityLookAtLocation
 .org 0x800de59c
   jal entityLookAtLocation
 .org 0x800de5c8

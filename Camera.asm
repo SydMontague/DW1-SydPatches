@@ -1,10 +1,10 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800de3d0
-  jal createCameraMovement
-.org 0x800de4c8
-  jal createCameraMovement
+;.org 0x800de3d0
+;  jal createCameraMovement
+;.org 0x800de4c8
+;  jal createCameraMovement
 .org 0x800ef8d8
   jal createCameraMovement
 
@@ -32,8 +32,8 @@
 ;  jal unsetCameraFollowPlayer
 ;.org 0x800ddd40
 ;  jal unsetCameraFollowPlayer
-.org 0x800de33c
-  jal unsetCameraFollowPlayer
+;.org 0x800de33c
+;  jal unsetCameraFollowPlayer
 .org 0x800de5a4
   jal unsetCameraFollowPlayer
 .org 0x800de730

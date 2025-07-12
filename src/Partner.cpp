@@ -28,6 +28,27 @@
 #include "extern/libgte.hpp"
 #include "extern/stddef.hpp"
 
+struct ToiletData
+{
+    int16_t posX1;
+    int16_t posY1;
+    int16_t posX2;
+    int16_t posY2;
+};
+
+constexpr dtl::array<ToiletData, 10> TOILET_DATA = {{
+    {.posX1 = -196, .posY1 = -1831, .posX2 = -392, .posY2 = -976},
+    {.posX1 = -2852, .posY1 = -957, .posX2 = -3319, .posY2 = -714},
+    {.posX1 = -1200, .posY1 = -925, .posX2 = -2544, .posY2 = -935},
+    {.posX1 = -281, .posY1 = 652, .posX2 = -176, .posY2 = 1306},
+    {.posX1 = 389, .posY1 = 445, .posX2 = 1487, .posY2 = 567},
+    {.posX1 = 3494, .posY1 = -2583, .posX2 = 3489, .posY2 = -1895},
+    {.posX1 = -1617, .posY1 = -666, .posX2 = -1576, .posY2 = 181},
+    {.posX1 = -30, .posY1 = 1550, .posX2 = -144, .posY2 = 2075},
+    {.posX1 = -2122, .posY1 = -1930, .posX2 = -2256, .posY2 = -1260},
+    {.posX1 = -1371, .posY1 = 816, .posX2 = -1449, .posY2 = 1819},
+}};
+
 constexpr auto FRESH_EVOLUTION_TIME       = 6;
 constexpr auto IN_TRAINING_EVOLUTION_TIME = 24;
 constexpr auto ROOKIE_EVOLUTION_TIME      = 72;
@@ -41,6 +62,9 @@ constexpr auto START_DISCIPLINE = 50;
 
 constexpr auto FRESH_AWAKE_TIME       = 3;
 constexpr auto IN_TRAINING_AWAKE_TIME = 7;
+
+static Vector toiletPos1;
+static Vector toiletPos2;
 
 static void updateSleepingTimes()
 {
@@ -1001,6 +1025,76 @@ static void tickFeedItem()
     }
 }
 
+static void handleToilet()
+{
+    PARTNER_PARA.happiness += 2;
+    PARTNER_PARA.discipline += 2;
+    PARTNER_PARA.poopLevel         = getRaiseData(PARTNER_ENTITY.type)->poopTimer * 2;
+    PARTNER_PARA.condition.isPoopy = false;
+    handlePoopWeightLoss(PARTNER_ENTITY.type);
+}
+
+static void tickPartnerToilet()
+{
+    switch (PARTNER_SUB_STATE)
+    {
+        case 0:
+        {
+            auto toiletId    = MAP_ENTRIES[CURRENT_SCREEN].toiletId - 1;
+            auto& toiletData = TOILET_DATA[toiletId];
+            auto y           = PARTNER_ENTITY.posData->location.y;
+
+            Tamer_setState(6);
+            unsetCameraFollowPlayer();
+
+            toiletPos1 = {.x = toiletData.posX1, .y = y, .z = toiletData.posY1};
+            toiletPos2 = {.x = toiletData.posX2, .y = y, .z = toiletData.posY2};
+
+            createCameraMovement(&toiletPos2, 20);
+            startAnimation(&PARTNER_ENTITY, 4);
+            PARTNER_SUB_STATE = 1;
+            break;
+        }
+        case 1:
+        {
+            entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
+
+            if (tickEntityWalkTo(0xFC, 0xFF, toiletPos1.x, toiletPos1.z, false)) PARTNER_SUB_STATE = 2;
+            break;
+        }
+        case 2:
+        {
+            entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
+
+            if (tickEntityWalkTo(0xFC, 0xFF, toiletPos2.x, toiletPos2.z, false))
+            {
+                // vanilla doesn't change orientation here, causing the Digimon to look into "random" directions
+                entityLookAtLocation(&PARTNER_ENTITY, &toiletPos1);
+                startAnimation(&PARTNER_ENTITY, 10);
+                PARTNER_SUB_STATE = 3;
+            }
+            break;
+        }
+        case 3:
+        {
+            if (PARTNER_ENTITY.frameCount > PARTNER_ENTITY.animFrame) return;
+
+            handleToilet();
+            createCameraMovement(&TAMER_ENTITY.posData->location, 20);
+            startAnimation(&PARTNER_ENTITY, 2);
+            PARTNER_SUB_STATE = 4;
+
+            break;
+        }
+        case 4:
+        {
+            entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
+            if (tickEntityWalkTo(0xFC, 0xFF, toiletPos1.x, toiletPos1.z, false)) SOME_SCRIPT_SYNC_BIT = 1;
+            break;
+        }
+    }
+}
+
 static void tickOverworld(int32_t instanceId)
 {
     if (IS_IN_MENU == 1)
@@ -1519,15 +1613,6 @@ extern "C"
     {
         PARTNER_PARA.weight -= (getRaiseData(type)->poopSize + random(4)) / 4;
         if (PARTNER_PARA.weight < WEIGHT_MIN) PARTNER_PARA.weight = WEIGHT_MIN;
-    }
-
-    void handleToilet()
-    {
-        PARTNER_PARA.happiness += 2;
-        PARTNER_PARA.discipline += 2;
-        PARTNER_PARA.poopLevel         = getRaiseData(PARTNER_ENTITY.type)->poopTimer * 2;
-        PARTNER_PARA.condition.isPoopy = false;
-        handlePoopWeightLoss(PARTNER_ENTITY.type);
     }
 
     void handleWildPoop()

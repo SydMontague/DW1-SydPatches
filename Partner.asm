@@ -7,9 +7,6 @@
 .org 0x800de63c
   jal createPoopPile
 
-.org 0x800de4b4
-  jal handleToilet
-
 .org 0x800de648
   jal handleWildPoop
 

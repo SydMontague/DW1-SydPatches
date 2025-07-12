@@ -11,4 +11,5 @@ extern "C"
     bool isCameraFollowingPlayer();
     void unsetCameraFollowPlayer();
     void setCameraFollowPlayer();
+    void createCameraMovement(Vector* target, int32_t instanceId);
 }

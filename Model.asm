@@ -265,12 +265,12 @@
 ;  jal startAnimation
 ;.org 0x800de254
 ;  jal startAnimation
-.org 0x800de3e0
-  jal startAnimation
-.org 0x800de480
-  jal startAnimation
-.org 0x800de4d8
-  jal startAnimation
+;.org 0x800de3e0
+;  jal startAnimation
+;.org 0x800de480
+;  jal startAnimation
+;.org 0x800de4d8
+;  jal startAnimation
 .org 0x800de57c
   jal startAnimation
 .org 0x800de5e8
