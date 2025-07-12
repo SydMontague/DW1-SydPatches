@@ -82,8 +82,8 @@
 .definelabel Partner_tickWalking,       0x800ded10
 .definelabel tickMainMenu,              0x8010ff1c
 .definelabel renderMainMenu,            0x80113458
+.definelabel checkEatDistance,          0x800df4dc
 
-.definelabel partnerFeedItem,           0x800ddec0
 .definelabel tickPartnerToilet,         0x800de2c0
 .definelabel partnerWildPoop,           0x800de540
 .definelabel partnerDying,              0x800de6c0

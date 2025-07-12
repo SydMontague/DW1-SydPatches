@@ -1,14 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800de200
-  jal removeOneSelectedItem
-
-.org 0x800de07c
-  li.u a3,renderFeedingItem
-.org 0x800de090
-  li.l a3,renderFeedingItem
-
 .org 0x80105dc4
   jal isTrainingComplete
 
@@ -84,10 +76,10 @@
 ;  jal Tamer_setState
 ;.org 0x800dde90	
 ;  jal Tamer_setState
-.org 0x800de1b4	
-  jal Tamer_setState
-.org 0x800de290	
-  jal Tamer_setState
+;.org 0x800de1b4	
+;  jal Tamer_setState
+;.org 0x800de290	
+;  jal Tamer_setState
 .org 0x800de334	
   jal Tamer_setState
 .org 0x800de584	
@@ -162,10 +154,10 @@
 
 ;.org 0x800aa1c4
 ;  jal Tamer_startAnimation
-.org 0x800de058
-  jal Tamer_startAnimation
-.org 0x800de25c
-  jal Tamer_startAnimation
+;.org 0x800de058
+;  jal Tamer_startAnimation
+;.org 0x800de25c
+;  jal Tamer_startAnimation
 .org 0x800de934
   jal Tamer_startAnimation
 .org 0x80105480

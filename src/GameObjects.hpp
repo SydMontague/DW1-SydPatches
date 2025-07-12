@@ -6,7 +6,7 @@ extern "C"
     enum class ObjectID : uint16_t
     {
         ENTITY_TEXT          = 402,
-        TAMER_ITEM           = 404,
+        THROWN_ITEM          = 404,
         DROPPED_ITEM         = 405,
         DEATH_COUNTDOWN      = 407,
         COMMAND_BAR          = 408,
@@ -67,7 +67,7 @@ extern "C"
 
         // Custom Objects
         DEBUG_OVERLAY = 20000,
-        STATUS_BAR = 20001,
+        STATUS_BAR    = 20001,
 
         NONE = 0xFFFF,
     };

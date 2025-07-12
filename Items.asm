@@ -68,10 +68,10 @@
 ;  jal removeTamerItem
 ;.org 0x800c455c
 ;  jal removeTamerItem
-.org 0x800de208
-  jal removeTamerItem
-.org 0x800de2a0
-  jal removeTamerItem
+;.org 0x800de208
+;  jal removeTamerItem
+;.org 0x800de2a0
+;  jal removeTamerItem
 .org 0x800f06cc
   jal removeTamerItem
 

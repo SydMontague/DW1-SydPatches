@@ -946,27 +946,11 @@ extern "C"
         startGameTime();
     }
 
-    void removeOneSelectedItem()
-    {
-        removeItem(INVENTORY_ITEM_TYPES[INVENTORY_POINTER], 1);
-    }
-
-    void renderFeedingItem(int32_t instanceId)
-    {
-        if (instanceId != 0) return;
-
-        auto& pos                   = TAMER_ENTITY.posData[9].posMatrix.work.t;
-        TAMER_ITEM.spriteLocation.x = pos[0];
-        TAMER_ITEM.spriteLocation.y = pos[1];
-        TAMER_ITEM.spriteLocation.z = pos[2];
-        renderOverworldItem(&TAMER_ITEM);
-    }
-
     void removeTamerItem()
     {
         if (TAMER_ITEM.type == ItemType::NONE) return;
 
-        removeObject(ObjectID::TAMER_ITEM, 0);
+        removeObject(ObjectID::THROWN_ITEM, 0);
         TAMER_ITEM.type = ItemType::NONE;
     }
 

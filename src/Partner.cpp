@@ -1,6 +1,7 @@
 #include "Partner.hpp"
 
 #include "Camera.hpp"
+#include "DigimonData.hpp"
 #include "Effects.hpp"
 #include "Entity.hpp"
 #include "Evolution.hpp"
@@ -799,6 +800,207 @@ static void tickPraiseScold(bool isScold)
     }
 }
 
+static void renderFeedingItem(int32_t instanceId)
+{
+    if (instanceId != 0) return;
+
+    auto& pos                   = TAMER_ENTITY.posData[9].posMatrix.work.t;
+    TAMER_ITEM.spriteLocation.x = pos[0];
+    TAMER_ITEM.spriteLocation.y = pos[1];
+    TAMER_ITEM.spriteLocation.z = pos[2];
+    renderOverworldItem(&TAMER_ITEM);
+}
+
+static bool willRefuseItem()
+{
+    auto type     = PARTNER_ENTITY.type;
+    auto itemType = TAMER_ITEM.type;
+
+    // key items
+    if (itemType >= ItemType::BLUE_FLUTE && itemType <= ItemType::GEAR) return true;
+    if (itemType == ItemType::FRIDGE_KEY || itemType == ItemType::AS_DECODER) return true;
+    // battle only items
+    if (itemType >= ItemType::OFFENSE_DISK && itemType <= ItemType::SUPER_SPEED_DISK) return true;
+    // tamer items
+    if (itemType >= ItemType::TRAINING_MANUAL && itemType <= ItemType::HEALTH_SHOE) return true;
+    // invalid item
+    if (itemType > ItemType::METAL_BANANA) return true;
+
+    // evolution items
+    auto level  = getDigimonData(type)->level;
+    auto target = getEvoItemTarget(itemType);
+    if (target != DigimonType::INVALID)
+    {
+        auto targetLevel = getDigimonData(target)->level;
+        auto levelDiff   = static_cast<int32_t>(targetLevel) - static_cast<int32_t>(level);
+        if (levelDiff != 1) return true;
+    }
+
+    // take any item after successful scold
+    if (ITEM_SCOLD_FLAG == 2)
+    {
+        ITEM_SCOLD_FLAG = 0;
+        return false;
+    }
+
+    if (itemType < ItemType::MEAT)
+    {
+        auto roll1 = random(100);
+        auto roll2 = random(10);
+        if (roll1 < (110 - PARTNER_PARA.discipline - roll2 - 10))
+        {
+            ITEM_SCOLD_FLAG = 1;
+            return true;
+        }
+    }
+
+    // 20% chance of refusing favorite food when not hungry
+    // vanilla would grant a justified scold if the Digimon were hungry, but as it can't refuse when hungry this
+    // could never happen
+    if (!PARTNER_PARA.condition.isHungry && itemType == getRaiseData(type)->favoriteFood && random(10) < 2) return true;
+
+    return false;
+}
+
+static void handleFoodFeed(ItemType item)
+{
+    if (!isFoodItem(item)) return;
+
+    auto* raise = getRaiseData(PARTNER_ENTITY.type);
+
+    if (!PARTNER_PARA.condition.isHungry)
+    {
+        PARTNER_PARA.happiness -= 3;
+        PARTNER_PARA.discipline -= 2;
+    }
+    else
+    {
+        if (PARTNER_PARA.energyLevel >= raise->energyThreshold)
+        {
+            PARTNER_PARA.happiness += 5;
+            PARTNER_PARA.discipline += 1;
+            PARTNER_PARA.condition.isHungry = false;
+            setFoodTimer(PARTNER_ENTITY.type);
+            PARTNER_PARA.starvationTimer = 0;
+        }
+
+        if (PARTNER_PARA.energyLevel >= raise->energyThreshold || raise->favoriteFood == item)
+        {
+            PARTNER_ANIMATION = 11;
+            startAnimation(&PARTNER_ENTITY, 11);
+        }
+    }
+}
+
+static void tickFeedItem()
+{
+    switch (PARTNER_SUB_STATE)
+    {
+        case 0:
+        {
+            if (checkEatDistance(getItemTakeDistance(PARTNER_ENTITY.type)))
+                PARTNER_SUB_STATE = 1;
+            else
+                PARTNER_SUB_STATE = 2;
+
+            startAnimation(&PARTNER_ENTITY, 2);
+            PARTNER_ENTITY.posData->rotation.y += 0x800;
+            tickPartnerWaypoints();
+            break;
+        }
+        case 1:
+        {
+            entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
+            if (!checkEatDistance(getItemTakeDistance(PARTNER_ENTITY.type))) PARTNER_SUB_STATE = 3;
+            break;
+        }
+        case 2:
+        {
+            entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
+            entityLookAtLocation(&PARTNER_ENTITY, &TAMER_ENTITY.posData->location);
+            if (checkEatDistance(getItemTakeDistance(PARTNER_ENTITY.type))) PARTNER_SUB_STATE = 3;
+
+            break;
+        }
+        case 3:
+        {
+            entityLookAtLocation(&PARTNER_ENTITY, &TAMER_ENTITY.posData->location);
+            startAnimation(&TAMER_ENTITY, 5);
+            playSound(0, 12);
+            startAnimation(&PARTNER_ENTITY, 0);
+            addObject(ObjectID::FEEDING_ITEM, 0, nullptr, renderFeedingItem);
+            PARTNER_SUB_STATE = 4;
+            break;
+        }
+        case 4:
+        {
+            if (TAMER_ENTITY.animFrame < 8) return;
+
+            if (willRefuseItem())
+            {
+                startAnimation(&PARTNER_ENTITY, 13);
+                PARTNER_SUB_STATE = 7;
+            }
+            else
+            {
+                startAnimation(&PARTNER_ENTITY, 8);
+                PARTNER_SUB_STATE = 5;
+            }
+            break;
+        }
+        case 5:
+        {
+            if (PARTNER_ENTITY.animId == 8 && PARTNER_ENTITY.animFrame == 11) removeObject(ObjectID::FEEDING_ITEM, 0);
+
+            if (PARTNER_ENTITY.animFrame == 15) startAnimation(&TAMER_ENTITY, 0);
+
+            if (PARTNER_ENTITY.frameCount <= PARTNER_ENTITY.animFrame) PARTNER_SUB_STATE = 6;
+            break;
+        }
+        case 6:
+        {
+            if (PARTNER_ENTITY.frameCount > PARTNER_ENTITY.animFrame) return;
+
+            PARTNER_STATE = 1;
+            Tamer_setState(0);
+            setCameraFollowPlayer();
+
+            auto func = ITEM_FUNCTIONS[static_cast<uint32_t>(TAMER_ITEM.type)];
+            if (func) func(TAMER_ITEM.type);
+
+            // vanilla uses the inventory pointer to get the item type, but that's stupid
+            removeItem(TAMER_ITEM.type, 1);
+            handleFoodFeed(TAMER_ITEM.type);
+            TAMER_ITEM.type = ItemType::NONE;
+            removeObject(ObjectID::FEEDING_ITEM, 0); // vanilla removes the THROWN_ITEM object here
+            break;
+        }
+        case 7:
+        {
+            if (PARTNER_ENTITY.frameCount > PARTNER_ENTITY.animFrame) return;
+
+            removeObject(ObjectID::FEEDING_ITEM, 0);
+            startAnimation(&PARTNER_ENTITY, 0);
+            startAnimation(&TAMER_ENTITY, 4);
+            PARTNER_SUB_STATE = 8;
+
+            break;
+        }
+        case 8:
+        {
+            if (TAMER_ENTITY.frameCount > TAMER_ENTITY.animFrame) return;
+
+            Tamer_setState(0);
+            PARTNER_STATE   = 1;
+            TAMER_ITEM.type = ItemType::NONE;
+            removeObject(ObjectID::FEEDING_ITEM, 0); // vanilla removes the THROWN_ITEM object here
+            setCameraFollowPlayer();
+
+            break;
+        }
+    }
+}
+
 static void tickOverworld(int32_t instanceId)
 {
     if (IS_IN_MENU == 1)
@@ -812,8 +1014,7 @@ static void tickOverworld(int32_t instanceId)
         case 1: tickNormal(); break;
         case 3: tickSleep(); break;
         case 4: tickPraiseScold(true); break;
-        case 15: tickPraiseScold(false); break;
-        case 5: partnerFeedItem(); break;
+        case 5: tickFeedItem(); break;
         case 6: tickPartnerToilet(); break;
         case 7: partnerWildPoop(); break;
         case 8: partnerDying(); break;
@@ -822,6 +1023,7 @@ static void tickOverworld(int32_t instanceId)
         case 11: partnerIdling(); break;
         case 13: partnerEvolving(); break;
         case 14: partnerDying2(); break;
+        case 15: tickPraiseScold(false); break;
     }
 
     PARTNER_ENTITY.isOnScreen = 1 ^ entityIsOffScreen(&PARTNER_ENTITY, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -1272,58 +1474,6 @@ extern "C"
         createCloudFX(&pos);
     }
 
-    uint32_t partnerWillRefuseItem()
-    {
-        auto type     = PARTNER_ENTITY.type;
-        auto itemType = TAMER_ITEM.type;
-
-        // key items
-        if (itemType >= ItemType::BLUE_FLUTE && itemType <= ItemType::GEAR) return true;
-        if (itemType == ItemType::FRIDGE_KEY || itemType == ItemType::AS_DECODER) return true;
-        // battle only items
-        if (itemType >= ItemType::OFFENSE_DISK && itemType <= ItemType::SUPER_SPEED_DISK) return true;
-        // tamer items
-        if (itemType >= ItemType::TRAINING_MANUAL && itemType <= ItemType::HEALTH_SHOE) return true;
-        // invalid item
-        if (itemType > ItemType::METAL_BANANA) return true;
-
-        // evolution items
-        auto level  = getDigimonData(type)->level;
-        auto target = getEvoItemTarget(itemType);
-        if (target != DigimonType::INVALID)
-        {
-            auto targetLevel = getDigimonData(target)->level;
-            auto levelDiff   = static_cast<int32_t>(targetLevel) - static_cast<int32_t>(level);
-            if (levelDiff != 1) return true;
-        }
-
-        // take any item after successful scold
-        if (ITEM_SCOLD_FLAG == 2)
-        {
-            ITEM_SCOLD_FLAG = 0;
-            return false;
-        }
-
-        if (itemType < ItemType::MEAT)
-        {
-            auto roll1 = random(100);
-            auto roll2 = random(10);
-            if (roll1 < (110 - PARTNER_PARA.discipline - roll2 - 10))
-            {
-                ITEM_SCOLD_FLAG = 1;
-                return true;
-            }
-        }
-
-        // 20% chance of refusing favorite food when not hungry
-        // vanilla would grant a justified scold if the Digimon were hungry, but as it can't refuse when hungry this
-        // could never happen
-        if (!PARTNER_PARA.condition.isHungry && itemType == getRaiseData(type)->favoriteFood && random(10) < 2)
-            return true;
-
-        return false;
-    }
-
     void tickConditionBubble()
     {
         // TODO rework, this sucks to begin with since only two bubbles are visible at most
@@ -1362,36 +1512,6 @@ extern "C"
             unsetBubble(conditionBubbleId);
             BUTTERFLY_ID  = setButterfly(&PARTNER_ENTITY);
             HAS_BUTTERFLY = 0;
-        }
-    }
-
-    void partnerHandleFoodFeed(ItemType item)
-    {
-        if (!isFoodItem(item)) return;
-
-        auto* raise = getRaiseData(PARTNER_ENTITY.type);
-
-        if (!PARTNER_PARA.condition.isHungry)
-        {
-            PARTNER_PARA.happiness -= 3;
-            PARTNER_PARA.discipline -= 2;
-        }
-        else
-        {
-            if (PARTNER_PARA.energyLevel >= raise->energyThreshold)
-            {
-                PARTNER_PARA.happiness += 5;
-                PARTNER_PARA.discipline += 1;
-                PARTNER_PARA.condition.isHungry = false;
-                setFoodTimer(PARTNER_ENTITY.type);
-                PARTNER_PARA.starvationTimer = 0;
-            }
-
-            if (PARTNER_PARA.energyLevel >= raise->energyThreshold || raise->favoriteFood == item)
-            {
-                PARTNER_ANIMATION = 11;
-                startAnimation(&PARTNER_ENTITY, 11);
-            }
         }
     }
 

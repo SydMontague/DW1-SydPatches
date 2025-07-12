@@ -1648,7 +1648,6 @@ extern "C"
     extern SectionData SECTION_DATA;
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
 
-    void partnerFeedItem();
     void tickPartnerToilet();
     void partnerWildPoop();
     void partnerDying();
@@ -1658,6 +1657,7 @@ extern "C"
     void partnerDying2();
     Closeness getPartnerTamerCloseness();
 
+    bool checkEatDistance(int32_t distance);
     void tickMainMenu(int32_t instanceId);
     void renderMainMenu(int32_t instanceId);
     void Partner_tickWalking();

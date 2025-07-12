@@ -67,10 +67,10 @@
 ;  jal setCameraFollowPlayer
 ;.org 0x800dde98
 ;  jal setCameraFollowPlayer
-.org 0x800de1bc
-  jal setCameraFollowPlayer
-.org 0x800de2a8
-  jal setCameraFollowPlayer
+;.org 0x800de1bc
+;  jal setCameraFollowPlayer
+;.org 0x800de2a8
+;  jal setCameraFollowPlayer
 .org 0x800de69c
   jal setCameraFollowPlayer
 .org 0x800dea10

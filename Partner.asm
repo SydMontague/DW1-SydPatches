@@ -7,12 +7,6 @@
 .org 0x800de63c
   jal createPoopPile
 
-.org 0x800de0b8
-  jal partnerWillRefuseItem
-
-.org 0x800de210
-  jal partnerHandleFoodFeed
-
 .org 0x800de4b4
   jal handleToilet
 
@@ -67,8 +61,8 @@
 ;  jal tickPartnerWaypoints
 ;.org 0x800ddd48
 ;  jal tickPartnerWaypoints
-.org 0x800ddf6c
-  jal tickPartnerWaypoints
+;.org 0x800ddf6c
+;  jal tickPartnerWaypoints
 .org 0x800de95c
   jal tickPartnerWaypoints
 .org 0x800e7624
