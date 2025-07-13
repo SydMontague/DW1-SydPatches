@@ -1648,13 +1648,16 @@ extern "C"
     extern SectionData SECTION_DATA;
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
 
-    void partnerDying();
     void partnerEatShit();
     void partnerIdling();
     void partnerEvolving();
     void partnerDying2();
     Closeness getPartnerTamerCloseness();
 
+    bool loadMapSounds2(int32_t mapSoundId);
+    void deinitializeFishing();
+    void setFishingDisabled();
+    void setFishingEnabled();
     bool checkEatDistance(int32_t distance);
     void tickMainMenu(int32_t instanceId);
     void renderMainMenu(int32_t instanceId);
@@ -1686,7 +1689,6 @@ extern "C"
     void initializeFishing();
     void
     renderLinePrimitive(uint32_t color, int16_t x1, int16_t y1, int16_t x2, int16_t y2, int32_t layer, uint32_t flag);
-    void closeInventoryBoxes2();
     uint32_t hasFishingRod();
     void initializeLoadedNPCModels();
     void NPCEntity_tickBattle(int32_t instanceId);

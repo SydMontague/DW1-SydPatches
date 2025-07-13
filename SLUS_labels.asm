@@ -83,12 +83,15 @@
 .definelabel tickMainMenu,              0x8010ff1c
 .definelabel renderMainMenu,            0x80113458
 .definelabel checkEatDistance,          0x800df4dc
+.definelabel deinitializeFishing,       0x800e4eb4
+.definelabel setFishingDisabled,        0x800e4d64
+.definelabel setFishingEnabled,         0x800e4d84
+.definelabel loadMapSounds2,            0x800e9034
 
-.definelabel partnerDying,              0x800de6c0
 .definelabel partnerEatShit,            0x800de88c
 .definelabel partnerIdling,             0x800dea2c
 .definelabel partnerEvolving,           0x800dea68
-.definelabel partnerDying2,             0x800dea10
+.definelabel partnerDying2,             0x800dec10
 .definelabel getPartnerTamerCloseness,  0x800df174
 
 .definelabel CHECKED_MEMORY_CARD, 0x80135064

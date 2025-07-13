@@ -12,8 +12,8 @@
 ;  jal closeInventoryBoxes
 ;.org 0x800dbb9c
 ;  jal closeInventoryBoxes
-.org 0x800de6f8
-  jal closeInventoryBoxes
+;.org 0x800de6f8
+;  jal closeInventoryBoxes
 .org 0x800deaa0
   jal closeInventoryBoxes
 

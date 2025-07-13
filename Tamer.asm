@@ -86,8 +86,8 @@
 ;  jal Tamer_setState
 ;.org 0x800de68c	
 ;  jal Tamer_setState
-.org 0x800de7cc	
-  jal Tamer_setState
+;.org 0x800de7cc	
+;  jal Tamer_setState
 .org 0x800de93c	
   jal Tamer_setState
 .org 0x800dea08	

@@ -9,10 +9,12 @@
 #include "Files.hpp"
 #include "Font.hpp"
 #include "GameData.hpp"
+#include "GameMenu.hpp"
 #include "GameObjects.hpp"
 #include "GameTime.hpp"
 #include "Helper.hpp"
 #include "Inventory.hpp"
+#include "InventoryUI.hpp"
 #include "ItemEffects.hpp"
 #include "ItemFunctions.hpp"
 #include "Map.hpp"
@@ -21,6 +23,7 @@
 #include "Sound.hpp"
 #include "Tamer.hpp"
 #include "constants.hpp"
+#include "extern/DOOA.hpp"
 #include "extern/STD.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
@@ -1230,6 +1233,55 @@ static void tickWildPoop()
     }
 }
 
+static void tickDying()
+{
+    switch (PARTNER_SUB_STATE)
+    {
+        case 0:
+        {
+            deinitializeFishing();
+            removeTriangleMenu();
+            closeInventoryBoxes();
+            removeUIBox1();
+            startAnimation(&PARTNER_ENTITY, 2);
+            entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
+            unsetCameraFollowPlayer();
+            loadDynamicLibrary(Overlay::DOOA_REL, nullptr, false, nullptr, 0);
+            loadMapSounds2(19);
+            isSoundLoaded(false, 8);
+            PARTNER_SUB_STATE = 1;
+            break;
+        }
+        case 1:
+        {
+            entityLookAtLocation(&PARTNER_ENTITY, &TAMER_ENTITY.posData->location);
+            if (getPartnerTamerCloseness() > Closeness::SPRINT_DISTANCE)
+            {
+                isSoundLoaded(false, 8);
+                DoOA_tick(&PARTNER_ENTITY, DOOA_DATA_PTR, false);
+                setFishingDisabled();
+                Tamer_setState(6);
+                unsetCameraFollowPlayer();
+                PARTNER_SUB_STATE = 2;
+            }
+            break;
+        }
+        case 2:
+        {
+            if (DoOA_tick(&PARTNER_ENTITY, DOOA_DATA_PTR, true) != -1) return;
+
+            setFishingEnabled();
+            // TODO is resetting these values necessary here?
+            PARTNER_PARA.remainingLifetime = START_LIFESPAN;
+            PARTNER_PARA.sicknessTimer     = 0;
+            PARTNER_PARA.injuryTimer       = 0;
+            STORED_TAMER_POS               = TAMER_ENTITY.posData->location;
+            SOME_SCRIPT_SYNC_BIT           = 1;
+            break;
+        }
+    }
+}
+
 static void tickOverworld(int32_t instanceId)
 {
     if (IS_IN_MENU == 1)
@@ -1246,7 +1298,7 @@ static void tickOverworld(int32_t instanceId)
         case 5: tickFeedItem(); break;
         case 6: tickPartnerToilet(); break;
         case 7: tickWildPoop(); break;
-        case 8: partnerDying(); break;
+        case 8: tickDying(); break;
         case 9: partnerEatShit(); break;
         case 10: tickConditionBubble(); break;
         case 11: partnerIdling(); break;

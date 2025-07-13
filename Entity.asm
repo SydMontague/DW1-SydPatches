@@ -134,10 +134,10 @@
 ;  jal entityLookAtLocation
 ;.org 0x800de5c8
 ;  jal entityLookAtLocation
-.org 0x800de728
-  jal entityLookAtLocation
-.org 0x800de780
-  jal entityLookAtLocation
+;.org 0x800de728
+;  jal entityLookAtLocation
+;.org 0x800de780
+;  jal entityLookAtLocation
 .org 0x800de980
   jal entityLookAtLocation
 .org 0x800dead0

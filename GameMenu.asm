@@ -183,8 +183,8 @@
 ;  jal removeTriangleMenu
 ;.org 0x800b6a5c
 ;  jal removeTriangleMenu
-.org 0x800de6f0
-  jal removeTriangleMenu
+;.org 0x800de6f0
+;  jal removeTriangleMenu
 .org 0x800dea98
   jal removeTriangleMenu
 
@@ -192,8 +192,8 @@
 ;  jal removeUIBox1
 ;.org 0x800b6a6c
 ;  jal removeUIBox1
-.org 0x800de700
-  jal removeUIBox1
+;.org 0x800de700
+;  jal removeUIBox1
 .org 0x800deaa8
   jal removeUIBox1
 

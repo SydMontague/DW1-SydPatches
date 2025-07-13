@@ -18,11 +18,11 @@
 .endarea
 
 .org 0x800d3078
-.area 0x800de6c0-.
+.area 0x800de88c-.
   .importobj "compiled/Cave3.lib"
 
-  .notice "Cave3 Empty space left: " + (0x800de6c0-.) + " bytes"
-  .fill 0x800de6c0-.
+  .notice "Cave3 Empty space left: " + (0x800de88c-.) + " bytes"
+  .fill 0x800de88c-.
 .endarea
 
 .org 0x8011d46c

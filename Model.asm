@@ -277,8 +277,8 @@
 ;  jal startAnimation
 ;.org 0x800de658
 ;  jal startAnimation
-.org 0x800de710
-  jal startAnimation
+;.org 0x800de710
+;  jal startAnimation
 .org 0x800de954
   jal startAnimation
 .org 0x800de9b4
