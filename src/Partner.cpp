@@ -568,6 +568,90 @@ static void sleepRegen()
     if (PARTNER_PARA.weight < WEIGHT_MIN) PARTNER_PARA.weight = WEIGHT_MIN;
 }
 
+static bool hasSpotPoop(int16_t tileX, int16_t tileY, uint8_t map)
+{
+    for (auto& poop : WORLD_POOP)
+    {
+        if (poop.x == tileX && poop.y == tileY && poop.map == map) return true;
+    }
+
+    return false;
+}
+
+static uint32_t countPoopsOnMap(uint8_t map)
+{
+    uint32_t count = 0;
+    for (auto& poop : WORLD_POOP)
+        if (poop.map == map) count++;
+
+    return count;
+}
+
+static PoopPile* getPoopSlotToFill()
+{
+    auto countOnMap = countPoopsOnMap(CURRENT_SCREEN);
+    if (countOnMap >= 16)
+    {
+        for (int32_t i = 0; i < 100; i++)
+        {
+            auto& poop = WORLD_POOP[(CURRENT_POOP_ID + i) % 100];
+            if (poop.map == CURRENT_SCREEN) return &poop;
+        }
+    }
+
+    for (auto& poop : WORLD_POOP)
+        if (poop.size == 0) return &poop;
+
+    auto* val       = &WORLD_POOP[CURRENT_POOP_ID];
+    CURRENT_POOP_ID = (CURRENT_POOP_ID + 1) % 100;
+    return val;
+}
+
+static void createPoopPile(int16_t tileX, int16_t tileY)
+{
+    auto rotation = PARTNER_ENTITY.posData->rotation.y;
+    if (rotation <= 0x300 || rotation >= 0xD00) tileY -= 1;
+    if (rotation <= 0xB00 && rotation >= 0x500) tileY += 1;
+    if (rotation <= 0xF00 && rotation >= 0x900) tileX -= 1;
+    if (rotation < 0x700 && rotation >= 0x100) tileX += 1;
+
+    while (hasSpotPoop(tileX, tileY, CURRENT_SCREEN))
+    {
+        switch (random(4))
+        {
+            case 0: tileX -= 1; break;
+            case 1: tileX += 1; break;
+            case 2: tileY -= 1; break;
+            case 3: tileY += 1; break;
+        }
+    }
+
+    auto* poop = getPoopSlotToFill();
+    poop->map  = CURRENT_SCREEN;
+    poop->x    = tileX;
+    poop->y    = tileY;
+    poop->size = getRaiseData(PARTNER_ENTITY.type)->poopSize;
+
+    if (PARTNER_ENTITY.type != DigimonType::SUKAMON) PARTNER_PARA.virusBar++;
+
+    SVector pos = {
+        .x = static_cast<int16_t>((tileX - 50) * 100 + 50),
+        .y = static_cast<int16_t>(PARTNER_ENTITY.posData->location.y),
+        .z = static_cast<int16_t>((50 - tileY) * 100 - 50),
+    };
+    createCloudFX(&pos);
+}
+
+static void handleWildPoop()
+{
+    PARTNER_PARA.condition.isPoopy = false;
+    PARTNER_PARA.careMistakes += 1;
+    PARTNER_PARA.happiness -= 10;
+    PARTNER_PARA.discipline -= 5;
+    PARTNER_PARA.poopLevel = getRaiseData(PARTNER_ENTITY.type)->poopTimer * 2;
+    handlePoopWeightLoss(PARTNER_ENTITY.type);
+}
+
 static void handleSleeping()
 {
     auto type       = PARTNER_ENTITY.type;
@@ -1095,6 +1179,57 @@ static void tickPartnerToilet()
     }
 }
 
+static void tickWildPoop()
+{
+    switch (PARTNER_SUB_STATE)
+    {
+        case 0:
+        {
+            startAnimation(&PARTNER_ENTITY, 4);
+            Tamer_setState(6);
+            entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
+            unsetCameraFollowPlayer();
+            PARTNER_SUB_STATE = 1;
+            break;
+        }
+        case 1:
+        {
+            entityLookAtLocation(&PARTNER_ENTITY, &TAMER_ENTITY.posData->location);
+
+            if (getPartnerTamerCloseness() > Closeness::SPRINT_DISTANCE)
+            {
+                startAnimation(&PARTNER_ENTITY, 10);
+                PARTNER_SUB_STATE = 2;
+            }
+
+            break;
+        }
+        case 2:
+        {
+            if (PARTNER_ENTITY.frameCount > PARTNER_ENTITY.animFrame) return;
+
+            int16_t tileX;
+            int16_t tileZ;
+            getModelTile(&PARTNER_ENTITY.posData->location, &tileX, &tileZ);
+            createPoopPile(tileX, tileZ); // vanilla stores the poop ID in a global variable, but it's unused
+            handleWildPoop();
+            startAnimation(&PARTNER_ENTITY, 12);
+            PARTNER_SUB_STATE = 3;
+            break;
+        }
+        case 3:
+        {
+            if (PARTNER_ENTITY.frameCount > PARTNER_ENTITY.animFrame) return;
+
+            Tamer_setState(0);
+            PARTNER_STATE = 1;
+            setCameraFollowPlayer();
+            addTamerLevel(1, -1);
+            break;
+        }
+    }
+}
+
 static void tickOverworld(int32_t instanceId)
 {
     if (IS_IN_MENU == 1)
@@ -1110,7 +1245,7 @@ static void tickOverworld(int32_t instanceId)
         case 4: tickPraiseScold(true); break;
         case 5: tickFeedItem(); break;
         case 6: tickPartnerToilet(); break;
-        case 7: partnerWildPoop(); break;
+        case 7: tickWildPoop(); break;
         case 8: partnerDying(); break;
         case 9: partnerEatShit(); break;
         case 10: tickConditionBubble(); break;
@@ -1494,80 +1629,6 @@ extern "C"
         if (PARTNER_PARA.weight < WEIGHT_MIN) PARTNER_PARA.weight = WEIGHT_MIN;
     }
 
-    inline bool hasSpotPoop(int16_t tileX, int16_t tileY, uint8_t map)
-    {
-        for (auto& poop : WORLD_POOP)
-        {
-            if (poop.x == tileX && poop.y == tileY && poop.map == map) return true;
-        }
-
-        return false;
-    }
-
-    inline uint32_t countPoopsOnMap(uint8_t map)
-    {
-        uint32_t count = 0;
-        for (auto& poop : WORLD_POOP)
-            if (poop.map == map) count++;
-
-        return count;
-    }
-
-    inline PoopPile* getPoopSlotToFill()
-    {
-        auto countOnMap = countPoopsOnMap(CURRENT_SCREEN);
-        if (countOnMap >= 16)
-        {
-            for (int32_t i = 0; i < 100; i++)
-            {
-                auto& poop = WORLD_POOP[(CURRENT_POOP_ID + i) % 100];
-                if (poop.map == CURRENT_SCREEN) return &poop;
-            }
-        }
-
-        for (auto& poop : WORLD_POOP)
-            if (poop.size == 0) return &poop;
-
-        auto* val       = &WORLD_POOP[CURRENT_POOP_ID];
-        CURRENT_POOP_ID = (CURRENT_POOP_ID + 1) % 100;
-        return val;
-    }
-
-    void createPoopPile(int16_t tileX, int16_t tileY)
-    {
-        auto rotation = PARTNER_ENTITY.posData->rotation.y;
-        if (rotation <= 0x300 || rotation >= 0xD00) tileY -= 1;
-        if (rotation <= 0xB00 && rotation >= 0x500) tileY += 1;
-        if (rotation <= 0xF00 && rotation >= 0x900) tileX -= 1;
-        if (rotation < 0x700 && rotation >= 0x100) tileX += 1;
-
-        while (hasSpotPoop(tileX, tileY, CURRENT_SCREEN))
-        {
-            switch (random(4))
-            {
-                case 0: tileX -= 1; break;
-                case 1: tileX += 1; break;
-                case 2: tileY -= 1; break;
-                case 3: tileY += 1; break;
-            }
-        }
-
-        auto* poop = getPoopSlotToFill();
-        poop->map  = CURRENT_SCREEN;
-        poop->x    = tileX;
-        poop->y    = tileY;
-        poop->size = getRaiseData(PARTNER_ENTITY.type)->poopSize;
-
-        if (PARTNER_ENTITY.type != DigimonType::SUKAMON) PARTNER_PARA.virusBar++;
-
-        SVector pos = {
-            .x = static_cast<int16_t>((tileX - 50) * 100 + 50),
-            .y = static_cast<int16_t>(PARTNER_ENTITY.posData->location.y),
-            .z = static_cast<int16_t>((50 - tileY) * 100 - 50),
-        };
-        createCloudFX(&pos);
-    }
-
     void tickConditionBubble()
     {
         // TODO rework, this sucks to begin with since only two bubbles are visible at most
@@ -1613,16 +1674,6 @@ extern "C"
     {
         PARTNER_PARA.weight -= (getRaiseData(type)->poopSize + random(4)) / 4;
         if (PARTNER_PARA.weight < WEIGHT_MIN) PARTNER_PARA.weight = WEIGHT_MIN;
-    }
-
-    void handleWildPoop()
-    {
-        PARTNER_PARA.condition.isPoopy = false;
-        PARTNER_PARA.careMistakes += 1;
-        PARTNER_PARA.happiness -= 10;
-        PARTNER_PARA.discipline -= 5;
-        PARTNER_PARA.poopLevel = getRaiseData(PARTNER_ENTITY.type)->poopTimer * 2;
-        handlePoopWeightLoss(PARTNER_ENTITY.type);
     }
 
     void handleEatingPoop()

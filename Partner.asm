@@ -4,12 +4,6 @@
 .org 0x800ef8e0
   jal setImmortalHour
 
-.org 0x800de63c
-  jal createPoopPile
-
-.org 0x800de648
-  jal handleWildPoop
-
 .org 0x800de9e8
   jal handleEatingPoop
 

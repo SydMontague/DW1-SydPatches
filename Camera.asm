@@ -34,8 +34,8 @@
 ;  jal unsetCameraFollowPlayer
 ;.org 0x800de33c
 ;  jal unsetCameraFollowPlayer
-.org 0x800de5a4
-  jal unsetCameraFollowPlayer
+;.org 0x800de5a4
+;  jal unsetCameraFollowPlayer
 .org 0x800de730
   jal unsetCameraFollowPlayer
 .org 0x800de7d4
@@ -71,8 +71,8 @@
 ;  jal setCameraFollowPlayer
 ;.org 0x800de2a8
 ;  jal setCameraFollowPlayer
-.org 0x800de69c
-  jal setCameraFollowPlayer
+;.org 0x800de69c
+;  jal setCameraFollowPlayer
 .org 0x800dea10
   jal setCameraFollowPlayer
 .org 0x800debf8

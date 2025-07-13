@@ -4,8 +4,8 @@
 .org 0x80105dc4
   jal isTrainingComplete
 
-.org 0x800de6a8
-  jal addTamerLevel
+;.org 0x800de6a8
+;  jal addTamerLevel
 ;.org 0x800dd254
 ;  jal addTamerLevel
 ;.org 0x800dd238
@@ -82,10 +82,10 @@
 ;  jal Tamer_setState
 ;.org 0x800de334	
 ;  jal Tamer_setState
-.org 0x800de584	
-  jal Tamer_setState
-.org 0x800de68c	
-  jal Tamer_setState
+;.org 0x800de584	
+;  jal Tamer_setState
+;.org 0x800de68c	
+;  jal Tamer_setState
 .org 0x800de7cc	
   jal Tamer_setState
 .org 0x800de93c	

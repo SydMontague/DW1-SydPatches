@@ -78,8 +78,8 @@
 ;  jal getModelTile
 ;.org 0x800d4e2c
 ;  jal getModelTile
-.org 0x800de62c
-  jal getModelTile
+;.org 0x800de62c
+;  jal getModelTile
 .org 0x800e1a38
   jal getModelTile
 .org 0x800f0e68
@@ -130,10 +130,10 @@
 ;  jal entityLookAtLocation
 ;.org 0x800de4f4
 ;  jal entityLookAtLocation
-.org 0x800de59c
-  jal entityLookAtLocation
-.org 0x800de5c8
-  jal entityLookAtLocation
+;.org 0x800de59c
+;  jal entityLookAtLocation
+;.org 0x800de5c8
+;  jal entityLookAtLocation
 .org 0x800de728
   jal entityLookAtLocation
 .org 0x800de780

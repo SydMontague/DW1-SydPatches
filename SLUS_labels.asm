@@ -84,7 +84,6 @@
 .definelabel renderMainMenu,            0x80113458
 .definelabel checkEatDistance,          0x800df4dc
 
-.definelabel partnerWildPoop,           0x800de540
 .definelabel partnerDying,              0x800de6c0
 .definelabel partnerEatShit,            0x800de88c
 .definelabel partnerIdling,             0x800dea2c
