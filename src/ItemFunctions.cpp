@@ -2,8 +2,8 @@
 
 #include "Effects.hpp"
 #include "Helper.hpp"
-#include "ItemEffects.hpp"
 #include "InventoryUI.hpp"
+#include "ItemEffects.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
 #include "Tamer.hpp"
@@ -441,6 +441,8 @@ extern "C"
 
         if (target == DigimonType::INVALID) return;
 
+        // vanilla checks for the level diff here as well, but that's redundant with willRefuseItem
+
         EVOLUTION_TARGET = static_cast<int16_t>(target);
         HAS_USED_EVOITEM = true;
         removeTamerItem();
@@ -661,8 +663,8 @@ extern "C"
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::GEAR)]         = handleNothing;
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::RAIN_PLANT)]   = handleFood;
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::STEAK)]        = handleFood;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::FRIDGE_KEY)]   = handleFood;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::AS_DECODER)]   = handleFood;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::FRIDGE_KEY)]   = handleNothing;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::AS_DECODER)]   = handleNothing;
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::GIGA_HAND)]    = handleEvoItem;
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::NOBLE_MANE)]   = handleEvoItem;
         ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::METAL_BANANA)] = handleEvoItem;
