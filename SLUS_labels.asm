@@ -87,9 +87,8 @@
 .definelabel setFishingDisabled,        0x800e4d64
 .definelabel setFishingEnabled,         0x800e4d84
 .definelabel loadMapSounds2,            0x800e9034
+.definelabel getEvoSequenceState,       0x800e732c
 
-.definelabel partnerEvolving,           0x800dea68
-.definelabel partnerDying2,             0x800dec10
 .definelabel getPartnerTamerCloseness,  0x800df174
 
 .definelabel CHECKED_MEMORY_CARD, 0x80135064
@@ -325,6 +324,7 @@
 
 // DOOA_REL
 .definelabel DoOA_tick, 0x80084644
+.definelabel DoOA_getSequenceState, 0x80084810
 
 // STD_REL
 .definelabel STD_Tamer_tickTournament, 0x80069688

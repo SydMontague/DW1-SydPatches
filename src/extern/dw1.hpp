@@ -1648,10 +1648,13 @@ extern "C"
     extern SectionData SECTION_DATA;
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
 
-    void partnerEvolving();
-    void partnerDying2();
     Closeness getPartnerTamerCloseness();
 
+    int32_t getEvoSequenceState(PartnerEntity* partner,
+                                int32_t buffer,
+                                PartnerPara* para,
+                                int16_t evoTarget,
+                                int16_t isInitialized);
     bool loadMapSounds2(int32_t mapSoundId);
     void deinitializeFishing();
     void setFishingDisabled();

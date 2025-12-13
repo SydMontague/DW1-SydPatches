@@ -1374,6 +1374,99 @@ static void tickIdle()
     PARTNER_SUB_STATE = 1;
 }
 
+static void tickEvolving()
+{
+    switch (PARTNER_SUB_STATE)
+    {
+        case 0:
+        {
+            stopGameTime();
+            removeTriangleMenu();
+            closeInventoryBoxes();
+            removeUIBox1();
+            setFishingDisabled();
+            unsetCameraFollowPlayer();
+            entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
+            startAnimation(&PARTNER_ENTITY, 2);
+            PARTNER_SUB_STATE = 1;
+            break;
+        }
+        case 1:
+        {
+            entityLookAtLocation(&PARTNER_ENTITY, &TAMER_ENTITY.posData->location);
+            auto closeness = getPartnerTamerCloseness();
+            if (closeness > Closeness::SPRINT_DISTANCE)
+            {
+                getEvoSequenceState(&PARTNER_ENTITY,
+                                     reinterpret_cast<int32_t>(&GENERAL_BUFFER),
+                                     &PARTNER_PARA,
+                                     EVOLUTION_TARGET,
+                                     0);
+                // vanilla sets 0x80134E34 to 0 here, but it seems to be unused
+                PARTNER_SUB_STATE = 2;
+            }
+            break;
+        }
+        case 2:
+        {
+            auto value = getEvoSequenceState(&PARTNER_ENTITY,
+                                              reinterpret_cast<int32_t>(&GENERAL_BUFFER),
+                                              &PARTNER_PARA,
+                                              EVOLUTION_TARGET,
+                                              1);
+
+            if (value != -1) return;
+
+            startGameTime();
+            EVOLUTION_TARGET = -1;
+            loadMapSounds(getMapSoundId(CURRENT_SCREEN));
+            // checkShopMap(mapId); // unused as of vanilla 1.1
+            checkArenaMap(CURRENT_SCREEN);
+            readMapTFS(CURRENT_SCREEN);
+            setFishingEnabled();
+            Partner_setState(1);
+            if (SOME_SCRIPT_SYNC_BIT == 0) { SOME_SCRIPT_SYNC_BIT = 1; }
+            else
+            {
+                Tamer_setState(0);
+                setCameraFollowPlayer();
+            }
+            break;
+        }
+    }
+}
+
+static void tickDying2()
+{
+    switch (PARTNER_SUB_STATE)
+    {
+        case 0:
+        {
+            DoOA_getSequenceState(0, 0);
+            PARTNER_SUB_STATE = 1;
+            break;
+        }
+        case 1:
+        {
+            auto value = DoOA_getSequenceState(0, 1);
+
+            if (value != -1) return;
+
+            loadMapSounds(getMapSoundId(CURRENT_SCREEN));
+            readMapTFS(CURRENT_SCREEN);
+            setFishingEnabled();
+            PARTNER_PARA.remainingLifetime = 360;
+            PARTNER_PARA.evoTimer          = 0;
+            PARTNER_PARA.sicknessTimer     = 0;
+            PARTNER_PARA.injuryTimer       = 0;
+            STORED_TAMER_POS               = TAMER_ENTITY.posData->location;
+            SOME_SCRIPT_SYNC_BIT           = 1;
+            PARTNER_SUB_STATE              = 2;
+            writePStat(0, 0);
+        }
+    }
+}
+
 static void tickOverworld(int32_t instanceId)
 {
     if (IS_IN_MENU == 1)
@@ -1394,8 +1487,8 @@ static void tickOverworld(int32_t instanceId)
         case 9: tickEatShit(); break;
         case 10: tickConditionBubble(); break;
         case 11: tickIdle(); break;
-        case 13: partnerEvolving(); break;
-        case 14: partnerDying2(); break;
+        case 13: tickEvolving(); break;
+        case 14: tickDying2(); break;
         case 15: tickPraiseScold(false); break;
     }
 
