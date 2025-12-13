@@ -141,14 +141,6 @@ constexpr uint8_t getTile(int32_t tileX, int32_t tileZ)
 }
 
 /*
- * Convert a tile coordinate to a world coordinate.
- */
-constexpr int32_t tileToPos(int16_t tile)
-{
-    return (tile - 50) * 100 + 50;
-}
-
-/*
  * Check whether a given position is within an rectangular area defined by a center X+Z coordinate and an extent in
  * every direction. This check happens on the XZ 2D plane, used for most of the game.
  */

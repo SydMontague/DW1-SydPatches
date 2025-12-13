@@ -4,9 +4,6 @@
 .org 0x800ef8e0
   jal setImmortalHour
 
-.org 0x800de9e8
-  jal handleEatingPoop
-
 ;.org 0x800a8fa8
 ;  jal tickSicknessMechanics
 

@@ -88,8 +88,6 @@
 .definelabel setFishingEnabled,         0x800e4d84
 .definelabel loadMapSounds2,            0x800e9034
 
-.definelabel partnerEatShit,            0x800de88c
-.definelabel partnerIdling,             0x800dea2c
 .definelabel partnerEvolving,           0x800dea68
 .definelabel partnerDying2,             0x800dec10
 .definelabel getPartnerTamerCloseness,  0x800df174

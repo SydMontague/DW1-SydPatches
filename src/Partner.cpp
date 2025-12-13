@@ -518,12 +518,13 @@ static void tickPoopDetection()
     {
         auto& poop = WORLD_POOP[i];
         if (poop.size == 0) continue;
+        if (poop.map != CURRENT_SCREEN) continue;
 
         auto radius  = poop.size < 11 ? 200 : 300;
-        auto centerX = tileToPos(poop.x);
-        auto centerY = tileToPos(poop.y);
+        auto centerX = convertTileToPosX(poop.x);
+        auto centerY = convertTileToPosZ(poop.y);
 
-        if (isWithinRect(centerX, centerY, radius, &PARTNER_ENTITY.posData->location))
+        if (isWithinRect(centerX, centerY, radius, &TAMER_ENTITY.posData->location))
         {
             Partner_setState(9);
             POOP_TO_EAT = i;
@@ -1282,6 +1283,97 @@ static void tickDying()
     }
 }
 
+static void handleEatingPoop()
+{
+    auto& poop         = WORLD_POOP[POOP_TO_EAT];
+    auto healingChance = 0;
+
+    if (poop.size < 11)
+    {
+        PARTNER_ENTITY.stats.currentHP += (PARTNER_ENTITY.stats.currentHP * 5) / 100;
+        PARTNER_ENTITY.stats.currentMP += (PARTNER_ENTITY.stats.currentMP * 2) / 100;
+        PARTNER_PARA.weight += 1;
+        healingChance = 2;
+    }
+    else if (poop.size < 14)
+    {
+        PARTNER_ENTITY.stats.currentHP += (PARTNER_ENTITY.stats.currentHP * 10) / 100;
+        PARTNER_ENTITY.stats.currentMP += (PARTNER_ENTITY.stats.currentMP * 5) / 100;
+        PARTNER_PARA.weight += 3;
+        healingChance = 7;
+    }
+    else
+    {
+        PARTNER_ENTITY.stats.currentHP += (PARTNER_ENTITY.stats.currentHP * 50) / 100;
+        PARTNER_ENTITY.stats.currentMP += (PARTNER_ENTITY.stats.currentMP * 10) / 100;
+        PARTNER_PARA.weight += 10;
+        healingChance = 20;
+    }
+
+    if (PARTNER_ENTITY.stats.hp < PARTNER_ENTITY.stats.currentHP)
+        PARTNER_ENTITY.stats.currentHP = PARTNER_ENTITY.stats.hp;
+    if (PARTNER_ENTITY.stats.mp < PARTNER_ENTITY.stats.currentMP)
+        PARTNER_ENTITY.stats.currentMP = PARTNER_ENTITY.stats.mp;
+    if (PARTNER_PARA.weight > WEIGHT_MAX) PARTNER_PARA.weight = WEIGHT_MAX;
+
+    handleMedicineHealing(healingChance, healingChance);
+
+    poop.map  = 0xFF;
+    poop.x    = -1;
+    poop.y    = -1;
+    poop.size = 0;
+}
+
+static void tickEatShit()
+{
+    switch (PARTNER_SUB_STATE)
+    {
+        case 0:
+        {
+            startAnimation(&TAMER_ENTITY, 0);
+            Tamer_setState(6);
+            unsetCameraFollowPlayer();
+            startAnimation(&PARTNER_ENTITY, 2);
+            tickPartnerWaypoints();
+            PARTNER_SUB_STATE = 1;
+            break;
+        }
+        case 1:
+        {
+            auto tileX = convertTileToPosX(WORLD_POOP[POOP_TO_EAT].x);
+            auto tileZ = convertTileToPosZ(WORLD_POOP[POOP_TO_EAT].y);
+            entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
+            auto finished = tickEntityWalkTo(0xFC, 0xFF, tileX, tileZ, false);
+            if (finished)
+            {
+                startAnimation(&PARTNER_ENTITY, 8);
+                PARTNER_SUB_STATE = 2; // vanilla uses state 3 here
+            }
+            break;
+        }
+        case 2:
+        {
+            // eat animation not done yet
+            if (PARTNER_ENTITY.frameCount > PARTNER_ENTITY.animFrame) return;
+
+            handleEatingPoop();
+            Partner_setState(1);
+            startAnimation(&PARTNER_ENTITY, 0);
+            Tamer_setState(0);
+            setCameraFollowPlayer();
+            break;
+        }
+    }
+}
+
+static void tickIdle()
+{
+    if (PARTNER_SUB_STATE != 0) return;
+
+    startAnimation(&PARTNER_ENTITY, 0);
+    PARTNER_SUB_STATE = 1;
+}
+
 static void tickOverworld(int32_t instanceId)
 {
     if (IS_IN_MENU == 1)
@@ -1299,9 +1391,9 @@ static void tickOverworld(int32_t instanceId)
         case 6: tickPartnerToilet(); break;
         case 7: tickWildPoop(); break;
         case 8: tickDying(); break;
-        case 9: partnerEatShit(); break;
+        case 9: tickEatShit(); break;
         case 10: tickConditionBubble(); break;
-        case 11: partnerIdling(); break;
+        case 11: tickIdle(); break;
         case 13: partnerEvolving(); break;
         case 14: partnerDying2(); break;
         case 15: tickPraiseScold(false); break;
@@ -1526,9 +1618,9 @@ extern "C"
             Vector translation;
             Vector scale;
 
-            translation.x = (poop.x - 50) * 100 + 50;
+            translation.x = convertTileToPosX(poop.x);
             translation.y = PARTNER_ENTITY.posData->location.y;
-            translation.z = (50 - poop.y) * 100 - 50;
+            translation.z = convertTileToPosZ(poop.y);
 
             scale.x = (poop.size * 4096) / 10;
             scale.y = scale.x;
@@ -1726,47 +1818,6 @@ extern "C"
     {
         PARTNER_PARA.weight -= (getRaiseData(type)->poopSize + random(4)) / 4;
         if (PARTNER_PARA.weight < WEIGHT_MIN) PARTNER_PARA.weight = WEIGHT_MIN;
-    }
-
-    void handleEatingPoop()
-    {
-        auto& poop         = WORLD_POOP[POOP_TO_EAT];
-        auto healingChance = 0;
-
-        if (poop.size < 11)
-        {
-            PARTNER_ENTITY.stats.currentHP += (PARTNER_ENTITY.stats.currentHP * 5) / 100;
-            PARTNER_ENTITY.stats.currentMP += (PARTNER_ENTITY.stats.currentMP * 2) / 100;
-            PARTNER_PARA.weight += 1;
-            healingChance = 2;
-        }
-        else if (poop.size < 14)
-        {
-            PARTNER_ENTITY.stats.currentHP += (PARTNER_ENTITY.stats.currentHP * 10) / 100;
-            PARTNER_ENTITY.stats.currentMP += (PARTNER_ENTITY.stats.currentMP * 5) / 100;
-            PARTNER_PARA.weight += 3;
-            healingChance = 7;
-        }
-        else
-        {
-            PARTNER_ENTITY.stats.currentHP += (PARTNER_ENTITY.stats.currentHP * 50) / 100;
-            PARTNER_ENTITY.stats.currentMP += (PARTNER_ENTITY.stats.currentMP * 10) / 100;
-            PARTNER_PARA.weight += 10;
-            healingChance = 20;
-        }
-
-        if (PARTNER_ENTITY.stats.hp < PARTNER_ENTITY.stats.currentHP)
-            PARTNER_ENTITY.stats.currentHP = PARTNER_ENTITY.stats.hp;
-        if (PARTNER_ENTITY.stats.mp < PARTNER_ENTITY.stats.currentMP)
-            PARTNER_ENTITY.stats.currentMP = PARTNER_ENTITY.stats.mp;
-        if (PARTNER_PARA.weight > WEIGHT_MAX) PARTNER_PARA.weight = WEIGHT_MAX;
-
-        handleMedicineHealing(healingChance, healingChance);
-
-        poop.map  = 0xFF;
-        poop.x    = -1;
-        poop.y    = -1;
-        poop.size = 0;
     }
 
     void skipHours(uint32_t amount)
@@ -1988,10 +2039,10 @@ extern "C"
         auto tile = getClosestTileOffScreen(tamerTileX, tamerTileZ, partnerTileX, partnerTileZ);
         if (tile.tileX != -1)
         {
-            PARTNER_ENTITY.posData[0].location.x = tileToPos(tile.tileX);
-            PARTNER_ENTITY.posData[0].location.z = tileToPos(tile.tileY);
-            PARTNER_ENTITY.locX                  = tileToPos(tile.tileX) << 15;
-            PARTNER_ENTITY.locZ                  = tileToPos(tile.tileY) << 15;
+            PARTNER_ENTITY.posData[0].location.x = convertTileToPosX(tile.tileX);
+            PARTNER_ENTITY.posData[0].location.z = convertTileToPosZ(tile.tileY);
+            PARTNER_ENTITY.locX                  = convertTileToPosX(tile.tileX) << 15;
+            PARTNER_ENTITY.locZ                  = convertTileToPosZ(tile.tileY) << 15;
         }
     }
 }
