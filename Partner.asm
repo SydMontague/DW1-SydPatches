@@ -56,28 +56,28 @@
 .org 0x800e7624
   jal tickPartnerWaypoints
 
-.org 0x800df624
-  jal Partner_setState
-.org 0x800df644
-  jal Partner_setState
-.org 0x800df660
-  jal Partner_setState
-.org 0x800df670
-  jal Partner_setState
-.org 0x800df680
-  jal Partner_setState
-.org 0x800df698
-  jal Partner_setState
-.org 0x800df6b0
-  jal Partner_setState
-.org 0x800df6c8
-  jal Partner_setState
-.org 0x800df744
-  jal Partner_setState
-.org 0x800df75c
-  jal Partner_setState
-.org 0x800df7dc
-  jal Partner_setState
+;.org 0x800df624
+;  jal Partner_setState
+;.org 0x800df644
+;  jal Partner_setState
+;.org 0x800df660
+;  jal Partner_setState
+;.org 0x800df670
+;  jal Partner_setState
+;.org 0x800df680
+;  jal Partner_setState
+;.org 0x800df698
+;  jal Partner_setState
+;.org 0x800df6b0
+;  jal Partner_setState
+;.org 0x800df6c8
+;  jal Partner_setState
+;.org 0x800df744
+;  jal Partner_setState
+;.org 0x800df75c
+;  jal Partner_setState
+;.org 0x800df7dc
+;  jal Partner_setState
 .org 0x801054b0
   jal Partner_setState
 .org 0x80105528
@@ -92,6 +92,9 @@
   jal Partner_startAnimation
 .org 0x80105984
   jal Partner_startAnimation
+
+.org 0x80103668
+  jal callDigimonRoutine
 
 .close 
 

@@ -299,14 +299,14 @@
 ;  jal startAnimation
 ;.org 0x800df5ec
 ;  j startAnimation
-.org 0x800df6f8
-  jal startAnimation
-.org 0x800df72c
-  jal startAnimation
-.org 0x800df78c
-  jal startAnimation
-.org 0x800df7c0
-  jal startAnimation
+;.org 0x800df6f8
+;  jal startAnimation
+;.org 0x800df72c
+;  jal startAnimation
+;.org 0x800df78c
+;  jal startAnimation
+;.org 0x800df7c0
+;  jal startAnimation
 .org 0x800e7288
   jal startAnimation
 .org 0x800e73f8

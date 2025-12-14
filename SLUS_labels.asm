@@ -324,6 +324,7 @@
 
 // KAR_REL
 .definelabel KAR_tick, 0x800545c8
+.definelabel KAR_start, 0x80053c30
 
 // libapi
 .definelabel libapi_malloc3, 0x80090f84

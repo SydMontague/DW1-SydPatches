@@ -25,6 +25,7 @@
 #include "Utils.hpp"
 #include "constants.hpp"
 #include "extern/DOOA.hpp"
+#include "extern/KAR.hpp"
 #include "extern/STD.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
@@ -2369,5 +2370,54 @@ extern "C"
     void Partner_startAnimation(int32_t animId)
     {
         startAnimation(&PARTNER_ENTITY, animId);
+    }
+
+    void callDigimonRoutine(int32_t routine)
+    {
+        switch (routine)
+        {
+            case 0: Partner_setState(6); break;
+            case 1:
+                KAR_start();
+                Tamer_setState(12);
+                Partner_setState(11);
+                break;
+            case 2:
+                EVOLUTION_TARGET = readPStat(5);
+                Partner_setState(13);
+                break;
+            case 3: Partner_setState(8); break;
+            case 4: Partner_setState(14); break;
+            case 5:
+                Tamer_setState(15);
+                Partner_setState(11);
+                break;
+            case 6:
+                Tamer_setState(16);
+                Partner_setState(11);
+                break;
+            case 7:
+                Tamer_setState(17);
+                Partner_setState(12);
+                if (TAMER_ENTITY.animId == 2 || TAMER_ENTITY.animId == 3) startAnimation(&TAMER_ENTITY, 0);
+                if (PARTNER_ENTITY.animId > 1 && PARTNER_ENTITY.animId < 5) startAnimation(&PARTNER_ENTITY, 0);
+                break;
+            case 8:
+                Tamer_setState(18);
+                Partner_setState(11);
+                break;
+            case 9:
+                Tamer_setState(19);
+                Partner_setState(12);
+                if (TAMER_ENTITY.animId == 2 || TAMER_ENTITY.animId == 3) startAnimation(&TAMER_ENTITY, 0);
+                if (PARTNER_ENTITY.animId > 1 && PARTNER_ENTITY.animId < 5) startAnimation(&PARTNER_ENTITY, 0);
+                break;
+            case 10:
+                EVOLUTION_TARGET = readPStat(0xFE);
+                Partner_setState(13);
+                break;
+        }
+
+        SOME_SCRIPT_SYNC_BIT = 0;
     }
 }

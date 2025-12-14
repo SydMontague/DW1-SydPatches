@@ -96,18 +96,18 @@
 ;  jal Tamer_setState
 ;.org 0x800df5a8	
 ;  jal Tamer_setState
-.org 0x800df63c	
-  jal Tamer_setState
-.org 0x800df690	
-  jal Tamer_setState
-.org 0x800df6a8	
-  jal Tamer_setState
-.org 0x800df6c0	
-  jal Tamer_setState
-.org 0x800df73c	
-  jal Tamer_setState
-.org 0x800df754	
-  jal Tamer_setState
+;.org 0x800df63c	
+;  jal Tamer_setState
+;.org 0x800df690	
+;  jal Tamer_setState
+;.org 0x800df6a8	
+;  jal Tamer_setState
+;.org 0x800df6c0	
+;  jal Tamer_setState
+;.org 0x800df73c	
+;  jal Tamer_setState
+;.org 0x800df754	
+;  jal Tamer_setState
 ;.org 0x800e34cc	
 ;  jal Tamer_setState
 .org 0x800eeac4	
