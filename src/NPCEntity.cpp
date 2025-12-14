@@ -4,6 +4,7 @@
 #include "InventoryUI.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
+#include "Partner.hpp"
 #include "Tamer.hpp"
 #include "extern/STD.hpp"
 #include "extern/dw1.hpp"

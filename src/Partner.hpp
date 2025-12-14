@@ -15,4 +15,9 @@ extern "C"
     void initializePartnerWaypoint();
     void Partner_tickCollision();
     void tickPartnerWaypoints();
+    void Partner_setFullState(uint8_t state, uint8_t substate);
+    void Partner_setState(uint8_t state);
+    void Partner_setSubState(uint8_t state);
+    uint8_t Partner_getState();
+    uint8_t Partner_getSubState();
 }

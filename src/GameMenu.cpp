@@ -9,6 +9,7 @@
 #include "Helper.hpp"
 #include "InventoryUI.hpp"
 #include "Math.hpp"
+#include "Partner.hpp"
 #include "PlayerMenu.hpp"
 #include "Sound.hpp"
 #include "StatsView.hpp"

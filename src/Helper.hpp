@@ -240,26 +240,7 @@ constexpr void setPolyFT4UV(POLY_FT4* prim, int16_t uvX, int16_t uvY, int16_t uv
 
 extern "C"
 {
-    inline void Partner_setState(uint8_t state)
-    {
-        PARTNER_STATE     = state;
-        PARTNER_SUB_STATE = 0;
-    }
 
-    inline void Partner_setSubState(uint8_t state)
-    {
-        PARTNER_SUB_STATE = state;
-    }
-
-    inline uint8_t Partner_getState()
-    {
-        return PARTNER_STATE;
-    }
-
-    inline uint8_t Partner_getSubState()
-    {
-        return PARTNER_SUB_STATE;
-    }
 
     inline bool isKeyDownRepeat(uint16_t inputMask)
     {

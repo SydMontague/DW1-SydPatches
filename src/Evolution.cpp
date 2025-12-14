@@ -1,9 +1,10 @@
 #include "Evolution.hpp"
 
-#include "extern/dw1.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
+#include "Partner.hpp"
 #include "Tamer.hpp"
+#include "extern/dw1.hpp"
 
 extern "C"
 {
@@ -288,15 +289,18 @@ extern "C"
         return target;
     }
 
-    int32_t getNumMasteredMoves() {
-      int32_t count;
+    int32_t getNumMasteredMoves()
+    {
+        int32_t count = 0;
 
-      for(auto val : PARTNER_ENTITY.learnedMoves) {
-        for(uint32_t i = 0; i < 32; i++) {
-          count += (val >> i) & 1;
+        for (auto val : PARTNER_ENTITY.learnedMoves)
+        {
+            for (uint32_t i = 0; i < 32; i++)
+            {
+                count += (val >> i) & 1;
+            }
         }
-      }
 
-      return count;
+        return count;
     }
 }

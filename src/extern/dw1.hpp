@@ -1647,7 +1647,6 @@ extern "C"
     void deinitializeFishing();
     void setFishingDisabled();
     void setFishingEnabled();
-    bool checkEatDistance(int32_t distance);
     void tickMainMenu(int32_t instanceId);
     void renderMainMenu(int32_t instanceId);
     void Partner_tickBattle(int32_t instanceId);

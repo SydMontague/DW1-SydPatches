@@ -30,4 +30,9 @@
 .org 0x80084524
   jal DOOA_getStoredDigimonY
 
+.org 0x80080230
+  jal DOOA_setSomeDyingState
+.org 0x80080240
+  jal DOOA_setSomeDyingState
+
 .close

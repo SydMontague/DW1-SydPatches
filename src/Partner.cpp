@@ -1194,6 +1194,14 @@ static void handleFoodFeed(ItemType item)
     }
 }
 
+static bool checkEatDistance(int32_t distance)
+{
+    auto partnerDistance = getDistanceSquared(&TAMER_ENTITY.posData->location, &PARTNER_ENTITY.posData->location);
+    auto targetDistance  = (distance * 200) / 10 + 160;
+
+    return partnerDistance <= pow(targetDistance, 2);
+}
+
 static void tickFeedItem()
 {
     switch (PARTNER_SUB_STATE)
@@ -2329,5 +2337,37 @@ extern "C"
             PARTNER_ENTITY.locX                  = convertTileToPosX(tile.tileX) << 15;
             PARTNER_ENTITY.locZ                  = convertTileToPosZ(tile.tileY) << 15;
         }
+    }
+
+    void Partner_setFullState(uint8_t state, uint8_t substate)
+    {
+        PARTNER_STATE     = state;
+        PARTNER_SUB_STATE = substate;
+    }
+
+    void Partner_setState(uint8_t state)
+    {
+        PARTNER_STATE     = state;
+        PARTNER_SUB_STATE = 0;
+    }
+
+    void Partner_setSubState(uint8_t state)
+    {
+        PARTNER_SUB_STATE = state;
+    }
+
+    uint8_t Partner_getState()
+    {
+        return PARTNER_STATE;
+    }
+
+    uint8_t Partner_getSubState()
+    {
+        return PARTNER_SUB_STATE;
+    }
+
+    void Partner_startAnimation(int32_t animId)
+    {
+        startAnimation(&PARTNER_ENTITY, animId);
     }
 }

@@ -14,7 +14,6 @@
 .definelabel setTextColor,              0x8010cc0c
 .definelabel callScriptSection,         0x80105b14
 .definelabel hasDigimonRaised,          0x800ff824
-;.definelabel Partner_setState,          0x800df4d0 ; use constexpr version instead
 .definelabel unsetButterfly,            0x800e9fb4
 .definelabel setTrigger,                0x801065c0
 .definelabel unsetBubble,               0x800ece20
@@ -80,7 +79,6 @@
 .definelabel Partner_tickBattle,        0x800f1414
 .definelabel tickMainMenu,              0x8010ff1c
 .definelabel renderMainMenu,            0x80113458
-.definelabel checkEatDistance,          0x800df4dc
 .definelabel deinitializeFishing,       0x800e4eb4
 .definelabel setFishingDisabled,        0x800e4d64
 .definelabel setFishingEnabled,         0x800e4d84

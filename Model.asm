@@ -297,8 +297,8 @@
 ;  j startAnimation
 ;.org 0x800df4b8
 ;  jal startAnimation
-.org 0x800df5ec
-  j startAnimation
+;.org 0x800df5ec
+;  j startAnimation
 .org 0x800df6f8
   jal startAnimation
 .org 0x800df72c
