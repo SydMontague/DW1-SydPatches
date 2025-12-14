@@ -51,8 +51,8 @@
 ;  jal tickPartnerWaypoints
 ;.org 0x800ddf6c
 ;  jal tickPartnerWaypoints
-.org 0x800de95c
-  jal tickPartnerWaypoints
+;.org 0x800de95c
+;  jal tickPartnerWaypoints
 .org 0x800e7624
   jal tickPartnerWaypoints
 

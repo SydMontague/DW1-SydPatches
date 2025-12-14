@@ -53,12 +53,12 @@
 ;  jal random
 ;.org 0x800c59f0
 ;  jal random
-.org 0x800def60
-  jal random
-.org 0x800deff4
-  jal random
-.org 0x800df03c
-  jal random
+;.org 0x800def60
+;  jal random
+;.org 0x800deff4
+;  jal random
+;.org 0x800df03c
+;  jal random
 ;.org 0x800e32e0
 ;  jal random
 .org 0x800e6aec

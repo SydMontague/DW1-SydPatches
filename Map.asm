@@ -93,20 +93,20 @@
 
 ;.org 0x800d5da8
 ;  jal getMapSoundId
-.org 0x800deb90
-  jal getMapSoundId
-.org 0x800dec60
-  jal getMapSoundId
+;.org 0x800deb90
+;  jal getMapSoundId
+;.org 0x800dec60
+;  jal getMapSoundId
 
 .org 0x801028f4
   jal loadMap
 
 ;.org 0x800abba4
 ;  jal readMapTFS
-.org 0x800debbc
-  jal readMapTFS
-.org 0x800dec74
-  jal readMapTFS
+;.org 0x800debbc
+;  jal readMapTFS
+;.org 0x800dec74
+;  jal readMapTFS
 .org 0x800e2424
   jal readMapTFS
 .org 0x801042f0

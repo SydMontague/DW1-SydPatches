@@ -7,8 +7,8 @@
 ;  jal tickEntityWalkTo
 ;.org 0x800de514
 ;  jal tickEntityWalkTo
-.org 0x800de998
-  jal tickEntityWalkTo
+;.org 0x800de998
+;  jal tickEntityWalkTo
 .org 0x8010573c
   jal tickEntityWalkTo
 .org 0x8010575c
@@ -138,12 +138,12 @@
 ;  jal entityLookAtLocation
 ;.org 0x800de780
 ;  jal entityLookAtLocation
-.org 0x800de980
-  jal entityLookAtLocation
-.org 0x800dead0
-  jal entityLookAtLocation
-.org 0x800deb04
-  jal entityLookAtLocation
+;.org 0x800de980
+;  jal entityLookAtLocation
+;.org 0x800dead0
+;  jal entityLookAtLocation
+;.org 0x800deb04
+;  jal entityLookAtLocation
 .org 0x800e60c8
   jal entityLookAtLocation
 .org 0x800e7714
@@ -201,8 +201,8 @@
 ;  jal entityCheckCollision
 ;.org 0x800d4944
 ;  jal entityCheckCollision
-.org 0x800def24
-  jal entityCheckCollision
+;.org 0x800def24
+;  jal entityCheckCollision
 .org 0x800ef4cc
   jal entityCheckCollision
 .org 0x800f5fb0

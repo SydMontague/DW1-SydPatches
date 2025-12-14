@@ -4,7 +4,6 @@
 
 .include "GameData.asm"
 .include "Jukebox.asm"
-.include "Evolutions.asm"
 .include "RaiseDataReloc.asm"
 .include "EvoDataReloc.asm"
 .include "Softlocks.asm"
@@ -27,7 +26,6 @@
 .include "Effects.asm"
 .include "EFE.asm"
 .include "NPCEntity.asm"
-.include "GameMenu.asm"
 .include "UIElements.asm"
 .include "Sound.asm"
 .include "Camera.asm"

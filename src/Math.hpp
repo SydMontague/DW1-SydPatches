@@ -82,6 +82,20 @@ extern "C"
         return val1 < val2 ? val2 : val1;
     }
 
+    /**
+     * Gets the n-th power of a value. Negative powers are not supported and return 0!
+     */
+    constexpr int32_t pow(int32_t val, int32_t power)
+    {
+        if (power == 0) return 0;
+
+        auto result = val;
+        for (int32_t i = 1; i < power; i++)
+            result *= val;
+
+        return result;
+    }
+
     inline int32_t random2(int32_t limit)
     {
         return rand() % limit;
@@ -225,3 +239,8 @@ static_assert(posmod(128, 4096) == 128);
 static_assert(posmod(-1, 4096) == 4095);
 static_assert(posmod(-2048, 4096) == 2048);
 static_assert(posmod(-4095, 4096) == 1);
+
+static_assert(pow(2, 0) == 0);
+static_assert(pow(3, 2) == 9);
+static_assert(pow(3, 3) == 27);
+static_assert(pow(2, 16) == 65536);

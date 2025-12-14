@@ -15,7 +15,6 @@
 .definelabel callScriptSection,         0x80105b14
 .definelabel hasDigimonRaised,          0x800ff824
 ;.definelabel Partner_setState,          0x800df4d0 ; use constexpr version instead
-.definelabel updateConditionAnimation,  0x800df2d0
 .definelabel unsetButterfly,            0x800e9fb4
 .definelabel setTrigger,                0x801065c0
 .definelabel unsetBubble,               0x800ece20
@@ -79,7 +78,6 @@
 .definelabel isFishing,                 0x800e4e7c
 .definelabel updateBGM,                 0x80106af0
 .definelabel Partner_tickBattle,        0x800f1414
-.definelabel Partner_tickWalking,       0x800ded10
 .definelabel tickMainMenu,              0x8010ff1c
 .definelabel renderMainMenu,            0x80113458
 .definelabel checkEatDistance,          0x800df4dc
@@ -88,8 +86,6 @@
 .definelabel setFishingEnabled,         0x800e4d84
 .definelabel loadMapSounds2,            0x800e9034
 .definelabel getEvoSequenceState,       0x800e732c
-
-.definelabel getPartnerTamerCloseness,  0x800df174
 
 .definelabel CHECKED_MEMORY_CARD, 0x80135064
 .definelabel MEMORY_CARD_ID, 0x80135044
@@ -259,8 +255,6 @@
 .definelabel TAMER_ITEM, 0x8013d4d0
 .definelabel PARTNER_STATE, 0x80134c5b
 .definelabel PARTNER_SUB_STATE, 0x80134c5c
-.definelabel PARTNER_ANIMATION, 0x80134e2c
-.definelabel POOP_TO_EAT, 0x80134c68
 .definelabel GAME_STATE, 0x80134f0a
 .definelabel FADE_DATA, 0x80134cac
 .definelabel IS_GAMETIME_RUNNING, 0x80134e20
@@ -268,7 +262,6 @@
 .definelabel DEATH_STATS,               0x801384e4
 .definelabel REINCARNATION_MODEL_DATA,  0x8008788c
 .definelabel ENTITY_TABLE,              0x8012f344
-.definelabel STOP_DISTANCE_TIMER,       0x80134c5a
 .definelabel EVO_SEQUENCE_DATA,         0x80154f90
 .definelabel POOP_ROTATION_MATRIX,      0x801341ec
 .definelabel MAP_LAYER_ENABLED,         0x80134ec8

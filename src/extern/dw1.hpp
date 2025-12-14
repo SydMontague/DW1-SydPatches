@@ -1425,13 +1425,6 @@ extern "C"
         int16_t clut;
     };
 
-    enum class Closeness
-    {
-        SPRINT_DISTANCE,
-        WALK_DISTANCE,
-        STOP_DISTANCE,
-    };
-
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1531,8 +1524,6 @@ extern "C"
     extern TamerItem TAMER_ITEM;
     extern uint8_t PARTNER_STATE;
     extern uint8_t PARTNER_SUB_STATE;
-    extern uint8_t PARTNER_ANIMATION;
-    extern uint8_t POOP_TO_EAT;
     extern uint32_t IS_NATURAL_DEATH;
     extern FadeData FADE_DATA;
     extern uint8_t GAME_STATE;
@@ -1541,7 +1532,6 @@ extern "C"
     extern Stats DEATH_STATS;
     extern EvoModelData REINCARNATION_MODEL_DATA;
     extern EntityTable ENTITY_TABLE;
-    extern uint8_t STOP_DISTANCE_TIMER;
     extern EvoSequenceData EVO_SEQUENCE_DATA;
     extern SVector POOP_ROTATION_MATRIX;
     extern bool MAP_LAYER_ENABLED;
@@ -1648,8 +1638,6 @@ extern "C"
     extern SectionData SECTION_DATA;
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
 
-    Closeness getPartnerTamerCloseness();
-
     int32_t getEvoSequenceState(PartnerEntity* partner,
                                 int32_t buffer,
                                 PartnerPara* para,
@@ -1662,7 +1650,6 @@ extern "C"
     bool checkEatDistance(int32_t distance);
     void tickMainMenu(int32_t instanceId);
     void renderMainMenu(int32_t instanceId);
-    void Partner_tickWalking();
     void Partner_tickBattle(int32_t instanceId);
     bool isFishing();
     void updateBGM();
@@ -1765,7 +1752,6 @@ extern "C"
     extern void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
     extern bool hasDigimonRaised(DigimonType type);
 
-    extern void updateConditionAnimation();
     extern void unsetButterfly(uint32_t id);
 }
 

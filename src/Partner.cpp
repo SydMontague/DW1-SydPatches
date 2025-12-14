@@ -22,6 +22,7 @@
 #include "Model.hpp"
 #include "Sound.hpp"
 #include "Tamer.hpp"
+#include "Utils.hpp"
 #include "constants.hpp"
 #include "extern/DOOA.hpp"
 #include "extern/STD.hpp"
@@ -30,6 +31,13 @@
 #include "extern/libgs.hpp"
 #include "extern/libgte.hpp"
 #include "extern/stddef.hpp"
+
+enum class Closeness
+{
+    SPRINT_DISTANCE,
+    WALK_DISTANCE,
+    STOP_DISTANCE,
+};
 
 struct ToiletData
 {
@@ -68,6 +76,13 @@ constexpr auto IN_TRAINING_AWAKE_TIME = 7;
 
 static Vector toiletPos1;
 static Vector toiletPos2;
+
+static bool isStandingStill;
+static int8_t emotionAnimTimeout;
+static int8_t healthShoeFrames;
+static uint8_t stopDistanceTimer;
+static uint8_t partnerAnimation;
+static uint8_t poopToEat;
 
 static void updateSleepingTimes()
 {
@@ -122,6 +137,53 @@ static void tickTirednessMechanics()
 
     if (CURRENT_FRAME % 100 == 0 && CURRENT_FRAME != LAST_HANDLED_FRAME && PARTNER_PARA.tiredness >= 80)
         PARTNER_PARA.happiness -= 2;
+}
+
+static void setPartnerIdle()
+{
+    if ((partnerAnimation == 0 || partnerAnimation == 1) && isStandingStill) return;
+
+    auto condition = PARTNER_PARA.condition;
+    if (condition.isSleepy || condition.isTired || condition.isInjured || condition.isSick)
+        partnerAnimation = 1;
+    else
+        partnerAnimation = 0;
+
+    startAnimation(&PARTNER_ENTITY, partnerAnimation);
+}
+
+static void updateConditionAnimation()
+{
+    auto condition = PARTNER_PARA.condition;
+
+    if (condition.raw == 0)
+    {
+        if (PARTNER_PARA.happiness < -30)
+            partnerAnimation = 7;
+        else if (PARTNER_PARA.happiness <= 30)
+            setPartnerIdle();
+        else
+            partnerAnimation = 5;
+    }
+    else
+    {
+        auto anim = 0;
+
+        if (condition.isSleepy)
+            anim = 17;
+        else if (condition.isTired)
+            anim = 18;
+        else if (condition.isHungry)
+            anim = 15;
+        else if (condition.isPoopy)
+            anim = 16;
+        else if (condition.isUnhappy)
+            anim = 19;
+        else if (condition.isInjured || condition.isSick)
+            anim = 14;
+
+        if (PARTNER_ENTITY.animId != anim) partnerAnimation = anim;
+    }
 }
 
 static void tickSleepMechanics()
@@ -527,16 +589,144 @@ static void tickPoopDetection()
         if (isWithinRect(centerX, centerY, radius, &TAMER_ENTITY.posData->location))
         {
             Partner_setState(9);
-            POOP_TO_EAT = i;
+            poopToEat = i;
             return;
         }
+    }
+}
+
+static Closeness getPartnerTamerCloseness()
+{
+    const auto distance       = getDistanceSquared(&TAMER_ENTITY.posData->location, &PARTNER_ENTITY.posData->location);
+    const auto radius         = getDigimonData(PARTNER_ENTITY.type)->radius / 2;
+    const auto walkDistance   = pow(radius * 5, 2);
+    const auto sprintDistance = pow(radius * 7, 2);
+
+    if (sprintDistance < distance) return Closeness::SPRINT_DISTANCE;
+    if (walkDistance < distance) return Closeness::WALK_DISTANCE;
+
+    return Closeness::STOP_DISTANCE;
+}
+
+static void setPartnerSlowWalking()
+{
+    auto condition = PARTNER_PARA.condition;
+    if (condition.isSleepy || condition.isTired || condition.isInjured || condition.isSick)
+        partnerAnimation = 3;
+    else
+        partnerAnimation = 2;
+
+    startAnimation(&PARTNER_ENTITY, partnerAnimation);
+}
+
+static void tickWalking()
+{
+    auto closeness = getPartnerTamerCloseness();
+    auto isUnhappy = PARTNER_PARA.condition.isUnhappy;
+
+    switch (closeness)
+    {
+        case Closeness::SPRINT_DISTANCE:
+        {
+            if (isUnhappy)
+                partnerAnimation = 2;
+            else if (PARTNER_ENTITY.animId == 2 || PARTNER_ENTITY.animId == 3)
+            {
+                if (PARTNER_ENTITY.loopCount == 0xFF) PARTNER_ENTITY.loopCount = 1;
+                if (PARTNER_ENTITY.loopCount == 0) partnerAnimation = 4;
+            }
+            else
+                partnerAnimation = 4;
+
+            isStandingStill = false;
+            break;
+        }
+        case Closeness::WALK_DISTANCE:
+        {
+            if (PARTNER_ENTITY.animId == 4)
+                setPartnerSlowWalking();
+            else if ((PARTNER_ENTITY.animId == 2 || PARTNER_ENTITY.animId == 3))
+            {
+                if (PARTNER_ENTITY.loopCount == 0) setPartnerSlowWalking();
+            }
+            else
+            {
+                if (PARTNER_ENTITY.loopCount == 0xFF) PARTNER_ENTITY.loopCount = 1;
+                if (PARTNER_ENTITY.frameCount <= PARTNER_ENTITY.animFrame) setPartnerSlowWalking();
+            }
+
+            isStandingStill    = false;
+            emotionAnimTimeout = -1;
+            break;
+        }
+        case Closeness::STOP_DISTANCE:
+        {
+            if (PARTNER_ENTITY.animId == 0 || PARTNER_ENTITY.animId == 1)
+            {
+                if (!isStandingStill || (PARTNER_ENTITY.frameCount * emotionAnimTimeout < stopDistanceTimer))
+                    updateConditionAnimation();
+            }
+            else
+            {
+                if ((PARTNER_ENTITY.animId > 1) && (PARTNER_ENTITY.animId < 5))
+                {
+                    auto collision = entityCheckCollision(nullptr, &PARTNER_ENTITY, 0, 0);
+                    if (PARTNER_ENTITY.loopCount == 0xFF) PARTNER_ENTITY.loopCount = 1;
+                    if (PARTNER_ENTITY.loopCount == 0 || collision == CollisionCode::TAMER)
+                    {
+                        emotionAnimTimeout = random(5) + 1;
+                        setPartnerIdle();
+                        stopDistanceTimer = 0;
+                    }
+                }
+
+                if ((PARTNER_ENTITY.animFlag & 1) == 0)
+                {
+                    emotionAnimTimeout = random(5) + 1;
+                    setPartnerIdle();
+                    stopDistanceTimer = 0;
+                }
+            }
+
+            stopDistanceTimer += 1;
+            isStandingStill = true;
+            break;
+        }
+    }
+
+    if (partnerAnimation != PARTNER_ENTITY.animId)
+    {
+        startAnimation(&PARTNER_ENTITY, partnerAnimation);
+        stopDistanceTimer = 0;
+    }
+
+    // vanilla does the health sandal effect here, but we move it into our own function
+}
+
+static void tickHealthSandals()
+{
+    if (TAMER_ENTITY.animId == 2 && getItemCount(ItemType::HEALTH_SHOE) > 0)
+    {
+        if (healthShoeFrames >= 20)
+        {
+            PARTNER_ENTITY.stats.currentHP += 5;
+            PARTNER_ENTITY.stats.currentMP += 5;
+
+            if (PARTNER_ENTITY.stats.hp < PARTNER_ENTITY.stats.currentHP)
+                PARTNER_ENTITY.stats.currentHP = PARTNER_ENTITY.stats.hp;
+            if (PARTNER_ENTITY.stats.mp < PARTNER_ENTITY.stats.currentMP)
+                PARTNER_ENTITY.stats.currentMP = PARTNER_ENTITY.stats.mp;
+            healthShoeFrames = 0;
+        }
+        healthShoeFrames += 1;
     }
 }
 
 static void tickNormal()
 {
     Partner_tickCollision();
-    Partner_tickWalking();
+    tickWalking();
+    tickHealthSandals();
     tickConditions();
     tickPoopingMechanics();
     tickPoopDetection();
@@ -998,7 +1188,7 @@ static void handleFoodFeed(ItemType item)
 
         if (PARTNER_PARA.energyLevel >= raise->energyThreshold || raise->favoriteFood == item)
         {
-            PARTNER_ANIMATION = 11;
+            partnerAnimation = 11;
             startAnimation(&PARTNER_ENTITY, 11);
         }
     }
@@ -1285,7 +1475,7 @@ static void tickDying()
 
 static void handleEatingPoop()
 {
-    auto& poop         = WORLD_POOP[POOP_TO_EAT];
+    auto& poop         = WORLD_POOP[poopToEat];
     auto healingChance = 0;
 
     if (poop.size < 11)
@@ -1340,8 +1530,8 @@ static void tickEatShit()
         }
         case 1:
         {
-            auto tileX = convertTileToPosX(WORLD_POOP[POOP_TO_EAT].x);
-            auto tileZ = convertTileToPosZ(WORLD_POOP[POOP_TO_EAT].y);
+            auto tileX = convertTileToPosX(WORLD_POOP[poopToEat].x);
+            auto tileZ = convertTileToPosZ(WORLD_POOP[poopToEat].y);
             entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
             auto finished = tickEntityWalkTo(0xFC, 0xFF, tileX, tileZ, false);
             if (finished)
@@ -1398,10 +1588,10 @@ static void tickEvolving()
             if (closeness > Closeness::SPRINT_DISTANCE)
             {
                 getEvoSequenceState(&PARTNER_ENTITY,
-                                     reinterpret_cast<int32_t>(&GENERAL_BUFFER),
-                                     &PARTNER_PARA,
-                                     EVOLUTION_TARGET,
-                                     0);
+                                    reinterpret_cast<int32_t>(&GENERAL_BUFFER),
+                                    &PARTNER_PARA,
+                                    EVOLUTION_TARGET,
+                                    0);
                 // vanilla sets 0x80134E34 to 0 here, but it seems to be unused
                 PARTNER_SUB_STATE = 2;
             }
@@ -1410,15 +1600,17 @@ static void tickEvolving()
         case 2:
         {
             auto value = getEvoSequenceState(&PARTNER_ENTITY,
-                                              reinterpret_cast<int32_t>(&GENERAL_BUFFER),
-                                              &PARTNER_PARA,
-                                              EVOLUTION_TARGET,
-                                              1);
+                                             reinterpret_cast<int32_t>(&GENERAL_BUFFER),
+                                             &PARTNER_PARA,
+                                             EVOLUTION_TARGET,
+                                             1);
 
             if (value != -1) return;
 
             startGameTime();
             EVOLUTION_TARGET = -1;
+            // fix evolutions not giving stats/lifetime after having used an evo item
+            HAS_USED_EVOITEM = false;
             loadMapSounds(getMapSoundId(CURRENT_SCREEN));
             // checkShopMap(mapId); // unused as of vanilla 1.1
             checkArenaMap(CURRENT_SCREEN);
@@ -1604,7 +1796,7 @@ extern "C"
         setEntityRotation(1, rotX, rotY, rotZ);
         setupEntityMatrix(1);
         startAnimation(&PARTNER_ENTITY, 0);
-        STOP_DISTANCE_TIMER  = 0;
+        stopDistanceTimer    = 0;
         PARTNER_ENTITY.vabId = 4;
         loadPartnerSounds(type);
         PARTNER_ENTITY.isOnMap     = 1;
@@ -1764,7 +1956,7 @@ extern "C"
         setupEntityMatrix(1);
         startAnimation(&PARTNER_ENTITY, 0);
         PARTNER_ENTITY.vabId       = 4;
-        STOP_DISTANCE_TIMER        = 0;
+        stopDistanceTimer          = 0;
         PARTNER_PARA.condition.raw = 0;
         setSleepTimes(&PARTNER_PARA, type);
         resetPartnerPara(type);
@@ -1803,7 +1995,7 @@ extern "C"
         setupEntityMatrix(1);
         startAnimation(&PARTNER_ENTITY, 0);
         PARTNER_ENTITY.vabId = 4;
-        STOP_DISTANCE_TIMER  = 0;
+        stopDistanceTimer    = 0;
 
         if (type == DigimonType::BOTAMON) setReincarnateStats(90, 110, 10, 11, 9, 10);
         if (type == DigimonType::PUNIMON) setReincarnateStats(120, 100, 16, 8, 8, 6);

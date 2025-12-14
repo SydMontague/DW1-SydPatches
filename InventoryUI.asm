@@ -14,8 +14,8 @@
 ;  jal closeInventoryBoxes
 ;.org 0x800de6f8
 ;  jal closeInventoryBoxes
-.org 0x800deaa0
-  jal closeInventoryBoxes
+;.org 0x800deaa0
+;  jal closeInventoryBoxes
 
 .org 0x800f03e4
   jal initializeInventoryUI
