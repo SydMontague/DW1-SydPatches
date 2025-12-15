@@ -298,6 +298,7 @@
 .definelabel MEDAL_COORDINATES, 0x801546b0
 .definelabel COMBAT_DATA_PTR, 0x80134d4c
 .definelabel INVENTORY_SIZE, 0x8013d4ce
+.definelabel ENTITY_TEXT_DATA, 0x80150cd0
 
 // BTL_REL
 .definelabel BTL_battleMain, 0x8005b5f4

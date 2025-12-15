@@ -1425,6 +1425,25 @@ extern "C"
         int16_t clut;
     };
 
+    struct EntityTextDataEntry
+    {
+        int32_t value;
+        int32_t numDigits;
+        int16_t x;
+        int16_t y;
+        int8_t unk1;
+        int8_t color;
+        int8_t icon;
+        int8_t unk2;
+    };
+
+    struct EntityTextData
+    {
+        int32_t activeElements;
+        EntityTextDataEntry entires[8];
+        uint8_t activeList[8];
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1432,6 +1451,7 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern EntityTextData ENTITY_TEXT_DATA[4];
     extern int32_t CHECKED_MEMORY_CARD;
     extern int32_t MEMORY_CARD_ID;
     extern int32_t MEMORY_CARD_SLOT;
@@ -1798,3 +1818,5 @@ static_assert(sizeof(CombatData) == 0x684);
 static_assert(sizeof(MapTileData) == 0x14);
 static_assert(sizeof(MapLight) == 24);
 static_assert(sizeof(MapSetup) == 0x98);
+static_assert(sizeof(EntityTextDataEntry) == 0x10);
+static_assert(sizeof(EntityTextData) == 0x8C);

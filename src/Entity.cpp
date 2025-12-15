@@ -571,6 +571,19 @@ extern "C"
         self->posData->rotation.y = posmod(baseRotation + 0x20, 4096);
         self->animFlag |= 2;
     }
+
+    void initializeEntityText()
+    {
+        for (auto& val : ENTITY_TEXT_DATA)
+        {
+            for (int32_t i = 0; i < 8; i++)
+            {
+                val.activeList[i]   = 0xFF;
+                val.entires[i].unk1 = 0xFF;
+            }
+            val.activeElements = 0;
+        }
+    }
 }
 
 bool hasAttackEquipped(DigimonEntity* entity)

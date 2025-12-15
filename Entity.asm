@@ -265,6 +265,9 @@
 .org 0x800e20f0
   jal isOffScreen
 
+.org 0x800f03f4
+  jal initializeEntityText
+
 .close 
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
