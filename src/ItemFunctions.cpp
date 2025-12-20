@@ -1,6 +1,7 @@
 #include "ItemFunctions.hpp"
 
 #include "Effects.hpp"
+#include "Entity.hpp"
 #include "Helper.hpp"
 #include "InventoryUI.hpp"
 #include "ItemEffects.hpp"

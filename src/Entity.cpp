@@ -1,6 +1,7 @@
 #include "Entity.hpp"
 
 #include "Camera.hpp"
+#include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
@@ -31,6 +32,7 @@ extern "C"
     // vanilla only allocates 8 vectors here, but there are 10 NPCs...
     static bool hasRotationData[10];
     static Vector rotationData[10];
+    static dtl::array<EntityTextData, 4> entityTextData;
 
     static int16_t moveToDeltaX;
     static int16_t moveToDeltaZ;
@@ -574,14 +576,125 @@ extern "C"
 
     void initializeEntityText()
     {
-        for (auto& val : ENTITY_TEXT_DATA)
+        for (auto& val : entityTextData)
         {
             for (int32_t i = 0; i < 8; i++)
             {
-                val.activeList[i]   = 0xFF;
-                val.entires[i].unk1 = 0xFF;
+                val.activeList[i]      = 0xFF;
+                val.entries[i].frameId = -1;
             }
             val.activeElements = 0;
+        }
+    }
+
+    void removeEntityText(int32_t entityId)
+    {
+        auto& entry = entityTextData[entityId];
+
+        if (entry.activeElements == 0) return;
+
+        removeObject(ObjectID::ENTITY_TEXT, entityId);
+        entry.activeElements = 0;
+        for (int32_t i = 0; i < 8; i++)
+        {
+            entry.activeList[i]      = 0xFF;
+            entry.entries[i].frameId = -1;
+        }
+    }
+
+    static void renderEntityText(int32_t id)
+    {
+        // vanilla sorts the activeList
+
+        constexpr dtl::array<int8_t, 24> yOffsets{0,  -7, -5, -5, -2, -1, 1, 2, 5, 5, 7, -4,
+                                                  -3, -2, 0,  -1, 1,  0,  2, 3, 0, 0, 0, 0};
+        constexpr dtl::array<uint8_t, 9> iconOffsets{0xE0, 0xB0, 0xC8, 0xB8, 0xC0, 0xD0, 0, 0, 0};
+
+        auto& textEntry = entityTextData[id];
+
+        for (int32_t i = 0; i < textEntry.entries.size(); i++)
+        {
+            if (textEntry.activeList[i] == 0xFF) continue;
+
+            auto& entry = textEntry.entries[i];
+            if (entry.frameId == -1) continue;
+            if (i != 0)
+            {
+                auto val = textEntry.entries[textEntry.activeList[i] - 1].frameId;
+                if (val != -1 && val < 11) continue; // delay
+            }
+            if (entry.frameId < 21) entry.y += yOffsets[entry.frameId];
+
+            auto posX = entry.x;
+            auto posY = entry.y;
+
+            if (GAME_STATE == 4)
+            {
+                auto& posData =
+                    ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[id])->posData[0].posMatrix.work.t;
+                auto pos = getScreenPosition(posData[0], posData[1], posData[2]); // vanilla uses getEntityScreenPos
+
+                posX += pos.screenX;
+                posY += pos.screenY - 8;
+            }
+
+            drawEntityText(entry.color, entry.numDigits, posX, posY, entry.value, 14 - i);
+            if (entry.icon != 0 && entry.icon < iconOffsets.size())
+                drawEntityTextIcon(posX - 8, posY, iconOffsets[entry.icon], 14 - i);
+
+            entry.frameId += 1;
+            if (entry.frameId > 30)
+            {
+                entry.frameId           = -1;
+                textEntry.activeList[i] = 0xFF;
+            }
+        }
+
+        for (const auto& val : textEntry.activeList)
+            if (val != 0xFF) return;
+
+        removeEntityText(id);
+    }
+
+    void addEntityText(DigimonEntity* entity, int32_t entityId, int8_t color, int32_t value, int8_t icon)
+    {
+        // vanilla resorts the activeList here, but I don't think that's necessary?
+        auto& textData = entityTextData[entityId];
+
+        if (textData.activeElements >= 8) return;
+
+        for (int32_t i = 0; i < textData.entries.size(); i++)
+        {
+            auto& entry = textData.entries[i];
+            if (entry.frameId != -1) continue;
+
+            entry.numDigits = getDigitCount(value);
+            entry.value     = value;
+            entry.color     = color;
+            entry.icon      = icon;
+            entry.frameId   = 0;
+
+            entry.x = textData.activeElements * 4;
+            entry.y = textData.activeElements * 4;
+            if (GAME_STATE != 4)
+            {
+                auto& posData = entity->posData[0].posMatrix.work.t;
+                auto pos = getScreenPosition(posData[0], posData[1], posData[2]); // vanilla uses getEntityScreenPos
+                entry.x += pos.screenX;
+                entry.y += pos.screenY - 8;
+            }
+
+            for (auto& activeEntry : textData.activeList)
+                if (activeEntry == 0xFF)
+                {
+                    activeEntry = i;
+                    break;
+                }
+
+            if (textData.activeElements == 0) addObject(ObjectID::ENTITY_TEXT, entityId, nullptr, renderEntityText);
+
+            textData.activeElements++;
+            break;
         }
     }
 }

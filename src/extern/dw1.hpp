@@ -1431,7 +1431,7 @@ extern "C"
         int32_t numDigits;
         int16_t x;
         int16_t y;
-        int8_t unk1;
+        int8_t frameId;
         int8_t color;
         int8_t icon;
         int8_t unk2;
@@ -1440,8 +1440,8 @@ extern "C"
     struct EntityTextData
     {
         int32_t activeElements;
-        EntityTextDataEntry entires[8];
-        uint8_t activeList[8];
+        dtl::array<EntityTextDataEntry, 8> entries;
+        dtl::array<uint8_t, 8> activeList;
     };
 
     extern PartnerPara PARTNER_PARA;
@@ -1451,7 +1451,6 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
-    extern EntityTextData ENTITY_TEXT_DATA[4];
     extern int32_t CHECKED_MEMORY_CARD;
     extern int32_t MEMORY_CARD_ID;
     extern int32_t MEMORY_CARD_SLOT;
@@ -1688,7 +1687,6 @@ extern "C"
     void handleBattleIdle(DigimonEntity* entity, Stats* stats, BattleFlags flags);
     void startBattleIdleAnimation(Entity* entity, Stats* stats, BattleFlags flags);
     void setItemTexture(POLY_FT4* prim, ItemType item);
-    void addEntityText(DigimonEntity* entity, int32_t entityId, int8_t color, int32_t amount, int8_t icon);
     void dailyPStatTrigger();
     bool hasMove(int32_t move);
     void activateMedalTexture(Medal medal);
@@ -1764,6 +1762,8 @@ extern "C"
                                  int16_t y3,
                                  int32_t order,
                                  uint32_t flag);
+    void drawEntityText(int32_t color, int32_t digitCount, int32_t x, int32_t y, int32_t value, int32_t layer);
+    void drawEntityTextIcon(int32_t posX, int32_t posY, uint8_t iconOffset, int32_t layer);
 
     extern void setTrigger(uint32_t triggerId);
     extern void clearTextArea();

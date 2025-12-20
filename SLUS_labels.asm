@@ -56,7 +56,6 @@
 .definelabel activateMedalTexture,      0x800e24a4
 .definelabel hasMove,                   0x800e5eb4
 .definelabel dailyPStatTrigger,         0x800fc374
-.definelabel addEntityText,             0x800df868
 .definelabel setItemTexture,            0x800e5dfc
 .definelabel handleBattleIdle,          0x800e7d40
 .definelabel entityLookAtTile,          0x800e6078
@@ -84,6 +83,8 @@
 .definelabel setFishingEnabled,         0x800e4d84
 .definelabel loadMapSounds2,            0x800e9034
 .definelabel getEvoSequenceState,       0x800e732c
+.definelabel drawEntityText,            0x800e5724
+.definelabel drawEntityTextIcon,        0x800e60e0
 
 .definelabel CHECKED_MEMORY_CARD, 0x80135064
 .definelabel MEMORY_CARD_ID, 0x80135044

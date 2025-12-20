@@ -96,6 +96,20 @@ extern "C"
         return result;
     }
 
+    constexpr int32_t getDigitCount(int32_t value)
+    {
+        auto count   = value < 0 ? 1 : 0;
+        auto current = abs(value);
+
+        do
+        {
+            count++;
+            current /= 10;
+        } while (current != 0);
+
+        return count;
+    }
+
     inline int32_t random2(int32_t limit)
     {
         return rand() % limit;
@@ -244,3 +258,10 @@ static_assert(pow(2, 0) == 0);
 static_assert(pow(3, 2) == 9);
 static_assert(pow(3, 3) == 27);
 static_assert(pow(2, 16) == 65536);
+
+static_assert(getDigitCount(0) == 1);
+static_assert(getDigitCount(10) == 2);
+static_assert(getDigitCount(99) == 2);
+static_assert(getDigitCount(-9) == 2);
+static_assert(getDigitCount(-99) == 3);
+static_assert(getDigitCount(5555555) == 7);

@@ -35,7 +35,7 @@ namespace dtl
 
         constexpr T* data() { return elements; }
         constexpr const T* data() const { return elements; }
-        constexpr size_t size() { return elem_count; }
+        constexpr size_t size() const { return elem_count; }
 
         constexpr T& operator[](size_t idx) { return elements[idx]; }
         constexpr const T& operator[](size_t idx) const { return elements[idx]; }

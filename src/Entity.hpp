@@ -15,4 +15,5 @@ extern "C"
     void collisionGrace(Entity* ignore, Entity* self, int32_t dx, int32_t dy);
     bool isLinearPathBlocked(int32_t tileX1, int32_t tileY1, int32_t tileX2, int32_t tileY2);
     bool tickEntityWalkTo(uint32_t scriptId1, uint32_t scriptId2, int32_t targetX, int32_t targetZ, bool withCamera);
+    void addEntityText(DigimonEntity* entity, int32_t entityId, int8_t color, int32_t value, int8_t icon);
 }

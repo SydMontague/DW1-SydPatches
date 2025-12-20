@@ -268,6 +268,12 @@
 .org 0x800f03f4
   jal initializeEntityText
 
+.org 0x80104860
+  jal addEntityText
+
+.org 0x800f46c0
+  jal removeEntityText
+
 .close 
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
@@ -390,6 +396,18 @@
 .org 0x800587f0
   jal isOffScreen
 
+.org 0x8005ca94
+  jal addEntityText
+.org 0x8005cd90
+  jal addEntityText
+.org 0x8005cf8c
+  jal addEntityText
+.org 0x8005e7c4
+  jal addEntityText
+
+.org 0x80058e04
+  jal removeEntityText
+
 .close
 
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
@@ -482,9 +500,21 @@
 .org 0x8006311c
   jal collisionGrace
 
+.org 0x80064744
+  jal addEntityText
+.org 0x80064b24
+  jal addEntityText
+.org 0x80064e20
+  jal addEntityText
+.org 0x8006653c
+  jal addEntityText
+  
+.org 0x80060664
+  jal removeEntityText
+
 .close
 
-.open "work/DIGIMON/STD_REL.BIN",0x80052ae0
+.open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
 
 .org 0x8005ca94
@@ -497,6 +527,15 @@
   jal entityLookAtLocation
 .org 0x800653d4
   jal entityLookAtLocation
+
+.org 0x8005c34c
+  jal addEntityText
+.org 0x8005c678
+  jal addEntityText
+.org 0x8005c974
+  jal addEntityText
+.org 0x8005df20
+  jal addEntityText
 
 .close
 
