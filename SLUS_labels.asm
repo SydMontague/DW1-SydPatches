@@ -61,7 +61,6 @@
 .definelabel entityLookAtTile,          0x800e6078
 .definelabel startBattleIdleAnimation,  0x800e8970
 .definelabel isInvisible,               0x800e61ac
-.definelabel loadDoors,                 0x800dfefc
 .definelabel initializeWarpCrystals,    0x800e0af8
 .definelabel initializeTrainingPoop,    0x800e172c
 .definelabel checkFishingMap,           0x800e4ee4
@@ -85,7 +84,10 @@
 .definelabel getEvoSequenceState,       0x800e732c
 .definelabel drawEntityText,            0x800e5724
 .definelabel drawEntityTextIcon,        0x800e60e0
+.definelabel isBoxOffScreen,            0x800e2010
 
+.definelabel GENERAL_MESH_BUFFER, 0x80151200
+.definelabel MAP_3D_OBJECTS, 0x80153240
 .definelabel CHECKED_MEMORY_CARD, 0x80135064
 .definelabel MEMORY_CARD_ID, 0x80135044
 .definelabel MEMORY_CARD_SLOT, 0x8013503c

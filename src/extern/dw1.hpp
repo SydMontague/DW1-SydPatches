@@ -1444,6 +1444,14 @@ extern "C"
         dtl::array<uint8_t, 8> activeList;
     };
 
+    struct Map3DObject
+    {
+        Vector translation;
+        SVector rotation;
+        int16_t direction;
+        uint16_t modelId;
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1451,6 +1459,8 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern dtl::array<dtl::array<uint8_t, 2048>, 4> GENERAL_MESH_BUFFER;
+    extern dtl::array<Map3DObject, 6> MAP_3D_OBJECTS;
     extern int32_t CHECKED_MEMORY_CARD;
     extern int32_t MEMORY_CARD_ID;
     extern int32_t MEMORY_CARD_SLOT;
@@ -1657,6 +1667,7 @@ extern "C"
     extern SectionData SECTION_DATA;
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
 
+    bool isBoxOffScreen(Vector* position, int32_t width, int32_t height);
     int32_t getEvoSequenceState(PartnerEntity* partner,
                                 int32_t buffer,
                                 PartnerPara* para,
@@ -1677,7 +1688,6 @@ extern "C"
     void calculatePosition(GsCOORDINATE2* coord, Matrix* matrix);
     void runMapHeadScript(uint8_t mapId);
     void unloadMapParts();
-    void loadDoors(int32_t doorEntryId);
     void initializeWarpCrystals(int32_t mapId);
     void initializeTrainingPoop();
     void checkFishingMap(int32_t mapId);

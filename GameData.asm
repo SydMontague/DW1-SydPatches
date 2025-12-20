@@ -18,15 +18,15 @@
 .endarea
 
 .org 0x800d3078
-.area 0x800dfe48-.
+.area 0x800e04fc-.
   .importobj "compiled/Cave3.lib"
 
-  .notice "Cave3 Empty space left: " + (0x800dfe48-.) + " bytes"
-  .fill 0x800dfe48-.
+  .notice "Cave3 Empty space left: " + (0x800e04fc-.) + " bytes"
+  .fill 0x800e04fc-.
 .endarea
 
 .org 0x8011d46c
-.area 0x80122d24-.
+.area 0x8012344c-.
   .importobj "compiled/GameData.lib"
 ;;;
 ; Relocated game data start. 
@@ -54,8 +54,8 @@ SB_address: ; 0x800e8f80
   .importobj "compiled/CustomUI.lib"
   .importobj "compiled/CustomInit.lib"
   
-  .notice "Empty space left: " + (0x80122d24-.) + " bytes"
-  .fill 0x80122d24-.
+  .notice "Empty space left: " + (0x8012344c-.) + " bytes"
+  .fill 0x8012344c-.
 .endarea
 
 
@@ -65,14 +65,6 @@ SB_address: ; 0x800e8f80
 
   .notice "Empty space left: " + (0x80137c00-.) + " bytes"
   .fill 0x80137c00-.
-.endarea
-
-; override some effect data
-.org 0x80123370
-.area 0x8012342c-.
-
-  .notice "Empty space left: " + (0x8012342c-.) + " bytes"
-  .fill 0x8012342c-.
 .endarea
 
 ; override some menu data

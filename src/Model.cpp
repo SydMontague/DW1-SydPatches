@@ -1306,4 +1306,14 @@ extern "C"
         libgte_TransMatrix(&lMatrix, &posData[0].location);
         calculatePosition(&posData[boneId].posMatrix, out);
     }
+
+    void loadStaticTMD(char* filePath, uint8_t* buffer, GsDOBJ2* object, GsCOORDINATE2* coords)
+    {
+        readFile(filePath, buffer);
+        libgs_GsMapModelingData(reinterpret_cast<uint32_t*>(buffer + 4));
+        libgs_GsLinkObject4(reinterpret_cast<uint32_t*>(buffer + 0xC), object, 0);
+        libgs_GsInitCoordinate2(nullptr, coords);
+        object->attribute = 0;
+        object->coord2    = coords;
+    }
 }

@@ -37,3 +37,4 @@
 .include "InventoryUI.asm"
 .include "GameTime.asm"
 .include "Script.asm"
+.include "Chest.asm"

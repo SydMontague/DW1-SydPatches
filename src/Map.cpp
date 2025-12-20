@@ -5,10 +5,12 @@
 #include "Fade.hpp"
 #include "Files.hpp"
 #include "Font.hpp"
+#include "GameData.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Inventory.hpp"
 #include "Math.hpp"
+#include "Model.hpp"
 #include "NPCEntity.hpp"
 #include "Partner.hpp"
 #include "Sound.hpp"
@@ -20,6 +22,94 @@
 #include "extern/libgte.hpp"
 #include "extern/psx.hpp"
 #include "extern/stddef.hpp"
+
+namespace
+{
+    struct DoorObject
+    {
+        uint8_t modelId{0xFF};
+        GsDOBJ2 obj;
+        GsCOORDINATE2 coords;
+    };
+
+    dtl::array<DoorObject, 4> doorObjects;
+
+    void renderDoors(int32_t instance)
+    {
+        if (!MAP_LAYER_ENABLED) return;
+
+        Vector scale = {4096, 4096, 4096, 0};
+
+        for (auto& obj : MAP_3D_OBJECTS)
+        {
+            if (obj.modelId == 0xFF) continue;
+
+            if (isBoxOffScreen(&obj.translation, 700, 800)) continue;
+
+            int32_t instanceId = 0;
+            for (; instanceId < doorObjects.size(); instanceId++)
+                if (doorObjects[instanceId].modelId == obj.modelId) break;
+
+            projectPosition(&doorObjects[instanceId].coords, &obj.translation, &obj.rotation, &scale);
+            renderObject(&doorObjects[instanceId].obj, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+
+            if (obj.modelId == 10)
+            {
+                auto copy = obj;
+                copy.translation.z += (obj.rotation.y < 0 ? 680 : -680);
+                copy.rotation.y = -obj.rotation.y;
+                projectPosition(&doorObjects[instanceId].coords, &copy.translation, &copy.rotation, &scale);
+                renderObject(&doorObjects[instanceId].obj, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+            }
+        }
+    }
+
+    void loadDoors(int32_t doorEntryId)
+    {
+        // vanilla has a bool here, for disabling door loading, but it's never set
+        doorObjects = {};
+
+        const auto& data = DOOR_MAPDATA[doorEntryId];
+
+        for (auto entry : data.modelId)
+        {
+            for (auto& slot : doorObjects)
+            {
+                if (slot.modelId == 0xFF)
+                {
+                    slot.modelId = entry;
+                    break;
+                }
+                if (slot.modelId == entry) break;
+            }
+        }
+
+        for (int32_t i = 0; i < doorObjects.size(); i++)
+        {
+            auto model = doorObjects[i].modelId;
+            if (model == 0xFF) continue;
+
+            dtl::array<uint8_t, 32> buffer;
+            sprintf(buffer.data(), "\\DOOR\\DOOR%02d.TMD", model);
+            loadStaticTMD(reinterpret_cast<char*>(buffer.data()),
+                          GENERAL_MESH_BUFFER[i].data(),
+                          &doorObjects[i].obj,
+                          &doorObjects[i].coords);
+        }
+
+        for (int32_t i = 0; i < MAP_3D_OBJECTS.size(); i++)
+        {
+            auto& entry = MAP_3D_OBJECTS[i];
+
+            entry.modelId     = data.modelId[i];
+            entry.translation = {data.posX[i], data.posY[i], data.posZ[i], 0};
+            entry.rotation    = {0, data.rotation[i], 0, 0};
+            entry.direction   = data.rotation[i];
+        }
+
+        addObject(ObjectID::DOORS, 0, nullptr, renderDoors);
+    }
+} // namespace
 
 extern "C"
 {
