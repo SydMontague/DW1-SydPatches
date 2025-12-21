@@ -403,12 +403,12 @@
 
 ;.org 0x800e0124
 ;  jal loadStaticTMD
-.org 0x800e0520
-  jal loadStaticTMD
-.org 0x800e0544
-  jal loadStaticTMD
-.org 0x800e076c
-  jal loadStaticTMD
+;.org 0x800e0520
+;  jal loadStaticTMD
+;.org 0x800e0544
+;  jal loadStaticTMD
+;.org 0x800e076c
+;  jal loadStaticTMD
 .org 0x800e0fd4
   jal loadStaticTMD
 .org 0x800e114c

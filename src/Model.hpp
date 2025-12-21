@@ -18,5 +18,5 @@ extern "C"
     void setupModelMatrix(PositionData* data);
     void startAnimation(Entity*, uint32_t animId);
     void tickAnimation(Entity* entity);
-    void loadStaticTMD(char* file, uint8_t* buffer, GsDOBJ2* object, GsCOORDINATE2* coords);
+    void loadStaticTMD(const char* file, uint8_t* buffer, GsDOBJ2* object, GsCOORDINATE2* coords);
 }

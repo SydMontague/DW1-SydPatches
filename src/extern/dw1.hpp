@@ -1688,7 +1688,6 @@ extern "C"
     void calculatePosition(GsCOORDINATE2* coord, Matrix* matrix);
     void runMapHeadScript(uint8_t mapId);
     void unloadMapParts();
-    void initializeWarpCrystals(int32_t mapId);
     void initializeTrainingPoop();
     void checkFishingMap(int32_t mapId);
     void checkCurlingMap(int32_t mapId);

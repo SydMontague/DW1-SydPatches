@@ -9,6 +9,7 @@
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Inventory.hpp"
+#include "MapObjects.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
 #include "NPCEntity.hpp"
@@ -1244,7 +1245,7 @@ extern "C"
         loadMapEntities(&GENERAL_BUFFER + *headerPtr++, mapId, CURRENT_EXIT);
 
         if (entry.doorsId != 0) { loadDoors(entry.doorsId - 1); }
-        if (mapId > 100 && mapId < 104) initializeWarpCrystals(mapId);
+        if (mapId > 100 && mapId < 104) loadWarpCrystals(mapId);
         if (mapId == 165) initializeTrainingPoop();
 
         loadMapCollisionData(&GENERAL_BUFFER + *headerPtr++);

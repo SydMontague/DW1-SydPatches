@@ -18,11 +18,11 @@
 .endarea
 
 .org 0x800d3078
-.area 0x800e04fc-.
+.area 0x800e0f80-.
   .importobj "compiled/Cave3.lib"
 
-  .notice "Cave3 Empty space left: " + (0x800e04fc-.) + " bytes"
-  .fill 0x800e04fc-.
+  .notice "Cave3 Empty space left: " + (0x800e0f80-.) + " bytes"
+  .fill 0x800e0f80-.
 .endarea
 
 .org 0x8011d46c
@@ -75,6 +75,13 @@ SB_address: ; 0x800e8f80
   .fill 0x80124c0c-.
 .endarea
 
+; override chest object data
+.org 0x80153408
+.area 0x80153cc8-.
+
+  .notice "Empty space left: " + (0x80153cc8-.) + " bytes"
+  .fill 0x80153cc8-.
+.endarea
 
 ; override vanilla raise data
 .org 0x8012abec

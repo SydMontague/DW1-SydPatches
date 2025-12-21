@@ -1307,7 +1307,7 @@ extern "C"
         calculatePosition(&posData[boneId].posMatrix, out);
     }
 
-    void loadStaticTMD(char* filePath, uint8_t* buffer, GsDOBJ2* object, GsCOORDINATE2* coords)
+    void loadStaticTMD(const char* filePath, uint8_t* buffer, GsDOBJ2* object, GsCOORDINATE2* coords)
     {
         readFile(filePath, buffer);
         libgs_GsMapModelingData(reinterpret_cast<uint32_t*>(buffer + 4));

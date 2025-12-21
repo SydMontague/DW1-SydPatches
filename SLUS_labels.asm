@@ -61,7 +61,6 @@
 .definelabel entityLookAtTile,          0x800e6078
 .definelabel startBattleIdleAnimation,  0x800e8970
 .definelabel isInvisible,               0x800e61ac
-.definelabel initializeWarpCrystals,    0x800e0af8
 .definelabel initializeTrainingPoop,    0x800e172c
 .definelabel checkFishingMap,           0x800e4ee4
 .definelabel checkCurlingMap,           0x800e89c8
@@ -86,6 +85,16 @@
 .definelabel drawEntityTextIcon,        0x800e60e0
 .definelabel isBoxOffScreen,            0x800e2010
 
+.definelabel GENERAL_OBJECT, 0x801532e8
+.definelabel GENERAL_COORDS, 0x80153308
+.definelabel GENERAL_OBJECT3, 0x801533a8
+.definelabel GENERAL_COORDS3, 0x801533b8
+.definelabel ACTIVE_DIRT_CART_MODEL, 0x80134e41
+.definelabel DIRT_PILE_SIZE_COUNTER, 0x80134424
+.definelabel WARP_CRYSTAL_COORD1, 0x80153cc8
+.definelabel WARP_CRYSTAL_COORD2, 0x80153d18
+.definelabel WARP_CRYSTAL_OBJECT1, 0x80153d68
+.definelabel WARP_CRYSTAL_OBJECT2, 0x80153d78
 .definelabel GENERAL_MESH_BUFFER, 0x80151200
 .definelabel MAP_3D_OBJECTS, 0x80153240
 .definelabel CHECKED_MEMORY_CARD, 0x80135064

@@ -26,10 +26,10 @@
 ;  jal readFile
 ;.org 0x800dfeb0
 ;  jal readFile
-.org 0x800e0898
-  jal readFile
-.org 0x800e0b28
-  jal readFile
+;.org 0x800e0898
+;  jal readFile
+;.org 0x800e0b28
+;  jal readFile
 .org 0x800e11e4
   jal readFile
 .org 0x800e11fc
