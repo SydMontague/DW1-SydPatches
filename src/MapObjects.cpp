@@ -1,6 +1,7 @@
 #include "Files.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
+#include "Math.hpp"
 #include "Model.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgs.hpp"
@@ -135,6 +136,34 @@ namespace
         if (!MAP_LAYER_ENABLED) return;
         renderObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
     }
+
+    void renderToyTownBoxes(int32_t instance)
+    {
+        if (!MAP_LAYER_ENABLED) return;
+
+        if (TOY_TOWN_SELECTED_BOX == 1)
+        {
+            BIG_BOX_LID_PROGRESS -= 100;
+            BIG_BOX_LID_PROGRESS = max(-1024, BIG_BOX_LID_PROGRESS);
+
+            SVector rot = {BIG_BOX_LID_PROGRESS, 0, 0, 0};
+            libgte_RotMatrix(&rot, &WARP_CRYSTAL_COORD2.coord);
+            WARP_CRYSTAL_COORD2.flag = 0;
+        }
+        if (TOY_TOWN_SELECTED_BOX == 2)
+        {
+            SMALL_BOX_LID_PROGRESS -= 100;
+            SMALL_BOX_LID_PROGRESS = max(-1024, SMALL_BOX_LID_PROGRESS);
+            SVector rot            = {SMALL_BOX_LID_PROGRESS, 0, 0, 0};
+            libgte_RotMatrix(&rot, &GENERAL_COORDS[1].coord);
+            GENERAL_COORDS[1].flag = 0;
+        }
+
+        renderObject(&WARP_CRYSTAL_OBJECT1, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+        renderObject(&WARP_CRYSTAL_OBJECT2, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+        renderObject(&GENERAL_OBJECT[0], GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+        renderObject(&GENERAL_OBJECT[1], GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+    }
 } // namespace
 
 extern "C"
@@ -230,5 +259,43 @@ extern "C"
 
         projectPosition(&GENERAL_COORDS3, &MAP_3D_OBJECTS[0].translation, &MAP_3D_OBJECTS[0].rotation, &scale);
         addObject(ObjectID::BOULDER, 0, nullptr, renderBoulder);
+    }
+
+    void spawnToyTownBoxes()
+    {
+        Vector box1Pos = {500, -600, 600, 0};
+        Vector box2Pos = {-400, -400, 600, 0};
+
+        readFile("\\ETCNA\\BIGBOX.TMD", GENERAL_MESH_BUFFER[0].data());
+        libgs_GsMapModelingData(reinterpret_cast<uint32_t*>(GENERAL_MESH_BUFFER[0].data() + 4));
+        libgs_GsInitCoordinate2(nullptr, &WARP_CRYSTAL_COORD1);
+        libgs_GsInitCoordinate2(&WARP_CRYSTAL_COORD1, &WARP_CRYSTAL_COORD2);
+        libgs_GsLinkObject4(reinterpret_cast<uint32_t*>(GENERAL_MESH_BUFFER[0].data() + 0xC), &WARP_CRYSTAL_OBJECT1, 0);
+        libgs_GsLinkObject4(reinterpret_cast<uint32_t*>(GENERAL_MESH_BUFFER[0].data() + 0xC), &WARP_CRYSTAL_OBJECT2, 1);
+        WARP_CRYSTAL_OBJECT1.attribute = 0;
+        WARP_CRYSTAL_OBJECT1.coord2    = &WARP_CRYSTAL_COORD1;
+        WARP_CRYSTAL_OBJECT2.attribute = 0;
+        WARP_CRYSTAL_OBJECT2.coord2    = &WARP_CRYSTAL_COORD2;
+
+        readFile("\\ETCNA\\SMABOX.TMD", GENERAL_MESH_BUFFER[1].data());
+        libgs_GsMapModelingData(reinterpret_cast<uint32_t*>(GENERAL_MESH_BUFFER[1].data() + 4));
+        libgs_GsInitCoordinate2(nullptr, &GENERAL_COORDS[0]);
+        libgs_GsInitCoordinate2(&GENERAL_COORDS[0], &GENERAL_COORDS[1]);
+        libgs_GsLinkObject4(reinterpret_cast<uint32_t*>(GENERAL_MESH_BUFFER[1].data() + 0xC), &GENERAL_OBJECT[0], 0);
+        libgs_GsLinkObject4(reinterpret_cast<uint32_t*>(GENERAL_MESH_BUFFER[1].data() + 0xC), &GENERAL_OBJECT[1], 1);
+        GENERAL_OBJECT[0].attribute = 0;
+        GENERAL_OBJECT[0].coord2    = &GENERAL_COORDS[0];
+        GENERAL_OBJECT[1].attribute = 0;
+        GENERAL_OBJECT[1].coord2    = &GENERAL_COORDS[1];
+
+        libgte_TransMatrix(&WARP_CRYSTAL_COORD1.coord, &box1Pos);
+        libgte_TransMatrix(&GENERAL_COORDS[0].coord, &box2Pos);
+        WARP_CRYSTAL_COORD1.flag = 0;
+        GENERAL_COORDS[0].flag   = 0;
+        BIG_BOX_LID_PROGRESS     = 0;
+        SMALL_BOX_LID_PROGRESS   = 0;
+        TOY_TOWN_SELECTED_BOX    = 0;
+
+        addObject(ObjectID::TOY_TOWN_BOXES, 0, nullptr, renderToyTownBoxes);
     }
 }

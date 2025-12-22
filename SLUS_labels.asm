@@ -84,6 +84,9 @@
 .definelabel drawEntityTextIcon,        0x800e60e0
 .definelabel isBoxOffScreen,            0x800e2010
 
+.definelabel BIG_BOX_LID_PROGRESS, 0x80134e44
+.definelabel SMALL_BOX_LID_PROGRESS, 0x80134e46
+.definelabel TOY_TOWN_SELECTED_BOX, 0x80134e48
 .definelabel GENERAL_OBJECT, 0x801532e8
 .definelabel GENERAL_COORDS, 0x80153308
 .definelabel GENERAL_OBJECT3, 0x801533a8

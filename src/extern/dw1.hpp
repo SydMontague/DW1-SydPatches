@@ -1459,6 +1459,9 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern int16_t BIG_BOX_LID_PROGRESS;
+    extern int16_t SMALL_BOX_LID_PROGRESS;
+    extern int16_t TOY_TOWN_SELECTED_BOX;
     extern dtl::array<dtl::array<uint8_t, 2048>, 4> GENERAL_MESH_BUFFER;
     extern dtl::array<Map3DObject, 6> MAP_3D_OBJECTS;
     extern int32_t CHECKED_MEMORY_CARD;

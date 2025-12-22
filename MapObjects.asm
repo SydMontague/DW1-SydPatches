@@ -17,4 +17,7 @@
 .org 0x80104db8
   jal spawnBoulder
 
+.org 0x801044c4
+  jal spawnToyTownBoxes
+
 .close
