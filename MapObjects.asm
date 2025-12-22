@@ -14,4 +14,7 @@
 .org 0x800eeb48
   jal initializeChest
 
+.org 0x80104db8
+  jal spawnBoulder
+
 .close

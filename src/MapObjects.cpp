@@ -129,6 +129,12 @@ namespace
         crystal->rotation1 = {0, 0, 0};
         crystal->rotation2 = {0, 0, 0};
     }
+
+    void renderBoulder(int32_t instance)
+    {
+        if (!MAP_LAYER_ENABLED) return;
+        renderObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+    }
 } // namespace
 
 extern "C"
@@ -212,5 +218,17 @@ extern "C"
                 addWarpCrystal(2100, -2100);
                 break;
         }
+    }
+
+    void spawnBoulder()
+    {
+        Vector scale = {4096, 4096, 4096, 0};
+        loadStaticTMD("\\ETCNA\\IWA.TMD", GENERAL_MESH_BUFFER[0].data(), &GENERAL_OBJECT3, &GENERAL_COORDS3);
+        loadTextureFile("\\ETCNA\\IWA1.TIM", nullptr, nullptr);
+        MAP_3D_OBJECTS[0].translation = {-300, -500, 2000, 0};
+        MAP_3D_OBJECTS[0].rotation    = {0, 0, 0, 0};
+
+        projectPosition(&GENERAL_COORDS3, &MAP_3D_OBJECTS[0].translation, &MAP_3D_OBJECTS[0].rotation, &scale);
+        addObject(ObjectID::BOULDER, 0, nullptr, renderBoulder);
     }
 }

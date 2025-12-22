@@ -1738,7 +1738,6 @@ extern "C"
                                     int32_t param);
     extern void renderDropShadow(Entity* entity);
     extern void Partner_tick(int32_t);
-    extern void projectPosition(GsCOORDINATE2* position, Vector* translation, SVector* rotation, Vector* scale);
     extern void renderObject(GsDOBJ2* obj, GsOT* ot, int32_t shift);
     extern void learnMove(uint8_t move);
     extern void initializeConditionBubbles();

@@ -19,4 +19,5 @@ extern "C"
     void startAnimation(Entity*, uint32_t animId);
     void tickAnimation(Entity* entity);
     void loadStaticTMD(const char* file, uint8_t* buffer, GsDOBJ2* object, GsCOORDINATE2* coords);
+    void projectPosition(GsCOORDINATE2* position, Vector* translation, SVector* rotation, Vector* scale);
 }

@@ -53,8 +53,8 @@
   jal lookupFileTable
 
 
-.org 0x800e0fe8
-  jal loadTextureFile
+;.org 0x800e0fe8
+;  jal loadTextureFile
 .org 0x801043cc
   jal loadTextureFile
 

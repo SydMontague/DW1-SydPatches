@@ -1,5 +1,6 @@
 #include "Helper.hpp"
 #include "Math.hpp"
+#include "Model.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
@@ -250,6 +251,7 @@ static SVector medalRotation{};
 static int8_t selectedMedalRow;
 static int8_t selectedMedalCol;
 static Medal selectedMedal;
+static dtl::array<uint8_t, 2048> MEDAL_MESH;
 
 static void updateMedal(Medal medal)
 {
@@ -361,5 +363,13 @@ void tickPlayerMenuMedalView()
         for (auto& text : textLabels)
             drawTextSprite(text);
         MENU_STATE = 1;
+    }
+}
+
+extern "C"
+{
+    void initializeMedalModel()
+    {
+        loadStaticTMD("\\ETCNA\\MEDAL.TMD", MEDAL_MESH.data(), &MEDAL_OBJECT, &MEDAL_COORDINATES);
     }
 }

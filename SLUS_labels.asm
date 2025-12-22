@@ -21,7 +21,6 @@
 .definelabel setButterfly,              0x800e9d24
 .definelabel readPStat,                0x801062e0
 .definelabel writePStat,                0x80106474
-.definelabel projectPosition,           0x800e1074
 .definelabel renderObject,              0x800e215c
 .definelabel learnMove,                 0x800e5f14
 .definelabel initializeConditionBubbles,0x800ec520

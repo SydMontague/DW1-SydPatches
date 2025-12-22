@@ -30,6 +30,9 @@
 .org 0x800eeb68
   jal addClock
 
+.org 0x800ee8c4
+  jal initializeMedalModel
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

@@ -51,6 +51,14 @@ extern "C"
 {
     static CVector colorInput = {0x80, 0x80, 0x80, 0};
 
+    void projectPosition(GsCOORDINATE2* position, Vector* translation, SVector* rotation, Vector* scale)
+    {
+        libgte_RotMatrix(rotation, &position->coord);
+        libgte_ScaleMatrix(&position->coord, scale);
+        libgte_TransMatrix(&position->coord, translation);
+        position->flag = 0;
+    }
+
     void renderDropShadow(Entity* entity)
     {
         auto* loc    = &entity->posData->location;
