@@ -112,24 +112,24 @@
 ;  jal removeObject
 ;.org 0x800dfdf8
 ;  jal removeObject
-.org 0x800e1bfc
-  jal removeObject
-.org 0x800e1c08
-  jal removeObject
-.org 0x800e1c14
-  jal removeObject
-.org 0x800e1c20
-  jal removeObject
-.org 0x800e1c2c
-  jal removeObject
-.org 0x800e1c38
-  jal removeObject
-.org 0x800e1c44
-  jal removeObject
-.org 0x800e1c50
-  jal removeObject
-.org 0x800e1c5c
-  jal removeObject
+;.org 0x800e1bfc
+;  jal removeObject
+;.org 0x800e1c08
+;  jal removeObject
+;.org 0x800e1c14
+;  jal removeObject
+;.org 0x800e1c20
+;  jal removeObject
+;.org 0x800e1c2c
+;  jal removeObject
+;.org 0x800e1c38
+;  jal removeObject
+;.org 0x800e1c44
+;  jal removeObject
+;.org 0x800e1c50
+;  jal removeObject
+;.org 0x800e1c5c
+;  jal removeObject
 .org 0x800e72c8
   jal removeObject
 .org 0x800e8474

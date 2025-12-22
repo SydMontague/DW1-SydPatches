@@ -30,4 +30,5 @@ extern "C"
     void changeMap(uint32_t map, uint32_t exit);
     void renderMap(int32_t instanceId);
     uint8_t getMapSoundId(uint32_t mapId);
+    void setImpassableSquare(int32_t tileX, int32_t tileY, int32_t radius);
 }

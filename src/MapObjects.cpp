@@ -1,6 +1,8 @@
+#include "Entity.hpp"
 #include "Files.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
+#include "Map.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
 #include "extern/dw1.hpp"
@@ -63,6 +65,16 @@ namespace
         if (!MAP_LAYER_ENABLED) return;
 
         renderObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+    }
+
+    Chest* getFreeChest()
+    {
+        for (auto& chest : CHEST_ARRAY)
+        {
+            if (chest.item == ItemType::NONE) return &chest;
+        }
+
+        return nullptr;
     }
 
     void clearChests()
@@ -350,5 +362,44 @@ extern "C"
         loadStaticTMD("\\ETCNA\\TRY.TMD", GENERAL_MESH_BUFFER[0].data(), &GENERAL_OBJECT3, &GENERAL_COORDS3);
         projectPosition(&GENERAL_COORDS3, &translation, &rotation, &scale);
         addObject(ObjectID::TRAINING_POOP, 0, nullptr, renderTrainingPoop);
+    }
+
+    void spawnChest(int32_t posX, int32_t posY, int32_t posZ, int16_t rotation, ItemType item, uint16_t trigger)
+    {
+        auto* chest = getFreeChest();
+        if (!chest) return;
+
+        if (isTriggerSet(trigger))
+        {
+            chest->isTaken      = true;
+            chest->trayLocation = {0, 0, -160, 0};
+        }
+        else
+        {
+            chest->isTaken      = false;
+            chest->trayLocation = {0, 0, 0, 0};
+        }
+
+        const int16_t tileX = getTileX(posX);
+        const int16_t tileZ = getTileZ(posZ);
+        setImpassableSquare(tileX, tileZ, 2);
+
+        chest->rotation     = {0, rotation, 0, 0};
+        chest->trayRotation = {0, 0, 0, 0};
+        chest->trigger      = trigger;
+        chest->item         = item;
+        chest->location     = {convertTileToPosX(tileX), 0, convertTileToPosZ(tileZ), 0};
+        chest->tileX        = tileX;
+        chest->tileY        = tileZ;
+
+        if (rotation == 0)
+            chest->tileY += 4;
+        else if (rotation == 0x800)
+            chest->tileY -= 4;
+
+        if (rotation == 0x400)
+            chest->tileX -= 4;
+        else if (rotation == 0xC00)
+            chest->tileX += 4;
     }
 }

@@ -36,9 +36,6 @@
 .org 0x80105e64
   jal tickRemoveMist
 
-.org 0x800e1a48
-  jal setImpassableSquare
-
 .org 0x80104edc
   jal setImpassableRect
 

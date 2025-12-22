@@ -1692,7 +1692,6 @@ extern "C"
     void renderSelectionCursor(int16_t x, int16_t y, int16_t width, int16_t height, int32_t depth);
     void calculatePosition(GsCOORDINATE2* coord, Matrix* matrix);
     void runMapHeadScript(uint8_t mapId);
-    void unloadMapParts();
     void checkFishingMap(int32_t mapId);
     void checkCurlingMap(int32_t mapId);
     void checkArenaMap(int32_t mapId);

@@ -1456,6 +1456,23 @@ extern "C"
         SKIP_DAYTIME_TRANSITION = 0;
     }
 
+    static void unloadMapObjects()
+    {
+        removeObject(ObjectID::DOORS, 0);
+        removeObject(ObjectID::WARP_CRYSTAL, 0);
+        removeObject(ObjectID::DIRT_CART, 0);
+        removeObject(ObjectID::DIRT_PILE, 0);
+        removeObject(ObjectID::BOULDER, 0);
+        removeObject(ObjectID::TOY_TOWN_BOXES, 0);
+        removeObject(ObjectID::GEARBOX, 0);
+        removeObject(ObjectID::DAYTIME_TRANSITION, 0);
+        removeObject(ObjectID::TRAINING_POOP, 0);
+        for (auto& chest : CHEST_ARRAY)
+        {
+            chest.item = ItemType::NONE;
+        }
+    }
+
     void unloadMap()
     {
         for (auto& val : MAP_TILE_DATA)
@@ -1473,7 +1490,7 @@ extern "C"
         CAMERA_Y         = 0;
         DRAWING_OFFSET_X = 0;
         DRAWING_OFFSET_Y = 0;
-        unloadMapParts();
+        unloadMapObjects();
     }
 
     bool isInDaytimeTransition()

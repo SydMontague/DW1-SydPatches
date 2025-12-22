@@ -63,7 +63,6 @@
 .definelabel checkFishingMap,           0x800e4ee4
 .definelabel checkCurlingMap,           0x800e89c8
 .definelabel checkArenaMap,             0x800ff9dc
-.definelabel unloadMapParts,            0x800e1bf0
 .definelabel runMapHeadScript,          0x80105ae4
 .definelabel calculatePosition,         0x800e4adc
 .definelabel renderItemSprite,          0x800e5d18

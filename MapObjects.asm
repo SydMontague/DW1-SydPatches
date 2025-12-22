@@ -26,4 +26,7 @@
 .org 0x80104528
   jal spawnAngemonPedestal
 
+.org 0x80104da0
+  jal spawnChest
+
 .close
