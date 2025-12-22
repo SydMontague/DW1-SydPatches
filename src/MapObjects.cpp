@@ -164,6 +164,28 @@ namespace
         renderObject(&GENERAL_OBJECT[0], GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
         renderObject(&GENERAL_OBJECT[1], GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
     }
+
+    void renderGearbox(int32_t instance)
+    {
+        if (!MAP_LAYER_ENABLED) return;
+        renderObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+    }
+
+    void renderAngemonPedestal(int32_t instance)
+    {
+        if (!MAP_LAYER_ENABLED) return;
+
+        Vector location = {ANGEMON_PEDESTAL_PROGRESS_X, 0, ANGEMON_PEDESTAL_PROGRESS_Z, 0};
+        libgte_TransMatrix(&GENERAL_COORDS3.coord, &location);
+        GENERAL_COORDS3.flag = 0;
+        renderObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+    }
+
+    void renderTrainingPoop(int32_t instance)
+    {
+        if (!MAP_LAYER_ENABLED) return;
+        renderObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+    }
 } // namespace
 
 extern "C"
@@ -297,5 +319,36 @@ extern "C"
         TOY_TOWN_SELECTED_BOX    = 0;
 
         addObject(ObjectID::TOY_TOWN_BOXES, 0, nullptr, renderToyTownBoxes);
+    }
+
+    void spawnGearbox()
+    {
+        Vector location       = {-100, 0, 1700, 0};
+        TOY_TOWN_SELECTED_BOX = 0;
+        loadStaticTMD("\\ETCNA\\GAND.TMD", GENERAL_MESH_BUFFER[0].data(), &GENERAL_OBJECT3, &GENERAL_COORDS3);
+        libgte_TransMatrix(&GENERAL_COORDS3.coord, &location);
+        GENERAL_COORDS3.flag = 0;
+        // vanilla sets a value to 0x294 here, but the value is never used
+        addObject(ObjectID::GEARBOX, 0, nullptr, renderGearbox);
+    }
+
+    void spawnAngemonPedestal()
+    {
+        loadStaticTMD("\\ETCNA\\ABOX.TMD", GENERAL_MESH_BUFFER[0].data(), &GENERAL_OBJECT3, &GENERAL_COORDS3);
+        // vanilla does TransMatrix here, but that's unnecessary since it's done in the render function every frame
+        ANGEMON_PEDESTAL_PROGRESS_X = 0;
+        ANGEMON_PEDESTAL_PROGRESS_Z = 1500;
+        addObject(ObjectID::DAYTIME_TRANSITION, 0, nullptr, renderAngemonPedestal); // TODO why DAYTIME_TRANSTION???
+    }
+
+    void loadTrainingPoop()
+    {
+        Vector translation = {1922, 0, 503, 0};
+        SVector rotation   = {0, 0, 0, 0};
+        Vector scale       = {4096, 4096, 4096, 0};
+
+        loadStaticTMD("\\ETCNA\\TRY.TMD", GENERAL_MESH_BUFFER[0].data(), &GENERAL_OBJECT3, &GENERAL_COORDS3);
+        projectPosition(&GENERAL_COORDS3, &translation, &rotation, &scale);
+        addObject(ObjectID::TRAINING_POOP, 0, nullptr, renderTrainingPoop);
     }
 }

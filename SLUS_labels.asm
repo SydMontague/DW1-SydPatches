@@ -60,7 +60,6 @@
 .definelabel entityLookAtTile,          0x800e6078
 .definelabel startBattleIdleAnimation,  0x800e8970
 .definelabel isInvisible,               0x800e61ac
-.definelabel initializeTrainingPoop,    0x800e172c
 .definelabel checkFishingMap,           0x800e4ee4
 .definelabel checkCurlingMap,           0x800e89c8
 .definelabel checkArenaMap,             0x800ff9dc
@@ -84,6 +83,8 @@
 .definelabel drawEntityTextIcon,        0x800e60e0
 .definelabel isBoxOffScreen,            0x800e2010
 
+.definelabel ANGEMON_PEDESTAL_PROGRESS_X, 0x80134e4c
+.definelabel ANGEMON_PEDESTAL_PROGRESS_Z, 0x80134e4e
 .definelabel BIG_BOX_LID_PROGRESS, 0x80134e44
 .definelabel SMALL_BOX_LID_PROGRESS, 0x80134e46
 .definelabel TOY_TOWN_SELECTED_BOX, 0x80134e48

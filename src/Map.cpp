@@ -1246,7 +1246,7 @@ extern "C"
 
         if (entry.doorsId != 0) { loadDoors(entry.doorsId - 1); }
         if (mapId > 100 && mapId < 104) loadWarpCrystals(mapId);
-        if (mapId == 165) initializeTrainingPoop();
+        if (mapId == 165) loadTrainingPoop();
 
         loadMapCollisionData(&GENERAL_BUFFER + *headerPtr++);
 

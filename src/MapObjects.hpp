@@ -4,4 +4,5 @@
 extern "C"
 {
     void loadWarpCrystals(int32_t mapId);
+    void loadTrainingPoop();
 }

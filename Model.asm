@@ -401,26 +401,6 @@
 .org 0x800f7ab8
   j tickAnimation
 
-;.org 0x800e0124
-;  jal loadStaticTMD
-;.org 0x800e0520
-;  jal loadStaticTMD
-;.org 0x800e0544
-;  jal loadStaticTMD
-;.org 0x800e076c
-;  jal loadStaticTMD
-;.org 0x800e0fd4
-;  jal loadStaticTMD
-;.org 0x800e114c
-;  j loadStaticTMD
-.org 0x800e1568
-  jal loadStaticTMD
-.org 0x800e165c
-  jal loadStaticTMD
-.org 0x800e17a8
-  jal loadStaticTMD
-
-
 .org 0x800e23e0
   jal projectPosition
 

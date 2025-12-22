@@ -20,4 +20,10 @@
 .org 0x801044c4
   jal spawnToyTownBoxes
 
+.org 0x80104498
+  jal spawnGearbox
+
+.org 0x80104528
+  jal spawnAngemonPedestal
+
 .close

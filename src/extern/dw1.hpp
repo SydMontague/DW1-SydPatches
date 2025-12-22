@@ -1459,6 +1459,8 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern int16_t ANGEMON_PEDESTAL_PROGRESS_X;
+    extern int16_t ANGEMON_PEDESTAL_PROGRESS_Z;
     extern int16_t BIG_BOX_LID_PROGRESS;
     extern int16_t SMALL_BOX_LID_PROGRESS;
     extern int16_t TOY_TOWN_SELECTED_BOX;
@@ -1691,7 +1693,6 @@ extern "C"
     void calculatePosition(GsCOORDINATE2* coord, Matrix* matrix);
     void runMapHeadScript(uint8_t mapId);
     void unloadMapParts();
-    void initializeTrainingPoop();
     void checkFishingMap(int32_t mapId);
     void checkCurlingMap(int32_t mapId);
     void checkArenaMap(int32_t mapId);
