@@ -1,13 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800e2544
-.area 0x800e3584-.
-.importobj "compiled/Evolution.lib"
-
-  .notice "Empty space left: " + (0x800e3584-.) + " bytes"
-.endarea
-
 ;.org 0x800a91b8
 ;  jal getFreshEvolutionTarget
 ;.org 0x800a91e8
