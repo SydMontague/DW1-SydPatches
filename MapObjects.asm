@@ -29,4 +29,7 @@
 .org 0x80104da0
   jal spawnChest
 
+.org 0x801058ac
+  jal tickRotateDoor
+
 .close

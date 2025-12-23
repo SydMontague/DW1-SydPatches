@@ -1,5 +1,6 @@
 #include "Entity.hpp"
 #include "Files.hpp"
+#include "GameData.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Map.hpp"
@@ -8,18 +9,6 @@
 #include "extern/dw1.hpp"
 #include "extern/libgs.hpp"
 #include "extern/libgte.hpp"
-
-extern dtl::array<GsDOBJ2, 2> GENERAL_OBJECT;
-extern dtl::array<GsCOORDINATE2, 2> GENERAL_COORDS;
-extern GsDOBJ2 GENERAL_OBJECT3;
-extern GsCOORDINATE2 GENERAL_COORDS3;
-extern uint8_t ACTIVE_DIRT_CART_MODEL;
-extern uint8_t DIRT_PILE_SIZE_COUNTER;
-
-extern GsCOORDINATE2 WARP_CRYSTAL_COORD1;
-extern GsCOORDINATE2 WARP_CRYSTAL_COORD2;
-extern GsDOBJ2 WARP_CRYSTAL_OBJECT1;
-extern GsDOBJ2 WARP_CRYSTAL_OBJECT2;
 
 namespace
 {
@@ -32,12 +21,21 @@ namespace
         bool isSet;
     };
 
+    struct DoorObject
+    {
+        uint8_t modelId{0xFF};
+        GsDOBJ2 obj;
+        GsCOORDINATE2 coords;
+    };
+
+    dtl::array<DoorObject, 4> doorObjects;
     dtl::array<uint8_t, 2048> CHEST_MESH_BUFFER;
     GsCOORDINATE2 CHEST_COORD1;
     GsCOORDINATE2 CHEST_COORD2;
     GsDOBJ2 CHEST_OBJECT1;
     GsDOBJ2 CHEST_OBJECT2;
     dtl::array<WarpCrystalData, 5> WARP_CRYSTAL_DATA;
+    int8_t doorRotationTimer;
 
     void renderDirtCartModel(int32_t instanceId)
     {
@@ -197,6 +195,36 @@ namespace
     {
         if (!MAP_LAYER_ENABLED) return;
         renderObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+    }
+
+    void renderDoors(int32_t instance)
+    {
+        if (!MAP_LAYER_ENABLED) return;
+
+        Vector scale = {4096, 4096, 4096, 0};
+
+        for (auto& obj : MAP_3D_OBJECTS)
+        {
+            if (obj.modelId == 0xFF) continue;
+
+            if (isBoxOffScreen(&obj.translation, 700, 800)) continue;
+
+            int32_t instanceId = 0;
+            for (; instanceId < doorObjects.size(); instanceId++)
+                if (doorObjects[instanceId].modelId == obj.modelId) break;
+
+            projectPosition(&doorObjects[instanceId].coords, &obj.translation, &obj.rotation, &scale);
+            renderObject(&doorObjects[instanceId].obj, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+
+            if (obj.modelId == 10)
+            {
+                auto copy = obj;
+                copy.translation.z += (obj.rotation.y < 0 ? 680 : -680);
+                copy.rotation.y = -obj.rotation.y;
+                projectPosition(&doorObjects[instanceId].coords, &copy.translation, &copy.rotation, &scale);
+                renderObject(&doorObjects[instanceId].obj, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+            }
+        }
     }
 } // namespace
 
@@ -401,5 +429,160 @@ extern "C"
             chest->tileX -= 4;
         else if (rotation == 0xC00)
             chest->tileX += 4;
+    }
+
+    bool tickRotateDoor(int32_t instance, int32_t target)
+    {
+        doorRotationTimer++;
+        switch (MAP_3D_OBJECTS[instance].modelId)
+        {
+            case 0:
+            {
+                if (doorRotationTimer > 32)
+                {
+                    doorRotationTimer = 0;
+                    return 1;
+                }
+
+                MAP_3D_OBJECTS[instance].rotation.y -= target * 33;
+                return 0;
+            }
+            case 5:
+            case 31:
+            case 32:
+                if (doorRotationTimer > 9)
+                {
+                    doorRotationTimer = 0;
+                    return 1;
+                }
+                MAP_3D_OBJECTS[instance].translation.y -= target * 200;
+                return 0;
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 16:
+            case 17:
+            case 18:
+            case 19:
+            {
+                if (doorRotationTimer > 32)
+                {
+                    MAP_3D_OBJECTS[instance].rotation.y = MAP_3D_OBJECTS[instance].direction;
+                    doorRotationTimer                = 0;
+                    return 1;
+                }
+
+                MAP_3D_OBJECTS[instance].rotation.y += target * 33;
+                return 0;
+            }
+            case 14:
+            case 15:
+            {
+                if (doorRotationTimer > 32)
+                {
+                    doorRotationTimer = 0;
+                    return 1;
+                }
+
+                MAP_3D_OBJECTS[instance].rotation.y += target * 33;
+                return 0;
+            }
+            case 20:
+            case 23:
+            case 25:
+            case 28:
+            case 30:
+            {
+                if (doorRotationTimer > 9)
+                {
+                    doorRotationTimer = 0;
+                    return 1;
+                }
+                if (CURRENT_SCREEN == 0x81)
+                    MAP_3D_OBJECTS[instance].translation.z -= 30;
+                else
+                    MAP_3D_OBJECTS[instance].translation.x -= 30;
+                return 0;
+            }
+            case 21:
+            case 22:
+            case 24:
+            case 27:
+            case 29:
+            {
+                if (doorRotationTimer > 9)
+                {
+                    doorRotationTimer = 0;
+                    return 1;
+                }
+                if (CURRENT_SCREEN == 0x81)
+                    MAP_3D_OBJECTS[instance].translation.z += 30;
+                else
+                    MAP_3D_OBJECTS[instance].translation.x += 30;
+                return 0;
+            }
+            case 26:
+            {
+                MAP_3D_OBJECTS[instance].rotation.x -= target * 110;
+                MAP_3D_OBJECTS[instance].rotation.x = clamp(MAP_3D_OBJECTS[instance].rotation.x, -1024, 0);
+                if (doorRotationTimer > 19)
+                {
+                    doorRotationTimer = 0;
+                    return 1;
+                }
+                return 0;
+            }
+        }
+
+        return 0;
+    }
+
+    void loadDoors(int32_t doorEntryId)
+    {
+        // vanilla has a bool here, for disabling door loading, but it's never set
+        doorObjects = {};
+
+        const auto& data = DOOR_MAPDATA[doorEntryId];
+
+        for (auto entry : data.modelId)
+        {
+            for (auto& slot : doorObjects)
+            {
+                if (slot.modelId == 0xFF)
+                {
+                    slot.modelId = entry;
+                    break;
+                }
+                if (slot.modelId == entry) break;
+            }
+        }
+
+        for (int32_t i = 0; i < doorObjects.size(); i++)
+        {
+            auto model = doorObjects[i].modelId;
+            if (model == 0xFF) continue;
+
+            dtl::array<uint8_t, 32> buffer;
+            sprintf(buffer.data(), "\\DOOR\\DOOR%02d.TMD", model);
+            loadStaticTMD(reinterpret_cast<char*>(buffer.data()),
+                          GENERAL_MESH_BUFFER[i].data(),
+                          &doorObjects[i].obj,
+                          &doorObjects[i].coords);
+        }
+
+        for (int32_t i = 0; i < MAP_3D_OBJECTS.size(); i++)
+        {
+            auto& entry = MAP_3D_OBJECTS[i];
+
+            entry.modelId     = data.modelId[i];
+            entry.translation = {data.posX[i], data.posY[i], data.posZ[i], 0};
+            entry.rotation    = {0, data.rotation[i], 0, 0};
+            entry.direction   = data.rotation[i];
+        }
+
+        doorRotationTimer = 0;
+        addObject(ObjectID::DOORS, 0, nullptr, renderDoors);
     }
 }

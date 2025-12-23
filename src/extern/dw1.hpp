@@ -1459,6 +1459,16 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern dtl::array<GsDOBJ2, 2> GENERAL_OBJECT;
+    extern dtl::array<GsCOORDINATE2, 2> GENERAL_COORDS;
+    extern GsDOBJ2 GENERAL_OBJECT3;
+    extern GsCOORDINATE2 GENERAL_COORDS3;
+    extern uint8_t ACTIVE_DIRT_CART_MODEL;
+    extern uint8_t DIRT_PILE_SIZE_COUNTER;
+    extern GsCOORDINATE2 WARP_CRYSTAL_COORD1;
+    extern GsCOORDINATE2 WARP_CRYSTAL_COORD2;
+    extern GsDOBJ2 WARP_CRYSTAL_OBJECT1;
+    extern GsDOBJ2 WARP_CRYSTAL_OBJECT2;
     extern int16_t ANGEMON_PEDESTAL_PROGRESS_X;
     extern int16_t ANGEMON_PEDESTAL_PROGRESS_Z;
     extern int16_t BIG_BOX_LID_PROGRESS;
