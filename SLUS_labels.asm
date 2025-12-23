@@ -21,7 +21,6 @@
 .definelabel setButterfly,              0x800e9d24
 .definelabel readPStat,                0x801062e0
 .definelabel writePStat,                0x80106474
-.definelabel renderObject,              0x800e215c
 .definelabel learnMove,                 0x800e5f14
 .definelabel initializeConditionBubbles,0x800ec520
 .definelabel initializeButterfly,       0x800e9ce8
@@ -80,7 +79,6 @@
 .definelabel getEvoSequenceState,       0x800e732c
 .definelabel drawEntityText,            0x800e5724
 .definelabel drawEntityTextIcon,        0x800e60e0
-.definelabel isBoxOffScreen,            0x800e2010
 
 .definelabel ANGEMON_PEDESTAL_PROGRESS_X, 0x80134e4c
 .definelabel ANGEMON_PEDESTAL_PROGRESS_Z, 0x80134e4e

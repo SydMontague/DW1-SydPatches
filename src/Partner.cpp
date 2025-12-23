@@ -1921,7 +1921,7 @@ extern "C"
             scale.z = scale.x;
 
             projectPosition(&poopPosition, &translation, &rotation, &scale);
-            renderObject(&poopObject, ACTIVE_ORDERING_TABLE, 2);
+            drawObject(&poopObject, ACTIVE_ORDERING_TABLE, 2);
         }
     }
 

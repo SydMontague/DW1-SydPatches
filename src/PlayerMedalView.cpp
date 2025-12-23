@@ -287,7 +287,7 @@ static void renderDigiviceMedals()
     medalRotation.y += 100;
     libgte_RotMatrix(&medalRotation, &MEDAL_COORDINATES.coord);
     MEDAL_COORDINATES.flag = 0;
-    renderObject(&MEDAL_OBJECT, FRAMEBUFFER_OT[ACTIVE_FRAMEBUFFER], 5);
+    drawObject(&MEDAL_OBJECT, FRAMEBUFFER_OT[ACTIVE_FRAMEBUFFER], 5);
     libgs_GsSortOt(FRAMEBUFFER_OT[ACTIVE_FRAMEBUFFER], ACTIVE_ORDERING_TABLE);
     libgs_GsSetProjection(VIEWPORT_DISTANCE);
     libgs_GsSetRefView2(&GS_VIEWPOINT);

@@ -259,12 +259,6 @@
 .org 0x800f7150
   jal collisionGrace
 
-
-;.org 0x800d5598
-;  jal isOffScreen
-.org 0x800e20f0
-  jal isOffScreen
-
 .org 0x800f03f4
   jal initializeEntityText
 

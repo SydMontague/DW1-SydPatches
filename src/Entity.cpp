@@ -364,31 +364,7 @@ extern "C"
         auto digiHeight = getDigimonData(entity->type)->height;
         const auto& pos = entity->posData[0].location;
 
-        struct AreaPoint
-        {
-            int8_t modX;
-            int8_t modY;
-        };
-
-        constexpr AreaPoint points[] = {
-            {.modX = -1, .modY = 1},
-            {.modX = 1, .modY = 1},
-            {.modX = -1, .modY = -1},
-            {.modX = 1, .modY = -1},
-        };
-
-        for (auto point : points)
-        {
-            auto screenPos = getScreenPosition(pos.x + digiRadius * point.modX, pos.y, pos.z + digiRadius * point.modY);
-
-            if (isInScreenRect(screenPos, width, height)) return false;
-
-            auto screenPos2 =
-                getScreenPosition(pos.x + digiRadius * point.modX, pos.y + digiHeight, pos.z + digiRadius * point.modY);
-
-            if (isInScreenRect(screenPos2, width, height)) return false;
-        }
-        return true;
+        return !isBoxOnScreen(&pos, digiRadius, digiHeight);
     }
 
     static Vector entityMoveForward(const Entity* entity)
@@ -761,10 +737,7 @@ void renderDigiviceEntity(Entity* entity, int32_t entityId, int32_t refX)
         auto posData = entity->posData[i];
         if (posData.obj.tmd == nullptr) continue;
 
-        libgs_GsGetLws(posData.obj.coord2, &lw, &ls);
-        libgs_GsSetLightMatrix(&lw);
-        libgs_GsSetLsMatrix(&ls);
-        libgs_GsSortObject4(&posData.obj, FRAMEBUFFER_OT[ACTIVE_FRAMEBUFFER], 5, &SCRATCHPAD);
+        drawObject(&posData.obj, FRAMEBUFFER_OT[ACTIVE_FRAMEBUFFER], 5);
     }
 
     libgs_GsSortOt(FRAMEBUFFER_OT[ACTIVE_FRAMEBUFFER], ACTIVE_ORDERING_TABLE);

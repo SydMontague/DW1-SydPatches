@@ -1682,7 +1682,6 @@ extern "C"
     extern SectionData SECTION_DATA;
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
 
-    bool isBoxOffScreen(Vector* position, int32_t width, int32_t height);
     int32_t getEvoSequenceState(PartnerEntity* partner,
                                 int32_t buffer,
                                 PartnerPara* para,
@@ -1751,7 +1750,6 @@ extern "C"
                                     int32_t param);
     extern void renderDropShadow(Entity* entity);
     extern void Partner_tick(int32_t);
-    extern void renderObject(GsDOBJ2* obj, GsOT* ot, int32_t shift);
     extern void learnMove(uint8_t move);
     extern void initializeConditionBubbles();
     extern void initializeButterfly();

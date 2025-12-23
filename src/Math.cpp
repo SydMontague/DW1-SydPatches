@@ -310,6 +310,28 @@ extern "C"
     }
 }
 
+bool isBoxOnScreen(const Vector* position, int32_t width, int32_t height)
+{
+    const auto pos1 = getScreenPosition(position->x + width * -1, position->y, position->z + width * 1);
+    if (isInScreenRect(pos1, SCREEN_WIDTH, SCREEN_HEIGHT)) return true;
+    const auto pos2 = getScreenPosition(position->x + width * 1, position->y, position->z + width * 1);
+    if (isInScreenRect(pos2, SCREEN_WIDTH, SCREEN_HEIGHT)) return true;
+    const auto pos3 = getScreenPosition(position->x + width * -1, position->y, position->z + width * -1);
+    if (isInScreenRect(pos3, SCREEN_WIDTH, SCREEN_HEIGHT)) return true;
+    const auto pos4 = getScreenPosition(position->x + width * 1, position->y, position->z + width * -1);
+    if (isInScreenRect(pos4, SCREEN_WIDTH, SCREEN_HEIGHT)) return true;
+    const auto pos5 = getScreenPosition(position->x + width * -1, position->y - height, position->z + width * 1);
+    if (isInScreenRect(pos5, SCREEN_WIDTH, SCREEN_HEIGHT)) return true;
+    const auto pos6 = getScreenPosition(position->x + width * 1, position->y - height, position->z + width * 1);
+    if (isInScreenRect(pos6, SCREEN_WIDTH, SCREEN_HEIGHT)) return true;
+    const auto pos7 = getScreenPosition(position->x + width * -1, position->y - height, position->z + width * -1);
+    if (isInScreenRect(pos7, SCREEN_WIDTH, SCREEN_HEIGHT)) return true;
+    const auto pos8 = getScreenPosition(position->x + width * 1, position->y - height, position->z + width * -1);
+    if (isInScreenRect(pos8, SCREEN_WIDTH, SCREEN_HEIGHT)) return true;
+
+    return false;
+}
+
 ScreenPos getScreenPosition(int16_t x, int16_t y, int16_t z)
 {
     auto mapPos = getMapPosition(x, y, z);

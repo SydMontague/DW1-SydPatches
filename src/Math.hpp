@@ -130,6 +130,16 @@ extern "C"
 }
 
 /*
+ * Checks whether a given box is somewhere visible on screen.
+ * @param position the center bottom of the box
+ * @param width the extent of the box in X and Z axis
+ * @param height the extent of the box in Y axis
+ * 
+ * @returns true if any point is on-screen, false otherwise
+ */
+bool isBoxOnScreen(const Vector* position, int32_t width, int32_t height);
+
+/*
  * Gets the 2D screen position of a 3D position.
  * The returned coordinates are relative to the center of the visibale screen area.
  */

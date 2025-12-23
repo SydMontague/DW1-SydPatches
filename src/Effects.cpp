@@ -4,6 +4,7 @@
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
+#include "Model.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
@@ -1017,24 +1018,14 @@ extern "C"
                         SVector* rotation,
                         Vector* scale)
     {
-        Matrix lw;
-        Matrix ls;
         GsDOBJ2 obj;
         libgs_GsLinkObject4(reinterpret_cast<uint32_t*>(model->objects), &obj, objId);
         libgs_GsInitCoordinate2(superCoord, baseCoord);
 
-        baseCoord->flag = 0;
-        obj.attribute   = 0;
-        obj.coord2      = baseCoord;
+        obj.attribute = 0;
+        obj.coord2    = baseCoord;
 
-        libgte_RotMatrix(rotation, &baseCoord->coord);
-        libgte_ScaleMatrix(&baseCoord->coord, scale);
-        libgte_TransMatrix(&baseCoord->coord, translation);
-
-        libgs_GsGetLws(obj.coord2, &lw, &ls);
-        libgs_GsSetLightMatrix(&lw);
-        libgs_GsSetLsMatrix(&ls);
-
-        libgs_GsSortObject4(&obj, ACTIVE_ORDERING_TABLE, 2, &SCRATCHPAD);
+        projectPosition(baseCoord, translation, rotation, scale);
+        drawObject(&obj, ACTIVE_ORDERING_TABLE, 2);
     }
 }

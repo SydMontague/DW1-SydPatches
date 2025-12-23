@@ -59,6 +59,16 @@ extern "C"
         position->flag = 0;
     }
 
+    void drawObject(GsDOBJ2* obj, GsOT* ot, int32_t shift)
+    {
+        Matrix lw;
+        Matrix ls;
+        libgs_GsGetLws(obj->coord2, &lw, &ls);
+        libgs_GsSetLightMatrix(&lw);
+        libgs_GsSetLsMatrix(&ls);
+        libgs_GsSortObject4(obj, ot, shift, &SCRATCHPAD);
+    }
+
     void renderDropShadow(Entity* entity)
     {
         auto* loc    = &entity->posData->location;
@@ -373,12 +383,7 @@ extern "C"
         if (entity == nullptr) return;
 
         auto* posData = entity->posData;
-        auto* matrix  = &posData->posMatrix.coord;
-
-        libgte_RotMatrix(&posData->rotation, matrix);
-        libgte_ScaleMatrix(matrix, &posData->scale);
-        libgte_TransMatrix(matrix, &posData->location);
-        posData->posMatrix.flag = 0;
+        projectPosition(&posData->posMatrix, &posData->location, &posData->rotation, &posData->scale);
     }
 
     void setEntityPosition(int32_t entityId, int32_t posX, int32_t posY, int32_t posZ)
@@ -1308,10 +1313,8 @@ extern "C"
         if (data->boneCount <= boneId) boneId = 0;
 
         auto& posData = entity->posData;
-        auto& lMatrix = posData->posMatrix.coord;
-        libgte_RotMatrix(&posData[0].rotation, &lMatrix);
-        libgte_ScaleMatrix(&lMatrix, &posData[0].scale);
-        libgte_TransMatrix(&lMatrix, &posData[0].location);
+
+        projectPosition(&posData->posMatrix, &posData[0].location, &posData[0].rotation, &posData[0].scale);
         calculatePosition(&posData[boneId].posMatrix, out);
     }
 

@@ -54,7 +54,7 @@ namespace
         libgte_TransMatrix(&GENERAL_COORDS[ACTIVE_DIRT_CART_MODEL].coord, &result);
 
         GENERAL_COORDS[ACTIVE_DIRT_CART_MODEL].flag = 0;
-        renderObject(&GENERAL_OBJECT[ACTIVE_DIRT_CART_MODEL], GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+        drawObject(&GENERAL_OBJECT[ACTIVE_DIRT_CART_MODEL], GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
     }
 
     void renderDirtPile(int32_t instance)
@@ -62,7 +62,7 @@ namespace
         if (DIRT_PILE_SIZE_COUNTER <= 5) return;
         if (!MAP_LAYER_ENABLED) return;
 
-        renderObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+        drawObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
     }
 
     Chest* getFreeChest()
@@ -93,12 +93,12 @@ namespace
         for (auto& chest : CHEST_ARRAY)
         {
             if (chest.item == ItemType::NONE) continue;
-            if (isBoxOffScreen(&chest.location, 100, 100)) continue;
+            if (!isBoxOnScreen(&chest.location, 100, 100)) continue;
 
             projectPosition(&CHEST_COORD1, &chest.location, &chest.rotation, &scale);
-            renderObject(&CHEST_OBJECT1, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+            drawObject(&CHEST_OBJECT1, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
             projectPosition(&CHEST_COORD2, &chest.trayLocation, &chest.trayRotation, &scale);
-            renderObject(&CHEST_OBJECT2, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+            drawObject(&CHEST_OBJECT2, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
         }
     }
 
@@ -119,12 +119,12 @@ namespace
         for (auto& crystal : WARP_CRYSTAL_DATA)
         {
             if (!crystal.isSet) continue;
-            if (isBoxOffScreen(&crystal.pos1, 100, 100)) continue;
+            if (!isBoxOnScreen(&crystal.pos1, 100, 100)) continue;
 
             projectPosition(&WARP_CRYSTAL_COORD1, &crystal.pos1, &crystal.rotation1, &scale);
-            renderObject(&WARP_CRYSTAL_OBJECT1, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+            drawObject(&WARP_CRYSTAL_OBJECT1, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
             projectPosition(&WARP_CRYSTAL_COORD2, &crystal.pos2, &crystal.rotation2, &scale);
-            renderObject(&WARP_CRYSTAL_OBJECT2, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+            drawObject(&WARP_CRYSTAL_OBJECT2, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
         }
     }
 
@@ -144,7 +144,7 @@ namespace
     void renderBoulder(int32_t instance)
     {
         if (!MAP_LAYER_ENABLED) return;
-        renderObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+        drawObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
     }
 
     void renderToyTownBoxes(int32_t instance)
@@ -169,16 +169,16 @@ namespace
             GENERAL_COORDS[1].flag = 0;
         }
 
-        renderObject(&WARP_CRYSTAL_OBJECT1, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
-        renderObject(&WARP_CRYSTAL_OBJECT2, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
-        renderObject(&GENERAL_OBJECT[0], GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
-        renderObject(&GENERAL_OBJECT[1], GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+        drawObject(&WARP_CRYSTAL_OBJECT1, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+        drawObject(&WARP_CRYSTAL_OBJECT2, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+        drawObject(&GENERAL_OBJECT[0], GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+        drawObject(&GENERAL_OBJECT[1], GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
     }
 
     void renderGearbox(int32_t instance)
     {
         if (!MAP_LAYER_ENABLED) return;
-        renderObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+        drawObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
     }
 
     void renderAngemonPedestal(int32_t instance)
@@ -188,13 +188,13 @@ namespace
         Vector location = {ANGEMON_PEDESTAL_PROGRESS_X, 0, ANGEMON_PEDESTAL_PROGRESS_Z, 0};
         libgte_TransMatrix(&GENERAL_COORDS3.coord, &location);
         GENERAL_COORDS3.flag = 0;
-        renderObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+        drawObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
     }
 
     void renderTrainingPoop(int32_t instance)
     {
         if (!MAP_LAYER_ENABLED) return;
-        renderObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+        drawObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
     }
 
     void renderDoors(int32_t instance)
@@ -207,14 +207,14 @@ namespace
         {
             if (obj.modelId == 0xFF) continue;
 
-            if (isBoxOffScreen(&obj.translation, 700, 800)) continue;
+            if (!isBoxOnScreen(&obj.translation, 700, 800)) continue;
 
             int32_t instanceId = 0;
             for (; instanceId < doorObjects.size(); instanceId++)
                 if (doorObjects[instanceId].modelId == obj.modelId) break;
 
             projectPosition(&doorObjects[instanceId].coords, &obj.translation, &obj.rotation, &scale);
-            renderObject(&doorObjects[instanceId].obj, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+            drawObject(&doorObjects[instanceId].obj, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
 
             if (obj.modelId == 10)
             {
@@ -222,7 +222,7 @@ namespace
                 copy.translation.z += (obj.rotation.y < 0 ? 680 : -680);
                 copy.rotation.y = -obj.rotation.y;
                 projectPosition(&doorObjects[instanceId].coords, &copy.translation, &copy.rotation, &scale);
-                renderObject(&doorObjects[instanceId].obj, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+                drawObject(&doorObjects[instanceId].obj, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
             }
         }
     }
@@ -246,10 +246,8 @@ extern "C"
         Vector scale     = {scaleValue, scaleValue, scaleValue, 0};
 
         loadStaticTMD("\\ETCNA\\T_YAMA.TMD", GENERAL_MESH_BUFFER[3].data(), &GENERAL_OBJECT3, &GENERAL_COORDS3);
-        libgte_RotMatrix(&rotation, &GENERAL_COORDS3.coord);
-        libgte_ScaleMatrix(&GENERAL_COORDS3.coord, &scale);
-        libgte_TransMatrix(&GENERAL_COORDS3.coord, &location);
-        GENERAL_COORDS3.flag = 0;
+
+        projectPosition(&GENERAL_COORDS3, &location, &rotation, &scale);
         addObject(ObjectID::DIRT_PILE, 0, nullptr, renderDirtPile);
     }
 
@@ -470,7 +468,7 @@ extern "C"
                 if (doorRotationTimer > 32)
                 {
                     MAP_3D_OBJECTS[instance].rotation.y = MAP_3D_OBJECTS[instance].direction;
-                    doorRotationTimer                = 0;
+                    doorRotationTimer                   = 0;
                     return 1;
                 }
 
