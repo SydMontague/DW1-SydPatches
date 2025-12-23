@@ -401,9 +401,6 @@
 .org 0x800f7ab8
   j tickAnimation
 
-.org 0x800e23e0
-  jal projectPosition
-
 .close
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0

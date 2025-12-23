@@ -36,11 +36,18 @@ namespace
     GsDOBJ2 CHEST_OBJECT2;
     dtl::array<WarpCrystalData, 5> WARP_CRYSTAL_DATA;
     int8_t doorRotationTimer;
+    int8_t dirtPileSizeCounter = 15; // TODO: this value isn't persisted in the savegame
+    int8_t toyTownSelectedBox;
+    uint8_t activeDirtCartModel;
+    int16_t bigBoxLidProgress;
+    int16_t smallBoxLidProgress;
+    int16_t angemonPedestalProgressX;
+    int16_t angemonPedestalProgressZ;
 
     void renderDirtCartModel(int32_t instanceId)
     {
         if (!MAP_LAYER_ENABLED) return;
-        if (ACTIVE_DIRT_CART_MODEL == 2) return;
+        if (activeDirtCartModel == 2) return;
 
         Matrix matrix;
         Vector vector = {.x = 0, .y = 0, .z = getDigimonData(PARTNER_ENTITY.type)->radius + 100};
@@ -50,16 +57,16 @@ namespace
         libgte_ApplyMatrixLV(&matrix, &vector, &result);
         result.x += PARTNER_ENTITY.posData->location.x;
         result.z += PARTNER_ENTITY.posData->location.z;
-        libgte_RotMatrix(&PARTNER_ENTITY.posData->rotation, &GENERAL_COORDS[ACTIVE_DIRT_CART_MODEL].coord);
-        libgte_TransMatrix(&GENERAL_COORDS[ACTIVE_DIRT_CART_MODEL].coord, &result);
+        libgte_RotMatrix(&PARTNER_ENTITY.posData->rotation, &GENERAL_COORDS[activeDirtCartModel].coord);
+        libgte_TransMatrix(&GENERAL_COORDS[activeDirtCartModel].coord, &result);
 
-        GENERAL_COORDS[ACTIVE_DIRT_CART_MODEL].flag = 0;
-        drawObject(&GENERAL_OBJECT[ACTIVE_DIRT_CART_MODEL], GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
+        GENERAL_COORDS[activeDirtCartModel].flag = 0;
+        drawObject(&GENERAL_OBJECT[activeDirtCartModel], GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
     }
 
     void renderDirtPile(int32_t instance)
     {
-        if (DIRT_PILE_SIZE_COUNTER <= 5) return;
+        if (dirtPileSizeCounter <= 5) return;
         if (!MAP_LAYER_ENABLED) return;
 
         drawObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
@@ -151,20 +158,20 @@ namespace
     {
         if (!MAP_LAYER_ENABLED) return;
 
-        if (TOY_TOWN_SELECTED_BOX == 1)
+        if (toyTownSelectedBox == 1)
         {
-            BIG_BOX_LID_PROGRESS -= 100;
-            BIG_BOX_LID_PROGRESS = max(-1024, BIG_BOX_LID_PROGRESS);
+            bigBoxLidProgress -= 100;
+            bigBoxLidProgress = max(-1024, bigBoxLidProgress);
 
-            SVector rot = {BIG_BOX_LID_PROGRESS, 0, 0, 0};
+            SVector rot = {bigBoxLidProgress, 0, 0, 0};
             libgte_RotMatrix(&rot, &WARP_CRYSTAL_COORD2.coord);
             WARP_CRYSTAL_COORD2.flag = 0;
         }
-        if (TOY_TOWN_SELECTED_BOX == 2)
+        if (toyTownSelectedBox == 2)
         {
-            SMALL_BOX_LID_PROGRESS -= 100;
-            SMALL_BOX_LID_PROGRESS = max(-1024, SMALL_BOX_LID_PROGRESS);
-            SVector rot            = {SMALL_BOX_LID_PROGRESS, 0, 0, 0};
+            smallBoxLidProgress -= 100;
+            smallBoxLidProgress = max(-1024, smallBoxLidProgress);
+            SVector rot         = {smallBoxLidProgress, 0, 0, 0};
             libgte_RotMatrix(&rot, &GENERAL_COORDS[1].coord);
             GENERAL_COORDS[1].flag = 0;
         }
@@ -185,7 +192,7 @@ namespace
     {
         if (!MAP_LAYER_ENABLED) return;
 
-        Vector location = {ANGEMON_PEDESTAL_PROGRESS_X, 0, ANGEMON_PEDESTAL_PROGRESS_Z, 0};
+        Vector location = {angemonPedestalProgressX, 0, angemonPedestalProgressZ, 0};
         libgte_TransMatrix(&GENERAL_COORDS3.coord, &location);
         GENERAL_COORDS3.flag = 0;
         drawObject(&GENERAL_OBJECT3, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
@@ -234,7 +241,7 @@ extern "C"
     {
         loadStaticTMD("\\ETCNA\\DOSYA.TMD", GENERAL_MESH_BUFFER[0].data(), &GENERAL_OBJECT[0], &GENERAL_COORDS[0]);
         loadStaticTMD("\\ETCNA\\HAKO.TMD", GENERAL_MESH_BUFFER[1].data(), &GENERAL_OBJECT[1], &GENERAL_COORDS[1]);
-        ACTIVE_DIRT_CART_MODEL = 2;
+        activeDirtCartModel = 2;
         addObject(ObjectID::DIRT_CART, 0, nullptr, renderDirtCartModel);
     }
 
@@ -242,7 +249,7 @@ extern "C"
     {
         Vector location  = {2037, 0, 849, 0};
         SVector rotation = {0, 0, 0, 0};
-        auto scaleValue  = (DIRT_PILE_SIZE_COUNTER * 4096) / 15;
+        auto scaleValue  = (dirtPileSizeCounter * 4096) / 15;
         Vector scale     = {scaleValue, scaleValue, scaleValue, 0};
 
         loadStaticTMD("\\ETCNA\\T_YAMA.TMD", GENERAL_MESH_BUFFER[3].data(), &GENERAL_OBJECT3, &GENERAL_COORDS3);
@@ -352,17 +359,17 @@ extern "C"
         libgte_TransMatrix(&GENERAL_COORDS[0].coord, &box2Pos);
         WARP_CRYSTAL_COORD1.flag = 0;
         GENERAL_COORDS[0].flag   = 0;
-        BIG_BOX_LID_PROGRESS     = 0;
-        SMALL_BOX_LID_PROGRESS   = 0;
-        TOY_TOWN_SELECTED_BOX    = 0;
+        bigBoxLidProgress        = 0;
+        smallBoxLidProgress      = 0;
+        toyTownSelectedBox       = 0;
 
         addObject(ObjectID::TOY_TOWN_BOXES, 0, nullptr, renderToyTownBoxes);
     }
 
     void spawnGearbox()
     {
-        Vector location       = {-100, 0, 1700, 0};
-        TOY_TOWN_SELECTED_BOX = 0;
+        Vector location    = {-100, 0, 1700, 0};
+        toyTownSelectedBox = 0;
         loadStaticTMD("\\ETCNA\\GAND.TMD", GENERAL_MESH_BUFFER[0].data(), &GENERAL_OBJECT3, &GENERAL_COORDS3);
         libgte_TransMatrix(&GENERAL_COORDS3.coord, &location);
         GENERAL_COORDS3.flag = 0;
@@ -374,8 +381,8 @@ extern "C"
     {
         loadStaticTMD("\\ETCNA\\ABOX.TMD", GENERAL_MESH_BUFFER[0].data(), &GENERAL_OBJECT3, &GENERAL_COORDS3);
         // vanilla does TransMatrix here, but that's unnecessary since it's done in the render function every frame
-        ANGEMON_PEDESTAL_PROGRESS_X = 0;
-        ANGEMON_PEDESTAL_PROGRESS_Z = 1500;
+        angemonPedestalProgressX = 0;
+        angemonPedestalProgressZ = 1500;
         addObject(ObjectID::DAYTIME_TRANSITION, 0, nullptr, renderAngemonPedestal); // TODO why DAYTIME_TRANSTION???
     }
 
@@ -582,5 +589,83 @@ extern "C"
 
         doorRotationTimer = 0;
         addObject(ObjectID::DOORS, 0, nullptr, renderDoors);
+    }
+
+    bool tickOpenChestTray(uint32_t chestId)
+    {
+        auto& chest = CHEST_ARRAY[chestId];
+
+        chest.trayLocation.z -= 20;
+
+        if (chest.trayLocation.z <= -160)
+        {
+            chest.trayLocation.z = -160;
+            chest.isTaken        = true;
+            return true;
+        }
+        return false;
+    }
+
+    bool tickCloseChestTray(uint32_t chestId)
+    {
+        auto& chest = CHEST_ARRAY[chestId];
+
+        chest.trayLocation.z += 20;
+
+        if (chest.trayLocation.z >= 0)
+        {
+            chest.trayLocation.z = 0;
+            chest.isTaken        = true;
+            return true;
+        }
+        return false;
+    }
+
+    void decreaseDirtPileSize()
+    {
+        dirtPileSizeCounter -= 1;
+        SVector rotation = {0, 0, 0, 0};
+        auto scaleValue  = (dirtPileSizeCounter * 4096) / 15;
+        Vector scale     = {scaleValue, scaleValue, scaleValue, 0};
+
+        libgte_RotMatrix(&rotation, &GENERAL_COORDS3.coord);
+        libgte_ScaleMatrix(&GENERAL_COORDS3.coord, &scale);
+        GENERAL_COORDS3.flag = 0;
+    }
+
+    void moveBoulder(int32_t diffX, int32_t diffZ)
+    {
+        Vector scale = {4096, 4096, 4096, 0};
+
+        MAP_3D_OBJECTS[0].translation.y += diffX;
+        MAP_3D_OBJECTS[0].translation.z += diffZ;
+        MAP_3D_OBJECTS[0].rotation.x -= 10;
+        projectPosition(&GENERAL_COORDS3, &MAP_3D_OBJECTS[0].translation, &MAP_3D_OBJECTS[0].rotation, &scale);
+    }
+
+    void openToyTownBox(int8_t boxId)
+    {
+        toyTownSelectedBox = boxId;
+    }
+
+    void somethingToyTown(int8_t boxId)
+    {
+        // TODO this is completely useless?
+        toyTownSelectedBox = boxId;
+        if (boxId == 0 && isTriggerSet(350)) readMapTFS(0x92);
+    }
+
+    bool moveAngemonPedestal()
+    {
+        angemonPedestalProgressZ += 10;
+        angemonPedestalProgressX = angemonPedestalProgressZ % 20 == 0 ? 5 : -5;
+        angemonPedestalProgressZ = min(2000, angemonPedestalProgressZ);
+
+        return angemonPedestalProgressZ >= 2000;
+    }
+
+    void setDirtCartModel(int32_t model)
+    {
+        activeDirtCartModel = model;
     }
 }

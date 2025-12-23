@@ -104,8 +104,8 @@
 ;  jal readMapTFS
 ;.org 0x800dec74
 ;  jal readMapTFS
-.org 0x800e2424
-  jal readMapTFS
+;.org 0x800e2424
+;  jal readMapTFS
 .org 0x801042f0
   jal readMapTFS
 .org 0x80104fd8

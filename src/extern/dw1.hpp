@@ -1463,17 +1463,10 @@ extern "C"
     extern dtl::array<GsCOORDINATE2, 2> GENERAL_COORDS;
     extern GsDOBJ2 GENERAL_OBJECT3;
     extern GsCOORDINATE2 GENERAL_COORDS3;
-    extern uint8_t ACTIVE_DIRT_CART_MODEL;
-    extern uint8_t DIRT_PILE_SIZE_COUNTER;
     extern GsCOORDINATE2 WARP_CRYSTAL_COORD1;
     extern GsCOORDINATE2 WARP_CRYSTAL_COORD2;
     extern GsDOBJ2 WARP_CRYSTAL_OBJECT1;
     extern GsDOBJ2 WARP_CRYSTAL_OBJECT2;
-    extern int16_t ANGEMON_PEDESTAL_PROGRESS_X;
-    extern int16_t ANGEMON_PEDESTAL_PROGRESS_Z;
-    extern int16_t BIG_BOX_LID_PROGRESS;
-    extern int16_t SMALL_BOX_LID_PROGRESS;
-    extern int16_t TOY_TOWN_SELECTED_BOX;
     extern dtl::array<dtl::array<uint8_t, 2048>, 4> GENERAL_MESH_BUFFER;
     extern dtl::array<Map3DObject, 6> MAP_3D_OBJECTS;
     extern int32_t CHECKED_MEMORY_CARD;
@@ -1710,7 +1703,6 @@ extern "C"
     void setItemTexture(POLY_FT4* prim, ItemType item);
     void dailyPStatTrigger();
     bool hasMove(int32_t move);
-    void activateMedalTexture(Medal medal);
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
     void initializeFishing();
     void
@@ -1732,8 +1724,6 @@ extern "C"
     int32_t isSoundLoaded(bool isAsync, int32_t soundId);
     void setMapLayerEnabled(int32_t val);
     void entityLookAtTile(Entity* entity, int8_t tileX, int8_t tileY);
-    bool tickOpenChestTray(uint32_t chestId);
-    bool tickCloseChestTray(uint32_t chestId);
     void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos);
     /*
      * Checks if a button has been pressed and consumes it (i.e. subsequent checks for the same button within the same

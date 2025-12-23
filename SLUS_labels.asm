@@ -30,8 +30,6 @@
 .definelabel Tamer_tickFishing,         0x800e4e18
 .definelabel isKeyDown,                 0x800fc054
 .definelabel getEntityScreenPos,        0x800e52d8
-.definelabel tickOpenChestTray,         0x800e21d0
-.definelabel tickCloseChestTray,        0x800e223c
 .definelabel setMapLayerEnabled,        0x800e65b8
 .definelabel isSoundLoaded,             0x800e90cc
 .definelabel loadDynamicLibrary,        0x800e61e4
@@ -51,7 +49,6 @@
 .definelabel renderTrianglePrimitive,   0x800e3d14
 .definelabel initializeFishing,         0x800e4e0c
 .definelabel entityGetTechFromAnim,     0x800e6000
-.definelabel activateMedalTexture,      0x800e24a4
 .definelabel hasMove,                   0x800e5eb4
 .definelabel dailyPStatTrigger,         0x800fc374
 .definelabel setItemTexture,            0x800e5dfc
@@ -80,17 +77,10 @@
 .definelabel drawEntityText,            0x800e5724
 .definelabel drawEntityTextIcon,        0x800e60e0
 
-.definelabel ANGEMON_PEDESTAL_PROGRESS_X, 0x80134e4c
-.definelabel ANGEMON_PEDESTAL_PROGRESS_Z, 0x80134e4e
-.definelabel BIG_BOX_LID_PROGRESS, 0x80134e44
-.definelabel SMALL_BOX_LID_PROGRESS, 0x80134e46
-.definelabel TOY_TOWN_SELECTED_BOX, 0x80134e48
 .definelabel GENERAL_OBJECT, 0x801532e8
 .definelabel GENERAL_COORDS, 0x80153308
 .definelabel GENERAL_OBJECT3, 0x801533a8
 .definelabel GENERAL_COORDS3, 0x801533b8
-.definelabel ACTIVE_DIRT_CART_MODEL, 0x80134e41
-.definelabel DIRT_PILE_SIZE_COUNTER, 0x80134424
 .definelabel WARP_CRYSTAL_COORD1, 0x80153cc8
 .definelabel WARP_CRYSTAL_COORD2, 0x80153d18
 .definelabel WARP_CRYSTAL_OBJECT1, 0x80153d68

@@ -5,6 +5,7 @@
 #include "UIElements.hpp"
 #include "Utils.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
 #include "extern/libgte.hpp"
 
@@ -318,6 +319,22 @@ void renderMedalView()
     renderTextSprite(descriptionLine);
 
     inset.render(5);
+}
+
+static void activateMedalTexture(Medal medal)
+{
+    constexpr int16_t MEDAL_TEXTURE_WIDTH  = 6;
+    constexpr int16_t MEDAL_TEXTURE_HEIGHT = 32;
+
+    RECT image = {
+        .x      = static_cast<int16_t>((static_cast<int32_t>(medal) % 9) * MEDAL_TEXTURE_WIDTH + 0x206),
+        .y      = static_cast<int16_t>((static_cast<int32_t>(medal) / 9) * MEDAL_TEXTURE_HEIGHT + 0x1b0),
+        .width  = MEDAL_TEXTURE_WIDTH,
+        .height = MEDAL_TEXTURE_HEIGHT,
+    };
+
+    libgpu_MoveImage(&image, 0x200, 0x1B0);
+    libgpu_DrawSync(0);
 }
 
 void tickPlayerMenuMedalView()

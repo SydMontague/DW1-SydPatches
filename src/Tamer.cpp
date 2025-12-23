@@ -10,6 +10,7 @@
 #include "Inventory.hpp"
 #include "InventoryUI.hpp"
 #include "Map.hpp"
+#include "MapObjects.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
 #include "Partner.hpp"
