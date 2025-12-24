@@ -100,8 +100,8 @@
 ;.org 0x800e2b40
 ;  li v0,EVO_GAINS_DATA
 
-.org 0x800e35c8
-  li v0,EVO_GAINS_DATA
+;.org 0x800e35c8
+;  li v0,EVO_GAINS_DATA
 .org 0x800e7370
   li.u v0,EVO_GAINS_DATA+0x0C
   .skip 4

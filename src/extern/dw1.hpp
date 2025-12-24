@@ -878,10 +878,10 @@ extern "C"
         uint16_t padding;
     };
 
-    using TickFunction     = void (*)(int32_t instanceId);
-    using RenderFunction   = void (*)(int32_t instanceId);
-    using ItemFunction     = void (*)(ItemType itemId);
-    using FileReadCallback = void (*)(int32_t);
+    using TickFunction   = void (*)(int32_t instanceId);
+    using RenderFunction = void (*)(int32_t instanceId);
+    using ItemFunction   = void (*)(ItemType itemId);
+    using FileCallback   = bool (*)(void*);
 
     using BoxTickFunction   = void (*)();
     using BoxRenderFunction = void (*)();
@@ -1499,7 +1499,7 @@ extern "C"
     extern int8_t TAMER_WAYPOINT_COUNT;
     extern int8_t PARTNER_WAYPOINT_COUNT;
     extern int8_t PARTNER_WAYPOINT_CURRENT;
-    extern uint8_t GENERAL_BUFFER;
+    extern dtl::array<uint8_t, 65536> GENERAL_BUFFER;
     extern dtl::array<uint8_t, 66> DIGIMON_VLALL_SOUND_ID;
     extern dtl::array<uint8_t, 180> DIGIMON_VBALL_SOUND_ID;
     extern dtl::array<MapSoundPara, 22> MAP_SOUND_PARA;
@@ -1720,7 +1720,7 @@ extern "C"
     bool hasMedal(Medal medal);
     void unlockMedal(Medal medal);
     uint8_t getCardAmount(uint8_t cardId);
-    void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileReadCallback callback, int32_t param);
+    void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileCallback callback, int32_t param);
     int32_t isSoundLoaded(bool isAsync, int32_t soundId);
     void setMapLayerEnabled(int32_t val);
     void entityLookAtTile(Entity* entity, int8_t tileX, int8_t tileY);
@@ -1733,11 +1733,6 @@ extern "C"
     void Tamer_tickFishing();
     extern void Tamer_tickBattle(int32_t instanceId);
     extern int32_t main();
-    extern void addFileReadRequest2(const uint8_t* path,
-                                    uint8_t* buffer,
-                                    int32_t* readComplete,
-                                    FileReadCallback callback,
-                                    int32_t param);
     extern void renderDropShadow(Entity* entity);
     extern void Partner_tick(int32_t);
     extern void learnMove(uint8_t move);

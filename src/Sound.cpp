@@ -99,13 +99,13 @@ static void seqPlay()
 
 static bool loadMusicFont(int32_t font)
 {
-    auto result = readVHBFileSectors(2, "SOUND\\VHB\\FAALL", &GENERAL_BUFFER, (font - 1) * 0x27, 0x27);
+    auto result = readVHBFileSectors(2, "SOUND\\VHB\\FAALL", GENERAL_BUFFER.data(), (font - 1) * 0x27, 0x27);
     if (result == -1) return false;
 
-    auto start = *reinterpret_cast<uint32_t*>(&GENERAL_BUFFER + 8);
-    auto end   = *reinterpret_cast<uint32_t*>(&GENERAL_BUFFER + 12);
+    auto start = *reinterpret_cast<uint32_t*>(GENERAL_BUFFER.data() + 8);
+    auto end   = *reinterpret_cast<uint32_t*>(GENERAL_BUFFER.data() + 12);
 
-    memcpy(SEQ_BUFFER.data(), &GENERAL_BUFFER + (start & 0xFFFFFFFC), end - start);
+    memcpy(SEQ_BUFFER.data(), GENERAL_BUFFER.data() + (start & 0xFFFFFFFC), end - start);
     return true;
 }
 
@@ -162,8 +162,8 @@ extern "C"
         libsnd_SsSetTableSize(SEQ_TABLE.data(), 1, 1);
         libsnd_SsSetTicKMode(2); // SS_TICK240
 
-        if (readVHBFile(0, "SOUND\\VHB\\SS", &GENERAL_BUFFER) == -1) return false;
-        if (readVHBFile(1, "SOUND\\VHB\\SL", &GENERAL_BUFFER) == -1) return false;
+        if (readVHBFile(0, "SOUND\\VHB\\SS", GENERAL_BUFFER.data()) == -1) return false;
+        if (readVHBFile(1, "SOUND\\VHB\\SL", GENERAL_BUFFER.data()) == -1) return false;
 
         libsnd_SsStart();
         libsnd_SsSetMVol(127, 127);
@@ -238,14 +238,14 @@ extern "C"
 
         readVHBFileSectors(vabId,
                            "SOUND\\VHB\\VBALL",
-                           &GENERAL_BUFFER,
+                           GENERAL_BUFFER.data(),
                            DIGIMON_VBALL_SOUND_ID[static_cast<size_t>(type)] * 7,
                            7);
     }
 
     void loadPartnerSounds(DigimonType type)
     {
-        auto result = readVHBFileSectors(3, "SOUND\\VHB\\VLALL", &GENERAL_BUFFER, getSoundBank(type) * 15, 15);
+        auto result = readVHBFileSectors(3, "SOUND\\VHB\\VLALL", GENERAL_BUFFER.data(), getSoundBank(type) * 15, 15);
         if (result == -1) return;
 
         loadDigimonSounds(4, type);
@@ -254,7 +254,7 @@ extern "C"
     bool VS_loadSounds()
     {
         ACTIVE_MAP_SOUND_ID = -1;
-        return readVHBFile(8, "SOUND\\VHB\\SB", &GENERAL_BUFFER) != -1;
+        return readVHBFile(8, "SOUND\\VHB\\SB", GENERAL_BUFFER.data()) != -1;
     }
 
     bool loadMapSounds(int32_t mapSoundId)
@@ -265,7 +265,7 @@ extern "C"
         auto& data          = MAP_SOUND_PARA[mapSoundId];
 
         auto result =
-            readVHBFileSectors(8, "SOUND\\VHB\\ESALL", &GENERAL_BUFFER, data.sectorId / 2, data.sectorCount / 2);
+            readVHBFileSectors(8, "SOUND\\VHB\\ESALL", GENERAL_BUFFER.data(), data.sectorId / 2, data.sectorCount / 2);
         return result != -1;
     }
 

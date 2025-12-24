@@ -11,4 +11,5 @@ extern "C"
     void jis_strncpy(uint8_t* dest, uint8_t* src, int32_t byte_cnt);
 
     void clearTextSubArea2(int16_t x, int16_t y, int16_t width, int16_t height);
+    size_t strnlen_s(const char* str, size_t size);
 }

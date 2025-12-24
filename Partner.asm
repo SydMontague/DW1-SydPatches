@@ -13,9 +13,6 @@
 .org 0x8010334c
   jal skipHours
 
-.org 0x800e3644
-  jal initializeReincarnatedPartner
-
 .org 0x801053cc
   jal setFoodTimer
 

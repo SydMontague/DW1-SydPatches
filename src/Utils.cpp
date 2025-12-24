@@ -78,4 +78,14 @@ extern "C"
         };
         clearTextSubArea(&rect);
     }
+
+    size_t strnlen_s(const char* str, size_t size)
+    {
+        if (str == nullptr) return 0;
+
+        for (size_t i = 0; i < size; i++)
+            if (str[i] == 0) return i;
+
+        return size;
+    }
 }

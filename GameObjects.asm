@@ -257,8 +257,8 @@
 ;  jal addObject
 ;.org 0x800e1808
 ;  jal addObject
-.org 0x800e36ec
-  jal addObject
+;.org 0x800e36ec
+;  jal addObject
 .org 0x800e745c
   jal addObject
 .org 0x800e7de4

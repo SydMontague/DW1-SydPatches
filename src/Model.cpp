@@ -894,7 +894,7 @@ extern "C"
                       EntityType entityType,
                       uint8_t* buffer,
                       EvoModelData* modelData,
-                      int32_t* readComplete)
+                      uint8_t* readComplete)
     {
         // vanilla has code for NPCs here, but since it's never used it got removed
         if (entityType != EntityType::PLAYER && entityType != EntityType::PARTNER) return;
@@ -909,7 +909,7 @@ extern "C"
         modelData->imagePtr  = buffer;
         modelData->imageSize = 0x4800;
         modelData->modelPtr  = buffer + 0x4800;
-        addFileReadRequest2(pathBuffer, modelData->modelPtr, readComplete, nullptr, 0);
+        addFileReadRequestPath(reinterpret_cast<char*>(pathBuffer), modelData->modelPtr, readComplete, nullptr, nullptr);
         modelData->modelSize = lookupFileSize(reinterpret_cast<char*>(pathBuffer));
     }
 

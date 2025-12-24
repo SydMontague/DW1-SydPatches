@@ -46,7 +46,7 @@ extern "C"
     extern CdlFILE* libcd_CdSearchFile(CdlFILE* filePtr, const char* name);
     extern bool libcd_CdControl(CdCommand command, uint8_t* params, uint8_t* result);
     extern bool libcd_CdRead(int32_t sectors, void* buffer, int32_t mode);
-    extern bool libcd_CdReadSync(int32_t mode, uint8_t* result);
+    extern int32_t libcd_CdReadSync(int32_t mode, uint8_t* result);
     extern int32_t libcd_CdPosToInt(CdlLoc* loc);
     extern CdlLoc* libcd_CdIntToPos(int32_t pos, CdlLoc* loc);
 }

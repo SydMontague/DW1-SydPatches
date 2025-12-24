@@ -21,8 +21,8 @@
 ;  jal unloadModel
 ;.org 0x800d97a0
 ;  jal unloadModel
-.org 0x800e3624
-  jal unloadModel
+;.org 0x800e3624
+;  jal unloadModel
 .org 0x800f172c
   jal unloadModel
 
@@ -49,8 +49,8 @@
 ;  jal removeEntity
 ;.org 0x800d9744		
 ;  jal removeEntity
-.org 0x800e3610		
-  jal removeEntity
+;.org 0x800e3610		
+;  jal removeEntity
 .org 0x800f1720		
   jal removeEntity
 

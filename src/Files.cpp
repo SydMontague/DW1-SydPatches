@@ -1,6 +1,9 @@
 #include "Files.hpp"
 
+#include "GameObjects.hpp"
 #include "Helper.hpp"
+#include "Math.hpp"
+#include "Utils.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libc.hpp"
 #include "extern/libcd.hpp"
@@ -8,8 +11,47 @@
 #include "extern/libgs.hpp"
 #include "extern/stddef.hpp"
 
-extern "C"
+namespace
 {
+    struct FileRequest
+    {
+        uint8_t* targetBuffer{nullptr};
+        uint8_t* isRunningPtr{nullptr};
+        FileCallback finishCallback{nullptr};
+        void* finishCallbackParam{nullptr};
+        FileCallback waitCallback{nullptr};
+        void* waitCallbackParam{nullptr};
+        int8_t state{-1};
+        dtl::array<uint8_t, 31> filename{};
+        CdlLoc pos{};
+        int32_t size{-1};
+    };
+
+    struct FileRequestCallback
+    {
+        bool isEnabled{false};
+        FileCallback callback;
+        void* parameter;
+    };
+
+    struct FileLookup
+    {
+        CdlLoc pos;
+        uint32_t size;
+    };
+
+    FileRequestCallback FILE_REQUEST_CALLBACK2;
+    dtl::RingQueue<FileRequest, 32> fileRequestQueue{};
+
+    void _tickFileReadQueue(int32_t instance)
+    {
+        tickFileReadQueue();
+    }
+
+    /*
+     * Finds a file on the disc and writes its position and size into the passed FileLookup struct.
+     * If the file couldn't be found false gets returned.
+     */
     bool lookupFileTable(FileLookup* lookup, const char* filename)
     {
         uint8_t buffer[256];
@@ -23,7 +65,10 @@ extern "C"
 
         return true;
     }
+} // namespace
 
+extern "C"
+{
     uint32_t lookupFileSize(const char* path)
     {
         FileLookup lookup;
@@ -128,5 +173,145 @@ extern "C"
             loadDynamicLibrary(Overlay::TRN2_REL, &TRN_LOADING_COMPLETE, true, nullptr, 0);
 
         TRAINING_COMPLETE = 0;
+    }
+
+    void setFileReadCallback2(FileCallback callback, void* param)
+    {
+        FILE_REQUEST_CALLBACK2.callback  = callback;
+        FILE_REQUEST_CALLBACK2.parameter = param;
+        FILE_REQUEST_CALLBACK2.isEnabled = true;
+    }
+
+    void tickFileReadQueue()
+    {
+        auto* request = fileRequestQueue.front();
+        if (request == nullptr) return;
+
+        if (request->state == 2)
+        {
+            if (request->size < 0)
+            {
+                dtl::array<uint8_t, 64> path;
+                CdlFILE file;
+                sprintf(path.data(), "\\%s;1", request->filename.data());
+                auto result = libcd_CdSearchFile(&file, reinterpret_cast<const char*>(path.data()));
+                if (result == nullptr) return;
+
+                request->pos  = file.pos;
+                request->size = file.size;
+            }
+
+            // seek file location
+            while (!libcd_CdControl(CdCommand::CdlSetloc, reinterpret_cast<uint8_t*>(&request->pos), nullptr))
+                ;
+            // start reading
+            while (!libcd_CdRead((request->size + 2047) >> 11, request->targetBuffer, 0x80))
+                ;
+
+            request->state = 1;
+            return;
+        }
+
+        if (request->state == 1)
+        {
+            auto remainingSectors = libcd_CdReadSync(1, nullptr);
+            if (remainingSectors < 0)
+                request->state = 2; // on error, restart request
+            else if (remainingSectors == 0)
+            {
+                FILE_REQUEST_CALLBACK2.isEnabled = false;
+                if (request->finishCallback) request->finishCallback(request->finishCallbackParam);
+
+                if (FILE_REQUEST_CALLBACK2.isEnabled)
+                {
+                    request->state             = 10;
+                    request->waitCallback      = FILE_REQUEST_CALLBACK2.callback;
+                    request->waitCallbackParam = FILE_REQUEST_CALLBACK2.parameter;
+                }
+            }
+            else
+                return;
+        }
+
+        if (request->state == 10 && request->waitCallback(request->waitCallbackParam)) return;
+
+        request->state = 0;
+        if (request->isRunningPtr != nullptr) *request->isRunningPtr = 0;
+        fileRequestQueue.pop();
+    }
+
+    void initializeFileReadQueue()
+    {
+        addObject(ObjectID::FILE_READ_QUEUE, 0, _tickFileReadQueue, nullptr);
+    }
+
+    int32_t addFileReadRequest(const char* filename,
+                               uint8_t* buffer,
+                               uint8_t* readComplete,
+                               FileCallback callback,
+                               void* param,
+                               CdlLoc* loc,
+                               size_t size)
+    {
+        constexpr auto max_length = decltype(FileRequest::filename)::element_count;
+
+        auto stringLength = strnlen_s(filename, max_length);
+        if (stringLength == max_length) return -1;
+
+        FileRequest request;
+        request.isRunningPtr        = readComplete;
+        request.state               = 2;
+        request.targetBuffer        = buffer;
+        request.finishCallback      = callback;
+        request.finishCallbackParam = param;
+        if (loc != nullptr) request.pos = *loc;
+        request.size = size;
+        memcpy(request.filename.data(), filename, stringLength);
+
+        if (readComplete != nullptr) *readComplete = 1;
+
+        while (!fileRequestQueue.push(request))
+            tickFileReadQueue();
+
+        return fileRequestQueue.getSize();
+    }
+
+    int32_t addFileReadRequestPath(const char* filename,
+                                   uint8_t* buffer,
+                                   uint8_t* readComplete,
+                                   FileCallback callback,
+                                   void* param)
+    {
+        return addFileReadRequest(filename, buffer, readComplete, callback, param, nullptr, -1);
+    }
+
+    int32_t addFileReadRequestSection(const char* filename,
+                                      uint8_t* buffer,
+                                      int32_t offset,
+                                      int32_t sectors,
+                                      uint8_t* readComplete,
+                                      FileCallback callback,
+                                      void* callbackParam)
+    {
+        FileLookup lookup;
+        auto hasFile = lookupFileTable(&lookup, filename);
+        if (!hasFile) return -1;
+
+        auto pos = libcd_CdPosToInt(&lookup.pos);
+        libcd_CdIntToPos(pos + offset, &lookup.pos);
+        return addFileReadRequest(filename, buffer, readComplete, callback, callbackParam, &lookup.pos, sectors << 11);
+    }
+
+    int32_t addFileReadRequestLookup(const char* filename,
+                                     uint8_t* buffer,
+                                     uint8_t* readComplete,
+                                     FileCallback callback,
+                                     void* callbackParam)
+    {
+        FileLookup lookup;
+        auto hasFile = lookupFileTable(&lookup, filename);
+        if (!hasFile) return -1;
+
+        return addFileReadRequest(filename, buffer, readComplete, callback, callbackParam, &lookup.pos, lookup.size);
     }
 }

@@ -1597,7 +1597,7 @@ static void tickEvolving()
             if (closeness > Closeness::SPRINT_DISTANCE)
             {
                 getEvoSequenceState(&PARTNER_ENTITY,
-                                    reinterpret_cast<int32_t>(&GENERAL_BUFFER),
+                                    reinterpret_cast<int32_t>(GENERAL_BUFFER.data()),
                                     &PARTNER_PARA,
                                     EVOLUTION_TARGET,
                                     0);
@@ -1609,7 +1609,7 @@ static void tickEvolving()
         case 2:
         {
             auto value = getEvoSequenceState(&PARTNER_ENTITY,
-                                             reinterpret_cast<int32_t>(&GENERAL_BUFFER),
+                                             reinterpret_cast<int32_t>(GENERAL_BUFFER.data()),
                                              &PARTNER_PARA,
                                              EVOLUTION_TARGET,
                                              1);

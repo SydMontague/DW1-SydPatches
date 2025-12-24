@@ -24,7 +24,6 @@
 #include "extern/psx.hpp"
 #include "extern/stddef.hpp"
 
-
 extern "C"
 {
     struct QuickTravelData
@@ -1136,10 +1135,10 @@ extern "C"
         uint8_t path[64];
 
         sprintf(path, "\\MAP\\MAP%d\\%s.MAP", (mapId / 15) + 1, entry.filename);
-        readFile(reinterpret_cast<char*>(path), &GENERAL_BUFFER);
+        readFile(reinterpret_cast<char*>(path), GENERAL_BUFFER.data());
 
-        uint32_t* headerPtr = reinterpret_cast<uint32_t*>(&GENERAL_BUFFER);
-        MapSetup* setup     = reinterpret_cast<MapSetup*>(&GENERAL_BUFFER + *headerPtr++);
+        uint32_t* headerPtr = reinterpret_cast<uint32_t*>(GENERAL_BUFFER.data());
+        MapSetup* setup     = reinterpret_cast<MapSetup*>(GENERAL_BUFFER.data() + *headerPtr++);
 
         loadMapSetup(setup);
         clearMapObjects(LOCAL_MAP_OBJECT_INSTANCE);
@@ -1147,21 +1146,21 @@ extern "C"
         if (entry.num4bppImages != 0 || entry.num8bppImages != 0)
         {
             for (int32_t i = 0; i < entry.num8bppImages; i++)
-                loadMapImage1(&GENERAL_BUFFER + *headerPtr++);
+                loadMapImage1(GENERAL_BUFFER.data() + *headerPtr++);
             for (int32_t i = 0; i < entry.num4bppImages; i++)
-                loadMapImage2(&GENERAL_BUFFER + *headerPtr++, i);
+                loadMapImage2(GENERAL_BUFFER.data() + *headerPtr++, i);
 
-            loadMapObjects(LOCAL_MAP_OBJECT_INSTANCE, &GENERAL_BUFFER + *headerPtr++, mapId);
+            loadMapObjects(LOCAL_MAP_OBJECT_INSTANCE, GENERAL_BUFFER.data() + *headerPtr++, mapId);
         }
 
         clearMapDigimon();
-        loadMapEntities(&GENERAL_BUFFER + *headerPtr++, mapId, CURRENT_EXIT);
+        loadMapEntities(GENERAL_BUFFER.data() + *headerPtr++, mapId, CURRENT_EXIT);
 
         if (entry.doorsId != 0) { loadDoors(entry.doorsId - 1); }
         if (mapId > 100 && mapId < 104) loadWarpCrystals(mapId);
         if (mapId == 165) loadTrainingPoop();
 
-        loadMapCollisionData(&GENERAL_BUFFER + *headerPtr++);
+        loadMapCollisionData(GENERAL_BUFFER.data() + *headerPtr++);
 
         loadMapSounds(getMapSoundId(mapId));
         initializePartnerWaypoint();
@@ -1180,7 +1179,7 @@ extern "C"
         uint8_t path[64];
 
         sprintf(path, "\\MAP\\MAP%d\\%s.TFS", (mapId / 15) + 1, entry.filename);
-        readFile(reinterpret_cast<char*>(path), &GENERAL_BUFFER);
+        readFile(reinterpret_cast<char*>(path), GENERAL_BUFFER.data());
     }
 
     constexpr void
@@ -1270,7 +1269,7 @@ extern "C"
 
     void setupMap()
     {
-        ReadBuffer buff{&GENERAL_BUFFER};
+        ReadBuffer buff{GENERAL_BUFFER.data()};
 
         auto width        = buff.read<uint16_t>();
         auto height       = buff.read<uint16_t>();

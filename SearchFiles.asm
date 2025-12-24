@@ -41,18 +41,6 @@
 .org 0x80105a14
   jal readFile
 
-;.org 0x800a32d8
-;  jal lookupFileTable
-;.org 0x800a3428
-;  jal lookupFileTable
-;.org 0x800a3644
-;  jal lookupFileTable
-.org 0x800e3b38
-  jal lookupFileTable
-.org 0x800e3be8
-  jal lookupFileTable
-
-
 ;.org 0x800e0fe8
 ;  jal loadTextureFile
 .org 0x801043cc
@@ -167,6 +155,39 @@ VLALL_address:
   b 0x800e91dc
   nop
 
+.org 0x800ee874
+  jal initializeFileReadQueue
+
+;.org 0x800d9210
+;  jal tickFileReadQueue
+;.org 0x800e3704
+;  j tickFileReadQueue
+;.org 0x800e39fc
+;  jal tickFileReadQueue
+.org 0x800e90f4
+  jal tickFileReadQueue
+.org 0x800e9260
+  jal tickFileReadQueue
+.org 0x800f366c
+  jal tickFileReadQueue
+
+.org 0x800e8c10
+  j setFileReadCallback2
+
+.org 0x800e625c
+  jal addFileReadRequestPath
+.org 0x80104384
+  jal addFileReadRequestPath
+
+
+.org 0x800e8cb0
+  jal addFileReadRequestSection
+.org 0x800e9210
+  jal addFileReadRequestSection
+
+.org 0x800e8b78
+  jal addFileReadRequestLookup
+
 .close
 
 .open "work/DIGIMON/FISH_REL.BIN",0x80070000
@@ -216,6 +237,16 @@ VLALL_address:
 .org 0x80057700
   jal loadTIMFile
 
+
+.org 0x8005f174
+  jal tickFileReadQueue
+
+.org 0x8006d6c4
+  jal addFileReadRequest
+
+.org 0x8006dee0
+  j setFileReadCallback2
+
 .close
 
 
@@ -225,8 +256,22 @@ VLALL_address:
 .org 0x8007d690
   jal loadTextureFile
 
+.org 0x8007c54c
+  jal tickFileReadQueue
+
 .close
 
+
+.open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
+.psx
+
+.org 0x80064fdc
+  jal addFileReadRequest
+
+.org 0x800657f8
+  j setFileReadCallback2
+
+.close 
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
@@ -247,6 +292,12 @@ VLALL_address:
 .org 0x80056e6c
   jal loadTIMFile
 
+.org 0x80063fb0
+  j setFileReadCallback2
+
+.org 0x80063794
+  jal addFileReadRequest
+
 .close
 
 
@@ -266,5 +317,20 @@ VLALL_address:
   jal readFile
 .org 0x80080e24
   jal readFile
+
+.org 0x80080280
+  jal tickFileReadQueue
+.org 0x80080d18
+  jal tickFileReadQueue
+.org 0x800824f4
+  jal tickFileReadQueue
+
+.close
+
+.open "work/DIGIMON/EVL_REL.BIN",0x80060000
+.psx
+
+.org 0x80060de4
+  jal tickFileReadQueue
 
 .close

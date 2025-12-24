@@ -24,7 +24,6 @@
 .definelabel learnMove,                 0x800e5f14
 .definelabel initializeConditionBubbles,0x800ec520
 .definelabel initializeButterfly,       0x800e9ce8
-.definelabel addFileReadRequest2,       0x800e3938
 .definelabel main,                      0x800ee800
 .definelabel Tamer_tickBattle,          0x800f1214
 .definelabel Tamer_tickFishing,         0x800e4e18
