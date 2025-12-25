@@ -104,6 +104,91 @@
 .org 0x8010d300
   jal renderUIBoxBorder
 
+.org 0x800e5aac
+  jal drawLine3P
+.org 0x800e5ad8
+  jal drawLine3P
+.org 0x800ee720
+  jal drawLine3P
+.org 0x800ee754
+  jal drawLine3P
+.org 0x800fda94
+  jal drawLine3P
+.org 0x800fdac0
+  jal drawLine3P
+.org 0x800fdb08
+  jal drawLine3P
+.org 0x800fdb3c
+  jal drawLine3P
+.org 0x800fe204
+  jal drawLine3P
+.org 0x800fe230
+  jal drawLine3P
+.org 0x800ff3f0
+  jal drawLine3P
+.org 0x800ff41c
+  jal drawLine3P
+
+
+
+.org 0x800edce8
+  jal drawLine2P
+.org 0x800edd0c
+  jal drawLine2P
+.org 0x800ee4c0
+  jal drawLine2P
+.org 0x800ee4f8
+  jal drawLine2P
+.org 0x800fe0cc
+  jal drawLine2P
+.org 0x800fe0fc
+  jal drawLine2P
+.org 0x800fe12c
+  jal drawLine2P
+.org 0x800ff600
+  jal drawLine2P
+.org 0x800ff630
+  jal drawLine2P
+.org 0x800ff660
+  jal drawLine2P
+.org 0x8010b5c4
+  jal drawLine2P
+.org 0x8010b5f4
+  jal drawLine2P
+.org 0x8010b624
+  jal drawLine2P
+
+.close
+
+.open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
+.psx
+
+.org 0x8005d16c
+  jal drawLine3P
+.org 0x8005d1a0
+  jal drawLine3P
+
+.org 0x8005d1cc
+  jal drawLine2P
+.org 0x80065de4
+  jal drawLine2P
+.org 0x8006a180
+  jal drawLine2P
+.org 0x8006a1dc
+  jal drawLine2P
+
+.close
+
+.open "work/DIGIMON/VS_REL.BIN",0x80052ae0
+.psx
+
+.org 0x8006459c
+  jal drawLine2P
+.org 0x8006885c
+  jal drawLine2P
+.org 0x800688b8
+  jal drawLine2P
+
 .close
 
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
@@ -116,6 +201,13 @@
 
 .org 0x80061074
   jal createAnimatedUIBox
+
+.org 0x8006e4cc
+  jal drawLine2P
+.org 0x8007278c
+  jal drawLine2P
+.org 0x800727e8
+  jal drawLine2P
 
 .close 
 
@@ -174,6 +266,9 @@
 .org 0x800712e4
   jal createAnimatedUIBox
 
+.org 0x80077d60
+  jal drawLine2P
+
 .close
 
 .open "work/DIGIMON/TRN_REL.BIN",0x80088800
@@ -196,6 +291,16 @@
 .org 0x8008ef1c
   jal createAnimatedUIBox
 
+.org 0x8008de0c
+  jal drawLine3P
+.org 0x8008de40
+  jal drawLine3P
+
+.org 0x8008dba8
+  jal drawLine2P
+.org 0x8008dbe0
+  jal drawLine2P
+
 .close
 
 .open "work/DIGIMON/TRN2_REL.BIN",0x80088800
@@ -210,5 +315,15 @@
   jal createAnimatedUIBox
 .org 0x8008d8f4
   jal createAnimatedUIBox
+
+.org 0x8008c7e4
+  jal drawLine3P
+.org 0x8008c818
+  jal drawLine3P
+
+.org 0x8008c580
+  jal drawLine2P
+.org 0x8008c5b8
+  jal drawLine2P
 
 .close

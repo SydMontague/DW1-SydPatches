@@ -1705,8 +1705,6 @@ extern "C"
     bool hasMove(int32_t move);
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
     void initializeFishing();
-    void
-    renderLinePrimitive(uint32_t color, int16_t x1, int16_t y1, int16_t x2, int16_t y2, int32_t layer, uint32_t flag);
     uint32_t hasFishingRod();
     void initializeLoadedNPCModels();
     void NPCEntity_tickBattle(int32_t instanceId);
@@ -1757,15 +1755,6 @@ extern "C"
                              int32_t hasShadow);
     extern void setUVDataPolyFT4(POLY_FT4* prim, int16_t uvX, int16_t uvY, int16_t uvWidth, int16_t uvHeight);
     extern void setPosDataPolyFT4(POLY_FT4* prim, int16_t posX, int16_t posY, int16_t width, int16_t height);
-    void renderTrianglePrimitive(uint32_t color,
-                                 int16_t x1,
-                                 int16_t y1,
-                                 int16_t x2,
-                                 int16_t y2,
-                                 int16_t x3,
-                                 int16_t y3,
-                                 int32_t order,
-                                 uint32_t flag);
     void drawEntityText(int32_t color, int32_t digitCount, int32_t x, int32_t y, int32_t value, int32_t layer);
     void drawEntityTextIcon(int32_t posX, int32_t posY, uint8_t iconOffset, int32_t layer);
 

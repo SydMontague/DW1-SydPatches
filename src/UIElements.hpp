@@ -198,4 +198,15 @@ extern "C"
                              BoxTickFunction tickFunc,
                              BoxRenderFunction renderFunc);
     void removeAnimatedUIBox(int32_t boxId, RECT* target);
+
+    void drawLine2P(uint32_t color, int16_t x0, int16_t y0, int16_t x1, int16_t y1, int32_t order, uint32_t blend);
+    void drawLine3P(uint32_t color,
+                          int16_t x0,
+                          int16_t y0,
+                          int16_t x1,
+                          int16_t y1,
+                          int16_t x2,
+                          int16_t y2,
+                          int32_t order,
+                          uint32_t blend);
 }

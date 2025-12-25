@@ -247,8 +247,8 @@ namespace
             const auto maxX = minX + SLOT_WIDTH;
             const auto maxY = minY + SLOT_HEIGHT;
 
-            renderTrianglePrimitive(MOVE_SELECTOR_COLOR, minX, minY, minX, maxY, maxX, maxY, depth, 0);
-            renderTrianglePrimitive(MOVE_SELECTOR_COLOR, maxX, maxY, maxX, minY, minX, minY, depth, 0);
+            drawLine3P(MOVE_SELECTOR_COLOR, minX, minY, minX, maxY, maxX, maxY, depth, 0);
+            drawLine3P(MOVE_SELECTOR_COLOR, maxX, maxY, maxX, minY, minX, minY, depth, 0);
         }
 
         const auto cursorX = getSlotPosX(INVENTORY_POINTER);

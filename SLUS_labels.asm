@@ -44,8 +44,6 @@
 .definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8
 .definelabel hasFishingRod,             0x800e4da0
-.definelabel renderLinePrimitive,       0x800e3e7c
-.definelabel renderTrianglePrimitive,   0x800e3d14
 .definelabel initializeFishing,         0x800e4e0c
 .definelabel entityGetTechFromAnim,     0x800e6000
 .definelabel hasMove,                   0x800e5eb4

@@ -9,6 +9,48 @@
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
 
+namespace
+{
+    struct DrawModeSettings
+    {
+        uint32_t* tag;
+        uint32_t pageX       : 4;
+        uint32_t pageY       : 1;
+        uint32_t blendMode   : 2;
+        uint32_t colorMode   : 2;
+        bool ditherEnabled   : 1;
+        bool allowDrawToDisp : 1;
+        bool textureDisabled : 1;
+        bool flipX           : 1;
+        bool flipY           : 1;
+        uint32_t unused      : 10;
+        uint8_t code;
+    };
+
+    static_assert(sizeof(DrawModeSettings) == 8);
+
+    void setLineBlendingMode(uint32_t mode, int32_t order)
+    {
+        if (mode == 0) return;
+
+        auto* base            = reinterpret_cast<DrawModeSettings*>(libgs_GsGetWorkBase());
+        base->code            = 0x81;
+        base->unused          = 0;
+        base->flipX           = false;
+        base->flipY           = false;
+        base->textureDisabled = false;
+        base->allowDrawToDisp = true;
+        base->ditherEnabled   = true;
+        base->colorMode       = 0;
+        base->blendMode       = mode;
+        base->pageY           = 0;
+        base->pageX           = 0;
+
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + order, base);
+        libgs_GsSetWorkBase(base + 1);
+    }
+} // namespace
+
 extern "C"
 {
     constexpr RGB8 UILINE_COLORS[] = {
@@ -68,8 +110,8 @@ extern "C"
 
         if ((flag & 0x80) != 0)
         {
-            renderTrianglePrimitive(0x20202, posX - 1, posY - 1, posX + 13, posY - 1, posX + 13, posY + 12, 2, 0);
-            renderTrianglePrimitive(0x20202, posX - 1, posY - 1, posX - 1, posY + 12, posX + 13, posY + 12, 2, 0);
+            drawLine3P(0x20202, posX - 1, posY - 1, posX + 13, posY - 1, posX + 13, posY + 12, 2, 0);
+            drawLine3P(0x20202, posX - 1, posY - 1, posX - 1, posY + 12, posX + 13, posY + 12, 2, 0);
         }
     }
 
@@ -84,7 +126,7 @@ extern "C"
         for (int32_t i = 0; i < count; i++)
         {
             auto& line = linePtr[i];
-            renderLinePrimitive(UILINE_COLORS[line.clut].asUint32(), line.x1, line.y1, line.x2, line.y2, layer, 0);
+            drawLine2P(UILINE_COLORS[line.clut].asUint32(), line.x1, line.y1, line.x2, line.y2, layer, 0);
         }
     }
 
@@ -242,8 +284,8 @@ extern "C"
         auto y1 = posY;
         auto y2 = posY + height;
 
-        renderTrianglePrimitive(color1, x1, y2, x1, y1, x2, y1, layer, 0);
-        renderTrianglePrimitive(color2, x1, y2, x2, y2, x2, y1, layer, 0);
+        drawLine3P(color1, x1, y2, x1, y1, x2, y1, layer, 0);
+        drawLine3P(color2, x1, y2, x2, y2, x2, y1, layer, 0);
         renderBox(x1, y1, width, height, red, green, blue, 0, layer);
     }
 
@@ -287,14 +329,14 @@ extern "C"
     void Line4Points::render(uint32_t color1, uint32_t color2, int32_t layer) const
     {
         // TODO: diagonal lines don't connect neatly to one side
-        renderTrianglePrimitive(color1, x1, y1 - 1, x2, y2 - 1, x3, y3 - 1, layer, 0);
-        renderLinePrimitive(color1, x3, y3 - 1, x4, y4 - 1, layer, 0);
+        drawLine3P(color1, x1, y1 - 1, x2, y2 - 1, x3, y3 - 1, layer, 0);
+        drawLine2P(color1, x3, y3 - 1, x4, y4 - 1, layer, 0);
 
-        renderTrianglePrimitive(color2, x1, y1, x2, y2, x3, y3, layer, 0);
-        renderLinePrimitive(color2, x3, y3, x4, y4, layer, 0);
+        drawLine3P(color2, x1, y1, x2, y2, x3, y3, layer, 0);
+        drawLine2P(color2, x3, y3, x4, y4, layer, 0);
 
-        renderTrianglePrimitive(color1, x1, y1 + 1, x2, y2 + 1, x3, y3 + 1, layer, 0);
-        renderLinePrimitive(color1, x3, y3 + 1, x4, y4 + 1, layer, 0);
+        drawLine3P(color1, x1, y1 + 1, x2, y2 + 1, x3, y3 + 1, layer, 0);
+        drawLine2P(color1, x3, y3 + 1, x4, y4 + 1, layer, 0);
     }
 
     constexpr Sprite BORDER_CORNER_SPRITES[] = {
@@ -328,25 +370,25 @@ extern "C"
         auto yMin = size->y;
         auto yMax = size->y + size->height - 3;
 
-        renderLinePrimitive(BORDER_BLACK, xMin + 4, yMin + 0, xMax + 0, yMin + 0, layer, 0);
-        // renderLinePrimitive(BORDER_COLOR1, xMin + 4, yMin + 1, xMax + 0, yMin + 1, layer, 0);
-        renderLinePrimitive(BORDER_COLOR2, xMin + 4, yMin + 1, xMax + 0, yMin + 1, layer, 0);
-        renderLinePrimitive(BORDER_BLACK, xMin + 4, yMin + 2, xMax + 0, yMin + 2, layer, 0);
+        drawLine2P(BORDER_BLACK, xMin + 4, yMin + 0, xMax + 0, yMin + 0, layer, 0);
+        // drawLine2P(BORDER_COLOR1, xMin + 4, yMin + 1, xMax + 0, yMin + 1, layer, 0);
+        drawLine2P(BORDER_COLOR2, xMin + 4, yMin + 1, xMax + 0, yMin + 1, layer, 0);
+        drawLine2P(BORDER_BLACK, xMin + 4, yMin + 2, xMax + 0, yMin + 2, layer, 0);
 
-        renderLinePrimitive(BORDER_BLACK, xMin + 4, yMax + 0, xMax + 0, yMax + 0, layer, 0);
-        renderLinePrimitive(BORDER_COLOR2, xMin + 4, yMax + 1, xMax + 0, yMax + 1, layer, 0);
-        // renderLinePrimitive(BORDER_COLOR1, xMin + 4, yMax + 2, xMax + 0, yMax + 2, layer, 0);
-        renderLinePrimitive(BORDER_BLACK, xMin + 4, yMax + 2, xMax + 0, yMax + 2, layer, 0);
+        drawLine2P(BORDER_BLACK, xMin + 4, yMax + 0, xMax + 0, yMax + 0, layer, 0);
+        drawLine2P(BORDER_COLOR2, xMin + 4, yMax + 1, xMax + 0, yMax + 1, layer, 0);
+        // drawLine2P(BORDER_COLOR1, xMin + 4, yMax + 2, xMax + 0, yMax + 2, layer, 0);
+        drawLine2P(BORDER_BLACK, xMin + 4, yMax + 2, xMax + 0, yMax + 2, layer, 0);
 
-        renderLinePrimitive(BORDER_BLACK, xMin + 0, yMin + 4, xMin + 0, yMax + 0, layer, 0);
-        renderLinePrimitive(BORDER_COLOR1, xMin + 1, yMin + 4, xMin + 1, yMax + 0, layer, 0);
-        renderLinePrimitive(BORDER_COLOR2, xMin + 2, yMin + 4, xMin + 2, yMax + 0, layer, 0);
-        renderLinePrimitive(BORDER_BLACK, xMin + 3, yMin + 4, xMin + 3, yMax + 0, layer, 0);
+        drawLine2P(BORDER_BLACK, xMin + 0, yMin + 4, xMin + 0, yMax + 0, layer, 0);
+        drawLine2P(BORDER_COLOR1, xMin + 1, yMin + 4, xMin + 1, yMax + 0, layer, 0);
+        drawLine2P(BORDER_COLOR2, xMin + 2, yMin + 4, xMin + 2, yMax + 0, layer, 0);
+        drawLine2P(BORDER_BLACK, xMin + 3, yMin + 4, xMin + 3, yMax + 0, layer, 0);
 
-        renderLinePrimitive(BORDER_BLACK, xMax + 0, yMin + 4, xMax + 0, yMax + 0, layer, 0);
-        renderLinePrimitive(BORDER_COLOR2, xMax + 1, yMin + 4, xMax + 1, yMax + 0, layer, 0);
-        renderLinePrimitive(BORDER_COLOR1, xMax + 2, yMin + 4, xMax + 2, yMax + 0, layer, 0);
-        renderLinePrimitive(BORDER_BLACK, xMax + 3, yMin + 4, xMax + 3, yMax + 0, layer, 0);
+        drawLine2P(BORDER_BLACK, xMax + 0, yMin + 4, xMax + 0, yMax + 0, layer, 0);
+        drawLine2P(BORDER_COLOR2, xMax + 1, yMin + 4, xMax + 1, yMax + 0, layer, 0);
+        drawLine2P(BORDER_COLOR1, xMax + 2, yMin + 4, xMax + 2, yMax + 0, layer, 0);
+        drawLine2P(BORDER_BLACK, xMax + 3, yMin + 4, xMax + 3, yMax + 0, layer, 0);
     }
 
     static void renderUIBoxStatic(int32_t instanceId)
@@ -366,9 +408,9 @@ extern "C"
             auto maxX  = data.finalPos.x + data.finalPos.width - 3;
             auto baseY = data.finalPos.y + 13;
 
-            renderLinePrimitive(BORDER_BLACK, minX, baseY + 0, maxX, baseY + 0, layer, 0);
-            renderLinePrimitive(BORDER_COLOR2, minX, baseY + 1, maxX, baseY + 1, layer, 0);
-            renderLinePrimitive(BORDER_BLACK, minX, baseY + 2, maxX, baseY + 2, layer, 0);
+            drawLine2P(BORDER_BLACK, minX, baseY + 0, maxX, baseY + 0, layer, 0);
+            drawLine2P(BORDER_COLOR2, minX, baseY + 1, maxX, baseY + 1, layer, 0);
+            drawLine2P(BORDER_BLACK, minX, baseY + 2, maxX, baseY + 2, layer, 0);
         }
 
         // scroll bar
@@ -379,16 +421,8 @@ extern "C"
             auto maxX = data.finalPos.x + data.finalPos.width;
             auto maxY = data.finalPos.y + data.finalPos.height;
 
-            renderTrianglePrimitive(0x020202,
-                                    maxX - 13,
-                                    maxY - 10,
-                                    maxX - 13,
-                                    minY + 13,
-                                    maxX - 6,
-                                    minY + 13,
-                                    layer,
-                                    0);
-            renderTrianglePrimitive(0xa08769, maxX - 6, minY + 14, maxX - 6, maxY - 10, maxX - 12, maxY - 10, layer, 0);
+            drawLine3P(0x020202, maxX - 13, maxY - 10, maxX - 13, minY + 13, maxX - 6, minY + 13, layer, 0);
+            drawLine3P(0xa08769, maxX - 6, minY + 14, maxX - 6, maxY - 10, maxX - 12, maxY - 10, layer, 0);
 
             auto barHeight = data.finalPos.height - 25;
             auto rowHeight = (barHeight * data.visibleRows) / data.totalRows;
@@ -396,8 +430,8 @@ extern "C"
                 data.finalPos.y + 14 + ((barHeight - rowHeight) * data.rowOffset) / (data.totalRows - data.visibleRows);
             auto barStart = rowOffset + rowHeight;
 
-            renderTrianglePrimitive(0x020202, maxX - 7, rowOffset, maxX - 7, barStart, maxX - 13, barStart, layer, 0);
-            renderTrianglePrimitive(0xa08769, maxX - 12, barStart, maxX - 12, rowOffset, maxX - 6, rowOffset, layer, 0);
+            drawLine3P(0x020202, maxX - 7, rowOffset, maxX - 7, barStart, maxX - 13, barStart, layer, 0);
+            drawLine3P(0xa08769, maxX - 12, barStart, maxX - 12, rowOffset, maxX - 6, rowOffset, layer, 0);
 
             POLY_F4* prim = reinterpret_cast<POLY_F4*>(libgs_GsGetWorkBase());
             libgpu_SetPolyF4(prim);
@@ -481,8 +515,8 @@ extern "C"
         auto y1 = startMinY + (diffMinY / 4);
         auto y2 = startMaxY + (diffMaxY / 4);
 
-        renderTrianglePrimitive(0x808080, x1, y1, x2, y1, x2, y2, layer, 0);
-        renderTrianglePrimitive(0x808080, x2, y2, x1, y2, x1, y1, layer, 0);
+        drawLine3P(0x808080, x1, y1, x2, y1, x2, y2, layer, 0);
+        drawLine3P(0x808080, x2, y2, x1, y2, x1, y1, layer, 0);
     }
 
     static void renderUIBoxAnimated(int32_t instanceId)
@@ -560,6 +594,50 @@ extern "C"
             data.frame = 0;
             data.state = 0;
         }
+    }
+
+    void drawLine3P(uint32_t color,
+                    int16_t x0,
+                    int16_t y0,
+                    int16_t x1,
+                    int16_t y1,
+                    int16_t x2,
+                    int16_t y2,
+                    int32_t order,
+                    uint32_t blend)
+    {
+        auto* line = reinterpret_cast<LINE_F3*>(libgs_GsGetWorkBase());
+        line->r0   = static_cast<uint8_t>(color >> 0);
+        line->g0   = static_cast<uint8_t>(color >> 8);
+        line->b0   = static_cast<uint8_t>(color >> 16);
+        line->x0   = x0;
+        line->y0   = y0;
+        line->x1   = x1;
+        line->y1   = y1;
+        line->x2   = x2;
+        line->y2   = y2;
+        libgpu_SetLineF3(line);
+        libgpu_SetSemiTrans(line, blend >> 2);
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + order, line);
+        libgs_GsSetWorkBase(line + 1);
+        setLineBlendingMode(blend, order);
+    }
+
+    void drawLine2P(uint32_t color, int16_t x0, int16_t y0, int16_t x1, int16_t y1, int32_t order, uint32_t blend)
+    {
+        auto* line = reinterpret_cast<LINE_F2*>(libgs_GsGetWorkBase());
+        line->r0   = static_cast<uint8_t>(color >> 0);
+        line->g0   = static_cast<uint8_t>(color >> 8);
+        line->b0   = static_cast<uint8_t>(color >> 16);
+        line->x0   = x0;
+        line->y0   = y0;
+        line->x1   = x1;
+        line->y1   = y1;
+        libgpu_SetLineF2(line);
+        libgpu_SetSemiTrans(line, blend >> 2);
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + order, line);
+        libgs_GsSetWorkBase(line + 1);
+        setLineBlendingMode(blend, order);
     }
 }
 
