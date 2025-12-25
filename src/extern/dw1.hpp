@@ -1665,7 +1665,7 @@ extern "C"
     extern dtl::array<const char*, 128> ITEM_DESC_PTR;
 
     // TODO can be relocated
-    extern uint8_t* PTR_DIGIMON_FILE_NAMES[180];
+    extern dtl::array<dtl::array<uint8_t, 8>, 180> DIGIMON_FILE_NAMES;
     // TODO: can be non-extern, but large
     extern dtl::array<uint8_t, 22136> SEQ_BUFFER;
     extern PositionData PARTNER_POSITION_DATA[34];

@@ -25,7 +25,7 @@
   .fill 0x800e3fb8-.
 .endarea
 
-.org 0x8011d46c
+.org 0x8011d190
 .area 0x8012344c-.
   .importobj "compiled/GameData.lib"
 ;;;

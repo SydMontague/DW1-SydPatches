@@ -731,7 +731,7 @@ extern "C"
         sprintf(pathBuffer,
                 "CHDAT\\MMD%d\\%s.MMD",
                 static_cast<uint32_t>(digimonType) / 30,
-                PTR_DIGIMON_FILE_NAMES[static_cast<uint32_t>(digimonType)]);
+                DIGIMON_FILE_NAMES[static_cast<uint32_t>(digimonType)].data());
 
         if (entityType == EntityType::NPC)
         {
@@ -903,7 +903,7 @@ extern "C"
         sprintf(pathBuffer,
                 "CHDAT\\MMD%d\\%s.MMD",
                 static_cast<uint32_t>(digimonType) / 30,
-                PTR_DIGIMON_FILE_NAMES[static_cast<uint32_t>(digimonType)]);
+                DIGIMON_FILE_NAMES[static_cast<uint32_t>(digimonType)].data());
 
         readFileSectors("CHDAT\\ALLTIM.TIM", buffer, static_cast<uint32_t>(digimonType) * 9, 9);
         modelData->imagePtr  = buffer;
