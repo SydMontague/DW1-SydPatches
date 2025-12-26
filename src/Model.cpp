@@ -8,6 +8,7 @@
 #include "Helper.hpp"
 #include "Map.hpp"
 #include "Math.hpp"
+#include "Matrix.hpp"
 #include "Sound.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libapi.hpp"
@@ -909,7 +910,11 @@ extern "C"
         modelData->imagePtr  = buffer;
         modelData->imageSize = 0x4800;
         modelData->modelPtr  = buffer + 0x4800;
-        addFileReadRequestPath(reinterpret_cast<char*>(pathBuffer), modelData->modelPtr, readComplete, nullptr, nullptr);
+        addFileReadRequestPath(reinterpret_cast<char*>(pathBuffer),
+                               modelData->modelPtr,
+                               readComplete,
+                               nullptr,
+                               nullptr);
         modelData->modelSize = lookupFileSize(reinterpret_cast<char*>(pathBuffer));
     }
 

@@ -125,7 +125,14 @@ extern "C"
                                         int32_t* interpolValue,
                                         int32_t* flag);
     void libgte_RotMatrixZYX(SVector* rotation, Matrix* matrix);
+    void libgte_RotMatrixYXZ(SVector* rotation, Matrix* matrix);
     Vector* libgte_ApplyMatrixLV(Matrix* matrix, Vector* vector, Vector* result);
+    Matrix* libgte_TransposeMatrix(Matrix* input, Matrix* output);
+    Vector* libgte_ApplyMatrix(Matrix* matrix, SVector* input, Vector* output);
+    int32_t libgte_ratan2(int32_t val1, int32_t val2);
+    int32_t libgte_SquareRoot0(int32_t value);
+    int32_t libgte_rsin(int32_t val);
+    int32_t libgte_rcos(int32_t val);
 
     // TODO: use proper signature
     using GsTMDFunction = void* (*)();

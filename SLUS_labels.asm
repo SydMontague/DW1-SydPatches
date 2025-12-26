@@ -57,7 +57,6 @@
 .definelabel checkCurlingMap,           0x800e89c8
 .definelabel checkArenaMap,             0x800ff9dc
 .definelabel runMapHeadScript,          0x80105ae4
-.definelabel calculatePosition,         0x800e4adc
 .definelabel renderItemSprite,          0x800e5d18
 .definelabel renderSelectionCursor,     0x800e5a3c
 .definelabel startThrowingItem,         0x800f0490
@@ -376,6 +375,7 @@
 .definelabel libgs_GsSetFlatLight, 0x800982a0
 .definelabel libgs_GsSortOt, 0x80098898
 .definelabel libgs_GsSetAmbient, 0x800987d8
+.definelabel libgs_GsMulCoord3, 0x80097fa8
 
 .definelabel libgs_REFERENCE_MATRIX, 0x80136f84
 .definelabel libgs_GsLIGHTWSMATRIX, 0x80136f24
@@ -418,7 +418,14 @@
 .definelabel libgte_RotTransPers3, 0x8009b404
 .definelabel libgte_RotTransPers4, 0x8009b464
 .definelabel libgte_RotMatrixZYX, 0x8009bd24
+.definelabel libgte_RotMatrixYXZ, 0x8009ba94
 .definelabel libgte_ApplyMatrixLV, 0x8009ab10
+.definelabel libgte_ApplyMatrix, 0x8009afe0
+.definelabel libgte_TransposeMatrix, 0x8009b7c4
+.definelabel libgte_ratan2, 0x800a0638
+.definelabel libgte_SquareRoot0, 0x8009a810
+.definelabel libgte_rsin, 0x8009a618
+.definelabel libgte_rcos, 0x8009a6e8
 
 .definelabel libgte_GsTMDdivTNF3, 0x8009de78
 .definelabel libgte_GsTMDdivTF3NL, 0x8009dbc8
