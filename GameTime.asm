@@ -45,8 +45,8 @@
 ;  jal startGameTime
 ;.org 0x800deb7c
 ;  jal startGameTime
-.org 0x800e4fe4
-  jal startGameTime
+;.org 0x800e4fe4
+;  jal startGameTime
 .org 0x801061f8
   jal startGameTime
 

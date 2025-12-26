@@ -3,6 +3,7 @@
 #include "Camera.hpp"
 #include "DigimonMenu.hpp"
 #include "Entity.hpp"
+#include "Fishing.hpp"
 #include "Font.hpp"
 #include "GameObjects.hpp"
 #include "GameTime.hpp"

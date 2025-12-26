@@ -8,6 +8,9 @@
 
 extern "C"
 {
+    // Overlay structure forward declarations
+    struct FishingData;
+
     struct GlyphData
     {
         uint16_t pixelData[11];
@@ -1663,6 +1666,7 @@ extern "C"
     extern dtl::array<const char*, 70> MAP_NAME_PTR;
     extern uint8_t TRN_LOADING_COMPLETE;
     extern dtl::array<const char*, 128> ITEM_DESC_PTR;
+    extern FishingData* FISHING_DATA_PTR;
 
     // TODO can be relocated
     extern dtl::array<dtl::array<uint8_t, 8>, 180> DIGIMON_FILE_NAMES;
@@ -1681,19 +1685,14 @@ extern "C"
                                 int16_t evoTarget,
                                 int16_t isInitialized);
     bool loadMapSounds2(int32_t mapSoundId);
-    void deinitializeFishing();
-    void setFishingDisabled();
-    void setFishingEnabled();
     void tickMainMenu(int32_t instanceId);
     void renderMainMenu(int32_t instanceId);
     void Partner_tickBattle(int32_t instanceId);
-    bool isFishing();
     void updateBGM();
     void startThrowingItem();
     void renderItemSprite(ItemType type, int16_t posX, int16_t posY, int32_t depth);
     void renderSelectionCursor(int16_t x, int16_t y, int16_t width, int16_t height, int32_t depth);
     void runMapHeadScript(uint8_t mapId);
-    void checkFishingMap(int32_t mapId);
     void checkCurlingMap(int32_t mapId);
     void checkArenaMap(int32_t mapId);
     bool isInvisible(Entity* entity);
@@ -1703,8 +1702,6 @@ extern "C"
     void dailyPStatTrigger();
     bool hasMove(int32_t move);
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
-    void initializeFishing();
-    uint32_t hasFishingRod();
     void initializeLoadedNPCModels();
     void NPCEntity_tickBattle(int32_t instanceId);
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
@@ -1727,7 +1724,6 @@ extern "C"
      * tick return false).
      */
     bool isKeyDown(uint16_t keyMask);
-    void Tamer_tickFishing();
     extern void Tamer_tickBattle(int32_t instanceId);
     extern int32_t main();
     extern void renderDropShadow(Entity* entity);
@@ -1756,6 +1752,7 @@ extern "C"
     extern void setPosDataPolyFT4(POLY_FT4* prim, int16_t posX, int16_t posY, int16_t width, int16_t height);
     void drawEntityText(int32_t color, int32_t digitCount, int32_t x, int32_t y, int32_t value, int32_t layer);
     void drawEntityTextIcon(int32_t posX, int32_t posY, uint8_t iconOffset, int32_t layer);
+    void triggerSeadramonCutscene();
 
     extern void setTrigger(uint32_t triggerId);
     extern void clearTextArea();

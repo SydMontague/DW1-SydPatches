@@ -26,7 +26,6 @@
 .definelabel initializeButterfly,       0x800e9ce8
 .definelabel main,                      0x800ee800
 .definelabel Tamer_tickBattle,          0x800f1214
-.definelabel Tamer_tickFishing,         0x800e4e18
 .definelabel isKeyDown,                 0x800fc054
 .definelabel getEntityScreenPos,        0x800e52d8
 .definelabel setMapLayerEnabled,        0x800e65b8
@@ -43,8 +42,6 @@
 .definelabel isTriggerSet,              0x8010643c
 .definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8
-.definelabel hasFishingRod,             0x800e4da0
-.definelabel initializeFishing,         0x800e4e0c
 .definelabel entityGetTechFromAnim,     0x800e6000
 .definelabel hasMove,                   0x800e5eb4
 .definelabel dailyPStatTrigger,         0x800fc374
@@ -53,25 +50,21 @@
 .definelabel entityLookAtTile,          0x800e6078
 .definelabel startBattleIdleAnimation,  0x800e8970
 .definelabel isInvisible,               0x800e61ac
-.definelabel checkFishingMap,           0x800e4ee4
 .definelabel checkCurlingMap,           0x800e89c8
 .definelabel checkArenaMap,             0x800ff9dc
 .definelabel runMapHeadScript,          0x80105ae4
 .definelabel renderItemSprite,          0x800e5d18
 .definelabel renderSelectionCursor,     0x800e5a3c
 .definelabel startThrowingItem,         0x800f0490
-.definelabel isFishing,                 0x800e4e7c
 .definelabel updateBGM,                 0x80106af0
 .definelabel Partner_tickBattle,        0x800f1414
 .definelabel tickMainMenu,              0x8010ff1c
 .definelabel renderMainMenu,            0x80113458
-.definelabel deinitializeFishing,       0x800e4eb4
-.definelabel setFishingDisabled,        0x800e4d64
-.definelabel setFishingEnabled,         0x800e4d84
 .definelabel loadMapSounds2,            0x800e9034
 .definelabel getEvoSequenceState,       0x800e732c
 .definelabel drawEntityText,            0x800e5724
 .definelabel drawEntityTextIcon,        0x800e60e0
+.definelabel triggerSeadramonCutscene,  0x800ff900
 
 .definelabel GENERAL_OBJECT, 0x801532e8
 .definelabel GENERAL_COORDS, 0x80153308
@@ -297,6 +290,7 @@
 .definelabel COMBAT_DATA_PTR, 0x80134d4c
 .definelabel INVENTORY_SIZE, 0x8013d4ce
 .definelabel ENTITY_TEXT_DATA, 0x80150cd0
+.definelabel FISHING_DATA_PTR, 0x80134e6c
 
 // BTL_REL
 .definelabel BTL_battleMain, 0x8005b5f4
@@ -311,6 +305,15 @@
 
 // EAB_REL
 .definelabel EaB_tick, 0x80061530
+
+// FISH_REL
+.definelabel FISH_loadFishing, 0x80079a38
+.definelabel FISH_deinitialize, 0x80079bd0
+.definelabel FISH_init, 0x80079b24
+.definelabel FISH_tamerTick, 0x80079c34
+
+.definelabel FISHING_DATA, 0x8007ac58
+.definelabel FISHING_MAP_DATA, 0x8007aad0
 
 // DOOA_REL
 .definelabel DoOA_tick, 0x80084644
@@ -342,6 +345,7 @@
 .definelabel sprintf, 0x8009129c
 .definelabel printf,  0x8009128c
 .definelabel rand,    0x8009127c
+.definelabel bzero,   0x8009123c
 
 // libcd
 .definelabel libcd_CdSearchFile, 0x800b23c0

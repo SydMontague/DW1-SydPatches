@@ -2,6 +2,7 @@
 #include "Entity.hpp"
 #include "Evolution.hpp"
 #include "Fade.hpp"
+#include "Fishing.hpp"
 #include "Font.hpp"
 #include "GameMenu.hpp"
 #include "GameObjects.hpp"
@@ -20,6 +21,7 @@
 #include "extern/DOOA.hpp"
 #include "extern/EAB.hpp"
 #include "extern/ENDI.hpp"
+#include "extern/FISH.hpp"
 #include "extern/KAR.hpp"
 #include "extern/MURD.hpp"
 #include "extern/STD.hpp"
@@ -823,6 +825,18 @@ extern "C"
         else if (Tamer_getSubState() == 1)
         {
             if (MURD_tick(&PARTNER_ENTITY, true) < 0) SOME_SCRIPT_SYNC_BIT = 1;
+        }
+    }
+
+    void Tamer_tickFishing()
+    {
+        if (FISHING_DATA_PTR == nullptr) return;
+
+        auto val = FISH_tamerTick();
+        if (val != 0)
+        {
+            setFishingDisabled();
+            triggerSeadramonCutscene();
         }
     }
 

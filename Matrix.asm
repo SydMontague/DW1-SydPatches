@@ -1,12 +1,3 @@
-.open "work/DIGIMON/SLUS_010.32",0x80090000
-.psx
-
-.org 0x800e4c00
-  jal matrixToEuler2
-
-.close
-
-
 .open "work/DIGIMON/DOO2_REL.BIN",0x80070000
 .psx
 

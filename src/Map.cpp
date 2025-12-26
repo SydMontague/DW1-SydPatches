@@ -4,6 +4,7 @@
 #include "Entity.hpp"
 #include "Fade.hpp"
 #include "Files.hpp"
+#include "Fishing.hpp"
 #include "Font.hpp"
 #include "GameData.hpp"
 #include "GameObjects.hpp"

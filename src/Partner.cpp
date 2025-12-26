@@ -7,6 +7,7 @@
 #include "Evolution.hpp"
 #include "Fade.hpp"
 #include "Files.hpp"
+#include "Fishing.hpp"
 #include "Font.hpp"
 #include "GameData.hpp"
 #include "GameMenu.hpp"
