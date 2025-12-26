@@ -6,6 +6,37 @@
 
 .close
 
+
+.open "work/DIGIMON/DOO2_REL.BIN",0x80070000
+.psx
+
+.org 0x800712a8
+  jal customRandom
+.org 0x8007130c
+  jal customRandom
+.org 0x80071324
+  jal customRandom
+.org 0x8007133c
+  jal customRandom
+
+.close
+
+
+.open "work/DIGIMON/EVL_REL.BIN",0x80060000
+.psx
+
+.org 0x80062eac
+  jal customRandom
+.org 0x80062f48
+  jal customRandom
+.org 0x80062f60
+  jal customRandom
+.org 0x80062f78
+  jal customRandom
+
+.close
+
+
 .open "work/DIGIMON/DOOA_REL.BIN",0x80080000
 .psx
 
@@ -17,6 +48,9 @@
   jal getDistance
 .org 0x8008458c
   jal getDistance
+
+.org 0x8008296c
+  jal customRandom
 
 .close
 
@@ -177,6 +211,71 @@
 .org 0x80079948
   jal matrixToEuler2
 
+.org 0x800718c0
+  jal customRandom
+.org 0x80071a4c
+  jal customRandom
+.org 0x80071ad0
+  jal customRandom
+.org 0x80072a38
+  jal customRandom
+.org 0x80072a50
+  jal customRandom
+.org 0x80073bb4
+  jal customRandom
+.org 0x80073bcc
+  jal customRandom
+.org 0x80073be4
+  jal customRandom
+.org 0x80073c00
+  jal customRandom
+.org 0x80074808
+  jal customRandom
+.org 0x80074818
+  jal customRandom
+.org 0x80074d98
+  jal customRandom
+.org 0x80074da8
+  jal customRandom
+.org 0x80074f64
+  jal customRandom
+.org 0x80075df0
+  jal customRandom
+.org 0x80075ff0
+  jal customRandom
+.org 0x80076008
+  jal customRandom
+.org 0x80076160
+  jal customRandom
+.org 0x800761a8
+  jal customRandom
+.org 0x800764c0
+  jal customRandom
+.org 0x800764e0
+  jal customRandom
+.org 0x80076524
+  jal customRandom
+.org 0x80076548
+  jal customRandom
+.org 0x800768b8
+  jal customRandom
+.org 0x800768d0
+  jal customRandom
+.org 0x80076948
+  jal customRandom
+.org 0x8007696c
+  jal customRandom
+.org 0x8007697c
+  jal customRandom
+.org 0x80076a10
+  jal customRandom
+.org 0x80076ee8
+  jal customRandom
+.org 0x8007875c
+  jal customRandom
+.org 0x80078774
+  jal customRandom
+
 .close
 
 
@@ -210,6 +309,15 @@
   jal matrixToEuler2
 .org 0x8006a4ec
   jal matrixToEuler2
+
+.org 0x80067cb8
+  jal customRandom
+.org 0x80067de8
+  jal customRandom
+.org 0x80067dfc
+  jal customRandom
+.org 0x8006acb8
+  jal customRandom
 
 .close
 
@@ -253,7 +361,21 @@
 .org 0x80072af8
   jal matrixToEuler2
 
+.org 0x8005bb00
+  jal customRandom
+.org 0x8005bc44
+  jal customRandom
+.org 0x80070250
+  jal customRandom
+.org 0x80070380
+  jal customRandom
+.org 0x80070394
+  jal customRandom
+.org 0x800732c4
+  jal customRandom
+
 .close
+
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
@@ -293,5 +415,18 @@
   jal matrixToEuler2
 .org 0x80068bc8
   jal matrixToEuler2
+
+.org 0x8005ad80
+  jal customRandom
+.org 0x8005aec4
+  jal customRandom
+.org 0x80066320
+  jal customRandom
+.org 0x80066450
+  jal customRandom
+.org 0x80066464
+  jal customRandom
+.org 0x80069394
+  jal customRandom
 
 .close

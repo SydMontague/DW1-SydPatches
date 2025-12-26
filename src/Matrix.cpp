@@ -8,6 +8,9 @@
 
 namespace
 {
+    static uint32_t customRng1 = 0;
+    static uint32_t customRng2 = 0x0013CC25;
+
     void toLocalVector(SVector* input, Vector* output)
     {
         Matrix matrix;
@@ -24,6 +27,20 @@ namespace
 
 extern "C"
 {
+    int32_t customRandom(int32_t min, int32_t max)
+    {
+        constexpr uint32_t CUSTOM_RNG_FACTOR = 1103515821;
+        constexpr uint32_t CUSTOM_RNG_VALUE  = 12345;
+
+        if (min == max) return max;
+        if (min > max) dtl::swap(min, max);
+
+        customRng1 = customRng1 * CUSTOM_RNG_FACTOR + CUSTOM_RNG_VALUE;
+        customRng2 = customRng2 * CUSTOM_RNG_FACTOR + CUSTOM_RNG_VALUE;
+
+        return min + ((customRng1 >> 0x10 | customRng2 << 0x10) % (max - min)) + 1U;
+    }
+
     void mapToWorldPosition(Vector* result, int16_t posX, int16_t posY, int32_t* hasValuePtr)
     {
         if (hasValuePtr != nullptr) *hasValuePtr = 0;
@@ -163,7 +180,7 @@ extern "C"
         }
 
         *matrix = arr[i - 1]->coord;
-        for (int j = j - 2; i >= 0; j--)
+        for (int j = i - 2; j >= 0; j--)
             libgs_GsMulCoord3(matrix, &arr[j]->coord);
     }
 
