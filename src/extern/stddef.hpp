@@ -114,7 +114,11 @@ namespace dtl
 
         while (j != pivot)
         {
-            if (compare(*j, *pivot)) swap(i++, j);
+            if (compare(*j, *pivot))
+            {
+                swap(i, j);
+                i++;
+            }
             j++;
         }
 
