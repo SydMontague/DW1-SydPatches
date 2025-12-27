@@ -6,4 +6,5 @@ extern "C"
 
     void libetc_InterruptCallback(uint32_t irq, IRQCallback callback);
     void libetc_ResetCallback();
+    int32_t libetc_vsync(int32_t val);
 }

@@ -147,6 +147,10 @@ extern "C"
     GsOT* libgs_GsSortOt(GsOT* src, GsOT* dest);
     void libgs_GsSetAmbient(uint32_t red, uint32_t green, uint32_t blue);
     void libgs_GsMulCoord3(Matrix* m1, Matrix* m2);
+    void libgs_GsSortClear(uint8_t r, uint8_t g, uint8_t b, GsOT* ot);
+    void libgs_GsSwapDispBuff();
+    void libgs_GsDrawOt(GsOT* ot);
+    void libgs_GsSetOrign(int32_t x, int32_t y);
 }
 
 static_assert(sizeof(GsOT) == 20);

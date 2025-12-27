@@ -212,6 +212,12 @@ extern "C"
         uint32_t* pixelPtr;
     };
 
+    struct DR_OFFSET
+    {
+        uint32_t* tag;
+        uint32_t code[2];
+    };
+
     constexpr void libgpu_SetPolyGT3(POLY_GT3* prim)
     {
         prim->tag[3] = 9;

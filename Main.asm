@@ -33,6 +33,11 @@
 .org 0x800ee8c4
   jal initializeMedalModel
 
+.org 0x800e6398
+  jal pauseFrame
+.org 0x800e63a0
+  jal pauseFrame
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

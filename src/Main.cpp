@@ -3,6 +3,9 @@
 #include "GameObjects.hpp"
 #include "Model.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libetc.hpp"
+#include "extern/libgpu.hpp"
+#include "extern/libgs.hpp"
 #include "extern/libgte.hpp"
 #include "extern/psx.hpp"
 
@@ -76,5 +79,22 @@ extern "C"
         }
 
         initializeLoadedNPCModels();
+    }
+
+    void pauseFrame()
+    {
+        ACTIVE_FRAMEBUFFER    = libgs_GsGetActiveBuffer();
+        ACTIVE_ORDERING_TABLE = GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER;
+        libgs_GsSetWorkBase(GS_WORK_BASES + ACTIVE_FRAMEBUFFER);
+        libgs_GsClearOt(0, 0, ACTIVE_ORDERING_TABLE);
+        tickObjects();
+        renderObjects();
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 32, &DRAW_OFFSETS[ACTIVE_FRAMEBUFFER]);
+        libgpu_DrawSync(0);
+        libetc_vsync(3);
+        libgs_GsSetOrign(DRAWING_OFFSET_X, DRAWING_OFFSET_Y);
+        libgs_GsSwapDispBuff();
+        libgs_GsSortClear(0, 0, 0, ACTIVE_ORDERING_TABLE);
+        libgs_GsDrawOt(ACTIVE_ORDERING_TABLE);
     }
 }

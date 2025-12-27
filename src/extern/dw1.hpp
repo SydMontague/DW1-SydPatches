@@ -1667,6 +1667,7 @@ extern "C"
     extern uint8_t TRN_LOADING_COMPLETE;
     extern dtl::array<const char*, 128> ITEM_DESC_PTR;
     extern FishingData* FISHING_DATA_PTR;
+    extern dtl::array<DR_OFFSET, 2> DRAW_OFFSETS;
 
     // TODO can be relocated
     extern dtl::array<dtl::array<uint8_t, 8>, 180> DIGIMON_FILE_NAMES;

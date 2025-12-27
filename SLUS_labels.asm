@@ -291,6 +291,7 @@
 .definelabel INVENTORY_SIZE, 0x8013d4ce
 .definelabel ENTITY_TEXT_DATA, 0x80150cd0
 .definelabel FISHING_DATA_PTR, 0x80134e6c
+.definelabel DRAW_OFFSETS, 0x8015db90
 
 // BTL_REL
 .definelabel BTL_battleMain, 0x8005b5f4
@@ -358,6 +359,7 @@
 // libetc
 .definelabel libetc_InterruptCallback, 0x8009237c
 .definelabel libetc_ResetCallback, 0x8009234c
+.definelabel libetc_vsync, 0x80091ca8
 
 // libgs
 .definelabel libgs_GsGetWorkBase, 0x80098c38
@@ -380,6 +382,10 @@
 .definelabel libgs_GsSortOt, 0x80098898
 .definelabel libgs_GsSetAmbient, 0x800987d8
 .definelabel libgs_GsMulCoord3, 0x80097fa8
+.definelabel libgs_GsSetOrign, 0x80097d48
+.definelabel libgs_GsSwapDispBuff, 0x80097c98
+.definelabel libgs_GsDrawOt, 0x80098808
+.definelabel libgs_GsSortClear, 0x800979c0
 
 .definelabel libgs_REFERENCE_MATRIX, 0x80136f84
 .definelabel libgs_GsLIGHTWSMATRIX, 0x80136f24
