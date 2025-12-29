@@ -133,4 +133,50 @@ extern "C"
         advanceBattleTime(result);
         return result;
     }
+
+    void damageTick(FighterData* fighter, Stats* stats)
+    {
+        // TODO shouldn't this be if/else instead?
+        if (fighter->hpDamageBuffer > 999)
+        {
+            stats->currentHP -= 900;
+            fighter->hpDamageBuffer -= 900;
+        }
+        if (fighter->hpDamageBuffer > 99)
+        {
+            stats->currentHP -= 80;
+            fighter->hpDamageBuffer -= 80;
+        }
+        if (fighter->hpDamageBuffer > 9)
+        {
+            stats->currentHP -= 6;
+            fighter->hpDamageBuffer -= 6;
+        }
+        if (fighter->hpDamageBuffer > 0)
+        {
+            stats->currentHP -= 1;
+            fighter->hpDamageBuffer -= 1;
+        }
+
+        if (stats->currentHP <= 0)
+        {
+            stats->currentHP        = 0;
+            fighter->hpDamageBuffer = 0;
+        }
+    }
+
+    void swapByte(uint8_t* left, uint8_t* right)
+    {
+        dtl::swap(*left, *right);
+    }
+
+    void swapShort(uint16_t* left, uint16_t* right)
+    {
+        dtl::swap(*left, *right);
+    }
+
+    void swapInt(uint32_t* left, uint32_t* right)
+    {
+        dtl::swap(*left, *right);
+    }
 }

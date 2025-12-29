@@ -101,11 +101,6 @@ namespace dtl
         return left < right;
     }
 
-    template<typename T> constexpr void swap(T* left, T* right)
-    {
-        swap(*left, *right);
-    }
-
     template<typename T> T* __sort_partition(T* first, T* last, Comparator<T> compare)
     {
         auto* pivot = last - 1;
@@ -116,13 +111,13 @@ namespace dtl
         {
             if (compare(*j, *pivot))
             {
-                swap(i, j);
+                swap(*i, *j);
                 i++;
             }
             j++;
         }
 
-        swap(i, pivot);
+        swap(*i, *pivot);
         return i;
     }
 
