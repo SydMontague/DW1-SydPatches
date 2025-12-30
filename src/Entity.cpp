@@ -6,6 +6,7 @@
 #include "Math.hpp"
 #include "Model.hpp"
 #include "Utils.hpp"
+#include "VanillaText.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgs.hpp"
 #include "extern/libgte.hpp"

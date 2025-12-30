@@ -7,8 +7,6 @@
 .definelabel swapShortBytes, 0x800f1ab0
 .definelabel convertAsciiToJis, 0x800f18c8
 .definelabel renderString, 0x800e5b50
-.definelabel setUVDataPolyFT4, 0x800e56b4
-.definelabel setPosDataPolyFT4, 0x800e56ec
 .definelabel clearTextArea,             0x8010cb90
 .definelabel setTextColor,              0x8010cc0c
 .definelabel callScriptSection,         0x80105b14
@@ -18,7 +16,7 @@
 .definelabel unsetBubble,               0x800ece20
 .definelabel addConditionBubble,        0x800ec538
 .definelabel setButterfly,              0x800e9d24
-.definelabel readPStat,                0x801062e0
+.definelabel readPStat,                 0x801062e0
 .definelabel writePStat,                0x80106474
 .definelabel learnMove,                 0x800e5f14
 .definelabel initializeConditionBubbles,0x800ec520
@@ -60,7 +58,6 @@
 .definelabel renderMainMenu,            0x80113458
 .definelabel loadMapSounds2,            0x800e9034
 .definelabel getEvoSequenceState,       0x800e732c
-.definelabel drawEntityText,            0x800e5724
 .definelabel drawEntityTextIcon,        0x800e60e0
 .definelabel triggerSeadramonCutscene,  0x800ff900
 

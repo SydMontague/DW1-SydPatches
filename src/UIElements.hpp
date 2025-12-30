@@ -201,12 +201,15 @@ extern "C"
 
     void drawLine2P(uint32_t color, int16_t x0, int16_t y0, int16_t x1, int16_t y1, int32_t order, uint32_t blend);
     void drawLine3P(uint32_t color,
-                          int16_t x0,
-                          int16_t y0,
-                          int16_t x1,
-                          int16_t y1,
-                          int16_t x2,
-                          int16_t y2,
-                          int32_t order,
-                          uint32_t blend);
+                    int16_t x0,
+                    int16_t y0,
+                    int16_t x1,
+                    int16_t y1,
+                    int16_t x2,
+                    int16_t y2,
+                    int32_t order,
+                    uint32_t blend);
+
+    void setUVDataPolyFT4(POLY_FT4* prim, int16_t uvX, int16_t uvY, int16_t uvWidth, int16_t uvHeight);
+    void setPosDataPolyFT4(POLY_FT4* prim, int16_t posX, int16_t posY, int16_t width, int16_t height);
 }

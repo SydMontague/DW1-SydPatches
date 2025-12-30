@@ -637,6 +637,30 @@ extern "C"
         libgs_GsSetWorkBase(line + 1);
         setLineBlendingMode(blend, order);
     }
+
+    void setUVDataPolyFT4(POLY_FT4* prim, int16_t uvX, int16_t uvY, int16_t uvWidth, int16_t uvHeight)
+    {
+        prim->u0 = uvX;
+        prim->v0 = uvY;
+        prim->u1 = uvX + uvWidth;
+        prim->v1 = uvY;
+        prim->u2 = uvX;
+        prim->v2 = uvY + uvHeight;
+        prim->u3 = uvX + uvWidth;
+        prim->v3 = uvY + uvHeight;
+    }
+
+    void setPosDataPolyFT4(POLY_FT4* prim, int16_t posX, int16_t posY, int16_t width, int16_t height)
+    {
+        prim->x0 = posX;
+        prim->y0 = posY;
+        prim->x1 = posX + width;
+        prim->y1 = posY;
+        prim->x2 = posX;
+        prim->y2 = posY + height;
+        prim->x3 = posX + width;
+        prim->y3 = posY + height;
+    }
 }
 
 void SimpleTextSprite::draw(Font* font, const uint8_t* string)

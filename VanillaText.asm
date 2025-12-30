@@ -55,6 +55,9 @@
 .org 0x80063f50
   jal convertValueToDigits
 
+.org 0x8005d320
+  jal drawEntityText
+  
 .close
 
 

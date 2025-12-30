@@ -1,6 +1,7 @@
 #include "GameObjects.hpp"
 #include "GameTime.hpp"
 #include "Helper.hpp"
+#include "UIElements.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"

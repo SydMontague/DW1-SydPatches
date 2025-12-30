@@ -1748,9 +1748,6 @@ extern "C"
                              int16_t uvY,
                              int32_t offset,
                              int32_t hasShadow);
-    extern void setUVDataPolyFT4(POLY_FT4* prim, int16_t uvX, int16_t uvY, int16_t uvWidth, int16_t uvHeight);
-    extern void setPosDataPolyFT4(POLY_FT4* prim, int16_t posX, int16_t posY, int16_t width, int16_t height);
-    void drawEntityText(int32_t color, int32_t digitCount, int32_t x, int32_t y, int32_t value, int32_t layer);
     void drawEntityTextIcon(int32_t posX, int32_t posY, uint8_t iconOffset, int32_t layer);
     void triggerSeadramonCutscene();
 

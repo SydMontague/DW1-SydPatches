@@ -130,7 +130,6 @@
   jal drawLine3P
 
 
-
 .org 0x800edce8
   jal drawLine2P
 .org 0x800edd0c
@@ -158,6 +157,133 @@
 .org 0x8010b624
   jal drawLine2P
 
+
+.org 0x800e59a0
+  jal setUVDataPolyFT4
+.org 0x800e5c24
+  jal setUVDataPolyFT4
+.org 0x800e5c9c
+  jal setUVDataPolyFT4
+.org 0x800e5e78
+  jal setUVDataPolyFT4
+.org 0x800e6148
+  jal setUVDataPolyFT4
+.org 0x800eced0
+  jal setUVDataPolyFT4
+.org 0x800ee37c
+  jal setUVDataPolyFT4
+.org 0x800f2a10
+  jal setUVDataPolyFT4
+.org 0x800f72e4
+  jal setUVDataPolyFT4
+.org 0x800f8be0
+  jal setUVDataPolyFT4
+.org 0x800f8cac
+  jal setUVDataPolyFT4
+.org 0x800f8dd0
+  jal setUVDataPolyFT4
+.org 0x800f8e4c
+  jal setUVDataPolyFT4
+.org 0x800f8ed4
+  jal setUVDataPolyFT4
+.org 0x800f8f58
+  jal setUVDataPolyFT4
+.org 0x800f9014
+  jal setUVDataPolyFT4
+.org 0x800f91f4
+  jal setUVDataPolyFT4
+.org 0x800f93b4
+  jal setUVDataPolyFT4
+.org 0x800f96d0
+  jal setUVDataPolyFT4
+.org 0x800f9770
+  jal setUVDataPolyFT4
+.org 0x800f980c
+  jal setUVDataPolyFT4
+.org 0x800f9a1c
+  jal setUVDataPolyFT4
+.org 0x800f9a90
+  jal setUVDataPolyFT4
+.org 0x800f9afc
+  jal setUVDataPolyFT4
+.org 0x800f9c18
+  jal setUVDataPolyFT4
+.org 0x800f9d24
+  jal setUVDataPolyFT4
+.org 0x800fa3b4
+  jal setUVDataPolyFT4
+.org 0x800fa404
+  jal setUVDataPolyFT4
+.org 0x800fa660
+  jal setUVDataPolyFT4
+.org 0x800fa69c
+  jal setUVDataPolyFT4
+.org 0x800fa6e8
+  jal setUVDataPolyFT4
+.org 0x800fa734
+  jal setUVDataPolyFT4
+.org 0x800fd87c
+  jal setUVDataPolyFT4
+.org 0x800fe2dc
+  jal setUVDataPolyFT4
+.org 0x80101538
+  jal setUVDataPolyFT4
+
+.org 0x800e59d4
+  jal setPosDataPolyFT4
+.org 0x800e5c3c
+  jal setPosDataPolyFT4
+.org 0x800e5cc4
+  jal setPosDataPolyFT4
+.org 0x800e5db0
+  jal setPosDataPolyFT4
+.org 0x800e6160
+  jal setPosDataPolyFT4
+.org 0x800ee3a0
+  jal setPosDataPolyFT4
+.org 0x800f2a38
+  jal setPosDataPolyFT4
+.org 0x800f7300
+  jal setPosDataPolyFT4
+.org 0x800f8bfc
+  jal setPosDataPolyFT4
+.org 0x800f8cc8
+  jal setPosDataPolyFT4
+.org 0x800f8e64
+  jal setPosDataPolyFT4
+.org 0x800f8eec
+  jal setPosDataPolyFT4
+.org 0x800f8f70
+  jal setPosDataPolyFT4
+.org 0x800f9030
+  jal setPosDataPolyFT4
+.org 0x800f9234
+  jal setPosDataPolyFT4
+.org 0x800f93ec
+  jal setPosDataPolyFT4
+.org 0x800f9894
+  jal setPosDataPolyFT4
+.org 0x800f9b60
+  jal setPosDataPolyFT4
+.org 0x800f9c48
+  jal setPosDataPolyFT4
+.org 0x800f9d50
+  jal setPosDataPolyFT4
+.org 0x800fa454
+  jal setPosDataPolyFT4
+.org 0x800fa7d0
+  jal setPosDataPolyFT4
+.org 0x800fd898
+  jal setPosDataPolyFT4
+.org 0x800fe2f4
+  jal setPosDataPolyFT4
+.org 0x80101554
+  jal setPosDataPolyFT4
+.org 0x8010b310
+  jal setPosDataPolyFT4
+.org 0x8010b348
+  jal setPosDataPolyFT4
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
@@ -177,6 +303,18 @@
 .org 0x8006a1dc
   jal drawLine2P
 
+.org 0x80061754
+  jal setUVDataPolyFT4
+.org 0x80063fb0
+  jal setUVDataPolyFT4
+
+.org 0x800617b8
+  jal setPosDataPolyFT4
+.org 0x8006180c
+  jal setPosDataPolyFT4
+.org 0x80063fd8
+  jal setPosDataPolyFT4
+
 .close
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
@@ -188,6 +326,70 @@
   jal drawLine2P
 .org 0x800688b8
   jal drawLine2P
+
+.org 0x800572e8
+  jal setUVDataPolyFT4
+.org 0x80057554
+  jal setUVDataPolyFT4
+.org 0x80057710
+  jal setUVDataPolyFT4
+.org 0x800578c8
+  jal setUVDataPolyFT4
+.org 0x800578e8
+  jal setUVDataPolyFT4
+.org 0x80057ad8
+  jal setUVDataPolyFT4
+.org 0x80057b18
+  jal setUVDataPolyFT4
+.org 0x80057c94
+  jal setUVDataPolyFT4
+.org 0x8005b084
+  jal setUVDataPolyFT4
+.org 0x8005b110
+  jal setUVDataPolyFT4
+.org 0x8005b1d4
+  jal setUVDataPolyFT4
+.org 0x8005b288
+  jal setUVDataPolyFT4
+.org 0x8005fe50
+  jal setUVDataPolyFT4
+.org 0x80061934
+  jal setUVDataPolyFT4
+
+.org 0x80057314
+  jal setPosDataPolyFT4
+.org 0x8005757c
+  jal setPosDataPolyFT4
+.org 0x8005759c
+  jal setPosDataPolyFT4
+.org 0x8005773c
+  jal setPosDataPolyFT4
+.org 0x8005775c
+  jal setPosDataPolyFT4
+.org 0x80057900
+  jal setPosDataPolyFT4
+.org 0x80057af4
+  jal setPosDataPolyFT4
+.org 0x80057b44
+  jal setPosDataPolyFT4
+.org 0x80057b68
+  jal setPosDataPolyFT4
+.org 0x80057cb8
+  jal setPosDataPolyFT4
+.org 0x8005b0a0
+  jal setPosDataPolyFT4
+.org 0x8005b12c
+  jal setPosDataPolyFT4
+.org 0x8005b200
+  jal setPosDataPolyFT4
+.org 0x8005b2a4
+  jal setPosDataPolyFT4
+.org 0x8005fee0
+  jal setPosDataPolyFT4
+.org 0x8005ff60
+  jal setPosDataPolyFT4
+.org 0x8006195c
+  jal setPosDataPolyFT4
 
 .close
 
@@ -208,6 +410,76 @@
   jal drawLine2P
 .org 0x800727e8
   jal drawLine2P
+
+.org 0x80059498
+  jal setUVDataPolyFT4
+.org 0x8005be04
+  jal setUVDataPolyFT4
+.org 0x8005be90
+  jal setUVDataPolyFT4
+.org 0x8005bf54
+  jal setUVDataPolyFT4
+.org 0x8005c008
+  jal setUVDataPolyFT4
+.org 0x8005d2b4
+  jal setUVDataPolyFT4
+.org 0x8005d6f0
+  jal setUVDataPolyFT4
+.org 0x8005d7fc
+  jal setUVDataPolyFT4
+.org 0x8005d920
+  jal setUVDataPolyFT4
+.org 0x8005e0c4
+  jal setUVDataPolyFT4
+.org 0x8005e2b4
+  jal setUVDataPolyFT4
+.org 0x8005e41c
+  jal setUVDataPolyFT4
+.org 0x8005e768
+  jal setUVDataPolyFT4
+.org 0x8005e830
+  jal setUVDataPolyFT4
+.org 0x800632ac
+  jal setUVDataPolyFT4
+.org 0x800689ac
+  jal setUVDataPolyFT4
+.org 0x8006a5d4
+  jal setUVDataPolyFT4
+
+.org 0x800594c0
+  jal setPosDataPolyFT4
+.org 0x8005be20
+  jal setPosDataPolyFT4
+.org 0x8005beac
+  jal setPosDataPolyFT4
+.org 0x8005bf80
+  jal setPosDataPolyFT4
+.org 0x8005c024
+  jal setPosDataPolyFT4
+.org 0x8005d2d0
+  jal setPosDataPolyFT4
+.org 0x8005d714
+  jal setPosDataPolyFT4
+.org 0x8005d938
+  jal setPosDataPolyFT4
+.org 0x8005e0e8
+  jal setPosDataPolyFT4
+.org 0x8005e2e4
+  jal setPosDataPolyFT4
+.org 0x8005e444
+  jal setPosDataPolyFT4
+.org 0x8005e784
+  jal setPosDataPolyFT4
+.org 0x8005e860
+  jal setPosDataPolyFT4
+.org 0x800632c8
+  jal setPosDataPolyFT4
+.org 0x80068a3c
+  jal setPosDataPolyFT4
+.org 0x80068abc
+  jal setPosDataPolyFT4
+.org 0x8006a5fc
+  jal setPosDataPolyFT4
 
 .close 
 
@@ -301,6 +573,12 @@
 .org 0x8008dbe0
   jal drawLine2P
 
+.org 0x8008da64
+  jal setUVDataPolyFT4
+
+.org 0x8008da88
+  jal setPosDataPolyFT4
+
 .close
 
 .open "work/DIGIMON/TRN2_REL.BIN",0x80088800
@@ -325,5 +603,11 @@
   jal drawLine2P
 .org 0x8008c5b8
   jal drawLine2P
+
+.org 0x8008c460
+  jal setPosDataPolyFT4
+
+.org 0x8008c43c
+  jal setUVDataPolyFT4
 
 .close
