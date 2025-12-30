@@ -1,10 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800e57a8
-  jal setEntityTextDigit
-.org 0x800e5928
-  jal setEntityTextDigit
 .org 0x800e611c
   jal setEntityTextDigit
 .org 0x800ee350
@@ -26,10 +22,6 @@
 .org 0x800ee464
   jal renderNumber
 
-.org 0x800e577c
-  jal convertValueToDigits
-.org 0x800e58fc
-  jal convertValueToDigits
 .org 0x800f299c
   jal convertValueToDigits
 .org 0x800f997c
@@ -57,7 +49,7 @@
 
 .org 0x8005d320
   jal drawEntityText
-  
+
 .close
 
 
@@ -138,5 +130,14 @@
   jal renderNumber
 .org 0x8008c524
   jal renderNumber
+
+.close
+
+
+.open "work/DIGIMON/FISH_REL.BIN",0x80070000
+.psx
+
+.org 0x80070f6c
+  jal renderItemAmount
 
 .close

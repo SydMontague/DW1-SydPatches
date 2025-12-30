@@ -1692,7 +1692,6 @@ extern "C"
     void updateBGM();
     void startThrowingItem();
     void renderItemSprite(ItemType type, int16_t posX, int16_t posY, int32_t depth);
-    void renderSelectionCursor(int16_t x, int16_t y, int16_t width, int16_t height, int32_t depth);
     void runMapHeadScript(uint8_t mapId);
     void checkCurlingMap(int32_t mapId);
     void checkArenaMap(int32_t mapId);

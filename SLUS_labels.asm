@@ -50,7 +50,6 @@
 .definelabel checkArenaMap,             0x800ff9dc
 .definelabel runMapHeadScript,          0x80105ae4
 .definelabel renderItemSprite,          0x800e5d18
-.definelabel renderSelectionCursor,     0x800e5a3c
 .definelabel startThrowingItem,         0x800f0490
 .definelabel updateBGM,                 0x80106af0
 .definelabel Partner_tickBattle,        0x800f1414

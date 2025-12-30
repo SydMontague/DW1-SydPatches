@@ -661,6 +661,25 @@ extern "C"
         prim->x3 = posX + width;
         prim->y3 = posY + height;
     }
+
+    void renderSelectionCursor(int16_t x, int16_t y, int16_t width, int16_t height, int32_t depth)
+    {
+        drawLine3P(0xb0b0b0, x, y + height - 1, x, y, x + width - 1, y, depth, 0);
+        drawLine3P(0x121212, x + width, y, x + width, y + height, x, y + height, depth, 0);
+
+        GsBOXF box{
+            .attribute = 0x40000000,
+            .x         = static_cast<int16_t>(x + 1),
+            .y         = static_cast<int16_t>(y + 1),
+            .width     = static_cast<uint16_t>(width - 1),
+            .height    = static_cast<uint16_t>(height - 1),
+            .r         = 0x80,
+            .g         = 0x80,
+            .b         = 0x80,
+        };
+
+        libgs_GsSortBoxFill(&box, ACTIVE_ORDERING_TABLE, depth);
+    }
 }
 
 void SimpleTextSprite::draw(Font* font, const uint8_t* string)

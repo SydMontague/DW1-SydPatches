@@ -104,10 +104,6 @@
 .org 0x8010d300
   jal renderUIBoxBorder
 
-.org 0x800e5aac
-  jal drawLine3P
-.org 0x800e5ad8
-  jal drawLine3P
 .org 0x800ee720
   jal drawLine3P
 .org 0x800ee754
@@ -158,8 +154,6 @@
   jal drawLine2P
 
 
-.org 0x800e59a0
-  jal setUVDataPolyFT4
 .org 0x800e5c24
   jal setUVDataPolyFT4
 .org 0x800e5c9c
@@ -229,8 +223,6 @@
 .org 0x80101538
   jal setUVDataPolyFT4
 
-.org 0x800e59d4
-  jal setPosDataPolyFT4
 .org 0x800e5c3c
   jal setPosDataPolyFT4
 .org 0x800e5cc4
@@ -284,7 +276,34 @@
 .org 0x8010b348
   jal setPosDataPolyFT4
 
+.org 0x800faf50
+  jal renderSelectionCursor
+.org 0x800fbbd0
+  jal renderSelectionCursor
+.org 0x800fffd8
+  jal renderSelectionCursor
+.org 0x801081cc
+  jal renderSelectionCursor
+.org 0x80109044
+  jal renderSelectionCursor
+.org 0x801094a0
+  jal renderSelectionCursor
+.org 0x801097a4
+  jal renderSelectionCursor
+.org 0x80109b68
+  jal renderSelectionCursor
+
 .close
+
+
+.open "work/DIGIMON/DGET_REL.BIN",0x80080800
+.psx
+
+.org 0x800816e4
+  jal renderSelectionCursor
+
+.close
+
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
@@ -496,6 +515,9 @@
 .org 0x80058eb0
   jal createAnimatedUIBox
 
+.org 0x80058dcc
+  jal renderSelectionCursor
+
 .close
 
 .open "work/DIGIMON/DOO2_REL.BIN",0x80070000
@@ -540,6 +562,9 @@
 
 .org 0x80077d60
   jal drawLine2P
+
+.org 0x80070fec
+  jal renderSelectionCursor
 
 .close
 

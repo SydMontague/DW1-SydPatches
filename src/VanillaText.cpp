@@ -75,4 +75,24 @@ extern "C"
             s.render(posX + (empty + i) * 7, posY, layer, 0);
         }
     }
+
+    void renderItemAmount(int32_t colorId, int32_t digits, int32_t posX, int32_t posY, int32_t value, int32_t layer)
+    {
+        dtl::array<int32_t, 16> buffer{};
+        int32_t numDigits;
+        convertValueToDigits(digits, value, &numDigits, buffer.data());
+        const auto empty = digits - numDigits;
+
+        for (int32_t i = 0; i < numDigits; i++)
+        {
+            Sprite s;
+            s.clut         = getClut(256, 484);
+            s.texture_page = 30;
+            s.width        = 6;
+            s.height       = 10;
+            s.uvX          = 137 + buffer[numDigits - i - 1] * 6;
+            s.uvV          = 156;
+            s.render(posX + (empty + i) * 6, posY, layer, 0);
+        }
+    }
 }
