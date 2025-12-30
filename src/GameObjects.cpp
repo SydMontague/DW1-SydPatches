@@ -65,7 +65,7 @@ extern "C"
         // sync all draw operations to make sure they're finished before the game tries to render them
         libgpu_DrawSync(0);
         uint32_t diff2 = getTimestamp() - start;
-        printf("Tick  : %dµs | %dµs\n", diff2, diff2 - diff1);
+        //printf("Tick  : %dµs | %dµs\n", diff2, diff2 - diff1);
     }
 
     void renderObjects()
@@ -74,7 +74,7 @@ extern "C"
         for (auto& obj : WORLD_OBJECTS)
             if (obj.objectId != ObjectID::NONE && obj.render) obj.render(obj.instanceId);
         uint32_t diff = getTimestamp() - start;
-        printf("Render: %dµs\n", diff);
+        //printf("Render: %dµs\n", diff);
     }
 
     void initializeAttackObjects()

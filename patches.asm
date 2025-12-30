@@ -40,3 +40,4 @@
 .include "MapObjects.asm"
 .include "Matrix.asm"
 .include "Fishing.asm"
+.include "VanillaText.asm"

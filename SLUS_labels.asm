@@ -2,7 +2,6 @@
 .definelabel padWithSpaces, 0x800ff51c
 .definelabel updateNamingPreview, 0x8010aa60
 .definelabel clearTextSubArea, 0x8010cbc4
-.definelabel renderNumber, 0x800e5444
 .definelabel drawString, 0x8010cf24
 .definelabel convertAsciiToGameChar, 0x800f18c8
 .definelabel swapShortBytes, 0x800f1ab0
