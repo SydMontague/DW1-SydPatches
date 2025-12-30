@@ -27,7 +27,6 @@
 .definelabel main,                      0x800ee800
 .definelabel Tamer_tickBattle,          0x800f1214
 .definelabel isKeyDown,                 0x800fc054
-.definelabel getEntityScreenPos,        0x800e52d8
 .definelabel setMapLayerEnabled,        0x800e65b8
 .definelabel isSoundLoaded,             0x800e90cc
 .definelabel loadDynamicLibrary,        0x800e61e4

@@ -210,15 +210,13 @@ extern "C"
 
         if (UI_BOX_DATA[instanceId].frame == 0)
         {
-            Position pos;
-            getEntityScreenPos(&TAMER_ENTITY, 1, &pos);
-
-            RECT final = {.x = posX, .y = posY, .width = width, .height = height};
-            RECT start = {
-                .x      = static_cast<int16_t>(pos.x - 5),
-                .y      = static_cast<int16_t>(pos.y - 5),
-                .width  = 10,
-                .height = 10,
+            ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
+            RECT final    = {.x = posX, .y = posY, .width = width, .height = height};
+            RECT start    = {
+                   .x      = static_cast<int16_t>(pos.screenX - 5),
+                   .y      = static_cast<int16_t>(pos.screenY - 5),
+                   .width  = 10,
+                   .height = 10,
             };
 
             createAnimatedUIBox(instanceId, 1, features, &final, &start, tickFunc, renderFunc);

@@ -126,7 +126,8 @@ extern "C"
     void getRotationDifference(PositionData* pos, Vector* target, int16_t* outAngle, int16_t* ccDiff, int16_t* cwDiff);
     bool rotateEntity(SVector* rotVector, int16_t targetAngle, int16_t ccDiff, int16_t cwDiff, int16_t speed);
     void addWithLimit(int16_t* valuePtr, int16_t value, int32_t limit);
-    int32_t worldPosToScreenPos(SVector* worldPos, Position* screenPos);
+    [[deprecated("getMapPosition")]] int32_t worldPosToScreenPos(SVector* worldPos, Position* screenPos);
+    [[deprecated("getScreenPosition")]] void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos);
 }
 
 /*
@@ -134,7 +135,7 @@ extern "C"
  * @param position the center bottom of the box
  * @param width the extent of the box in X and Z axis
  * @param height the extent of the box in Y axis
- * 
+ *
  * @returns true if any point is on-screen, false otherwise
  */
 bool isBoxOnScreen(const Vector* position, int32_t width, int32_t height);
@@ -159,6 +160,11 @@ ScreenPos getScreenPosition(const Vector& pos);
  * The returned coordinates are relative to the center of the visibale screen area.
  */
 ScreenPos getScreenPosition(int16_t tileX, int16_t tileZ);
+/*
+ * Gets the 2D screen position of an entity model object.
+ * The returned coordinates are relative to the center of the visibale screen area.
+ */
+ScreenPos getScreenPosition(const Entity& entity, int32_t objId);
 
 /*
  * Gets the 2D map position of a 3D position.
@@ -180,6 +186,11 @@ MapPos getMapPosition(const Vector& pos);
  * The returned coordinates are relative to the center of the map.
  */
 MapPos getMapPosition(int16_t tileX, int16_t tileZ);
+/*
+ * Gets the 2D map position of an entity model object.
+ * The returned coordinates are relative to the center of the map.
+ */
+MapPos getMapPosition(const Entity& entity, int32_t objId);
 
 /*
  * Checks whether a screen position is within a given rectangle centered on the screen.

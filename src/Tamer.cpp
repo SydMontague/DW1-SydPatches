@@ -362,15 +362,13 @@ extern "C"
             if (!tickOpenChestTray(interactedChest)) return;
             if (!isUIBoxAvailable(1)) return;
 
-            Position pos;
-            getEntityScreenPos(&TAMER_ENTITY, 1, &pos);
-
-            RECT target = {.x = -130, .y = 42, .width = 262, .height = 59};
-            RECT source = {
-                .x      = static_cast<int16_t>(pos.x - 5),
-                .y      = static_cast<int16_t>(pos.y - 5),
-                .width  = 10,
-                .height = 10,
+            ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
+            RECT target   = {.x = -130, .y = 42, .width = 262, .height = 59};
+            RECT source   = {
+                  .x      = static_cast<int16_t>(pos.screenX - 5),
+                  .y      = static_cast<int16_t>(pos.screenY - 5),
+                  .width  = 10,
+                  .height = 10,
             };
 
             createAnimatedUIBox(1, 0, 2, &target, &source, nullptr, renderItemPickupTextbox);
@@ -412,13 +410,12 @@ extern "C"
         }
         else if (Tamer_getSubState() == 5)
         {
-            Position pos;
-            getEntityScreenPos(&TAMER_ENTITY, 1, &pos);
-            RECT target = {
-                .x      = static_cast<int16_t>(pos.x - 5),
-                .y      = static_cast<int16_t>(pos.y - 5),
-                .width  = 10,
-                .height = 10,
+            ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
+            RECT target   = {
+                  .x      = static_cast<int16_t>(pos.screenX - 5),
+                  .y      = static_cast<int16_t>(pos.screenY - 5),
+                  .width  = 10,
+                  .height = 10,
             };
 
             removeAnimatedUIBox(1, &target);
@@ -456,15 +453,13 @@ extern "C"
         {
             if (!isUIBoxAvailable(1)) return;
 
-            Position pos;
-            getEntityScreenPos(&TAMER_ENTITY, 1, &pos);
-
-            RECT target = {.x = -130, .y = 42, .width = 262, .height = 59};
-            RECT source = {
-                .x      = static_cast<int16_t>(pos.x - 5),
-                .y      = static_cast<int16_t>(pos.y - 5),
-                .width  = 10,
-                .height = 10,
+            ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
+            RECT target   = {.x = -130, .y = 42, .width = 262, .height = 59};
+            RECT source   = {
+                  .x      = static_cast<int16_t>(pos.screenX - 5),
+                  .y      = static_cast<int16_t>(pos.screenY - 5),
+                  .width  = 10,
+                  .height = 10,
             };
             // vanilla writes TAKE_CHEST_ITEM here, but it's never used so skip that
 
@@ -508,13 +503,12 @@ extern "C"
         }
         else if (Tamer_getSubState() == 4)
         {
-            Position pos;
-            getEntityScreenPos(&TAMER_ENTITY, 1, &pos);
-            RECT target = {
-                .x      = static_cast<int16_t>(pos.x - 5),
-                .y      = static_cast<int16_t>(pos.y - 5),
-                .width  = 10,
-                .height = 10,
+            ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
+            RECT target   = {
+                  .x      = static_cast<int16_t>(pos.screenX - 5),
+                  .y      = static_cast<int16_t>(pos.screenY - 5),
+                  .width  = 10,
+                  .height = 10,
             };
 
             removeAnimatedUIBox(1, &target);
@@ -569,15 +563,13 @@ extern "C"
         {
             if (!isUIBoxAvailable(1)) return;
 
-            Position pos;
-            getEntityScreenPos(&TAMER_ENTITY, 1, &pos);
-
-            RECT target = {.x = -130, .y = 42, .width = 262, .height = 59};
-            RECT source = {
-                .x      = static_cast<int16_t>(pos.x - 5),
-                .y      = static_cast<int16_t>(pos.y - 5),
-                .width  = 10,
-                .height = 10,
+            ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
+            RECT target   = {.x = -130, .y = 42, .width = 262, .height = 59};
+            RECT source   = {
+                  .x      = static_cast<int16_t>(pos.screenX - 5),
+                  .y      = static_cast<int16_t>(pos.screenY - 5),
+                  .width  = 10,
+                  .height = 10,
             };
             // vanilla writes TAKE_CHEST_ITEM here, but it's never used so skip that
 
@@ -588,13 +580,12 @@ extern "C"
         {
             if (!isKeyDown(BUTTON_CROSS)) return;
 
-            Position pos;
-            getEntityScreenPos(&TAMER_ENTITY, 1, &pos);
-            RECT target = {
-                .x      = static_cast<int16_t>(pos.x - 5),
-                .y      = static_cast<int16_t>(pos.y - 5),
-                .width  = 10,
-                .height = 10,
+            ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
+            RECT target   = {
+                  .x      = static_cast<int16_t>(pos.screenX - 5),
+                  .y      = static_cast<int16_t>(pos.screenY - 5),
+                  .width  = 10,
+                  .height = 10,
             };
 
             removeAnimatedUIBox(1, &target);

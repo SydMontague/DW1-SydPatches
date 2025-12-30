@@ -308,6 +308,13 @@ extern "C"
             ptr  = reinterpret_cast<int16_t*>(reinterpret_cast<uint8_t*>(ptr) + step);
         }
     }
+
+    void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos)
+    {
+        auto val  = getScreenPosition(*entity, objId);
+        outPos->x = val.screenX;
+        outPos->y = val.screenY;
+    }
 }
 
 bool isBoxOnScreen(const Vector* position, int32_t width, int32_t height)
@@ -358,6 +365,12 @@ ScreenPos getScreenPosition(int16_t tileX, int16_t tileZ)
     return getScreenPosition(convertTileToPosX(tileX), 0, convertTileToPosZ(tileZ));
 }
 
+ScreenPos getScreenPosition(const Entity& entity, int32_t objId)
+{
+    const auto& pos = entity.posData[objId].posMatrix.work.t;
+    return getScreenPosition(pos[0], pos[1], pos[2]);
+}
+
 MapPos getMapPosition(int16_t x, int16_t y, int16_t z)
 {
     libgs_GsSetLsMatrix(&libgs_REFERENCE_MATRIX);
@@ -388,4 +401,10 @@ MapPos getMapPosition(const SVector& pos)
 MapPos getMapPosition(int16_t tileX, int16_t tileZ)
 {
     return getMapPosition(convertTileToPosX(tileX), 0, convertTileToPosZ(tileZ));
+}
+
+MapPos getMapPosition(const Entity& entity, int32_t objId)
+{
+    const auto& pos = entity.posData[objId].posMatrix.work.t;
+    return getMapPosition(pos[0], pos[1], pos[2]);
 }

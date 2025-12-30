@@ -606,9 +606,8 @@ extern "C"
 
             if (GAME_STATE == 4)
             {
-                auto& posData =
-                    ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[id])->posData[0].posMatrix.work.t;
-                auto pos = getScreenPosition(posData[0], posData[1], posData[2]); // vanilla uses getEntityScreenPos
+                auto entity = ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[id]);
+                auto pos    = getScreenPosition(*entity, 0); // vanilla uses getEntityScreenPos
 
                 posX += pos.screenX;
                 posY += pos.screenY - 8;
@@ -654,8 +653,7 @@ extern "C"
             entry.y = textData.activeElements * 4;
             if (GAME_STATE != 4)
             {
-                auto& posData = entity->posData[0].posMatrix.work.t;
-                auto pos = getScreenPosition(posData[0], posData[1], posData[2]); // vanilla uses getEntityScreenPos
+                auto pos = getScreenPosition(*entity, 0); // vanilla uses getEntityScreenPos
                 entry.x += pos.screenX;
                 entry.y += pos.screenY - 8;
             }

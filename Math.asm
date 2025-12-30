@@ -200,6 +200,19 @@
 .org 0x800ec530
   j setInt16WithStride
 
+.org 0x800ed5fc
+  jal getEntityScreenPos
+.org 0x800ee010
+  jal getEntityScreenPos
+.org 0x80101120
+  jal getEntityScreenPos
+.org 0x80109c6c
+  jal getEntityScreenPos
+.org 0x80109e14
+  jal getEntityScreenPos
+.org 0x80109f38
+  jal getEntityScreenPos
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
@@ -413,6 +426,13 @@
 .org 0x80072a5c
   jal setInt16WithStride
 
+.org 0x8005d0d4
+  jal getEntityScreenPos
+.org 0x80061038
+  jal getEntityScreenPos
+.org 0x80062494
+  jal getEntityScreenPos
+  
 .close
 
 
@@ -880,6 +900,11 @@
 .org 0x8008e02c
   jal worldPosToScreenPos
 
+.org 0x8008d448
+  jal getEntityScreenPos
+.org 0x8008d6f8
+  jal getEntityScreenPos
+
 .close
 
 .open "work/DIGIMON/TRN2_REL.BIN",0x80088800
@@ -887,6 +912,9 @@
 
 .org 0x8008ca04
   jal worldPosToScreenPos
+
+.org 0x8008c0d0
+  jal getEntityScreenPos
 
 .close
 
@@ -1112,5 +1140,16 @@
 
 .org 0x80070cd4
   jal setRotTransMatrix
+
+.close
+
+
+.open "work/DIGIMON/FISH_REL.BIN",0x80070000
+.psx
+
+.org 0x800711c4
+  jal getEntityScreenPos
+.org 0x80071754
+  jal getEntityScreenPos
 
 .close
