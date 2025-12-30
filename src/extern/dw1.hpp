@@ -1738,15 +1738,6 @@ extern "C"
     extern uint32_t setButterfly(Entity* entity);
     extern uint16_t convertAsciiToJis(uint8_t input);
     extern void clearTextSubArea(RECT* rect);
-    extern void renderString(int32_t colorId,
-                             int16_t posX,
-                             int16_t posY,
-                             int16_t uvWidth,
-                             int16_t uvHeight,
-                             int16_t uvX,
-                             int16_t uvY,
-                             int32_t offset,
-                             int32_t hasShadow);
     void drawEntityTextIcon(int32_t posX, int32_t posY, uint8_t iconOffset, int32_t layer);
     void triggerSeadramonCutscene();
 

@@ -3,6 +3,7 @@
 #include "Helper.hpp"
 #include "Math.hpp"
 #include "UIElements.hpp"
+#include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
 
@@ -94,5 +95,18 @@ extern "C"
             s.uvV          = 156;
             s.render(posX + (empty + i) * 6, posY, layer, 0);
         }
+    }
+
+    void renderString(int32_t colorId,
+                      int16_t posX,
+                      int16_t posY,
+                      int16_t uvWidth,
+                      int16_t uvHeight,
+                      int16_t uvX,
+                      int16_t uvY,
+                      int32_t offset,
+                      int32_t hasShadow)
+    {
+        renderStringNew(colorId, posX, posY, uvWidth, uvHeight, uvX + 704, uvY + 256, offset, hasShadow);
     }
 }

@@ -6,10 +6,6 @@
 .org 0x800ee350
   jal setEntityTextDigit
 
-.org 0x800e5bac
-  jal initStringFT4
-.org 0x800e5c78
-  jal initStringFT4
 .org 0x800ece90
   jal initStringFT4
 
@@ -26,6 +22,59 @@
   jal convertValueToDigits
 .org 0x800f997c
   jal convertValueToDigits
+
+.org 0x800e6598
+  jal renderString
+.org 0x800edcb0
+  jal renderString
+.org 0x800ede40
+  jal renderString
+.org 0x800ee548
+  jal renderString
+.org 0x800f27d8
+  jal renderString
+.org 0x800f73c4
+  jal renderString
+.org 0x800f73f8
+  jal renderString
+.org 0x800f7428
+  jal renderString
+.org 0x800f9e20
+  jal renderString
+.org 0x800fb13c
+  jal renderString
+.org 0x800fb6b0
+  jal renderString
+.org 0x800fbb88
+  jal renderString
+.org 0x800fbce4
+  jal renderString
+.org 0x800fbd1c
+  jal renderString
+.org 0x800fdf30
+  jal renderString
+.org 0x801001b4
+  jal renderString
+.org 0x80101388
+  jal renderString
+.org 0x8010911c
+  jal renderString
+.org 0x80109aec
+  jal renderString
+.org 0x80109b28
+  jal renderString
+.org 0x8010a50c
+  jal renderString
+.org 0x8010a59c
+  jal renderString
+.org 0x8010a62c
+  jal renderString
+.org 0x8010a704
+  jal renderString
+.org 0x8010b454
+  jal renderString
+.org 0x8010b4a8
+  jal renderString
 
 .close 
 
@@ -50,6 +99,11 @@
 .org 0x8005d320
   jal drawEntityText
 
+.org 0x80061f14
+  jal renderString
+.org 0x800630a8
+  jal renderString
+
 .close
 
 
@@ -73,6 +127,52 @@
   jal convertValueToDigits
 .org 0x8006a574
   jal convertValueToDigits
+
+.org 0x80059260
+  jal renderString
+.org 0x8006338c
+  jal renderString
+.org 0x800633c0
+  jal renderString
+.org 0x800633f0
+  jal renderString
+.org 0x800684ec
+  jal renderString
+
+.close
+
+.open "work/DIGIMON/DGET_REL.BIN",0x80080800
+.psx
+
+.org 0x80081324
+  jal renderString
+.org 0x80081744
+  jal renderString
+.org 0x8008177c
+  jal renderString
+.org 0x800817b8
+  jal renderString
+.org 0x800817f4
+  jal renderString
+.org 0x80081830
+  jal renderString
+.org 0x800818a0
+  jal renderString
+.org 0x80081a34
+  jal renderString
+
+.close
+
+
+.open "work/DIGIMON/KAR_REL.BIN",0x80053800
+.psx
+
+.org 0x80058d50
+  jal renderString
+.org 0x80058d8c
+  jal renderString
+.org 0x8005901c
+  jal renderString
 
 .close
 
@@ -104,6 +204,9 @@
 .org 0x800618d4
   jal convertValueToDigits
 
+.org 0x8005f990
+  jal renderString
+
 .close
 
 .open "work/DIGIMON/TRN_REL.BIN",0x80088800
@@ -116,6 +219,17 @@
   jal renderNumber
 .org 0x8008db4c
   jal renderNumber
+
+.org 0x8008a72c
+  jal renderString
+.org 0x8008aa4c
+  jal renderString
+.org 0x8008aaa4
+  jal renderString
+.org 0x8008aad8
+  jal renderString
+.org 0x8008dc30
+  jal renderString
 
 .close
 
@@ -131,6 +245,9 @@
 .org 0x8008c524
   jal renderNumber
 
+.org 0x8008c608
+  jal renderString
+
 .close
 
 
@@ -139,5 +256,10 @@
 
 .org 0x80070f6c
   jal renderItemAmount
+
+.org 0x80070dc0
+  jal renderString
+.org 0x80071608
+  jal renderString
 
 .close

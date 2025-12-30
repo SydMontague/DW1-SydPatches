@@ -6,7 +6,6 @@
 .definelabel convertAsciiToGameChar, 0x800f18c8
 .definelabel swapShortBytes, 0x800f1ab0
 .definelabel convertAsciiToJis, 0x800f18c8
-.definelabel renderString, 0x800e5b50
 .definelabel clearTextArea,             0x8010cb90
 .definelabel setTextColor,              0x8010cc0c
 .definelabel callScriptSection,         0x80105b14
