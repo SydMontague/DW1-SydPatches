@@ -17,7 +17,6 @@
 .definelabel setButterfly,              0x800e9d24
 .definelabel readPStat,                 0x801062e0
 .definelabel writePStat,                0x80106474
-.definelabel learnMove,                 0x800e5f14
 .definelabel initializeConditionBubbles,0x800ec520
 .definelabel initializeButterfly,       0x800e9ce8
 .definelabel main,                      0x800ee800
@@ -38,7 +37,6 @@
 .definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8
 .definelabel entityGetTechFromAnim,     0x800e6000
-.definelabel hasMove,                   0x800e5eb4
 .definelabel dailyPStatTrigger,         0x800fc374
 .definelabel handleBattleIdle,          0x800e7d40
 .definelabel entityLookAtTile,          0x800e6078

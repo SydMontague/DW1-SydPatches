@@ -1698,7 +1698,6 @@ extern "C"
     void handleBattleIdle(DigimonEntity* entity, Stats* stats, BattleFlags flags);
     void startBattleIdleAnimation(Entity* entity, Stats* stats, BattleFlags flags);
     void dailyPStatTrigger();
-    bool hasMove(int32_t move);
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
     void initializeLoadedNPCModels();
     void NPCEntity_tickBattle(int32_t instanceId);
@@ -1725,7 +1724,6 @@ extern "C"
     extern int32_t main();
     extern void renderDropShadow(Entity* entity);
     extern void Partner_tick(int32_t);
-    extern void learnMove(uint8_t move);
     extern void initializeConditionBubbles();
     extern void initializeButterfly();
     extern void initializePoop();

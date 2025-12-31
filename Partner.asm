@@ -93,6 +93,20 @@
 .org 0x80103668
   jal callDigimonRoutine
 
+.org 0x800ed400
+  jal hasMove
+.org 0x800fe444
+  jal hasMove
+.org 0x800fe554
+  jal hasMove
+.org 0x80106d20
+  j hasMove
+
+.org 0x800ed580
+  jal learnMove
+.org 0x801067e4
+  j learnMove
+
 .close 
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
@@ -153,6 +167,11 @@
 .org 0x8008d48c
   jal Partner_setState
 
+.org 0x8008a944
+  jal learnMove
+.org 0x8008a800
+  jal hasMove
+
 .close
 
 
@@ -198,5 +217,14 @@
 
 .org 0x8007c3f8
   jal Partner_setState
+
+.close
+
+
+.open "work/DIGIMON/EVL_REL.BIN",0x80060000
+.psx
+
+.org 0x80063944
+  jal learnMove
 
 .close

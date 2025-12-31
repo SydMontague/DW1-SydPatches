@@ -20,4 +20,6 @@ extern "C"
     void Partner_setSubState(uint8_t state);
     uint8_t Partner_getState();
     uint8_t Partner_getSubState();
+    void learnMove(uint8_t move);
+    bool hasMove(int32_t move);
 }

@@ -4,6 +4,7 @@
 #include "Font.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
+#include "Partner.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"

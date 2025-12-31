@@ -2421,4 +2421,27 @@ extern "C"
 
         SOME_SCRIPT_SYNC_BIT = 0;
     }
+
+    bool hasMove(int32_t move)
+    {
+        auto byte = move / 32;
+        auto bit  = move % 32;
+
+        return (PARTNER_ENTITY.learnedMoves[byte] & (1 << bit)) != 0;
+    }
+
+    void learnMove(uint8_t move)
+    {
+        if (move == 44 || move == 48) // Dynamite Kick
+            PARTNER_ENTITY.learnedMoves[1] |= 0x11000;
+        else if (move == 55 || move == 57) // Horizontal Kick
+            PARTNER_ENTITY.learnedMoves[1] |= 0x2800000;
+        else
+        {
+            auto byte = move / 32;
+            auto bit  = move % 32;
+
+            (PARTNER_ENTITY.learnedMoves[byte] |= (1 << bit));
+        }
+    }
 }
