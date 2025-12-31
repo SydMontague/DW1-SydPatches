@@ -156,8 +156,8 @@
 
 ;.org 0x800e5e78
 ;  jal setUVDataPolyFT4
-.org 0x800e6148
-  jal setUVDataPolyFT4
+;.org 0x800e6148
+;  jal setUVDataPolyFT4
 .org 0x800eced0
   jal setUVDataPolyFT4
 .org 0x800ee37c
@@ -221,8 +221,8 @@
 
 ;.org 0x800e5db0
 ;  jal setPosDataPolyFT4
-.org 0x800e6160
-  jal setPosDataPolyFT4
+;.org 0x800e6160
+;  jal setPosDataPolyFT4
 .org 0x800ee3a0
   jal setPosDataPolyFT4
 .org 0x800f2a38

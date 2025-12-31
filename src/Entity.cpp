@@ -5,9 +5,11 @@
 #include "Helper.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
+#include "UIElements.hpp"
 #include "Utils.hpp"
 #include "VanillaText.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
 #include "extern/libgte.hpp"
 #include "extern/psx.hpp"
@@ -470,6 +472,15 @@ extern "C"
         return false;
     }
 
+    bool isInvisible(Entity* entity)
+    {
+        if (entity == nullptr) return true;
+        if (entity->isOnMap == 0) return true;
+        if (entity->isOnScreen == 0) return true;
+
+        return false;
+    }
+
     CollisionCode entityCheckCollision(Entity* ignore, Entity* self, int32_t width, int32_t height)
     {
         self->animFlag &= 5;
@@ -579,6 +590,19 @@ extern "C"
         }
     }
 
+    static void drawEntityTextIcon(int32_t posX, int32_t posY, uint8_t iconOffset, int32_t layer)
+    {
+        Sprite sprite{
+            .uvX          = iconOffset,
+            .uvV          = 184,
+            .width        = 8,
+            .height       = 8,
+            .texture_page = 30,
+            .clut         = getClut(256, 486),
+        };
+        sprite.render(posX, posY, layer, 0);
+    }
+
     static void renderEntityText(int32_t id)
     {
         // vanilla sorts the activeList
@@ -671,6 +695,23 @@ extern "C"
             textData.activeElements++;
             break;
         }
+    }
+
+    uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move)
+    {
+        constexpr auto TECH_ANIM_START_ID = 46;
+
+        if (move == 0xFF) return 0xFF;
+        // fix wrong finisher for H-Kabuterimon, exists for backward compatibility
+        if (entity->type == DigimonType::HERCULESKABUTERIMON && move == 60) return 112;
+
+        return getDigimonData(entity->type)->moves[move - TECH_ANIM_START_ID];
+    }
+
+    void entityLookAtTile(Entity* entity, int8_t tileX, int8_t tileY)
+    {
+        Vector location = {.x = convertTileToPosX(tileX), .y = 0, .z = convertTileToPosZ(tileY)};
+        entityLookAtLocation(entity, &location);
     }
 }
 

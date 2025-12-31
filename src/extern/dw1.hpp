@@ -1694,11 +1694,9 @@ extern "C"
     void runMapHeadScript(uint8_t mapId);
     void checkCurlingMap(int32_t mapId);
     void checkArenaMap(int32_t mapId);
-    bool isInvisible(Entity* entity);
     void handleBattleIdle(DigimonEntity* entity, Stats* stats, BattleFlags flags);
     void startBattleIdleAnimation(Entity* entity, Stats* stats, BattleFlags flags);
     void dailyPStatTrigger();
-    uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
     void initializeLoadedNPCModels();
     void NPCEntity_tickBattle(int32_t instanceId);
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
@@ -1714,7 +1712,6 @@ extern "C"
     void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileCallback callback, int32_t param);
     int32_t isSoundLoaded(bool isAsync, int32_t soundId);
     void setMapLayerEnabled(int32_t val);
-    void entityLookAtTile(Entity* entity, int8_t tileX, int8_t tileY);
     /*
      * Checks if a button has been pressed and consumes it (i.e. subsequent checks for the same button within the same
      * tick return false).
@@ -1734,7 +1731,6 @@ extern "C"
     extern uint32_t setButterfly(Entity* entity);
     extern uint16_t convertAsciiToJis(uint8_t input);
     extern void clearTextSubArea(RECT* rect);
-    void drawEntityTextIcon(int32_t posX, int32_t posY, uint8_t iconOffset, int32_t layer);
     void triggerSeadramonCutscene();
 
     extern void setTrigger(uint32_t triggerId);

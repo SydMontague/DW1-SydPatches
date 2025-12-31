@@ -36,12 +36,9 @@
 .definelabel isTriggerSet,              0x8010643c
 .definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8
-.definelabel entityGetTechFromAnim,     0x800e6000
 .definelabel dailyPStatTrigger,         0x800fc374
 .definelabel handleBattleIdle,          0x800e7d40
-.definelabel entityLookAtTile,          0x800e6078
 .definelabel startBattleIdleAnimation,  0x800e8970
-.definelabel isInvisible,               0x800e61ac
 .definelabel checkCurlingMap,           0x800e89c8
 .definelabel checkArenaMap,             0x800ff9dc
 .definelabel runMapHeadScript,          0x80105ae4
@@ -52,7 +49,6 @@
 .definelabel renderMainMenu,            0x80113458
 .definelabel loadMapSounds2,            0x800e9034
 .definelabel getEvoSequenceState,       0x800e732c
-.definelabel drawEntityTextIcon,        0x800e60e0
 .definelabel triggerSeadramonCutscene,  0x800ff900
 
 .definelabel GENERAL_OBJECT, 0x801532e8

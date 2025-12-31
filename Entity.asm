@@ -144,8 +144,8 @@
 ;  jal entityLookAtLocation
 ;.org 0x800deb04
 ;  jal entityLookAtLocation
-.org 0x800e60c8
-  jal entityLookAtLocation
+;.org 0x800e60c8
+;  jal entityLookAtLocation
 .org 0x800e7714
   jal entityLookAtLocation
 .org 0x800e7814
@@ -267,6 +267,31 @@
 
 .org 0x800f46c0
   jal removeEntityText
+
+.org 0x800e670c
+  jal entityGetTechFromAnim
+.org 0x800e79b0
+  jal entityGetTechFromAnim
+.org 0x800f5620
+  jal entityGetTechFromAnim
+.org 0x800f5864
+  jal entityGetTechFromAnim
+.org 0x800f5e18
+  jal entityGetTechFromAnim
+.org 0x800f62a0
+  jal entityGetTechFromAnim
+
+.org 0x800f1088
+  jal entityLookAtTile
+.org 0x800f10f4
+  jal entityLookAtTile
+
+.org 0x800e7670
+  jal isInvisible
+.org 0x800e7a90
+  jal isInvisible
+.org 0x800e85c0
+  jal isInvisible
 
 .close 
 
@@ -402,6 +427,61 @@
 .org 0x80058e04
   jal removeEntityText
 
+.org 0x80058718
+  jal entityGetTechFromAnim
+.org 0x80059918
+  jal entityGetTechFromAnim
+.org 0x80059b6c
+  jal entityGetTechFromAnim
+.org 0x8005a190
+  jal entityGetTechFromAnim
+.org 0x8005a6cc
+  jal entityGetTechFromAnim
+.org 0x8005b7a4
+  jal entityGetTechFromAnim
+.org 0x8005d3a8
+  jal entityGetTechFromAnim
+.org 0x8005d688
+  jal entityGetTechFromAnim
+.org 0x8005d808
+  jal entityGetTechFromAnim
+.org 0x8005d99c
+  jal entityGetTechFromAnim
+.org 0x8005da28
+  jal entityGetTechFromAnim
+.org 0x8005e034
+  jal entityGetTechFromAnim
+.org 0x8005f038
+  jal entityGetTechFromAnim
+.org 0x8005f16c
+  jal entityGetTechFromAnim
+.org 0x8005f2b0
+  jal entityGetTechFromAnim
+.org 0x800603e4
+  jal entityGetTechFromAnim
+.org 0x8006070c
+  jal entityGetTechFromAnim
+.org 0x800608a4
+  jal entityGetTechFromAnim
+.org 0x800609d8
+  jal entityGetTechFromAnim
+.org 0x80060c84
+  jal entityGetTechFromAnim
+.org 0x80060e84
+  jal entityGetTechFromAnim
+.org 0x80061098
+  jal entityGetTechFromAnim
+.org 0x80061e88
+  jal entityGetTechFromAnim
+
+.org 0x800575a0
+  jal entityLookAtTile
+.org 0x80057638
+  jal entityLookAtTile
+
+.org 0x80057408
+  jal isInvisible
+
 .close
 
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
@@ -506,6 +586,59 @@
 .org 0x80060664
   jal removeEntityText
 
+.org 0x80057274
+  jal entityGetTechFromAnim
+.org 0x800601b0
+  jal entityGetTechFromAnim
+.org 0x80061578
+  jal entityGetTechFromAnim
+.org 0x800617c0
+  jal entityGetTechFromAnim
+.org 0x80061d58
+  jal entityGetTechFromAnim
+.org 0x800621ec
+  jal entityGetTechFromAnim
+.org 0x80063898
+  jal entityGetTechFromAnim
+.org 0x80064a1c
+  jal entityGetTechFromAnim
+.org 0x8006514c
+  jal entityGetTechFromAnim
+.org 0x8006542c
+  jal entityGetTechFromAnim
+.org 0x800655ac
+  jal entityGetTechFromAnim
+.org 0x8006576c
+  jal entityGetTechFromAnim
+.org 0x80065840
+  jal entityGetTechFromAnim
+.org 0x800658e0
+  jal entityGetTechFromAnim
+.org 0x80065ce0
+  jal entityGetTechFromAnim
+.org 0x80065e68
+  jal entityGetTechFromAnim
+.org 0x80066c30
+  jal entityGetTechFromAnim
+.org 0x80066d64
+  jal entityGetTechFromAnim
+.org 0x80066ea8
+  jal entityGetTechFromAnim
+.org 0x800677fc
+  jal entityGetTechFromAnim
+.org 0x80067b24
+  jal entityGetTechFromAnim
+.org 0x80067cbc
+  jal entityGetTechFromAnim
+.org 0x80067e04
+  jal entityGetTechFromAnim
+.org 0x800680b0
+  jal entityGetTechFromAnim
+.org 0x80068448
+  jal entityGetTechFromAnim
+.org 0x80068540
+  jal entityGetTechFromAnim
+
 .close
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
@@ -530,6 +663,43 @@
   jal addEntityText
 .org 0x8005df20
   jal addEntityText
+
+.org 0x8005b51c
+  jal entityGetTechFromAnim
+.org 0x8005cb54
+  jal entityGetTechFromAnim
+.org 0x8005cde4
+  jal entityGetTechFromAnim
+.org 0x8005cf64
+  jal entityGetTechFromAnim
+.org 0x8005d138
+  jal entityGetTechFromAnim
+.org 0x8005d20c
+  jal entityGetTechFromAnim
+.org 0x8005d2ac
+  jal entityGetTechFromAnim
+.org 0x8005d5d4
+  jal entityGetTechFromAnim
+.org 0x8005d84c
+  jal entityGetTechFromAnim
+.org 0x8005e614
+  jal entityGetTechFromAnim
+.org 0x8005e748
+  jal entityGetTechFromAnim
+.org 0x8005e88c
+  jal entityGetTechFromAnim
+.org 0x8005f084
+  jal entityGetTechFromAnim
+.org 0x8005f21c
+  jal entityGetTechFromAnim
+.org 0x8005f350
+  jal entityGetTechFromAnim
+.org 0x8005f5fc
+  jal entityGetTechFromAnim
+.org 0x8005f8ec
+  jal entityGetTechFromAnim
+.org 0x8005f9e4
+  jal entityGetTechFromAnim
 
 .close
 
