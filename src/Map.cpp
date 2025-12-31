@@ -10,6 +10,7 @@
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Inventory.hpp"
+#include "InventoryUI.hpp"
 #include "MapObjects.hpp"
 #include "Math.hpp"
 #include "Model.hpp"

@@ -4,21 +4,13 @@
 .org 0x800f1298
   jal addInventoryUI
 
-;.org 0x800ab43c
-;  jal closeInventoryBoxes
-;.org 0x800b6a64
-;  jal closeInventoryBoxes
-;.org 0x800c3944
-;  jal closeInventoryBoxes
-;.org 0x800dbb9c
-;  jal closeInventoryBoxes
-;.org 0x800de6f8
-;  jal closeInventoryBoxes
-;.org 0x800deaa0
-;  jal closeInventoryBoxes
-
 .org 0x800f03e4
   jal initializeInventoryUI
+
+.org 0x800fb60c
+  jal renderItemSprite
+.org 0x800fddbc
+  jal renderItemSprite
 
 .close
 
@@ -31,5 +23,13 @@
 
 .org 0x80058c98
   jal closeInventoryBoxes
+
+.close
+
+.open "work/DIGIMON/FISH_REL.BIN",0x80070000
+.psx
+
+.org 0x8007999c
+  j renderItemSprite
 
 .close

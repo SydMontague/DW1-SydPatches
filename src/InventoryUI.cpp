@@ -12,6 +12,8 @@
 #include "UIElements.hpp"
 #include "Utils.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libgpu.hpp"
+#include "extern/libgs.hpp"
 #include "extern/stddef.hpp"
 
 namespace
@@ -43,6 +45,14 @@ namespace
         {2, 3, 0, 5, 4, 1},
         {1, 2, 0, 3, 5, 4},
     }};
+
+    constexpr dtl::array<int8_t, 128> ITEM_CLUT_DATA{
+        0,  1,  18, 3,  4,  8,  6,  0,  8,  6, 7,  4,  8,  9,  9,  10, 4,  11, 8,  12, 8,  11, 13, 10, 4,  14,
+        6,  0,  4,  15, 14, 8,  8,  11, 14, 8, 16, 21, 17, 17, 17, 18, 19, 11, 9,  14, 21, 2,  3,  21, 16, 18,
+        20, 11, 11, 1,  12, 4,  11, 7,  0,  2, 14, 20, 13, 13, 13, 13, 15, 8,  11, 5,  12, 1,  2,  4,  4,  5,
+        4,  5,  16, 4,  5,  16, 22, 21, 12, 4, 12, 23, 23, 5,  8,  12, 5,  3,  14, 17, 4,  10, 19, 10, 4,  4,
+        4,  10, 23, 5,  4,  16, 5,  10, 4,  7, 8,  14, 20, 9,  4,  16, 4,  23, 21, 4,  9,  4,  4,  4,
+    };
 
     constexpr int16_t getSlotPosX(int32_t slotId)
     {
@@ -757,5 +767,32 @@ extern "C"
     {
         state           = -1;
         isInventoryOpen = false;
+    }
+
+    void setItemTexture(POLY_FT4* prim, ItemType item)
+    {
+        auto col = static_cast<int32_t>(item) % 16;
+        auto row = static_cast<int32_t>(item) / 16;
+
+        auto width  = col != 15 ? 16 : 15;
+        auto height = row != 15 ? 16 : 15;
+
+        setUVDataPolyFT4(prim, col * 16, row * 16, width, height);
+        prim->clut = getClut(0xe0, ITEM_CLUT_DATA[static_cast<int32_t>(item)] + 0x1e8);
+    }
+
+    void renderItemSprite(ItemType type, int16_t posX, int16_t posY, int32_t depth)
+    {
+        auto prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+        libgpu_SetPolyFT4(prim);
+        prim->tpage = 5;
+        setItemTexture(prim, type);
+        prim->r0 = 128;
+        prim->g0 = 128;
+        prim->b0 = 128;
+
+        setPosDataPolyFT4(prim, posX, posY, prim->u1 - prim->u0, prim->v2 - prim->v0);
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + depth, prim);
+        libgs_GsSetWorkBase(prim + 1);
     }
 }

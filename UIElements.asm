@@ -154,8 +154,8 @@
   jal drawLine2P
 
 
-.org 0x800e5e78
-  jal setUVDataPolyFT4
+;.org 0x800e5e78
+;  jal setUVDataPolyFT4
 .org 0x800e6148
   jal setUVDataPolyFT4
 .org 0x800eced0
@@ -219,8 +219,8 @@
 .org 0x80101538
   jal setUVDataPolyFT4
 
-.org 0x800e5db0
-  jal setPosDataPolyFT4
+;.org 0x800e5db0
+;  jal setPosDataPolyFT4
 .org 0x800e6160
   jal setPosDataPolyFT4
 .org 0x800ee3a0

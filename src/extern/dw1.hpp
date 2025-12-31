@@ -1691,14 +1691,12 @@ extern "C"
     void Partner_tickBattle(int32_t instanceId);
     void updateBGM();
     void startThrowingItem();
-    void renderItemSprite(ItemType type, int16_t posX, int16_t posY, int32_t depth);
     void runMapHeadScript(uint8_t mapId);
     void checkCurlingMap(int32_t mapId);
     void checkArenaMap(int32_t mapId);
     bool isInvisible(Entity* entity);
     void handleBattleIdle(DigimonEntity* entity, Stats* stats, BattleFlags flags);
     void startBattleIdleAnimation(Entity* entity, Stats* stats, BattleFlags flags);
-    void setItemTexture(POLY_FT4* prim, ItemType item);
     void dailyPStatTrigger();
     bool hasMove(int32_t move);
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);

@@ -40,7 +40,6 @@
 .definelabel entityGetTechFromAnim,     0x800e6000
 .definelabel hasMove,                   0x800e5eb4
 .definelabel dailyPStatTrigger,         0x800fc374
-.definelabel setItemTexture,            0x800e5dfc
 .definelabel handleBattleIdle,          0x800e7d40
 .definelabel entityLookAtTile,          0x800e6078
 .definelabel startBattleIdleAnimation,  0x800e8970
@@ -48,7 +47,6 @@
 .definelabel checkCurlingMap,           0x800e89c8
 .definelabel checkArenaMap,             0x800ff9dc
 .definelabel runMapHeadScript,          0x80105ae4
-.definelabel renderItemSprite,          0x800e5d18
 .definelabel startThrowingItem,         0x800f0490
 .definelabel updateBGM,                 0x80106af0
 .definelabel Partner_tickBattle,        0x800f1414
