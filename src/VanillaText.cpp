@@ -107,6 +107,6 @@ extern "C"
                       int32_t offset,
                       int32_t hasShadow)
     {
-        renderStringNew(colorId, posX, posY, uvWidth, uvHeight, uvX + 704, uvY + 256, offset, hasShadow);
+        renderStringNew(colorId, posX, posY, uvWidth, uvHeight, (uvX / 4) + 704, uvY + 256, offset, hasShadow);
     }
 }
