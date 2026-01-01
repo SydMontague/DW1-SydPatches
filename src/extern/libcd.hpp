@@ -49,4 +49,5 @@ extern "C"
     extern int32_t libcd_CdReadSync(int32_t mode, uint8_t* result);
     extern int32_t libcd_CdPosToInt(CdlLoc* loc);
     extern CdlLoc* libcd_CdIntToPos(int32_t pos, CdlLoc* loc);
+    void libcd_CdInit(int32_t mode);
 }

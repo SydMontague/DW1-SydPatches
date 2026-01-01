@@ -312,6 +312,9 @@
 .definelabel KAR_tick, 0x800545c8
 .definelabel KAR_start, 0x80053c30
 
+// MOV_REL
+.definelabel MOV_startMovie, 0x80010620
+
 // libapi
 .definelabel libapi_malloc3, 0x80090f84
 .definelabel libapi_free3, 0x80091034
@@ -338,6 +341,7 @@
 .definelabel libcd_CdReadSync, 0x800b2cb4
 .definelabel libcd_CdPosToInt, 0x800b0554
 .definelabel libcd_CdIntToPos, 0x800b0450
+.definelabel libcd_CdInit, 0x800afe24
 
 // libetc
 .definelabel libetc_InterruptCallback, 0x8009237c
@@ -392,6 +396,8 @@
 .definelabel libgpu_ReadTIM, 0x80096bdc
 .definelabel libgpu_MoveImage, 0x80094968
 .definelabel libgpu_LoadClut, 0x8009292c
+.definelabel libgpu_ResetGraph, 0x80094538
+.definelabel libgpu_SetGraphDebug, 0x800946ac
 
 // libgte
 .definelabel libgte_setRotMatrix, 0x8009b200

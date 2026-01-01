@@ -248,6 +248,8 @@ extern "C"
     TIM_IMAGE* libgpu_ReadTIM(TIM_IMAGE* image);
     int32_t libgpu_MoveImage(const RECT* rect, int32_t x, int32_t y);
     void libgpu_LoadClut(void* buffer, int32_t x, int32_t y);
+    int32_t libgpu_ResetGraph(int32_t mode);
+    void libgpu_SetGraphDebug(int32_t level);
 }
 
 // validation
