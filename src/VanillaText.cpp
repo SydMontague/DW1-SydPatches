@@ -1,3 +1,4 @@
+#include "VanillaText.hpp"
 
 #include "Font.hpp"
 #include "Helper.hpp"
@@ -6,6 +7,33 @@
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
+
+namespace
+{
+    void renderPredrawnNumber(int32_t posX,
+                              int32_t posY,
+                              int32_t colorId,
+                              int16_t width,
+                              int16_t height,
+                              int32_t uvX,
+                              int32_t uvY,
+                              int32_t texturePage,
+                              int32_t clut,
+                              int32_t layer)
+    {
+        auto* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+        libgpu_SetPolyFT4(prim);
+        prim->r0    = TEXT_COLORS[colorId].red;
+        prim->g0    = TEXT_COLORS[colorId].green;
+        prim->b0    = TEXT_COLORS[colorId].blue;
+        prim->clut  = clut;
+        prim->tpage = texturePage;
+        setUVDataPolyFT4(prim, uvX, uvY, width, height);
+        setPosDataPolyFT4(prim, posX, posY, width, height);
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + layer, prim);
+        libgs_GsSetWorkBase(prim + 1);
+    }
+} // namespace
 
 extern "C"
 {
@@ -46,14 +74,9 @@ extern "C"
 
         for (int32_t i = 0; i < numDigits; i++)
         {
-            Sprite s;
-            s.clut         = getClut(208, 488);
-            s.texture_page = 27;
-            s.width        = 8;
-            s.height       = 12;
-            s.uvX          = buffer[numDigits - i - 1] * 8;
-            s.uvV          = 240;
-            s.render(posX + (empty + i) * 8, posY, layer, 0);
+            const auto finalX = posX + (empty + i) * 8;
+            const auto finalU = buffer[numDigits - i - 1] * 8;
+            renderPredrawnNumber(finalX, posY, colorId, 8, 12, finalU, 240, 27, getClut(208, 488), layer);
         }
     }
 
@@ -66,14 +89,9 @@ extern "C"
 
         for (int32_t i = 0; i < numDigits; i++)
         {
-            Sprite s;
-            s.clut         = getClut(256, 484);
-            s.texture_page = 30;
-            s.width        = 8;
-            s.height       = 9;
-            s.uvX          = buffer[numDigits - i - 1] * 8;
-            s.uvV          = 183;
-            s.render(posX + (empty + i) * 7, posY, layer, 0);
+            const auto finalX = posX + (empty + i) * 7;
+            const auto finalU = buffer[numDigits - i - 1] * 8;
+            renderPredrawnNumber(finalX, posY, colorId, 8, 9, finalU, 183, 30, getClut(256, 484), layer);
         }
     }
 
@@ -86,14 +104,9 @@ extern "C"
 
         for (int32_t i = 0; i < numDigits; i++)
         {
-            Sprite s;
-            s.clut         = getClut(256, 484);
-            s.texture_page = 30;
-            s.width        = 6;
-            s.height       = 10;
-            s.uvX          = 137 + buffer[numDigits - i - 1] * 6;
-            s.uvV          = 156;
-            s.render(posX + (empty + i) * 6, posY, layer, 0);
+            const auto finalX = posX + (empty + i) * 6;
+            const auto finalU = 137 + buffer[numDigits - i - 1] * 6;
+            renderPredrawnNumber(finalX, posY, colorId, 6, 10, finalU, 156, 30, getClut(256, 484), layer);
         }
     }
 

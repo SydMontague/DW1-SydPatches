@@ -140,4 +140,16 @@ extern "C"
                                      uint8_t* readComplete,
                                      FileCallback callback,
                                      void* callbackParam);
+
+    /**
+     * Loads a dynamic library from disc.
+     *
+     * @param lib the libraray/overlay to load
+     * @param isComplete a pointer to a byte that will be initialized to 1 and set to 0 once the request is done,
+     *                   does nothing when isAsync is true
+     * @param isAsync whether to add the request to the readQueue or do it blocking
+     * @param callback a callback to be called on the read is complete, does nothing when isAsync is true
+     * @param param the parameter passed to the callback, does nothing when isAsync is true
+     */
+    void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileCallback callback, void* param);
 }

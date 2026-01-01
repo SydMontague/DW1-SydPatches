@@ -2,6 +2,7 @@
 
 #include "UIElements.hpp"
 #include "Utils.hpp"
+#include "VanillaText.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 

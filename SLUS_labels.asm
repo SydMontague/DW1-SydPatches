@@ -24,7 +24,6 @@
 .definelabel isKeyDown,                 0x800fc054
 .definelabel setMapLayerEnabled,        0x800e65b8
 .definelabel isSoundLoaded,             0x800e90cc
-.definelabel loadDynamicLibrary,        0x800e61e4
 .definelabel unlockMedal,               0x800ff830
 .definelabel hasMedal,                  0x800ff85c
 .definelabel getCardAmount,             0x801067ec
@@ -204,7 +203,6 @@
 .definelabel DIGIMON_DATA, 0x8012ceb4
 .definelabel PARTNER_PARA, 0x80138460
 .definelabel RNG_STATE, 0x80009010
-.definelabel TEXT_COLORS, 0x8012b918
 .definelabel ACTIVE_ORDERING_TABLE, 0x80134ed0
 .definelabel NANIMON_TRIGGER, 0x80134c64
 .definelabel EVOLUTION_TARGET, 0x80134e50

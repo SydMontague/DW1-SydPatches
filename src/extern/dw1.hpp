@@ -1536,7 +1536,6 @@ extern "C"
     extern GlyphData GLYPH_DATA[79];
     extern uint8_t COLORCODE_HIGHBITS;
     extern uint8_t COLORCODE_LOWBITS;
-    extern RGB8 TEXT_COLORS[17];
     extern GsOT* ACTIVE_ORDERING_TABLE;
     extern PartnerEntity PARTNER_ENTITY;
     extern NPCEntity NPC_ENTITIES[8];
@@ -1709,7 +1708,6 @@ extern "C"
     bool hasMedal(Medal medal);
     void unlockMedal(Medal medal);
     uint8_t getCardAmount(uint8_t cardId);
-    void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileCallback callback, int32_t param);
     int32_t isSoundLoaded(bool isAsync, int32_t soundId);
     void setMapLayerEnabled(int32_t val);
     /*

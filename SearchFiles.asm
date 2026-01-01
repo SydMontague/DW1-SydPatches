@@ -34,8 +34,8 @@
 ;  jal readFile
 ;.org 0x800e11fc
 ;  jal readFile
-.org 0x800e6220
-  jal readFile
+;.org 0x800e6220
+;  jal readFile
 .org 0x800e65d8
   jal readFile
 .org 0x80105a14
@@ -174,8 +174,8 @@ VLALL_address:
 .org 0x800e8c10
   j setFileReadCallback2
 
-.org 0x800e625c
-  jal addFileReadRequestPath
+;.org 0x800e625c
+;  jal addFileReadRequestPath
 .org 0x80104384
   jal addFileReadRequestPath
 
@@ -187,6 +187,29 @@ VLALL_address:
 
 .org 0x800e8b78
   jal addFileReadRequestLookup
+
+.org 0x800e62a8
+  jal loadDynamicLibrary
+.org 0x800e6c0c
+  jal loadDynamicLibrary
+.org 0x800e743c
+  jal loadDynamicLibrary
+.org 0x800e761c
+  jal loadDynamicLibrary
+.org 0x800e89e8
+  jal loadDynamicLibrary
+.org 0x800ff978
+  jal loadDynamicLibrary
+.org 0x800ff9c4
+  jal loadDynamicLibrary
+.org 0x800ffa18
+  jal loadDynamicLibrary
+.org 0x8010439c
+  jal loadDynamicLibrary
+.org 0x801043e4
+  jal loadDynamicLibrary
+.org 0x80111b88
+  jal loadDynamicLibrary
 
 .close
 
@@ -259,6 +282,9 @@ VLALL_address:
 .org 0x8007c54c
   jal tickFileReadQueue
 
+.org 0x8007d70c
+  jal loadDynamicLibrary
+
 .close
 
 
@@ -324,6 +350,9 @@ VLALL_address:
   jal tickFileReadQueue
 .org 0x800824f4
   jal tickFileReadQueue
+
+.org 0x80080270
+  jal loadDynamicLibrary
 
 .close
 

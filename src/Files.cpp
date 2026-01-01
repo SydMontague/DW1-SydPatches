@@ -13,6 +13,46 @@
 
 namespace
 {
+    constexpr dtl::array<dtl::array<char, 16>, 17> REL_BIN_PATHS = {
+        "",
+        "BTL_REL.BIN",
+        "STD_REL.BIN",
+        "FISH_REL.BIN",
+        "EVL_REL.BIN",
+        "KAR_REL.BIN",
+        "VS_REL.BIN",
+        "MOV_REL.BIN",
+        "DOO2_REL.BIN",
+        "DOOA_REL.BIN",
+        "TRN_REL.BIN",
+        "SHOP_REL.BIN",
+        "DGET_REL.BIN",
+        "TRN2_REL.BIN",
+        "MURD_REL.BIN",
+        "ENDI_REL.BIN",
+        "EAB_REL.BIN",
+    };
+
+    constexpr dtl::array<uint32_t, 17> REL_BIN_OFFSETS = {
+        0x00000000,
+        0x80052ae0,
+        0x80052ae0,
+        0x80070000,
+        0x80060000,
+        0x80053800,
+        0x80052ae0,
+        0x80010000,
+        0x80070000,
+        0x80080000,
+        0x80088800,
+        0x80080800,
+        0x80080800,
+        0x80088800,
+        0x8007c000,
+        0x80060000,
+        0x80060000,
+    };
+
     struct FileRequest
     {
         uint8_t* targetBuffer{nullptr};
@@ -165,12 +205,23 @@ extern "C"
             ;
     }
 
+    void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileCallback callback, void* param)
+    {
+        const auto& path = REL_BIN_PATHS[static_cast<int32_t>(lib)];
+        auto* offset     = reinterpret_cast<uint8_t*>(REL_BIN_OFFSETS[static_cast<int32_t>(lib)]);
+
+        if (isAsync)
+            addFileReadRequestPath(path.data(), offset, isComplete, callback, param);
+        else
+            readFile(path.data(), offset);
+    }
+
     void loadTrainingLibrary(int32_t map)
     {
         if (map == 0x70 || map == 0x4E || map == 0x77)
-            loadDynamicLibrary(Overlay::TRN_REL, &TRN_LOADING_COMPLETE, true, nullptr, 0);
+            loadDynamicLibrary(Overlay::TRN_REL, &TRN_LOADING_COMPLETE, true, nullptr, nullptr);
         else if (map == 0x6B || map == 0x6C || map == 0xA5 || map == 0x63)
-            loadDynamicLibrary(Overlay::TRN2_REL, &TRN_LOADING_COMPLETE, true, nullptr, 0);
+            loadDynamicLibrary(Overlay::TRN2_REL, &TRN_LOADING_COMPLETE, true, nullptr, nullptr);
 
         TRAINING_COMPLETE = 0;
     }
