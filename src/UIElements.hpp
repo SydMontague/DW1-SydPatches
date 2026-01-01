@@ -143,6 +143,12 @@ extern "C"
         void render(uint32_t color1, uint32_t color2, int32_t layer) const;
     };
 
+    void createStaticUIBox(int32_t id,
+                           uint8_t color,
+                           uint8_t features,
+                           const RECT* pos,
+                           TickFunction tickFunc,
+                           RenderFunction renderFunc);
     void removeStaticUIBox(int32_t id);
     void drawTextSprite(TextSprite& entry);
     void renderTextSprite2(TextSprite& entry, int32_t offsetX, int32_t offsetY);
@@ -165,8 +171,8 @@ extern "C"
                        int16_t width,
                        int16_t height,
                        uint8_t features,
-                       BoxTickFunction tickFunc,
-                       BoxRenderFunction renderFunc);
+                       TickFunction tickFunc,
+                       RenderFunction renderFunc);
     bool isUIBoxAvailable(int32_t id);
     void closeUIBoxIfOpen(int32_t instanceId);
     void renderMenuTab(int32_t posX, int32_t width, bool isActive);
@@ -195,8 +201,8 @@ extern "C"
                              uint8_t features,
                              const RECT* finalPos,
                              const RECT* startPos,
-                             BoxTickFunction tickFunc,
-                             BoxRenderFunction renderFunc);
+                             TickFunction tickFunc,
+                             RenderFunction renderFunc);
     void removeAnimatedUIBox(int32_t boxId, RECT* target);
 
     void drawLine2P(uint32_t color, int16_t x0, int16_t y0, int16_t x1, int16_t y1, int32_t order, uint32_t blend);

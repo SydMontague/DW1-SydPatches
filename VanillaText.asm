@@ -21,8 +21,6 @@
 .org 0x800f997c
   jal convertValueToDigits
 
-.org 0x800e6598
-  jal renderString
 .org 0x800edcb0
   jal renderString
 .org 0x800ede40

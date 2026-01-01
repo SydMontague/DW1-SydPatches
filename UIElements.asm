@@ -4,8 +4,8 @@
 .org 0x800ee8ac
   jal initializeUIBoxData
 
-.org 0x800e64c8
-  jal createStaticUIBox
+;.org 0x800e64c8
+;  jal createStaticUIBox
 .org 0x800f7fa8
   jal createStaticUIBox
 .org 0x800f9fc8
@@ -23,8 +23,8 @@
 ;  jal removeStaticUIBox
 ;.org 0x800db288
 ;  jal removeStaticUIBox
-.org 0x800e6440
-  jal removeStaticUIBox
+;.org 0x800e6440
+;  jal removeStaticUIBox
 .org 0x800f7ffc
   jal removeStaticUIBox
 .org 0x800fa058

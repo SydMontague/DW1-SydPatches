@@ -456,7 +456,7 @@ static TextSprite nameText = {
     .hasShadow  = 1,
 };
 
-void tickEvoChartDetail()
+void tickEvoChartDetail(int32_t instanceId)
 {
     if (isDetailRendered) return;
 
@@ -470,7 +470,7 @@ void tickEvoChartDetail()
     isDetailRendered = true;
 }
 
-void renderEvoChartDetail()
+void renderEvoChartDetail(int32_t instanceId)
 {
     if (!isDetailRendered) return;
 

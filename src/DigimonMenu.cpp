@@ -50,7 +50,7 @@ static TextSprite techLabel = {
 
 static uint8_t digimonMenuState;
 
-void renderDigimonMenu()
+void renderDigimonMenu(int32_t instanceId)
 {
     if (digimonMenuState == 0)
         renderDigimonStatsView();
@@ -65,7 +65,7 @@ void renderDigimonMenu()
     renderMenuTab(-70, 64, digimonMenuState != 1);
 }
 
-void tickDigimonMenu()
+void tickDigimonMenu(int32_t instanceId)
 {
     if (MENU_STATE == 0)
     {

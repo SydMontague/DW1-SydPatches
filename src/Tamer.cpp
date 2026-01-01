@@ -133,7 +133,7 @@ extern "C"
         return 0xFF;
     }
 
-    void renderAwardSomethingTextbox()
+    void renderAwardSomethingTextbox(int32_t instanceId)
     {
         // vanilla doesn't use shadows
         renderStringNew(0, -125, 45, 255, 36, 704, 120 + 256, 5, 1);
@@ -141,7 +141,7 @@ extern "C"
         TEXTBOX_OPEN_TIMER++;
     }
 
-    void renderItemPickupTextbox()
+    void renderItemPickupTextbox(int32_t instanceId)
     {
         // vanilla doesn't use shadows
         // vanilla uses the take state to determine how many lines to render, but that's just redundant

@@ -203,8 +203,8 @@ extern "C"
                        int16_t width,
                        int16_t height,
                        uint8_t features,
-                       BoxTickFunction tickFunc,
-                       BoxRenderFunction renderFunc)
+                       TickFunction tickFunc,
+                       RenderFunction renderFunc)
     {
         if (UI_BOX_DATA[instanceId].state == 1) return true;
 
@@ -353,7 +353,7 @@ extern "C"
         if (UI_BOX_DATA[instanceId].state != 1 && UI_BOX_DATA[instanceId].state != 4) return;
         if (UI_BOX_DATA[instanceId].tick == nullptr) return;
 
-        UI_BOX_DATA[instanceId].tick();
+        UI_BOX_DATA[instanceId].tick(instanceId);
     }
 
     void renderUIBoxBorder(RECT* size, int32_t layer)
@@ -394,7 +394,7 @@ extern "C"
         auto& data       = UI_BOX_DATA[instanceId];
         const auto layer = 6 - instanceId;
 
-        if (data.render != nullptr) data.render();
+        if (data.render != nullptr) data.render(instanceId);
 
         renderUIBoxBorder(&data.finalPos, layer);
 
@@ -540,8 +540,8 @@ extern "C"
                            uint8_t color,
                            uint8_t features,
                            const RECT* pos,
-                           BoxTickFunction tickFunc,
-                           BoxRenderFunction renderFunc)
+                           TickFunction tickFunc,
+                           RenderFunction renderFunc)
     {
         UI_BOX_DATA[id].state    = 1;
         UI_BOX_DATA[id].color    = color;
@@ -557,8 +557,8 @@ extern "C"
                              uint8_t features,
                              const RECT* finalPos,
                              const RECT* startPos,
-                             BoxTickFunction tickFunc,
-                             BoxRenderFunction renderFunc)
+                             TickFunction tickFunc,
+                             RenderFunction renderFunc)
     {
         playSound(0, 0);
         UI_BOX_DATA[instanceId].state    = 2;

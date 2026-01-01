@@ -89,7 +89,7 @@ static TextSprite cardLabel = {
 
 static uint8_t playerMenuState;
 
-void tickPlayerMenu()
+void tickPlayerMenu(int32_t instanceId)
 {
     if (MENU_STATE == 0)
     {
@@ -130,7 +130,7 @@ void tickPlayerMenu()
     else if (playerMenuState == 3) { tickPlayerMenuCardView(); }
 }
 
-void renderPlayerMenu()
+void renderPlayerMenu(int32_t instanceId)
 {
     if (playerMenuState == 0)
         renderPlayerInfoView();

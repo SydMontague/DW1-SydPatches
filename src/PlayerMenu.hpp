@@ -1,5 +1,5 @@
 #include "extern/stddef.hpp"
 
-void tickPlayerMenu();
-void renderPlayerMenu();
+void tickPlayerMenu(int32_t instance);
+void renderPlayerMenu(int32_t instance);
 void setPlayerMenuState(uint32_t state);

@@ -216,7 +216,7 @@ namespace
         sortBasicString.draw(&vanillaFont, "Basic");
     }
 
-    void renderInventoryTop()
+    void renderInventoryTop(int32_t instanceId)
     {
         auto depth = 6;
         auto& box  = UI_BOX_DATA[0];
@@ -272,7 +272,7 @@ namespace
         descString.draw(&vanillaFont, ITEM_DESC_PTR[static_cast<int32_t>(INVENTORY_ITEM_TYPES[INVENTORY_POINTER])]);
     }
 
-    void renderInventoryBottom()
+    void renderInventoryBottom(int32_t instanceId)
     {
         if (INVENTORY_ITEM_TYPES[INVENTORY_POINTER] == ItemType::NONE) return;
 
@@ -283,7 +283,7 @@ namespace
         descString.render(box.finalPos.x + 26, box.finalPos.y + 8, 9, 5, true);
     }
 
-    void renderItemOptions()
+    void renderItemOptions(int32_t instanceId)
     {
         auto& box = UI_BOX_DATA[2];
         auto type = INVENTORY_ITEM_TYPES[INVENTORY_POINTER];
@@ -308,7 +308,7 @@ namespace
         renderSelectionCursor(baseX, baseY + menuSelected * 18, 40, 16, 4);
     }
 
-    void tickSortOption()
+    void tickSortOption(int32_t instanceId)
     {
         if (focusedWindow != 3) return;
 
@@ -334,7 +334,7 @@ namespace
         }
     }
 
-    void renderSortOption()
+    void renderSortOption(int32_t instanceId)
     {
         auto baseX = UI_BOX_DATA[3].finalPos.x + 9;
         auto baseY = UI_BOX_DATA[3].finalPos.y + 6;
@@ -368,7 +368,7 @@ namespace
         createAnimatedUIBox(3, 1, 0, &final, &start, tickSortOption, renderSortOption);
     }
 
-    static void tickDropOption()
+    static void tickDropOption(int32_t instanceId)
     {
         if (focusedWindow != 3) return;
 
@@ -395,7 +395,7 @@ namespace
         }
     }
 
-    static void renderDropOption()
+    static void renderDropOption(int32_t instanceId)
     {
         auto baseX = UI_BOX_DATA[3].finalPos.x;
         auto baseY = UI_BOX_DATA[3].finalPos.y;
@@ -424,7 +424,7 @@ namespace
         createAnimatedUIBox(3, 1, 0, &final, &start, tickDropOption, renderDropOption);
     }
 
-    void tickInventoryOptions()
+    void tickInventoryOptions(int32_t instanceId)
     {
         if (focusedWindow != 2) return;
 
@@ -492,7 +492,7 @@ namespace
         createAnimatedUIBox(2, 1, 0, &final, &start, tickInventoryOptions, renderItemOptions);
     }
 
-    void tickInventoryTop()
+    void tickInventoryTop(int32_t instanceId)
     {
         if (focusedWindow != 0) return;
 

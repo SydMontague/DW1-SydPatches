@@ -312,7 +312,7 @@ extern "C"
         }
     }
 
-    void renderGameMenu()
+    void renderGameMenu(int32_t instance)
     {
         // not strictly vanilla equivalent, adjusted to improve layout and fix inconsistencies
         const auto yOffset = optionCount <= 6 ? -39 : 0;
@@ -391,7 +391,7 @@ extern "C"
         }
     }
 
-    void tickGameMenu()
+    void tickGameMenu(int32_t instance)
     {
         constexpr int16_t mapping[3][3] = {
             {0, 1, 2},

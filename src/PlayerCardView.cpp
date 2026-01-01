@@ -141,14 +141,14 @@ static void loadCardImage(int32_t card)
     loadStackedTIMEntry("\\CARD\\CARD.ALL", TEXTURE_BUFFER, card * 14, 14);
 }
 
-static void renderCardImage()
+static void renderCardImage(int32_t instanceId)
 {
     auto clut  = getClut(0x1C0, 0x1FF);
     auto tpage = getTPage(1, 2, 0x240, 0x100);
     renderRectPolyFT4(-75, -84, 150, 180, 0, 0, tpage, clut, 4, 0);
 }
 
-static void tickCardCount()
+static void tickCardCount(int32_t instanceId)
 {
     if (!isCardCountDrawn)
     {
@@ -160,7 +160,7 @@ static void tickCardCount()
     }
 }
 
-static void renderCardCount()
+static void renderCardCount(int32_t instanceId)
 {
     if (!isCardCountDrawn) return;
     renderTextSprite(cardCount);

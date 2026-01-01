@@ -886,9 +886,6 @@ extern "C"
     using ItemFunction   = void (*)(ItemType itemId);
     using FileCallback   = bool (*)(void*);
 
-    using BoxTickFunction   = void (*)();
-    using BoxRenderFunction = void (*)();
-
     union ScreenCoord
     {
         struct
@@ -910,8 +907,8 @@ extern "C"
         uint16_t totalRows;
         uint8_t features; // flag, 1 -> header separator, 2 -> transparent bg, 3 -> scroll bar
         uint8_t color;
-        BoxTickFunction tick;
-        BoxRenderFunction render;
+        TickFunction tick;
+        RenderFunction render;
     };
 
     struct MapEntry

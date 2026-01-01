@@ -347,6 +347,7 @@
 .definelabel libetc_InterruptCallback, 0x8009237c
 .definelabel libetc_ResetCallback, 0x8009234c
 .definelabel libetc_vsync, 0x80091ca8
+.definelabel libetc_PadRead, 0x80091be8
 
 // libgs
 .definelabel libgs_GsGetWorkBase, 0x80098c38
