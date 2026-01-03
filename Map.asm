@@ -166,6 +166,11 @@
 .org 0x800847ec
   jal setDeathMap
 
+.org 0x80080470
+  jal setMapLayerEnabled
+.org 0x800825e0
+  jal setMapLayerEnabled
+
 .close
 
 .open "work/DIGIMON/MURD_REL.BIN",0x8007C000
@@ -180,6 +185,11 @@
 .org 0x8007d6ec
   jal setDeathMap
 
+.org 0x8007c258
+  jal setMapLayerEnabled
+.org 0x8007c470
+  jal setMapLayerEnabled
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
@@ -193,6 +203,33 @@
 .org 0x800591a0
   jal getMapSoundId
   
+.org 0x80064ac8
+  jal setMapLayerEnabled
+.org 0x80066454
+  j setMapLayerEnabled
+
+.close
+
+
+.open "work/DIGIMON/STD_REL.BIN",0x80052ae0
+.psx
+
+.org 0x8006d1b0
+  jal setMapLayerEnabled
+.org 0x8006eb78
+  j setMapLayerEnabled
+
+.close
+
+
+.open "work/DIGIMON/VS_REL.BIN",0x80052ae0
+.psx
+
+.org 0x80063280
+  jal setMapLayerEnabled
+.org 0x80064c48
+  j setMapLayerEnabled
+
 .close
 
 .open "work/DIGIMON/KAR_REL.BIN",0x80053800
@@ -422,6 +459,11 @@
 .org 0x80061014
   jal getMapSoundId
 
+.org 0x800603d8
+  jal setMapLayerEnabled
+.org 0x80060fe8
+  jal setMapLayerEnabled
+
 .close
 
 .open "work/DIGIMON/FISH_REL.BIN",0x80070000
@@ -429,5 +471,16 @@
 
 .org 0x80079e70
   jal handleTileUpdate
+
+.close
+
+
+.open "work/DIGIMON/EAB_REL.BIN",0x80060000
+.psx
+
+.org 0x800607a8
+  jal setMapLayerEnabled
+.org 0x80060b6c
+  jal setMapLayerEnabled
 
 .close

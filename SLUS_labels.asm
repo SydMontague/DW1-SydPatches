@@ -22,7 +22,6 @@
 .definelabel main,                      0x800ee800
 .definelabel Tamer_tickBattle,          0x800f1214
 .definelabel isKeyDown,                 0x800fc054
-.definelabel setMapLayerEnabled,        0x800e65b8
 .definelabel isSoundLoaded,             0x800e90cc
 .definelabel unlockMedal,               0x800ff830
 .definelabel hasMedal,                  0x800ff85c

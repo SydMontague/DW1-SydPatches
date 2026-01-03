@@ -39,8 +39,8 @@
 ;  jal readFile
 ;.org 0x800e6220
 ;  jal readFile
-.org 0x800e65d8
-  jal readFile
+;.org 0x800e65d8
+;  jal readFile
 .org 0x80105a14
   jal readFile
 
@@ -213,6 +213,17 @@ VLALL_address:
   jal loadDynamicLibrary
 .org 0x80111b88
   jal loadDynamicLibrary
+
+.org 0x800ee938
+  jal loadStackedTIMFile
+.org 0x800ee99c
+  jal loadStackedTIMFile
+.org 0x800eea38
+  jal loadStackedTIMFile
+.org 0x800eeaf4
+  jal loadStackedTIMFile
+.org 0x800f8120
+  jal loadStackedTIMFile
 
 .close
 

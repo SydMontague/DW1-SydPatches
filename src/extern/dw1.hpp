@@ -1706,7 +1706,6 @@ extern "C"
     void unlockMedal(Medal medal);
     uint8_t getCardAmount(uint8_t cardId);
     int32_t isSoundLoaded(bool isAsync, int32_t soundId);
-    void setMapLayerEnabled(int32_t val);
     /*
      * Checks if a button has been pressed and consumes it (i.e. subsequent checks for the same button within the same
      * tick return false).

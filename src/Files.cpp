@@ -365,4 +365,38 @@ extern "C"
 
         return addFileReadRequest(filename, buffer, readComplete, callback, callbackParam, &lookup.pos, lookup.size);
     }
+
+    void loadStackedTIMFile(const char* file)
+    {
+        auto* head = GENERAL_BUFFER.data();
+        readFile(file, head);
+
+        while (*head == 0x10)
+        {
+            printf("Image\n");
+            GsIMAGE image;
+            libgs_GsGetTimInfo(reinterpret_cast<uint32_t*>(head + 4), &image);
+            head += 20 + (image.pixelWidth * image.pixelHeight) * 2;
+
+            RECT pixelRect = {
+                .x      = image.pixelX,
+                .y      = image.pixelY,
+                .width  = static_cast<int16_t>(image.pixelWidth),
+                .height = static_cast<int16_t>(image.pixelHeight),
+            };
+            libgpu_LoadImage(&pixelRect, image.pixelPtr);
+
+            if ((image.pixelMode >> 3 & 1) != 0)
+            {
+                RECT clutRect = {
+                    .x      = image.clutX,
+                    .y      = image.clutY,
+                    .width  = static_cast<int16_t>(image.clutWidth),
+                    .height = static_cast<int16_t>(image.clutHeight),
+                };
+                libgpu_LoadImage(&clutRect, image.clutPtr);
+                head += 12 + (image.clutWidth * image.clutHeight) * 2;
+            }
+        }
+    }
 }

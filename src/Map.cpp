@@ -1718,4 +1718,9 @@ extern "C"
             return 168;
         }
     }
+
+    void setMapLayerEnabled(int32_t val)
+    {
+        MAP_LAYER_ENABLED = val;
+    }
 }
