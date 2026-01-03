@@ -268,8 +268,8 @@
 .org 0x800f46c0
   jal removeEntityText
 
-.org 0x800e670c
-  jal entityGetTechFromAnim
+;.org 0x800e670c
+;  jal entityGetTechFromAnim
 .org 0x800e79b0
   jal entityGetTechFromAnim
 .org 0x800f5620

@@ -10,14 +10,14 @@
 ;.org 0x800b5a98
 ;  jal getDrawPosition
 
-.org 0x800e68a4
-  jal setMapObjectsFlag
-.org 0x800e68bc
-  jal setMapObjectsFlag
-.org 0x800e68e4
-  jal setMapObjectsFlag
-.org 0x800e68fc
-  jal setMapObjectsFlag
+;.org 0x800e68a4
+;  jal setMapObjectsFlag
+;.org 0x800e68bc
+;  jal setMapObjectsFlag
+;.org 0x800e68e4
+;  jal setMapObjectsFlag
+;.org 0x800e68fc
+;  jal setMapObjectsFlag
 .org 0x80103cd8
   jal setMapObjectsFlag
 
@@ -151,6 +151,9 @@
 
 .org 0x801139d4
   jal getFileCityTopMap
+
+.org 0x800e6eac
+  jal updateMapLightState
 
 .close
 

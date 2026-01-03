@@ -107,6 +107,9 @@
 .org 0x801067e4
   j learnMove
 
+.org 0x800fe5ac
+  jal unlearnMove
+
 .close 
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

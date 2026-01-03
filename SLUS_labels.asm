@@ -30,7 +30,6 @@
 .definelabel playBGM,                   0x80106a80
 .definelabel loadBattleData,            0x800e74d0
 .definelabel handleBattleStart,         0x800e847c
-.definelabel isTamerOnScreen,           0x800e67ec
 .definelabel isTriggerSet,              0x8010643c
 .definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8

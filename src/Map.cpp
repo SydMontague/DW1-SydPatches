@@ -35,6 +35,25 @@ extern "C"
         uint32_t previousExit;
     };
 
+    struct MapLightUpdateData
+    {
+        uint8_t mapId;
+        uint8_t mode;
+        uint16_t startId;
+        uint16_t count;
+        uint16_t trigger;
+    };
+
+    constexpr dtl::array<MapLightUpdateData, 1> mapLightUpdateData = {{
+        {
+            .mapId   = 0xB7,
+            .mode    = 1,
+            .startId = 0x31,
+            .count   = 2,
+            .trigger = 0xFFFF,
+        },
+    }};
+
     constexpr QuickTravelData quickTravelData[] = {
         {.map = 38, .previousMap = 88, .previousExit = 2},
         {.map = 70, .previousMap = 69, .previousExit = 2},
@@ -1722,5 +1741,19 @@ extern "C"
     void setMapLayerEnabled(int32_t val)
     {
         MAP_LAYER_ENABLED = val;
+    }
+
+    void updateMapLightState()
+    {
+        for (const auto data : mapLightUpdateData)
+        {
+            if (CURRENT_SCRIPT_ID != data.mapId) continue;
+            if (data.trigger != 0xFFFF && isTriggerSet(data.trigger)) continue;
+
+            auto isNight  = HOUR < 7 && HOUR > 18;
+            auto newValue = isNight ^ data.mode;
+
+            setMapObjectsFlag(data.startId, data.count, newValue);
+        }
     }
 }

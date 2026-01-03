@@ -14,4 +14,5 @@ extern "C"
     void initializeTamerWaypoints();
     void checkMapInteraction();
     void startFeedingItem(ItemType item);
+    bool isTamerOnScreen();
 }

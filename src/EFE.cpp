@@ -1,6 +1,7 @@
 #include "Effects.hpp"
 #include "GameObjects.hpp"
 #include "Math.hpp"
+#include "Tamer.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libcd.hpp"
 #include "extern/libgpu.hpp"

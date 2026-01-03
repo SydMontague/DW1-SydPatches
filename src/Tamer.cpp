@@ -985,6 +985,11 @@ extern "C"
         TAMER_WAYPOINT_ACTIVE  = 0;
         TAMER_WAYPOINT_CURRENT = 0;
     }
+
+    bool isTamerOnScreen()
+    {
+        return TAMER_ENTITY.isOnScreen;
+    }
 }
 
 static void tickTamerWaypoints()

@@ -86,6 +86,17 @@ static uint8_t stopDistanceTimer;
 static uint8_t partnerAnimation;
 static uint8_t poopToEat;
 
+static constexpr bool isSameMove(uint32_t move1, uint32_t move2)
+{
+    if (move1 == move2) return true;
+    if (move1 == 44 && move2 == 46) return true;
+    if (move1 == 64 && move2 == 44) return true;
+    if (move1 == 55 && move2 == 57) return true;
+    if (move1 == 57 && move2 == 55) return true;
+
+    return false;
+}
+
 static void updateSleepingTimes()
 {
     auto level = getDigimonData(PARTNER_ENTITY.type)->level;
@@ -2443,5 +2454,23 @@ extern "C"
 
             (PARTNER_ENTITY.learnedMoves[byte] |= (1 << bit));
         }
+    }
+
+    void unlearnMove(uint32_t move)
+    {
+        // vanilla works with 16-bit masks instead of 32-bit, causing too many moves to be unlearned
+        auto byte = move / 32;
+        auto bit  = move % 32;
+        auto mask = 1U << bit;
+
+        if (move == 44 || move == 48)
+            mask = 0x11000;
+        else if (move == 55 || move == 57)
+            mask = 0x2800000;
+
+        PARTNER_ENTITY.learnedMoves[byte] &= ~mask;
+
+        for (auto& tech : PARTNER_ENTITY.stats.moves)
+            if (isSameMove(entityGetTechFromAnim(&PARTNER_ENTITY, tech), move)) tech = 0xFF;
     }
 }
