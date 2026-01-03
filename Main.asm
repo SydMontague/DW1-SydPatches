@@ -33,6 +33,15 @@
 .org 0x800ee8c4
   jal initializeMedalModel
 
+.org 0x800ee904
+  jal playMovie
+.org 0x800ee988
+  jal playMovie
+.org 0x800eeae0
+  jal playMovie
+.org 0x800eebcc
+  jal playMovie
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

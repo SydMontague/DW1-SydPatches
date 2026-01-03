@@ -1734,6 +1734,7 @@ extern "C"
     extern bool hasDigimonRaised(DigimonType type);
 
     extern void unsetButterfly(uint32_t id);
+    void initializeFramebuffer();
 }
 
 static_assert(sizeof(PositionData) == 0x88);

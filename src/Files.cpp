@@ -373,7 +373,6 @@ extern "C"
 
         while (*head == 0x10)
         {
-            printf("Image\n");
             GsIMAGE image;
             libgs_GsGetTimInfo(reinterpret_cast<uint32_t*>(head + 4), &image);
             head += 20 + (image.pixelWidth * image.pixelHeight) * 2;

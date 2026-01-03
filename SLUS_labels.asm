@@ -48,6 +48,7 @@
 .definelabel loadMapSounds2,            0x800e9034
 .definelabel getEvoSequenceState,       0x800e732c
 .definelabel triggerSeadramonCutscene,  0x800ff900
+.definelabel initializeFramebuffer,     0x800eec14
 
 .definelabel GENERAL_OBJECT, 0x801532e8
 .definelabel GENERAL_COORDS, 0x80153308

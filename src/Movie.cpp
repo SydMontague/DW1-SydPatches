@@ -5,7 +5,7 @@
 #include "extern/libcd.hpp"
 #include "extern/libgpu.hpp"
 
-extern "C"
+namespace
 {
     void startMovie(Movies movie)
     {
@@ -16,4 +16,16 @@ extern "C"
         MOV_startMovie(movie);
         libgpu_ResetGraph(3);
     };
+} // namespace
+
+extern "C"
+{
+    void playMovie(Movies movie, bool shouldPlay)
+    {
+        // TODO the shouldPlay argument is useless, it's always true and should be responsibility of the caller
+        if (!shouldPlay) return;
+
+        startMovie(movie);
+        initializeFramebuffer();
+    }
 }
