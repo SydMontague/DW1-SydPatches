@@ -19,8 +19,8 @@
 .org 0x800eebc0
   jal finalizeMusic
 
-.org 0x800e6bf4
-  jal stopBGM
+;.org 0x800e6bf4
+;  jal stopBGM
 .org 0x800e72d0
   jal stopBGM
 .org 0x800f2438

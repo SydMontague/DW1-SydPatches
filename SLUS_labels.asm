@@ -48,6 +48,10 @@
 .definelabel getEvoSequenceState,       0x800e732c
 .definelabel triggerSeadramonCutscene,  0x800ff900
 .definelabel initializeFramebuffer,     0x800eec14
+.definelabel unsetTrigger,              0x801065fc
+.definelabel getScriptJumpTableEntry,   0x800e6f50
+.definelabel readScriptJumpTableEntry,  0x800e6f9c
+.definelabel enforceStatsLimits,        0x80102678
 
 .definelabel GENERAL_OBJECT, 0x801532e8
 .definelabel GENERAL_COORDS, 0x80153308
@@ -274,6 +278,9 @@
 .definelabel ENTITY_TEXT_DATA, 0x80150cd0
 .definelabel FISHING_DATA_PTR, 0x80134e6c
 .definelabel DRAW_OFFSETS, 0x8015db90
+.definelabel TOURNAMENTS_WON, 0x80134fcc
+.definelabel TOURNAMENTS_LOST, 0x80134fce
+.definelabel TOURNAMENT_WINS, 0x80134fd0
 
 // BTL_REL
 .definelabel BTL_battleMain, 0x8005b5f4
@@ -306,6 +313,7 @@
 .definelabel STD_Tamer_tickTournament, 0x80069688
 .definelabel STD_NPCEntity_tickTournament, 0x80069700
 .definelabel STD_Partner_tickTournament, 0x800696e4
+.definelabel STD_tournamentMain, 0x800579d8
 
 // KAR_REL
 .definelabel KAR_tick, 0x800545c8

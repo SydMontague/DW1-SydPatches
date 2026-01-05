@@ -190,8 +190,8 @@ VLALL_address:
 
 ;.org 0x800e62a8
 ;  jal loadDynamicLibrary
-.org 0x800e6c0c
-  jal loadDynamicLibrary
+;.org 0x800e6c0c
+;  jal loadDynamicLibrary
 .org 0x800e743c
   jal loadDynamicLibrary
 .org 0x800e761c

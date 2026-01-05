@@ -1452,6 +1452,33 @@ extern "C"
         uint16_t modelId;
     };
 
+    enum class ScriptStats
+    {
+        OFFSENSE,
+        DEFENSE,
+        SPEED,
+        BRAINS,
+        MAX_HP,
+        MAX_MP,
+        CURRENT_HP,
+        CURRENT_MP,
+        TIREDNESS,
+        HAPPINESS,
+        DISCIPLINE,
+        ENERGY,
+        VIRUS,
+        LIFETIME,
+        MERIT,
+        STARTED_BATTLES,
+        FLED_BATTLES,
+        TOURNAMENTS_WON,
+        TOURNAMENT_WINS,
+        TOURNAMENTS_LOST,
+        WEIGHT,
+        TAMER_LEVEL,
+        LIVES,
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1459,6 +1486,9 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern uint16_t TOURNAMENTS_WON;
+    extern uint16_t TOURNAMENTS_LOST;
+    extern uint16_t TOURNAMENT_WINS;
     extern dtl::array<GsDOBJ2, 2> GENERAL_OBJECT;
     extern dtl::array<GsCOORDINATE2, 2> GENERAL_COORDS;
     extern GsDOBJ2 GENERAL_OBJECT3;
@@ -1676,6 +1706,10 @@ extern "C"
     extern SectionData SECTION_DATA;
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
 
+    void unsetTrigger(int32_t id);
+    uint16_t* getScriptJumpTableEntry(uint32_t section, uint32_t id);
+    uint8_t* readScriptJumpTableEntry(uint16_t* scriptPtr, int32_t id);
+    int16_t enforceStatsLimits(ScriptStats type, uint32_t value);
     int32_t getEvoSequenceState(PartnerEntity* partner,
                                 int32_t buffer,
                                 PartnerPara* para,
