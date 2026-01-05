@@ -1381,7 +1381,7 @@ extern "C"
         int16_t statusedCount;
         int16_t unk2;
         int16_t startingHP;
-        int16_t unk3;
+        int16_t unk3[2];
         BattleCommand currentCommand[2];
         BattleCommand buffereCommand[2];
         BattleCommand hoveredCommand[2];
