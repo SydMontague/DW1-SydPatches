@@ -145,8 +145,8 @@
 ;  jal Tamer_getState
 ;.org 0x800e3264
 ;  jal Tamer_getState
-.org 0x800e6dcc
-  jal Tamer_getState
+;.org 0x800e6dcc
+;  jal Tamer_getState
 .org 0x800eeab4
   jal Tamer_getState
 .org 0x800eeb70

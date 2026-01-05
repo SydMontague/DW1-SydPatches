@@ -49,10 +49,14 @@
 .definelabel triggerSeadramonCutscene,  0x800ff900
 .definelabel initializeFramebuffer,     0x800eec14
 .definelabel unsetTrigger,              0x801065fc
-.definelabel getScriptJumpTableEntry,   0x800e6f50
-.definelabel readScriptJumpTableEntry,  0x800e6f9c
 .definelabel enforceStatsLimits,        0x80102678
+.definelabel closeBox,                  0x801006d4
+.definelabel getScriptSection,          0x8010629c
+.definelabel getScript,                 0x80106218
 
+.definelabel ACTIVE_MAP_SCRIPT, 0x80134fc2
+.definelabel ACTIVE_INSTRUCTION, 0x80134fe8
+.definelabel SCRIPT_STATE_2, 0x80134ffa
 .definelabel GENERAL_OBJECT, 0x801532e8
 .definelabel GENERAL_COORDS, 0x80153308
 .definelabel GENERAL_OBJECT3, 0x801533a8

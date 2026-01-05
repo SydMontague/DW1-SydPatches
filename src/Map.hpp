@@ -32,4 +32,5 @@ extern "C"
     uint8_t getMapSoundId(uint32_t mapId);
     void setImpassableSquare(int32_t tileX, int32_t tileY, int32_t radius);
     void setMapLayerEnabled(int32_t val);
+    void updateMapLightState();
 }

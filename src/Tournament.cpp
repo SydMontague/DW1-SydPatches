@@ -1,3 +1,5 @@
+#include "Tournament.hpp"
+
 #include "Files.hpp"
 #include "GameObjects.hpp"
 #include "GameTime.hpp"
@@ -26,8 +28,8 @@ namespace
         dtl::array<uint8_t, 0x70> array;
 
         auto tournamentId = readPStat(3);
-        auto* scriptPtr   = getScriptJumpTableEntry(10, tournamentId);
-        auto* scriptEntry = readScriptJumpTableEntry(scriptPtr, 4);
+        auto* scriptPtr   = getCupDataJumpTable(10, tournamentId);
+        auto* scriptEntry = getCupDataJumpTableEntry(scriptPtr, 4);
         auto* entryPtr    = reinterpret_cast<uint8_t*>(scriptEntry + 2);
         int32_t count     = 0;
         TournamentConfig config;
@@ -88,6 +90,18 @@ namespace
 
 extern "C"
 {
+    uint8_t* getCupDataJumpTableEntry(uint8_t* scriptPtr, int32_t id)
+    {
+        return getScript(ACTIVE_MAP_SCRIPT) + reinterpret_cast<uint16_t*>(scriptPtr)[id * 2 + 1];
+    }
+
+    uint8_t* getCupDataJumpTable(uint32_t section, uint32_t id)
+    {
+        auto ptr = getScript(ACTIVE_MAP_SCRIPT);
+        ptr      = getScriptSection(ptr, section);
+        return getCupDataJumpTableEntry(ptr, id);
+    }
+
     void startTournament()
     {
         auto config = getTournamentConfig();
@@ -106,5 +120,56 @@ extern "C"
 
         TOURNAMENT_WINS = enforceStatsLimits(ScriptStats::TOURNAMENT_WINS, TOURNAMENT_WINS + wins);
         writePStat(255, wins);
+    }
+
+    int32_t minutesOfDay()
+    {
+        return MINUTE + HOUR * 60;
+    }
+
+    void updateTournamentRegistration()
+    {
+        // vanilla does this at the end of the function, but this would break due to the many returns
+        updateMapLightState(); // TODO relocate somewhere sensible
+
+        if (!isTriggerSet(37)) return;
+
+        auto registeredType = readPStat(4);
+        auto minutes        = minutesOfDay();
+
+        if (static_cast<uint8_t>(PARTNER_ENTITY.type) != registeredType)
+        {
+            unsetTrigger(0x25);
+            return;
+        }
+
+        auto tournamentDay = readPStat(2);
+        if ((tournamentDay & 0x80) != 0) return;
+        if (minutes < 720) return;
+        if (IS_SCRIPT_PAUSED == 0) return;
+        if (Tamer_getState() != 0) return;
+        if (Partner_getState() != 1) return;
+
+        for (const auto& val : UI_BOX_DATA)
+            if (val.state != 0) return;
+
+        if (minutes > 1380 || DAY != tournamentDay)
+        {
+            callScriptSection(0, 1242, true);
+            unsetTrigger(0x25);
+            return;
+        }
+        if (minutes < 1200)
+        {
+            if (!isTriggerSet(0x26)) return;
+            unsetTrigger(0x26);
+        }
+        else
+        {
+            if (!isTriggerSet(0x27)) return;
+            unsetTrigger(0x27);
+        }
+
+        callScriptSection(0, 1241, true);
     }
 }

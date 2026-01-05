@@ -1486,6 +1486,8 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern uint16_t SCRIPT_STATE_2;
+    extern uint8_t ACTIVE_INSTRUCTION;
     extern uint16_t TOURNAMENTS_WON;
     extern uint16_t TOURNAMENTS_LOST;
     extern uint16_t TOURNAMENT_WINS;
@@ -1705,10 +1707,12 @@ extern "C"
     extern MomentumData TAMER_MOMENTUM_DATA[22];
     extern SectionData SECTION_DATA;
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
+    extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    uint8_t* getScript(uint32_t scriptId);
+    uint8_t* getScriptSection(uint8_t* ptr, int32_t section);
+    void closeBox(int32_t id);
     void unsetTrigger(int32_t id);
-    uint16_t* getScriptJumpTableEntry(uint32_t section, uint32_t id);
-    uint8_t* readScriptJumpTableEntry(uint16_t* scriptPtr, int32_t id);
     int16_t enforceStatsLimits(ScriptStats type, uint32_t value);
     int32_t getEvoSequenceState(PartnerEntity* partner,
                                 int32_t buffer,

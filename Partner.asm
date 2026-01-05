@@ -80,9 +80,6 @@
 .org 0x80105528
   jal Partner_setState
 
-.org 0x800e6ddc
-  jal Partner_getState
-
 .org 0x801054a8
   jal Partner_startAnimation
 .org 0x80105520

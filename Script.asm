@@ -6,4 +6,7 @@
 .org 0x80105f78
   jal getScriptSyncBit
 
+.org 0x80105dec
+  jal scriptStartTournament
+
 .close
