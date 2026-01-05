@@ -26,6 +26,7 @@
 #include "Utils.hpp"
 #include "constants.hpp"
 #include "extern/DOOA.hpp"
+#include "extern/EVL.hpp"
 #include "extern/KAR.hpp"
 #include "extern/STD.hpp"
 #include "extern/dw1.hpp"
@@ -1585,6 +1586,56 @@ static void tickIdle()
     PARTNER_SUB_STATE = 1;
 }
 
+static void tickEvoSequenceLoading(int32_t id)
+{
+    if (EVO_SEQUENCE_DATA.state == 1)
+    {
+        if (EVO_SEQUENCE_DATA.timer > 0x37)
+        {
+            removeObject(ObjectID::EVO_SEQUENCE_LOADING, id);
+            stopBGM();
+            EVL_initEvoSequence();
+            return;
+        }
+    }
+
+    if (EVO_SEQUENCE_DATA.state == 0 && EVO_SEQUENCE_DATA.timer > 55)
+    {
+        EVO_SEQUENCE_DATA.state = 1;
+        EVO_SEQUENCE_DATA.timer = 0;
+        startAnimation(&PARTNER_ENTITY, 1);
+        addConditionBubble(7, EVO_SEQUENCE_DATA.partner);
+    }
+
+    EVO_SEQUENCE_DATA.timer = min(EVO_SEQUENCE_DATA.timer + 1, 30000);
+}
+
+static int32_t getEvoSequenceState(int16_t target, int16_t isInitialized)
+{
+    if (isInitialized != 0) return EVO_SEQUENCE_DATA.timer;
+
+    const auto type = static_cast<DigimonType>(target);
+
+    EVO_SEQUENCE_DATA.timer     = 0;
+    EVO_SEQUENCE_DATA.unk2      = 0;
+    EVO_SEQUENCE_DATA.state     = 0;
+    EVO_SEQUENCE_DATA.digimonId = type; // vanilla takes the ID from the statsgains data, but we already have it!
+    EVO_SEQUENCE_DATA.evoTarget = target;
+    EVO_SEQUENCE_DATA.heightFactor =
+        (getDigimonData(type)->radius * 4096) / getDigimonData(PARTNER_ENTITY.type)->radius;
+    EVO_SEQUENCE_DATA.partner = &PARTNER_ENTITY;
+    EVO_SEQUENCE_DATA.para    = &PARTNER_PARA;
+    startAnimation(&PARTNER_ENTITY, 0);
+    stopSound();
+    loadMapSounds2(18);
+    isSoundLoaded(false, 8);
+    loadVLALL(target, GENERAL_BUFFER.data());
+    loadDynamicLibrary(Overlay::EVL_REL, nullptr, false, 0, 0);
+    addObject(ObjectID::EVO_SEQUENCE_LOADING, 0, tickEvoSequenceLoading, nullptr);
+
+    return EVO_SEQUENCE_DATA.timer;
+}
+
 static void tickEvolving()
 {
     switch (PARTNER_SUB_STATE)
@@ -1608,11 +1659,7 @@ static void tickEvolving()
             auto closeness = getPartnerTamerCloseness();
             if (closeness > Closeness::SPRINT_DISTANCE)
             {
-                getEvoSequenceState(&PARTNER_ENTITY,
-                                    reinterpret_cast<int32_t>(GENERAL_BUFFER.data()),
-                                    &PARTNER_PARA,
-                                    EVOLUTION_TARGET,
-                                    0);
+                getEvoSequenceState(EVOLUTION_TARGET, 0);
                 // vanilla sets 0x80134E34 to 0 here, but it seems to be unused
                 PARTNER_SUB_STATE = 2;
             }
@@ -1620,11 +1667,7 @@ static void tickEvolving()
         }
         case 2:
         {
-            auto value = getEvoSequenceState(&PARTNER_ENTITY,
-                                             reinterpret_cast<int32_t>(GENERAL_BUFFER.data()),
-                                             &PARTNER_PARA,
-                                             EVOLUTION_TARGET,
-                                             1);
+            auto value = getEvoSequenceState(EVOLUTION_TARGET, 1);
 
             if (value != -1) return;
 
@@ -2472,5 +2515,19 @@ extern "C"
 
         for (auto& tech : PARTNER_ENTITY.stats.moves)
             if (isSameMove(entityGetTechFromAnim(&PARTNER_ENTITY, tech), move)) tech = 0xFF;
+    }
+
+    void reincarnatePartner(uint32_t unused, Stats* stats, PartnerPara* para, DigimonType type)
+    {
+        const auto previousType = PARTNER_ENTITY.type;
+
+        *stats                     = PARTNER_ENTITY.stats;
+        PARTNER_ENTITY.stats.moves = {0x2E, 0xFF, 0xFF, 0xFF};
+        removeEntity(previousType, 1);
+        ENTITY_TABLE.partner = nullptr;
+        unloadModel(static_cast<int32_t>(previousType), EntityType::PARTNER);
+        initializeReincarnatedPartner(type, 0, 0, 0, 0, 0, 0);
+        PARTNER_ENTITY.lives = 3;
+        setDigimonRaised(type);
     }
 }

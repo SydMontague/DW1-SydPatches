@@ -307,10 +307,10 @@
 ;  jal startAnimation
 ;.org 0x800df7c0
 ;  jal startAnimation
-.org 0x800e7288
-  jal startAnimation
-.org 0x800e73f8
-  jal startAnimation
+;.org 0x800e7288
+;  jal startAnimation
+;.org 0x800e73f8
+;  jal startAnimation
 .org 0x800e764c
   jal startAnimation
 .org 0x800e7684

@@ -45,7 +45,6 @@
 .definelabel tickMainMenu,              0x8010ff1c
 .definelabel renderMainMenu,            0x80113458
 .definelabel loadMapSounds2,            0x800e9034
-.definelabel getEvoSequenceState,       0x800e732c
 .definelabel triggerSeadramonCutscene,  0x800ff900
 .definelabel initializeFramebuffer,     0x800eec14
 .definelabel unsetTrigger,              0x801065fc
@@ -53,6 +52,8 @@
 .definelabel closeBox,                  0x801006d4
 .definelabel getScriptSection,          0x8010629c
 .definelabel getScript,                 0x80106218
+.definelabel loadVLALL,                 0x800e9154
+.definelabel setDigimonRaised,          0x800ff7f8
 
 .definelabel ACTIVE_MAP_SCRIPT, 0x80134fc2
 .definelabel ACTIVE_INSTRUCTION, 0x80134fe8
@@ -290,6 +291,9 @@
 .definelabel BTL_battleMain, 0x8005b5f4
 .definelabel BTL_healStatusEffect, 0x8005ed08
 .definelabel BTL_removeDeathCountdown, 0x80062874
+
+// EVL_REL
+.definelabel EVL_initEvoSequence, 0x8006309c
 
 // ENDI_REL
 .definelabel ENDI_tickEnding, 0x80060d00

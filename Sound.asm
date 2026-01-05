@@ -21,8 +21,8 @@
 
 ;.org 0x800e6bf4
 ;  jal stopBGM
-.org 0x800e72d0
-  jal stopBGM
+;.org 0x800e72d0
+;  jal stopBGM
 .org 0x800f2438
   jal stopBGM
 .org 0x800f2524
@@ -92,8 +92,8 @@
 ;.org 0x800dec68
 ;  jal loadMapSounds
 
-.org 0x800e7400
-  jal stopSound
+;.org 0x800e7400
+;  jal stopSound
 .org 0x800f2440
   jal stopSound
 .org 0x800f252c

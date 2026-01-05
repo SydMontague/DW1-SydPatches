@@ -228,3 +228,12 @@
   jal learnMove
 
 .close
+
+
+.open "work/DIGIMON/DOOA_REL.BIN",0x80080000
+.psx
+
+.org 0x80082534
+  jal reincarnatePartner
+
+.close

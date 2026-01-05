@@ -589,7 +589,7 @@ extern "C"
         int16_t speed;
         int16_t brain;
         uint8_t movesPrio[4];
-        uint8_t moves[4];
+        dtl::array<uint8_t,4> moves;
         int16_t hp;
         int16_t mp;
         int16_t currentHP;
@@ -697,15 +697,15 @@ extern "C"
 
     struct EvoSequenceData
     {
-        int32_t unk1;
+        int32_t timer;
         PartnerEntity* partner;
         int16_t unk2;
         DigimonType digimonId : 16;
         EvoModelData modelData;
-        int32_t unk3;
+        int32_t hasFinishedLoading;
         PartnerPara* para;
         int16_t evoTarget;
-        int16_t unk4;
+        int16_t state;
         int32_t heightFactor;
     };
 
@@ -1709,16 +1709,13 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void setDigimonRaised(DigimonType type);
+    void loadVLALL(int16_t type, uint8_t* buffer);
     uint8_t* getScript(uint32_t scriptId);
     uint8_t* getScriptSection(uint8_t* ptr, int32_t section);
     void closeBox(int32_t id);
     void unsetTrigger(int32_t id);
     int16_t enforceStatsLimits(ScriptStats type, uint32_t value);
-    int32_t getEvoSequenceState(PartnerEntity* partner,
-                                int32_t buffer,
-                                PartnerPara* para,
-                                int16_t evoTarget,
-                                int16_t isInitialized);
     bool loadMapSounds2(int32_t mapSoundId);
     void tickMainMenu(int32_t instanceId);
     void renderMainMenu(int32_t instanceId);

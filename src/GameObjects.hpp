@@ -33,6 +33,8 @@ extern "C"
         POISON_BUBBLE        = 2053,
         CONFUSION_EFFECT     = 2054,
         POISON_EFFECT        = 2056,
+        EVO_SEQUENCE_LOADING = 2057,
+        EVO_SEQUENCE         = 2058,
         FINISHER_AURA        = 2061,
         BUTTERFLY            = 2062,
         STUN_EFFECT          = 2063,
