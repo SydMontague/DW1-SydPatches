@@ -9,4 +9,10 @@
 .org 0x80105dec
   jal scriptStartTournament
 
+.org 0x80103eb8
+  jal checkTournamentMedalConditions
+
+.org 0x80105dfc
+  jal scriptCheckTournamentMedal
+
 .close
