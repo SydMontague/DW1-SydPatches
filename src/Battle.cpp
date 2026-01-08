@@ -1,13 +1,186 @@
 #include "Camera.hpp"
+#include "Entity.hpp"
+#include "Files.hpp"
 #include "GameMenu.hpp"
 #include "GameTime.hpp"
 #include "Helper.hpp"
 #include "Map.hpp"
+#include "Model.hpp"
 #include "Partner.hpp"
+#include "Sound.hpp"
 #include "extern/BTL.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgs.hpp"
 #include "extern/stddef.hpp"
+
+namespace
+{
+    bool isScreenConcave()
+    {
+        static constexpr dtl::array<uint8_t, 18> maps =
+            {166, 167, 210, 212, 219, 226, 227, 228, 247, 248, 249, 253, 254, 161, 132, 2, 13, 101};
+
+        for (auto map : maps)
+            if (map == CURRENT_SCREEN) return true;
+
+        return false;
+    }
+
+    template<typename T> static void waitUntil(T fn)
+    {
+        while (!fn())
+        {
+            if (!IS_PREDEFINED_BATTLE)
+            {
+                for (int32_t i = 1; i <= ENEMY_COUNT; i++)
+                    entityLookAtLocation(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i]),
+                                         &PARTNER_ENTITY.posData->location);
+
+                Partner_tickCollision();
+            }
+
+            loadCombatDataTick();
+        }
+    }
+
+    int32_t playBattleMusic(uint32_t talkedToEntity)
+    {
+        static constexpr dtl::array<uint8_t, 45> music{
+            2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 1, 1,
+            1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 1, 1, 2, 1, 2, 2, 2,
+        };
+
+        if (ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[1])->type == DigimonType::MACHINEDRAMON)
+            return 3;
+
+        if (IS_PREDEFINED_BATTLE) return 0;
+
+        if (talkedToEntity < 2 || talkedToEntity > 9) return 1;
+
+        auto enemyType = static_cast<uint32_t>(ENTITY_TABLE.getEntityById(talkedToEntity)->type) - 67;
+
+        if (enemyType < 0 || enemyType > music.size()) return 1;
+
+        return music[enemyType];
+    }
+
+    void loadBattleData(uint32_t talkedToEntity, uint32_t enemyCount)
+    {
+        LOAD_EFE_STATE = -1;
+        playMusic(33, playBattleMusic(talkedToEntity));
+
+        uint8_t finishedLoading;
+        loadDynamicLibrary(Overlay::BTL_REL, &finishedLoading, true, nullptr, nullptr);
+        tickPartnerWaypoints();
+        PARTNER_ENTITY.isOnScreen                 = 1;
+        ENEMY_COUNT                               = enemyCount;
+        COMBAT_DATA_PTR->player.currentCommand[0] = BattleCommand::YOUR_CALL;
+        startAnimation(&TAMER_ENTITY, 1);
+
+        for (int32_t i = 2; i < 10; i++)
+        {
+            auto* entity = ENTITY_TABLE.getEntityById(i);
+            if (!isInvisible(entity)) startAnimation(entity, 33);
+        }
+
+        GAME_STATE = 3;
+        if (!IS_PREDEFINED_BATTLE) startAnimation(&PARTNER_ENTITY, 36);
+
+        // wait for the library to load
+        waitUntil([&finishedLoading] { return finishedLoading == 0; });
+
+        // start sound loading
+        loadSB();
+        auto lastId = 4;
+        for (int32_t i = 1; i <= ENEMY_COUNT; i++)
+        {
+            auto* entity =
+                reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i]));
+            entity->vabId = 4 + i;
+            lastId        = readVBALLSection(4 + i, static_cast<int32_t>(entity->type));
+        }
+
+        // wait for sounds to finish loading
+        waitUntil([&] { return isSoundBufferLoadingDone(lastId) == 0; });
+
+        BTL_initializeBattleItemParticles();
+        BTL_initializeUnk3();
+        BTL_initializeUnk2();
+        BTL_loadEmbeddedTextures(&BTL_EMBEDDED_TEXTURE1, &BTL_EMBEDDED_TEXTURE2);
+
+        if (!IS_PREDEFINED_BATTLE) Partner_tickCollision();
+        loadCombatDataTick();
+
+        BTL_initializePoisonBubble();
+        BTL_initializeConfusionEffect(&BTL_CONFUSION_MODEL);
+
+        if (!IS_PREDEFINED_BATTLE) Partner_tickCollision();
+        loadCombatDataTick();
+
+        BTL_initializeStunEffect(&BTL_STUN_MODEL);
+
+        if (!IS_PREDEFINED_BATTLE) Partner_tickCollision();
+        loadCombatDataTick();
+
+        initializeUnknownModel(&BTL_UNKNOWN_MODEL);
+
+        if (!IS_PREDEFINED_BATTLE) Partner_tickCollision();
+        loadCombatDataTick();
+
+        initializeUnknownModelObject();
+        BTL_initializeEFEEngine(GENERAL_BUFFER.data());
+
+        if (!IS_PREDEFINED_BATTLE) Partner_tickCollision();
+        loadCombatDataTick();
+
+        dtl::array<int16_t, 18> moves{};
+        dtl::array<int16_t, 18> effectIds{};
+        int32_t moveCount = 0;
+
+        for (int32_t i = 0; i <= ENEMY_COUNT; i++)
+        {
+            auto* entity =
+                reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i]));
+            entity->unk1   = -1;
+            entity->unk2_1 = 0xFF;
+
+            for (auto& move : entity->stats.moves)
+            {
+                if (move == 0xFF) continue;
+                auto tech = entityGetTechFromAnim(entity, move);
+                if (tech == 0xFF)
+                {
+                    move = 0xFF;
+                    continue;
+                }
+                moves[moveCount++] = tech + 256;
+            }
+        }
+        moves[moveCount] = -1;
+
+        BTL_loadMoveEFE(moves.data(), effectIds.data(), &LOAD_EFE_STATE);
+
+        // vanilla calls isInvisible on all entities, but there are no side effects?
+        waitUntil([] { return LOAD_EFE_STATE <= 0; });
+
+        auto effectSlot = 0;
+        for (int32_t i = 0; i <= ENEMY_COUNT; i++)
+        {
+            auto* entity =
+                reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i]));
+
+            for (int32_t j = 0; j < 4; j++)
+            {
+                if (entity->stats.moves[j] == 0xFF)
+                    COMBAT_DATA_PTR->fighter[i].effectSlot[j] = -1;
+                else
+                    COMBAT_DATA_PTR->fighter[i].effectSlot[j] = effectIds[effectSlot++];
+            }
+        }
+
+        handleBattleIdle(&PARTNER_ENTITY, &PARTNER_ENTITY.stats, {0});
+    }
+} // namespace
 
 extern "C"
 {

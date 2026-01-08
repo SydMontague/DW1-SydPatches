@@ -1486,6 +1486,9 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern int16_t ENEMY_COUNT;
+    extern int8_t IS_PREDEFINED_BATTLE;
+    extern int8_t LOAD_EFE_STATE;
     extern uint16_t SCRIPT_STATE_2;
     extern uint8_t ACTIVE_INSTRUCTION;
     extern uint16_t TOURNAMENTS_WON;
@@ -1709,6 +1712,12 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    int32_t loadSB();
+    int32_t readVBALLSection(int32_t id, int32_t soundId);
+    int32_t isSoundBufferLoadingDone(int32_t id);
+    void initializeUnknownModel(void*);
+    void initializeUnknownModelObject();
+    void loadCombatDataTick();
     void setDigimonRaised(DigimonType type);
     void loadVLALL(int16_t type, uint8_t* buffer);
     uint8_t* getScript(uint32_t scriptId);
@@ -1734,7 +1743,6 @@ extern "C"
     bool isTriggerSet(int32_t trigger);
     bool isTamerOnScreen();
     uint32_t handleBattleStart(uint32_t talkedToEntity);
-    void loadBattleData(uint32_t talkedToEntity, uint32_t enemyCount);
     void playBGM(uint8_t soundFont);
     void renderUIBox(int32_t instanceId);
     bool hasMedal(Medal medal);

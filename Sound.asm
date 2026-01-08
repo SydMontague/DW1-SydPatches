@@ -56,18 +56,18 @@
 .org 0x80109254
   jal stopBGM
 
-.org 0x800e7524
-  jal playMusic
-.org 0x800e7560
-  jal playMusic
-.org 0x800e75b4
-  jal playMusic
-.org 0x800e75c8
-  jal playMusic
-.org 0x800e75ec
-  jal playMusic
-.org 0x800e75fc
-  jal playMusic
+;.org 0x800e7524
+;  jal playMusic
+;.org 0x800e7560
+;  jal playMusic
+;.org 0x800e75b4
+;  jal playMusic
+;.org 0x800e75c8
+;  jal playMusic
+;.org 0x800e75ec
+;  jal playMusic
+;.org 0x800e75fc
+;  jal playMusic
 .org 0x800f244c
   jal playMusic
 .org 0x800f2538

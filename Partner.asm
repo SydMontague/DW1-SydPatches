@@ -23,35 +23,6 @@
 .org 0x800eea7c
   jal initializePartner
 
-;.org 0x800dd9c8
-;  jal Partner_tickCollision
-.org 0x800e7734
-  jal Partner_tickCollision
-.org 0x800e7834
-  jal Partner_tickCollision
-.org 0x800e788c
-  jal Partner_tickCollision
-.org 0x800e78c0
-  jal Partner_tickCollision
-.org 0x800e78ec
-  jal Partner_tickCollision
-.org 0x800e7918
-  jal Partner_tickCollision
-.org 0x800e794c
-  jal Partner_tickCollision
-.org 0x800e7b10
-  jal Partner_tickCollision
-
-;.org 0x800dda78
-;  jal tickPartnerWaypoints
-;.org 0x800ddd48
-;  jal tickPartnerWaypoints
-;.org 0x800ddf6c
-;  jal tickPartnerWaypoints
-;.org 0x800de95c
-;  jal tickPartnerWaypoints
-.org 0x800e7624
-  jal tickPartnerWaypoints
 
 ;.org 0x800df624
 ;  jal Partner_setState

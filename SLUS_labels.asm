@@ -28,7 +28,6 @@
 .definelabel getCardAmount,             0x801067ec
 .definelabel renderUIBox,               0x80101440
 .definelabel playBGM,                   0x80106a80
-.definelabel loadBattleData,            0x800e74d0
 .definelabel handleBattleStart,         0x800e847c
 .definelabel isTriggerSet,              0x8010643c
 .definelabel NPCEntity_tickBattle,      0x800f1430
@@ -54,7 +53,16 @@
 .definelabel getScript,                 0x80106218
 .definelabel loadVLALL,                 0x800e9154
 .definelabel setDigimonRaised,          0x800ff7f8
+.definelabel loadSB,                    0x800e8f80
+.definelabel readVBALLSection,          0x800e8fb4
+.definelabel isSoundBufferLoadingDone,  0x800e8f64
+.definelabel initializeUnknownModel,    0x800f1838
+.definelabel initializeUnknownModelObject,0x800f1878
+.definelabel loadCombatDataTick,        0x800e7c3c
 
+.definelabel ENEMY_COUNT, 0x80134d6c
+.definelabel IS_PREDEFINED_BATTLE, 0x80134e84
+.definelabel LOAD_EFE_STATE, 0x80134e85
 .definelabel ACTIVE_MAP_SCRIPT, 0x80134fc2
 .definelabel ACTIVE_INSTRUCTION, 0x80134fe8
 .definelabel SCRIPT_STATE_2, 0x80134ffa
@@ -291,6 +299,21 @@
 .definelabel BTL_battleMain, 0x8005b5f4
 .definelabel BTL_healStatusEffect, 0x8005ed08
 .definelabel BTL_removeDeathCountdown, 0x80062874
+.definelabel BTL_initializeBattleItemParticles, 0x80071678
+.definelabel BTL_initializeUnk3, 0x800721e8
+.definelabel BTL_initializeUnk2, 0x80072a3c
+.definelabel BTL_initializePoisonBubble, 0x8006f088
+.definelabel BTL_loadEmbeddedTextures, 0x8007087c
+.definelabel BTL_initializeConfusionEffect, 0x8006f3c0
+.definelabel BTL_initializeStunEffect, 0x8006fdc4
+.definelabel BTL_initializeEFEEngine, 0x8006605c
+.definelabel BTL_loadMoveEFE, 0x80066198
+
+.definelabel BTL_EMBEDDED_TEXTURE1, 0x80052ae0
+.definelabel BTL_EMBEDDED_TEXTURE2, 0x80053800
+.definelabel BTL_CONFUSION_MODEL, 0x80054838
+.definelabel BTL_STUN_MODEL, 0x80054d00
+.definelabel BTL_UNKNOWN_MODEL, 0x80055328
 
 // EVL_REL
 .definelabel EVL_initEvoSequence, 0x8006309c

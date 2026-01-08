@@ -194,8 +194,8 @@ VLALL_address:
 ;  jal loadDynamicLibrary
 ;.org 0x800e743c
 ;  jal loadDynamicLibrary
-.org 0x800e761c
-  jal loadDynamicLibrary
+;.org 0x800e761c
+;  jal loadDynamicLibrary
 .org 0x800e89e8
   jal loadDynamicLibrary
 .org 0x800ff978

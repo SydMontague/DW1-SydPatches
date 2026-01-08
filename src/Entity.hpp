@@ -18,4 +18,5 @@ extern "C"
     void addEntityText(DigimonEntity* entity, int32_t entityId, int8_t color, int32_t value, int8_t icon);
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
     void entityLookAtTile(Entity* entity, int8_t tileX, int8_t tileY);
+    bool isInvisible(Entity* entity);
 }
