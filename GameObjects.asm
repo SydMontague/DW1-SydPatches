@@ -3,8 +3,8 @@
 
 ;.org 0x800e505c
 ;  jal tickObjects
-.org 0x800e7ca4
-  jal tickObjects
+;.org 0x800e7ca4
+;  jal tickObjects
 .org 0x800eee3c
   jal tickObjects
 .org 0x800eef44
@@ -18,8 +18,8 @@
 
 ;.org 0x800e5064
 ;  jal renderObjects
-.org 0x800e7cac
-  jal renderObjects
+;.org 0x800e7cac
+;  jal renderObjects
 .org 0x800eee44
   jal renderObjects
 .org 0x800eef4c
@@ -132,8 +132,8 @@
 ;  jal removeObject
 ;.org 0x800e72c8
 ;  jal removeObject
-.org 0x800e8474
-  j removeObject
+;.org 0x800e8474
+;  j removeObject
 .org 0x800e9fdc
   jal removeObject
 .org 0x800ece6c
@@ -261,8 +261,8 @@
 ;  jal addObject
 ;.org 0x800e745c
 ;  jal addObject
-.org 0x800e7de4
-  j addObject
+;.org 0x800e7de4
+;  j addObject
 .org 0x800e9dac
   jal addObject
 .org 0x800ec628

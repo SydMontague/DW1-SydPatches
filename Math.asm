@@ -138,8 +138,8 @@
 ;  jal atan
 ;.org 0x800d45d0
 ;  jal atan
-.org 0x800e81f8
-  jal atan
+;.org 0x800e81f8
+;  jal atan
 
 ;.org 0x800add78
 ;  jal lerp
@@ -188,8 +188,8 @@
 ;  jal worldPosToScreenPos
 ;.org 0x800daa30
 ;  jal worldPosToScreenPos
-.org 0x800e7f40
-  jal worldPosToScreenPos
+;.org 0x800e7f40
+;  jal worldPosToScreenPos
 .org 0x800e9f40
   jal worldPosToScreenPos
 .org 0x800ec6ac

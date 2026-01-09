@@ -1,20 +1,36 @@
+#include "Battle.h"
+
 #include "Camera.hpp"
 #include "Entity.hpp"
 #include "Files.hpp"
 #include "GameMenu.hpp"
+#include "GameObjects.hpp"
 #include "GameTime.hpp"
 #include "Helper.hpp"
 #include "Map.hpp"
+#include "Math.hpp"
 #include "Model.hpp"
 #include "Partner.hpp"
 #include "Sound.hpp"
 #include "extern/BTL.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libetc.hpp"
+#include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
+#include "extern/libgte.hpp"
 #include "extern/stddef.hpp"
 
 namespace
 {
+    struct FleeBubbleState
+    {
+        int16_t frame;
+        int16_t type;
+        // vanilla has 8 additional bytes, which are unused
+    };
+
+    dtl::array<FleeBubbleState, 9> FLEE_BUBBLE_DATA;
+
     bool isScreenConcave()
     {
         static constexpr dtl::array<uint8_t, 18> maps =
@@ -24,6 +40,25 @@ namespace
             if (map == CURRENT_SCREEN) return true;
 
         return false;
+    }
+
+    void loadBattleDataTick()
+    {
+        POLLED_INPUT          = libetc_PadRead(1);
+        ACTIVE_FRAMEBUFFER    = libgs_GsGetActiveBuffer();
+        ACTIVE_ORDERING_TABLE = GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER;
+        libgs_GsSetWorkBase(GS_WORK_BASES[ACTIVE_FRAMEBUFFER]);
+        libgs_GsClearOt(0, 0, ACTIVE_ORDERING_TABLE);
+        tickObjects();
+        renderObjects();
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 32, &DRAW_OFFSETS[ACTIVE_FRAMEBUFFER]);
+        libgpu_DrawSync(0);
+        libetc_vsync(3);
+        libgs_GsSetOrign(DRAWING_OFFSET_X, DRAWING_OFFSET_Y);
+        libgs_GsSwapDispBuff();
+        libgs_GsSortClear(0, 0, 0, ACTIVE_ORDERING_TABLE);
+        libgs_GsDrawOt(ACTIVE_ORDERING_TABLE);
+        POLLED_INPUT_PREVIOUS = POLLED_INPUT;
     }
 
     template<typename T> static void waitUntil(T fn)
@@ -39,7 +74,7 @@ namespace
                 Partner_tickCollision();
             }
 
-            loadCombatDataTick();
+            loadBattleDataTick();
         }
     }
 
@@ -109,29 +144,29 @@ namespace
         BTL_loadEmbeddedTextures(&BTL_EMBEDDED_TEXTURE1, &BTL_EMBEDDED_TEXTURE2);
 
         if (!IS_PREDEFINED_BATTLE) Partner_tickCollision();
-        loadCombatDataTick();
+        loadBattleDataTick();
 
         BTL_initializePoisonBubble();
         BTL_initializeConfusionEffect(&BTL_CONFUSION_MODEL);
 
         if (!IS_PREDEFINED_BATTLE) Partner_tickCollision();
-        loadCombatDataTick();
+        loadBattleDataTick();
 
         BTL_initializeStunEffect(&BTL_STUN_MODEL);
 
         if (!IS_PREDEFINED_BATTLE) Partner_tickCollision();
-        loadCombatDataTick();
+        loadBattleDataTick();
 
         initializeUnknownModel(&BTL_UNKNOWN_MODEL);
 
         if (!IS_PREDEFINED_BATTLE) Partner_tickCollision();
-        loadCombatDataTick();
+        loadBattleDataTick();
 
         initializeUnknownModelObject();
         BTL_initializeEFEEngine(GENERAL_BUFFER.data());
 
         if (!IS_PREDEFINED_BATTLE) Partner_tickCollision();
-        loadCombatDataTick();
+        loadBattleDataTick();
 
         dtl::array<int16_t, 18> moves{};
         dtl::array<int16_t, 18> effectIds{};
@@ -180,10 +215,112 @@ namespace
 
         handleBattleIdle(&PARTNER_ENTITY, &PARTNER_ENTITY.stats, {0});
     }
+
+    void removeFleeBubble(int32_t entityId)
+    {
+        removeObject(ObjectID::FLEE_BUBBLE, entityId);
+    }
+
+    void renderFleeBubble(int32_t id)
+    {
+        constexpr dtl::array<int8_t, 10> offsetArray{0x64, 0x68, 0x6C, 0x70, 0x74, 0x78, 0x74, 0x70, 0x6c, 0x68};
+
+        auto* entity = ENTITY_TABLE.getEntityById(id);
+        auto& bubble = FLEE_BUBBLE_DATA[id - 2];
+
+        SVector bubblePos{
+            .x = static_cast<int16_t>(entity->posData[0].location.x),
+            .y = static_cast<int16_t>(-250 - getDigimonData(entity->type)->height),
+            .z = static_cast<int16_t>(entity->posData[0].location.z),
+        };
+        if (bubble.frame < 5) bubblePos.y = -200 - getDigimonData(entity->type)->height - ((bubble.frame + 1) * 50) / 5;
+
+        auto pos       = getScreenPosition(bubblePos);
+        auto entityPos = getScreenPosition(entity->posData->location);
+        auto screenX   = clamp(pos.screenX, -140, 140);
+        auto screenY   = clamp(pos.screenY, -100, 100);
+        auto depth     = (VIEWPORT_DISTANCE * 0x90) / pos.depth;
+        if (bubble.frame < 5)
+            depth = (depth * (bubble.frame + 1)) / 5;
+        else
+            depth = (depth * offsetArray[(bubble.frame - 5) % 10]) / 100;
+
+        GsSPRITE sprite{
+            .attribute = 0,
+            .x         = screenX,
+            .y         = screenY,
+            .width     = static_cast<uint16_t>(depth < 0x30 ? 24 : 23),
+            .height    = static_cast<uint16_t>(depth < 0x30 ? 24 : 23),
+            .tpage     = 30,
+            .u         = static_cast<uint8_t>(bubble.type * 24 + 184),
+            .v         = 128,
+            .clutX     = 256,
+            .clutY     = 487,
+            .r         = 128,
+            .g         = 128,
+            .b         = 128,
+            .mx        = 11,
+            .my        = 12,
+            .scaleX    = static_cast<int16_t>((depth * 4096) / (depth < 0x30 ? 24 : 23)),
+            .scaleY    = static_cast<int16_t>((depth * 4096) / (depth < 0x30 ? 24 : 23)),
+            .rotate    = atan(-(entityPos.screenY - screenY), entityPos.screenX - screenX),
+        };
+
+        auto* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+        libgpu_SetPolyFT4(prim);
+        libgpu_SetSemiTrans(prim, 1);
+        prim->r0    = 128;
+        prim->g0    = 128;
+        prim->b0    = 128;
+        prim->tpage = 30;
+        prim->clut  = getClut(256, 0x1e7);
+        prim->u0    = bubble.type * 16 + 200;
+        prim->v0    = 152;
+        prim->u1    = (sprite.width == 0x18 ? 16 : 15) + bubble.type * 16 - 56;
+        prim->v1    = 152;
+        prim->u2    = bubble.type * 16 + 200;
+        prim->v2    = (sprite.width == 0x18 ? 16 : 15) + 152;
+        prim->u3    = (sprite.width == 0x18 ? 16 : 15) + bubble.type * 16 - 56;
+        prim->v3    = (sprite.width == 0x18 ? 16 : 15) + 152;
+
+        auto val   = ((depth * 2) / 3);
+        auto baseX = screenX - val / 2;
+        auto baseY = screenY - val / 2;
+        prim->x0   = baseX;
+        prim->y0   = baseY;
+        prim->x1   = baseX + val;
+        prim->y1   = baseY;
+        prim->x2   = baseX;
+        prim->y2   = baseY + val;
+        prim->x3   = baseX + val;
+        prim->y3   = baseY + val;
+
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 8, prim);
+        libgs_GsSetWorkBase(prim + 1);
+        libgs_GsSortSprite(&sprite, ACTIVE_ORDERING_TABLE, 8);
+        bubble.frame++;
+        if (LOAD_EFE_STATE == 0 || bubble.frame >= 200) removeFleeBubble(id);
+    }
 } // namespace
 
 extern "C"
 {
+    void handleBattleIdle(DigimonEntity* entity, Stats* stats, BattleFlags flags)
+    {
+        if (NO_AI_FLAG != 0 && entity != FINISHING_ENTITY) return;
+        if (entity->animId == 33) return;
+        if (entity->animId == 34) return;
+
+        startBattleIdleAnimation(entity, &entity->stats, flags);
+    }
+
+    void setFleeBubble(int32_t entityId, int16_t type)
+    {
+        FLEE_BUBBLE_DATA[entityId - 2].frame = 0;
+        FLEE_BUBBLE_DATA[entityId - 2].type  = type;
+        addObject(ObjectID::FLEE_BUBBLE, entityId, nullptr, renderFleeBubble);
+    }
+
     void advanceBattleTime(BattleResult result)
     {
         CURRENT_FRAME += 400;

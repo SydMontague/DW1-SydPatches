@@ -33,7 +33,6 @@
 .definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8
 .definelabel dailyPStatTrigger,         0x800fc374
-.definelabel handleBattleIdle,          0x800e7d40
 .definelabel startBattleIdleAnimation,  0x800e8970
 .definelabel checkCurlingMap,           0x800e89c8
 .definelabel checkArenaMap,             0x800ff9dc
@@ -58,8 +57,9 @@
 .definelabel isSoundBufferLoadingDone,  0x800e8f64
 .definelabel initializeUnknownModel,    0x800f1838
 .definelabel initializeUnknownModelObject,0x800f1878
-.definelabel loadCombatDataTick,        0x800e7c3c
 
+.definelabel NO_AI_FLAG, 0x80134f74
+.definelabel FINISHING_ENTITY, 0x80134d60
 .definelabel ENEMY_COUNT, 0x80134d6c
 .definelabel IS_PREDEFINED_BATTLE, 0x80134e84
 .definelabel LOAD_EFE_STATE, 0x80134e85

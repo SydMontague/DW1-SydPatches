@@ -8,6 +8,7 @@ extern "C"
         ENTITY_TEXT          = 402,
         THROWN_ITEM          = 404,
         DROPPED_ITEM         = 405,
+        FLEE_BUBBLE          = 406,
         DEATH_COUNTDOWN      = 407,
         COMMAND_BAR          = 408,
         FINISHER_BAR         = 410,

@@ -1,5 +1,6 @@
 #include "Partner.hpp"
 
+#include "Battle.h"
 #include "Camera.hpp"
 #include "DigimonData.hpp"
 #include "Effects.hpp"

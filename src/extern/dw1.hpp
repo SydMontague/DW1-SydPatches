@@ -1699,6 +1699,8 @@ extern "C"
     extern dtl::array<const char*, 128> ITEM_DESC_PTR;
     extern FishingData* FISHING_DATA_PTR;
     extern dtl::array<DR_OFFSET, 2> DRAW_OFFSETS;
+    extern int32_t NO_AI_FLAG;
+    extern Entity* FINISHING_ENTITY;
 
     // TODO can be relocated
     extern dtl::array<dtl::array<uint8_t, 8>, 180> DIGIMON_FILE_NAMES;
@@ -1717,7 +1719,6 @@ extern "C"
     int32_t isSoundBufferLoadingDone(int32_t id);
     void initializeUnknownModel(void*);
     void initializeUnknownModelObject();
-    void loadCombatDataTick();
     void setDigimonRaised(DigimonType type);
     void loadVLALL(int16_t type, uint8_t* buffer);
     uint8_t* getScript(uint32_t scriptId);
@@ -1734,7 +1735,6 @@ extern "C"
     void runMapHeadScript(uint8_t mapId);
     void checkCurlingMap(int32_t mapId);
     void checkArenaMap(int32_t mapId);
-    void handleBattleIdle(DigimonEntity* entity, Stats* stats, BattleFlags flags);
     void startBattleIdleAnimation(Entity* entity, Stats* stats, BattleFlags flags);
     void dailyPStatTrigger();
     void initializeLoadedNPCModels();
