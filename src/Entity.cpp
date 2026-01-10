@@ -21,10 +21,11 @@ Pair<Entity*, uint8_t> getEntityFromScriptId(uint8_t entityId)
     if (entityId == 0xFD) return {&TAMER_ENTITY, 0};
     if (entityId == 0xFC) return {&PARTNER_ENTITY, 1};
 
-    for (int32_t i = 0; i < 8; i++)
+    for (int32_t i = 2; i < 10; i++)
     {
-        auto* entity = &NPC_ENTITIES[i];
-        if (entity->scriptId == entityId) return {entity, static_cast<uint8_t>(i + 2)};
+        auto* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i));
+        if (entity == nullptr) continue;
+        if (entity->scriptId == entityId) return {entity, static_cast<uint8_t>(i)};
     }
 
     return {nullptr, entityId};
