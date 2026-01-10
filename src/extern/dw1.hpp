@@ -1734,9 +1734,7 @@ extern "C"
     void updateBGM();
     void startThrowingItem();
     void runMapHeadScript(uint8_t mapId);
-    void checkCurlingMap(int32_t mapId);
     void checkArenaMap(int32_t mapId);
-    void startBattleIdleAnimation(Entity* entity, Stats* stats, BattleFlags flags);
     void dailyPStatTrigger();
     void initializeLoadedNPCModels();
     void NPCEntity_tickBattle(int32_t instanceId);

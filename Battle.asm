@@ -51,7 +51,6 @@
 
 .close
 
-
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
 
@@ -108,6 +107,11 @@
   jal handleBattleIdle
 .org 0x8005aea0
   jal handleBattleIdle
+
+.org 0x800573a4
+  jal startBattleIdleAnimation
+.org 0x80059250
+  jal startBattleIdleAnimation
 
 .close
 

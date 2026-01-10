@@ -1150,6 +1150,11 @@ extern "C"
             MAP_TILES[i] = map->tiles[i];
     }
 
+    static void checkCurlingMap(int32_t mapId)
+    {
+        if (mapId == 0x88) loadDynamicLibrary(Overlay::KAR_REL, nullptr, false, nullptr, nullptr);
+    }
+
     void loadMap(uint32_t mapId)
     {
         auto& entry = MAP_ENTRIES[mapId];

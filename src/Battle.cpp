@@ -441,6 +441,12 @@ namespace
 
 extern "C"
 {
+    void startBattleIdleAnimation(Entity* entity, Stats* stats, BattleFlags flags)
+    {
+        bool isSlowed = flags.isPoisoned || stats->currentHP <= stats->hp / 5;
+        startAnimation(entity, isSlowed ? 34 : 33);
+    }
+
     void handleBattleIdle(DigimonEntity* entity, Stats* stats, BattleFlags flags)
     {
         if (NO_AI_FLAG != 0 && entity != FINISHING_ENTITY) return;

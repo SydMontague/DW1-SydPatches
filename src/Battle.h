@@ -4,4 +4,5 @@
 extern "C"
 {
     void handleBattleIdle(DigimonEntity* entity, Stats* stats, BattleFlags flags);
+    void startBattleIdleAnimation(Entity* entity, Stats* stats, BattleFlags flags);
 }

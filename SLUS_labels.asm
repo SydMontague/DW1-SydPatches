@@ -32,8 +32,6 @@
 .definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8
 .definelabel dailyPStatTrigger,         0x800fc374
-.definelabel startBattleIdleAnimation,  0x800e8970
-.definelabel checkCurlingMap,           0x800e89c8
 .definelabel checkArenaMap,             0x800ff9dc
 .definelabel runMapHeadScript,          0x80105ae4
 .definelabel startThrowingItem,         0x800f0490

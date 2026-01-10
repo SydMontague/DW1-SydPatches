@@ -1,4 +1,5 @@
 #include "Effects.hpp"
+#include "Files.hpp"
 #include "GameObjects.hpp"
 #include "Math.hpp"
 #include "Tamer.hpp"
@@ -146,6 +147,11 @@ extern "C"
         EFE_LOAD_STATE = -1;
         EFE_DATA_STACK = EFE_SCRIPT_MEM1_DATA;
         findEFEDATFile();
+    }
+
+    void fillEFEXTable()
+    {
+        // vanilla fills a table at 0x80155024, but it seems entirely unused?
     }
 
     void EFE_downloadSomeImage()

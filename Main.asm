@@ -42,6 +42,9 @@
 .org 0x800eebcc
   jal playMovie
 
+.org 0x800ee88c
+  jal fillEFEXTable
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
