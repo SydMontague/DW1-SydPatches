@@ -49,21 +49,6 @@
 .org 0x800f6b24
   jal handleBattleIdle
 
-.org 0x800e8514
-  jal setFleeBubble
-.org 0x800e85d8
-  jal setFleeBubble
-.org 0x800e8668
-  jal setFleeBubble
-.org 0x800e86bc
-  jal setFleeBubble
-.org 0x800e872c
-  jal setFleeBubble
-.org 0x800e8778
-  jal setFleeBubble
-.org 0x800e8924
-  jal setFleeBubble
-
 .close
 
 

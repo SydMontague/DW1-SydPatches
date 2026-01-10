@@ -66,21 +66,6 @@
 ;.org 0x800d41f8
 ;  jal isFiveTileWidePathBlocked
 
-;.org 0x800d3bbc
-;  jal isLinearPathBlocked
-;.org 0x800d3c0c
-;  jal isLinearPathBlocked
-;.org 0x800d4b30
-;  jal isLinearPathBlocked
-;.org 0x800d4b98
-;  jal isLinearPathBlocked
-;.org 0x800d4c3c
-;  jal isLinearPathBlocked
-.org 0x800e8714
-  jal isLinearPathBlocked
-.org 0x800e8760
-  jal isLinearPathBlocked
-
 .org 0x800eea04
   jal initializeMap
 .org 0x800eea84
@@ -151,9 +136,6 @@
 
 .org 0x801139d4
   jal getFileCityTopMap
-
-.org 0x800e6eac
-  jal updateMapLightState
 
 .close
 

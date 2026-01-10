@@ -28,7 +28,6 @@
 .definelabel getCardAmount,             0x801067ec
 .definelabel renderUIBox,               0x80101440
 .definelabel playBGM,                   0x80106a80
-.definelabel handleBattleStart,         0x800e847c
 .definelabel isTriggerSet,              0x8010643c
 .definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8
@@ -58,6 +57,7 @@
 .definelabel initializeUnknownModel,    0x800f1838
 .definelabel initializeUnknownModelObject,0x800f1878
 
+.definelabel FLEE_DISABLED, 0x80134d7c
 .definelabel NO_AI_FLAG, 0x80134f74
 .definelabel FINISHING_ENTITY, 0x80134d60
 .definelabel ENEMY_COUNT, 0x80134d6c

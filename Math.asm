@@ -65,10 +65,10 @@
 ;  jal random
 ;.org 0x800e6b78
 ;  jal random
-.org 0x800e8788
-  jal random
-.org 0x800e88f0
-  jal random
+;.org 0x800e8788
+;  jal random
+;.org 0x800e88f0
+;  jal random
 .org 0x800ed054
   jal random
 .org 0x800ed1e0

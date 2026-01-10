@@ -1701,6 +1701,7 @@ extern "C"
     extern dtl::array<DR_OFFSET, 2> DRAW_OFFSETS;
     extern int32_t NO_AI_FLAG;
     extern Entity* FINISHING_ENTITY;
+    extern bool FLEE_DISABLED;
 
     // TODO can be relocated
     extern dtl::array<dtl::array<uint8_t, 8>, 180> DIGIMON_FILE_NAMES;
@@ -1742,7 +1743,6 @@ extern "C"
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
     bool isTriggerSet(int32_t trigger);
     bool isTamerOnScreen();
-    uint32_t handleBattleStart(uint32_t talkedToEntity);
     void playBGM(uint8_t soundFont);
     void renderUIBox(int32_t instanceId);
     bool hasMedal(Medal medal);

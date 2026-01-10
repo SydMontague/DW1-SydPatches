@@ -7,6 +7,7 @@
 #include "GameObjects.hpp"
 #include "GameTime.hpp"
 #include "Helper.hpp"
+#include "Inventory.hpp"
 #include "Map.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
@@ -301,6 +302,141 @@ namespace
         bubble.frame++;
         if (LOAD_EFE_STATE == 0 || bubble.frame >= 200) removeFleeBubble(id);
     }
+
+    void setFleeBubble(int32_t entityId, int16_t type)
+    {
+        FLEE_BUBBLE_DATA[entityId - 2].frame = 0;
+        FLEE_BUBBLE_DATA[entityId - 2].type  = type;
+        addObject(ObjectID::FLEE_BUBBLE, entityId, nullptr, renderFleeBubble);
+    }
+
+    uint32_t handleBattleStartPredefined()
+    {
+        auto enemySlot = 1;
+        dtl::array<uint8_t, 4> val;
+        for (int32_t i = 0; i < 3; i++)
+        {
+            val[i] = readPStat(251 + i);
+            if (val[i] == 0xFF) continue;
+
+            setFleeBubble(val[i], 0);
+            COMBAT_DATA_PTR->player.entityIds[enemySlot++] = val[i];
+        }
+
+        for (int32_t i = 2; i < 10; i++)
+        {
+            if (val.contains(i)) continue;
+
+            auto* entity = ENTITY_TABLE.getEntityById(i);
+            if (!entity->isOnScreen)
+                entity->isOnMap = false;
+            else
+                setFleeBubble(i, 1);
+        }
+
+        return enemySlot - 1;
+    }
+
+    int8_t getFleeChance(DigimonType partner, DigimonType enemy)
+    {
+        constexpr dtl::array<dtl::array<int8_t, 3>, 3> lookup{{
+            {60, 70, 100},
+            {80, 60, 100},
+            {90, 100, 30},
+        }};
+
+        auto partnerTypus = getDigimonData(partner)->type;
+        auto enemyTypus   = getDigimonData(enemy)->type;
+
+        if (partnerTypus == Type::UNDEFINED) return 0;
+        if (enemyTypus == Type::UNDEFINED) return 0;
+        if (static_cast<uint8_t>(partnerTypus) == 0xFF) return 70;
+        if (static_cast<uint8_t>(enemyTypus) == 0xFF) return 70;
+
+        return lookup[static_cast<uint8_t>(partnerTypus) - 1][static_cast<uint8_t>(enemyTypus) - 1];
+    }
+
+    uint32_t handleBattleStartRandom(uint32_t talkedToEntity)
+    {
+        COMBAT_DATA_PTR->player.entityIds[1] = talkedToEntity;
+        auto isConcave                       = isScreenConcave();
+        auto enemyCount                      = 2;
+
+        for (int32_t i = 2; i < 10; i++)
+        {
+            auto* entity = ENTITY_TABLE.getEntityById(i);
+
+            if (entity == nullptr || !entity->isOnMap) continue;
+
+            if (i == talkedToEntity)
+            {
+                setFleeBubble(i, 0);
+                continue;
+            }
+
+            if (!entity->isOnScreen)
+            {
+                entity->isOnMap = false;
+                continue;
+            }
+            if (enemyCount > 3)
+            {
+                setFleeBubble(i, 1);
+                continue;
+            }
+
+            if (isConcave)
+            {
+                auto tamerTileX   = getTileX(TAMER_ENTITY.posData[0].location.x);
+                auto tamerTileY   = getTileZ(TAMER_ENTITY.posData[0].location.z);
+                auto enemyTileX   = getTileX(entity->posData[0].location.x);
+                auto enemyTileY   = getTileZ(entity->posData[0].location.z);
+                auto partnerTileX = getTileX(PARTNER_ENTITY.posData[0].location.x);
+                auto partnerTileY = getTileZ(PARTNER_ENTITY.posData[0].location.z);
+
+                auto tamerEnemyBlocked   = isLinearPathBlocked(tamerTileX, tamerTileY, enemyTileX, enemyTileY);
+                auto partnerEnemyBlocked = isLinearPathBlocked(partnerTileX, partnerTileY, enemyTileX, enemyTileY);
+
+                if (tamerEnemyBlocked || partnerEnemyBlocked)
+                {
+                    setFleeBubble(i, 1);
+                    continue;
+                }
+            }
+
+            auto roll     = random(100);
+            auto hasRepel = getItemCount(ItemType::ENEMY_REPEL) > 0;
+            auto hasBell  = getItemCount(ItemType::ENEMY_BELL) > 0;
+
+            if (hasBell)
+                roll -= 50;
+            else if (hasRepel)
+                roll += 20;
+
+            if (roll < getFleeChance(PARTNER_ENTITY.type, entity->type))
+            {
+                COMBAT_DATA_PTR->player.entityIds[enemyCount++] = i;
+                setFleeBubble(i, 0);
+            }
+            else
+                setFleeBubble(i, 1);
+        }
+
+        return enemyCount - 1;
+    }
+
+    uint32_t handleBattleStart(uint32_t talkedToEntity)
+    {
+        COMBAT_DATA_PTR->player.entityIds[0] = 1;
+        COMBAT_DATA_PTR->player.unk4         = 0;
+        FLEE_DISABLED                        = isTriggerSet(1);
+        IS_PREDEFINED_BATTLE                 = readPStat(0xfa);
+
+        if (IS_PREDEFINED_BATTLE) return handleBattleStartPredefined();
+
+        return handleBattleStartRandom(talkedToEntity);
+    }
+
 } // namespace
 
 extern "C"
@@ -313,14 +449,6 @@ extern "C"
 
         startBattleIdleAnimation(entity, &entity->stats, flags);
     }
-
-    void setFleeBubble(int32_t entityId, int16_t type)
-    {
-        FLEE_BUBBLE_DATA[entityId - 2].frame = 0;
-        FLEE_BUBBLE_DATA[entityId - 2].type  = type;
-        addObject(ObjectID::FLEE_BUBBLE, entityId, nullptr, renderFleeBubble);
-    }
-
     void advanceBattleTime(BattleResult result)
     {
         CURRENT_FRAME += 400;

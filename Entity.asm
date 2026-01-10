@@ -87,19 +87,6 @@
 .org 0x800f1050
   jal getModelTile
 
-;.org 0x800d4054
-;  jal getEntityTile
-;.org 0x800d4090
-;  jal getEntityTile
-;.org 0x800d4af0
-;  jal getEntityTile
-.org 0x800e86e0
-  jal getEntityTile
-.org 0x800e86fc
-  jal getEntityTile
-.org 0x800e8748
-  jal getEntityTile
-
 ;.org 0x800aa6f4
 ;  jal entityLookAtLocation
 ;.org 0x800aaae8
@@ -285,13 +272,6 @@
   jal entityLookAtTile
 .org 0x800f10f4
   jal entityLookAtTile
-
-;.org 0x800e7670
-;  jal isInvisible
-;.org 0x800e7a90
-;  jal isInvisible
-.org 0x800e85c0
-  jal isInvisible
 
 .close 
 
