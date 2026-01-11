@@ -1715,19 +1715,14 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
-    int32_t loadSB();
-    int32_t readVBALLSection(int32_t id, int32_t soundId);
-    int32_t isSoundBufferLoadingDone(int32_t id);
     void initializeUnknownModel(void*);
     void initializeUnknownModelObject();
     void setDigimonRaised(DigimonType type);
-    void loadVLALL(int16_t type, uint8_t* buffer);
     uint8_t* getScript(uint32_t scriptId);
     uint8_t* getScriptSection(uint8_t* ptr, int32_t section);
     void closeBox(int32_t id);
     void unsetTrigger(int32_t id);
     int16_t enforceStatsLimits(ScriptStats type, uint32_t value);
-    bool loadMapSounds2(int32_t mapSoundId);
     void tickMainMenu(int32_t instanceId);
     void renderMainMenu(int32_t instanceId);
     void Partner_tickBattle(int32_t instanceId);
@@ -1746,7 +1741,6 @@ extern "C"
     bool hasMedal(Medal medal);
     void unlockMedal(Medal medal);
     uint8_t getCardAmount(uint8_t cardId);
-    int32_t isSoundLoaded(bool isAsync, int32_t soundId);
     /*
      * Checks if a button has been pressed and consumes it (i.e. subsequent checks for the same button within the same
      * tick return false).

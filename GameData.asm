@@ -18,11 +18,11 @@
 .endarea
 
 .org 0x800d3078
-.area 0x800e8b00-.
+.area 0x800e9294-.
   .importobj "compiled/Cave3.lib"
 
-  .notice "Cave3 Empty space left: " + (0x800e8b00-.) + " bytes"
-  .fill 0x800e8b00-.
+  .notice "Cave3 Empty space left: " + (0x800e9294-.) + " bytes"
+  .fill 0x800e9294-.
 .endarea
 
 .org 0x8011d190
@@ -43,10 +43,6 @@ EVO_PATHS_DATA:
   .include "EvoPaths.asm"
 NAMING_DATA:
   .include "NamingData.asm"
-
-.align 4
-SB_address: ; 0x800e8f80
-.ascii "SOUND\\VHB\\SB",0
 
 .align 4
   .importobj "compiled/utils.lib"

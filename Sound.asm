@@ -352,6 +352,19 @@
 .org 0x80112b0c
   jal playSound
 
+.org 0x801043a8
+  jal readVBALLSection
+
+.org 0x801043b0
+  jal loadMapSounds2
+.org 0x801043ec
+  jal loadMapSounds2
+
+.org 0x80104400
+  jal isSoundLoaded
+.org 0x80104438
+  jal isSoundLoaded
+
 .close
 
 
@@ -480,8 +493,19 @@
 .org 0x80080ce8
   jal playSound2
 
-.close
+.org 0x8008020c
+  jal loadMapSounds2
 
+.org 0x80080218
+  jal isSoundLoaded
+
+.org 0x8008227c
+  jal loadVLALL
+
+.org 0x8008253c
+  jal waitForSoundBufferLoading
+
+.close
 
 .open "work/DIGIMON/ENDI_REL.BIN",0x80060000
 .psx
@@ -508,6 +532,15 @@
   jal stopSound
 .org 0x80060bf0
   jal playSound
+
+.org 0x8006101c
+  jal loadMapSounds2
+
+.org 0x80061044
+  jal isSoundLoaded
+
+.org 0x80060e18
+  jal waitForSoundBufferLoading
 
 .close
 
@@ -730,6 +763,12 @@
 .org 0x8006bf18
   jal playSound
 
+.org 0x800591a8
+  jal loadMapSounds2
+
+.org 0x800591b8
+  jal isSoundLoaded
+
 .close
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
@@ -849,5 +888,16 @@
   jal stopBGM
 .org 0x8006c644
   jal stopBGM
+
+.org 0x80058e70
+  jal readVBALLSection
+
+.org 0x80058f80
+  jal isSoundLoaded
+.org 0x8005905c
+  jal isSoundLoaded
+
+.org 0x80058f88
+  jal loadSB
 
 .close

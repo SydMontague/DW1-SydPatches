@@ -7,29 +7,42 @@
 #include "extern/libspu.hpp"
 #include "extern/stddef.hpp"
 
+struct SoundBufferData
+{
+    uint8_t* buffer;
+    uint16_t vabId;
+    uint8_t finishedLoading;
+    uint8_t unk;
+};
+
 static dtl::array<uint8_t, SS_SEQ_TABSIZ> SEQ_TABLE;
 static int16_t CURRENT_SEQ_TRACK;
 static int16_t CURRENT_SEQ_FONT;
 static int16_t SEQ_ACCESS_NUM;
 static uint32_t freeChannelIndex;
+static dtl::array<SoundBufferData, 10> SOUND_BUFFERS;
+static uint8_t LOAD_SOUND_COMPLETE_STATE;
+
+static uint32_t uploadSoundStart(uint8_t* buffer, int32_t param)
+{
+    auto size1 = reinterpret_cast<uint32_t*>(buffer)[0];
+    auto size2 = reinterpret_cast<uint32_t*>(buffer)[1];
+    memcpy(VHB_HEADER_ADDR[param], buffer + (size1 & 0xFFFFFFFC), size2 - size1);
+    libsnd_SsVabClose(param);
+    auto result = libsnd_SsVabOpenHeadSticky(VHB_HEADER_ADDR[param], param, VHB_SOUNDBUFFER_START[param]);
+    if (result < 0) return false;
+
+    auto result2 = libsnd_SsVabTransBody(buffer + size2, param);
+    if (result2 < 0) return false;
+
+    return true;
+}
 
 static int32_t readVHBFile(int32_t vabId, const char* filename, uint8_t* buffer)
 {
-    uint8_t path[64];
-    sprintf(path, "%s.VHB", filename);
-    readFile(reinterpret_cast<char*>(path), buffer);
-
-    auto size1 = *reinterpret_cast<uint32_t*>(buffer);
-    auto size2 = *reinterpret_cast<uint32_t*>(buffer + 4);
-
-    memcpy(VHB_HEADER_ADDR[vabId], buffer + (size1 & 0xFFFFFFFC), size2 - size1);
-
-    libsnd_SsVabClose(vabId);
-    auto result = libsnd_SsVabOpenHeadSticky(VHB_HEADER_ADDR[vabId], vabId, VHB_SOUNDBUFFER_START[vabId]);
-    if (result < 0) return -1;
-
-    auto result2 = libsnd_SsVabTransBody(buffer + size2, result);
-    if (result != result2) return -1;
+    readFile(filename, buffer);
+    auto result = uploadSoundStart(buffer, vabId);
+    if (!result) return -1;
 
     libsnd_SsVabTransCompleted(1);
     libsnd_SsUtGetVBaddrInSB(result);
@@ -54,20 +67,10 @@ static void seqClose()
 static int32_t
 readVHBFileSectors(int32_t vabId, const char* filename, uint8_t* buffer, uint32_t offset, int32_t sectors)
 {
-    uint8_t path[64];
-    sprintf(path, "%s.VHB", filename);
-    readFileSectors(reinterpret_cast<char*>(path), buffer, offset, sectors);
+    readFileSectors(filename, buffer, offset, sectors);
 
-    auto size1 = *reinterpret_cast<uint32_t*>(buffer);
-    auto size2 = *reinterpret_cast<uint32_t*>(buffer + 4);
-    memcpy(VHB_HEADER_ADDR[vabId], buffer + (size1 & 0xFFFFFFFC), size2 - size1);
-
-    libsnd_SsVabClose(vabId);
-    auto result = libsnd_SsVabOpenHeadSticky(VHB_HEADER_ADDR[vabId], vabId, VHB_SOUNDBUFFER_START[vabId]);
-    if (result < 0) return -1;
-
-    auto result2 = libsnd_SsVabTransBody(buffer + size2, result);
-    if (result != result2) return -1;
+    auto result = uploadSoundStart(buffer, vabId);
+    if (!result) return -1;
 
     libsnd_SsVabTransCompleted(1);
     libsnd_SsUtGetVBaddrInSB(result);
@@ -99,7 +102,7 @@ static void seqPlay()
 
 static bool loadMusicFont(int32_t font)
 {
-    auto result = readVHBFileSectors(2, "SOUND\\VHB\\FAALL", GENERAL_BUFFER.data(), (font - 1) * 0x27, 0x27);
+    auto result = readVHBFileSectors(2, "SOUND\\VHB\\FAALL.VHB", GENERAL_BUFFER.data(), (font - 1) * 0x27, 0x27);
     if (result == -1) return false;
 
     auto start = *reinterpret_cast<uint32_t*>(GENERAL_BUFFER.data() + 8);
@@ -153,6 +156,60 @@ static int32_t getSoundBank(DigimonType type)
     return DIGIMON_VLALL_SOUND_ID[static_cast<size_t>(type)];
 }
 
+static bool loadSoundCompleteCallback(void* para)
+{
+    auto param = reinterpret_cast<uint32_t>(para);
+
+    if (LOAD_SOUND_COMPLETE_STATE == 0)
+    {
+        auto result = uploadSoundStart(SOUND_BUFFERS[param].buffer, param);
+        if (!result)
+        {
+            SOUND_BUFFERS[param].vabId = 0xFFFF;
+            return false;
+        }
+
+        SOUND_BUFFERS[param].vabId = param;
+        LOAD_SOUND_COMPLETE_STATE  = 4;
+        return true;
+    }
+
+    if (LOAD_SOUND_COMPLETE_STATE == 4)
+    {
+        if (libsnd_SsVabTransCompleted(0) != 0) LOAD_SOUND_COMPLETE_STATE = 5;
+        return true;
+    }
+
+    if (LOAD_SOUND_COMPLETE_STATE == 5)
+    {
+        libsnd_SsUtGetVBaddrInSB(SOUND_BUFFERS[param].vabId);
+        return false;
+    }
+
+    return true;
+}
+
+static bool loadSoundFinishCallback(void* param)
+{
+    LOAD_SOUND_COMPLETE_STATE = 0;
+    setFileReadCallback2(loadSoundCompleteCallback, param);
+    return true;
+}
+
+static void uploadSoundBuffer(uint32_t param)
+{
+    auto result = uploadSoundStart(SOUND_BUFFERS[param].buffer, param);
+    if (!result)
+    {
+        SOUND_BUFFERS[param].vabId = 0xFFFF;
+        return;
+    }
+
+    SOUND_BUFFERS[param].vabId = param;
+    libsnd_SsVabTransCompleted(1);
+    libsnd_SsUtGetVBaddrInSB(SOUND_BUFFERS[param].vabId);
+}
+
 extern "C"
 {
     bool initializeMusic()
@@ -162,8 +219,8 @@ extern "C"
         libsnd_SsSetTableSize(SEQ_TABLE.data(), 1, 1);
         libsnd_SsSetTicKMode(2); // SS_TICK240
 
-        if (readVHBFile(0, "SOUND\\VHB\\SS", GENERAL_BUFFER.data()) == -1) return false;
-        if (readVHBFile(1, "SOUND\\VHB\\SL", GENERAL_BUFFER.data()) == -1) return false;
+        if (readVHBFile(0, "SOUND\\VHB\\SS.VHB", GENERAL_BUFFER.data()) == -1) return false;
+        if (readVHBFile(1, "SOUND\\VHB\\SL.VHB", GENERAL_BUFFER.data()) == -1) return false;
 
         libsnd_SsStart();
         libsnd_SsSetMVol(127, 127);
@@ -237,7 +294,7 @@ extern "C"
         if (vabId < 4 || vabId > 7) return;
 
         readVHBFileSectors(vabId,
-                           "SOUND\\VHB\\VBALL",
+                           "SOUND\\VHB\\VBALL.VHB",
                            GENERAL_BUFFER.data(),
                            DIGIMON_VBALL_SOUND_ID[static_cast<size_t>(type)] * 7,
                            7);
@@ -245,7 +302,8 @@ extern "C"
 
     void loadPartnerSounds(DigimonType type)
     {
-        auto result = readVHBFileSectors(3, "SOUND\\VHB\\VLALL", GENERAL_BUFFER.data(), getSoundBank(type) * 15, 15);
+        auto result =
+            readVHBFileSectors(3, "SOUND\\VHB\\VLALL.VHB", GENERAL_BUFFER.data(), getSoundBank(type) * 15, 15);
         if (result == -1) return;
 
         loadDigimonSounds(4, type);
@@ -254,7 +312,7 @@ extern "C"
     bool VS_loadSounds()
     {
         ACTIVE_MAP_SOUND_ID = -1;
-        return readVHBFile(8, "SOUND\\VHB\\SB", GENERAL_BUFFER.data()) != -1;
+        return readVHBFile(8, "SOUND\\VHB\\SB.VHB", GENERAL_BUFFER.data()) != -1;
     }
 
     bool loadMapSounds(int32_t mapSoundId)
@@ -264,8 +322,11 @@ extern "C"
         ACTIVE_MAP_SOUND_ID = mapSoundId;
         auto& data          = MAP_SOUND_PARA[mapSoundId];
 
-        auto result =
-            readVHBFileSectors(8, "SOUND\\VHB\\ESALL", GENERAL_BUFFER.data(), data.sectorId / 2, data.sectorCount / 2);
+        auto result = readVHBFileSectors(8,
+                                         "SOUND\\VHB\\ESALL.VHB",
+                                         GENERAL_BUFFER.data(),
+                                         data.sectorId / 2,
+                                         data.sectorCount / 2);
         return result != -1;
     }
 
@@ -294,5 +355,90 @@ extern "C"
         seqStop();
         seqClose();
         CURRENT_SEQ_TRACK = -1;
+    }
+
+    int32_t isSoundBufferLoadingDone(int32_t id)
+    {
+        return SOUND_BUFFERS[id].finishedLoading;
+    }
+
+    int32_t readVBALLSection(int32_t id, int32_t soundId)
+    {
+        if (id < 4 || id > 7) SOUND_BUFFERS[id].vabId = 0xFFFF;
+
+        SOUND_BUFFERS[id].buffer = GENERAL_BUFFER.data();
+        addFileReadRequestSection("SOUND\\VHB\\VBALL.VHB",
+                                  GENERAL_BUFFER.data(),
+                                  DIGIMON_VBALL_SOUND_ID[soundId] * 7,
+                                  7,
+                                  &SOUND_BUFFERS[id].finishedLoading,
+                                  loadSoundFinishCallback,
+                                  reinterpret_cast<void*>(id));
+        return id;
+    }
+
+    int32_t loadMapSounds2(int32_t mapSoundId)
+    {
+        if (ACTIVE_MAP_SOUND_ID == mapSoundId) return 1;
+
+        ACTIVE_MAP_SOUND_ID     = mapSoundId;
+        auto& para              = MAP_SOUND_PARA;
+        SOUND_BUFFERS[8].buffer = GENERAL_BUFFER.data();
+        addFileReadRequestSection("SOUND\\VHB\\VBALL.VHB",
+                                  GENERAL_BUFFER.data(),
+                                  para[mapSoundId].sectorId / 2,
+                                  para[mapSoundId].sectorCount / 2,
+                                  &SOUND_BUFFERS[8].finishedLoading,
+                                  loadSoundFinishCallback,
+                                  reinterpret_cast<void*>(8));
+        return 8;
+    }
+
+    int32_t isSoundLoaded(bool isAsync, int32_t soundId)
+    {
+        if (isAsync)
+        {
+            while (SOUND_BUFFERS[soundId].finishedLoading != 0)
+                tickFileReadQueue();
+        }
+        else if (SOUND_BUFFERS[soundId].finishedLoading != 0)
+            return -1;
+
+        return SOUND_BUFFERS[soundId].vabId != 0xFFFF;
+    }
+
+    int32_t loadVLALL(int16_t type, uint8_t* buffer)
+    {
+        readVBALLSection(4, type);
+        auto soundId = (type < 1 || type > 65) ? 15 : DIGIMON_VLALL_SOUND_ID[type];
+
+        SOUND_BUFFERS[3].buffer = buffer;
+        addFileReadRequestSection("SOUND\\VHB\\VLALL.VHB",
+                                  buffer,
+                                  soundId * 15,
+                                  15,
+                                  &SOUND_BUFFERS[3].finishedLoading,
+                                  nullptr,
+                                  nullptr);
+        return 3;
+    }
+
+    void waitForSoundBufferLoading(int32_t param)
+    {
+        while (SOUND_BUFFERS[param].finishedLoading != 0)
+            tickFileReadQueue();
+        uploadSoundBuffer(param);
+    }
+
+    int32_t loadSB()
+    {
+        ACTIVE_MAP_SOUND_ID     = -1;
+        SOUND_BUFFERS[8].buffer = GENERAL_BUFFER.data();
+        addFileReadRequestLookup("SOUND\\VHB\\SB.VHB",
+                                 GENERAL_BUFFER.data(),
+                                 &SOUND_BUFFERS[8].finishedLoading,
+                                 loadSoundFinishCallback,
+                                 reinterpret_cast<void*>(8));
+        return 8;
     }
 }

@@ -152,4 +152,6 @@ extern "C"
      * @param param the parameter passed to the callback, does nothing when isAsync is true
      */
     void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileCallback callback, void* param);
+
+    void setFileReadCallback2(FileCallback callback, void* param);
 }

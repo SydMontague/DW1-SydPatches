@@ -15,4 +15,10 @@ extern "C"
     void stopSoundMask(uint32_t mask);
     void finalizeMusic();
     bool initializeMusic();
+    int32_t isSoundBufferLoadingDone(int32_t id);
+    int32_t readVBALLSection(int32_t id, int32_t soundId);
+    int32_t loadMapSounds2(int32_t mapSoundId);
+    int32_t isSoundLoaded(bool isAsync, int32_t soundId);
+    int32_t loadVLALL(int16_t type, uint8_t* buffer);
+    int32_t loadSB();
 }

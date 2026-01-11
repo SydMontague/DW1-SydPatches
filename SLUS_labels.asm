@@ -22,7 +22,6 @@
 .definelabel main,                      0x800ee800
 .definelabel Tamer_tickBattle,          0x800f1214
 .definelabel isKeyDown,                 0x800fc054
-.definelabel isSoundLoaded,             0x800e90cc
 .definelabel unlockMedal,               0x800ff830
 .definelabel hasMedal,                  0x800ff85c
 .definelabel getCardAmount,             0x801067ec
@@ -39,7 +38,6 @@
 .definelabel Partner_tickBattle,        0x800f1414
 .definelabel tickMainMenu,              0x8010ff1c
 .definelabel renderMainMenu,            0x80113458
-.definelabel loadMapSounds2,            0x800e9034
 .definelabel triggerSeadramonCutscene,  0x800ff900
 .definelabel initializeFramebuffer,     0x800eec14
 .definelabel unsetTrigger,              0x801065fc
@@ -47,11 +45,7 @@
 .definelabel closeBox,                  0x801006d4
 .definelabel getScriptSection,          0x8010629c
 .definelabel getScript,                 0x80106218
-.definelabel loadVLALL,                 0x800e9154
 .definelabel setDigimonRaised,          0x800ff7f8
-.definelabel loadSB,                    0x800e8f80
-.definelabel readVBALLSection,          0x800e8fb4
-.definelabel isSoundBufferLoadingDone,  0x800e8f64
 .definelabel initializeUnknownModel,    0x800f1838
 .definelabel initializeUnknownModelObject,0x800f1878
 
