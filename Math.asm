@@ -118,10 +118,10 @@
 ;  jal sin
 ;.org 0x800c12d8
 ;  jal sin
-.org 0x800e9e58
-  jal sin
-.org 0x800e9ef8
-  jal sin
+;.org 0x800e9e58
+;  jal sin
+;.org 0x800e9ef8
+;  jal sin
 .org 0x800ecd80
   jal sin
 
@@ -129,8 +129,8 @@
 ;  jal cos
 ;.org 0x800c1320
 ;  jal cos
-.org 0x800e9e98
-  jal cos
+;.org 0x800e9e98
+;  jal cos
 
 ;.org 0x800ab228
 ;  jal atan
@@ -167,10 +167,10 @@
 ;  jal lerp
 ;.org 0x800c1378
 ;  jal lerp
-.org 0x800e9e4c
-  jal lerp
-.org 0x800e9eec
-  jal lerp
+;.org 0x800e9e4c
+;  jal lerp
+;.org 0x800e9eec
+;  jal lerp
 .org 0x800ecd04
   jal lerp
 .org 0x800ecd30
@@ -190,8 +190,8 @@
 ;  jal worldPosToScreenPos
 ;.org 0x800e7f40
 ;  jal worldPosToScreenPos
-.org 0x800e9f40
-  jal worldPosToScreenPos
+;.org 0x800e9f40
+;  jal worldPosToScreenPos
 .org 0x800ec6ac
   jal worldPosToScreenPos
 .org 0x800fbee8

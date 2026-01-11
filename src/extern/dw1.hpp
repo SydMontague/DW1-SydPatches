@@ -1584,8 +1584,6 @@ extern "C"
     extern uint16_t HOUR;
     extern uint16_t DAY;
     extern uint16_t YEAR;
-    extern int32_t HAS_BUTTERFLY;
-    extern uint32_t BUTTERFLY_ID;
     extern uint8_t ITEM_SCOLD_FLAG;
     extern uint32_t HAS_IMMORTAL_HOUR;
     extern uint8_t IMMORTAL_HOUR;
@@ -1751,13 +1749,11 @@ extern "C"
     extern void renderDropShadow(Entity* entity);
     extern void Partner_tick(int32_t);
     extern void initializeConditionBubbles();
-    extern void initializeButterfly();
     extern void initializePoop();
     extern uint8_t readPStat(int32_t address);
     extern void writePStat(int32_t address, uint8_t value);
     extern void unsetBubble(uint32_t id);
     extern uint8_t addConditionBubble(uint32_t type, Entity* entity);
-    extern uint32_t setButterfly(Entity* entity);
     extern uint16_t convertAsciiToJis(uint8_t input);
     extern void clearTextSubArea(RECT* rect);
     void triggerSeadramonCutscene();
@@ -1767,8 +1763,6 @@ extern "C"
     extern void setTextColor(int32_t color);
     extern void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
     extern bool hasDigimonRaised(DigimonType type);
-
-    extern void unsetButterfly(uint32_t id);
     void initializeFramebuffer();
 }
 

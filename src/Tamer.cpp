@@ -1,3 +1,4 @@
+#include "Butterfly.hpp"
 #include "Camera.hpp"
 #include "Entity.hpp"
 #include "Evolution.hpp"
@@ -883,11 +884,7 @@ extern "C"
     {
         if (GAME_STATE != 0 || Tamer_getState() != 0)
         {
-            if (HAS_BUTTERFLY == 0)
-            {
-                unsetButterfly(BUTTERFLY_ID);
-                HAS_BUTTERFLY = -1;
-            }
+            if (hasButterfly()) removeButterfly();
         }
 
         switch (GAME_STATE)

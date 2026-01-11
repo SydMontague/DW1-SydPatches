@@ -1,6 +1,7 @@
 #include "Partner.hpp"
 
 #include "Battle.h"
+#include "Butterfly.hpp"
 #include "Camera.hpp"
 #include "DigimonData.hpp"
 #include "Effects.hpp"
@@ -325,8 +326,7 @@ static void tickUnhappinessMechanics()
     {
         PARTNER_PARA.condition.isUnhappy = false;
         PARTNER_ENTITY.loopCount         = 1;
-        unsetButterfly(BUTTERFLY_ID);
-        HAS_BUTTERFLY = -1;
+        removeButterfly();
     }
 }
 
@@ -1044,11 +1044,7 @@ static void handleScold()
     PARTNER_PARA.refusedFavFood      = 0; // TODO unused mechanic
     PARTNER_PARA.condition.isUnhappy = false;
     NANIMON_TRIGGER                  = 0;
-    if (HAS_BUTTERFLY == 0)
-    {
-        unsetButterfly(BUTTERFLY_ID);
-        HAS_BUTTERFLY = -1;
-    }
+    if (hasButterfly()) removeButterfly();
 
     if (getDigimonData(PARTNER_ENTITY.type)->level != Level::ROOKIE) return;
     if (PARTNER_PARA.happiness != HAPPINESS_MIN) return;
@@ -1756,11 +1752,7 @@ static void tickOverworld(int32_t instanceId)
 
 static void tick(int32_t instanceId)
 {
-    if ((GAME_STATE != 0 || PARTNER_STATE != 1) && HAS_BUTTERFLY == 0)
-    {
-        unsetButterfly(BUTTERFLY_ID);
-        HAS_BUTTERFLY = -1;
-    }
+    if ((GAME_STATE != 0 || PARTNER_STATE != 1) && hasButterfly()) removeButterfly();
 
     switch (GAME_STATE)
     {
@@ -1803,8 +1795,6 @@ extern "C"
     void initializeStatusObjects()
     {
         initializeConditionBubbles();
-        initializeButterfly();
-        HAS_BUTTERFLY = -1;
         initializePoop();
         EVOLUTION_TARGET   = -1;
         CURRENT_POOP_ID    = 0;
@@ -2141,10 +2131,9 @@ extern "C"
 
         if (bubbleType != -1)
         {
-            if (HAS_BUTTERFLY == 0)
+            if (hasButterfly())
             {
-                unsetButterfly(BUTTERFLY_ID);
-                HAS_BUTTERFLY                    = -1;
+                removeButterfly();
                 PARTNER_PARA.condition.isUnhappy = false;
                 PARTNER_ENTITY.loopCount         = 1;
             }
@@ -2156,11 +2145,10 @@ extern "C"
                 conditionBubbleType  = bubbleType;
             }
         }
-        else if (PARTNER_PARA.condition.isUnhappy && HAS_BUTTERFLY == -1)
+        else if (PARTNER_PARA.condition.isUnhappy && !hasButterfly())
         {
             unsetBubble(conditionBubbleId);
-            BUTTERFLY_ID  = setButterfly(&PARTNER_ENTITY);
-            HAS_BUTTERFLY = 0;
+            addButterfly(&PARTNER_ENTITY);
         }
     }
 

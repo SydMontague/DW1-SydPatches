@@ -16,8 +16,8 @@
 .org 0x801042cc
   jal createMeramonShake
 
-.org 0x800e9e30
-  jal translateConditionFXToEntity
+;.org 0x800e9e30
+;  jal translateConditionFXToEntity
 .org 0x800ec684
   jal translateConditionFXToEntity
 .org 0x800fbedc
@@ -25,8 +25,8 @@
 
 ;.org 0x800ae5b0
 ;  jal renderSprite
-.org 0x800e9f98
-  jal renderSprite
+;.org 0x800e9f98
+;  jal renderSprite
 .org 0x800ec7c4
   jal renderSprite
 .org 0x800ec898

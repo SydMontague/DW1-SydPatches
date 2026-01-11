@@ -7,7 +7,7 @@ struct _CoordinateType
 {
     int16_t screenX;
     int16_t screenY;
-    int16_t depth;
+    int32_t depth;
 };
 
 // represents screen coordinates, relative to the center of the visible screen
