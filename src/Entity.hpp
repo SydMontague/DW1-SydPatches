@@ -19,4 +19,5 @@ extern "C"
     uint8_t entityGetTechFromAnim(DigimonEntity* entity, uint8_t move);
     void entityLookAtTile(Entity* entity, int8_t tileX, int8_t tileY);
     bool isInvisible(Entity* entity);
+    bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
 }

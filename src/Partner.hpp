@@ -4,7 +4,6 @@
 extern "C"
 {
     void initializeStatusObjects();
-    void tickConditionBubble();
     void handlePoopWeightLoss(DigimonType type);
     void setFoodTimer(DigimonType type);
     void renderPoop(int32_t instanceId);

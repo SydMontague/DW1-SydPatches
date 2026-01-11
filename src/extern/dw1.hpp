@@ -588,8 +588,8 @@ extern "C"
         int16_t def;
         int16_t speed;
         int16_t brain;
-        uint8_t movesPrio[4];
-        dtl::array<uint8_t,4> moves;
+        dtl::array<uint8_t, 4> movesPrio;
+        dtl::array<uint8_t, 4> moves;
         int16_t hp;
         int16_t mp;
         int16_t currentHP;
@@ -1731,9 +1731,7 @@ extern "C"
     void dailyPStatTrigger();
     void initializeLoadedNPCModels();
     void NPCEntity_tickBattle(int32_t instanceId);
-    bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
     bool isTriggerSet(int32_t trigger);
-    bool isTamerOnScreen();
     void playBGM(uint8_t soundFont);
     void renderUIBox(int32_t instanceId);
     bool hasMedal(Medal medal);
@@ -1744,25 +1742,21 @@ extern "C"
      * tick return false).
      */
     bool isKeyDown(uint16_t keyMask);
-    extern void Tamer_tickBattle(int32_t instanceId);
-    extern int32_t main();
-    extern void renderDropShadow(Entity* entity);
-    extern void Partner_tick(int32_t);
-    extern void initializeConditionBubbles();
-    extern void initializePoop();
-    extern uint8_t readPStat(int32_t address);
-    extern void writePStat(int32_t address, uint8_t value);
-    extern void unsetBubble(uint32_t id);
-    extern uint8_t addConditionBubble(uint32_t type, Entity* entity);
-    extern uint16_t convertAsciiToJis(uint8_t input);
-    extern void clearTextSubArea(RECT* rect);
+    void Tamer_tickBattle(int32_t instanceId);
+    int32_t main();
+    void initializeConditionBubbles();
+    uint8_t readPStat(int32_t address);
+    void writePStat(int32_t address, uint8_t value);
+    void unsetBubble(uint32_t id);
+    uint8_t addConditionBubble(uint32_t type, Entity* entity);
+    uint16_t convertAsciiToJis(uint8_t input);
+    void clearTextSubArea(RECT* rect);
     void triggerSeadramonCutscene();
-
-    extern void setTrigger(uint32_t triggerId);
-    extern void clearTextArea();
-    extern void setTextColor(int32_t color);
-    extern void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
-    extern bool hasDigimonRaised(DigimonType type);
+    void setTrigger(uint32_t triggerId);
+    void clearTextArea();
+    void setTextColor(int32_t color);
+    void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
+    bool hasDigimonRaised(DigimonType type);
     void initializeFramebuffer();
 }
 
