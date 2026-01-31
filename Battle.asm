@@ -49,6 +49,18 @@
 .org 0x800f6b24
   jal handleBattleIdle
 
+.org 0x800ed720
+  jal initializeUnusedBitText
+
+.org 0x800ed78c
+  jal battleStatsGainsAndDrops
+  
+.org 0x800ed848
+  jal handleBattleInjury
+
+.org 0x800ed8b0
+  jal battleMoveLearning
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

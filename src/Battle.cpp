@@ -13,6 +13,7 @@
 #include "Model.hpp"
 #include "Partner.hpp"
 #include "Sound.hpp"
+#include "UIElements.hpp"
 #include "extern/BTL.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libetc.hpp"
@@ -437,6 +438,24 @@ namespace
         return handleBattleStartRandom(talkedToEntity);
     }
 
+    int32_t getStatGainChance(Stat stat)
+    {
+        switch (stat)
+        {
+            case Stat::HP:
+                return ((COMBAT_DATA_PTR->player.startingHP - PARTNER_ENTITY.stats.currentHP) * 100) /
+                       PARTNER_ENTITY.stats.hp;
+            case Stat::MP:
+            case Stat::OFFENSE: return COMBAT_DATA_PTR->player.hitCount * 10;
+            case Stat::DEFENSE: return COMBAT_DATA_PTR->player.unk2 * 10;
+            case Stat::SPEED:
+                return COMBAT_DATA_PTR->player.blockedCount * 10 +
+                       ((COMBAT_DATA_PTR->player.startingHP - PARTNER_ENTITY.stats.currentHP) * 50) /
+                           PARTNER_ENTITY.stats.hp;
+            case Stat::BRAINS: return COMBAT_DATA_PTR->player.hitCount * 5 + COMBAT_DATA_PTR->player.unk2 * 5;
+            default: return 0;
+        }
+    }
 } // namespace
 
 extern "C"
@@ -622,5 +641,97 @@ extern "C"
     void swapInt(uint32_t* left, uint32_t* right)
     {
         dtl::swap(*left, *right);
+    }
+
+    void initializeUnusedBitText()
+    {
+        libgpu_SetPolyFT4(&UNUSED_BIT_TEXT);
+        UNUSED_BIT_TEXT.tpage = 0x1b;
+        UNUSED_BIT_TEXT.clut  = getClut(208, 488);
+        UNUSED_BIT_TEXT.r0    = 128;
+        UNUSED_BIT_TEXT.g0    = 128;
+        UNUSED_BIT_TEXT.b0    = 128;
+        setUVDataPolyFT4(&UNUSED_BIT_TEXT, 0x9C, 0xF0, 0x18, 0xC);
+    }
+
+    // this function blows up in size otherwise
+    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
+    __attribute__((optimize("Os"))) void battleStatsGainsAndDrops(ItemType* droppedItems)
+    {
+        constexpr dtl::array<uint8_t, 4> enemyCountFactor{0, 10, 12, 16};
+        StatsGains gains{};
+
+        for (int32_t i = 0; i < 6; i++)
+        {
+            auto stat        = static_cast<Stat>(i);
+            auto partnerStat = max(1, INITIAL_COMBAT_STATS[0].get(stat));
+            auto enemyStat   = 1;
+
+            for (int32_t i = 0; i < ENEMY_COUNT; i++)
+                enemyStat = max(enemyStat, INITIAL_COMBAT_STATS[1 + i].get(stat));
+
+            if (enemyStat < partnerStat)
+            {
+                auto chance = (enemyStat * enemyCountFactor[ENEMY_COUNT] * 100) / (partnerStat * 10);
+                STATS_GAINS.set(stat, random(100) < chance ? 1 : 0);
+            }
+            else
+                STATS_GAINS.set(stat,
+                                (partnerStat + enemyStat * enemyCountFactor[ENEMY_COUNT] - 1) / (partnerStat * 10));
+        }
+
+        for (int32_t i = 0; i < 6; i++)
+        {
+            auto stat = static_cast<Stat>(i);
+            if (STATS_GAINS.get(stat) != 0) continue;
+
+            STATS_GAINS.set(stat, random(100) < getStatGainChance(stat) ? 1 : 0);
+        }
+
+        for (int32_t i = 0; i < 3; i++)
+        {
+            droppedItems[i] = ItemType::NONE;
+            if (CURRENT_SCREEN == 143 || ENEMY_COUNT <= i) continue;
+
+            auto type   = ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i + 1])->type;
+            auto chance = getDigimonData(type)->dropChance;
+            if (random(100) < chance) droppedItems[i] = getDigimonData(type)->dropItem;
+        }
+    }
+
+    void handleBattleInjury()
+    {
+        auto currentHP = PARTNER_ENTITY.stats.currentHP;
+        auto maxHP     = PARTNER_ENTITY.stats.hp;
+        auto tiredness = PARTNER_PARA.tiredness;
+        auto chance    = tiredness - (currentHP * 100) / maxHP;
+
+        if (random(100) < chance) PARTNER_PARA.condition.isInjured = true;
+    }
+
+    void battleMoveLearning()
+    {
+        dtl::array<uint8_t, 12> learnableMoves;
+        uint32_t count = 0;
+
+        for (auto move : COMBAT_DATA_PTR->player.usedMoves)
+        {
+            if (move == 0xFF) break;
+            if (hasMove(move)) continue;
+
+            auto special    = getMove(move)->special;
+            const auto data = getDigimonData(PARTNER_ENTITY.type);
+            auto index      = data->special.indexOf(special);
+            if (index == 0xFFFFFFFF) continue;
+            if (!data->moves.contains(move)) continue;
+
+            if (random(100) < MOVE_LEARN_CHANCES[move][index]) learnableMoves[count++] = move;
+        }
+
+        if (count == 0) return;
+
+        auto picked = learnableMoves[random(count)];
+        learnMove(picked);
+        BTL_appendMoveLearnedText(picked);
     }
 }

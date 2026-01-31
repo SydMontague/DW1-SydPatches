@@ -21,4 +21,5 @@ extern "C"
     void BTL_initializeStunEffect(void*);
     void BTL_initializeEFEEngine(void*);
     void BTL_loadMoveEFE(int16_t* moves, int16_t* effectIds, int8_t* isLoaded);
+    void BTL_appendMoveLearnedText(int move);
 }

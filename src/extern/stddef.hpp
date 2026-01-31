@@ -29,7 +29,7 @@ namespace dtl
      */
     template<typename T, size_t elem_count> struct array
     {
-        using value_type = T;
+        using value_type                      = T;
         static constexpr size_t element_count = elem_count;
 
         static_assert(elem_count != 0);
@@ -58,6 +58,16 @@ namespace dtl
 
             return false;
         };
+
+        constexpr size_t indexOf(const T& value) const
+        {
+            for (size_t i = 0; i < elem_count; i++)
+            {
+                if (elements[i] == value) return i;
+            }
+
+            return 0xFFFFFFFF;
+        }
     };
 
     template<typename T, size_t size> struct RingQueue

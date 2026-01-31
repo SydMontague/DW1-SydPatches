@@ -196,10 +196,10 @@ extern "C"
         int16_t height;
         Type type;
         Level level;
-        Special special[3];
-        uint8_t dropItem;
+        dtl::array<Special, 3> special;
+        ItemType dropItem;
         uint8_t dropChance;
-        uint8_t moves[16];
+        dtl::array<uint8_t, 16> moves;
         uint8_t padding;
     };
 
@@ -1249,7 +1249,7 @@ extern "C"
         uint8_t mpCost;
         uint8_t iframes;
         Range range;
-        uint8_t special;
+        Special special;
         Status status;
         uint8_t accuracy;
         uint8_t statusChance;
@@ -1479,6 +1479,54 @@ extern "C"
         LIVES,
     };
 
+    enum class Stat
+    {
+        HP,
+        MP,
+        OFFENSE,
+        DEFENSE,
+        SPEED,
+        BRAINS,
+    };
+
+    struct StatsGains
+    {
+        int16_t hp;
+        int16_t mp;
+        int16_t offense;
+        int16_t defense;
+        int16_t speed;
+        int16_t brains;
+
+        int16_t get(Stat stat)
+        {
+            switch (stat)
+            {
+                case Stat::HP: return hp;
+                case Stat::MP: return mp;
+                case Stat::OFFENSE: return offense;
+                case Stat::DEFENSE: return defense;
+                case Stat::SPEED: return speed;
+                case Stat::BRAINS: return brains;
+                default: return 0;
+            }
+        }
+
+        void set(Stat stat, int16_t value)
+        {
+            switch (stat)
+            {
+                case Stat::HP: hp = value; break;
+                case Stat::MP: mp = value; break;
+                case Stat::OFFENSE: offense = value; break;
+                case Stat::DEFENSE: defense = value; break;
+                case Stat::SPEED: speed = value; break;
+                case Stat::BRAINS: brains = value; break;
+                default: return;
+            }
+        }
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1486,6 +1534,9 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern POLY_FT4 UNUSED_BIT_TEXT;
+    extern dtl::array<StatsGains, 4> INITIAL_COMBAT_STATS;
+    extern StatsGains STATS_GAINS;
     extern int16_t ENEMY_COUNT;
     extern int8_t IS_PREDEFINED_BATTLE;
     extern int8_t LOAD_EFE_STATE;
@@ -1703,6 +1754,7 @@ extern "C"
 
     // TODO can be relocated
     extern dtl::array<dtl::array<uint8_t, 8>, 180> DIGIMON_FILE_NAMES;
+    extern dtl::array<dtl::array<uint8_t, 3>, 58> MOVE_LEARN_CHANCES;
     // TODO: can be non-extern, but large
     extern dtl::array<uint8_t, 22136> SEQ_BUFFER;
     extern PositionData PARTNER_POSITION_DATA[34];

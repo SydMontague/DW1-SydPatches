@@ -43,6 +43,10 @@
 .definelabel initializeUnknownModel,    0x800f1838
 .definelabel initializeUnknownModelObject,0x800f1878
 
+.definelabel UNUSED_BIT_TEXT, 0x801555a8
+.definelabel MOVE_LEARN_CHANCES, 0x80125fa4
+.definelabel INITIAL_COMBAT_STATS, 0x8013d610
+.definelabel STATS_GAINS, 0x8013d468
 .definelabel FLEE_DISABLED, 0x80134d7c
 .definelabel NO_AI_FLAG, 0x80134f74
 .definelabel FINISHING_ENTITY, 0x80134d60
@@ -294,6 +298,7 @@
 .definelabel BTL_initializeStunEffect, 0x8006fdc4
 .definelabel BTL_initializeEFEEngine, 0x8006605c
 .definelabel BTL_loadMoveEFE, 0x80066198
+.definelabel BTL_appendMoveLearnedText, 0x80062d70
 
 .definelabel BTL_EMBEDDED_TEXTURE1, 0x80052ae0
 .definelabel BTL_EMBEDDED_TEXTURE2, 0x80053800
