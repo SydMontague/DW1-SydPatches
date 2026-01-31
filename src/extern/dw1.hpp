@@ -1744,11 +1744,8 @@ extern "C"
     bool isKeyDown(uint16_t keyMask);
     void Tamer_tickBattle(int32_t instanceId);
     int32_t main();
-    void initializeConditionBubbles();
     uint8_t readPStat(int32_t address);
     void writePStat(int32_t address, uint8_t value);
-    void unsetBubble(uint32_t id);
-    uint8_t addConditionBubble(uint32_t type, Entity* entity);
     uint16_t convertAsciiToJis(uint8_t input);
     void clearTextSubArea(RECT* rect);
     void triggerSeadramonCutscene();

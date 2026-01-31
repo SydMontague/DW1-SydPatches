@@ -122,8 +122,8 @@
 ;  jal sin
 ;.org 0x800e9ef8
 ;  jal sin
-.org 0x800ecd80
-  jal sin
+;.org 0x800ecd80
+;  jal sin
 
 ;.org 0x800adb04
 ;  jal cos
@@ -171,12 +171,12 @@
 ;  jal lerp
 ;.org 0x800e9eec
 ;  jal lerp
-.org 0x800ecd04
-  jal lerp
-.org 0x800ecd30
-  jal lerp
-.org 0x800ecd78
-  jal lerp
+;.org 0x800ecd04
+;  jal lerp
+;.org 0x800ecd30
+;  jal lerp
+;.org 0x800ecd78
+;  jal lerp
 
 ;.org 0x800adc6c
 ;  jal worldPosToScreenPos
@@ -192,13 +192,13 @@
 ;  jal worldPosToScreenPos
 ;.org 0x800e9f40
 ;  jal worldPosToScreenPos
-.org 0x800ec6ac
-  jal worldPosToScreenPos
+;.org 0x800ec6ac
+;  jal worldPosToScreenPos
 .org 0x800fbee8
   jal worldPosToScreenPos
 
-.org 0x800ec530
-  j setInt16WithStride
+;.org 0x800ec530
+;  j setInt16WithStride
 
 .org 0x800ed5fc
   jal getEntityScreenPos

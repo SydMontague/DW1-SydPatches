@@ -11,11 +11,8 @@
 .definelabel callScriptSection,         0x80105b14
 .definelabel hasDigimonRaised,          0x800ff824
 .definelabel setTrigger,                0x801065c0
-.definelabel unsetBubble,               0x800ece20
-.definelabel addConditionBubble,        0x800ec538
 .definelabel readPStat,                 0x801062e0
 .definelabel writePStat,                0x80106474
-.definelabel initializeConditionBubbles,0x800ec520
 .definelabel main,                      0x800ee800
 .definelabel Tamer_tickBattle,          0x800f1214
 .definelabel isKeyDown,                 0x800fc054

@@ -19,7 +19,7 @@ namespace
         .attribute = 0x50000000,
         .x         = 0,
         .y         = 0,
-        .width     = 17,
+        .width     = 17, // 16 in vanilla, causing one pixel to be cut off
         .height    = 16,
         .tpage     = 0x3F,
         .u         = 0,

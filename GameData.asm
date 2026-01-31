@@ -33,6 +33,14 @@
   .fill 0x800e9ff4-.
 .endarea
 
+.org 0x800ec520
+.area 0x800ece84-.
+  .importobj "compiled/Cave5.lib"
+
+  .notice "Cave5 Empty space left: " + (0x800ece84-.) + " bytes"
+  .fill 0x800ece84-.
+.endarea
+
 .org 0x8011d190
 .area 0x8012344c-.
   .importobj "compiled/GameData.lib"
@@ -62,6 +70,14 @@ NAMING_DATA:
   .fill 0x8012344c-.
 .endarea
 
+
+; override condition bubble data
+.org 0x8012cb8c
+.area 0x8012ce64-.
+
+  .notice "Empty space left: " + (0x8012ce64-.) + " bytes"
+  .fill 0x8012ce64-.
+.endarea
 
 ; override vanilla attack objects
 .org 0x80137a24

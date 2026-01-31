@@ -18,8 +18,8 @@
 
 ;.org 0x800e9e30
 ;  jal translateConditionFXToEntity
-.org 0x800ec684
-  jal translateConditionFXToEntity
+;.org 0x800ec684
+;  jal translateConditionFXToEntity
 .org 0x800fbedc
   jal translateConditionFXToEntity
 
@@ -27,26 +27,26 @@
 ;  jal renderSprite
 ;.org 0x800e9f98
 ;  jal renderSprite
-.org 0x800ec7c4
-  jal renderSprite
-.org 0x800ec898
-  jal renderSprite
-.org 0x800ec970
-  jal renderSprite
-.org 0x800ec9e4
-  jal renderSprite
-.org 0x800eca40
-  jal renderSprite
-.org 0x800eca98
-  jal renderSprite
-.org 0x800ecb0c
-  jal renderSprite
-.org 0x800ecbd0
-  jal renderSprite
-.org 0x800ecc0c
-  jal renderSprite
-.org 0x800ecc40
-  jal renderSprite
+;.org 0x800ec7c4
+;  jal renderSprite
+;.org 0x800ec898
+;  jal renderSprite
+;.org 0x800ec970
+;  jal renderSprite
+;.org 0x800ec9e4
+;  jal renderSprite
+;.org 0x800eca40
+;  jal renderSprite
+;.org 0x800eca98
+;  jal renderSprite
+;.org 0x800ecb0c
+;  jal renderSprite
+;.org 0x800ecbd0
+;  jal renderSprite
+;.org 0x800ecc0c
+;  jal renderSprite
+;.org 0x800ecc40
+;  jal renderSprite
 
 .close
 

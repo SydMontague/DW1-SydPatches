@@ -3,6 +3,7 @@
 #include "Battle.h"
 #include "Butterfly.hpp"
 #include "Camera.hpp"
+#include "ConditionBubble.hpp"
 #include "DigimonData.hpp"
 #include "Effects.hpp"
 #include "Entity.hpp"
@@ -772,7 +773,7 @@ namespace
             }
             if (bubbleType != conditionBubbleType && conditionBubbleTimer >= 50)
             {
-                unsetBubble(conditionBubbleId);
+                removeConditionBubble(conditionBubbleId);
                 conditionBubbleId    = addConditionBubble(bubbleType, &PARTNER_ENTITY);
                 conditionBubbleTimer = 0;
                 conditionBubbleType  = bubbleType;
@@ -780,7 +781,7 @@ namespace
         }
         else if (PARTNER_PARA.condition.isUnhappy && !hasButterfly())
         {
-            unsetBubble(conditionBubbleId);
+            removeConditionBubble(conditionBubbleId);
             addButterfly(&PARTNER_ENTITY);
         }
     }
@@ -1963,7 +1964,6 @@ extern "C"
 
     void initializeStatusObjects()
     {
-        initializeConditionBubbles();
         initializePoop();
         EVOLUTION_TARGET   = -1;
         CURRENT_POOP_ID    = 0;

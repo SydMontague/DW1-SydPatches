@@ -34,7 +34,8 @@ mips-g++ GameData.cpp -o ../compiled/GameData.lib $FLAGS
 
 mips-g++ GameTime.cpp InventoryUI.cpp Timestamp.cpp FixedNumbers.cpp Main.cpp Fade.cpp GameObjects.cpp Helper.cpp NPCEntity.cpp Entity.cpp Tamer.cpp Effects.cpp -o ../compiled/Cave1.lib $FLAGS
 mips-g++ Map.cpp Model.cpp ItemEffects.cpp ItemFunctions.cpp GameMenu.cpp PlayerMenu.cpp DigimonMenu.cpp StatsView.cpp TechView.cpp PlayerInfoView.cpp PlayerChartView.cpp PlayerMedalView.cpp PlayerCardView.cpp -o ../compiled/Cave2.lib $FLAGS
-mips-g++ Pause.cpp Movie.cpp VanillaText.cpp Fishing.cpp Matrix.cpp Utils.cpp Files.cpp EFE.cpp MapObjects.cpp Script.cpp Partner.cpp DOOA/DOOA.cpp CombatCommon.cpp Inventory.cpp Sound.cpp Math.cpp Camera.cpp Battle.cpp Tournament.cpp DigimonData.cpp Transformation.cpp Evolution.cpp -o ../compiled/Cave3.lib $FLAGS
+mips-g++ ConditionBubble.cpp Movie.cpp VanillaText.cpp Fishing.cpp Matrix.cpp Utils.cpp Files.cpp EFE.cpp MapObjects.cpp Script.cpp Partner.cpp DOOA/DOOA.cpp CombatCommon.cpp Inventory.cpp Sound.cpp Math.cpp Camera.cpp Battle.cpp Tournament.cpp DigimonData.cpp Transformation.cpp Evolution.cpp -o ../compiled/Cave3.lib $FLAGS
 mips-g++ Butterfly.cpp -o ../compiled/Cave4.lib $FLAGS
+mips-g++ Pause.cpp -o ../compiled/Cave5.lib $FLAGS
 
 cd -
