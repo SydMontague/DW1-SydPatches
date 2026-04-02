@@ -599,6 +599,7 @@ extern "C"
     struct DigimonEntity : Entity
     {
         Stats stats;
+        // TODO belongs all into stats
         int16_t unk1;
         uint8_t unk2_1;
         uint8_t unk2_2;
@@ -613,7 +614,7 @@ extern "C"
         uint32_t unk1;
         uint32_t unk2;
         uint8_t name[20];
-        int32_t lives;
+        int8_t lives;
     };
 
     struct TamerEntity : Entity
@@ -1525,6 +1526,10 @@ extern "C"
                 default: return;
             }
         }
+
+        bool isAllZero() {
+            return hp == 0 && mp == 0 && offense == 0 && defense == 0 && speed == 0 && brains == 0;
+        }
     };
 
     extern PartnerPara PARTNER_PARA;
@@ -1534,6 +1539,8 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern int16_t POST_BATTLE_STATS_TIMER;
+    extern int32_t HAS_TAKEN_DAMAGE;
     extern POLY_FT4 UNUSED_BIT_TEXT;
     extern dtl::array<StatsGains, 4> INITIAL_COMBAT_STATS;
     extern StatsGains STATS_GAINS;
@@ -1751,6 +1758,8 @@ extern "C"
     extern int32_t NO_AI_FLAG;
     extern Entity* FINISHING_ENTITY;
     extern bool FLEE_DISABLED;
+    extern int32_t BITS_TO_GAIN;
+    extern bool SHOULD_SKIP_BIT_COUNTING;
 
     // TODO can be relocated
     extern dtl::array<dtl::array<uint8_t, 8>, 180> DIGIMON_FILE_NAMES;
@@ -1807,6 +1816,9 @@ extern "C"
     void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
     bool hasDigimonRaised(DigimonType type);
     void initializeFramebuffer();
+    void createPostBattleStatsBox();
+    void removeBattleEndBox(int32_t id);
+    void resetStatsAfterCombat();
 }
 
 static_assert(sizeof(PositionData) == 0x88);

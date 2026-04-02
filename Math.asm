@@ -69,18 +69,18 @@
 ;  jal random
 ;.org 0x800e88f0
 ;  jal random
-.org 0x800ed054
-  jal random
-.org 0x800ed1e0
-  jal random
-.org 0x800ed2b0
-  jal random
-.org 0x800ed370
-  jal random
-.org 0x800ed524
-  jal random
-.org 0x800ed560
-  jal random
+;.org 0x800ed054
+;  jal random
+;.org 0x800ed1e0
+;  jal random
+;.org 0x800ed2b0
+;  jal random
+;.org 0x800ed370
+;  jal random
+;.org 0x800ed524
+;  jal random
+;.org 0x800ed560
+;  jal random
 .org 0x800f3cd4
   jal random
 .org 0x800f44a4
@@ -200,8 +200,8 @@
 ;.org 0x800ec530
 ;  j setInt16WithStride
 
-.org 0x800ed5fc
-  jal getEntityScreenPos
+;.org 0x800ed5fc
+;  jal getEntityScreenPos
 .org 0x800ee010
   jal getEntityScreenPos
 .org 0x80101120

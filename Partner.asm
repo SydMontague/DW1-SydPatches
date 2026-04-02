@@ -61,8 +61,8 @@
 .org 0x80103668
   jal callDigimonRoutine
 
-.org 0x800ed400
-  jal hasMove
+;.org 0x800ed400
+;  jal hasMove
 .org 0x800fe444
   jal hasMove
 .org 0x800fe554
@@ -70,8 +70,8 @@
 .org 0x80106d20
   j hasMove
 
-.org 0x800ed580
-  jal learnMove
+;.org 0x800ed580
+;  jal learnMove
 .org 0x801067e4
   j learnMove
 

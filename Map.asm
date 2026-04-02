@@ -52,9 +52,6 @@
 .org 0x80104d40
   jal spawnItem
 
-.org 0x800eda74
-  jal spawnDroppedItem
-
 .org 0x800f03dc
   jal initializeDroppedItems
 

@@ -137,10 +137,10 @@
 ;  jal playSound
 ;.org 0x800e64dc
 ;  jal playSound
-.org 0x800edb6c
-  jal playSound
-.org 0x800edbcc
-  jal playSound
+;.org 0x800edb6c
+;  jal playSound
+;.org 0x800edbcc
+;  jal playSound
 .org 0x800ee298
   jal playSound
 .org 0x800eedac

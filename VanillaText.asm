@@ -4,13 +4,10 @@
 .org 0x800ee350
   jal setEntityTextDigit
 
-.org 0x800ece90
-  jal initStringFT4
-
-.org 0x800edc1c
-  jal renderNumber
-.org 0x800edd6c
-  jal renderNumber
+;.org 0x800edc1c
+;  jal renderNumber
+;.org 0x800edd6c
+;  jal renderNumber
 .org 0x800ee3fc
   jal renderNumber
 .org 0x800ee464
@@ -21,8 +18,8 @@
 .org 0x800f997c
   jal convertValueToDigits
 
-.org 0x800edcb0
-  jal renderString
+;.org 0x800edcb0
+;  jal renderString
 .org 0x800ede40
   jal renderString
 .org 0x800ee548

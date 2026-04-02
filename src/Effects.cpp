@@ -961,7 +961,7 @@ extern "C"
         ScreenCoord xy2;
         auto screenZ = libgte_RotTransPers3(pos1, pos2, pos3, &xy0.raw, &xy1.raw, &xy2.raw, &dummy1, &dummy2);
 
-        if (screenZ <= 0x20 || screenZ >= 0x1000) return;
+        if (screenZ / 4 <= 0x20 || screenZ / 4 >= 0x1000) return;
 
         prim->x0 = xy0.x;
         prim->x1 = xy1.x;
@@ -984,6 +984,8 @@ extern "C"
         ScreenCoord xy2;
         ScreenCoord xy3;
         auto screenZ = libgte_RotTransPers4(pos1, pos2, pos3, pos4, &xy0.raw, &xy1.raw, &xy2.raw, &xy3.raw, &emp, &ty);
+
+        if (screenZ / 4 <= 0x20 || screenZ / 4 >= 0x1000) return;
 
         prim->x0 = xy0.x;
         prim->x1 = xy1.x;

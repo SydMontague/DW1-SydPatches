@@ -2514,7 +2514,7 @@ extern "C"
     {
         const auto previousType = PARTNER_ENTITY.type;
 
-        *stats                     = PARTNER_ENTITY.stats;
+        DEATH_STATS = PARTNER_ENTITY.stats;
         PARTNER_ENTITY.stats.moves = {0x2E, 0xFF, 0xFF, 0xFF};
         removeEntity(previousType, 1);
         ENTITY_TABLE.partner = nullptr;

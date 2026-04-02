@@ -42,7 +42,12 @@
 .definelabel setDigimonRaised,          0x800ff7f8
 .definelabel initializeUnknownModel,    0x800f1838
 .definelabel initializeUnknownModelObject,0x800f1878
+.definelabel createPostBattleStatsBox,  0x800edebc
+.definelabel removeBattleEndBox,        0x800ee7b4
+.definelabel resetStatsAfterCombat,     0x800ede58
 
+.definelabel SHOULD_SKIP_BIT_COUNTING, 0x80134e9c
+.definelabel BITS_TO_GAIN, 0x80134e90
 .definelabel UNUSED_BIT_TEXT, 0x801555a8
 .definelabel MOVE_LEARN_CHANCES, 0x80125fa4
 .definelabel INITIAL_COMBAT_STATS, 0x8013d610
@@ -284,6 +289,8 @@
 .definelabel TOURNAMENTS_WON, 0x80134fcc
 .definelabel TOURNAMENTS_LOST, 0x80134fce
 .definelabel TOURNAMENT_WINS, 0x80134fd0
+.definelabel HAS_TAKEN_DAMAGE, 0x800134d70
+.definelabel POST_BATTLE_STATS_TIMER, 0x80134ea0
 
 // BTL_REL
 .definelabel BTL_battleMain, 0x8005b5f4
@@ -299,12 +306,23 @@
 .definelabel BTL_initializeEFEEngine, 0x8006605c
 .definelabel BTL_loadMoveEFE, 0x80066198
 .definelabel BTL_appendMoveLearnedText, 0x80062d70
+.definelabel BTL_tickBattleEndText, 0x80062f58
+.definelabel BTL_renderBattleEndText, 0x8006306c
+.definelabel BTL_initializeBattleEndText, 0x800628b4
+.definelabel BTL_appendItemDroppedText, 0x8006291c
+.definelabel BTL_appendInjuredText, 0x800629f4
+.definelabel BTL_appendCommandLearnedText, 0x80062a58
+.definelabel BTL_appendMPBonusText, 0x80062c2c
+.definelabel BTL_battleTickFrame, 0x8005dec4
+.definelabel BTL_drawBattleEndText, 0x80062de4
+.definelabel BTL_isEndBoxTextFinished, 0x800630c0
 
 .definelabel BTL_EMBEDDED_TEXTURE1, 0x80052ae0
 .definelabel BTL_EMBEDDED_TEXTURE2, 0x80053800
 .definelabel BTL_CONFUSION_MODEL, 0x80054838
 .definelabel BTL_STUN_MODEL, 0x80054d00
 .definelabel BTL_UNKNOWN_MODEL, 0x80055328
+.definelabel BTL_END_BOX_TEXTBUFFER, 0x80073ea0
 
 // EVL_REL
 .definelabel EVL_initEvoSequence, 0x8006309c
