@@ -384,7 +384,7 @@ extern "C"
         ACTIVE_MAP_SOUND_ID     = mapSoundId;
         auto& para              = MAP_SOUND_PARA;
         SOUND_BUFFERS[8].buffer = GENERAL_BUFFER.data();
-        addFileReadRequestSection("SOUND\\VHB\\VBALL.VHB",
+        addFileReadRequestSection("SOUND\\VHB\\ESALL.VHB",
                                   GENERAL_BUFFER.data(),
                                   para[mapSoundId].sectorId / 2,
                                   para[mapSoundId].sectorCount / 2,
