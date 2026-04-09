@@ -57,8 +57,8 @@
 ;  jal removeAnimatedUIBox
 ;.org 0x800dc2c0
 ;  jal removeAnimatedUIBox
-.org 0x800ee7e8
-  jal removeAnimatedUIBox
+;.org 0x800ee7e8
+;  jal removeAnimatedUIBox
 .org 0x800f4dd8
   jal removeAnimatedUIBox
 .org 0x800f4f70
@@ -94,8 +94,8 @@
 ;  jal createAnimatedUIBox
 ;.org 0x800ed6f8
 ;  jal createAnimatedUIBox
-.org 0x800ee068
-  jal createAnimatedUIBox
+;.org 0x800ee068
+;  jal createAnimatedUIBox
 .org 0x800f5104
   jal createAnimatedUIBox
 .org 0x80100460
@@ -104,10 +104,10 @@
 .org 0x8010d300
   jal renderUIBoxBorder
 
-.org 0x800ee720
-  jal drawLine3P
-.org 0x800ee754
-  jal drawLine3P
+;.org 0x800ee720
+;  jal drawLine3P
+;.org 0x800ee754
+;  jal drawLine3P
 .org 0x800fda94
   jal drawLine3P
 .org 0x800fdac0
@@ -130,10 +130,10 @@
 ;  jal drawLine2P
 ;.org 0x800edd0c
 ;  jal drawLine2P
-.org 0x800ee4c0
-  jal drawLine2P
-.org 0x800ee4f8
-  jal drawLine2P
+;.org 0x800ee4c0
+;  jal drawLine2P
+;.org 0x800ee4f8
+;  jal drawLine2P
 .org 0x800fe0cc
   jal drawLine2P
 .org 0x800fe0fc
@@ -160,8 +160,8 @@
 ;  jal setUVDataPolyFT4
 ;.org 0x800eced0
 ;  jal setUVDataPolyFT4
-.org 0x800ee37c
-  jal setUVDataPolyFT4
+;.org 0x800ee37c
+;  jal setUVDataPolyFT4
 .org 0x800f2a10
   jal setUVDataPolyFT4
 .org 0x800f72e4
@@ -223,8 +223,8 @@
 ;  jal setPosDataPolyFT4
 ;.org 0x800e6160
 ;  jal setPosDataPolyFT4
-.org 0x800ee3a0
-  jal setPosDataPolyFT4
+;.org 0x800ee3a0
+;  jal setPosDataPolyFT4
 .org 0x800f2a38
   jal setPosDataPolyFT4
 .org 0x800f7300

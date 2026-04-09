@@ -42,9 +42,6 @@
 .definelabel setDigimonRaised,          0x800ff7f8
 .definelabel initializeUnknownModel,    0x800f1838
 .definelabel initializeUnknownModelObject,0x800f1878
-.definelabel createPostBattleStatsBox,  0x800edebc
-.definelabel removeBattleEndBox,        0x800ee7b4
-.definelabel resetStatsAfterCombat,     0x800ede58
 
 .definelabel SHOULD_SKIP_BIT_COUNTING, 0x80134e9c
 .definelabel BITS_TO_GAIN, 0x80134e90

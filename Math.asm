@@ -202,8 +202,8 @@
 
 ;.org 0x800ed5fc
 ;  jal getEntityScreenPos
-.org 0x800ee010
-  jal getEntityScreenPos
+;.org 0x800ee010
+;  jal getEntityScreenPos
 .org 0x80101120
   jal getEntityScreenPos
 .org 0x80109c6c

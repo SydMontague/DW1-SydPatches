@@ -141,8 +141,8 @@
 ;  jal playSound
 ;.org 0x800edbcc
 ;  jal playSound
-.org 0x800ee298
-  jal playSound
+;.org 0x800ee298
+;  jal playSound
 .org 0x800eedac
   jal playSound
 .org 0x800f0bdc

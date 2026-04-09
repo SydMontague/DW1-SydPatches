@@ -116,6 +116,9 @@
 .org 0x8005929c
   jal handleBattleEndBox
 
+.org 0x80058dec
+  jal resetStatsAfterCombat
+
 .close
 
 
