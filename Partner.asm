@@ -16,14 +16,6 @@
 .org 0x801053cc
   jal setFoodTimer
 
-.org 0x800ee9f4
-  jal initializePartner
-.org 0x800eeb38
-  jal initializePartner
-.org 0x800eea7c
-  jal initializePartner
-
-
 ;.org 0x800df624
 ;  jal Partner_setState
 ;.org 0x800df644

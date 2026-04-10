@@ -31,9 +31,6 @@
 .org 0x800efc9c
   jal renderObjects
 
-.org 0x800ee864
-  jal initializeWorldObjects
-
 ;.org 0x800a1450
 ;  jal removeObject
 ;.org 0x800a4fbc

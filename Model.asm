@@ -121,9 +121,6 @@
 .org 0x800f2e94
   jal resetFlattenGlobal
 
-.org 0x800ee85c
-  jal initializeModelComponents
-  
 ;.org 0x800c1a8c
 ;  jal getEntityModelComponent
 

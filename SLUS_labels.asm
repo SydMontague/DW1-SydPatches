@@ -13,7 +13,6 @@
 .definelabel setTrigger,                0x801065c0
 .definelabel readPStat,                 0x801062e0
 .definelabel writePStat,                0x80106474
-.definelabel main,                      0x800ee800
 .definelabel Tamer_tickBattle,          0x800f1214
 .definelabel isKeyDown,                 0x800fc054
 .definelabel unlockMedal,               0x800ff830
@@ -42,7 +41,22 @@
 .definelabel setDigimonRaised,          0x800ff7f8
 .definelabel initializeUnknownModel,    0x800f1838
 .definelabel initializeUnknownModelObject,0x800f1878
+.definelabel initializeHeap,            0x800eebdc
+.definelabel initializeFontCLUT,        0x8010cb3c
+.definelabel initializeScripts,         0x801059c8
+.definelabel view_init,                 0x800f02f4
+.definelabel initializeEffectData,      0x800f0380
+.definelabel initializeInventoryModules,0x800f03c0
+.definelabel runLandingScreen,          0x800eed30
+.definelabel runMainMenu,               0x800eefe4
+.definelabel newGameScene,              0x800ef1e0
+.definelabel initializeLoadedMap,       0x800ef38c
+.definelabel recalculatePPandArena,     0x800efa18
+.definelabel gameLoop,                  0x800efb68
 
+.definelabel FIRST_SCREEN_PRESSED_START, 0x80134eb0
+.definelabel SAVED_CURRENT_SCREEN, 0x80155725
+.definelabel SAVED_PARTNER_TYPE, 0x80155670
 .definelabel SHOULD_SKIP_BIT_COUNTING, 0x80134e9c
 .definelabel BITS_TO_GAIN, 0x80134e90
 .definelabel UNUSED_BIT_TEXT, 0x801555a8
@@ -392,6 +406,11 @@
 .definelabel libetc_ResetCallback, 0x8009234c
 .definelabel libetc_vsync, 0x80091ca8
 .definelabel libetc_PadRead, 0x80091be8
+.definelabel libetc_PadInit, 0x80091b9c
+
+// libgs_GsMulCoord3
+.definelabel libmcrd_MemCardInit, 0x800eb0fc
+.definelabel libmcrd_MemCardStart, 0x800eb128
 
 // libgs
 .definelabel libgs_GsGetWorkBase, 0x80098c38

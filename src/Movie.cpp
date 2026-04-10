@@ -18,14 +18,11 @@ namespace
     };
 } // namespace
 
-extern "C"
+void playMovie(Movies movie, bool shouldPlay)
 {
-    void playMovie(Movies movie, bool shouldPlay)
-    {
-        // TODO the shouldPlay argument is useless, it's always true and should be responsibility of the caller
-        if (!shouldPlay) return;
+    // TODO the shouldPlay argument is useless, it's always true and should be responsibility of the caller
+    if (!shouldPlay) return;
 
-        startMovie(movie);
-        initializeFramebuffer();
-    }
+    startMovie(movie);
+    initializeFramebuffer();
 }

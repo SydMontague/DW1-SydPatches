@@ -20,8 +20,8 @@
 ;  jal stopGameTime
 ;.org 0x800dea90
 ;  jal stopGameTime
-.org 0x800eea24
-  jal stopGameTime
+;.org 0x800eea24
+;  jal stopGameTime
 .org 0x8010634c
   jal stopGameTime
 

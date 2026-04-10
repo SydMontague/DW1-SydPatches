@@ -8,4 +8,5 @@ extern "C"
     void libetc_ResetCallback();
     int32_t libetc_vsync(int32_t val);
     uint32_t libetc_PadRead(uint16_t controllerId);
+    void libetc_PadInit();
 }

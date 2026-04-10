@@ -34,11 +34,11 @@
 .endarea
 
 .org 0x800ec520
-.area 0x800ee800-.
+.area 0x800eebdc-.
   .importobj "compiled/Cave5.lib"
 
-  .notice "Cave5 Empty space left: " + (0x800ee800-.) + " bytes"
-  .fill 0x800ee800-.
+  .notice "Cave5 Empty space left: " + (0x800eebdc-.) + " bytes"
+  .fill 0x800eebdc-.
 .endarea
 
 .org 0x8011d190
@@ -140,9 +140,6 @@ NAMING_DATA:
   .notice "Empty space left: " + (0x80138460-.) + " bytes"
   .fill 0x80138460-.
 .endarea
-
-.org 0x800ee8d4
-  jal customInit
 
 .org drawString
   sra a1,a1,2

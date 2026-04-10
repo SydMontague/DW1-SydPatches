@@ -220,4 +220,5 @@ extern "C"
     void setPosDataPolyFT4(POLY_FT4* prim, int16_t posX, int16_t posY, int16_t width, int16_t height);
 
     void renderSelectionCursor(int16_t x, int16_t y, int16_t width, int16_t height, int32_t depth);
+    void initializeUIBoxData();
 }

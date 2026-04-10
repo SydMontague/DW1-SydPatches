@@ -15,4 +15,11 @@ extern "C"
     void checkMapInteraction();
     void startFeedingItem(ItemType item);
     bool isTamerOnScreen();
+    void initializeTamer(DigimonType type,
+                         int32_t posX,
+                         int32_t posY,
+                         int32_t posZ,
+                         int32_t rotX,
+                         int32_t rotY,
+                         int32_t rotZ);
 }

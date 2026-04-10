@@ -63,13 +63,6 @@
 ;.org 0x800d41f8
 ;  jal isFiveTileWidePathBlocked
 
-.org 0x800eea04
-  jal initializeMap
-.org 0x800eea84
-  jal initializeMap
-.org 0x800eeb40
-  jal initializeMap
-
 ;.org 0x800d5da8
 ;  jal getMapSoundId
 ;.org 0x800deb90

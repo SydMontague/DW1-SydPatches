@@ -1734,6 +1734,9 @@ extern "C"
     extern bool FLEE_DISABLED;
     extern int32_t BITS_TO_GAIN;
     extern bool SHOULD_SKIP_BIT_COUNTING;
+    extern uint32_t FIRST_SCREEN_PRESSED_START;
+    extern uint8_t SAVED_CURRENT_SCREEN;
+    extern DigimonType SAVED_PARTNER_TYPE;
 
     // TODO can be relocated
     extern dtl::array<dtl::array<uint8_t, 8>, 180> DIGIMON_FILE_NAMES;
@@ -1790,6 +1793,18 @@ extern "C"
     void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
     bool hasDigimonRaised(DigimonType type);
     void initializeFramebuffer();
+    void initializeHeap();
+    void initializeFontCLUT();
+    void initializeScripts();
+    void view_init();
+    void initializeEffectData();
+    void initializeInventoryModules();
+    void runLandingScreen();
+    void runMainMenu();
+    void newGameScene();
+    void initializeLoadedMap();
+    void recalculatePPandArena();
+    void gameLoop();
 }
 
 static_assert(sizeof(PositionData) == 0x88);

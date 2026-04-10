@@ -21,4 +21,11 @@ extern "C"
     uint8_t Partner_getSubState();
     void learnMove(uint8_t move);
     bool hasMove(int32_t move);
+    void initializePartner(DigimonType type,
+                           int32_t posX,
+                           int32_t posY,
+                           int32_t posZ,
+                           int32_t rotX,
+                           int32_t rotY,
+                           int32_t rotZ);
 }

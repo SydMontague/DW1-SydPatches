@@ -8,4 +8,5 @@ extern "C"
     void loadDoors(int32_t doorEntryId);
     bool tickOpenChestTray(uint32_t chestId);
     bool tickCloseChestTray(uint32_t chestId);
+    void initializeChest();
 }

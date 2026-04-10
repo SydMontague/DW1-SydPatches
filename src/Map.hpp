@@ -34,4 +34,5 @@ extern "C"
     void setMapLayerEnabled(int32_t val);
     void updateMapLightState();
     void spawnDroppedItem(Entity* entity, ItemType item);
+    void initializeMap();
 }

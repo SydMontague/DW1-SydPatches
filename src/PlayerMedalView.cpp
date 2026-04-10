@@ -383,10 +383,7 @@ void tickPlayerMenuMedalView()
     }
 }
 
-extern "C"
+void initializeMedalModel()
 {
-    void initializeMedalModel()
-    {
-        loadStaticTMD("\\ETCNA\\MEDAL.TMD", MEDAL_MESH.data(), &MEDAL_OBJECT, &MEDAL_COORDINATES);
-    }
+    loadStaticTMD("\\ETCNA\\MEDAL.TMD", MEDAL_MESH.data(), &MEDAL_OBJECT, &MEDAL_COORDINATES);
 }

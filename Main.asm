@@ -1,49 +1,8 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800ee9bc
-  jal initializeTamer
-.org 0x800eea58
-  jal initializeTamer
-.org 0x800eeb14
-  jal initializeTamer
-
 .org 0x80090010
   .word EntryPoint
-
-.org 0x800ee86c
-  jal initializeGsTMDMap
-
-.org 0x800ee87c
-  jal initializeAttackObjects
-
-.org 0x800eebb8
-  jal cleanupGame
-
-.org 0x800ee8cc
-  jal initializeClockData
-
-.org 0x800eea1c
-  jal addClock
-.org 0x800eeaac
-  jal addClock
-.org 0x800eeb68
-  jal addClock
-
-.org 0x800ee8c4
-  jal initializeMedalModel
-
-.org 0x800ee904
-  jal playMovie
-.org 0x800ee988
-  jal playMovie
-.org 0x800eeae0
-  jal playMovie
-.org 0x800eebcc
-  jal playMovie
-
-.org 0x800ee88c
-  jal fillEFEXTable
 
 .close
 

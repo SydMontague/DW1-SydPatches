@@ -21,4 +21,5 @@ extern "C"
     void loadStaticTMD(const char* file, uint8_t* buffer, GsDOBJ2* object, GsCOORDINATE2* coords);
     void projectPosition(GsCOORDINATE2* position, Vector* translation, SVector* rotation, Vector* scale);
     void drawObject(GsDOBJ2* obj, GsOT* ot, int32_t shift);
+    void initializeModelComponents();
 }

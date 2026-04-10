@@ -154,4 +154,6 @@ extern "C"
     void loadDynamicLibrary(Overlay lib, uint8_t* isComplete, bool isAsync, FileCallback callback, void* param);
 
     void setFileReadCallback2(FileCallback callback, void* param);
+    void initializeFileReadQueue();
+    void loadStackedTIMFile(const char* file);
 }

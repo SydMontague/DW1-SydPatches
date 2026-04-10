@@ -46,10 +46,10 @@
 .org 0x801043cc
   jal loadTextureFile
 
-.org 0x800ee8e4
-  jal loadTIMFile
-.org 0x800ee8f4
-  jal loadTIMFile
+;.org 0x800ee8e4
+;  jal loadTIMFile
+;.org 0x800ee8f4
+;  jal loadTIMFile
 .org 0x800ef008
   jal loadTIMFile
 .org 0x800f7adc
@@ -155,9 +155,6 @@
 ;  b 0x800e91dc
 ;  nop
 
-.org 0x800ee874
-  jal initializeFileReadQueue
-
 ;.org 0x800d9210
 ;  jal tickFileReadQueue
 ;.org 0x800e3704
@@ -211,14 +208,14 @@
 .org 0x80111b88
   jal loadDynamicLibrary
 
-.org 0x800ee938
-  jal loadStackedTIMFile
-.org 0x800ee99c
-  jal loadStackedTIMFile
-.org 0x800eea38
-  jal loadStackedTIMFile
-.org 0x800eeaf4
-  jal loadStackedTIMFile
+;.org 0x800ee938
+;  jal loadStackedTIMFile
+;.org 0x800ee99c
+;  jal loadStackedTIMFile
+;.org 0x800eea38
+;  jal loadStackedTIMFile
+;.org 0x800eeaf4
+;  jal loadStackedTIMFile
 .org 0x800f8120
   jal loadStackedTIMFile
 

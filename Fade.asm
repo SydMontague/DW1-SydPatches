@@ -1,9 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800ee894
-  jal initializeFadeData
-
 .org 0x801044fc
   jal fadeToWhite
 
@@ -16,8 +13,8 @@
 ;  jal fadeFromBlack
 ;.org 0x800ddc84
 ;  jal fadeFromBlack
-.org 0x800eeb88
-  jal fadeFromBlack
+;.org 0x800eeb88
+;  jal fadeFromBlack
 .org 0x800eed5c
   jal fadeFromBlack
 .org 0x800ef044

@@ -1,24 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800ee90c
-  jal initializeMusic
-.org 0x800ee940
-  jal initializeMusic
-.org 0x800ee990
-  jal initializeMusic
-.org 0x800eeae8
-  jal initializeMusic
-
-.org 0x800ee91c
-  jal finalizeMusic
-.org 0x800ee97c
-  jal finalizeMusic
-.org 0x800eead4
-  jal finalizeMusic
-.org 0x800eebc0
-  jal finalizeMusic
-
 ;.org 0x800e6bf4
 ;  jal stopBGM
 ;.org 0x800e72d0

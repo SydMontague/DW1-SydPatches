@@ -2,3 +2,4 @@
 
 void tickPlayerMenuMedalView();
 void renderMedalView();
+void initializeMedalModel();

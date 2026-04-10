@@ -110,10 +110,10 @@
 ;  jal Tamer_setState
 ;.org 0x800e34cc	
 ;  jal Tamer_setState
-.org 0x800eeac4	
-  jal Tamer_setState
-.org 0x800eeb80	
-  jal Tamer_setState
+;.org 0x800eeac4	
+;  jal Tamer_setState
+;.org 0x800eeb80	
+;  jal Tamer_setState
 .org 0x80104440	
   jal Tamer_setState
 .org 0x80105488	
@@ -147,10 +147,10 @@
 ;  jal Tamer_getState
 ;.org 0x800e6dcc
 ;  jal Tamer_getState
-.org 0x800eeab4
-  jal Tamer_getState
-.org 0x800eeb70
-  jal Tamer_getState
+;.org 0x800eeab4
+;  jal Tamer_getState
+;.org 0x800eeb70
+;  jal Tamer_getState
 
 ;.org 0x800aa1c4
 ;  jal Tamer_startAnimation

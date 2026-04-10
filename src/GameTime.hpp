@@ -10,4 +10,5 @@ extern "C"
     void startGameTime();
     void stopGameTime();
     void renderStatusBars(int32_t instanceId);
+    void initializeClockData();
 }
