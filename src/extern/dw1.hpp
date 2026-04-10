@@ -811,13 +811,13 @@ extern "C"
         uint32_t* unk6;
         uint32_t* unk7;
         uint32_t* unk8;
-        uint32_t* stackTop;
+        uint8_t* stackTop;
         uint32_t unk9;
         uint32_t stackFrames;
         uint32_t unk10;
         uint32_t unk11;
         uint32_t unk12;
-        uint32_t heapPtr;
+        uint8_t* heapPtr;
         uint32_t unk13;
         uint32_t unk14;
         uint32_t unk15;
@@ -1793,7 +1793,6 @@ extern "C"
     void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
     bool hasDigimonRaised(DigimonType type);
     void initializeFramebuffer();
-    void initializeHeap();
     void initializeFontCLUT();
     void initializeScripts();
     void view_init();

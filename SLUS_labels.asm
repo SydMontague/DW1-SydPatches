@@ -41,7 +41,6 @@
 .definelabel setDigimonRaised,          0x800ff7f8
 .definelabel initializeUnknownModel,    0x800f1838
 .definelabel initializeUnknownModelObject,0x800f1878
-.definelabel initializeHeap,            0x800eebdc
 .definelabel initializeFontCLUT,        0x8010cb3c
 .definelabel initializeScripts,         0x801059c8
 .definelabel view_init,                 0x800f02f4
@@ -376,6 +375,7 @@
 // libapi
 .definelabel libapi_malloc3, 0x80090f84
 .definelabel libapi_free3, 0x80091034
+.definelabel libapi_InitHeap3, 0x80090f24
 
 // libc
 .definelabel strcat,  0x800911cc

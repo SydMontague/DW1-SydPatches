@@ -29,7 +29,6 @@ FLAGS="-O3 -std=c++23 -T linker.ld -mabi=32 -march=r3000 -r -mel -nostdlib -mexp
 mips-g++ UIElements.cpp -o ../compiled/utils.lib $FLAGS
 mips-g++ Font.cpp Font5px.cpp Font7px.cpp -o ../compiled/font.lib $FLAGS
 mips-g++ CustomUI.cpp -o ../compiled/CustomUI.lib $FLAGS
-mips-g++ CustomInit.cpp -o ../compiled/CustomInit.lib $FLAGS
 mips-g++ GameData.cpp -o ../compiled/GameData.lib $FLAGS
 
 mips-g++ Input.cpp dw1.cpp GameTime.cpp InventoryUI.cpp Timestamp.cpp FixedNumbers.cpp Main.cpp Fade.cpp GameObjects.cpp Helper.cpp NPCEntity.cpp Entity.cpp Tamer.cpp Effects.cpp -o ../compiled/Cave1.lib $FLAGS

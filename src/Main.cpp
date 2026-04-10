@@ -17,6 +17,7 @@
 #include "Timestamp.hpp"
 #include "extern/MOV.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libapi.hpp"
 #include "extern/libcd.hpp"
 #include "extern/libetc.hpp"
 #include "extern/libgpu.hpp"
@@ -82,12 +83,18 @@ namespace
 
         initializeLoadedNPCModels();
     }
-    
+
     void customInit()
     {
         initTimestamp();
         initCustomUI();
         fillItemTable();
+    }
+
+    void initializeHeap()
+    {
+        auto size = (SECTION_DATA.stackTop - SECTION_DATA.heapPtr) - (SECTION_DATA.stackFrames * 0x400);
+        libapi_InitHeap3(SECTION_DATA.heapPtr, size);
     }
 } // namespace
 
@@ -207,7 +214,7 @@ extern "C"
     {
         // vanilla resets r2-27 and r30 here
         gp = SECTION_DATA.globalPointer;
-        sp = SECTION_DATA.stackTop;
+        sp = reinterpret_cast<uint32_t*>(SECTION_DATA.stackTop);
 
         memset(SECTION_DATA.bss1Offset, 0, SECTION_DATA.bss1Size);
         memset(SECTION_DATA.bss2Offset, 0, SECTION_DATA.bss2Size);

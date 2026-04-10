@@ -64,7 +64,6 @@ NAMING_DATA:
   .importobj "compiled/utils.lib"
   .importobj "compiled/font.lib"
   .importobj "compiled/CustomUI.lib"
-  .importobj "compiled/CustomInit.lib"
   
   .notice "Empty space left: " + (0x8012344c-.) + " bytes"
   .fill 0x8012344c-.
