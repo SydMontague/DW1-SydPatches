@@ -22,6 +22,31 @@ static_assert(sizeof(uint8_t) == 1);
 // Digimon Template Library
 namespace dtl
 {
+    template<typename T> struct remove_reference
+    {
+        using type = T;
+    };
+    template<typename T> struct remove_reference<T&>
+    {
+        using type = T;
+    };
+    template<typename T> struct remove_reference<T&&>
+    {
+        using type = T;
+    };
+
+    template<typename T> using remove_reference_t = remove_reference<T>::type;
+
+    template<typename T> remove_reference_t<T>&& move(T&& val)
+    {
+        return static_cast<remove_reference<T>&&>(val);
+    }
+    struct in_place_t
+    {
+        explicit in_place_t() = default;
+    };
+    inline constexpr in_place_t in_place{};
+
     template<typename T> using Comparator = bool(const T& left, const T& right);
 
     /*
@@ -107,6 +132,137 @@ namespace dtl
 
         size_t getSize() { return entryCount; }
     };
+
+    /*
+     * A basic unique_ptr implementation, analogous to std::unique_ptr, but with fewer features.
+     * In particular arrays are not implemented as of yet, but may be if the need arises.
+     */
+    template<typename T> class unique_ptr
+    {
+    public:
+        using pointer   = T*;
+        using reference = T&;
+
+        constexpr unique_ptr() noexcept {}
+        constexpr unique_ptr(pointer val)
+            : value(val)
+        {
+        }
+        constexpr ~unique_ptr()
+        {
+            if (value) delete value;
+        }
+        constexpr unique_ptr(const unique_ptr& other) = delete;
+        constexpr unique_ptr(unique_ptr&& other)
+            : value(other.release())
+        {
+        }
+
+        constexpr pointer release() noexcept
+        {
+            auto old = get();
+            value    = nullptr;
+            return old;
+        }
+        constexpr void reset(pointer ptr = pointer()) noexcept
+        {
+            auto old = get();
+            value    = ptr;
+            if (old) delete old;
+        }
+        constexpr void swap(unique_ptr& other) { swap(value, other.value); }
+        constexpr pointer get() { return value; }
+
+        constexpr unique_ptr& operator=(const unique_ptr& other) = delete;
+        constexpr unique_ptr& operator=(unique_ptr&& other) { reset(other.release()); }
+        constexpr explicit operator bool() { return get() != nullptr; }
+        constexpr pointer operator->() const noexcept { return get(); }
+        constexpr reference operator*() const noexcept { return *get(); }
+
+    private:
+        pointer value;
+    };
+
+    /*
+     * A basic optional implementation, analogous to std::optional, but with fewer features.
+     */
+    template<typename T> class optional
+    {
+    public:
+        using value_type = T;
+
+        constexpr optional() {}
+        constexpr optional(T&& val)
+            : value_(val)
+            , has_value_(true)
+        {
+        }
+        constexpr optional(const optional& other)
+        {
+            if (other.has_value())
+            {
+                value_     = *other;
+                has_value_ = true;
+            }
+        }
+        template<typename... Args>
+        constexpr optional(in_place_t, Args&&... args)
+            : value_(args...)
+            , has_value_(true)
+        {
+        }
+
+        constexpr optional(optional&& other)
+        {
+            if (other.has_value()) value_ = dtl::move(other.value_);
+            has_value_ = other.has_value_;
+        }
+
+        constexpr optional& operator=(const optional& other)
+        {
+            has_value_ = other.has_value_;
+            if (has_value_) value_ = other.value_;
+        }
+        constexpr optional& operator=(optional&& other)
+        {
+            if (other.has_value()) value_ = dtl::move(other.value_);
+            has_value_ = other.has_value_;
+        }
+
+        constexpr ~optional()
+        {
+            if (has_value_) value_.~T();
+        }
+
+        constexpr bool has_value() const noexcept { return has_value_; };
+        constexpr const value_type& value() const { return value_; };
+        constexpr value_type value_or(value_type&& default_value) const noexcept
+        {
+            return has_value_ ? value_ : default_value;
+        }
+        constexpr const value_type* operator->() const noexcept { return &value_; }
+        constexpr const value_type& operator*() const noexcept { return value_; }
+        constexpr value_type* operator->() noexcept { return &value_; }
+        constexpr value_type& operator*() noexcept { return value_; }
+        constexpr void reset() noexcept
+        {
+            if (has_value_) value_.~T();
+            has_value_ = false;
+        }
+
+    private:
+        union
+        {
+            uint8_t dummy_;
+            T value_;
+        };
+        bool has_value_{false};
+    };
+
+    template<typename T, typename... Args> constexpr unique_ptr<T> make_unique(Args&&... args)
+    {
+        return unique_ptr<T>(new T(args...));
+    }
 
     template<typename T> constexpr void swap(T& left, T& right)
     {

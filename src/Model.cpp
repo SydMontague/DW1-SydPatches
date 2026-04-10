@@ -16,6 +16,7 @@
 #include "extern/libgs.hpp"
 #include "extern/libgte.hpp"
 #include "extern/psx.hpp"
+#include "extern/stddef.hpp"
 
 struct UV1Packet
 {
@@ -688,10 +689,9 @@ extern "C"
 
     void loadDigimonTexture(DigimonType type, ModelComponent* model)
     {
-        uint32_t* buffer = reinterpret_cast<uint32_t*>(libapi_malloc3(0x4800));
-        readFileSectors("CHDAT\\ALLTIM.TIM", buffer, static_cast<uint32_t>(type) * 9, 9);
-        uploadModelTexture(buffer, model);
-        libapi_free3(buffer);
+        auto buffer = dtl::make_unique<dtl::array<uint8_t, 0x4800>>();
+        readFileSectors("CHDAT\\ALLTIM.TIM", buffer.get(), static_cast<uint32_t>(type) * 9, 9);
+        uploadModelTexture(reinterpret_cast<uint32_t*>(buffer.get()), model);
     }
 
     void initializeModelComponents()
