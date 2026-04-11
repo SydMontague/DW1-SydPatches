@@ -15,10 +15,10 @@
 ;  jal fadeFromBlack
 ;.org 0x800eeb88
 ;  jal fadeFromBlack
-.org 0x800eed5c
-  jal fadeFromBlack
-.org 0x800ef044
-  jal fadeFromBlack
+;.org 0x800eed5c
+;  jal fadeFromBlack
+;.org 0x800ef044
+;  jal fadeFromBlack
 .org 0x800ef208
   jal fadeFromBlack
 .org 0x800f2458
@@ -36,10 +36,10 @@
 ;  jal fadeToBlack
 ;.org 0x800ddba4
 ;  jal fadeToBlack
-.org 0x800eeeb8
-  jal fadeToBlack
-.org 0x800ef18c
-  jal fadeToBlack
+;.org 0x800eeeb8
+;  jal fadeToBlack
+;.org 0x800ef18c
+;  jal fadeToBlack
 .org 0x800ef350
   jal fadeToBlack
 .org 0x800f0b98

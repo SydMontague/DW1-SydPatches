@@ -3,3 +3,4 @@
 #include "extern/dw1.hpp"
 
 bool isKeyDownPolled(InputButtons button);
+bool isKeyPressed(InputButtons button);

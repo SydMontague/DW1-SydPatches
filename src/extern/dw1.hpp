@@ -1799,12 +1799,12 @@ extern "C"
     void view_init();
     void initializeEffectData();
     void initializeInventoryModules();
-    void runLandingScreen();
-    void runMainMenu();
     void newGameScene();
     void initializeLoadedMap();
     void recalculatePPandArena();
     void gameLoop();
+    void renderPressStartToContinue(int32_t instance);
+    void renderMainMenuBackground(int32_t instance);
 }
 
 static_assert(sizeof(PositionData) == 0x88);

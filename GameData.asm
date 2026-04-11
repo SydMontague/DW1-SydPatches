@@ -34,11 +34,11 @@
 .endarea
 
 .org 0x800ec520
-.area 0x800eebdc-.
+.area 0x800ef1e0-.
   .importobj "compiled/Cave5.lib"
 
-  .notice "Cave5 Empty space left: " + (0x800eebdc-.) + " bytes"
-  .fill 0x800eebdc-.
+  .notice "Cave5 Empty space left: " + (0x800ef1e0-.) + " bytes"
+  .fill 0x800ef1e0-.
 .endarea
 
 .org 0x8011d190

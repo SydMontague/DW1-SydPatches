@@ -50,8 +50,8 @@
 ;  jal loadTIMFile
 ;.org 0x800ee8f4
 ;  jal loadTIMFile
-.org 0x800ef008
-  jal loadTIMFile
+;.org 0x800ef008
+;  jal loadTIMFile
 .org 0x800f7adc
   jal loadTIMFile
 .org 0x800f7aec

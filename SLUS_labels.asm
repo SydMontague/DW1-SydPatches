@@ -45,12 +45,12 @@
 .definelabel view_init,                 0x800f02f4
 .definelabel initializeEffectData,      0x800f0380
 .definelabel initializeInventoryModules,0x800f03c0
-.definelabel runLandingScreen,          0x800eed30
-.definelabel runMainMenu,               0x800eefe4
 .definelabel newGameScene,              0x800ef1e0
 .definelabel initializeLoadedMap,       0x800ef38c
 .definelabel recalculatePPandArena,     0x800efa18
 .definelabel gameLoop,                  0x800efb68
+.definelabel renderPressStartToContinue,0x800efebc
+.definelabel renderMainMenuBackground,  0x800f0158
 
 .definelabel FIRST_SCREEN_PRESSED_START, 0x80134eb0
 .definelabel SAVED_CURRENT_SCREEN, 0x80155725
