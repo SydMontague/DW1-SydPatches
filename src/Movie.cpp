@@ -1,5 +1,6 @@
 
 #include "Files.hpp"
+#include "Main.hpp"
 #include "extern/MOV.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libcd.hpp"

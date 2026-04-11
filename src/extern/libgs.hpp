@@ -17,13 +17,19 @@ extern "C"
         int32_t scale;
     };
 
+    struct GsOT_TAG
+    {
+        uint32_t p  : 24;
+        uint8_t num : 8;
+    };
+
     struct GsOT
     {
         uint32_t length;
-        uint32_t* origin;
+        GsOT_TAG* origin;
         uint32_t offset;
         uint32_t point;
-        uint32_t* current;
+        GsOT_TAG* current;
     };
 
     struct GsCOORD2PARAM
@@ -151,7 +157,11 @@ extern "C"
     void libgs_GsSwapDispBuff();
     void libgs_GsDrawOt(GsOT* ot);
     void libgs_GsSetOrign(int32_t x, int32_t y);
+    void libgs_GsInitGraph(uint16_t x_res, uint16_t y_res, uint16_t int1, uint16_t dither, uint16_t vram);
+    void libgs_GsDefDispBuff(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
+    void libgs_GsInit3D();
 }
 
 static_assert(sizeof(GsOT) == 20);
 static_assert(sizeof(GsSPRITE) == 0x24);
+static_assert(sizeof(GsOT_TAG) == 4);

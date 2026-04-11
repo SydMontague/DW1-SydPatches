@@ -1705,8 +1705,8 @@ extern "C"
     extern uint8_t SELECTED_CARD;
     extern uint8_t* MOVE_NAMES[122];
     extern GsOT* FRAMEBUFFER_OT[2];
-    extern uint32_t* FRAMEBUFFER0_ORIGIN;
-    extern uint32_t* FRAMEBUFFER1_ORIGIN;
+    extern GsOT_TAG* FRAMEBUFFER0_ORIGIN;
+    extern GsOT_TAG* FRAMEBUFFER1_ORIGIN;
     extern GsF_LIGHT LIGHT_DATA[3];
     extern GsDOBJ2 MEDAL_OBJECT;
     extern GsCOORDINATE2 MEDAL_COORDINATES;
@@ -1728,7 +1728,7 @@ extern "C"
     extern uint8_t TRN_LOADING_COMPLETE;
     extern dtl::array<const char*, 128> ITEM_DESC_PTR;
     extern FishingData* FISHING_DATA_PTR;
-    extern dtl::array<DR_OFFSET, 2> DRAW_OFFSETS;
+    extern dtl::array<DR_OFFSET, 2> DR_OFFSETS;
     extern int32_t NO_AI_FLAG;
     extern Entity* FINISHING_ENTITY;
     extern bool FLEE_DISABLED;
@@ -1739,6 +1739,8 @@ extern "C"
     extern DigimonType SAVED_PARTNER_TYPE;
 
     // TODO can be relocated
+    extern dtl::array<GsOT_TAG, 4096> GSOT_TAGS_0;
+    extern dtl::array<GsOT_TAG, 4096> GSOT_TAGS_1;
     extern dtl::array<dtl::array<uint8_t, 8>, 180> DIGIMON_FILE_NAMES;
     extern dtl::array<dtl::array<uint8_t, 3>, 58> MOVE_LEARN_CHANCES;
     // TODO: can be non-extern, but large
@@ -1792,7 +1794,6 @@ extern "C"
     void setTextColor(int32_t color);
     void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
     bool hasDigimonRaised(DigimonType type);
-    void initializeFramebuffer();
     void initializeFontCLUT();
     void initializeScripts();
     void view_init();

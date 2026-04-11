@@ -53,7 +53,7 @@ namespace
         libgs_GsClearOt(0, 0, ACTIVE_ORDERING_TABLE);
         tickObjects();
         renderObjects();
-        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 32, &DRAW_OFFSETS[ACTIVE_FRAMEBUFFER]);
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 32, &DR_OFFSETS[ACTIVE_FRAMEBUFFER]);
         libgpu_DrawSync(0);
         libetc_vsync(3);
         libgs_GsSetOrign(DRAWING_OFFSET_X, DRAWING_OFFSET_Y);

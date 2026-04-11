@@ -32,7 +32,6 @@
 .definelabel tickMainMenu,              0x8010ff1c
 .definelabel renderMainMenu,            0x80113458
 .definelabel triggerSeadramonCutscene,  0x800ff900
-.definelabel initializeFramebuffer,     0x800eec14
 .definelabel unsetTrigger,              0x801065fc
 .definelabel enforceStatsLimits,        0x80102678
 .definelabel closeBox,                  0x801006d4
@@ -295,12 +294,14 @@
 .definelabel INVENTORY_SIZE, 0x8013d4ce
 .definelabel ENTITY_TEXT_DATA, 0x80150cd0
 .definelabel FISHING_DATA_PTR, 0x80134e6c
-.definelabel DRAW_OFFSETS, 0x8015db90
+.definelabel DR_OFFSETS, 0x8015db90
 .definelabel TOURNAMENTS_WON, 0x80134fcc
 .definelabel TOURNAMENTS_LOST, 0x80134fce
 .definelabel TOURNAMENT_WINS, 0x80134fd0
 .definelabel HAS_TAKEN_DAMAGE, 0x800134d70
 .definelabel POST_BATTLE_STATS_TIMER, 0x80134ea0
+.definelabel GSOT_TAGS_0, 0x80155b68
+.definelabel GSOT_TAGS_1, 0x80159b68
 
 // BTL_REL
 .definelabel BTL_battleMain, 0x8005b5f4
@@ -408,7 +409,7 @@
 .definelabel libetc_PadRead, 0x80091be8
 .definelabel libetc_PadInit, 0x80091b9c
 
-// libgs_GsMulCoord3
+// libmcrd
 .definelabel libmcrd_MemCardInit, 0x800eb0fc
 .definelabel libmcrd_MemCardStart, 0x800eb128
 
@@ -437,6 +438,9 @@
 .definelabel libgs_GsSwapDispBuff, 0x80097c98
 .definelabel libgs_GsDrawOt, 0x80098808
 .definelabel libgs_GsSortClear, 0x800979c0
+.definelabel libgs_GsInitGraph, 0x8009794c
+.definelabel libgs_GsDefDispBuff, 0x80098038
+.definelabel libgs_GsInit3D, 0x800980d8
 
 .definelabel libgs_REFERENCE_MATRIX, 0x80136f84
 .definelabel libgs_GsLIGHTWSMATRIX, 0x80136f24
@@ -462,6 +466,8 @@
 .definelabel libgpu_LoadClut, 0x8009292c
 .definelabel libgpu_ResetGraph, 0x80094538
 .definelabel libgpu_SetGraphDebug, 0x800946ac
+.definelabel libgpu_SetDispMask, 0x80094718
+.definelabel libgpu_SetDrawOffset, 0x80095030
 
 // libgte
 .definelabel libgte_setRotMatrix, 0x8009b200

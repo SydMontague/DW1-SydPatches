@@ -98,6 +98,29 @@ namespace
     }
 } // namespace
 
+void initializeFramebuffer()
+{
+    constexpr RECT frameBuffers{.x = 0, .y = 0, .width = 320, .height = 480};
+    constexpr dtl::array<uint16_t, 2> drawOffset0 = {160, 360};
+    constexpr dtl::array<uint16_t, 2> drawOffset1 = {160, 120};
+
+    libgpu_SetDispMask(0);
+    libgs_GsInitGraph(320, 240, 4, 0, 0);
+    libgs_GsDefDispBuff(0, 0, 0, 0xf0);
+    libgpu_ClearImage(&frameBuffers, 0, 0, 0);
+    GS_ORDERING_TABLE[0].length = 12;
+    GS_ORDERING_TABLE[0].origin = GSOT_TAGS_0.data();
+    GS_ORDERING_TABLE[1].length = 12;
+    GS_ORDERING_TABLE[1].origin = GSOT_TAGS_1.data();
+    libgs_GsInit3D();
+    DRAWING_OFFSET_X = 160;
+    DRAWING_OFFSET_Y = 120;
+    libgpu_SetDrawOffset(&DR_OFFSETS[0], drawOffset0.data());
+    libgpu_SetDrawOffset(&DR_OFFSETS[1], drawOffset1.data());
+    MAP_LAYER_ENABLED = true;
+    libgpu_SetDispMask(1);
+}
+
 extern "C"
 {
     int32_t main()

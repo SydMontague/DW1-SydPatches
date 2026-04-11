@@ -250,6 +250,8 @@ extern "C"
     void libgpu_LoadClut(void* buffer, int32_t x, int32_t y);
     int32_t libgpu_ResetGraph(int32_t mode);
     void libgpu_SetGraphDebug(int32_t level);
+    void libgpu_SetDispMask(int mask);
+    void libgpu_SetDrawOffset(DR_OFFSET* p, const uint16_t* ofs);
 }
 
 // validation
@@ -259,3 +261,4 @@ static_assert(sizeof(POLY_FT4) == 0x28);
 static_assert(sizeof(POLY_GT3) == 10 * 4);
 static_assert(sizeof(POLY_GT4) == 13 * 4);
 static_assert(sizeof(POLY_F4) == 24);
+static_assert(sizeof(DR_OFFSET) == 12);
