@@ -1912,8 +1912,8 @@ namespace
         setEntityRotation(1, rotX, rotY, rotZ);
         setupEntityMatrix(1);
         startAnimation(&PARTNER_ENTITY, 0);
-        PARTNER_ENTITY.vabId = 4;
-        stopDistanceTimer    = 0;
+        PARTNER_ENTITY.stats.vabId = 4;
+        stopDistanceTimer          = 0;
 
         if (type == DigimonType::BOTAMON) setReincarnateStats(90, 110, 10, 11, 9, 10);
         if (type == DigimonType::PUNIMON) setReincarnateStats(120, 100, 16, 8, 8, 6);
@@ -1988,8 +1988,8 @@ extern "C"
         setEntityRotation(1, rotX, rotY, rotZ);
         setupEntityMatrix(1);
         startAnimation(&PARTNER_ENTITY, 0);
-        stopDistanceTimer    = 0;
-        PARTNER_ENTITY.vabId = 4;
+        stopDistanceTimer          = 0;
+        PARTNER_ENTITY.stats.vabId = 4;
         loadPartnerSounds(type);
         PARTNER_ENTITY.isOnMap     = 1;
         PARTNER_ENTITY.isOnScreen  = 1;
@@ -2124,7 +2124,7 @@ extern "C"
         setEntityRotation(1, rotX, rotY, rotZ);
         setupEntityMatrix(1);
         startAnimation(&PARTNER_ENTITY, 0);
-        PARTNER_ENTITY.vabId       = 4;
+        PARTNER_ENTITY.stats.vabId = 4;
         stopDistanceTimer          = 0;
         PARTNER_PARA.condition.raw = 0;
         setSleepTimes(&PARTNER_PARA, type);
@@ -2223,7 +2223,7 @@ extern "C"
         PARTNER_PARA.foodLevel -= 15;
     }
 
-    void setImmortalHour(void)
+    void setImmortalHour()
     {
         HAS_IMMORTAL_HOUR = 1;
         IMMORTAL_HOUR     = HOUR;
@@ -2514,7 +2514,7 @@ extern "C"
     {
         const auto previousType = PARTNER_ENTITY.type;
 
-        DEATH_STATS = PARTNER_ENTITY.stats;
+        DEATH_STATS                = PARTNER_ENTITY.stats;
         PARTNER_ENTITY.stats.moves = {0x2E, 0xFF, 0xFF, 0xFF};
         removeEntity(previousType, 1);
         ENTITY_TABLE.partner = nullptr;

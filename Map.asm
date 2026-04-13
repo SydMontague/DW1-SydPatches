@@ -93,10 +93,10 @@
 
 ;.org 0x800d6620
 ;  jal initializeDrawingOffsets
-.org 0x800ef438
-  jal initializeDrawingOffsets
-.org 0x800ef8ec
-  jal initializeDrawingOffsets
+;.org 0x800ef438
+;  jal initializeDrawingOffsets
+;.org 0x800ef8ec
+;  jal initializeDrawingOffsets
 
 ;.org 0x800d672c
 ;  jal uploadMapTileImages
@@ -104,8 +104,8 @@
 ;  jal uploadMapTileImages
 ;.org 0x800d875c
 ;  jal uploadMapTileImages
-.org 0x800ef9f0
-  jal uploadMapTileImages
+;.org 0x800ef9f0
+;  jal uploadMapTileImages
 
 ;.org 0x800d9034
 ;  jal unloadMap

@@ -1,8 +1,8 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800efa00
-  jal updateMinuteHand
+;.org 0x800efa00
+;  jal updateMinuteHand
 
 ;.org 0x800a9ec0
 ;  jal stopGameTime

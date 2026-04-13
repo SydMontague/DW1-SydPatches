@@ -123,19 +123,19 @@ extern "C"
             MAP_DIGIMON_TABLE[i].rotZ          = mapDigimon->rotZ;
             MAP_DIGIMON_TABLE[i].trackingRange = mapDigimon->aiTrackRange;
 
-            NPC_ENTITIES[i].unk2            = mapDigimon->unk2;
-            NPC_ENTITIES[i].scriptId        = mapDigimon->scriptId;
-            NPC_ENTITIES[i].stats.hp        = mapDigimon->maxHP;
-            NPC_ENTITIES[i].stats.mp        = mapDigimon->maxMP;
-            NPC_ENTITIES[i].stats.currentHP = mapDigimon->currentHP;
-            NPC_ENTITIES[i].stats.currentMP = mapDigimon->currentMP;
-            NPC_ENTITIES[i].stats.off       = mapDigimon->offense;
-            NPC_ENTITIES[i].stats.def       = mapDigimon->defense;
-            NPC_ENTITIES[i].stats.speed     = mapDigimon->speed;
-            NPC_ENTITIES[i].stats.brain     = mapDigimon->brains;
-            NPC_ENTITIES[i].bits            = mapDigimon->bits;
-            NPC_ENTITIES[i].chargeMode      = mapDigimon->chargeMode;
-            NPC_ENTITIES[i].unk1            = mapDigimon->unk5;
+            NPC_ENTITIES[i].unk2             = mapDigimon->unk2;
+            NPC_ENTITIES[i].scriptId         = mapDigimon->scriptId;
+            NPC_ENTITIES[i].stats.hp         = mapDigimon->maxHP;
+            NPC_ENTITIES[i].stats.mp         = mapDigimon->maxMP;
+            NPC_ENTITIES[i].stats.currentHP  = mapDigimon->currentHP;
+            NPC_ENTITIES[i].stats.currentMP  = mapDigimon->currentMP;
+            NPC_ENTITIES[i].stats.off        = mapDigimon->offense;
+            NPC_ENTITIES[i].stats.def        = mapDigimon->defense;
+            NPC_ENTITIES[i].stats.speed      = mapDigimon->speed;
+            NPC_ENTITIES[i].stats.brain      = mapDigimon->brains;
+            NPC_ENTITIES[i].bits             = mapDigimon->bits;
+            NPC_ENTITIES[i].stats.chargeMode = mapDigimon->chargeMode;
+            NPC_ENTITIES[i].stats.unk1       = mapDigimon->unk5;
 
             NPC_ENTITIES[i].stats.moves[0]     = mapDigimon->moves[0];
             NPC_ENTITIES[i].stats.moves[1]     = mapDigimon->moves[1];
@@ -1278,7 +1278,7 @@ extern "C"
         }
     }
 
-    static void updateMapTile()
+    void updateMapTile()
     {
         MAP_TILE_X = (CAMERA_X - 32) / 128;
         if (MAP_WIDTH < 5)

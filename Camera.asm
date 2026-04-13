@@ -5,8 +5,8 @@
 ;  jal createCameraMovement
 ;.org 0x800de4c8
 ;  jal createCameraMovement
-.org 0x800ef8d8
-  jal createCameraMovement
+;.org 0x800ef8d8
+;  jal createCameraMovement
 
 .org 0x801057c0
   jal tickCameraMoveTo

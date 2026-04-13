@@ -1,6 +1,8 @@
 #include "Main.hpp"
 
+#include "Camera.hpp"
 #include "CustomUI.hpp"
+#include "Entity.hpp"
 #include "Fade.hpp"
 #include "Files.hpp"
 #include "GameObjects.hpp"
@@ -251,6 +253,97 @@ namespace
         } while (!result || FADE_DATA.fadeOutCurrent < 40);
 
         unloadNewGameScene();
+    }
+
+    bool isProtectedNPC(DigimonType type, int32_t screen)
+    {
+        if (type == DigimonType::OTAMAMON) return true;
+        if (type > DigimonType::ANALOGMAN) return true;
+        if (type == DigimonType::GUARDROMON && screen == 155) return true;
+        if (type == DigimonType::SABERDRAMON && screen == 85) return true;
+        if (type == DigimonType::BOTAMON) return true;
+        if (type == DigimonType::KOROMON) return true;
+        if (type == DigimonType::PUNIMON) return true;
+        if (type == DigimonType::TSUNOMON) return true;
+        if (type == DigimonType::POYOMON) return true;
+        if (type == DigimonType::TOKOMON) return true;
+        if (type == DigimonType::YURAMON) return true;
+        if (type == DigimonType::TANEMON) return true;
+
+        return false;
+    }
+
+    void handleSpawnNPCCollision()
+    {
+        auto collisionResult = entityCheckCollision(&PARTNER_ENTITY, &TAMER_ENTITY, 0, 0);
+        if (collisionResult <= CollisionCode::PARTNER || collisionResult > CollisionCode::NPC8) return;
+
+        auto type = ENTITY_TABLE.getEntityById(static_cast<int32_t>(collisionResult))->type;
+        if (!isProtectedNPC(type, SAVED_CURRENT_SCREEN))
+        {
+            ENTITY_TABLE.getEntityById(static_cast<int32_t>(collisionResult))->isOnMap = false;
+            return;
+        }
+
+        auto posX     = MAP_WARPS.spawnX[SAVED_CURRENT_EXIT];
+        auto posY     = MAP_WARPS.spawnY[SAVED_CURRENT_EXIT];
+        auto posZ     = MAP_WARPS.spawnZ[SAVED_CURRENT_EXIT];
+        auto rotation = MAP_WARPS.rotation[SAVED_CURRENT_EXIT];
+
+        TAMER_ENTITY.posData->location.x = posX;
+        TAMER_ENTITY.posData->location.y = posY;
+        TAMER_ENTITY.posData->location.z = posZ;
+        TAMER_ENTITY.posData->rotation.y = rotation;
+        STORED_TAMER_POS                 = TAMER_ENTITY.posData->location;
+
+        if (rotation <= 0x200 || rotation > 0xE00) posZ += 200;
+        if (rotation > 0x200 && rotation <= 0x600) posX += 200;
+        if (rotation > 0x600 && rotation <= 0xA00) posZ -= 200;
+        if (rotation > 0xA00 && rotation <= 0xE00) posX -= 200;
+
+        PARTNER_ENTITY.posData->location.x = posX;
+        PARTNER_ENTITY.posData->location.y = posY;
+        PARTNER_ENTITY.posData->location.z = posZ;
+        // vanilla does startAnimation here, but we refactored a bit to make it redundant
+    }
+
+    void initializeLoadedMap()
+    {
+        TAMER_ENTITY.posData->location   = SAVED_PLAYER_POS;
+        PARTNER_ENTITY.posData->location = SAVED_PARTNER_POS;
+        STORED_TAMER_POS                 = TAMER_ENTITY.posData->location;
+        initializeDrawingOffsets();
+
+        for (auto& entity : NPC_ENTITIES)
+            if (entity.type != DigimonType::INVALID && entity.type != DigimonType::TAMER) entity.isOnScreen = 1;
+
+        handleSpawnNPCCollision();
+        startAnimation(&TAMER_ENTITY, 0);
+        startAnimation(&PARTNER_ENTITY, 0);
+
+        PARTNER_ENTITY.stats   = SAVED_PARTNER_STATS;
+        PARTNER_ENTITY.lives   = SAVED_LIVES;
+        MONEY                  = SAVED_MONEY;
+        PARTNER_PARA           = SAVED_PARTNER_PARA;
+        PREVIOUS_SCREEN        = SAVED_PREVIOUS_SCREEN;
+        CURRENT_EXIT           = SAVED_CURRENT_EXIT;
+        PREVIOUS_EXIT          = SAVED_PREVIOUS_EXIT;
+        TAMER_WAYPOINT_X       = SAVED_TAMER_WAYPOINT_X;
+        TAMER_WAYPOINT_Y       = SAVED_TAMER_WAYPOINT_Y;
+        TAMER_PREVIOUS_TILE_X  = SAVED_TAMER_PREVIOUS_TILE_X;
+        TAMER_PREVIOUS_TILE_Y  = SAVED_TAMER_PREVIOUS_TILE_Y;
+        TAMER_WAYPOINT_CURRENT = SAVED_TAMER_WAYPOINT_CURRENT;
+        TAMER_WAYPOINT_COUNT   = SAVED_TAMER_WAYPOINT_COUNT;
+        TAMER_START_TILE_X     = SAVED_TAMER_START_TILE_X;
+        TAMER_START_TILE_Y     = SAVED_TAMER_START_TILE_Y;
+        TAMER_WAYPOINT_ACTIVE  = SAVED_TAMER_WAYPOINT_ACTIVE;
+        CAMERA_UPDATE_TILES    = 1;
+        createCameraMovement(&TAMER_ENTITY.posData->location, 2);
+        setImmortalHour();
+        initializeDrawingOffsets();
+        updateMapTile();
+        uploadMapTileImages(MAP_TILE_DATA.data(), MAP_TILE_X + MAP_TILE_Y * MAP_WIDTH);
+        updateMinuteHand(HOUR, MINUTE);
     }
 } // namespace
 

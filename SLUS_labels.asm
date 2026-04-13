@@ -45,7 +45,6 @@
 .definelabel view_init,                 0x800f02f4
 .definelabel initializeEffectData,      0x800f0380
 .definelabel initializeInventoryModules,0x800f03c0
-.definelabel initializeLoadedMap,       0x800ef38c
 .definelabel recalculatePPandArena,     0x800efa18
 .definelabel gameLoop,                  0x800efb68
 .definelabel renderPressStartToContinue,0x800efebc
@@ -58,6 +57,24 @@
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel unloadNewGameScene,        0x800f1714
 
+.definelabel SAVED_PREVIOUS_SCREEN, 0x80155726
+.definelabel SAVED_PLAYER_POS, 0x801555d0
+.definelabel SAVED_PARTNER_POS, 0x801555e0
+.definelabel SAVED_CURRENT_EXIT, 0x80155727
+.definelabel SAVED_PREVIOUS_EXIT, 0x80155728
+.definelabel SAVED_MONEY, 0x80155674
+.definelabel SAVED_LIVES, 0x8015571c
+.definelabel SAVED_PARTNER_STATS, 0x801556fc
+.definelabel SAVED_PARTNER_PARA, 0x80155678
+.definelabel SAVED_TAMER_WAYPOINT_X, 0x80155729
+.definelabel SAVED_TAMER_WAYPOINT_Y, 0x80155747
+.definelabel SAVED_TAMER_PREVIOUS_TILE_X, 0x80155765
+.definelabel SAVED_TAMER_PREVIOUS_TILE_Y, 0x80155766
+.definelabel SAVED_TAMER_WAYPOINT_CURRENT, 0x80155767
+.definelabel SAVED_TAMER_WAYPOINT_COUNT, 0x80155768
+.definelabel SAVED_TAMER_START_TILE_X, 0x80155769
+.definelabel SAVED_TAMER_START_TILE_Y, 0x8015576a
+.definelabel SAVED_TAMER_WAYPOINT_ACTIVE, 0x8015576b
 .definelabel FIRST_SCREEN_PRESSED_START, 0x80134eb0
 .definelabel SAVED_CURRENT_SCREEN, 0x80155725
 .definelabel SAVED_PARTNER_TYPE, 0x80155670

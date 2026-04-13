@@ -1251,7 +1251,7 @@ extern "C"
 
                     // TODO this is invalid for the tamer? Only seems to matter in VS?
                     // is this even used correctly by the game?
-                    if (vabId == 4 && entity->isOnScreen) vabId = ((DigimonEntity*)entity)->vabId;
+                    if (vabId == 4 && entity->isOnScreen) vabId = ((DigimonEntity*)entity)->stats.vabId;
 
                     playSound(vabId, soundId);
                     instructionPtrPtr += 2;

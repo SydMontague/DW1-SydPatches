@@ -190,8 +190,8 @@
 ;  jal entityCheckCollision
 ;.org 0x800def24
 ;  jal entityCheckCollision
-.org 0x800ef4cc
-  jal entityCheckCollision
+;.org 0x800ef4cc
+;  jal entityCheckCollision
 .org 0x800f5fb0
   jal entityCheckCollision
 .org 0x800f63b4

@@ -316,14 +316,14 @@
 ;  jal startAnimation
 ;.org 0x800e89c0
 ;  j startAnimation
-.org 0x800ef4a0
-  jal startAnimation
-.org 0x800ef4b0
-  jal startAnimation
-.org 0x800ef76c
-  jal startAnimation
-.org 0x800ef77c
-  jal startAnimation
+;.org 0x800ef4a0
+;  jal startAnimation
+;.org 0x800ef4b0
+;  jal startAnimation
+;.org 0x800ef76c
+;  jal startAnimation
+;.org 0x800ef77c
+;  jal startAnimation
 .org 0x800f04a0
   jal startAnimation
 .org 0x800f0d70

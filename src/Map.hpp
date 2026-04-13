@@ -35,4 +35,6 @@ extern "C"
     void updateMapLightState();
     void spawnDroppedItem(Entity* entity, ItemType item);
     void initializeMap();
+    void initializeDrawingOffsets();
+    void updateMapTile();
 }

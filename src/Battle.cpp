@@ -133,8 +133,8 @@ namespace
         {
             auto* entity =
                 reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i]));
-            entity->vabId = 4 + i;
-            lastId        = readVBALLSection(4 + i, static_cast<int32_t>(entity->type));
+            entity->stats.vabId = 4 + i;
+            lastId              = readVBALLSection(4 + i, static_cast<int32_t>(entity->type));
         }
 
         // wait for sounds to finish loading
@@ -178,8 +178,8 @@ namespace
         {
             auto* entity =
                 reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i]));
-            entity->unk1   = -1;
-            entity->unk2_1 = 0xFF;
+            entity->stats.unk1   = -1;
+            entity->stats.unk2_1 = 0xFF;
 
             for (auto& move : entity->stats.moves)
             {

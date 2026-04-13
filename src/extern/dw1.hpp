@@ -594,18 +594,17 @@ extern "C"
         int16_t mp;
         int16_t currentHP;
         int16_t currentMP;
-    };
-
-    struct DigimonEntity : Entity
-    {
-        Stats stats;
-        // TODO belongs all into stats
         int16_t unk1;
         uint8_t unk2_1;
         uint8_t unk2_2;
         int16_t vabId;
         uint8_t chargeMode;
         uint8_t field7_0x57;
+    };
+
+    struct DigimonEntity : Entity
+    {
+        Stats stats;
     };
 
     struct PartnerEntity : DigimonEntity
@@ -1561,8 +1560,8 @@ extern "C"
     extern uint8_t PARTNER_TAMER_PREVIOUS_TILE_Y;
     extern dtl::array<int8_t, 30> PARTNER_WAYPOINT_X;
     extern dtl::array<int8_t, 30> PARTNER_WAYPOINT_Y;
-    extern dtl::array<int8_t, 32> TAMER_WAYPOINT_X;
-    extern dtl::array<int8_t, 32> TAMER_WAYPOINT_Y;
+    extern dtl::array<int8_t, 30> TAMER_WAYPOINT_X;
+    extern dtl::array<int8_t, 30> TAMER_WAYPOINT_Y;
     extern int8_t TAMER_WAYPOINT_COUNT;
     extern int8_t PARTNER_WAYPOINT_COUNT;
     extern int8_t PARTNER_WAYPOINT_CURRENT;
@@ -1736,6 +1735,24 @@ extern "C"
     extern bool SHOULD_SKIP_BIT_COUNTING;
     extern uint32_t FIRST_SCREEN_PRESSED_START;
     extern uint8_t SAVED_CURRENT_SCREEN;
+    extern uint8_t SAVED_PREVIOUS_SCREEN;
+    extern Vector SAVED_PLAYER_POS;
+    extern Vector SAVED_PARTNER_POS;
+    extern uint8_t SAVED_CURRENT_EXIT;
+    extern uint8_t SAVED_PREVIOUS_EXIT;
+    extern int32_t SAVED_MONEY;
+    extern uint8_t SAVED_LIVES;
+    extern Stats SAVED_PARTNER_STATS;
+    extern PartnerPara SAVED_PARTNER_PARA;
+    extern dtl::array<int8_t, 30> SAVED_TAMER_WAYPOINT_X;
+    extern dtl::array<int8_t, 30> SAVED_TAMER_WAYPOINT_Y;
+    extern uint8_t SAVED_TAMER_PREVIOUS_TILE_X;
+    extern uint8_t SAVED_TAMER_PREVIOUS_TILE_Y;
+    extern int8_t SAVED_TAMER_WAYPOINT_CURRENT;
+    extern int8_t SAVED_TAMER_WAYPOINT_ACTIVE;
+    extern int8_t SAVED_TAMER_WAYPOINT_COUNT;
+    extern int8_t SAVED_TAMER_START_TILE_X;
+    extern int8_t SAVED_TAMER_START_TILE_Y;
     extern DigimonType SAVED_PARTNER_TYPE;
 
     // TODO can be relocated
@@ -1799,7 +1816,6 @@ extern "C"
     void view_init();
     void initializeEffectData();
     void initializeInventoryModules();
-    void initializeLoadedMap();
     void recalculatePPandArena();
     void gameLoop();
     void renderPressStartToContinue(int32_t instance);
@@ -1816,7 +1832,7 @@ extern "C"
 static_assert(sizeof(PositionData) == 0x88);
 static_assert(sizeof(MomentumData) == 0x52);
 static_assert(sizeof(Entity) == 0x38);
-static_assert(sizeof(Stats) == 0x18);
+static_assert(sizeof(Stats) == 0x20);
 static_assert(sizeof(TamerEntity) == 0x3C);
 static_assert(sizeof(DigimonEntity) == 0x58);
 static_assert(sizeof(PartnerEntity) == 0x80);
