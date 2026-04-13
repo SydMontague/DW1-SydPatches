@@ -11,8 +11,8 @@
 ;  jal tickObjects
 ;.org 0x800ef0ec
 ;  jal tickObjects
-.org 0x800ef2b8
-  jal tickObjects
+;.org 0x800ef2b8
+;  jal tickObjects
 .org 0x800efc94
   jal tickObjects
 
@@ -26,8 +26,8 @@
 ;  jal renderObjects
 ;.org 0x800ef0f4
 ;  jal renderObjects
-.org 0x800ef2c0
-  jal renderObjects
+;.org 0x800ef2c0
+;  jal renderObjects
 .org 0x800efc9c
   jal renderObjects
 

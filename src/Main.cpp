@@ -31,6 +31,7 @@
 namespace
 {
     int32_t inputRepeatTimer;
+    int32_t gameInputRepeatTimer;
 
     void initializeGsTMDMap(void)
     {
@@ -117,6 +118,24 @@ namespace
         CHANGED_INPUT = POLLED_INPUT & ~POLLED_INPUT_PREVIOUS | directionPressed;
     }
 
+    void pollInputGame()
+    {
+        POLLED_INPUT_PREVIOUS = POLLED_INPUT;
+        POLLED_INPUT          = libetc_PadRead(0);
+        bool directionPressed = POLLED_INPUT & POLLED_INPUT_PREVIOUS & 0xf000f000;
+        if (directionPressed == 0)
+            gameInputRepeatTimer = 0;
+        else if (gameInputRepeatTimer + 1 < 5)
+        {
+            directionPressed = 0;
+            gameInputRepeatTimer++;
+        }
+        else
+            gameInputRepeatTimer--;
+
+        CHANGED_INPUT = POLLED_INPUT & ~POLLED_INPUT_PREVIOUS | directionPressed;
+    }
+
     void runFrame()
     {
         ACTIVE_FRAMEBUFFER = libgs_GsGetActiveBuffer();
@@ -196,6 +215,42 @@ namespace
         } while (CURRENT_MENU != -1 && FADE_DATA.fadeOutCurrent < 40);
 
         removeObject(ObjectID::MAIN_MENU_SCREEN, 0);
+    }
+
+    void newGameScene()
+    {
+        // checkShopMap(0xda); // unused as of vanilla 1.1
+        initializeNamingBuffer(0);
+        initializeTextbox();
+        fadeFromBlack(20);
+        writePStat(0xfe, 0);
+        writePStat(0xf3, 0xff);
+        loadNewGameScene();
+
+        auto result = false;
+        do
+        {
+            pollInputGame();
+            ACTIVE_FRAMEBUFFER    = libgs_GsGetActiveBuffer();
+            ACTIVE_ORDERING_TABLE = GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER;
+            libgs_GsSetWorkBase(GS_WORK_BASES + ACTIVE_FRAMEBUFFER);
+            libgs_GsClearOt(0, 0, ACTIVE_ORDERING_TABLE);
+            processInput();
+            tickTextboxHandling(1);
+            if (readPStat(0xf3) == 0) result = newGameStateMachine();
+            tickObjects();
+            renderObjects();
+            libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 0x20, &DR_OFFSETS[ACTIVE_FRAMEBUFFER]);
+            libgpu_DrawSync(0);
+            libetc_vsync(3);
+            libgs_GsSetOrign(DRAWING_OFFSET_X, DRAWING_OFFSET_Y);
+            libgs_GsSwapDispBuff();
+            libgs_GsSortClear(0, 0, 0, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER);
+            libgs_GsDrawOt(ACTIVE_ORDERING_TABLE);
+            if (result && FADE_DATA.fadeOutCurrent == 0) fadeToBlack(40);
+        } while (!result || FADE_DATA.fadeOutCurrent < 40);
+
+        unloadNewGameScene();
     }
 } // namespace
 
