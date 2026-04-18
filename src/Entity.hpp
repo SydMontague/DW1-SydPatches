@@ -20,4 +20,5 @@ extern "C"
     void entityLookAtTile(Entity* entity, int8_t tileX, int8_t tileY);
     bool isInvisible(Entity* entity);
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
+    void initializeEntityText();
 }

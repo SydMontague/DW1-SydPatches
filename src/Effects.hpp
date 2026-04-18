@@ -10,4 +10,8 @@ extern "C"
     void renderParticleFlash(ParticleFlashData* data);
     void translateConditionFXToEntity(Entity* entity, SVector* out);
     void renderSprite(GsSPRITE* sprite, int16_t x, int16_t y, uint32_t distance, int32_t scaleX, int32_t scaleY);
+    void initializeParticleFX();
+    void initializeEntityParticleFX();
+    void initializeCloudFXData();
+    void initializeHealingParticles();
 }

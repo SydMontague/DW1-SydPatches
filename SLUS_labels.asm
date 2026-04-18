@@ -42,11 +42,6 @@
 .definelabel initializeUnknownModelObject,0x800f1878
 .definelabel initializeFontCLUT,        0x8010cb3c
 .definelabel initializeScripts,         0x801059c8
-.definelabel view_init,                 0x800f02f4
-.definelabel initializeEffectData,      0x800f0380
-.definelabel initializeInventoryModules,0x800f03c0
-.definelabel renderPressStartToContinue,0x800efebc
-.definelabel renderMainMenuBackground,  0x800f0158
 .definelabel processInput,              0x800fbf9c
 .definelabel tickTextboxHandling,       0x80100258
 .definelabel initializeNamingBuffer,    0x8010c70c
@@ -56,6 +51,7 @@
 .definelabel unloadNewGameScene,        0x800f1714
 .definelabel tickScript,                0x80105bd8
 
+.definelabel COMBAT_DATA, 0x8013d640
 .definelabel SAVED_PREVIOUS_SCREEN, 0x80155726
 .definelabel SAVED_PLAYER_POS, 0x801555d0
 .definelabel SAVED_PARTNER_POS, 0x801555e0
@@ -463,6 +459,7 @@
 .definelabel libgs_GsInitGraph, 0x8009794c
 .definelabel libgs_GsDefDispBuff, 0x80098038
 .definelabel libgs_GsInit3D, 0x800980d8
+.definelabel libgs_GsSetNearClip, 0x80098028
 
 .definelabel libgs_REFERENCE_MATRIX, 0x80136f84
 .definelabel libgs_GsLIGHTWSMATRIX, 0x80136f24

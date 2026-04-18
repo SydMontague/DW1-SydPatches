@@ -1754,6 +1754,7 @@ extern "C"
     extern int8_t SAVED_TAMER_START_TILE_X;
     extern int8_t SAVED_TAMER_START_TILE_Y;
     extern DigimonType SAVED_PARTNER_TYPE;
+    extern CombatData COMBAT_DATA;
 
     // TODO can be relocated
     extern dtl::array<GsOT_TAG, 4096> GSOT_TAGS_0;
@@ -1814,11 +1815,6 @@ extern "C"
     bool hasDigimonRaised(DigimonType type);
     void initializeFontCLUT();
     void initializeScripts();
-    void view_init();
-    void initializeEffectData();
-    void initializeInventoryModules();
-    void renderPressStartToContinue(int32_t instance);
-    void renderMainMenuBackground(int32_t instance);
     void processInput();
     void tickTextboxHandling(int32_t mode);
     void initializeNamingBuffer(int32_t mode);

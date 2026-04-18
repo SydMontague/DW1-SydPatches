@@ -37,4 +37,5 @@ extern "C"
     void initializeMap();
     void initializeDrawingOffsets();
     void updateMapTile();
+    void initializeDroppedItems();
 }

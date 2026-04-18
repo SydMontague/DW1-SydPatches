@@ -160,6 +160,7 @@ extern "C"
     void libgs_GsInitGraph(uint16_t x_res, uint16_t y_res, uint16_t int1, uint16_t dither, uint16_t vram);
     void libgs_GsDefDispBuff(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
     void libgs_GsInit3D();
+    void libgs_GsSetNearClip(int32_t clip);
 }
 
 static_assert(sizeof(GsOT) == 20);

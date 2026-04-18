@@ -2,12 +2,17 @@
 
 #include "Camera.hpp"
 #include "CustomUI.hpp"
+#include "EFE.hpp"
+#include "Effects.hpp"
 #include "Entity.hpp"
 #include "Fade.hpp"
 #include "Files.hpp"
 #include "GameObjects.hpp"
 #include "GameTime.hpp"
+#include "Helper.hpp"
 #include "Input.hpp"
+#include "Inventory.hpp"
+#include "InventoryUI.hpp"
 #include "ItemFunctions.hpp"
 #include "Map.hpp"
 #include "MapObjects.hpp"
@@ -36,6 +41,8 @@ namespace
 {
     int32_t inputRepeatTimer;
     int32_t gameInputRepeatTimer;
+    bool firstScreenPressedStart  = false;
+    int32_t firstScreenFrameCount = 0;
 
     void initializeGsTMDMap(void)
     {
@@ -157,9 +164,152 @@ namespace
         libgs_GsDrawOt(GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER);
     }
 
+    void renderMainMenuBackground(int32_t instance)
+    {
+        auto* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+        libgpu_SetPolyFT4(prim);
+        prim->x0    = -160;
+        prim->y0    = -120;
+        prim->x1    = 96;
+        prim->y1    = -120;
+        prim->x2    = -160;
+        prim->y2    = 120;
+        prim->x3    = 96;
+        prim->y3    = 120;
+        prim->u0    = 0;
+        prim->v0    = 0;
+        prim->u1    = 255;
+        prim->v1    = 0;
+        prim->u2    = 0;
+        prim->v2    = 240;
+        prim->u3    = 255;
+        prim->v3    = 240;
+        prim->r0    = 128;
+        prim->g0    = 128;
+        prim->b0    = 128;
+        prim->tpage = getTPage(1, 0, 0x300, 0);
+        prim->clut  = getClut(0, 0x1e0);
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 30, prim);
+
+        prim++;
+        libgpu_SetPolyFT4(prim);
+        prim->x0    = 96;
+        prim->y0    = -120;
+        prim->x1    = 160;
+        prim->y1    = -120;
+        prim->x2    = 96;
+        prim->y2    = 120;
+        prim->x3    = 160;
+        prim->y3    = 120;
+        prim->u0    = 0;
+        prim->v0    = 0;
+        prim->u1    = 64;
+        prim->v1    = 0;
+        prim->u2    = 0;
+        prim->v2    = 240;
+        prim->u3    = 64;
+        prim->v3    = 240;
+        prim->r0    = 128;
+        prim->g0    = 128;
+        prim->b0    = 128;
+        prim->tpage = getTPage(1, 0, 0x380, 0);
+        prim->clut  = getClut(0, 0x1e0);
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 30, prim);
+
+        libgs_GsSetWorkBase(prim + 1);
+    }
+
+    void renderPressStartToContinue(int32_t instance)
+    {
+        auto* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+
+        firstScreenFrameCount++;
+        if (firstScreenPressedStart == 1) firstScreenFrameCount += 30;
+        firstScreenFrameCount %= 60;
+
+        if (firstScreenFrameCount < 30)
+        {
+            libgpu_SetPolyFT4(prim);
+            prim->x0    = -54;
+            prim->y0    = 50;
+            prim->x1    = 67;
+            prim->y1    = 50;
+            prim->x2    = -54;
+            prim->y2    = 60;
+            prim->x3    = 67;
+            prim->y3    = 60;
+            prim->u0    = 0;
+            prim->v0    = 241;
+            prim->u1    = 121;
+            prim->v1    = 241;
+            prim->u2    = 0;
+            prim->v2    = 251;
+            prim->u3    = 121;
+            prim->v3    = 251;
+            prim->r0    = 0;
+            prim->g0    = 128;
+            prim->b0    = 0;
+            prim->tpage = getTPage(1, 0, 0x300, 0);
+            prim->clut  = getClut(0, 0x1e0);
+            libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 30, prim);
+            prim++;
+        }
+
+        libgpu_SetPolyFT4(prim);
+        prim->x0    = -160;
+        prim->y0    = -120;
+        prim->x1    = 96;
+        prim->y1    = -120;
+        prim->x2    = -160;
+        prim->y2    = 120;
+        prim->x3    = 96;
+        prim->y3    = 120;
+        prim->u0    = 0;
+        prim->v0    = 0;
+        prim->u1    = 255;
+        prim->v1    = 0;
+        prim->u2    = 0;
+        prim->v2    = 240;
+        prim->u3    = 255;
+        prim->v3    = 240;
+        prim->r0    = 128;
+        prim->g0    = 128;
+        prim->b0    = 128;
+        prim->tpage = getTPage(1, 0, 0x300, 0);
+        prim->clut  = getClut(0, 0x1e0);
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 30, prim);
+        prim++;
+
+        libgpu_SetPolyFT4(prim);
+        prim->x0    = 96;
+        prim->y0    = -120;
+        prim->x1    = 160;
+        prim->y1    = -120;
+        prim->x2    = 96;
+        prim->y2    = 120;
+        prim->x3    = 160;
+        prim->y3    = 120;
+        prim->u0    = 0;
+        prim->v0    = 0;
+        prim->u1    = 64;
+        prim->v1    = 0;
+        prim->u2    = 0;
+        prim->v2    = 240;
+        prim->u3    = 64;
+        prim->v3    = 240;
+        prim->r0    = 128;
+        prim->g0    = 128;
+        prim->b0    = 128;
+        prim->tpage = getTPage(1, 0, 0x380, 0);
+        prim->clut  = getClut(0, 0x1e0);
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 30, prim);
+
+        libgs_GsSetWorkBase(prim + 1);
+    }
+
     bool runLandingScreen()
     {
-        bool confirmed = false;
+        firstScreenPressedStart = false;
         addObject(ObjectID::MAIN_MENU_SCREEN, 0, nullptr, renderPressStartToContinue);
         FADE_DATA.fadeOutCurrent = 0;
         fadeFromBlack(40);
@@ -171,7 +321,7 @@ namespace
                 FADE_DATA.fadeInCurrent == 0)
             {
                 playSound(0, 3);
-                confirmed = true;
+                firstScreenPressedStart = true;
                 break;
             }
             runFrame();
@@ -181,7 +331,7 @@ namespace
         while (FADE_DATA.fadeOutCurrent < 40)
             runFrame();
         removeObject(ObjectID::MAIN_MENU_SCREEN, 0);
-        return confirmed;
+        return firstScreenPressedStart;
     }
 
     void runMainMenu()
@@ -399,6 +549,41 @@ namespace
         if (isTriggerSet(38)) unsetTrigger(38);
         if (isTriggerSet(39)) unsetTrigger(39);
     }
+
+    void view_init()
+    {
+        libgs_GsSetProjection(1024);
+        GS_VIEWPOINT.viewpointX      = 0;
+        GS_VIEWPOINT.viewpointY      = 0;
+        GS_VIEWPOINT.viewpointZ      = -2000;
+        GS_VIEWPOINT.refpointX       = 0;
+        GS_VIEWPOINT.refpointY       = 0;
+        GS_VIEWPOINT.refpointZ       = 0;
+        GS_VIEWPOINT.viewpoint_twist = 0;
+        GS_VIEWPOINT.super           = nullptr;
+        libgs_GsSetRefView2(&GS_VIEWPOINT);
+        libgs_GsSetNearClip(100);
+    }
+
+    void initializeEffectData()
+    {
+        initializeEFE();
+        initializeParticleFX();
+        initializeEntityParticleFX();
+        initializeCloudFXData();
+        initializeHealingParticles();
+    }
+
+    void initializeInventoryModules()
+    {
+        COMBAT_DATA_PTR = &COMBAT_DATA;
+        resetFlattenGlobal();
+        initializeDroppedItems();
+        initializeInventoryUI();
+        initializeInventory();
+        initializeEntityText();
+    }
+
 } // namespace
 
 void initializeFramebuffer()

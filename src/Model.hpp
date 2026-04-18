@@ -22,4 +22,5 @@ extern "C"
     void projectPosition(GsCOORDINATE2* position, Vector* translation, SVector* rotation, Vector* scale);
     void drawObject(GsDOBJ2* obj, GsOT* ot, int32_t shift);
     void initializeModelComponents();
+    void resetFlattenGlobal();
 }
