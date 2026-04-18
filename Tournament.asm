@@ -1,9 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800efbfc
-  jal updateTournamentRegistration
-
 .close
 
 .open "work/DIGIMON/DGET_REL.BIN",0x80080800

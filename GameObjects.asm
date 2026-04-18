@@ -1,36 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-;.org 0x800e505c
-;  jal tickObjects
-;.org 0x800e7ca4
-;  jal tickObjects
-;.org 0x800eee3c
-;  jal tickObjects
-;.org 0x800eef44
-;  jal tickObjects
-;.org 0x800ef0ec
-;  jal tickObjects
-;.org 0x800ef2b8
-;  jal tickObjects
-.org 0x800efc94
-  jal tickObjects
-
-;.org 0x800e5064
-;  jal renderObjects
-;.org 0x800e7cac
-;  jal renderObjects
-;.org 0x800eee44
-;  jal renderObjects
-;.org 0x800eef4c
-;  jal renderObjects
-;.org 0x800ef0f4
-;  jal renderObjects
-;.org 0x800ef2c0
-;  jal renderObjects
-.org 0x800efc9c
-  jal renderObjects
-
 ;.org 0x800a1450
 ;  jal removeObject
 ;.org 0x800a4fbc

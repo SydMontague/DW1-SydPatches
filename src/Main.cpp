@@ -14,10 +14,12 @@
 #include "Model.hpp"
 #include "Movie.hpp"
 #include "Partner.hpp"
+#include "Pause.hpp"
 #include "PlayerMedalView.hpp"
 #include "Sound.hpp"
 #include "Tamer.hpp"
 #include "Timestamp.hpp"
+#include "Tournament.hpp"
 #include "extern/MOV.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libapi.hpp"
@@ -255,6 +257,35 @@ namespace
         unloadNewGameScene();
     }
 
+    void gameLoop()
+    {
+        pollInputGame();
+        ACTIVE_FRAMEBUFFER = libgs_GsGetActiveBuffer();
+        libgs_GsSetWorkBase(GS_WORK_BASES + ACTIVE_FRAMEBUFFER);
+        libgs_GsClearOt(0, 0, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER);
+        ACTIVE_ORDERING_TABLE = GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER;
+        processInput();
+        updateTournamentRegistration();
+        if (!IS_SCRIPT_PAUSED) tickScript();
+
+        libgs_GsSetOrign(DRAWING_OFFSET_X, DRAWING_OFFSET_Y);
+        libgs_GsSetRefView2(&GS_VIEWPOINT);
+        libgs_GsSetProjection(VIEWPORT_DISTANCE);
+        GS_VIEWPOINT_COPY      = GS_VIEWPOINT;
+        VIEWPORT_DISTANCE_COPY = VIEWPORT_DISTANCE;
+        DRAWING_OFFSET_X_COPY  = DRAWING_OFFSET_X;
+        DRAWING_OFFSET_Y_COPY  = DRAWING_OFFSET_Y;
+        tickObjects();
+        renderObjects();
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 0x20, &DR_OFFSETS[ACTIVE_FRAMEBUFFER]);
+        libgpu_DrawSync(0);
+        libetc_vsync(3);
+        libgs_GsSwapDispBuff();
+        libgs_GsSortClear(0, 0, 0, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER);
+        libgs_GsDrawOt(GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER);
+        handlePause();
+    }
+
     bool isProtectedNPC(DigimonType type, int32_t screen)
     {
         if (type == DigimonType::OTAMAMON) return true;
@@ -344,6 +375,29 @@ namespace
         updateMapTile();
         uploadMapTileImages(MAP_TILE_DATA.data(), MAP_TILE_X + MAP_TILE_Y * MAP_WIDTH);
         updateMinuteHand(HOUR, MINUTE);
+    }
+
+    void recalculatePPandArena()
+    {
+        auto prosperity = 0;
+        for (int32_t i = 3; i < 59; i++)
+        {
+            auto level = DIGIMON_DATA[i].level;
+            if (level < Level::ROOKIE) continue;
+            if (!isTriggerSet(200 + i)) continue;
+
+            if (i == 11 || i == 39 || i == 53)
+                prosperity++;
+            else
+                prosperity += static_cast<int32_t>(level) - 2;
+        }
+
+        writePStat(1, prosperity);
+
+        if (readPStat(3) > 22) return;
+        if (isTriggerSet(37)) unsetTrigger(37);
+        if (isTriggerSet(38)) unsetTrigger(38);
+        if (isTriggerSet(39)) unsetTrigger(39);
     }
 } // namespace
 

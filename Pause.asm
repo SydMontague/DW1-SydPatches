@@ -9,9 +9,6 @@
 .org 0x800f462c
   jal createPauseBox
 
-.org 0x800efd18
-  jal handlePause
-
 .close
 
 

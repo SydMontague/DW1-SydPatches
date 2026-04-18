@@ -1770,6 +1770,7 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void tickScript();
     void initializeUnknownModel(void*);
     void initializeUnknownModelObject();
     void setDigimonRaised(DigimonType type);
@@ -1816,8 +1817,6 @@ extern "C"
     void view_init();
     void initializeEffectData();
     void initializeInventoryModules();
-    void recalculatePPandArena();
-    void gameLoop();
     void renderPressStartToContinue(int32_t instance);
     void renderMainMenuBackground(int32_t instance);
     void processInput();
