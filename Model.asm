@@ -116,8 +116,8 @@
 .org 0x800f1b7c
   jal setEntityRotation
 
-.org 0x800f03d4
-  jal resetFlattenGlobal
+;.org 0x800f03d4
+;  jal resetFlattenGlobal
 .org 0x800f2e94
   jal resetFlattenGlobal
 
@@ -324,8 +324,8 @@
 ;  jal startAnimation
 ;.org 0x800ef77c
 ;  jal startAnimation
-.org 0x800f04a0
-  jal startAnimation
+;.org 0x800f04a0
+;  jal startAnimation
 .org 0x800f0d70
   jal startAnimation
 .org 0x800f0f64

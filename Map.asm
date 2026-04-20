@@ -39,22 +39,11 @@
 .org 0x80104edc
   jal setImpassableRect
 
-;.org 0x800ba4cc
-;  j renderOverworldItem
-;.org 0x800c4ca0
-;  jal renderOverworldItem
-.org 0x800f06e8
-  j renderOverworldItem
-
 ;.org 0x800d9044
 ;  jal clearDroppedItems
 
 .org 0x80104d40
   jal spawnItem
-
-.org 0x800f03dc
-  jal initializeDroppedItems
-
 
 ;.org 0x800d40a8
 ;  jal isFiveTileWidePathBlocked

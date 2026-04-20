@@ -1784,7 +1784,6 @@ extern "C"
     void renderMainMenu(int32_t instanceId);
     void Partner_tickBattle(int32_t instanceId);
     void updateBGM();
-    void startThrowingItem();
     void runMapHeadScript(uint8_t mapId);
     void checkArenaMap(int32_t mapId);
     void dailyPStatTrigger();

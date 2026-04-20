@@ -4,9 +4,6 @@
 .org 0x800f1298
   jal addInventoryUI
 
-.org 0x800f03e4
-  jal initializeInventoryUI
-
 .org 0x800fb60c
   jal renderItemSprite
 .org 0x800fddbc

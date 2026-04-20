@@ -6,8 +6,8 @@
 
 ;.org 0x800db190
 ;  jal removeItem
-.org 0x800f04d8
-  jal removeItem
+;.org 0x800f04d8
+;  jal removeItem
 .org 0x800fb378
   jal removeItem
 .org 0x800fc28c
@@ -60,20 +60,6 @@
   jal getItemCount
 .org 0x80108b28
   jal getItemCount
-
-.org 0x800f03ec
-  jal initializeInventory
-
-;.org 0x800c393c
-;  jal removeTamerItem
-;.org 0x800c455c
-;  jal removeTamerItem
-;.org 0x800de208
-;  jal removeTamerItem
-;.org 0x800de2a0
-;  jal removeTamerItem
-.org 0x800f06cc
-  jal removeTamerItem
 
 .close
 

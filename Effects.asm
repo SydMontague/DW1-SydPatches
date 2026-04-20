@@ -1,18 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800f03a0
-  jal initializeCloudFXData
-
-.org 0x800f0390
-  jal initializeParticleFX
-
-.org 0x800f0398
-  jal initializeEntityParticleFX
-
-.org 0x800f03a8
-  jal initializeHealingParticles
-
 .org 0x801042cc
   jal createMeramonShake
 

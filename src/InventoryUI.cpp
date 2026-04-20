@@ -9,6 +9,7 @@
 #include "Model.hpp"
 #include "Sound.hpp"
 #include "Tamer.hpp"
+#include "ThrownItem.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
 #include "extern/dw1.hpp"
@@ -609,6 +610,13 @@ namespace
         };
 
         removeAnimatedUIBox(0, &target);
+    }
+
+    void startThrowingItem()
+    {
+        startAnimation(&TAMER_ENTITY, 6);
+        addThrownItem(INVENTORY_ITEM_TYPES[INVENTORY_POINTER]);
+        removeItem(INVENTORY_ITEM_TYPES[INVENTORY_POINTER], 1);
     }
 
     void tickInventoryUI(int32_t instanceId)

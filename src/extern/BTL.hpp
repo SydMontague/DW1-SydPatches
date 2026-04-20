@@ -33,4 +33,5 @@ extern "C"
     void BTL_battleTickFrame();
     void BTL_drawBattleEndText(bool isDrawing);
     bool BTL_isEndBoxTextFinished();
+    void BTL_addItemParticles(Entity* entity);
 }

@@ -26,7 +26,6 @@
 .definelabel dailyPStatTrigger,         0x800fc374
 .definelabel checkArenaMap,             0x800ff9dc
 .definelabel runMapHeadScript,          0x80105ae4
-.definelabel startThrowingItem,         0x800f0490
 .definelabel updateBGM,                 0x80106af0
 .definelabel Partner_tickBattle,        0x800f1414
 .definelabel tickMainMenu,              0x8010ff1c
@@ -345,6 +344,7 @@
 .definelabel BTL_battleTickFrame, 0x8005dec4
 .definelabel BTL_drawBattleEndText, 0x80062de4
 .definelabel BTL_isEndBoxTextFinished, 0x800630c0
+.definelabel BTL_addItemParticles, 0x800716b0
 
 .definelabel BTL_EMBEDDED_TEXTURE1, 0x80052ae0
 .definelabel BTL_EMBEDDED_TEXTURE2, 0x80053800

@@ -246,9 +246,6 @@
 .org 0x800f7150
   jal collisionGrace
 
-.org 0x800f03f4
-  jal initializeEntityText
-
 .org 0x80104860
   jal addEntityText
 
