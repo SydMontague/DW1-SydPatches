@@ -569,42 +569,112 @@ extern "C"
 
     static void handleNothing(ItemType item) {}
 
+    static void
+    buffStats(DigimonEntity* entity, int32_t entityId, int32_t amount, int16_t* valuePtr, uint8_t color, uint8_t icon)
+    {
+        addWithLimit(valuePtr, amount, 999);
+        addEntityText(entity, entityId, color, amount, icon);
+    }
+
+    static void handleBuffDisk(ItemType item)
+    {
+        if (PARTNER_ENTITY.stats.currentHP == 0) return;
+
+        const auto offLimit   = min((INITIAL_COMBAT_STATS[0].offense * 13) / 10, 999);
+        const auto defLimit   = min((INITIAL_COMBAT_STATS[0].defense * 13) / 10, 999);
+        const auto speedLimit = min((INITIAL_COMBAT_STATS[0].speed * 13) / 10, 999);
+
+        switch (item)
+        {
+            case ItemType::OFFENSE_DISK:
+            {
+                auto gain = min(20, offLimit - PARTNER_ENTITY.stats.off);
+                buffStats(&PARTNER_ENTITY, 0, gain, &PARTNER_ENTITY.stats.off, 11, 3);
+                break;
+            }
+            case ItemType::DEFENSE_DISK:
+            {
+                auto gain = min(20, defLimit - PARTNER_ENTITY.stats.def);
+                buffStats(&PARTNER_ENTITY, 0, gain, &PARTNER_ENTITY.stats.def, 11, 4);
+                break;
+            }
+            case ItemType::SPEED_DISK:
+            {
+                auto gain = min(20, speedLimit - PARTNER_ENTITY.stats.speed);
+                buffStats(&PARTNER_ENTITY, 0, gain, &PARTNER_ENTITY.stats.speed, 11, 5);
+                break;
+            }
+            case ItemType::OMNI_DISK:
+            {
+                buffStats(&PARTNER_ENTITY, 0, 20, &PARTNER_ENTITY.stats.off, 11, 3);
+                buffStats(&PARTNER_ENTITY, 0, 20, &PARTNER_ENTITY.stats.def, 11, 4);
+                buffStats(&PARTNER_ENTITY, 0, 20, &PARTNER_ENTITY.stats.speed, 11, 5);
+                break;
+            }
+            case ItemType::SUPER_OFFENSE_DISK:
+            {
+                auto gain = min(50, offLimit - PARTNER_ENTITY.stats.off);
+                buffStats(&PARTNER_ENTITY, 0, gain, &PARTNER_ENTITY.stats.off, 11, 3);
+                break;
+            }
+            case ItemType::SUPER_DEFENSE_DISK:
+            {
+                auto gain = min(50, defLimit - PARTNER_ENTITY.stats.def);
+                buffStats(&PARTNER_ENTITY, 0, gain, &PARTNER_ENTITY.stats.def, 11, 4);
+                break;
+            }
+            case ItemType::SUPER_SPEED_DISK:
+            {
+                auto gain = min(50, speedLimit - PARTNER_ENTITY.stats.speed);
+                buffStats(&PARTNER_ENTITY, 0, gain, &PARTNER_ENTITY.stats.speed, 11, 5);
+                break;
+            }
+            default: return;
+        }
+
+        BTL_addBuffDiskEffect(&PARTNER_ENTITY);
+    }
+
     void fillItemTable()
     {
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SMALL_RECOVERY)]  = handleSmallHP;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MEDIUM_RECOVERY)] = handleMediumHP;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::LARGE_RECOVERY)]  = handleLargeHP;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SUPER_RECOVERY)]  = handleSuperHP;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MP_FLOPPY)]       = handleSmallMP;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MEDIUM_MP)]       = handleMediumMP;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::LARGE_MP)]        = handleLargeMP;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DOUBLE_FLOPPY)]   = handleDoubleFloppy;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::VARIOUS)]         = handleVarious;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::OMNIPOTENT)]      = handleOmnipotent;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::PROTECTION)]      = handleProtection;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::RESTORE)]         = handleRestore;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SUPER_RESTORE)]   = handleSuperRestore;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::BANDAGE)]         = handleBandage;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MEDICINE)]        = handleMedicine;
-
-        // TODO discs
-
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::AUTOPILOT)]       = handleAutopilot;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::OFFENSE_CHIP)]    = handleOffChip;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DEFENSE_CHIP)]    = handleDefChip;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::BRAIN_SHIP)]      = handleBrainChip;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SPEED_CHIP)]      = handleSpeedChip;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::HP_CHIP)]         = handleHPChip;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MP_CHIP)]         = handleMPChip;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DV_CHIP_A)]       = handleDVChipA;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DV_CHIP_D)]       = handleDVChipD;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DV_CHIP_E)]       = handleDVChipE;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::PORTA_POTTY)]     = handlePortaPottyItem;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::TRAINING_MANUAL)] = handleNothing;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::REST_PILLOW)]     = handleNothing;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::ENEMY_REPEL)]     = handleNothing;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::ENEMY_BELL)]      = handleNothing;
-        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::HEALTH_SHOE)]     = handleNothing;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SMALL_RECOVERY)]     = handleSmallHP;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MEDIUM_RECOVERY)]    = handleMediumHP;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::LARGE_RECOVERY)]     = handleLargeHP;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SUPER_RECOVERY)]     = handleSuperHP;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MP_FLOPPY)]          = handleSmallMP;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MEDIUM_MP)]          = handleMediumMP;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::LARGE_MP)]           = handleLargeMP;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DOUBLE_FLOPPY)]      = handleDoubleFloppy;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::VARIOUS)]            = handleVarious;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::OMNIPOTENT)]         = handleOmnipotent;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::PROTECTION)]         = handleProtection;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::RESTORE)]            = handleRestore;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SUPER_RESTORE)]      = handleSuperRestore;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::BANDAGE)]            = handleBandage;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MEDICINE)]           = handleMedicine;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::OFFENSE_DISK)]       = handleBuffDisk;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DEFENSE_DISK)]       = handleBuffDisk;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SPEED_DISK)]         = handleBuffDisk;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::OMNI_DISK)]          = handleBuffDisk;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SUPER_OFFENSE_DISK)] = handleBuffDisk;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SUPER_DEFENSE_DISK)] = handleBuffDisk;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SUPER_SPEED_DISK)]   = handleBuffDisk;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::AUTOPILOT)]          = handleAutopilot;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::OFFENSE_CHIP)]       = handleOffChip;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DEFENSE_CHIP)]       = handleDefChip;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::BRAIN_SHIP)]         = handleBrainChip;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::SPEED_CHIP)]         = handleSpeedChip;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::HP_CHIP)]            = handleHPChip;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::MP_CHIP)]            = handleMPChip;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DV_CHIP_A)]          = handleDVChipA;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DV_CHIP_D)]          = handleDVChipD;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::DV_CHIP_E)]          = handleDVChipE;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::PORTA_POTTY)]        = handlePortaPottyItem;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::TRAINING_MANUAL)]    = handleNothing;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::REST_PILLOW)]        = handleNothing;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::ENEMY_REPEL)]        = handleNothing;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::ENEMY_BELL)]         = handleNothing;
+        ITEM_FUNCTIONS[static_cast<uint32_t>(ItemType::HEALTH_SHOE)]        = handleNothing;
 
         for (uint32_t type = static_cast<uint32_t>(ItemType::MEAT);
              type <= static_cast<uint32_t>(ItemType::CHAIN_MELON);

@@ -345,6 +345,7 @@
 .definelabel BTL_drawBattleEndText, 0x80062de4
 .definelabel BTL_isEndBoxTextFinished, 0x800630c0
 .definelabel BTL_addItemParticles, 0x800716b0
+.definelabel BTL_addBuffDiskEffect, 0x800721fc
 
 .definelabel BTL_EMBEDDED_TEXTURE1, 0x80052ae0
 .definelabel BTL_EMBEDDED_TEXTURE2, 0x80053800

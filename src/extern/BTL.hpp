@@ -34,4 +34,5 @@ extern "C"
     void BTL_drawBattleEndText(bool isDrawing);
     bool BTL_isEndBoxTextFinished();
     void BTL_addItemParticles(Entity* entity);
+    void BTL_addBuffDiskEffect(Entity* entity);
 }
