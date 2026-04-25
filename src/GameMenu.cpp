@@ -262,6 +262,7 @@ extern "C"
     };
 
     static bool menuOptionDisabled[8]{};
+    static bool fishHidden;
     static int8_t selectedOption;
     static int8_t optionCount;
     static uint8_t fishingRodState;
@@ -333,8 +334,7 @@ extern "C"
 
     void renderGameMenu(int32_t instance)
     {
-        // top row (FISH/DEBUG) is always present now (DEBUG is unconditional), so no yOffset shift
-        const auto yOffset = 0;
+        const auto yOffset = (!isDebugEnabled() && fishHidden) ? -39 : 0;
 
         if (MENU_STATE == 0)
         {
@@ -434,7 +434,10 @@ extern "C"
         {
             int8_t r = ((row + dir * i) % 3 + 3) % 3;
             int8_t s = SLOT_MAPPING[r][col];
-            if (s != -1) return s;
+            if (s == -1) continue;
+            if (s == 7 && !isDebugEnabled()) continue;
+            if (s == 6 && !isDebugEnabled() && fishHidden) continue;
+            return s;
         }
         return slot;
     }
@@ -496,8 +499,8 @@ extern "C"
         {
             case 0:
             {
-                // DEBUG occupies the top row, so extra height is always required
-                auto height = GAME_MENU_HEIGHT + GAME_MENU_EXTRA_HEIGHT;
+                auto height = GAME_MENU_HEIGHT;
+                if (isDebugEnabled() || !fishHidden) height += GAME_MENU_EXTRA_HEIGHT;
                 createMenuBox(0, GAME_MENU_X, GAME_MENU_Y, GAME_MENU_WIDTH, height, 2, tickGameMenu, renderGameMenu);
                 MENU_STATE          = 0;
                 TRIANGLE_MENU_STATE = 0xFFFFFFFF;
@@ -588,11 +591,12 @@ extern "C"
     void addGameMenu()
     {
         fishingRodState = hasFishingRod();
-        // FISH (slot 6): disabled when no rod or sleepy. DEBUG (slot 7): always enabled.
-        menuOptionDisabled[6] = (fishingRodState == 0) || (fishingRodState == 1) || PARTNER_PARA.condition.isSleepy;
+        const bool fishUnavailable = (fishingRodState == 0) || (fishingRodState == 1) || PARTNER_PARA.condition.isSleepy;
+        menuOptionDisabled[6] = isDebugEnabled() && fishUnavailable;
         menuOptionDisabled[7] = false;
+        fishHidden            = !isDebugEnabled() && fishUnavailable;
         selectedOption        = (fishingRodState == 2) ? 6 : 0;
-        optionCount           = 8;
+        optionCount           = isDebugEnabled() ? 8 : (fishHidden ? 6 : 7);
         TRIANGLE_MENU_STATE   = 0;
         addObject(ObjectID::GAME_MENU, 0, tickTriangleMenu, nullptr);
     }

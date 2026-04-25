@@ -2,6 +2,7 @@
 
 #include "extern/stddef.hpp"
 
+inline constexpr bool isDebugEnabled() { return false; }
 void tickDebugMenu(int32_t instanceId);
 void renderDebugMenu(int32_t instanceId);
 void resetDebugMenu();
