@@ -527,29 +527,6 @@ namespace
         updateMinuteHand(HOUR, MINUTE);
     }
 
-    void recalculatePPandArena()
-    {
-        auto prosperity = 0;
-        for (int32_t i = 3; i < 59; i++)
-        {
-            auto level = DIGIMON_DATA[i].level;
-            if (level < Level::ROOKIE) continue;
-            if (!isTriggerSet(200 + i)) continue;
-
-            if (i == 11 || i == 39 || i == 53)
-                prosperity++;
-            else
-                prosperity += static_cast<int32_t>(level) - 2;
-        }
-
-        writePStat(1, prosperity);
-
-        if (readPStat(3) > 22) return;
-        if (isTriggerSet(37)) unsetTrigger(37);
-        if (isTriggerSet(38)) unsetTrigger(38);
-        if (isTriggerSet(39)) unsetTrigger(39);
-    }
-
     void view_init()
     {
         libgs_GsSetProjection(1024);
@@ -736,5 +713,28 @@ extern "C"
         main();
 
         asm volatile("break 0x20, 0x201");
+    }
+
+    void recalculatePPandArena()
+    {
+        auto prosperity = 0;
+        for (int32_t i = 3; i < 59; i++)
+        {
+            auto level = DIGIMON_DATA[i].level;
+            if (level < Level::ROOKIE) continue;
+            if (!isTriggerSet(200 + i)) continue;
+
+            if (i == 11 || i == 39 || i == 53)
+                prosperity++;
+            else
+                prosperity += static_cast<int32_t>(level) - 2;
+        }
+
+        writePStat(1, prosperity);
+
+        if (readPStat(3) > 22) return;
+        if (isTriggerSet(37)) unsetTrigger(37);
+        if (isTriggerSet(38)) unsetTrigger(38);
+        if (isTriggerSet(39)) unsetTrigger(39);
     }
 }

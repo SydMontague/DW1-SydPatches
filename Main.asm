@@ -4,6 +4,9 @@
 .org 0x80090010
   .word EntryPoint
 
+.org 0x801130d8
+  jal recalculatePPandArena
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
