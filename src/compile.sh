@@ -36,5 +36,6 @@ mips-g++ Map.cpp Model.cpp ItemEffects.cpp ItemFunctions.cpp GameMenu.cpp Player
 mips-g++ ConditionBubble.cpp Movie.cpp VanillaText.cpp Fishing.cpp Matrix.cpp Utils.cpp Files.cpp EFE.cpp MapObjects.cpp Script.cpp Partner.cpp DOOA/DOOA.cpp CombatCommon.cpp Inventory.cpp Sound.cpp Math.cpp Camera.cpp Battle.cpp Tournament.cpp DigimonData.cpp Transformation.cpp Evolution.cpp -o ../compiled/Cave3.lib $FLAGS
 mips-g++ Butterfly.cpp -o ../compiled/Cave4.lib $FLAGS
 mips-g++ ThrownItem.cpp Main.cpp BattleEndBox.cpp -o ../compiled/Cave5.lib $FLAGS
+mips-g++ DebugMenu.cpp -o ../compiled/Cave6.lib $FLAGS
 
 cd -

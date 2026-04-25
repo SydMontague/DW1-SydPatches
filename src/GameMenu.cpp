@@ -1,6 +1,7 @@
 #include "GameMenu.hpp"
 
 #include "Camera.hpp"
+#include "DebugMenu.hpp"
 #include "DigimonMenu.hpp"
 #include "Entity.hpp"
 #include "Fishing.hpp"
@@ -71,6 +72,7 @@ extern "C"
         {GAME_MENU_OPTIONS_X + 90, GAME_MENU_OPTIONS_Y + 83, 20, 20, 40, 40, 0, 30, getClut(0x100, 0x1F0 + 13)},
         // vanilla only has 19px for us here, too
         {GAME_MENU_OPTIONS_X + 10, GAME_MENU_OPTIONS_Y + 5, 20, 19, 80, 0, 0, 30, getClut(0x100, 0x1F0 + 13)},
+        {GAME_MENU_OPTIONS_X + 90, GAME_MENU_OPTIONS_Y + 5, 20, 19, 80, 20, 0, 30, getClut(0x100, 0x1F0 + 14)},
     };
 
     constexpr SelectionSprite GAME_MENU_SELECTOR[] = {
@@ -240,9 +242,26 @@ extern "C"
             .layer      = 6,
             .hasShadow  = 1,
         },
+        {
+            .font       = &myFont7px,
+            .string     = "DEBUG",
+            .uvX        = GAME_MENU_TEXT_DRAW_X + 16,
+            .uvY        = GAME_MENU_TEXT_DRAW_Y + 8,
+            .uvWidth    = 0,
+            .uvHeight   = 0,
+            .posX       = GAME_MENU_OPTIONS_X + 80,
+            .posY       = GAME_MENU_OPTIONS_Y + 29,
+            .boxWidth   = 40,
+            .boxHeight  = 10,
+            .alignmentX = AlignmentX::CENTER,
+            .alignmentY = AlignmentY::CENTER,
+            .color      = 5,
+            .layer      = 6,
+            .hasShadow  = 1,
+        },
     };
 
-    static bool menuOptionDisabled[7]{};
+    static bool menuOptionDisabled[8]{};
     static int8_t selectedOption;
     static int8_t optionCount;
     static uint8_t fishingRodState;
@@ -314,8 +333,8 @@ extern "C"
 
     void renderGameMenu(int32_t instance)
     {
-        // not strictly vanilla equivalent, adjusted to improve layout and fix inconsistencies
-        const auto yOffset = optionCount <= 6 ? -39 : 0;
+        // top row (FISH/DEBUG) is always present now (DEBUG is unconditional), so no yOffset shift
+        const auto yOffset = 0;
 
         if (MENU_STATE == 0)
         {
@@ -339,16 +358,23 @@ extern "C"
             badge.hasShadow = option ? 0 : 1;
             badge.color     = option ? -1 : 0;
 
-            renderRectPolyFT4(sprite.posX,
-                              sprite.posY + yOffset,
-                              sprite.width,
-                              sprite.height,
-                              sprite.uvX + uOffset,
-                              sprite.uvY - 64,
-                              sprite.texture_page,
-                              sprite.clut,
-                              6,
-                              option);
+            if (i == 7)
+            {
+                renderDebugIcon(sprite.posX, sprite.posY + yOffset, sprite.width, sprite.height);
+            }
+            else
+            {
+                renderRectPolyFT4(sprite.posX,
+                                  sprite.posY + yOffset,
+                                  sprite.width,
+                                  sprite.height,
+                                  sprite.uvX + uOffset,
+                                  sprite.uvY - 64,
+                                  sprite.texture_page,
+                                  sprite.clut,
+                                  6,
+                                  option);
+            }
             renderTextSprite2(badge, 0, yOffset);
         }
 
@@ -388,36 +414,42 @@ extern "C"
                 Tamer_setState(11);
                 IS_IN_MENU = 0;
                 break;
+            case 7: TRIANGLE_MENU_STATE = 7; break;
         }
+    }
+
+    static constexpr int8_t SLOT_MAPPING[3][3] = {
+        {6, -1, 7},
+        {0,  1, 2},
+        {3,  4, 5},
+    };
+
+    static int8_t verticalMove(int8_t slot, int8_t dir)
+    {
+        int8_t row = 1, col = slot % 3;
+        for (int8_t r = 0; r < 3; r++)
+            for (int8_t c = 0; c < 3; c++)
+                if (SLOT_MAPPING[r][c] == slot) { row = r; col = c; }
+        for (int8_t i = 1; i <= 3; i++)
+        {
+            int8_t r = ((row + dir * i) % 3 + 3) % 3;
+            int8_t s = SLOT_MAPPING[r][col];
+            if (s != -1) return s;
+        }
+        return slot;
     }
 
     void tickGameMenu(int32_t instance)
     {
-        constexpr int16_t mapping[3][3] = {
-            {0, 1, 2},
-            {3, 4, 5},
-            {6, 1, 2},
-        };
-
         menuOptionDisabled[5] = !PARTNER_PARA.condition.isSleepy;
 
         // vanilla allows only handled at most one key per frame, we but can handle all of them
         // order it set to allow diagonal movements even with fishing enabled
         auto newSelection = selectedOption;
-        if (isKeyDown(InputButtons::BUTTON_DOWN))
-        {
-            auto col     = newSelection % 3;
-            auto row     = ring((newSelection / 3) + 1, 0, (optionCount + 2 - col) / 3);
-            newSelection = mapping[row][col];
-        }
+        if (isKeyDown(InputButtons::BUTTON_DOWN)) newSelection = verticalMove(newSelection, +1);
         if (isKeyDown(InputButtons::BUTTON_LEFT)) newSelection = ring(newSelection - 1, 0, optionCount);
         if (isKeyDown(InputButtons::BUTTON_RIGHT)) newSelection = ring(newSelection + 1, 0, optionCount);
-        if (isKeyDown(InputButtons::BUTTON_UP))
-        {
-            auto col     = newSelection % 3;
-            auto row     = ring((newSelection / 3) - 1, 0, (optionCount + 2 - col) / 3);
-            newSelection = mapping[row][col];
-        }
+        if (isKeyDown(InputButtons::BUTTON_UP)) newSelection = verticalMove(newSelection, -1);
 
         if (newSelection != selectedOption)
         {
@@ -464,8 +496,8 @@ extern "C"
         {
             case 0:
             {
-                auto height = GAME_MENU_HEIGHT;
-                if (fishingRodState != 0) height += GAME_MENU_EXTRA_HEIGHT;
+                // DEBUG occupies the top row, so extra height is always required
+                auto height = GAME_MENU_HEIGHT + GAME_MENU_EXTRA_HEIGHT;
                 createMenuBox(0, GAME_MENU_X, GAME_MENU_Y, GAME_MENU_WIDTH, height, 2, tickGameMenu, renderGameMenu);
                 MENU_STATE          = 0;
                 TRIANGLE_MENU_STATE = 0xFFFFFFFF;
@@ -529,25 +561,38 @@ extern "C"
                 if (UI_BOX_DATA[1].frame == 0) TRIANGLE_MENU_STATE = 0;
                 break;
             }
+            case 7:
+            {
+                closeUIBoxIfOpen(0);
+                if (UI_BOX_DATA[0].frame == 0)
+                {
+                    createMenuBox(1, -150, -89, 300, 190, 0, tickDebugMenu, renderDebugMenu);
+                    MENU_STATE          = 0;
+                    MENU_SUB_STATE      = 0;
+                    TRIANGLE_MENU_STATE = 0xFFFFFFFF;
+                    resetDebugMenu();
+                }
+                break;
+            }
+            case 8:
+            {
+                TAMER_ENTITY.isOnScreen   = true;
+                PARTNER_ENTITY.isOnScreen = true;
+                closeUIBoxIfOpen(1);
+                if (UI_BOX_DATA[1].frame == 0) TRIANGLE_MENU_STATE = 0;
+                break;
+            }
         }
     }
 
     void addGameMenu()
     {
         fishingRodState = hasFishingRod();
-        if (fishingRodState != 0)
-        {
-            optionCount           = 7;
-            menuOptionDisabled[6] = fishingRodState != 2;
-            selectedOption        = 6;
-        }
-        else
-        {
-            optionCount           = 6;
-            menuOptionDisabled[6] = false;
-            selectedOption        = 0;
-        }
-        menuOptionDisabled[6] = PARTNER_PARA.condition.isSleepy;
+        // FISH (slot 6): disabled when no rod or sleepy. DEBUG (slot 7): always enabled.
+        menuOptionDisabled[6] = (fishingRodState == 0) || (fishingRodState == 1) || PARTNER_PARA.condition.isSleepy;
+        menuOptionDisabled[7] = false;
+        selectedOption        = (fishingRodState == 2) ? 6 : 0;
+        optionCount           = 8;
         TRIANGLE_MENU_STATE   = 0;
         addObject(ObjectID::GAME_MENU, 0, tickTriangleMenu, nullptr);
     }
