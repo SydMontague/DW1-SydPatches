@@ -1,1 +1,1 @@
-tools\windows\dumpsxiso.exe -x work\DIGIMON -s work\BUILD.XML %1
+tools\windows\dumpsxiso.exe -x ./extract/DIGIMON $1
