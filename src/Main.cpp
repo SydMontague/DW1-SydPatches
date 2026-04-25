@@ -115,7 +115,7 @@ namespace
     {
         POLLED_INPUT_PREVIOUS = POLLED_INPUT;
         POLLED_INPUT          = libetc_PadRead(0);
-        bool directionPressed = POLLED_INPUT & POLLED_INPUT_PREVIOUS & 0xf000f000;
+        auto directionPressed = POLLED_INPUT & POLLED_INPUT_PREVIOUS & 0xf000f000;
         if (directionPressed == 0)
             inputRepeatTimer = 0;
         else if (inputRepeatTimer + 1 < 15)
@@ -133,7 +133,7 @@ namespace
     {
         POLLED_INPUT_PREVIOUS = POLLED_INPUT;
         POLLED_INPUT          = libetc_PadRead(0);
-        bool directionPressed = POLLED_INPUT & POLLED_INPUT_PREVIOUS & 0xf000f000;
+        auto directionPressed = POLLED_INPUT & POLLED_INPUT_PREVIOUS & 0xf000f000;
         if (directionPressed == 0)
             gameInputRepeatTimer = 0;
         else if (gameInputRepeatTimer + 1 < 5)
