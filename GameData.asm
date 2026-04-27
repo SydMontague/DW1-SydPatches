@@ -126,10 +126,12 @@ NAMING_DATA:
   .fill 0x80138720-.
 .endarea
 
-; unused libgs functions
+; unused libgs functions — repurposed as Cave6
 .org 0x800957c0
 .area 0x80096bcc-.
-  .notice "Empty space left: " + (0x80096bcc-.) + " bytes"
+  .importobj "compiled/Cave6.lib"
+
+  .notice "Cave6 Empty space left: " + (0x80096bcc-.) + " bytes"
   .fill 0x80096bcc-.
 .endarea
 
