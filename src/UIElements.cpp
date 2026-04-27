@@ -171,9 +171,7 @@ extern "C"
     }
 
     void renderTextSprite(TextSprite& entry)
-    {
-        renderTextSprite2(entry, 0, 0);
-    }
+    { renderTextSprite2(entry, 0, 0); }
 
     void initSpecialSprite(IconSprite& sprite, Special special)
     {
@@ -213,10 +211,10 @@ extern "C"
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT final    = {.x = posX, .y = posY, .width = width, .height = height};
             RECT start    = {
-                   .x      = static_cast<int16_t>(pos.screenX - 5),
-                   .y      = static_cast<int16_t>(pos.screenY - 5),
-                   .width  = 10,
-                   .height = 10,
+                .x      = static_cast<int16_t>(pos.screenX - 5),
+                .y      = static_cast<int16_t>(pos.screenY - 5),
+                .width  = 10,
+                .height = 10,
             };
 
             createAnimatedUIBox(instanceId, 1, features, &final, &start, tickFunc, renderFunc);
@@ -234,9 +232,7 @@ extern "C"
     }
 
     bool isUIBoxAvailable(int32_t id)
-    {
-        return UI_BOX_DATA[id].state == 1 || UI_BOX_DATA[id].frame == 0;
-    }
+    { return UI_BOX_DATA[id].state == 1 || UI_BOX_DATA[id].frame == 0; }
 
     void renderBox(int16_t posX,
                    int16_t posY,
@@ -288,19 +284,13 @@ extern "C"
     }
 
     void renderDigimonStatsBar(int32_t value, int32_t maxValue, int32_t width, int32_t posX, int32_t posY)
-    {
-        renderBox(posX, posY, (width * value) / maxValue, 2, 50, 200, 200, 0, 5);
-    }
+    { renderBox(posX, posY, (width * value) / maxValue, 2, 50, 200, 200, 0, 5); }
 
     void Sprite::render(int16_t posX, int16_t posY, uint8_t layer, uint8_t flag) const
-    {
-        renderRectPolyFT4(posX, posY, width, height, uvX, uvV, texture_page, clut, layer, flag);
-    }
+    { renderRectPolyFT4(posX, posY, width, height, uvX, uvV, texture_page, clut, layer, flag); }
 
     void Inset::render(int32_t order) const
-    {
-        renderBorderBox(posX, posY, width, height, 0x020202, 0xa08769, 0x35, 0x4B, 0x5C, order);
-    }
+    { renderBorderBox(posX, posY, width, height, 0x020202, 0xa08769, 0x35, 0x4B, 0x5C, order); }
 
     void renderMenuTab(int32_t posX, int32_t width, bool isActive)
     {
@@ -315,14 +305,10 @@ extern "C"
     }
 
     void IconSprite::render(int32_t layer) const
-    {
-        renderRectPolyFT4(posX, posY, width, height, uvX, uvY, texture_page, clut, layer, 0);
-    }
+    { renderRectPolyFT4(posX, posY, width, height, uvX, uvY, texture_page, clut, layer, 0); }
 
     void BorderBox::render() const
-    {
-        renderBorderBox(posX, posY, width, height, color1, color2, red, green, blue, layer);
-    }
+    { renderBorderBox(posX, posY, width, height, color1, color2, red, green, blue, layer); }
 
     void Line4Points::render(uint32_t color1, uint32_t color2, int32_t layer) const
     {
@@ -356,7 +342,7 @@ extern "C"
         UI_BOX_DATA[instanceId].tick(instanceId);
     }
 
-    void renderUIBoxBorder(RECT* size, int32_t layer)
+    void renderUIBoxBorder(RECT* size, int32_t layer, int16_t notchX, int16_t notchW)
     {
         BORDER_CORNER_SPRITES[0].render(size->x, size->y, layer, 0);
         BORDER_CORNER_SPRITES[1].render(size->x + size->width - 4, size->y, layer, 0);
@@ -368,14 +354,34 @@ extern "C"
         auto yMin = size->y;
         auto yMax = size->y + size->height - 3;
 
-        drawLine2P(BORDER_BLACK, xMin + 4, yMin + 0, xMax + 0, yMin + 0, layer, 0);
-        // drawLine2P(BORDER_COLOR1, xMin + 4, yMin + 1, xMax + 0, yMin + 1, layer, 0);
-        drawLine2P(BORDER_COLOR2, xMin + 4, yMin + 1, xMax + 0, yMin + 1, layer, 0);
-        drawLine2P(BORDER_BLACK, xMin + 4, yMin + 2, xMax + 0, yMin + 2, layer, 0);
+        // Top edge — split into two segments around the notch when notchW > 0,
+        // else draw the full uninterrupted top edge.
+        if (notchW > 0)
+        {
+            const int16_t leftEnd    = notchX - 1;
+            const int16_t rightStart = notchX + notchW;
+            if (leftEnd > xMin + 4)
+            {
+                drawLine2P(BORDER_BLACK, xMin + 4, yMin + 0, leftEnd, yMin + 0, layer, 0);
+                drawLine2P(BORDER_COLOR2, xMin + 4, yMin + 1, leftEnd, yMin + 1, layer, 0);
+                drawLine2P(BORDER_BLACK, xMin + 4, yMin + 2, leftEnd, yMin + 2, layer, 0);
+            }
+            if (rightStart < xMax)
+            {
+                drawLine2P(BORDER_BLACK, rightStart, yMin + 0, xMax + 0, yMin + 0, layer, 0);
+                drawLine2P(BORDER_COLOR2, rightStart, yMin + 1, xMax + 0, yMin + 1, layer, 0);
+                drawLine2P(BORDER_BLACK, rightStart, yMin + 2, xMax + 0, yMin + 2, layer, 0);
+            }
+        }
+        else
+        {
+            drawLine2P(BORDER_BLACK, xMin + 4, yMin + 0, xMax + 0, yMin + 0, layer, 0);
+            drawLine2P(BORDER_COLOR2, xMin + 4, yMin + 1, xMax + 0, yMin + 1, layer, 0);
+            drawLine2P(BORDER_BLACK, xMin + 4, yMin + 2, xMax + 0, yMin + 2, layer, 0);
+        }
 
         drawLine2P(BORDER_BLACK, xMin + 4, yMax + 0, xMax + 0, yMax + 0, layer, 0);
         drawLine2P(BORDER_COLOR2, xMin + 4, yMax + 1, xMax + 0, yMax + 1, layer, 0);
-        // drawLine2P(BORDER_COLOR1, xMin + 4, yMax + 2, xMax + 0, yMax + 2, layer, 0);
         drawLine2P(BORDER_BLACK, xMin + 4, yMax + 2, xMax + 0, yMax + 2, layer, 0);
 
         drawLine2P(BORDER_BLACK, xMin + 0, yMin + 4, xMin + 0, yMax + 0, layer, 0);
@@ -396,7 +402,8 @@ extern "C"
 
         if (data.render != nullptr) data.render(instanceId);
 
-        renderUIBoxBorder(&data.finalPos, layer);
+        // features bit 3 (=8): the render fn draws its own border (e.g. with a label notch).
+        if ((data.features & 8) == 0) renderUIBoxBorder(&data.finalPos, layer, 0, 0);
 
         // horizontal line
         // TODO deprecate, this line should be drawn by the render func
@@ -471,7 +478,7 @@ extern "C"
         constexpr RGB8 boxColors[] = {
             {0, 0, 0},
             {45, 56, 64},
-            {0, 0, 0},
+            {12, 22, 30},
             {0, 0, 0},
             {0, 0, 0},
         };
@@ -484,6 +491,9 @@ extern "C"
         box.width  = data.finalPos.width - 8;
         box.height = data.finalPos.height - 3;
         libgs_GsSortBoxFill(&box, ACTIVE_ORDERING_TABLE, layer);
+        // features bit 4 (=16): draw fill twice (mode-0 semi-transparent only) to get a 75/25
+        // blend instead of 50/50. (B+F)/2 then ((B+F)/2 + F)/2 = B/4 + 3F/4.
+        if ((data.features & 0x12) == 0x12) libgs_GsSortBoxFill(&box, ACTIVE_ORDERING_TABLE, layer);
     }
 
     static void renderUIBoxAnim(int32_t instanceId, int32_t frame)
@@ -533,7 +543,10 @@ extern "C"
             if (data.frame > 4) data.state = 1;
             if (data.frame == 0) removeStaticUIBox(instanceId);
         }
-        else { renderUIBoxStatic(instanceId); }
+        else
+        {
+            renderUIBoxStatic(instanceId);
+        }
     }
 
     void createStaticUIBox(int32_t id,
@@ -690,16 +703,17 @@ void SimpleTextSprite::draw(Font* font, const uint8_t* string)
 }
 
 void SimpleTextSprite::draw(Font* font, const char* string)
-{
-    draw(font, reinterpret_cast<const uint8_t*>(string));
-}
+{ draw(font, reinterpret_cast<const uint8_t*>(string)); }
 
 void SimpleTextSprite::render(int32_t posX, int32_t posY, int32_t color, int32_t offset, bool hasShadow)
 {
+    if (uvWidth == 0) return;
     renderStringNew(color, posX, posY, uvWidth, uvHeight, uvX, uvY, offset, hasShadow);
 }
 
 void SimpleTextSprite::clear()
 {
     clearTextSubArea2(uvX, uvY, uvWidth, uvHeight);
+    uvWidth  = 0;
+    uvHeight = 0;
 }

@@ -94,6 +94,8 @@ NAMING_DATA:
 ; override some menu data
 .org 0x80123860
 .area 0x80124c0c-.
+  .importobj "compiled/ItemInfo.lib"
+  .importobj "compiled/ItemInfoDataB.lib"
 
   .notice "Empty space left: " + (0x80124c0c-.) + " bytes"
   .fill 0x80124c0c-.
@@ -111,6 +113,7 @@ NAMING_DATA:
 ; override vanilla raise data, dynamic library data
 .org 0x8012abec
 .area 0x8012bacc-.
+  .importobj "compiled/ItemInfoDataA.lib"
 
   .notice "Empty space left: " + (0x8012bacc-.) + " bytes"
   .fill 0x8012bacc-.
