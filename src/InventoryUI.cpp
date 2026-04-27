@@ -5,6 +5,7 @@
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Inventory.hpp"
+#include "Map.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
 #include "Sound.hpp"
@@ -99,7 +100,6 @@ namespace
     uint8_t previousSelection;
     uint8_t menuSelected;
     uint8_t sortSelected;
-    uint8_t dropSelected;
     uint8_t focusedWindow;
     uint8_t repeatTimer;
 
@@ -109,9 +109,6 @@ namespace
     SimpleTextSprite moveString(704 + 16, 256 + 180);
     SimpleTextSprite sortString(704 + 32, 256 + 180);
     SimpleTextSprite dropString(704 + 48, 256 + 180);
-    SimpleTextSprite youSureString(704 + 0, 256 + 192);
-    SimpleTextSprite yesString(704 + 48, 256 + 192);
-    SimpleTextSprite noString(704 + 56, 256 + 192);
     SimpleTextSprite descString(704 + 0, 256 + 204);
     SimpleTextSprite sortBattleString(704 + 0, 256 + 240);
     SimpleTextSprite sortRaiseString(704 + 16, 256 + 240);
@@ -208,9 +205,6 @@ namespace
         moveString.draw(&vanillaFont, "Move");
         sortString.draw(&vanillaFont, "Sort");
         dropString.draw(&vanillaFont, "Drop");
-        youSureString.draw(&vanillaFont, "Are you sure?");
-        yesString.draw(&vanillaFont, "Yes");
-        noString.draw(&vanillaFont, "No");
 
         sortBattleString.draw(&vanillaFont, "Battle");
         sortRaiseString.draw(&vanillaFont, "Raise");
@@ -369,62 +363,6 @@ namespace
         createAnimatedUIBox(3, 1, 0, &final, &start, tickSortOption, renderSortOption);
     }
 
-    static void tickDropOption(int32_t instanceId)
-    {
-        if (focusedWindow != 3) return;
-
-        if (isInventoryKeyDownRepeat(InputButtons::BUTTON_LEFT) && dropSelected > 0)
-        {
-            playSound(0, 2);
-            dropSelected--;
-        }
-        if (isInventoryKeyDownRepeat(InputButtons::BUTTON_RIGHT) && dropSelected < 1)
-        {
-            playSound(0, 2);
-            dropSelected++;
-        }
-
-        if (isInventoryKeyDown(InputButtons::BUTTON_TRIANGLE)) { removeAnimatedUIBox(3, nullptr); }
-        else if (isInventoryKeyDown(InputButtons::BUTTON_CROSS))
-        {
-            removeAnimatedUIBox(3, nullptr);
-            state         = 61;
-            focusedWindow = -1;
-
-            if (dropSelected == 0)
-                removeItem(INVENTORY_ITEM_TYPES[INVENTORY_POINTER], INVENTORY_ITEM_AMOUNTS[INVENTORY_POINTER]);
-        }
-    }
-
-    static void renderDropOption(int32_t instanceId)
-    {
-        auto baseX = UI_BOX_DATA[3].finalPos.x;
-        auto baseY = UI_BOX_DATA[3].finalPos.y;
-
-        youSureString.render(baseX + 12, baseY + 8, 9, 3, 1);
-        yesString.render(baseX + 23, baseY + 32, 9, 3, 1);
-        noString.render(baseX + 75, baseY + 32, 9, 3, 1);
-
-        renderSelectionCursor(baseX + 18 + dropSelected * 52, baseY + 30, 42, 16, 3);
-    }
-
-    void createDropOptions()
-    {
-        dropSelected  = 1;
-        focusedWindow = 3;
-        state         = 52;
-
-        constexpr RECT final = {.x = -64, .y = -38, .width = 128, .height = 53};
-        RECT start           = {
-                      .x      = static_cast<int16_t>(UI_BOX_DATA[2].finalPos.x + 9),
-                      .y      = static_cast<int16_t>(UI_BOX_DATA[2].finalPos.y + 60),
-                      .width  = 40,
-                      .height = 16,
-        };
-
-        createAnimatedUIBox(3, 1, 0, &final, &start, tickDropOption, renderDropOption);
-    }
-
     void tickInventoryOptions(int32_t instanceId)
     {
         if (focusedWindow != 2) return;
@@ -471,7 +409,18 @@ namespace
                 }
                 case 3:
                 {
-                    createDropOptions();
+                    auto type    = INVENTORY_ITEM_TYPES[INVENTORY_POINTER];
+                    auto nameIdx = INVENTORY_ITEM_NAMES[INVENTORY_POINTER];
+                    spawnDroppedItem(&TAMER_ENTITY, type);
+                    setIsStandingOnDrop(true);
+                    removeItem(type, 1);
+                    if (INVENTORY_ITEM_TYPES[INVENTORY_POINTER] != ItemType::NONE)
+                    {
+                        uint8_t buf[8];
+                        sprintf(buf, "%2d", INVENTORY_ITEM_AMOUNTS[INVENTORY_POINTER]);
+                        itemAmounts[nameIdx].draw(&fixedNumbersFont, buf);
+                    }
+                    removeAnimatedUIBox(2, nullptr);
                     break;
                 }
             }

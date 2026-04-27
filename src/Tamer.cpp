@@ -987,6 +987,8 @@ extern "C"
     {
         return TAMER_ENTITY.isOnScreen;
     }
+
+    void setIsStandingOnDrop(bool value) { isStandingOnDrop = value; }
 }
 
 static void tickTamerWaypoints()
