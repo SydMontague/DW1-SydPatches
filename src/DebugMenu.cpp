@@ -214,18 +214,18 @@ void formatRow(int32_t rowIndex, int32_t entryIndex)
     {
         uint8_t v        = readPStat(entryIndex);
         const char* name = lookupName(PSTAT_NAMES, sizeof(PSTAT_NAMES) / sizeof(PSTAT_NAMES[0]), entryIndex);
-        sprintf(reinterpret_cast<uint8_t*>(dst), "%3d  %-13s %5d", entryIndex, name, v);
+        sprintf(reinterpret_cast<uint8_t*>(dst), "%3d  %-12s %5d", entryIndex, name, v);
     }
     else if (debugPage == PAGE_TRIGGER)
     {
         bool on          = isTriggerSet(entryIndex);
         const char* name = lookupName(TRIGGER_NAMES, sizeof(TRIGGER_NAMES) / sizeof(TRIGGER_NAMES[0]), entryIndex);
-        sprintf(reinterpret_cast<uint8_t*>(dst), "%3d  %-13s %5s", entryIndex, name, on ? "ON" : "OFF");
+        sprintf(reinterpret_cast<uint8_t*>(dst), "%3d  %-12s %5s", entryIndex, name, on ? "ON" : "OFF");
     }
     else
     {
         const StatRow& row = STATS_ROWS[entryIndex];
-        sprintf(reinterpret_cast<uint8_t*>(dst), "%3d  %-13s %5d", entryIndex, row.name, *row.valuePtr);
+        sprintf(reinterpret_cast<uint8_t*>(dst), "%3d  %-12s %5d", entryIndex, row.name, *row.valuePtr);
     }
 }
 
