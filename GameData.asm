@@ -1,6 +1,18 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
+;;; Used for code in vanilla
+.notice "Start Code Caves"
+
+; unused libgs functions — repurposed as Cave6
+.org 0x800957c0
+.area 0x80096bcc-.
+  .importobj "compiled/Cave6.lib"
+
+  .notice "Cave6 Empty space left: " + (0x80096bcc-.) + " bytes"
+  .fill 0x80096bcc-.
+.endarea
+
 .org 0x800a0a50
 .area 0x800afd78-.
   .importobj "compiled/Cave1.lib"
@@ -41,6 +53,9 @@
   .fill 0x800f0b2c-.
 .endarea
 
+;;; Initialized memory, in vanilla only for data
+.notice "Start Memory Caves"
+
 .org 0x8011d190
 .area 0x8012344c-.
   .importobj "compiled/GameData.lib"
@@ -69,37 +84,12 @@ NAMING_DATA:
   .fill 0x8012344c-.
 .endarea
 
-
-; override condition bubble data
-.org 0x8012cb8c
-.area 0x8012ce64-.
-
-  .notice "Empty space left: " + (0x8012ce64-.) + " bytes"
-  .fill 0x8012ce64-.
-.endarea
-
-; override vanilla attack objects
-.org 0x80137a24
-.area 0x80137c00-.
-
-  .notice "Empty space left: " + (0x80137c00-.) + " bytes"
-  .fill 0x80137c00-.
-.endarea
-
 ; override some menu data
 .org 0x80123860
 .area 0x80124c0c-.
 
   .notice "Empty space left: " + (0x80124c0c-.) + " bytes"
   .fill 0x80124c0c-.
-.endarea
-
-; override chest object data
-.org 0x80153408
-.area 0x80153cc8-.
-
-  .notice "Empty space left: " + (0x80153cc8-.) + " bytes"
-  .fill 0x80153cc8-.
 .endarea
 
 ; override vanilla raise data, dynamic library data
@@ -110,12 +100,22 @@ NAMING_DATA:
   .fill 0x8012bacc-.
 .endarea
 
-; override effect data
-.org 0x801387b8
-.area 0x80138c0c-.
+; override condition bubble data, some file paths
+.org 0x8012cb8c
+.area 0x8012ceb4-.
 
-  .notice "Empty space left: " + (0x80138c0c-.) + " bytes"
-  .fill 0x80138c0c-.
+  .notice "Empty space left: " + (0x8012ceb4-.) + " bytes"
+  .fill 0x8012ceb4-.
+.endarea
+
+;;; Not caves, uninitialized memory
+.notice "Start Uninitialized Caves"
+
+; override vanilla attack objects, poop data
+.org 0x80137a24
+.area 0x80138460-.
+
+  .notice "Empty space left: " + (0x80138460-.) + " bytes"
 .endarea
 
 ; override vanilla rotation data
@@ -123,24 +123,24 @@ NAMING_DATA:
 .area 0x80138720-.
 
   .notice "Empty space left: " + (0x80138720-.) + " bytes"
-  .fill 0x80138720-.
 .endarea
 
-; unused libgs functions — repurposed as Cave6
-.org 0x800957c0
-.area 0x80096bcc-.
-  .importobj "compiled/Cave6.lib"
+; override effect data
+.org 0x801387b8
+.area 0x80138c0c-.
 
-  .notice "Cave6 Empty space left: " + (0x80096bcc-.) + " bytes"
-  .fill 0x80096bcc-.
+  .notice "Empty space left: " + (0x80138c0c-.) + " bytes"
 .endarea
 
-; relocated poop data (model, libgs data)
-.org 0x80137c00
-.area 0x80138460-.
-  .notice "Empty space left: " + (0x80138460-.) + " bytes"
-  .fill 0x80138460-.
+; override chest object data
+.org 0x80153408
+.area 0x80153cc8-.
+
+  .notice "Empty space left: " + (0x80153cc8-.) + " bytes"
 .endarea
+
+
+;;; TODO: patches, need to be moved somewhere else / deleted when reimplemented
 
 .org drawString
   sra a1,a1,2
