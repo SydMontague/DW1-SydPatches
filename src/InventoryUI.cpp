@@ -411,9 +411,10 @@ namespace
                 {
                     auto type    = INVENTORY_ITEM_TYPES[INVENTORY_POINTER];
                     auto nameIdx = INVENTORY_ITEM_NAMES[INVENTORY_POINTER];
-                    spawnDroppedItem(&TAMER_ENTITY, type);
+                    auto amount  = INVENTORY_ITEM_AMOUNTS[INVENTORY_POINTER];
+                    spawnDroppedItem(&TAMER_ENTITY, type, amount);
                     setIsStandingOnDrop(true);
-                    removeItem(type, 1);
+                    removeItem(type, amount);
                     if (INVENTORY_ITEM_TYPES[INVENTORY_POINTER] != ItemType::NONE)
                     {
                         uint8_t buf[8];
