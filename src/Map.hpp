@@ -33,7 +33,8 @@ extern "C"
     void setImpassableSquare(int32_t tileX, int32_t tileY, int32_t radius);
     void setMapLayerEnabled(int32_t val);
     void updateMapLightState();
-    void spawnDroppedItem(Entity* entity, ItemType item);
+    void spawnDroppedItem(Entity* entity, ItemType item, uint8_t amount = 1);
+    uint8_t getDroppedItemAmount(int32_t dropId);
     void initializeMap();
     void initializeDrawingOffsets();
     void updateMapTile();

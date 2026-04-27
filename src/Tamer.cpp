@@ -445,7 +445,15 @@ extern "C"
             drawStringNew(&vanillaFont, getDigimonData(DigimonType::TAMER)->name, 704 + 0, 256 + 12);
             auto offset = drawStringNew(&vanillaFont, findItemStr, 704 + 0, 256 + 24) / 4;
             setTextColor(5);
-            drawStringNew(&vanillaFont, getItem(itemType)->name, 704 + offset + 1, 256 + 24);
+            auto nameOffset = drawStringNew(&vanillaFont, getItem(itemType)->name, 704 + offset + 1, 256 + 24) / 4;
+            const uint8_t pickupAmount = getDroppedItemAmount(pickedDropId);
+            if (pickupAmount > 1)
+            {
+                setTextColor(3);
+                uint8_t suffix[8];
+                sprintf(suffix, " x%d", pickupAmount);
+                drawStringNew(&vanillaFont, suffix, 704 + offset + 1 + nameOffset, 256 + 24);
+            }
             setTextColor(1);
 
             takeItemFrameCount = 0;
@@ -987,6 +995,8 @@ extern "C"
     {
         return TAMER_ENTITY.isOnScreen;
     }
+
+    void setIsStandingOnDrop(bool value) { isStandingOnDrop = value; }
 }
 
 static void tickTamerWaypoints()

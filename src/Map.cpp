@@ -882,7 +882,11 @@ extern "C"
         renderDroppedItemShadow(&DROPPED_ITEMS[instanceId]);
     }
 
-    void spawnDroppedItem(Entity* entity, ItemType item)
+    static uint8_t DROPPED_ITEM_AMOUNTS[10] = {0};
+
+    uint8_t getDroppedItemAmount(int32_t dropId) { return DROPPED_ITEM_AMOUNTS[dropId]; }
+
+    void spawnDroppedItem(Entity* entity, ItemType item, uint8_t amount)
     {
         for (int32_t i = 0; i < 10; i++)
         {
@@ -894,6 +898,7 @@ extern "C"
             data.spriteLocation.y = 0;
             data.spriteLocation.z = entity->posData->location.z;
             getModelTile(&entity->posData->location, &data.tileX, &data.tileY);
+            DROPPED_ITEM_AMOUNTS[i] = amount;
             addObject(ObjectID::DROPPED_ITEM, i, nullptr, renderDroppedItem);
             return;
         }
@@ -920,7 +925,8 @@ extern "C"
     void deleteDroppedItem(int32_t instanceId)
     {
         removeObject(ObjectID::DROPPED_ITEM, instanceId);
-        DROPPED_ITEMS[instanceId].type = ItemType::NONE;
+        DROPPED_ITEMS[instanceId].type   = ItemType::NONE;
+        DROPPED_ITEM_AMOUNTS[instanceId] = 0;
     }
 
     void clearDroppedItems()
@@ -931,7 +937,8 @@ extern "C"
 
     bool pickupItem(int32_t dropId)
     {
-        if (giveItem(DROPPED_ITEMS[dropId].type, 1))
+        const uint8_t amount = DROPPED_ITEM_AMOUNTS[dropId] != 0 ? DROPPED_ITEM_AMOUNTS[dropId] : 1;
+        if (giveItem(DROPPED_ITEMS[dropId].type, amount))
         {
             deleteDroppedItem(dropId);
             return true;
