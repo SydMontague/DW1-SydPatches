@@ -21,6 +21,7 @@ constexpr int32_t TAB_PSTAT_X   = -120;
 constexpr int32_t TAB_TRIGGER_X = -40;
 constexpr int32_t TAB_STATS_X   = 40;
 constexpr int32_t TAB_BOX_W     = 80;
+constexpr int32_t TAB_NAME_W    = TAB_BOX_W - 14;
 
 constexpr int32_t LIST_X = -130;
 constexpr int32_t LIST_Y = -75;
@@ -78,8 +79,37 @@ struct StatRow
     int16_t* valuePtr;
 };
 
-extern const StatRow STATS_ROWS[];
-extern const int32_t STATS_COUNT;
+struct EditInput
+{
+    uint16_t button;
+    int8_t delta;
+};
+
+constexpr dtl::array<EditInput, 5> EDIT_INPUTS = {{
+    {InputButtons::BUTTON_LEFT,   -1 },
+    {InputButtons::BUTTON_RIGHT,  +1 },
+    {InputButtons::BUTTON_SQUARE, -10},
+    {InputButtons::BUTTON_CIRCLE, +10},
+    {InputButtons::BUTTON_CROSS,  +1 }, // triggers only
+}};
+
+constexpr dtl::array<StatRow, 15> STATS_ROWS = {{
+    {"HP max",     &PARTNER_ENTITY.stats.hp},
+    {"MP max",     &PARTNER_ENTITY.stats.mp},
+    {"HP cur",     &PARTNER_ENTITY.stats.currentHP},
+    {"MP cur",     &PARTNER_ENTITY.stats.currentMP},
+    {"Off",        &PARTNER_ENTITY.stats.off},
+    {"Def",        &PARTNER_ENTITY.stats.def},
+    {"Speed",      &PARTNER_ENTITY.stats.speed},
+    {"Brain",      &PARTNER_ENTITY.stats.brain},
+    {"Happiness",  &PARTNER_PARA.happiness},
+    {"Discipline", &PARTNER_PARA.discipline},
+    {"Tiredness",  &PARTNER_PARA.tiredness},
+    {"Weight",     &PARTNER_PARA.weight},
+    {"Age",        &PARTNER_PARA.age},
+    {"Battles",    &PARTNER_PARA.battles},
+    {"CareMis",    &PARTNER_PARA.careMistakes},
+}};
 
 const char* lookupName(const Named* arr, int32_t count, int32_t idx)
 {
@@ -103,7 +133,7 @@ TextSprite headerTabs[3] = {
         .uvHeight   = 0,
         .posX       = TAB_PSTAT_X,
         .posY       = -101,
-        .boxWidth   = TAB_BOX_W,
+        .boxWidth   = TAB_NAME_W,
         .boxHeight  = 12,
         .alignmentX = AlignmentX::CENTER,
         .alignmentY = AlignmentY::CENTER,
@@ -120,7 +150,7 @@ TextSprite headerTabs[3] = {
         .uvHeight   = 0,
         .posX       = TAB_TRIGGER_X,
         .posY       = -101,
-        .boxWidth   = TAB_BOX_W,
+        .boxWidth   = TAB_NAME_W,
         .boxHeight  = 12,
         .alignmentX = AlignmentX::CENTER,
         .alignmentY = AlignmentY::CENTER,
@@ -137,7 +167,7 @@ TextSprite headerTabs[3] = {
         .uvHeight   = 0,
         .posX       = TAB_STATS_X,
         .posY       = -101,
-        .boxWidth   = TAB_BOX_W,
+        .boxWidth   = TAB_NAME_W,
         .boxHeight  = 12,
         .alignmentX = AlignmentX::CENTER,
         .alignmentY = AlignmentY::CENTER,
@@ -174,7 +204,7 @@ int32_t entryCount()
 {
     if (debugPage == PAGE_PSTAT) return PSTAT_COUNT;
     if (debugPage == PAGE_TRIGGER) return TRIGGER_COUNT;
-    return STATS_COUNT;
+    return STATS_ROWS.size();
 }
 
 void formatRow(int32_t rowIndex, int32_t entryIndex)
@@ -249,25 +279,6 @@ void changeValue(int32_t delta)
     else *statPtr = static_cast<int16_t>(v);
 }
 
-const StatRow STATS_ROWS[] = {
-    {"HP max",     &PARTNER_ENTITY.stats.hp},
-    {"MP max",     &PARTNER_ENTITY.stats.mp},
-    {"HP cur",     &PARTNER_ENTITY.stats.currentHP},
-    {"MP cur",     &PARTNER_ENTITY.stats.currentMP},
-    {"Off",        &PARTNER_ENTITY.stats.off},
-    {"Def",        &PARTNER_ENTITY.stats.def},
-    {"Speed",      &PARTNER_ENTITY.stats.speed},
-    {"Brain",      &PARTNER_ENTITY.stats.brain},
-    {"Happiness",  &PARTNER_PARA.happiness},
-    {"Discipline", &PARTNER_PARA.discipline},
-    {"Tiredness",  &PARTNER_PARA.tiredness},
-    {"Weight",     &PARTNER_PARA.weight},
-    {"Age",        &PARTNER_PARA.age},
-    {"Battles",    &PARTNER_PARA.battles},
-    {"CareMis",    &PARTNER_PARA.careMistakes},
-};
-
-const int32_t STATS_COUNT = sizeof(STATS_ROWS) / sizeof(STATS_ROWS[0]);
 } // namespace
 
 void resetDebugMenu()
@@ -338,17 +349,6 @@ void tickDebugMenu(int32_t)
     {
         if (cursors[debugPage] + 1 < count) { cursors[debugPage]++; changed = true; playSound(0, 2); }
     }
-    static constexpr struct
-    {
-        uint16_t button;
-        int8_t delta;
-    } EDIT_INPUTS[] = {
-        {InputButtons::BUTTON_LEFT,   -1 },
-        {InputButtons::BUTTON_RIGHT,  +1 },
-        {InputButtons::BUTTON_SQUARE, -10},
-        {InputButtons::BUTTON_CIRCLE, +10},
-        {InputButtons::BUTTON_CROSS,  +1 }, // triggers only
-    };
     for (auto& e : EDIT_INPUTS)
     {
         if (!isKeyDownRepeat(e.button)) continue;

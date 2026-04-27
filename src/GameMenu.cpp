@@ -426,7 +426,8 @@ extern "C"
 
     static int8_t verticalMove(int8_t slot, int8_t dir)
     {
-        int8_t row = 1, col = slot % 3;
+        int8_t row = 1;
+        int8_t col = slot % 3;
         for (int8_t r = 0; r < 3; r++)
             for (int8_t c = 0; c < 3; c++)
                 if (SLOT_MAPPING[r][c] == slot) { row = r; col = c; }
