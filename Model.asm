@@ -326,18 +326,18 @@
 ;  jal startAnimation
 ;.org 0x800f04a0
 ;  jal startAnimation
-.org 0x800f0d70
-  jal startAnimation
-.org 0x800f0f64
-  jal startAnimation
-.org 0x800f1320
-  jal startAnimation
-.org 0x800f1340
-  jal startAnimation
-.org 0x800f1364
-  jal startAnimation
-.org 0x800f13ec
-  jal startAnimation
+;.org 0x800f0d70
+;  jal startAnimation
+;.org 0x800f0f64
+;  jal startAnimation
+;.org 0x800f1320
+;  jal startAnimation
+;.org 0x800f1340
+;  jal startAnimation
+;.org 0x800f1364
+;  jal startAnimation
+;.org 0x800f13ec
+;  jal startAnimation
 .org 0x800f14f4
   jal startAnimation
 .org 0x800f15b8
@@ -383,14 +383,14 @@
 ;  jal tickAnimation
 ;.org 0x800dd9a8
 ;  jal tickAnimation
-.org 0x800f13f8
-  jal tickAnimation
-.org 0x800f1428
-  j tickAnimation
-.org 0x800f1450
-  jal tickAnimation
-.org 0x800f1480
-  jal tickAnimation
+;.org 0x800f13f8
+;  jal tickAnimation
+;.org 0x800f1428
+;  j tickAnimation
+;.org 0x800f1450
+;  jal tickAnimation
+;.org 0x800f1480
+;  jal tickAnimation
 .org 0x800f1510
   jal tickAnimation
 .org 0x800f7a9c

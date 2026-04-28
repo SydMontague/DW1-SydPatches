@@ -13,7 +13,6 @@
 .definelabel setTrigger,                0x801065c0
 .definelabel readPStat,                 0x801062e0
 .definelabel writePStat,                0x80106474
-.definelabel Tamer_tickBattle,          0x800f1214
 .definelabel isKeyDown,                 0x800fc054
 .definelabel unlockMedal,               0x800ff830
 .definelabel hasMedal,                  0x800ff85c
@@ -21,13 +20,11 @@
 .definelabel renderUIBox,               0x80101440
 .definelabel playBGM,                   0x80106a80
 .definelabel isTriggerSet,              0x8010643c
-.definelabel NPCEntity_tickBattle,      0x800f1430
 .definelabel initializeLoadedNPCModels, 0x80105aa8
 .definelabel dailyPStatTrigger,         0x800fc374
 .definelabel checkArenaMap,             0x800ff9dc
 .definelabel runMapHeadScript,          0x80105ae4
 .definelabel updateBGM,                 0x80106af0
-.definelabel Partner_tickBattle,        0x800f1414
 .definelabel tickMainMenu,              0x8010ff1c
 .definelabel renderMainMenu,            0x80113458
 .definelabel triggerSeadramonCutscene,  0x800ff900
@@ -223,6 +220,9 @@
 .definelabel POLLED_INPUT_PREVIOUS, 0x80134ee8
 .definelabel TARGET_MAP, 0x80134de0
 .definelabel CURRENT_EXIT, 0x80134daa
+.definelabel BATTLE_TOGGLE_LIFEBAR, 0x80134d64
+.definelabel IS_TAMERLESS_BATTLE, 0x80134d78
+.definelabel FLEE_TIMER, 0x80134d68
 
 .definelabel TAMER_MOMENTUM_DATA, 0x801a00dc
 .definelabel TAMER_POSITION_DATA, 0x801a07e8
@@ -346,6 +346,8 @@
 .definelabel BTL_isEndBoxTextFinished, 0x800630c0
 .definelabel BTL_addItemParticles, 0x800716b0
 .definelabel BTL_addBuffDiskEffect, 0x800721fc
+.definelabel BTL_getRemainingEnemies, 0x8005fce8
+.definelabel BTL_drawCommandShout, 0x80060ffc
 
 .definelabel BTL_EMBEDDED_TEXTURE1, 0x80052ae0
 .definelabel BTL_EMBEDDED_TEXTURE2, 0x80053800

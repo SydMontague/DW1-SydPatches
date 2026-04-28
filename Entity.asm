@@ -38,55 +38,6 @@
 .org 0x80105930
   jal tickEntityMoveToAxis
 
-;.org 0x800a66a8
-;  jal getModelTile
-;.org 0x800ab284
-;  jal getModelTile
-;.org 0x800ac1c4
-;  jal getModelTile
-;.org 0x800ac1d4
-;  jal getModelTile
-;.org 0x800acb1c
-;  jal getModelTile
-;.org 0x800b71b8
-;  jal getModelTile
-;.org 0x800b71c8
-;  jal getModelTile
-;.org 0x800b7318
-;  jal getModelTile
-;.org 0x800b7328
-;  jal getModelTile
-;.org 0x800b753c
-;  jal getModelTile
-;.org 0x800b754c
-;  jal getModelTile
-;.org 0x800b77d4
-;  jal getModelTile
-;.org 0x800b77e4
-;  jal getModelTile
-;.org 0x800c4c48
-;  jal getModelTile
-;.org 0x800d3a1c
-;  jal getModelTile
-;.org 0x800d3aa8
-;  jal getModelTile
-;.org 0x800d3b10
-;  jal getModelTile
-;.org 0x800d439c
-;  jal getModelTile
-;.org 0x800d4d20
-;  jal getModelTile
-;.org 0x800d4e2c
-;  jal getModelTile
-;.org 0x800de62c
-;  jal getModelTile
-;.org 0x800e1a38
-;  jal getModelTile
-.org 0x800f0e68
-  jal getModelTile
-.org 0x800f1050
-  jal getModelTile
-
 ;.org 0x800aa6f4
 ;  jal entityLookAtLocation
 ;.org 0x800aaae8
@@ -139,12 +90,12 @@
 ;  jal entityLookAtLocation
 ;.org 0x800e7af0
 ;  jal entityLookAtLocation
-.org 0x800f0f54
-  jal entityLookAtLocation
-.org 0x800f11e0
-  jal entityLookAtLocation
-.org 0x800f12a8
-  jal entityLookAtLocation
+;.org 0x800f0f54
+;  jal entityLookAtLocation
+;.org 0x800f11e0
+;  jal entityLookAtLocation
+;.org 0x800f12a8
+;  jal entityLookAtLocation
 .org 0x800f3530
   jal entityLookAtLocation
 .org 0x800f3560
@@ -264,11 +215,6 @@
   jal entityGetTechFromAnim
 .org 0x800f62a0
   jal entityGetTechFromAnim
-
-.org 0x800f1088
-  jal entityLookAtTile
-.org 0x800f10f4
-  jal entityLookAtTile
 
 .close 
 

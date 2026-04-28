@@ -42,8 +42,8 @@
 ;  jal fadeToBlack
 ;.org 0x800ef350
 ;  jal fadeToBlack
-.org 0x800f0b98
-  jal fadeToBlack
+;.org 0x800f0b98
+;  jal fadeToBlack
 .org 0x800f7d7c
   jal fadeToBlack
 .org 0x800fa018

@@ -10,6 +10,7 @@
 #include "GameObjects.hpp"
 #include "GameTime.hpp"
 #include "Helper.hpp"
+#include "Input.hpp"
 #include "Inventory.hpp"
 #include "InventoryUI.hpp"
 #include "Map.hpp"
@@ -20,6 +21,7 @@
 #include "Sound.hpp"
 #include "UIElements.hpp"
 #include "constants.hpp"
+#include "extern/BTL.hpp"
 #include "extern/DOOA.hpp"
 #include "extern/EAB.hpp"
 #include "extern/ENDI.hpp"
@@ -32,6 +34,206 @@
 #include "extern/libgte.hpp"
 
 static void tickTamerWaypoints();
+
+namespace
+{
+    BattleCommand operator+(BattleCommand self, int32_t increase)
+    {
+        return static_cast<BattleCommand>(static_cast<int32_t>(self) + increase);
+    }
+
+    BattleCommand& operator+=(BattleCommand& self, int32_t increase)
+    {
+        self = self + increase;
+        return self;
+    }
+    BattleCommand operator-(BattleCommand self, int32_t decrease)
+    {
+        return static_cast<BattleCommand>(static_cast<int32_t>(self) - decrease);
+    }
+
+    BattleCommand& operator-=(BattleCommand& self, int32_t decrease)
+    {
+        self = self - decrease;
+        return self;
+    }
+
+    int32_t combatIdleTimer;
+
+    void lookAtExit()
+    {
+        Matrix mat;
+        Vector pos{
+            .x = MAP_WARPS.spawnX[CURRENT_EXIT],
+            .y = 0,
+            .z = MAP_WARPS.spawnZ[CURRENT_EXIT],
+        };
+        SVector rotation{
+            .x = 0,
+            .y = static_cast<int16_t>((MAP_WARPS.rotation[CURRENT_EXIT] + 0x800) & 0xFFF),
+            .z = 0,
+        };
+        Vector other{
+            .x = 0,
+            .y = 0,
+            .z = -3000,
+        };
+        Vector result;
+
+        libgte_RotMatrix(&rotation, &mat);
+        libgte_ApplyMatrixLV(&mat, &other, &result);
+        pos.x += result.x;
+        pos.z += result.z;
+        entityLookAtLocation(&TAMER_ENTITY, &pos);
+    }
+
+    void handleFleeing()
+    {
+        auto waypointCount = TAMER_WAYPOINT_COUNT - 1;
+        int16_t tileX;
+        int16_t tileY;
+        getModelTile(&TAMER_ENTITY.posData->location, &tileX, &tileY);
+
+        if (waypointCount < 0)
+        {
+            entityLookAtTile(&TAMER_ENTITY, TAMER_START_TILE_X, TAMER_START_TILE_Y);
+            if (tileX == TAMER_START_TILE_X && tileY == TAMER_START_TILE_Y)
+            {
+                lookAtExit();
+                TAMER_ENTITY.animFlag |= 2;
+            }
+        }
+        else
+        {
+            entityLookAtTile(&TAMER_ENTITY, TAMER_WAYPOINT_X[waypointCount], TAMER_WAYPOINT_Y[waypointCount]);
+            if (tileX == TAMER_WAYPOINT_X[waypointCount] && tileY == TAMER_WAYPOINT_Y[waypointCount])
+                TAMER_WAYPOINT_COUNT--;
+        }
+    }
+
+    void handleCommands()
+    {
+        if (IS_TAMERLESS_BATTLE) return;
+        if (UI_BOX_DATA[0].state != 0) return;
+
+        auto* data = &COMBAT_DATA_PTR->player;
+
+        if (data->currentCommand[0] == BattleCommand::RUN)
+        {
+            if (FLEE_TIMER == 20 && PARTNER_ENTITY.stats.currentHP - COMBAT_DATA_PTR->fighter[0].hpDamageBuffer > 0)
+            {
+                fadeToBlack(20);
+            }
+            handleFleeing();
+            FLEE_TIMER++;
+            return;
+        }
+
+        if (isKeyDownPolled(InputButtons::BUTTON_LEFT))
+        {
+            playSound(0, 2);
+            data->hoveredCommand[0] += 1;
+            if (FLEE_DISABLED && data->hoveredCommand[0] == BattleCommand::RUN)
+                data->hoveredCommand[0] = BattleCommand::ATTACK;
+            if (data->numCommands[0] - 1 < static_cast<int32_t>(data->hoveredCommand[0]))
+                data->hoveredCommand[0] = FLEE_DISABLED ? BattleCommand::ATTACK : BattleCommand::RUN;
+        }
+
+        if (isKeyDownPolled(InputButtons::BUTTON_RIGHT))
+        {
+            playSound(0, 2);
+            data->hoveredCommand[0] -= 1;
+            if (FLEE_DISABLED && data->hoveredCommand[0] == BattleCommand::RUN)
+                data->hoveredCommand[0] = static_cast<BattleCommand>(0);
+            if (static_cast<int32_t>(data->hoveredCommand[0]) < 1)
+                data->hoveredCommand[0] = static_cast<BattleCommand>(data->numCommands[0] - 1);
+        }
+
+        if (isKeyDownPolled(InputButtons::BUTTON_CROSS))
+        {
+            playSound(0, 3);
+            int16_t aliveCount;
+            int16_t aliveArray[4];
+            BTL_getRemainingEnemies(&PARTNER_ENTITY, aliveArray, &aliveCount);
+            if (aliveCount == 0) return;
+
+            if (TAMER_ENTITY.animId != 14) startAnimation(&TAMER_ENTITY, 14);
+
+            data->buffereCommand[0] = data->availableCommands[0][static_cast<int32_t>(data->hoveredCommand[0])];
+            data->commandDelay[0]   = 0; // vanilla calculates a dfferent value first, but always sets it to 0
+            if (data->buffereCommand[0] == BattleCommand::CHANGE) data->changeTarget = 1;
+            if (data->buffereCommand[0] == BattleCommand::RUN)
+            {
+                int16_t tileX;
+                int16_t tileY;
+                data->currentCommand[0] = BattleCommand::RUN;
+                getModelTile(&TAMER_ENTITY.posData->location, &tileX, &tileY);
+                if (tileX == TAMER_START_TILE_X && tileY == TAMER_START_TILE_Y) lookAtExit();
+                startAnimation(&TAMER_ENTITY, 3);
+            }
+            BTL_drawCommandShout(data->buffereCommand[0]);
+        }
+
+        if (isKeyDownPolled(InputButtons::BUTTON_SQUARE) &&
+            COMBAT_DATA_PTR->fighter[0].finisherProgress >= COMBAT_DATA_PTR->fighter[0].finisherGoal)
+        {
+            playSound(0, 3);
+            data->buffereCommand[0] = BattleCommand::FINISHER;
+            data->commandDelay[0]   = 0;
+            data->currentCommand[0] = BattleCommand::FINISHER;
+            BTL_drawCommandShout(data->buffereCommand[0]);
+        }
+    }
+
+    void Tamer_tickBattleBase(int32_t instanceId)
+    {
+        auto* entity = ENTITY_TABLE.getEntityById(instanceId);
+
+        if (entity->animId == 1)
+            combatIdleTimer++;
+        else
+            combatIdleTimer = 0;
+
+        if (combatIdleTimer > 170)
+        {
+            startAnimation(entity, 1);
+            combatIdleTimer = 0;
+        }
+        tickAnimation(entity);
+    }
+
+    void Tamer_tickBattleOverworld(int32_t instanceId)
+    {
+        auto* entity = ENTITY_TABLE.getEntityById(instanceId);
+
+        if (COMBAT_DATA_PTR->player.currentCommand[0] != BattleCommand::RUN)
+        {
+            if (!IS_TAMERLESS_BATTLE && isKeyDownPolled(InputButtons::BUTTON_TRIANGLE)) { addInventoryUI(); }
+            entityLookAtLocation(entity, &PARTNER_ENTITY.posData->location);
+
+            if (UI_BOX_DATA[0].state == 0)
+            {
+                auto animId = entity->animId;
+                if (!NO_AI_FLAG || FINISHING_ENTITY != &PARTNER_ENTITY)
+                {
+                    if (animId == 6 || animId == 14)
+                    {
+                        if ((entity->animFlag & 1) == 0) startAnimation(entity, 1);
+                    }
+                    else if (animId != 1)
+                        startAnimation(entity, 1);
+                }
+                else if (animId != 10)
+                    startAnimation(entity, 10);
+            }
+        }
+
+        if (isKeyDownPolled(InputButtons::BUTTON_SELECT)) BATTLE_TOGGLE_LIFEBAR = !BATTLE_TOGGLE_LIFEBAR;
+        handleCommands();
+
+        Tamer_tickBattleBase(instanceId);
+    }
+} // namespace
 
 extern "C"
 {
@@ -898,9 +1100,9 @@ extern "C"
         switch (GAME_STATE)
         {
             case 0: Tamer_tickOverworld(instanceId); break;
-            case 1:
+            case 1: Tamer_tickBattleOverworld(instanceId); break;
             case 2:
-            case 3: Tamer_tickBattle(instanceId); break;
+            case 3: Tamer_tickBattleBase(instanceId); break;
             case 4:
             case 5: STD_Tamer_tickTournament(instanceId); break;
         }
@@ -996,7 +1198,10 @@ extern "C"
         return TAMER_ENTITY.isOnScreen;
     }
 
-    void setIsStandingOnDrop(bool value) { isStandingOnDrop = value; }
+    void setIsStandingOnDrop(bool value)
+    {
+        isStandingOnDrop = value;
+    }
 }
 
 static void tickTamerWaypoints()

@@ -127,14 +127,14 @@
 ;  jal playSound
 ;.org 0x800eedac
 ;  jal playSound
-.org 0x800f0bdc
-  jal playSound
-.org 0x800f0c90
-  jal playSound
-.org 0x800f0d28
-  jal playSound
-.org 0x800f0fdc
-  jal playSound
+;.org 0x800f0bdc
+;  jal playSound
+;.org 0x800f0c90
+;  jal playSound
+;.org 0x800f0d28
+;  jal playSound
+;.org 0x800f0fdc
+;  jal playSound
 .org 0x800f28c4
   jal playSound
 .org 0x800f36a0

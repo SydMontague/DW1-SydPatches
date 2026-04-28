@@ -1801,6 +1801,11 @@ namespace
         tickAnimation(&PARTNER_ENTITY);
     }
 
+    void Partner_tickBattle(int32_t instanceId)
+    {
+        tickAnimation(ENTITY_TABLE.getEntityById(instanceId));
+    }
+
     void tick(int32_t instanceId)
     {
         if ((GAME_STATE != 0 || PARTNER_STATE != 1) && hasButterfly()) removeButterfly();

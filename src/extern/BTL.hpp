@@ -35,4 +35,6 @@ extern "C"
     bool BTL_isEndBoxTextFinished();
     void BTL_addItemParticles(Entity* entity);
     void BTL_addBuffDiskEffect(Entity* entity);
+    void BTL_getRemainingEnemies(Entity* selfEntity, int16_t* aliveArray, int16_t* aliveCount);
+    void BTL_drawCommandShout(BattleCommand command);
 }

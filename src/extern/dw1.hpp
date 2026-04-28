@@ -1381,7 +1381,7 @@ extern "C"
         int16_t statusedCount;
         int16_t unk2;
         int16_t startingHP;
-        int16_t unk3[2];
+        int16_t commandDelay[2];
         BattleCommand currentCommand[2];
         BattleCommand buffereCommand[2];
         BattleCommand hoveredCommand[2];
@@ -1755,6 +1755,9 @@ extern "C"
     extern int8_t SAVED_TAMER_START_TILE_Y;
     extern DigimonType SAVED_PARTNER_TYPE;
     extern CombatData COMBAT_DATA;
+    extern bool BATTLE_TOGGLE_LIFEBAR;
+    extern bool IS_TAMERLESS_BATTLE;
+    extern uint8_t FLEE_TIMER;
 
     // TODO can be relocated
     extern dtl::array<GsOT_TAG, 4096> GSOT_TAGS_0;
@@ -1782,13 +1785,11 @@ extern "C"
     int16_t enforceStatsLimits(ScriptStats type, uint32_t value);
     void tickMainMenu(int32_t instanceId);
     void renderMainMenu(int32_t instanceId);
-    void Partner_tickBattle(int32_t instanceId);
     void updateBGM();
     void runMapHeadScript(uint8_t mapId);
     void checkArenaMap(int32_t mapId);
     void dailyPStatTrigger();
     void initializeLoadedNPCModels();
-    void NPCEntity_tickBattle(int32_t instanceId);
     bool isTriggerSet(int32_t trigger);
     void playBGM(uint8_t soundFont);
     void renderUIBox(int32_t instanceId);
@@ -1800,7 +1801,6 @@ extern "C"
      * tick return false).
      */
     bool isKeyDown(uint16_t keyMask);
-    void Tamer_tickBattle(int32_t instanceId);
     int32_t main();
     uint8_t readPStat(int32_t address);
     void writePStat(int32_t address, uint8_t value);

@@ -9,6 +9,16 @@
 #include "extern/STD.hpp"
 #include "extern/dw1.hpp"
 
+namespace
+{
+    void NPCEntity_tickBattle(int32_t instanceId)
+    {
+        auto* entity = ENTITY_TABLE.getEntityById(instanceId);
+        tickAnimation(entity);
+        if ((entity->animFlag & 4) != 0) tickAnimation(entity);
+    }
+} // namespace
+
 extern "C"
 {
     constexpr auto ROTATION_SPEED = 113;
