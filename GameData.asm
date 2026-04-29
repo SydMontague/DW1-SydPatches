@@ -53,6 +53,13 @@
   .fill 0x800f1498-.
 .endarea
 
+.org 0x800fbf84
+.area 0x800fc08c-.
+
+  .notice "Cave5-sub1 Empty space left: " + (0x800fc08c-.) + " bytes"
+  .fill 0x800fc08c-.
+.endarea
+
 ;;; Initialized memory, in vanilla only for data
 .notice "Start Memory Caves"
 

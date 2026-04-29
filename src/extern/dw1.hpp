@@ -1594,6 +1594,10 @@ extern "C"
     extern UIBoxData UI_BOX_DATA[6];
     extern uint32_t POLLED_INPUT;
     extern uint32_t POLLED_INPUT_PREVIOUS;
+    extern uint16_t INPUT_REPEAT_COUNTER;
+    extern uint32_t INPUT_REPEAT_MASK;
+    extern uint32_t INPUT_FRESH_MASK;
+    extern uint32_t INPUT_PENDING_MASK;
     extern MapWarps MAP_WARPS;
     extern uint16_t CHAR_TO_GLYPH_TABLE[80];
     extern GlyphData GLYPH_DATA[79];
@@ -1796,11 +1800,6 @@ extern "C"
     bool hasMedal(Medal medal);
     void unlockMedal(Medal medal);
     uint8_t getCardAmount(uint8_t cardId);
-    /*
-     * Checks if a button has been pressed and consumes it (i.e. subsequent checks for the same button within the same
-     * tick return false).
-     */
-    bool isKeyDown(uint16_t keyMask);
     int32_t main();
     uint8_t readPStat(int32_t address);
     void writePStat(int32_t address, uint8_t value);
@@ -1814,7 +1813,6 @@ extern "C"
     bool hasDigimonRaised(DigimonType type);
     void initializeFontCLUT();
     void initializeScripts();
-    void processInput();
     void tickTextboxHandling(int32_t mode);
     void initializeNamingBuffer(int32_t mode);
     void initializeTextbox();

@@ -9,6 +9,7 @@
 #include "GameObjects.hpp"
 #include "GameTime.hpp"
 #include "Helper.hpp"
+#include "Input.hpp"
 #include "InventoryUI.hpp"
 #include "Math.hpp"
 #include "Partner.hpp"

@@ -1,6 +1,7 @@
 #include "Files.hpp"
 #include "Font.hpp"
 #include "Helper.hpp"
+#include "Input.hpp"
 #include "Math.hpp"
 #include "PlayerCardView.hpp"
 #include "PlayerChartView.hpp"
