@@ -1802,7 +1802,6 @@ extern "C"
     int32_t main();
     uint8_t readPStat(int32_t address);
     void writePStat(int32_t address, uint8_t value);
-    uint16_t convertAsciiToJis(uint8_t input);
     void clearTextSubArea(RECT* rect);
     void triggerSeadramonCutscene();
     void setTrigger(uint32_t triggerId);

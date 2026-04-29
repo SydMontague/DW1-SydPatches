@@ -3,9 +3,6 @@
 .definelabel updateNamingPreview, 0x8010aa60
 .definelabel clearTextSubArea, 0x8010cbc4
 .definelabel drawString, 0x8010cf24
-.definelabel convertAsciiToGameChar, 0x800f18c8
-.definelabel swapShortBytes, 0x800f1ab0
-.definelabel convertAsciiToJis, 0x800f18c8
 .definelabel clearTextArea,             0x8010cb90
 .definelabel setTextColor,              0x8010cc0c
 .definelabel callScriptSection,         0x80105b14
