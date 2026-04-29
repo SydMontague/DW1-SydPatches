@@ -45,6 +45,14 @@ bool isKeyPressed(InputButtons button)
 
 extern "C"
 {
+    void inputInit()
+    {
+        INPUT_PENDING_MASK   = 0;
+        INPUT_FRESH_MASK     = 0xFFFFFFFFu;
+        INPUT_REPEAT_MASK    = 0;
+        INPUT_REPEAT_COUNTER = 0;
+    }
+
     bool isKeyDown(uint16_t keyMask)
     {
         if ((INPUT_PENDING_MASK & keyMask) == 0) return false;
