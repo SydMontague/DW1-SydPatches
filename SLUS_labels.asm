@@ -40,9 +40,7 @@
 .definelabel tickTextboxHandling,       0x80100258
 .definelabel initializeNamingBuffer,    0x8010c70c
 .definelabel initializeTextbox,         0x8010020c
-.definelabel loadNewGameScene,          0x800f1528
 .definelabel newGameStateMachine,       0x8010c7ac
-.definelabel unloadNewGameScene,        0x800f1714
 .definelabel tickScript,                0x80105bd8
 
 .definelabel COMBAT_DATA, 0x8013d640

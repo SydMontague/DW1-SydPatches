@@ -43,6 +43,7 @@ namespace
     int32_t gameInputRepeatTimer;
     bool firstScreenPressedStart  = false;
     int32_t firstScreenFrameCount = 0;
+    int32_t newGameJijimonTickCount;
 
     void initializeGsTMDMap(void)
     {
@@ -369,6 +370,87 @@ namespace
         } while (CURRENT_MENU != -1 && FADE_DATA.fadeOutCurrent < 40);
 
         removeObject(ObjectID::MAIN_MENU_SCREEN, 0);
+    }
+
+    void tickNewGameJijimon(int32_t instanceId)
+    {
+        auto entity = ENTITY_TABLE.getEntityById(instanceId);
+
+        if (newGameJijimonTickCount < 30000) newGameJijimonTickCount++;
+
+        if (newGameJijimonTickCount == 35)
+        {
+            setEntityRotation(2, 0, 0x71, 0);
+            setupEntityMatrix(2);
+            startAnimation(entity, 0);
+            writePStat(0xf3, 0);
+        }
+        tickAnimation(entity);
+    }
+
+    void loadNewGameScene()
+    {
+        constexpr GsRVIEW2 refView{
+            .viewpointX      = 0,
+            .viewpointY      = 0,
+            .viewpointZ      = -4200,
+            .refpointX       = 0,
+            .refpointY       = 0,
+            .refpointZ       = 0,
+            .viewpoint_twist = 0,
+            .super           = nullptr,
+        };
+        constexpr GsF_LIGHT light0{
+            .x = 30,
+            .y = 100,
+            .z = 30,
+            .r = 64,
+            .g = 64,
+            .b = 64,
+        };
+        constexpr GsF_LIGHT light1{
+            .x = -30,
+            .y = 100,
+            .z = 0,
+            .r = 40,
+            .g = 40,
+            .b = 40,
+        };
+        constexpr GsF_LIGHT light2{
+            .x = 0,
+            .y = 100,
+            .z = -30,
+            .r = 38,
+            .g = 38,
+            .b = 38,
+        };
+
+        auto* entity = &NPC_ENTITIES[0];
+
+        loadMMD(DigimonType::JIJIMON, EntityType::NPC);
+        ENTITY_TABLE.npc1 = entity;
+        initializeDigimonObject(DigimonType::JIJIMON, 2, tickNewGameJijimon);
+        entity->isOnMap         = true;
+        entity->isOnScreen      = true;
+        newGameJijimonTickCount = 0;
+        setEntityPosition(2, 800, 150, 0);
+        setEntityRotation(2, 0, 1024, 0);
+        setupEntityMatrix(2);
+        startAnimation(entity, 2);
+        libgs_GsSetProjection(1000);
+        libgs_GsSetRefView2(&refView);
+        DRAWING_OFFSET_X = 160;
+        DRAWING_OFFSET_Y = 185;
+        libgs_GsSetFlatLight(0, &light0);
+        libgs_GsSetFlatLight(1, &light1);
+        libgs_GsSetFlatLight(2, &light2);
+        libgs_GsSetAmbient(0x800, 0x800, 0x800);
+    }
+
+    void unloadNewGameScene()
+    {
+        removeEntity(DigimonType::JIJIMON, 2);
+        unloadModel(static_cast<int32_t>(DigimonType::JIJIMON), EntityType::NPC);
     }
 
     void newGameScene()

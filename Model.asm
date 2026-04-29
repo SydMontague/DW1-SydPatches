@@ -1,80 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-;.org 0x800a446c
-;  jal loadMMD
-;.org 0x800a983c
-;  jal loadMMD
-.org 0x800f1534
-  jal loadMMD
-;.org 0x800b6110
-;  j loadMMD
-
-
-;.org 0x800b63fc
-;  j unloadModel
-;.org 0x800b6634
-;  jal unloadModel
-;.org 0x800d9764
-;  jal unloadModel
-;.org 0x800d9770
-;  jal unloadModel
-;.org 0x800d97a0
-;  jal unloadModel
-;.org 0x800e3624
-;  jal unloadModel
-.org 0x800f172c
-  jal unloadModel
-
-
-;.org 0x800a4490
-;  jal initializeDigimonObject
-;.org 0x800a4ff4
-;  jal initializeDigimonObject
-;.org 0x800a5218
-;  jal initializeDigimonObject
-;.org 0x800a9860
-;  jal initializeDigimonObject
-;.org 0x800b61f0
-;  jal initializeDigimonObject
-.org 0x800f1558
-  jal initializeDigimonObject
-
-
-;.org 0x800b61a8		
-;  jal removeEntity
-;.org 0x800b63e4		
-;  jal removeEntity
-;.org 0x800b65e0		
-;  jal removeEntity
-;.org 0x800d9744		
-;  jal removeEntity
-;.org 0x800e3610		
-;  jal removeEntity
-.org 0x800f1720		
-  jal removeEntity
-
-
-;.org 0x800a9890
-;  jal setupEntityMatrix
-;.org 0x800a9c84
-;  jal setupEntityMatrix
-;.org 0x800ac700
-;  jal setupEntityMatrix
-;.org 0x800ac96c
-;  jal setupEntityMatrix
-;.org 0x800b6240
-;  jal setupEntityMatrix
-;.org 0x800bf078
-;  jal setupEntityMatrix
-;.org 0x800bf1c8
-;  jal setupEntityMatrix
-.org 0x800f14e4
-  jal setupEntityMatrix
-.org 0x800f15a8
-  jal setupEntityMatrix
-
-
 ;.org 0x800a9874
 ;  jal setEntityPosition
 ;.org 0x800a9c60
@@ -89,8 +15,8 @@
 ;  jal setEntityPosition
 ;.org 0x800bf1ac
 ;  jal setEntityPosition
-.org 0x800f158c
-  jal setEntityPosition
+;.org 0x800f158c
+;  jal setEntityPosition
 .org 0x800f1af8
   jal setEntityPosition
 .org 0x800f1b68
@@ -107,10 +33,10 @@
 ;  jal setEntityRotation
 ;.org 0x800bf1c0
 ;  jal setEntityRotation
-.org 0x800f14dc
-  jal setEntityRotation
-.org 0x800f15a0
-  jal setEntityRotation
+;.org 0x800f14dc
+;  jal setEntityRotation
+;.org 0x800f15a0
+;  jal setEntityRotation
 .org 0x800f1b0c
   jal setEntityRotation
 .org 0x800f1b7c
@@ -338,10 +264,10 @@
 ;  jal startAnimation
 ;.org 0x800f13ec
 ;  jal startAnimation
-.org 0x800f14f4
-  jal startAnimation
-.org 0x800f15b8
-  jal startAnimation
+;.org 0x800f14f4
+;  jal startAnimation
+;.org 0x800f15b8
+;  jal startAnimation
 .org 0x800f1b1c
   jal startAnimation
 .org 0x800f1b8c
@@ -391,8 +317,8 @@
 ;  jal tickAnimation
 ;.org 0x800f1480
 ;  jal tickAnimation
-.org 0x800f1510
-  jal tickAnimation
+;.org 0x800f1510
+;  jal tickAnimation
 .org 0x800f7a9c
   j tickAnimation
 .org 0x800f7ab8

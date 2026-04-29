@@ -148,7 +148,7 @@ extern "C"
     void libgs_GsSortSprite(GsSPRITE* sprite, GsOT* ot, uint16_t depth);
     void libgs_GsSortBoxFill(GsBOXF* box, GsOT* ot, uint16_t layer);
     void libgs_GsSetProjection(uint32_t distance);
-    int32_t libgs_GsSetRefView2(GsRVIEW2* view);
+    int32_t libgs_GsSetRefView2(const GsRVIEW2* view);
     void libgs_GsSetFlatLight(uint32_t id, const GsF_LIGHT* light);
     GsOT* libgs_GsSortOt(GsOT* src, GsOT* dest);
     void libgs_GsSetAmbient(uint32_t red, uint32_t green, uint32_t blue);

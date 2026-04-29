@@ -1816,9 +1816,7 @@ extern "C"
     void tickTextboxHandling(int32_t mode);
     void initializeNamingBuffer(int32_t mode);
     void initializeTextbox();
-    void loadNewGameScene();
     int32_t newGameStateMachine();
-    void unloadNewGameScene();
 }
 
 static_assert(sizeof(PositionData) == 0x88);
