@@ -1762,6 +1762,7 @@ extern "C"
     extern bool BATTLE_TOGGLE_LIFEBAR;
     extern bool IS_TAMERLESS_BATTLE;
     extern uint8_t FLEE_TIMER;
+    extern TMDModel* BUFF_MODEL;
 
     // TODO can be relocated
     extern dtl::array<GsOT_TAG, 4096> GSOT_TAGS_0;
@@ -1779,8 +1780,6 @@ extern "C"
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
     void tickScript();
-    void initializeUnknownModel(void*);
-    void initializeUnknownModelObject();
     void setDigimonRaised(DigimonType type);
     uint8_t* getScript(uint32_t scriptId);
     uint8_t* getScriptSection(uint8_t* ptr, int32_t section);

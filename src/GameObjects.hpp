@@ -26,6 +26,7 @@ extern "C"
         MONOCHROMON_BUBBLE   = 433,
         VS_PLAYER_INPUT      = 434,
         FILE_READ_QUEUE      = 1028,
+        BATTLE_UNKNOWN_MODEL = 1281,
         ENTITY_PARTICLE_FX   = 1282,
         PARTICLE_FX          = 1536,
         CLOUD_FX             = 1537,

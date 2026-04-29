@@ -14,6 +14,7 @@
 #include "Partner.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
+#include "BuffModel.hpp"
 #include "extern/BTL.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libetc.hpp"
@@ -143,7 +144,7 @@ namespace
         BTL_initializeBattleItemParticles();
         BTL_initializeUnk3();
         BTL_initializeUnk2();
-        BTL_loadEmbeddedTextures(&BTL_EMBEDDED_TEXTURE1, &BTL_EMBEDDED_TEXTURE2);
+        BTL_initializeFinisherAuraModel(&BTL_EMBEDDED_TEXTURE1, &BTL_FINISHER_MODEL);
 
         if (!IS_PREDEFINED_BATTLE) Partner_tickCollision();
         loadBattleDataTick();
@@ -159,12 +160,12 @@ namespace
         if (!IS_PREDEFINED_BATTLE) Partner_tickCollision();
         loadBattleDataTick();
 
-        initializeUnknownModel(&BTL_UNKNOWN_MODEL);
+        initializeBuffModel(reinterpret_cast<TMDModel*>(&BTL_BUFF_MODEL));
 
         if (!IS_PREDEFINED_BATTLE) Partner_tickCollision();
         loadBattleDataTick();
 
-        initializeUnknownModelObject();
+        initializeBuffModelObject();
         BTL_initializeEFEEngine(GENERAL_BUFFER.data());
 
         if (!IS_PREDEFINED_BATTLE) Partner_tickCollision();

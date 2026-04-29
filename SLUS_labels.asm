@@ -33,8 +33,6 @@
 .definelabel getScriptSection,          0x8010629c
 .definelabel getScript,                 0x80106218
 .definelabel setDigimonRaised,          0x800ff7f8
-.definelabel initializeUnknownModel,    0x800f1838
-.definelabel initializeUnknownModelObject,0x800f1878
 .definelabel initializeFontCLUT,        0x8010cb3c
 .definelabel initializeScripts,         0x801059c8
 .definelabel tickTextboxHandling,       0x80100258
@@ -223,6 +221,7 @@
 .definelabel BATTLE_TOGGLE_LIFEBAR, 0x80134d64
 .definelabel IS_TAMERLESS_BATTLE, 0x80134d78
 .definelabel FLEE_TIMER, 0x80134d68
+.definelabel BUFF_MODEL, 0x801b1c58
 
 .definelabel TAMER_MOMENTUM_DATA, 0x801a00dc
 .definelabel TAMER_POSITION_DATA, 0x801a07e8
@@ -328,7 +327,7 @@
 .definelabel BTL_initializeUnk3, 0x800721e8
 .definelabel BTL_initializeUnk2, 0x80072a3c
 .definelabel BTL_initializePoisonBubble, 0x8006f088
-.definelabel BTL_loadEmbeddedTextures, 0x8007087c
+.definelabel BTL_initializeFinisherAuraModel, 0x8007087c
 .definelabel BTL_initializeConfusionEffect, 0x8006f3c0
 .definelabel BTL_initializeStunEffect, 0x8006fdc4
 .definelabel BTL_initializeEFEEngine, 0x8006605c
@@ -350,10 +349,10 @@
 .definelabel BTL_drawCommandShout, 0x80060ffc
 
 .definelabel BTL_EMBEDDED_TEXTURE1, 0x80052ae0
-.definelabel BTL_EMBEDDED_TEXTURE2, 0x80053800
+.definelabel BTL_FINISHER_MODEL, 0x80053800
 .definelabel BTL_CONFUSION_MODEL, 0x80054838
 .definelabel BTL_STUN_MODEL, 0x80054d00
-.definelabel BTL_UNKNOWN_MODEL, 0x80055328
+.definelabel BTL_BUFF_MODEL, 0x80055328
 .definelabel BTL_END_BOX_TEXTBUFFER, 0x80073ea0
 
 // EVL_REL

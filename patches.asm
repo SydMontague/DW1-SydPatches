@@ -10,6 +10,7 @@
 .include "Naming.asm"
 .include "Items.asm"
 
+.include "BuffModel.asm"
 .include "statusBar.asm"
 .include "StatsView.asm"
 .include "Partner.asm"
