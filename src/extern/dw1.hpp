@@ -1594,6 +1594,10 @@ extern "C"
     extern UIBoxData UI_BOX_DATA[6];
     extern uint32_t POLLED_INPUT;
     extern uint32_t POLLED_INPUT_PREVIOUS;
+    extern uint16_t INPUT_REPEAT_COUNTER;
+    extern uint32_t INPUT_REPEAT_MASK;
+    extern uint32_t INPUT_FRESH_MASK;
+    extern uint32_t INPUT_PENDING_MASK;
     extern MapWarps MAP_WARPS;
     extern uint16_t CHAR_TO_GLYPH_TABLE[80];
     extern GlyphData GLYPH_DATA[79];
@@ -1814,7 +1818,7 @@ extern "C"
     bool hasDigimonRaised(DigimonType type);
     void initializeFontCLUT();
     void initializeScripts();
-    void processInput();
+    uint32_t processInput();
     void tickTextboxHandling(int32_t mode);
     void initializeNamingBuffer(int32_t mode);
     void initializeTextbox();

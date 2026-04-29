@@ -42,3 +42,4 @@
 .include "Fishing.asm"
 .include "VanillaText.asm"
 .include "Pause.asm"
+.include "Input.asm"

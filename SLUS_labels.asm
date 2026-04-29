@@ -13,7 +13,6 @@
 .definelabel setTrigger,                0x801065c0
 .definelabel readPStat,                 0x801062e0
 .definelabel writePStat,                0x80106474
-.definelabel isKeyDown,                 0x800fc054
 .definelabel unlockMedal,               0x800ff830
 .definelabel hasMedal,                  0x800ff85c
 .definelabel getCardAmount,             0x801067ec
@@ -38,7 +37,6 @@
 .definelabel initializeUnknownModelObject,0x800f1878
 .definelabel initializeFontCLUT,        0x8010cb3c
 .definelabel initializeScripts,         0x801059c8
-.definelabel processInput,              0x800fbf9c
 .definelabel tickTextboxHandling,       0x80100258
 .definelabel initializeNamingBuffer,    0x8010c70c
 .definelabel initializeTextbox,         0x8010020c
@@ -218,6 +216,10 @@
 .definelabel UI_BOX_DATA, 0x8013d390
 .definelabel POLLED_INPUT, 0x80134ee4
 .definelabel POLLED_INPUT_PREVIOUS, 0x80134ee8
+.definelabel INPUT_REPEAT_COUNTER, 0x80135016
+.definelabel INPUT_REPEAT_MASK, 0x8013501c
+.definelabel INPUT_FRESH_MASK, 0x80135020
+.definelabel INPUT_PENDING_MASK, 0x80135024
 .definelabel TARGET_MAP, 0x80134de0
 .definelabel CURRENT_EXIT, 0x80134daa
 .definelabel BATTLE_TOGGLE_LIFEBAR, 0x80134d64
