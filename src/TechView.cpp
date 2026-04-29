@@ -3,6 +3,7 @@
 #include "Entity.hpp"
 #include "Font.hpp"
 #include "Helper.hpp"
+#include "Input.hpp"
 #include "Math.hpp"
 #include "Partner.hpp"
 #include "Sound.hpp"

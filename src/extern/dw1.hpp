@@ -1800,11 +1800,6 @@ extern "C"
     bool hasMedal(Medal medal);
     void unlockMedal(Medal medal);
     uint8_t getCardAmount(uint8_t cardId);
-    /*
-     * Checks if a button has been pressed and consumes it (i.e. subsequent checks for the same button within the same
-     * tick return false).
-     */
-    bool isKeyDown(uint16_t keyMask);
     int32_t main();
     uint8_t readPStat(int32_t address);
     void writePStat(int32_t address, uint8_t value);
@@ -1818,7 +1813,6 @@ extern "C"
     bool hasDigimonRaised(DigimonType type);
     void initializeFontCLUT();
     void initializeScripts();
-    uint32_t processInput();
     void tickTextboxHandling(int32_t mode);
     void initializeNamingBuffer(int32_t mode);
     void initializeTextbox();

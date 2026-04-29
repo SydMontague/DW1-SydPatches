@@ -3,6 +3,7 @@
 #include "DigimonData.hpp"
 #include "Files.hpp"
 #include "Helper.hpp"
+#include "Input.hpp"
 #include "Math.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"

@@ -1,4 +1,5 @@
 #include "Helper.hpp"
+#include "Input.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
 #include "Sound.hpp"
