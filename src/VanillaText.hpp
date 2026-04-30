@@ -35,4 +35,5 @@ extern "C"
                                                         int32_t offset,
                                                         int32_t hasShadow);
     void setEntityTextDigit(POLY_FT4* prim, int32_t dx, int32_t dy);
+    uint16_t convertAsciiToJis(uint8_t input);
 }
