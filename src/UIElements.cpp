@@ -90,7 +90,14 @@ extern "C"
         else
             setPosDataPolyFT4(prim, posX, posY, width, height);
 
-        if ((flag & 1) != 0)
+        if ((flag & 0x20) != 0)
+        {
+            // Extra-dim modulator for higher inactive/active contrast.
+            prim->r0 = 24;
+            prim->g0 = 24;
+            prim->b0 = 24;
+        }
+        else if ((flag & 1) != 0)
         {
             prim->r0 = 50;
             prim->g0 = 50;
@@ -342,7 +349,7 @@ extern "C"
         UI_BOX_DATA[instanceId].tick(instanceId);
     }
 
-    void renderUIBoxBorder(RECT* size, int32_t layer, int16_t notchX, int16_t notchW)
+    void renderUIBoxBorderNotched(RECT* size, int32_t layer, int16_t notchX, int16_t notchW)
     {
         BORDER_CORNER_SPRITES[0].render(size->x, size->y, layer, 0);
         BORDER_CORNER_SPRITES[1].render(size->x + size->width - 4, size->y, layer, 0);
@@ -354,8 +361,6 @@ extern "C"
         auto yMin = size->y;
         auto yMax = size->y + size->height - 3;
 
-        // Top edge — split into two segments around the notch when notchW > 0,
-        // else draw the full uninterrupted top edge.
         if (notchW > 0)
         {
             const int16_t leftEnd    = notchX - 1;
@@ -395,6 +400,10 @@ extern "C"
         drawLine2P(BORDER_BLACK, xMax + 3, yMin + 4, xMax + 3, yMax + 0, layer, 0);
     }
 
+    // 2-arg ABI preserved for vanilla jal callers (UIElements.asm:0x8010d300).
+    void renderUIBoxBorder(RECT* size, int32_t layer)
+    { renderUIBoxBorderNotched(size, layer, 0, 0); }
+
     static void renderUIBoxStatic(int32_t instanceId)
     {
         auto& data       = UI_BOX_DATA[instanceId];
@@ -403,7 +412,7 @@ extern "C"
         if (data.render != nullptr) data.render(instanceId);
 
         // features bit 3 (=8): the render fn draws its own border (e.g. with a label notch).
-        if ((data.features & 8) == 0) renderUIBoxBorder(&data.finalPos, layer, 0, 0);
+        if ((data.features & 8) == 0) renderUIBoxBorder(&data.finalPos, layer);
 
         // horizontal line
         // TODO deprecate, this line should be drawn by the render func

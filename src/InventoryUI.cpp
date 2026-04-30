@@ -364,7 +364,7 @@ namespace
         const int16_t notchW = labelW + 4;
 
         RECT rect{.x = panelX, .y = panelY, .width = panelW, .height = panelH};
-        renderUIBoxBorder(&rect, depth, notchX, notchW);
+        renderUIBoxBorderNotched(&rect, depth, notchX, notchW);
 
         label.render(notchX + 2, panelY - 4, COLOR_CYAN, depth, true);
     }
@@ -488,7 +488,7 @@ namespace
 
         renderCategoryTabs(&tabLabels[0], TAB_Y, labelDepth - 1, &activeTabX, &activeTabW);
         RECT listRect{.x = LIST_X, .y = LIST_Y, .width = box.finalPos.width, .height = box.finalPos.height};
-        renderUIBoxBorder(&listRect, labelDepth, 0, 0);
+        renderUIBoxBorder(&listRect, labelDepth);
 
         // Two semi-trans fills = 75/25 blend matching the description-window preset.
         renderBox(CAP_X + 4, CAP_Y + 3, CAP_WIDTH - 8, CAP_HEIGHT - 3, 12, 22, 30, 1, depth);
@@ -740,13 +740,24 @@ namespace
         {
             int32_t pos = getVisibleRow(INVENTORY_POINTER);
             if (pos < 0) pos = 0;
-            int32_t newPos = pos;
-            if (isInventoryKeyDownRepeat(InputButtons::BUTTON_UP) && pos >= 2) newPos = pos - 2;
-            if (isInventoryKeyDownRepeat(InputButtons::BUTTON_DOWN) && pos + 2 < inv_filteredCount) newPos = pos + 2;
-            if (isInventoryKeyDownRepeat(InputButtons::BUTTON_LEFT) && (pos & 1) == 1) newPos = pos - 1;
-            if (isInventoryKeyDownRepeat(InputButtons::BUTTON_RIGHT) && (pos & 1) == 0 && pos + 1 < inv_filteredCount)
-                newPos = pos + 1;
-            if (newPos != pos) INVENTORY_POINTER = inv_filteredIdx[newPos];
+
+            int32_t deltaRow = 0;
+            int32_t deltaCol = 0;
+            if (isInventoryKeyDownRepeat(InputButtons::BUTTON_UP))        deltaRow = -1;
+            else if (isInventoryKeyDownRepeat(InputButtons::BUTTON_DOWN)) deltaRow = +1;
+            if (isInventoryKeyDownRepeat(InputButtons::BUTTON_LEFT))         deltaCol = -1;
+            else if (isInventoryKeyDownRepeat(InputButtons::BUTTON_RIGHT))   deltaCol = +1;
+
+            if (deltaRow != 0 || deltaCol != 0)
+            {
+                // Validate the combined target so a sparse last row still permits a diagonal
+                // into the populated cell (e.g. pos=3 + DOWN+LEFT → pos=4 even though pos=5 is empty).
+                const int32_t newRow = pos / 2 + deltaRow;
+                const int32_t newCol = (pos & 1) + deltaCol;
+                const int32_t target = newRow * 2 + newCol;
+                if (newRow >= 0 && newCol >= 0 && newCol <= 1 && target < inv_filteredCount)
+                    INVENTORY_POINTER = inv_filteredIdx[target];
+            }
         }
         if (soundPrev != INVENTORY_POINTER) playSound(0, 2);
 

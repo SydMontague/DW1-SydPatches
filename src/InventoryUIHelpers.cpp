@@ -129,8 +129,9 @@ extern "C"
     {
         const int32_t  height = active ? 11 : 12;
         const uint16_t clut   = getClut(0x60, 0x1EC);
-        // flag bit 0 = dim modulator; we want active bright, inactive dim.
-        const char     flag   = static_cast<char>(!active);
+        // Active = full bright (flag 0). Inactive = extra-dim (flag 0x20) so the
+        // selected tab's blue clearly stands out against the others.
+        const char     flag   = active ? 0 : 0x20;
         renderRectPolyFT4(x, y, 7, height, 0xD4, 0x8C, 5, clut, depth, flag);
         const int32_t middleSlots = (w - 14) / 4;
         for (int32_t i = 0; i < middleSlots; i++)
@@ -159,7 +160,8 @@ extern "C"
             renderTabBox(cursorX, tabY, tabW, 12, active, depth);
 
             const int16_t labelX = static_cast<int16_t>(cursorX + (tabW - labelW) / 2);
-            labels[i].render(labelX, static_cast<int16_t>(tabY + 2), active ? 2 : 0, depth - 1, true);
+            // Active = mustard (#c8b432) on bright blue tab; inactive = mid-grey on dark tab.
+            labels[i].render(labelX, static_cast<int16_t>(tabY + 2), active ? 4 : 0, depth - 1, true);
 
             if (active)
             {
