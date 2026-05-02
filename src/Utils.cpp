@@ -96,7 +96,21 @@ void* operator new(size_t size)
     return libapi_malloc3(size);
 }
 
+void* operator new[](size_t size) {
+    return libapi_malloc3(size);
+}
+
 void operator delete(void* p, size_t size) noexcept
+{
+    libapi_free3(p);
+}
+
+void operator delete[](void* p) noexcept
+{
+    libapi_free3(p);
+}
+
+void operator delete[](void* p, size_t size) noexcept
 {
     libapi_free3(p);
 }
