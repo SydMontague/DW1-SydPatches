@@ -24,7 +24,8 @@ mkdir ../compiled/ -p
 # -fno-exceptions                   -> we don't have exceptions
 # -mno-check-zero-division          -> don't emit trap instructions, saves space
 # -Wno-builtin-declaration-mismatch -> don't warn about custom implemented standard functions
-FLAGS="-O3 -std=c++23 -T linker.ld -mabi=32 -march=r3000 -r -mel -nostdlib -mexplicit-relocs -mno-shared -fno-zero-initialized-in-bss -mno-gpopt -fno-inline-functions -msoft-float -fno-inline-small-functions -fno-exceptions -mno-check-zero-division -Wno-builtin-declaration-mismatch"
+# -fno-use-cxa-atexit               -> don't use __cxa_atexit(), we don't have it and never properly exit on PS1
+FLAGS="-O3 -std=c++23 -T linker.ld -mabi=32 -march=r3000 -r -mel -nostdlib -mexplicit-relocs -mno-shared -fno-zero-initialized-in-bss -mno-gpopt -fno-inline-functions -msoft-float -fno-inline-small-functions -fno-exceptions -mno-check-zero-division -Wno-builtin-declaration-mismatch -fno-use-cxa-atexit"
 
 mips-g++ UIElements.cpp -o ../compiled/utils.lib $FLAGS
 mips-g++ Font.cpp Font5px.cpp Font7px.cpp -o ../compiled/font.lib $FLAGS

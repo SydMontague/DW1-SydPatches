@@ -31,10 +31,10 @@ namespace dtl
             elements   = make_unique<T[]>(elem_count);
             dtl::copy(other.begin(), other.end(), begin());
         }
-        constexpr runtime_array(runtime_array&& other) { dtl::swap(*this, other); }
+        constexpr runtime_array(runtime_array&& other) { swap(*this, other); }
         constexpr runtime_array& operator=(runtime_array other)
         {
-            dtl::swap(*this, other);
+            swap(*this, other);
             return *this;
         }
 

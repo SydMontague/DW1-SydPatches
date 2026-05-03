@@ -1,5 +1,6 @@
 #pragma once
 
+#include "algorithm.hpp"
 #include "type_traits.hpp"
 
 namespace dtl
@@ -27,6 +28,13 @@ namespace dtl
         using pointer   = T*;
         using reference = T&;
 
+        friend void swap(unique_ptr& first, unique_ptr& second)
+        {
+            using dtl::swap;
+
+            swap(first.value, second.value);
+        }
+
         constexpr unique_ptr() noexcept
             : value(nullptr)
         {
@@ -62,7 +70,11 @@ namespace dtl
         constexpr const pointer get() const { return value; }
 
         constexpr unique_ptr& operator=(const unique_ptr& other) = delete;
-        constexpr unique_ptr& operator=(unique_ptr&& other) { reset(other.release()); }
+        constexpr unique_ptr& operator=(unique_ptr&& other)
+        {
+            reset(other.release());
+            return *this;
+        }
         constexpr explicit operator bool() { return get() != nullptr; }
         constexpr pointer operator->() const noexcept { return get(); }
         constexpr reference operator*() const noexcept { return *get(); }
@@ -77,6 +89,13 @@ namespace dtl
         using pointer   = T*;
         using reference = T&;
 
+        friend void swap(unique_ptr& first, unique_ptr& second)
+        {
+            using dtl::swap;
+
+            swap(first.value, second.value);
+        }
+
         constexpr unique_ptr() noexcept
             : value(nullptr)
         {
@@ -112,7 +131,11 @@ namespace dtl
         constexpr const pointer get() const { return value; }
 
         constexpr unique_ptr& operator=(const unique_ptr& other) = delete;
-        constexpr unique_ptr& operator=(unique_ptr&& other) { reset(other.release()); }
+        constexpr unique_ptr& operator=(unique_ptr&& other)
+        {
+            reset(other.release());
+            return *this;
+        }
         constexpr explicit operator bool() { return get() != nullptr; }
         constexpr pointer operator->() const noexcept { return get(); }
         constexpr reference operator*() const noexcept { return *get(); }

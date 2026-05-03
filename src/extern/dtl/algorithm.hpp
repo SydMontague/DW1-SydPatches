@@ -57,6 +57,6 @@ namespace dtl
 
     template<typename T> remove_reference_t<T>&& move(T&& val)
     {
-        return static_cast<remove_reference<T>&&>(val);
+        return static_cast<typename remove_reference<T>::type&&>(val);
     }
 } // namespace dtl
