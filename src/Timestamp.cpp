@@ -19,7 +19,7 @@ uint32_t getTickCount()
 
 uint64_t getTimestamp()
 {
-    auto currentValue = TIMER2.currentValue;
+    auto currentValue = TIMER0.currentValue;
     uint64_t us       = (irqCount * 1250LL) + (currentValue * 1250) / 42336;
 
     return us;
