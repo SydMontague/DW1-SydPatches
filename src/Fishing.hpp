@@ -5,7 +5,7 @@ extern "C"
 {
     void setFishingDisabled();
     void setFishingEnabled();
-    bool hasFishingRod();
+    uint32_t hasFishingRod();
     void initializeFishing();
     bool isFishing();
     void deinitializeFishing();
