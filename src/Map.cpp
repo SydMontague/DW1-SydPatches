@@ -11,6 +11,7 @@
 #include "Helper.hpp"
 #include "Inventory.hpp"
 #include "InventoryUI.hpp"
+#include "MapData.hpp"
 #include "MapObjects.hpp"
 #include "Math.hpp"
 #include "Model.hpp"

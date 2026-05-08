@@ -94,7 +94,6 @@
 .definelabel ITEM_DESC_PTR, 0x801279dc
 .definelabel CONDITION_FX_OFFSETS, 0x8012a2c4
 .definelabel TRN_LOADING_COMPLETE, 0x80134de1
-.definelabel MAP_NAME_PTR, 0x801291bc
 .definelabel SCRIPT_MAP_CHANGE_STATE, 0x80134dde
 .definelabel CAMERA_TARGET, 0x80150c7c
 .definelabel DRAW_OFFSET_LIMIT_X_MAX, 0x80134db6

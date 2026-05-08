@@ -7,6 +7,25 @@
 .org 0x801130d8
   jal recalculatePPandArena
 
+; VERY DIRTY drawString2 patch, t2 *seems* unused, but there is literally no guarantee!!!
+.org 0x800ff118
+  clear t2
+.org 0x800ffa94
+  clear t2
+.org 0x8010aa90
+  clear t2
+
+.org 0x80100dd8
+  sll v0,t2,0x10
+
+.org 0x80100de4
+  andi t2,v0,0xffff
+
+.org 0x80100df8
+  li t2,0xc
+  sll v0,t2,0x10
+
+
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

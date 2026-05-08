@@ -99,6 +99,15 @@ NAMING_DATA:
   .fill 0x80124c0c-.
 .endarea
 
+; override map data
+.org 0x801289f4
+.area 0x801292d4
+  .importobj "compiled/MapData.lib"
+
+  .notice "Empty space left: " + (0x801292d4-.) + " bytes"
+  .fill 0x801292d4-.
+.endarea
+
 ; override vanilla raise data, dynamic library data
 .org 0x8012abec
 .area 0x8012bacc-.
