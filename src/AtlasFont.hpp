@@ -7,11 +7,11 @@
 struct AtlasString
 {
     dtl::runtime_array<SPRT> data{};
-    uint32_t tpage;
+    uint8_t tpage;
     int32_t width;
 
     AtlasString() {};
-    AtlasString(dtl::runtime_array<SPRT> data, uint32_t tpage, int32_t width)
+    AtlasString(dtl::runtime_array<SPRT> data, uint8_t tpage, int32_t width)
         : data(dtl::move(data))
         , tpage(tpage)
         , width(width)
