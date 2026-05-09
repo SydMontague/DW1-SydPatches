@@ -806,6 +806,7 @@ static IconSprite sprites[] = {
     {PROFILE_OFFSET_X, PROFILE_OFFSET_Y, 53, 11, 0, 203, 0, 5, getClut(0x60, 0x1e8 + 8)},
     {CONDITION_OFFSET_X, CONDITION_OFFSET_Y, 53, 11, 0, 203, 0, 5, getClut(0x60, 0x1e8 + 8)},
     {STATS_OFFSET_X, STATS_OFFSET_Y, 53, 11, 0, 203, 0, 5, getClut(0x60, 0x1e8 + 8)},
+    // stat icons got moved from 147, 186 to 59, 255, to make space for atlas fonts
     {STATS_OFFSET_X, STATS_OFFSET_Y + 18, 11, 11, 59 + 0, 225, 0, 5, getClut(0x60, 0x1e8 + 11)},
     {STATS_OFFSET_X, STATS_OFFSET_Y + 33, 11, 11, 59 + 11, 225, 0, 5, getClut(0x60, 0x1e8 + 11)},
     {STATS_OFFSET_X, STATS_OFFSET_Y + 48, 11, 11, 59 + 22, 225, 0, 5, getClut(0x60, 0x1e8 + 11)},
