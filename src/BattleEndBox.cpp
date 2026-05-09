@@ -1,10 +1,10 @@
+#include "AtlasFont.hpp"
 #include "Battle.h"
 #include "Font.hpp"
 #include "Helper.hpp"
 #include "Input.hpp"
 #include "Map.hpp"
 #include "Math.hpp"
-#include "AtlasFont.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
 #include "VanillaText.hpp"
@@ -19,7 +19,6 @@ namespace
 {
     struct Data
     {
-        AtlasFont font;
         dtl::array<AtlasString, 6> statLabels{};
         AtlasString bitString1;
         AtlasString bitString2;
@@ -78,7 +77,7 @@ namespace
 
         dtl::array<uint8_t, 16> string;
         sprintf(string.data(), "%d", BITS_TO_GAIN);
-        data->font.renderSlow(string.data(), -18, 28, layer);
+        getAtlasVanilla().renderSlow(string.data(), -18, 28, layer);
         data->bitString1.render(layer);
 
         if (BTL_END_BOX_TEXTBUFFER[0] != 0)
@@ -93,7 +92,7 @@ namespace
     {
         dtl::array<uint8_t, 16> string;
         sprintf(string.data(), "%d", MONEY);
-        data->font.renderSlow(string.data(), UI_BOX_DATA[2].finalPos.x + 58, UI_BOX_DATA[2].finalPos.y + 10, 4);
+        getAtlasVanilla().renderSlow(string.data(), UI_BOX_DATA[2].finalPos.x + 58, UI_BOX_DATA[2].finalPos.y + 10, 4);
         data->bitString2.render(4);
     }
 
@@ -135,7 +134,7 @@ namespace
 
             dtl::array<uint8_t, 8> string;
             sprintf(string.data(), "%d", STATS_GAINS.get(stat));
-            data->font.renderSlow(string.data(), box.finalPos.x + 0x8e, box.finalPos.y + 9 + i * 13, layer);
+            getAtlasVanilla().renderSlow(string.data(), box.finalPos.x + 0x8e, box.finalPos.y + 9 + i * 13, layer);
         }
 
         for (int32_t i = 0; i < 6; i++)
@@ -144,7 +143,7 @@ namespace
             dtl::array<uint8_t, 8> string;
 
             sprintf(string.data(), "%d", INITIAL_COMBAT_STATS[0].get(stat));
-            data->font.renderSlow(string.data(), box.finalPos.x + 0x44, box.finalPos.y + 9 + i * 13, layer);
+            getAtlasVanilla().renderSlow(string.data(), box.finalPos.x + 0x44, box.finalPos.y + 9 + i * 13, layer);
         }
 
         setTextColor(previous_color);
@@ -260,7 +259,7 @@ namespace
             .height = static_cast<int16_t>(BTL_END_BOX_TEXTBUFFER[0] == 0 ? 31 : 66),
         };
 
-        data->bitString1 = data->font.render(bitsString, finalPos.x + 10, finalPos.y + 10, LABEL_SETTINGS);
+        data->bitString1 = getAtlasVanilla().render(bitsString, finalPos.x + 10, finalPos.y + 10, LABEL_SETTINGS);
 
         createAnimatedUIBox(1, 0, 2, &finalPos, &startPos, tickBitBox, renderBitBox);
     }
@@ -274,7 +273,7 @@ namespace
             .width  = 176,
             .height = 31,
         };
-        data->bitString2 = data->font.render(bitsString, finalPos.x + 10, finalPos.y + 10);
+        data->bitString2 = getAtlasVanilla().render(bitsString, finalPos.x + 10, finalPos.y + 10);
         createAnimatedUIBox(2, 1, 0, &finalPos, &startPos, nullptr, renderFinalBalance);
     }
 
@@ -313,10 +312,9 @@ namespace
         };
 
         data = dtl::make_unique<Data>();
-        data->font.init(&vanillaFont, 704, 256);
         for (int32_t i = 0; i < statLabels.size(); i++)
             data->statLabels[i] =
-                data->font.render(statLabels[i], finalPos.x + 10, finalPos.y + 9 + i * 13, LABEL_SETTINGS);
+                getAtlasVanilla().render(statLabels[i], finalPos.x + 10, finalPos.y + 9 + i * 13, LABEL_SETTINGS);
 
         createAnimatedUIBox(0, 0, 2, &finalPos, &startPos, tickPostBattleStatsBox, renderPostBattleStatsBox);
     }

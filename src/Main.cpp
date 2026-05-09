@@ -1,5 +1,6 @@
 #include "Main.hpp"
 
+#include "AtlasFont.hpp"
 #include "Camera.hpp"
 #include "CustomUI.hpp"
 #include "EFE.hpp"
@@ -729,11 +730,13 @@ int32_t main()
         {
             playMovie(Movies::INTRO, true);
             initializeMusic();
+            initFonts();
             confirmed = runLandingScreen();
             finalizeMusic();
         } while (!confirmed);
 
         loadStackedTIMFile("\\ETCDAT\\ETCTIM.BIN");
+        initFonts();
         initializeMusic();
         runMainMenu();
 
@@ -746,6 +749,7 @@ int32_t main()
                 playMovie(Movies::NEWGAME, true);
                 initializeMusic();
                 loadStackedTIMFile("\\ETCDAT\\ETCTIM.BIN");
+                initFonts();
                 initializeTamer(DigimonType::TAMER, 0, 0, 0, 0, 0, 0);
                 auto starter = readPStat(0xfe) == 0 ? DigimonType::AGUMON : DigimonType::GABUMON;
                 initializePartner(starter, 0, 0, 0, 0, 0, 0);
@@ -760,6 +764,7 @@ int32_t main()
             case 1:
             {
                 loadStackedTIMFile("\\ETCDAT\\ETCTIM.BIN");
+                initFonts();
                 initializeTamer(DigimonType::TAMER, 0, 0, 0, 0, 0, 0);
                 initializePartner(SAVED_PARTNER_TYPE, 0, 0, 0, 0, 0, 0);
                 initializeMap();
@@ -776,6 +781,7 @@ int32_t main()
                 playMovie(Movies::POST_CREDITS, true);
                 initializeMusic();
                 loadStackedTIMFile("\\ETCDAT\\ETCTIM.BIN");
+                initFonts();
                 initializeTamer(DigimonType::TAMER, 0, 0, 0, 0, 0, 0);
                 initializePartner(SAVED_PARTNER_TYPE, 0, 0, 0, 0, 0, 0);
                 initializeMap();

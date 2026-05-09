@@ -1,6 +1,8 @@
 #include "AtlasFont.hpp"
 
+#include "Font.hpp"
 #include "Helper.hpp"
+#include "Math.hpp"
 #include "Utils.hpp"
 #include "extern/dtl/runtime_array.hpp"
 
@@ -8,6 +10,11 @@ namespace
 {
     constexpr auto CLUT_X = 208;
     constexpr auto CLUT_Y = 489;
+
+    AtlasFont fontAtlas5px;
+    AtlasFont fontAtlas7px;
+    AtlasFont fontAtlasNumbers;
+    AtlasFont fontAtlasVanilla;
 
     struct JISIterator
     {
@@ -115,22 +122,62 @@ namespace
 
 } // namespace
 
+const AtlasFont& getAtlas5px()
+{
+    return fontAtlas5px;
+}
+
+const AtlasFont& getAtlas7px()
+{
+    return fontAtlas7px;
+}
+
+const AtlasFont& getAtlasNumbers()
+{
+    return fontAtlasNumbers;
+}
+
+const AtlasFont& getAtlasVanilla()
+{
+    return fontAtlasVanilla;
+}
+
+void initFonts()
+{
+    // move stat icons to new space, so that we have enough space for the vanilla font
+    RECT src{
+        .x      = 356,
+        .y      = 186,
+        .width  = 68 / 4,
+        .height = 11,
+    };
+    libgpu_MoveImage(&src, 334, 225);
+
+    // use space in ETCTIM8
+    fontAtlasVanilla.init(&vanillaFont, 351, 176);
+    fontAtlas5px.init(&myFont5px, 350, 242);
+    // use space in ETCTIM5
+    fontAtlas7px.init(&myFont7px, 768, 432);
+    // use space below ETCTIM2
+    fontAtlasNumbers.init(&fixedNumbersFont, 530, 418);
+}
+
 AtlasFont::AtlasFont() {}
 
-void AtlasFont::init(Font* f, int32_t x, int32_t y)
+void AtlasFont::init(Font* f, int32_t x, int32_t y, int32_t maxWidth)
 {
     glyphs = dtl::runtime_array<AtlasGlyph>(f->glyph_count);
     font   = f;
     tpage  = (y / 256) * 16 + (x / 64);
 
-    const auto end_x = ((x / 64) + 1) * 64;
+    const auto end_x = min(((x / 64) + 1) * 64, x + maxWidth);
     auto current_x   = x;
 
     for (int32_t i = 0; i < f->glyph_count; i++)
     {
         auto width = f->getGlyphWidth(i);
 
-        if (current_x + width >= end_x)
+        if (current_x + ((width + 3) / 4) >= end_x)
         {
             current_x = x;
             y += f->height;
@@ -141,12 +188,12 @@ void AtlasFont::init(Font* f, int32_t x, int32_t y)
     }
 }
 
-void AtlasFont::renderSlow(const char* string, int32_t x, int32_t y, int32_t depth, RenderSettings settings)
+void AtlasFont::renderSlow(const char* string, int32_t x, int32_t y, int32_t depth, RenderSettings settings) const
 {
     renderSlow(reinterpret_cast<const uint8_t*>(string), x, y, depth, settings);
 }
 
-void AtlasFont::renderSlow(const uint8_t* string, int32_t x, int32_t y, int32_t depth, RenderSettings settings)
+void AtlasFont::renderSlow(const uint8_t* string, int32_t x, int32_t y, int32_t depth, RenderSettings settings) const
 {
     auto size = jis_len(string);
     JISIterator itr{string};
@@ -168,12 +215,12 @@ void AtlasFont::renderSlow(const uint8_t* string, int32_t x, int32_t y, int32_t 
     libgs_GsSetWorkBase(prim + 1);
 }
 
-AtlasString AtlasFont::render(const char* string, int32_t x, int32_t y, RenderSettings settings)
+AtlasString AtlasFont::render(const char* string, int32_t x, int32_t y, RenderSettings settings) const
 {
     return render(reinterpret_cast<const uint8_t*>(string), x, y, settings);
 }
 
-AtlasString AtlasFont::render(const uint8_t* string, int32_t x, int32_t y, RenderSettings settings)
+AtlasString AtlasFont::render(const uint8_t* string, int32_t x, int32_t y, RenderSettings settings) const
 {
     auto size = jis_len(string);
     JISIterator itr{string};
@@ -188,7 +235,7 @@ AtlasString AtlasFont::render(const uint8_t* string, int32_t x, int32_t y, Rende
         totalWidth += glyph.width;
     }
 
-    return AtlasString(data, tpage, totalWidth);
+    return AtlasString(data, tpage, totalWidth, font->height);
 }
 
 void AtlasString::enableShadow(bool enabled)
@@ -204,6 +251,39 @@ void AtlasString::setColor(uint8_t r, uint8_t g, uint8_t b)
         entry.r = (r + 1) / 2;
         entry.g = (g + 1) / 2;
         entry.b = (b + 1) / 2;
+    }
+}
+
+void AtlasString::setAlignment(RECT rect, AlignmentX alignX, AlignmentY alignY)
+{
+    auto x = rect.x;
+    auto y = rect.y;
+
+    switch (alignX)
+    {
+        case AlignmentX::LEFT: x += 0; break;
+        case AlignmentX::CENTER: x += (rect.width - width) / 2; break;
+        case AlignmentX::RIGHT: x += (rect.width - width); break;
+    }
+
+    switch (alignY)
+    {
+        case AlignmentY::TOP: y += 0; break;
+        case AlignmentY::CENTER: y += (rect.height - height) / 2; break;
+        case AlignmentY::BOTTOM: y += (rect.height - height); break;
+    }
+
+    setPosition(x, y);
+}
+
+void AtlasString::setPosition(int32_t x, int32_t y)
+{
+    const auto old_x = data[0].x;
+
+    for (auto& entry : data)
+    {
+        entry.x = x + (entry.x - old_x);
+        entry.y = y;
     }
 }
 
