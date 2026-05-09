@@ -7,6 +7,9 @@
 .org 0x801130d8
   jal recalculatePPandArena
 
+.org 0x800f2e9c
+  jal initializeAttackObjects
+
 ; VERY DIRTY drawString2 patch, t2 *seems* unused, but there is literally no guarantee!!!
 .org 0x800ff118
   clear t2
@@ -58,9 +61,6 @@
 
 .org 0x80063b8c
   jal updateTMDTextureData
-
-.org 0x800f2e9c
-  jal initializeAttackObjects
 
 .org 0x80064ddc
   jal addAttackObject
