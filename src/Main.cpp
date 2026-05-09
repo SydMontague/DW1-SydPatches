@@ -99,6 +99,26 @@ namespace
         initializeLoadedNPCModels();
     }
 
+    void initializeCustomFontCLUTs()
+    {
+        constexpr dtl::array<uint16_t, 16> noShadow{0x0000, 0x7FFF};
+        constexpr dtl::array<uint16_t, 16> shadow{0x0000, 0x7FFF, 0x8000};
+        constexpr RECT rectNoShadow{
+            .x      = 208,
+            .y      = 489,
+            .width  = 16,
+            .height = 1,
+        };
+        constexpr RECT rectShadow{
+            .x      = 208,
+            .y      = 490,
+            .width  = 16,
+            .height = 1,
+        };
+        libgpu_LoadImage(&rectNoShadow, noShadow.data());
+        libgpu_LoadImage(&rectShadow, shadow.data());
+    }
+
     void customInit()
     {
         initTimestamp();
@@ -686,6 +706,7 @@ int32_t main()
     initializeFileReadQueue();
     initializeAttackObjects();
     initializeFontCLUT();
+    initializeCustomFontCLUTs();
     // fillEFEXTable(); does nothing
     initializeFadeData();
     initializeScripts();

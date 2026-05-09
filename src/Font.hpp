@@ -1,11 +1,17 @@
 #pragma once
+#include "extern/dtl/algorithm.hpp"
+#include "extern/dtl/runtime_array.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libgs.hpp"
 
 extern "C"
 {
     using GetWidthFn     = uint8_t (*)(uint16_t);
     using GetRowFn       = uint16_t (*)(uint16_t, uint8_t);
     using GetCodePointFn = uint16_t (*)(const uint8_t*, uint32_t);
+    using GetGlyphWidth  = uint8_t (*)(int32_t);
+    using GetGlyphRow    = uint16_t (*)(int32_t, int32_t);
+    using GetGlyphIndex  = int32_t (*)(uint16_t);
 
     struct CustomFont
     {
@@ -35,6 +41,10 @@ extern "C"
     struct Font
     {
         uint8_t height;
+        uint8_t glyph_count;
+        GetGlyphWidth getGlyphWidth;
+        GetGlyphRow getGlyphRow;
+        GetGlyphIndex getGlyphIndex;
         GetWidthFn getWidth;
         GetRowFn getRow;
         GetCodePointFn getCodePoint;
@@ -50,11 +60,6 @@ extern "C"
     extern Font myFont5px;
     extern Font myFont7px;
     extern Font fixedNumbersFont;
-
-    GlyphData* getGlyphVanilla(uint16_t codepoint);
-    uint8_t getWidthVanilla(uint16_t codepoint);
-    uint16_t getRowVanilla(uint16_t codepoint, uint8_t row);
-    uint16_t getCodePointVanilla(const uint8_t* string, uint32_t index);
 
     uint16_t drawStringNew(Font* font, const uint8_t* string, int16_t start_x, int16_t start_y);
 

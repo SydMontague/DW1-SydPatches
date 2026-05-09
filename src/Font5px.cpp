@@ -121,7 +121,7 @@ extern "C"
         {.width = 4, .rows = {0x5f, 0xbf, 0x5f, 0xbf, 0x5f, 0xff}},
     };
 
-    Glyph5PX* getGlyph5px(uint16_t codepoint)
+    static Glyph5PX* getGlyph5px(uint16_t codepoint)
     {
         for (int32_t i = 0; i < myFont.mappingCount; i++)
         {
@@ -147,13 +147,38 @@ extern "C"
     {
         const uint8_t* ptr = jis_at_index(string, index);
         uint8_t firstByte  = *ptr;
-        return firstByte;
+        if (firstByte < 0x80) return firstByte;
+        return firstByte << 8 | ptr[1];
+    }
+
+    static int32_t getGlyphIndex(uint16_t codepoint)
+    {
+        for (const auto& mapping : myMapping)
+        {
+            if (mapping.codepoint == codepoint) return mapping.index;
+        }
+
+        return myFont.mappingCount - 1;
+    }
+
+    static uint8_t getGlyphWidth(int32_t index)
+    {
+        return myGlyphs[index].width;
+    }
+
+    static uint16_t getGlyphRow(int32_t glyph, int32_t row)
+    {
+        return myGlyphs[glyph].rows[row] << 8;
     }
 
     Font myFont5px = {
-        .height       = 6,
-        .getWidth     = getWidthCustom,
-        .getRow       = getRowCustom,
-        .getCodePoint = getCodePointCustom,
+        .height        = 6,
+        .glyph_count   = 58,
+        .getGlyphWidth = getGlyphWidth,
+        .getGlyphRow   = getGlyphRow,
+        .getGlyphIndex = getGlyphIndex,
+        .getWidth      = getWidthCustom,
+        .getRow        = getRowCustom,
+        .getCodePoint  = getCodePointCustom,
     };
 }

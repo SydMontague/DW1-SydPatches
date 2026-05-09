@@ -6,30 +6,25 @@
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 
-extern "C"
+namespace
 {
-    constexpr uint32_t RENDER_COLS      = 128;
-    constexpr uint32_t RENDER_ROWS      = 32;
-    constexpr uint32_t RENDER_AREA_SIZE = RENDER_COLS * RENDER_ROWS;
-
-    uint32_t RENDER_AREA_POINTER          = 0;
-    uint8_t RENDER_AREA[RENDER_AREA_SIZE] = {0};
-
-    Font vanillaFont = {
-        .height       = 11,
-        .getWidth     = getWidthVanilla,
-        .getRow       = getRowVanilla,
-        .getCodePoint = getCodePointVanilla,
-    };
-
-    GlyphData* getGlyphVanilla(uint16_t codepoint)
+    int32_t getGlyphIndex(uint16_t codepoint)
     {
+        if (codepoint == 0x2E) codepoint = 0x8142;
+        if (codepoint == 0x27) codepoint = 0x8175;
+        if (codepoint < 0x80) codepoint = convertAsciiToJis(codepoint);
+
         CHAR_TO_GLYPH_TABLE[78] = codepoint;
         uint32_t i              = 0;
         for (; CHAR_TO_GLYPH_TABLE[i] != codepoint; i++)
             ;
 
-        return GLYPH_DATA + i;
+        return i;
+    }
+    
+    GlyphData* getGlyphVanilla(uint16_t codepoint)
+    {
+        return GLYPH_DATA + getGlyphIndex(codepoint);
     }
 
     uint8_t getWidthVanilla(uint16_t codepoint)
@@ -56,6 +51,37 @@ extern "C"
 
         return convertAsciiToJis(firstByte);
     }
+
+    uint8_t getGlyphWidth(int32_t index)
+    {
+        return GLYPH_DATA[index].width;
+    }
+
+    uint16_t getGlyphRow(int32_t glyph, int32_t row)
+    {
+        return GLYPH_DATA[glyph].pixelData[row];
+    }
+} // namespace
+
+extern "C"
+{
+    constexpr uint32_t RENDER_COLS      = 128;
+    constexpr uint32_t RENDER_ROWS      = 32;
+    constexpr uint32_t RENDER_AREA_SIZE = RENDER_COLS * RENDER_ROWS;
+
+    uint32_t RENDER_AREA_POINTER          = 0;
+    uint8_t RENDER_AREA[RENDER_AREA_SIZE] = {0};
+
+    Font vanillaFont = {
+        .height        = 11,
+        .glyph_count   = 78,
+        .getGlyphWidth = getGlyphWidth,
+        .getGlyphRow   = getGlyphRow,
+        .getGlyphIndex = getGlyphIndex,
+        .getWidth      = getWidthVanilla,
+        .getRow        = getRowVanilla,
+        .getCodePoint  = getCodePointVanilla,
+    };
 
     uint8_t* getRenderArea(uint32_t height, uint32_t width)
     {

@@ -1,6 +1,12 @@
 #include "Font.hpp"
+#include "UIElements.hpp"
 #include "Utils.hpp"
+#include "extern/dtl/algorithm.hpp"
+#include "extern/dtl/runtime_array.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libgpu.hpp"
+#include "extern/libgs.hpp"
+#include "extern/stddef.hpp"
 
 extern "C"
 {
@@ -121,14 +127,19 @@ extern "C"
         {.width = 5, .rows = {0x67, 0x97, 0x17, 0x27, 0x47, 0x07, 0x47, 0x07}},
     };
 
-    Glyph7PX* getGlyph7px(uint16_t codepoint)
+    static int32_t getGlyphIndex(uint16_t codepoint)
     {
-        for (int32_t i = 0; i < myFont.mappingCount; i++)
+        for (const auto& mapping : myMapping)
         {
-            if (myMapping[i].codepoint == codepoint) return &myGlyphs[myMapping[i].index];
+            if (mapping.codepoint == codepoint) return mapping.index;
         }
 
-        return &myGlyphs[myFont.mappingCount - 1];
+        return myFont.mappingCount - 1;
+    }
+
+    static Glyph7PX* getGlyph7px(uint16_t codepoint)
+    {
+        return &myGlyphs[getGlyphIndex(codepoint)];
     }
 
     static uint8_t getWidthCustom(uint16_t codepoint)
@@ -147,13 +158,28 @@ extern "C"
     {
         const uint8_t* ptr = jis_at_index(string, index);
         uint8_t firstByte  = *ptr;
-        return firstByte;
+        if (firstByte < 0x80) return firstByte;
+        return firstByte << 8 | ptr[1];
+    }
+
+    static uint8_t getGlyphWidth(int32_t index)
+    {
+        return myGlyphs[index].width;
+    }
+
+    static uint16_t getGlyphRow(int32_t glyph, int32_t row)
+    {
+        return myGlyphs[glyph].rows[row] << 8;
     }
 
     Font myFont7px = {
-        .height       = 8,
-        .getWidth     = getWidthCustom,
-        .getRow       = getRowCustom,
-        .getCodePoint = getCodePointCustom,
+        .height        = 8,
+        .glyph_count   = 58,
+        .getGlyphWidth = getGlyphWidth,
+        .getGlyphRow   = getGlyphRow,
+        .getGlyphIndex = getGlyphIndex,
+        .getWidth      = getWidthCustom,
+        .getRow        = getRowCustom,
+        .getCodePoint  = getCodePointCustom,
     };
 }

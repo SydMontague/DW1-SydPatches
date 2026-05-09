@@ -1,5 +1,6 @@
 #pragma once
 
+#include "libgs.hpp"
 #include "stddef.hpp"
 
 extern "C"
@@ -203,6 +204,36 @@ extern "C"
         uint32_t pad;
     };
 
+    struct SPRT
+    {
+        GsOT_TAG tag;
+        uint8_t r;
+        uint8_t g;
+        uint8_t b;
+        uint8_t code;
+        int16_t x;
+        int16_t y;
+        uint8_t u;
+        uint8_t v;
+        uint16_t clut;
+        int16_t width;
+        int16_t height;
+    };
+
+    struct SPRT8
+    {
+        GsOT_TAG tag;
+        uint8_t r;
+        uint8_t g;
+        uint8_t b;
+        uint8_t code;
+        int16_t x;
+        int16_t y;
+        uint8_t u;
+        uint8_t v;
+        uint16_t clut;
+    };
+
     struct TIM_IMAGE
     {
         uint32_t mode;
@@ -216,6 +247,12 @@ extern "C"
     {
         uint32_t* tag;
         uint32_t code[2];
+    };
+
+    struct DR_TPAGE
+    {
+        uint8_t tag[4];
+        uint32_t code;
     };
 
     constexpr void libgpu_SetPolyGT3(POLY_GT3* prim)
@@ -237,8 +274,8 @@ extern "C"
     void libgpu_SetLineF4(LINE_F4* prim);
     void libgpu_AddPrim(void* ot, void* prim);
     void libgpu_ClearImage(const RECT* rect, uint32_t red, uint32_t green, uint32_t blue);
-    int32_t libgpu_LoadImage(const RECT* rect, uint32_t* data);
-    int32_t libgpu_LoadImage2(const RECT* rect, uint32_t* data);
+    int32_t libgpu_LoadImage(const RECT* rect, const void* data);
+    int32_t libgpu_LoadImage2(const RECT* rect, const void* data);
     uint16_t libgpu_GetClut(int32_t x, int32_t y);
     void libgpu_DrawSync(int32_t mode);
     uint16_t libgpu_GetTPage(int32_t textureMode, int32_t transparency, int32_t x, int32_t y);
