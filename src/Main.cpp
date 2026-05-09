@@ -1,5 +1,6 @@
 #include "Main.hpp"
 
+#include "AtlasFont.hpp"
 #include "Camera.hpp"
 #include "CustomUI.hpp"
 #include "EFE.hpp"
@@ -97,6 +98,26 @@ namespace
         }
 
         initializeLoadedNPCModels();
+    }
+
+    void initializeCustomFontCLUTs()
+    {
+        constexpr dtl::array<uint16_t, 16> noShadow{0x0000, 0x7FFF};
+        constexpr dtl::array<uint16_t, 16> shadow{0x0000, 0x7FFF, 0x8000};
+        constexpr RECT rectNoShadow{
+            .x      = 208,
+            .y      = 489,
+            .width  = 16,
+            .height = 1,
+        };
+        constexpr RECT rectShadow{
+            .x      = 208,
+            .y      = 490,
+            .width  = 16,
+            .height = 1,
+        };
+        libgpu_LoadImage(&rectNoShadow, noShadow.data());
+        libgpu_LoadImage(&rectShadow, shadow.data());
     }
 
     void customInit()
@@ -686,6 +707,7 @@ int32_t main()
     initializeFileReadQueue();
     initializeAttackObjects();
     initializeFontCLUT();
+    initializeCustomFontCLUTs();
     // fillEFEXTable(); does nothing
     initializeFadeData();
     initializeScripts();
@@ -708,11 +730,13 @@ int32_t main()
         {
             playMovie(Movies::INTRO, true);
             initializeMusic();
+            initFonts();
             confirmed = runLandingScreen();
             finalizeMusic();
         } while (!confirmed);
 
         loadStackedTIMFile("\\ETCDAT\\ETCTIM.BIN");
+        initFonts();
         initializeMusic();
         runMainMenu();
 
@@ -725,6 +749,7 @@ int32_t main()
                 playMovie(Movies::NEWGAME, true);
                 initializeMusic();
                 loadStackedTIMFile("\\ETCDAT\\ETCTIM.BIN");
+                initFonts();
                 initializeTamer(DigimonType::TAMER, 0, 0, 0, 0, 0, 0);
                 auto starter = readPStat(0xfe) == 0 ? DigimonType::AGUMON : DigimonType::GABUMON;
                 initializePartner(starter, 0, 0, 0, 0, 0, 0);
@@ -739,6 +764,7 @@ int32_t main()
             case 1:
             {
                 loadStackedTIMFile("\\ETCDAT\\ETCTIM.BIN");
+                initFonts();
                 initializeTamer(DigimonType::TAMER, 0, 0, 0, 0, 0, 0);
                 initializePartner(SAVED_PARTNER_TYPE, 0, 0, 0, 0, 0, 0);
                 initializeMap();
@@ -755,6 +781,7 @@ int32_t main()
                 playMovie(Movies::POST_CREDITS, true);
                 initializeMusic();
                 loadStackedTIMFile("\\ETCDAT\\ETCTIM.BIN");
+                initFonts();
                 initializeTamer(DigimonType::TAMER, 0, 0, 0, 0, 0, 0);
                 initializePartner(SAVED_PARTNER_TYPE, 0, 0, 0, 0, 0, 0);
                 initializeMap();
