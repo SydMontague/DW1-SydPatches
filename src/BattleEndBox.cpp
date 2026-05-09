@@ -4,10 +4,12 @@
 #include "Input.hpp"
 #include "Map.hpp"
 #include "Math.hpp"
+#include "AtlasFont.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
 #include "VanillaText.hpp"
 #include "extern/BTL.hpp"
+#include "extern/dtl/unique_ptr.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
@@ -15,6 +17,20 @@
 
 namespace
 {
+    struct Data
+    {
+        AtlasFont font;
+        dtl::array<AtlasString, 6> statLabels{};
+        AtlasString bitString1;
+        AtlasString bitString2;
+    };
+
+    dtl::unique_ptr<Data> data;
+
+    constexpr dtl::array<const char*, 6> statLabels{"HP", "MP", "Off", "Def", "Speed", "Brain"};
+    constexpr auto bitsString = "Bits";
+    constexpr RenderSettings LABEL_SETTINGS{.r = 0xFF, .g = 0xFF, .b = 0x53};
+
     dtl::array<bool, 6> STAT_BOX_HAS_GAIN;
 
     constexpr int32_t getLimit(Stat stat)
@@ -62,29 +78,8 @@ namespace
 
         dtl::array<uint8_t, 16> string;
         sprintf(string.data(), "%d", BITS_TO_GAIN);
-        TextSprite sprite{
-            .font       = &vanillaFont,
-            .string     = reinterpret_cast<char*>(string.data()),
-            .uvX        = 704 + 0,
-            .uvY        = 256 + 180,
-            .uvWidth    = 15,
-            .uvHeight   = 12,
-            .posX       = -18,
-            .posY       = 28,
-            .boxWidth   = 60,
-            .boxHeight  = 12,
-            .alignmentX = AlignmentX::LEFT,
-            .alignmentY = AlignmentY::CENTER,
-            .color      = 2,
-            .layer      = layer,
-        };
-
-        auto previous_color = COLORCODE_LOWBITS;
-        setTextColor(1);
-        drawTextSprite(sprite);
-        setTextColor(previous_color);
-        renderTextSprite(sprite);
-        renderStringNew(4, -78, 28, 48, 12, 704, 256 + 24, layer, 0);
+        data->font.renderSlow(string.data(), -18, 28, layer);
+        data->bitString1.render(layer);
 
         if (BTL_END_BOX_TEXTBUFFER[0] != 0)
         {
@@ -98,29 +93,8 @@ namespace
     {
         dtl::array<uint8_t, 16> string;
         sprintf(string.data(), "%d", MONEY);
-        TextSprite sprite{
-            .font       = &vanillaFont,
-            .string     = reinterpret_cast<char*>(string.data()),
-            .uvX        = 704 + 16,
-            .uvY        = 256 + 180,
-            .uvWidth    = 15,
-            .uvHeight   = 12,
-            .posX       = static_cast<int16_t>(UI_BOX_DATA[2].finalPos.x + 60),
-            .posY       = static_cast<int16_t>(UI_BOX_DATA[2].finalPos.y + 10),
-            .boxWidth   = 60,
-            .boxHeight  = 12,
-            .alignmentX = AlignmentX::LEFT,
-            .alignmentY = AlignmentY::CENTER,
-            .color      = 0,
-            .layer      = 4,
-        };
-
-        auto previous_color = COLORCODE_LOWBITS;
-        setTextColor(1);
-        drawTextSprite(sprite);
-        setTextColor(previous_color);
-        renderTextSprite(sprite);
-        renderStringNew(0, UI_BOX_DATA[2].finalPos.x + 10, UI_BOX_DATA[2].finalPos.y + 10, 48, 12, 704, 256 + 24, 4, 0);
+        data->font.renderSlow(string.data(), UI_BOX_DATA[2].finalPos.x + 58, UI_BOX_DATA[2].finalPos.y + 10, 4);
+        data->bitString2.render(4);
     }
 
     void renderPostBattleStatsBox(int32_t instance)
@@ -161,24 +135,7 @@ namespace
 
             dtl::array<uint8_t, 8> string;
             sprintf(string.data(), "%d", STATS_GAINS.get(stat));
-            TextSprite gainSprite{
-                .font       = &vanillaFont,
-                .string     = reinterpret_cast<char*>(string.data()),
-                .uvX        = static_cast<uint16_t>(704 + i * 8),
-                .uvY        = static_cast<uint16_t>(256 + 36),
-                .uvWidth    = 15,
-                .uvHeight   = 12,
-                .posX       = static_cast<int16_t>(box.finalPos.x + 0x8e),
-                .posY       = static_cast<int16_t>(box.finalPos.y + 9 + i * 13),
-                .boxWidth   = 60,
-                .boxHeight  = 12,
-                .alignmentX = AlignmentX::LEFT,
-                .alignmentY = AlignmentY::CENTER,
-                .color      = 5,
-                .layer      = static_cast<uint8_t>(layer),
-            };
-            drawTextSprite(gainSprite);
-            renderTextSprite(gainSprite);
+            data->font.renderSlow(string.data(), box.finalPos.x + 0x8e, box.finalPos.y + 9 + i * 13, layer);
         }
 
         for (int32_t i = 0; i < 6; i++)
@@ -187,24 +144,7 @@ namespace
             dtl::array<uint8_t, 8> string;
 
             sprintf(string.data(), "%d", INITIAL_COMBAT_STATS[0].get(stat));
-            TextSprite currentSprite{
-                .font       = &vanillaFont,
-                .string     = reinterpret_cast<char*>(string.data()),
-                .uvX        = static_cast<uint16_t>(704 + i * 8),
-                .uvY        = static_cast<uint16_t>(256 + 48),
-                .uvWidth    = 15,
-                .uvHeight   = 12,
-                .posX       = static_cast<int16_t>(box.finalPos.x + 0x44),
-                .posY       = static_cast<int16_t>(box.finalPos.y + 9 + i * 13),
-                .boxWidth   = 60,
-                .boxHeight  = 12,
-                .alignmentX = AlignmentX::LEFT,
-                .alignmentY = AlignmentY::CENTER,
-                .color      = 0,
-                .layer      = static_cast<uint8_t>(layer),
-            };
-            drawTextSprite(currentSprite);
-            renderTextSprite(currentSprite);
+            data->font.renderSlow(string.data(), box.finalPos.x + 0x44, box.finalPos.y + 9 + i * 13, layer);
         }
 
         setTextColor(previous_color);
@@ -223,12 +163,8 @@ namespace
                    layer,
                    0);
 
-        renderStringNew(4, box.finalPos.x + 10, box.finalPos.y + 9, 48, 12, 704, 256, layer, 0);
-        renderStringNew(4, box.finalPos.x + 10, box.finalPos.y + 22, 48, 12, 704 + 24, 256, layer, 0);
-        renderStringNew(4, box.finalPos.x + 10, box.finalPos.y + 35, 48, 12, 704 + 48, 256, layer, 0);
-        renderStringNew(4, box.finalPos.x + 10, box.finalPos.y + 48, 48, 12, 704, 256 + 12, layer, 0);
-        renderStringNew(4, box.finalPos.x + 10, box.finalPos.y + 61, 48, 12, 704 + 24, 256 + 12, layer, 0);
-        renderStringNew(4, box.finalPos.x + 10, box.finalPos.y + 74, 48, 12, 704 + 48, 256 + 12, layer, 0);
+        for (const auto& entry : data->statLabels)
+            entry.render(layer);
 
         GsBOXF rect{
             .attribute = 0,
@@ -309,8 +245,6 @@ namespace
 
     void createBitsBox()
     {
-        constexpr uint8_t bitsString[5] = "Bits";
-
         auto& work     = TAMER_ENTITY.posData[1].posMatrix.work.t;
         auto entityPos = getScreenPosition(work[0], work[1], work[2]);
         const RECT startPos{
@@ -326,8 +260,9 @@ namespace
             .height = static_cast<int16_t>(BTL_END_BOX_TEXTBUFFER[0] == 0 ? 31 : 66),
         };
 
+        data->bitString1 = data->font.render(bitsString, finalPos.x + 10, finalPos.y + 10, LABEL_SETTINGS);
+
         createAnimatedUIBox(1, 0, 2, &finalPos, &startPos, tickBitBox, renderBitBox);
-        drawStringNew(&vanillaFont, bitsString, 704, 256 + 24);
     }
 
     void createFinalBalanceBox()
@@ -339,39 +274,26 @@ namespace
             .width  = 176,
             .height = 31,
         };
+        data->bitString2 = data->font.render(bitsString, finalPos.x + 10, finalPos.y + 10);
         createAnimatedUIBox(2, 1, 0, &finalPos, &startPos, nullptr, renderFinalBalance);
     }
 
     void removeBattleEndBox(int32_t id)
     {
         if (UI_BOX_DATA[id].state != 0) removeAnimatedUIBox(id, nullptr);
+
+        data.release();
     }
 
     void createPostBattleStatsBox()
     {
-        constexpr auto hpString    = "HP";
-        constexpr auto mpString    = "MP";
-        constexpr auto offString   = "Off";
-        constexpr auto defString   = "Def";
-        constexpr auto speedString = "Speed";
-        constexpr auto brainString = "Brain";
-
         SHOULD_SKIP_BIT_COUNTING = false;
-        clearTextArea();
 
         for (int32_t i = 0; i < 6; i++)
         {
             auto stat            = static_cast<Stat>(i);
             STAT_BOX_HAS_GAIN[i] = STATS_GAINS.get(stat) != 0;
         }
-
-        drawStringNew(&vanillaFont, reinterpret_cast<const uint8_t*>(hpString), 704, 256 + 0);
-        drawStringNew(&vanillaFont, reinterpret_cast<const uint8_t*>(mpString), 704 + 24, 256 + 0);
-        drawStringNew(&vanillaFont, reinterpret_cast<const uint8_t*>(offString), 704 + 48, 256 + 0);
-        drawStringNew(&vanillaFont, reinterpret_cast<const uint8_t*>(defString), 704, 256 + 12);
-        drawStringNew(&vanillaFont, reinterpret_cast<const uint8_t*>(speedString), 704 + 24, 256 + 12);
-        drawStringNew(&vanillaFont, reinterpret_cast<const uint8_t*>(brainString), 704 + 48, 256 + 12);
-        libgpu_DrawSync(0);
 
         POST_BATTLE_STATS_TIMER = 100;
 
@@ -389,6 +311,12 @@ namespace
             .width  = 10,
             .height = 10,
         };
+
+        data = dtl::make_unique<Data>();
+        data->font.init(&vanillaFont, 704, 256);
+        for (int32_t i = 0; i < statLabels.size(); i++)
+            data->statLabels[i] =
+                data->font.render(statLabels[i], finalPos.x + 10, finalPos.y + 9 + i * 13, LABEL_SETTINGS);
 
         createAnimatedUIBox(0, 0, 2, &finalPos, &startPos, tickPostBattleStatsBox, renderPostBattleStatsBox);
     }
