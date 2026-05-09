@@ -1,4 +1,5 @@
 
+#include "AtlasFont.hpp"
 #include "Font.hpp"
 #include "GameObjects.hpp"
 #include "Sound.hpp"
@@ -10,8 +11,7 @@
 
 namespace
 {
-    SimpleTextSprite pauseString(704 + 30, 256 + 240);
-    bool hasPauseBpx       = false;
+    bool hasPauseBox       = false;
     uint32_t inputCurrent  = 0;
     uint32_t inputPrevious = 0;
 
@@ -29,7 +29,11 @@ namespace
         };
 
         libgs_GsSortBoxFill(&box, ACTIVE_ORDERING_TABLE, 7 - instance);
-        pauseString.render(UI_BOX_DATA[5].finalPos.x + 6, UI_BOX_DATA[5].finalPos.y + 6, 0, 0, 1);
+        getAtlasVanilla().renderSlow("Pause",
+                                     UI_BOX_DATA[5].finalPos.x + 6,
+                                     UI_BOX_DATA[5].finalPos.y + 6,
+                                     0,
+                                     {.hasShadow = true});
     };
 
     void pauseFrame()
@@ -62,18 +66,17 @@ extern "C"
 {
     void removePauseBox()
     {
-        if (!hasPauseBpx) return;
+        if (!hasPauseBox) return;
 
         removeStaticUIBox(5);
-        hasPauseBpx = false;
+        hasPauseBox = false;
         playSound(0, 3);
     }
 
     void createPauseBox()
     {
-        if (hasPauseBpx) return;
+        if (hasPauseBox) return;
 
-        pauseString.draw(&vanillaFont, "Pause");
         RECT rect{
             .x      = -26,
             .y      = -14,
@@ -82,7 +85,7 @@ extern "C"
         };
 
         createStaticUIBox(5, 1, 0, &rect, nullptr, renderPauseBox);
-        hasPauseBpx = true;
+        hasPauseBox = true;
         playSound(0, 3);
     }
 
