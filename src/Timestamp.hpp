@@ -2,7 +2,7 @@
 
 #include "extern/stddef.hpp"
 
-extern "C" void initTimestamp();
+void initTimestamp();
 
 /*
  * Gets the number of ticks since initialization of the timer. One tick equals 1.25ms.

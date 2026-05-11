@@ -8,15 +8,15 @@
 #include "extern/libgs.hpp"
 #include "extern/stddef.hpp"
 
-extern "C"
+namespace
 {
-    static CustomFont myFont = {
+    CustomFont myFont = {
         .height       = 8,
         .isWide       = true,
         .mappingCount = 141,
     };
 
-    static GlyphMapping myMapping[141] = {
+    GlyphMapping myMapping[141] = {
         {.codepoint = 0x20, .index = 0},    {.codepoint = 0x21, .index = 1},    {.codepoint = 0x22, .index = 2},
         {.codepoint = 0x23, .index = 3},    {.codepoint = 0x25, .index = 4},    {.codepoint = 0x27, .index = 5},
         {.codepoint = 0x28, .index = 6},    {.codepoint = 0x29, .index = 7},    {.codepoint = 0x2a, .index = 8},
@@ -66,7 +66,7 @@ extern "C"
         {.codepoint = 0x78, .index = 53},   {.codepoint = 0x79, .index = 54},   {.codepoint = 0x7a, .index = 55},
     };
 
-    static Glyph7PX myGlyphs[58] = {
+    Glyph7PX myGlyphs[58] = {
         {.width = 4, .rows = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff}},
         {.width = 2, .rows = {0x7f, 0x7f, 0x7f, 0x7f, 0x7f, 0xff, 0x7f, 0xff}},
         {.width = 4, .rows = {0x5f, 0x5f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff}},
@@ -127,7 +127,7 @@ extern "C"
         {.width = 5, .rows = {0x67, 0x97, 0x17, 0x27, 0x47, 0x07, 0x47, 0x07}},
     };
 
-    static int32_t getGlyphIndex(uint16_t codepoint)
+    int32_t getGlyphIndex(uint16_t codepoint)
     {
         for (const auto& mapping : myMapping)
         {
@@ -137,24 +137,24 @@ extern "C"
         return myFont.mappingCount - 1;
     }
 
-    static Glyph7PX* getGlyph7px(uint16_t codepoint)
+    Glyph7PX* getGlyph7px(uint16_t codepoint)
     {
         return &myGlyphs[getGlyphIndex(codepoint)];
     }
 
-    static uint8_t getWidthCustom(uint16_t codepoint)
+    uint8_t getWidthCustom(uint16_t codepoint)
     {
         return getGlyph7px(codepoint)->width;
     }
 
-    static uint16_t getRowCustom(uint16_t codepoint, uint8_t row)
+    uint16_t getRowCustom(uint16_t codepoint, uint8_t row)
     {
         if (row > myFont.height) return 0;
 
         return getGlyph7px(codepoint)->rows[row] << 8;
     }
 
-    static uint16_t getCodePointCustom(const uint8_t* string, uint32_t index)
+    uint16_t getCodePointCustom(const uint8_t* string, uint32_t index)
     {
         const uint8_t* ptr = jis_at_index(string, index);
         uint8_t firstByte  = *ptr;
@@ -162,16 +162,19 @@ extern "C"
         return firstByte << 8 | ptr[1];
     }
 
-    static uint8_t getGlyphWidth(int32_t index)
+    uint8_t getGlyphWidth(int32_t index)
     {
         return myGlyphs[index].width;
     }
 
-    static uint16_t getGlyphRow(int32_t glyph, int32_t row)
+    uint16_t getGlyphRow(int32_t glyph, int32_t row)
     {
         return myGlyphs[glyph].rows[row] << 8;
     }
+} // namespace
 
+extern "C"
+{
     Font myFont7px = {
         .height        = 8,
         .glyph_count   = 58,

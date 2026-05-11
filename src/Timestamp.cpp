@@ -5,12 +5,15 @@
 #include "extern/libetc.hpp"
 #include "extern/psx.hpp"
 
-static uint32_t irqCount = 0;
-
-static void timer0irq()
+namespace
 {
-    irqCount++;
-}
+    uint32_t irqCount = 0;
+
+    void timer0irq()
+    {
+        irqCount++;
+    }
+} // namespace
 
 uint32_t getTickCount()
 {
@@ -25,7 +28,7 @@ uint64_t getTimestamp()
     return us;
 }
 
-extern "C" void initTimestamp()
+void initTimestamp()
 {
     TIMER0.config.syncEnable        = 0;
     TIMER0.config.resetMode         = 1;

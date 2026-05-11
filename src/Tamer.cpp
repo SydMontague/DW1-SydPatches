@@ -1,3 +1,5 @@
+#include "Tamer.hpp"
+
 #include "Butterfly.hpp"
 #include "Camera.hpp"
 #include "Entity.hpp"
@@ -59,6 +61,26 @@ namespace
     }
 
     int32_t combatIdleTimer;
+
+    constexpr uint8_t findItemStr[]       = "Woah!";
+    constexpr uint8_t emptyChestStr[]     = "Hey! It's empty!";
+    constexpr uint8_t inventoryFullStr[]  = "But I can't hold any more!";
+    constexpr uint8_t tamerLevelUpStr[]   = "Tamer level went up!!!";
+    constexpr uint8_t tamerLevelDownStr[] = "Tamer level went down!!!";
+    constexpr uint8_t medalLine1[]        = "Congratulations!";
+    constexpr uint8_t medalLine2[]        = "To recognize your great";
+    constexpr uint8_t medalLine3[]        = "records, we sent you a medal!";
+
+    uint8_t takeItemFrameCount;
+    bool isStandingOnDrop;
+    uint8_t pickedDropId;
+    int8_t levelsAwarded;
+    bool hasLevelsAwardPending;
+    bool hasMedalAwardPending;
+    uint8_t interactedChest;
+
+    uint8_t state;
+    uint8_t subState;
 
     void lookAtExit()
     {
@@ -233,85 +255,10 @@ namespace
 
         Tamer_tickBattleBase(instanceId);
     }
-} // namespace
-
-extern "C"
-{
-    constexpr uint8_t findItemStr[]       = "Woah!";
-    constexpr uint8_t emptyChestStr[]     = "Hey! It's empty!";
-    constexpr uint8_t inventoryFullStr[]  = "But I can't hold any more!";
-    constexpr uint8_t tamerLevelUpStr[]   = "Tamer level went up!!!";
-    constexpr uint8_t tamerLevelDownStr[] = "Tamer level went down!!!";
-    constexpr uint8_t medalLine1[]        = "Congratulations!";
-    constexpr uint8_t medalLine2[]        = "To recognize your great";
-    constexpr uint8_t medalLine3[]        = "records, we sent you a medal!";
-
-    static uint8_t takeItemFrameCount;
-    static bool isStandingOnDrop;
-    static uint8_t pickedDropId;
-    static int8_t levelsAwarded;
-    static bool hasLevelsAwardPending;
-    static bool hasMedalAwardPending;
-    static uint8_t interactedChest;
-
-    static uint8_t state;
-    static uint8_t subState;
 
     void setTamerDirection(int16_t direction)
     {
         TAMER_ENTITY.posData->rotation.y = direction % 4096;
-    }
-
-    void Tamer_setState(uint8_t newState)
-    {
-        state    = newState;
-        subState = 0;
-    }
-
-    void Tamer_setSubState(uint8_t newState)
-    {
-        subState = newState;
-    }
-
-    void Tamer_setFullState(uint8_t newState, uint8_t newSubState)
-    {
-        state    = newState;
-        subState = newSubState;
-    }
-
-    uint8_t Tamer_getState()
-    {
-        return state;
-    }
-
-    uint8_t Tamer_getSubState()
-    {
-        return subState;
-    }
-
-    bool isTrainingComplete()
-    {
-        if (TRAINING_COMPLETE == 1)
-        {
-            TRAINING_COMPLETE = 0;
-            return true;
-        }
-        return false;
-    }
-
-    void addTamerLevel(int32_t chance, int32_t amount)
-    {
-        if (random(100) >= chance) return;
-
-        TAMER_ENTITY.tamerLevel += amount;
-        if (TAMER_ENTITY.tamerLevel <= 10 && TAMER_ENTITY.tamerLevel >= 0)
-        {
-            levelsAwarded         = amount;
-            hasLevelsAwardPending = true;
-        }
-
-        if (TAMER_ENTITY.tamerLevel < 0) TAMER_ENTITY.tamerLevel = 0;
-        if (TAMER_ENTITY.tamerLevel > 10) TAMER_ENTITY.tamerLevel = 10;
     }
 
     // this function blows up in size otherwise
@@ -385,59 +332,6 @@ extern "C"
         isStandingOnDrop = false;
     }
 
-    void checkMapInteraction()
-    {
-        // vanilla checks for CHANGED_INPUT instead of isKeyDown, but this allows buffering input
-        auto collision = entityCheckCollision(&PARTNER_ENTITY, &TAMER_ENTITY, 0, 0);
-
-        if (collision == CollisionCode::MAP) { collisionGrace(nullptr, &TAMER_ENTITY, 0, 0); }
-        else if (collision >= CollisionCode::NPC1 && collision <= CollisionCode::NPC8)
-        {
-            TAMER_ENTITY.animFlag |= 2;
-            auto& npc = NPC_ENTITIES[static_cast<int32_t>(collision) - 2];
-            if (IS_SCRIPT_PAUSED && (npc.autotalk || isKeyDown(BUTTON_CROSS)))
-            {
-                removeTriangleMenu();
-                closeInventoryBoxes();
-                removeUIBox1();
-                TALKED_TO_ENTITY = static_cast<uint8_t>(collision);
-                callScriptSection(CURRENT_SCRIPT_ID, npc.scriptId, 1);
-            }
-        }
-
-        if (Tamer_getState() != 0) return;
-
-        auto trigger = getTileTrigger(&TAMER_ENTITY.posData->location);
-
-        if (IS_SCRIPT_PAUSED == 1)
-        {
-            if (trigger == 120 && PARTNER_PARA.condition.isPoopy) callScriptSection(0, 1250, 0);
-
-            if (trigger >= 80 && trigger < 110 && isKeyDown(BUTTON_CROSS))
-                callScriptSection(CURRENT_SCRIPT_ID, trigger, 0);
-
-            if (trigger >= 50 && trigger < 80) callScriptSection(CURRENT_SCRIPT_ID, trigger, 0);
-        }
-
-        if (trigger >= 110 && trigger < 120)
-        {
-            PREVIOUS_EXIT = trigger - 110;
-            TARGET_MAP    = MAP_WARPS.targetMap[trigger - 110];
-            CURRENT_EXIT  = MAP_WARPS.targetExit[trigger - 110];
-            // vanilla writes the previous exit 0x80134df9, but it seems unused
-            Tamer_setState(5);
-            unsetCameraFollowPlayer();
-            stopGameTime();
-        }
-
-        auto chest = checkChestCollision();
-        if (chest != 0xFF && isKeyDown(BUTTON_CROSS))
-        {
-            interactedChest = chest;
-            Tamer_setState(14);
-        }
-    }
-
     void Tamer_tickIdle()
     {
         if (Tamer_getSubState() != 0) return;
@@ -454,11 +348,6 @@ extern "C"
             Tamer_setSubState(1);
         }
         else if (Tamer_getSubState() == 1) { entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location); }
-    }
-
-    void Tamer_startAnimation(int32_t animId)
-    {
-        startAnimation(&TAMER_ENTITY, animId);
     }
 
     void Tamer_tickPraise()
@@ -946,6 +835,54 @@ extern "C"
         setPartnerIdling();
     }
 
+    void addTamerWaypoint(uint32_t index, int8_t tileX, int8_t tileY)
+    {
+        TAMER_WAYPOINT_X[index] = tileX;
+        TAMER_WAYPOINT_Y[index] = tileY;
+        TAMER_WAYPOINT_COUNT++;
+    }
+
+    void tickTamerWaypoints()
+    {
+        auto tileX = getTileX(TAMER_ENTITY.posData->location.x);
+        auto tileZ = getTileZ(TAMER_ENTITY.posData->location.z);
+
+        if (tileX != TAMER_PREVIOUS_TILE_X || tileZ != TAMER_PREVIOUS_TILE_Y)
+        {
+            if (!isLinearPathBlocked(tileX, tileZ, TAMER_START_TILE_X, TAMER_START_TILE_Y)) { clearTamerWaypoints(); }
+            else if (TAMER_WAYPOINT_COUNT == 0) { addTamerWaypoint(0, TAMER_PREVIOUS_TILE_X, TAMER_PREVIOUS_TILE_Y); }
+            else
+            {
+                auto id = (TAMER_WAYPOINT_CURRENT + TAMER_WAYPOINT_COUNT - 1) % 30;
+
+                if (isLinearPathBlocked(tileX, tileZ, TAMER_WAYPOINT_X[id], TAMER_WAYPOINT_Y[id]))
+                    addTamerWaypoint((TAMER_WAYPOINT_CURRENT + TAMER_WAYPOINT_COUNT) % 30,
+                                     TAMER_PREVIOUS_TILE_X,
+                                     TAMER_PREVIOUS_TILE_Y);
+            }
+        }
+
+        if (TAMER_WAYPOINT_COUNT > 1)
+        {
+            if (isLinearPathBlocked(tileX,
+                                    tileZ,
+                                    TAMER_WAYPOINT_X[TAMER_WAYPOINT_ACTIVE],
+                                    TAMER_WAYPOINT_Y[TAMER_WAYPOINT_ACTIVE]))
+            {
+                TAMER_WAYPOINT_ACTIVE--;
+                if (TAMER_WAYPOINT_ACTIVE < 0) TAMER_WAYPOINT_ACTIVE = TAMER_WAYPOINT_COUNT - 2;
+            }
+            else
+            {
+                TAMER_WAYPOINT_COUNT = TAMER_WAYPOINT_ACTIVE + 1;
+                if (TAMER_WAYPOINT_COUNT > 1) TAMER_WAYPOINT_ACTIVE--;
+            }
+        }
+
+        TAMER_PREVIOUS_TILE_X = tileX;
+        TAMER_PREVIOUS_TILE_Y = tileZ;
+    }
+
     void Tamer_tickWalkingState()
     {
         tickTamerWaypoints();
@@ -1108,6 +1045,120 @@ extern "C"
         }
     }
 
+} // namespace
+
+extern "C"
+{
+    void Tamer_setState(uint8_t newState)
+    {
+        state    = newState;
+        subState = 0;
+    }
+
+    void Tamer_setSubState(uint8_t newState)
+    {
+        subState = newState;
+    }
+
+    void Tamer_setFullState(uint8_t newState, uint8_t newSubState)
+    {
+        state    = newState;
+        subState = newSubState;
+    }
+
+    uint8_t Tamer_getState()
+    {
+        return state;
+    }
+
+    uint8_t Tamer_getSubState()
+    {
+        return subState;
+    }
+
+    bool isTrainingComplete()
+    {
+        if (TRAINING_COMPLETE == 1)
+        {
+            TRAINING_COMPLETE = 0;
+            return true;
+        }
+        return false;
+    }
+
+    void addTamerLevel(int32_t chance, int32_t amount)
+    {
+        if (random(100) >= chance) return;
+
+        TAMER_ENTITY.tamerLevel += amount;
+        if (TAMER_ENTITY.tamerLevel <= 10 && TAMER_ENTITY.tamerLevel >= 0)
+        {
+            levelsAwarded         = amount;
+            hasLevelsAwardPending = true;
+        }
+
+        if (TAMER_ENTITY.tamerLevel < 0) TAMER_ENTITY.tamerLevel = 0;
+        if (TAMER_ENTITY.tamerLevel > 10) TAMER_ENTITY.tamerLevel = 10;
+    }
+
+    void checkMapInteraction()
+    {
+        // vanilla checks for CHANGED_INPUT instead of isKeyDown, but this allows buffering input
+        auto collision = entityCheckCollision(&PARTNER_ENTITY, &TAMER_ENTITY, 0, 0);
+
+        if (collision == CollisionCode::MAP) { collisionGrace(nullptr, &TAMER_ENTITY, 0, 0); }
+        else if (collision >= CollisionCode::NPC1 && collision <= CollisionCode::NPC8)
+        {
+            TAMER_ENTITY.animFlag |= 2;
+            auto& npc = NPC_ENTITIES[static_cast<int32_t>(collision) - 2];
+            if (IS_SCRIPT_PAUSED && (npc.autotalk || isKeyDown(BUTTON_CROSS)))
+            {
+                removeTriangleMenu();
+                closeInventoryBoxes();
+                removeUIBox1();
+                TALKED_TO_ENTITY = static_cast<uint8_t>(collision);
+                callScriptSection(CURRENT_SCRIPT_ID, npc.scriptId, 1);
+            }
+        }
+
+        if (Tamer_getState() != 0) return;
+
+        auto trigger = getTileTrigger(&TAMER_ENTITY.posData->location);
+
+        if (IS_SCRIPT_PAUSED == 1)
+        {
+            if (trigger == 120 && PARTNER_PARA.condition.isPoopy) callScriptSection(0, 1250, 0);
+
+            if (trigger >= 80 && trigger < 110 && isKeyDown(BUTTON_CROSS))
+                callScriptSection(CURRENT_SCRIPT_ID, trigger, 0);
+
+            if (trigger >= 50 && trigger < 80) callScriptSection(CURRENT_SCRIPT_ID, trigger, 0);
+        }
+
+        if (trigger >= 110 && trigger < 120)
+        {
+            PREVIOUS_EXIT = trigger - 110;
+            TARGET_MAP    = MAP_WARPS.targetMap[trigger - 110];
+            CURRENT_EXIT  = MAP_WARPS.targetExit[trigger - 110];
+            // vanilla writes the previous exit 0x80134df9, but it seems unused
+            Tamer_setState(5);
+            unsetCameraFollowPlayer();
+            stopGameTime();
+        }
+
+        auto chest = checkChestCollision();
+        if (chest != 0xFF && isKeyDown(BUTTON_CROSS))
+        {
+            interactedChest = chest;
+            Tamer_setState(14);
+        }
+    }
+
+    void Tamer_startAnimation(int32_t animId)
+    {
+        startAnimation(&TAMER_ENTITY, animId);
+    }
+
     void initializeTamer(DigimonType type,
                          int32_t posX,
                          int32_t posY,
@@ -1168,13 +1219,6 @@ extern "C"
         TAMER_ITEM.type = ItemType::NONE;
     }
 
-    void addTamerWaypoint(uint32_t index, int8_t tileX, int8_t tileY)
-    {
-        TAMER_WAYPOINT_X[index] = tileX;
-        TAMER_WAYPOINT_Y[index] = tileY;
-        TAMER_WAYPOINT_COUNT++;
-    }
-
     void initializeTamerWaypoints()
     {
         TAMER_START_TILE_X     = getTileX(TAMER_ENTITY.posData->location.x);
@@ -1202,45 +1246,4 @@ extern "C"
     {
         isStandingOnDrop = value;
     }
-}
-
-static void tickTamerWaypoints()
-{
-    auto tileX = getTileX(TAMER_ENTITY.posData->location.x);
-    auto tileZ = getTileZ(TAMER_ENTITY.posData->location.z);
-
-    if (tileX != TAMER_PREVIOUS_TILE_X || tileZ != TAMER_PREVIOUS_TILE_Y)
-    {
-        if (!isLinearPathBlocked(tileX, tileZ, TAMER_START_TILE_X, TAMER_START_TILE_Y)) { clearTamerWaypoints(); }
-        else if (TAMER_WAYPOINT_COUNT == 0) { addTamerWaypoint(0, TAMER_PREVIOUS_TILE_X, TAMER_PREVIOUS_TILE_Y); }
-        else
-        {
-            auto id = (TAMER_WAYPOINT_CURRENT + TAMER_WAYPOINT_COUNT - 1) % 30;
-
-            if (isLinearPathBlocked(tileX, tileZ, TAMER_WAYPOINT_X[id], TAMER_WAYPOINT_Y[id]))
-                addTamerWaypoint((TAMER_WAYPOINT_CURRENT + TAMER_WAYPOINT_COUNT) % 30,
-                                 TAMER_PREVIOUS_TILE_X,
-                                 TAMER_PREVIOUS_TILE_Y);
-        }
-    }
-
-    if (TAMER_WAYPOINT_COUNT > 1)
-    {
-        if (isLinearPathBlocked(tileX,
-                                tileZ,
-                                TAMER_WAYPOINT_X[TAMER_WAYPOINT_ACTIVE],
-                                TAMER_WAYPOINT_Y[TAMER_WAYPOINT_ACTIVE]))
-        {
-            TAMER_WAYPOINT_ACTIVE--;
-            if (TAMER_WAYPOINT_ACTIVE < 0) TAMER_WAYPOINT_ACTIVE = TAMER_WAYPOINT_COUNT - 2;
-        }
-        else
-        {
-            TAMER_WAYPOINT_COUNT = TAMER_WAYPOINT_ACTIVE + 1;
-            if (TAMER_WAYPOINT_COUNT > 1) TAMER_WAYPOINT_ACTIVE--;
-        }
-    }
-
-    TAMER_PREVIOUS_TILE_X = tileX;
-    TAMER_PREVIOUS_TILE_Y = tileZ;
 }

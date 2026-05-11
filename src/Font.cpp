@@ -8,6 +8,13 @@
 
 namespace
 {
+    constexpr uint32_t RENDER_COLS      = 128;
+    constexpr uint32_t RENDER_ROWS      = 32;
+    constexpr uint32_t RENDER_AREA_SIZE = RENDER_COLS * RENDER_ROWS;
+
+    uint32_t RENDER_AREA_POINTER          = 0;
+    uint8_t RENDER_AREA[RENDER_AREA_SIZE] = {0};
+
     int32_t getGlyphIndex(uint16_t codepoint)
     {
         if (codepoint == 0x2E) codepoint = 0x8142;
@@ -21,7 +28,7 @@ namespace
 
         return i;
     }
-    
+
     GlyphData* getGlyphVanilla(uint16_t codepoint)
     {
         return GLYPH_DATA + getGlyphIndex(codepoint);
@@ -61,27 +68,6 @@ namespace
     {
         return GLYPH_DATA[glyph].pixelData[row];
     }
-} // namespace
-
-extern "C"
-{
-    constexpr uint32_t RENDER_COLS      = 128;
-    constexpr uint32_t RENDER_ROWS      = 32;
-    constexpr uint32_t RENDER_AREA_SIZE = RENDER_COLS * RENDER_ROWS;
-
-    uint32_t RENDER_AREA_POINTER          = 0;
-    uint8_t RENDER_AREA[RENDER_AREA_SIZE] = {0};
-
-    Font vanillaFont = {
-        .height        = 11,
-        .glyph_count   = 78,
-        .getGlyphWidth = getGlyphWidth,
-        .getGlyphRow   = getGlyphRow,
-        .getGlyphIndex = getGlyphIndex,
-        .getWidth      = getWidthVanilla,
-        .getRow        = getRowVanilla,
-        .getCodePoint  = getCodePointVanilla,
-    };
 
     uint8_t* getRenderArea(uint32_t height, uint32_t width)
     {
@@ -147,6 +133,20 @@ extern "C"
 
         return glyph_width;
     }
+} // namespace
+
+extern "C"
+{
+    Font vanillaFont = {
+        .height        = 11,
+        .glyph_count   = 78,
+        .getGlyphWidth = getGlyphWidth,
+        .getGlyphRow   = getGlyphRow,
+        .getGlyphIndex = getGlyphIndex,
+        .getWidth      = getWidthVanilla,
+        .getRow        = getRowVanilla,
+        .getCodePoint  = getCodePointVanilla,
+    };
 
     uint16_t drawStringNew(Font* font, const uint8_t* string, int16_t start_x, int16_t start_y)
     {

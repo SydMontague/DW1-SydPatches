@@ -2,7 +2,7 @@
 #include "Utils.hpp"
 #include "extern/stddef.hpp"
 
-extern "C"
+namespace
 {
     CustomFont myFont = {
         .height       = 12,
@@ -50,19 +50,19 @@ extern "C"
         return &myGlyphs[myFont.mappingCount - 1];
     }
 
-    static uint8_t getWidthCustom(uint16_t codepoint)
+    uint8_t getWidthCustom(uint16_t codepoint)
     {
         return getFixedGlyph(codepoint)->width;
     }
 
-    static uint16_t getRowCustom(uint16_t codepoint, uint8_t row)
+    uint16_t getRowCustom(uint16_t codepoint, uint8_t row)
     {
         if (row > myFont.height) return 0;
 
         return getFixedGlyph(codepoint)->rows[row] << 8;
     }
 
-    static uint16_t getCodePointCustom(const uint8_t* string, uint32_t index)
+    uint16_t getCodePointCustom(const uint8_t* string, uint32_t index)
     {
         const uint8_t* ptr = jis_at_index(string, index);
         uint8_t firstByte  = *ptr;
@@ -70,7 +70,7 @@ extern "C"
         return firstByte << 8 | ptr[1];
     }
 
-    static int32_t getGlyphIndex(uint16_t codepoint)
+    int32_t getGlyphIndex(uint16_t codepoint)
     {
         for (const auto& mapping : myMapping)
         {
@@ -80,16 +80,19 @@ extern "C"
         return myFont.mappingCount - 1;
     }
 
-    static uint8_t getGlyphWidth(int32_t index)
+    uint8_t getGlyphWidth(int32_t index)
     {
         return myGlyphs[index].width;
     }
 
-    static uint16_t getGlyphRow(int32_t glyph, int32_t row)
+    uint16_t getGlyphRow(int32_t glyph, int32_t row)
     {
         return myGlyphs[glyph].rows[row] << 8;
     }
+} // namespace
 
+extern "C"
+{
     Font fixedNumbersFont = {
         .height        = 12,
         .glyph_count   = 12,

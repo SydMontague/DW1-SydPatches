@@ -6,19 +6,8 @@
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
 
-extern "C"
+namespace
 {
-    void initializeFadeData()
-    {
-        FADE_DATA.fadeOutTarget  = 0;
-        FADE_DATA.fadeOutCurrent = 0;
-        FADE_DATA.fadeInTarget   = 0;
-        FADE_DATA.fadeInCurrent  = 0;
-        FADE_DATA.fadeProgress   = 0;
-        FADE_DATA.fadeMode       = FadeMode::BLACK_FADE;
-        FADE_DATA.fadeProtection = 0;
-    }
-
     void renderFade(uint8_t progress)
     {
         POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
@@ -66,6 +55,20 @@ extern "C"
             renderFade(FADE_DATA.fadeProgress);
             FADE_DATA.fadeInCurrent++;
         }
+    }
+} // namespace
+
+extern "C"
+{
+    void initializeFadeData()
+    {
+        FADE_DATA.fadeOutTarget  = 0;
+        FADE_DATA.fadeOutCurrent = 0;
+        FADE_DATA.fadeInTarget   = 0;
+        FADE_DATA.fadeInCurrent  = 0;
+        FADE_DATA.fadeProgress   = 0;
+        FADE_DATA.fadeMode       = FadeMode::BLACK_FADE;
+        FADE_DATA.fadeProtection = 0;
     }
 
     void fadeFromWhite(int32_t frames)

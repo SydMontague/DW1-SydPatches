@@ -6,21 +6,8 @@
 #include "Tamer.hpp"
 #include "extern/dw1.hpp"
 
-extern "C"
+namespace
 {
-    DigimonType getFreshEvolutionTarget(DigimonType type)
-    {
-        // FIX: removed evo timer reset, as it should be unnecessary
-        switch (type)
-        {
-            case DigimonType::BOTAMON: return DigimonType::KOROMON;
-            case DigimonType::PUNIMON: return DigimonType::TSUNOMON;
-            case DigimonType::POYOMON: return DigimonType::TOKOMON;
-            case DigimonType::YURAMON: return DigimonType::TANEMON;
-            default: return DigimonType::TAMER;
-        }
-    }
-
     bool highestStatFulfilled(EvoRequirements& reqs)
     {
         int32_t highestStatValue = 0;
@@ -141,6 +128,22 @@ extern "C"
         }
 
         return reqPoints;
+    }
+} // namespace
+
+extern "C"
+{
+    DigimonType getFreshEvolutionTarget(DigimonType type)
+    {
+        // FIX: removed evo timer reset, as it should be unnecessary
+        switch (type)
+        {
+            case DigimonType::BOTAMON: return DigimonType::KOROMON;
+            case DigimonType::PUNIMON: return DigimonType::TSUNOMON;
+            case DigimonType::POYOMON: return DigimonType::TOKOMON;
+            case DigimonType::YURAMON: return DigimonType::TANEMON;
+            default: return DigimonType::TAMER;
+        }
     }
 
     DigimonType getInTrainingEvolutionTarget(DigimonType current)
