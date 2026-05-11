@@ -1,5 +1,6 @@
 #include "InventoryUI.hpp"
 
+#include "AtlasFont.hpp"
 #include "Font.hpp"
 #include "GameMenu.hpp"
 #include "GameObjects.hpp"
@@ -16,6 +17,7 @@
 #include "ThrownItem.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
+#include "extern/dtl/unique_ptr.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
@@ -73,8 +75,20 @@ namespace
     constexpr uint32_t SLASH_COLOR          = 0xffef84;
     constexpr uint32_t BADGE_RED_COLOR      = 0x2020ff;
 
-    constexpr int32_t COLOR_CYAN  = 2;
-    constexpr int32_t COLOR_LIGHT = 0;
+    // Render colors are doubled-and-clamped versions of VanillaText.hpp's TEXT_COLORS.
+    // AtlasFont halves settings.r/g/b (`(s+1)/2`) before storing them as prim color.
+    // Combined with the PSX modulation formula `output = texture*prim/128` over a
+    // pure-white glyph atlas (CLUT idx 1 = 0x7FFF), settings=0xFF yields pixel-perfect
+    // 0xFF output. SimpleTextSprite passed TEXT_COLORS values directly as prim color,
+    // so its 0x80 became output 0xFF (full passthrough). To match that visible color
+    // we pass min(2*TEXT_COLORS, 0xFF) here. hasShadow stays false (AtlasFont's
+    // shadow CLUT bakes a dirty outline that doesn't match SimpleTextSprite's
+    // +1/+1 black-duplicate drop shadow).
+    constexpr RenderSettings TEXT_LIGHT    = {.r = 0xFF, .g = 0xFF, .b = 0xFF};
+    constexpr RenderSettings TEXT_CYAN     = {.r = 0xD2, .g = 0xFF, .b = 0xFF};
+    constexpr RenderSettings TEXT_RED      = {.r = 0xFF, .g = 0x3C, .b = 0xA0};
+    constexpr RenderSettings TEXT_ENABLED  = {.r = 0xDC, .g = 0xDC, .b = 0xDC};
+    constexpr RenderSettings TEXT_DISABLED = {.r = 0x8C, .g = 0x8C, .b = 0x8C};
 
     constexpr dtl::array<int8_t, 128> ITEM_CLUT_DATA{
         0,  1,  18, 3,  4,  8,  6,  0,  8,  6, 7,  4,  8,  9,  9,  10, 4,  11, 8,  12, 8,  11, 13, 10, 4,  14,
@@ -82,16 +96,6 @@ namespace
         20, 11, 11, 1,  12, 4,  11, 7,  0,  2, 14, 20, 13, 13, 13, 13, 15, 8,  11, 5,  12, 1,  2,  4,  4,  5,
         4,  5,  16, 4,  5,  16, 22, 21, 12, 4, 12, 23, 23, 5,  8,  12, 5,  3,  14, 17, 4,  10, 19, 10, 4,  4,
         4,  10, 23, 5,  4,  16, 5,  10, 4,  7, 8,  14, 20, 9,  4,  16, 4,  23, 21, 4,  9,  4,  4,  4,
-    };
-
-    constexpr const char* CATEGORY_LABELS[] = {
-        "Heal",
-        "Status",
-        "Food",
-        "Boost",
-        "Digivolve",
-        "Misc",
-        "All",
     };
 
     constexpr int16_t getSlotPosX(int32_t col)
@@ -112,29 +116,26 @@ namespace
 
     RECT getCursorSlotRect();
 
-    consteval dtl::array<SimpleTextSprite, 30> initializeNameArray()
+    struct Data
     {
-        dtl::array<SimpleTextSprite, 30> data;
-        for (int32_t i = 0; i < data.size(); i++)
-            data[i] = SimpleTextSprite(704 + (i % 2) * 32, 256 + (i / 2) * 12);
-        return data;
-    }
+        AtlasString labelDescStr;
+        AtlasString labelCapacityStr;
 
-    consteval dtl::array<SimpleTextSprite, 30> initializeAmountArray()
-    {
-        dtl::array<SimpleTextSprite, 30> data;
-        for (int32_t i = 0; i < data.size(); i++)
-            data[i] = SimpleTextSprite(704 + (i % 2) * 32 + 24, 256 + (i / 2) * 12);
-        return data;
-    }
+        AtlasString itemNameStr;
+        AtlasString headlineStr;
+        AtlasString detailStr;
+        dtl::array<AtlasString, 4> descLines;
 
-    consteval dtl::array<SimpleTextSprite, 7> initializeTabArray()
-    {
-        dtl::array<SimpleTextSprite, 7> data;
-        for (int32_t i = 0; i < data.size(); i++)
-            data[i] = SimpleTextSprite(640, 256 + 156 + i * 12);
-        return data;
-    }
+        AtlasString capacityUsedStr;
+        AtlasString capacityMaxStr;
+        AtlasString fullBadgeStr;
+
+        AtlasString menuUseStr;
+        AtlasString menuDropStr;
+        AtlasString menuMoveStr;
+    };
+
+    dtl::unique_ptr<Data> data;
 
     uint8_t getUseColor(Item* item)
     {
@@ -155,31 +156,7 @@ namespace
     int16_t activeTabX;
     int16_t activeTabW;
 
-    dtl::array<SimpleTextSprite, 30> itemNames   = initializeNameArray();
-    dtl::array<SimpleTextSprite, 30> itemAmounts = initializeAmountArray();
-    dtl::array<SimpleTextSprite, 7> tabLabels    = initializeTabArray();
-
-    SimpleTextSprite useString(704 + 0, 256 + 180);
-    SimpleTextSprite dropString(704 + 48, 256 + 180);
-    SimpleTextSprite moveString(704 + 96, 256 + 180);
-
     int8_t inv_moveSourceSlot = -1;
-
-    SimpleTextSprite labelItem(640, 256 + 0);
-    SimpleTextSprite labelDesc(640, 256 + 8);
-    SimpleTextSprite labelCapacity(640, 256 + 32);
-    SimpleTextSprite labelFull(640, 256 + 40);
-
-    SimpleTextSprite effectString0(640, 256 + 68);
-    SimpleTextSprite effectString1(640, 256 + 80);
-
-    SimpleTextSprite capacityUsedStr(640, 256 + 92);
-    SimpleTextSprite capacityMaxStr(640 + 32, 256 + 92);
-
-    SimpleTextSprite descLine0(640, 256 + 108);
-    SimpleTextSprite descLine1(640, 256 + 120);
-    SimpleTextSprite descLine2(640, 256 + 132);
-    SimpleTextSprite descLine3(640, 256 + 144);
 
     bool isInventoryKeyDown(InputButtons button)
     { return (POLLED_INPUT & ~POLLED_INPUT_PREVIOUS & button) != 0; }
@@ -208,10 +185,9 @@ namespace
         return used;
     }
 
-    void drawWrappedDescription(const char* src, int16_t maxWidth)
+    void drawWrappedDescription(const char* src, int16_t maxWidth, int16_t baseX, int16_t baseY)
     {
-        SimpleTextSprite* lines[4] = {&descLine0, &descLine1, &descLine2, &descLine3};
-        for (auto* l : lines) l->clear();
+        for (auto& l : data->descLines) l = {};
 
         if (src == nullptr) return;
 
@@ -244,7 +220,7 @@ namespace
             for (int32_t j = 0; j < takeLen; j++)
                 buf[j] = src[srcPos + j];
             buf[takeLen] = '\0';
-            lines[lineIdx]->draw(&myFont7px, reinterpret_cast<const uint8_t*>(buf));
+            data->descLines[lineIdx] = getAtlas7px().render(buf, baseX, baseY + lineIdx * 9, TEXT_LIGHT);
             lineIdx++;
 
             srcPos += takeLen;
@@ -252,32 +228,18 @@ namespace
         }
     }
 
-    void drawInventoryText()
+    void initFontData()
     {
-        clearTextArea();
+        data = dtl::make_unique<Data>();
 
-        for (int32_t i = 0; i < INVENTORY_SIZE; i++)
-        {
-            auto type = INVENTORY_ITEM_TYPES[i];
-            if (type == ItemType::NONE) continue;
-            uint8_t amount[8];
-            sprintf(amount, "x%d", INVENTORY_ITEM_AMOUNTS[i]);
-            itemNames[i].draw(&vanillaFont, getItem(type)->name);
-            itemAmounts[i].draw(&vanillaFont, amount);
-            INVENTORY_ITEM_NAMES[i] = i;
-        }
+        // Section-border labels live at panelX + 8, panelY - 4 (see renderSectionBorder).
+        data->labelDescStr     = getAtlas7px().render("ITEM DESCRIPTION", INFO_X + 8, INFO_Y - 4, TEXT_CYAN);
+        data->labelCapacityStr = getAtlas7px().render("CAPACITY", CAP_X + 8, CAP_Y - 4, TEXT_CYAN);
 
-        useString.draw(&vanillaFont, "Use");
-        dropString.draw(&vanillaFont, "Drop");
-        moveString.draw(&vanillaFont, "Move");
-
-        labelItem.draw(&myFont7px, "ITEM");
-        labelDesc.draw(&myFont7px, "ITEM DESCRIPTION");
-        labelCapacity.draw(&myFont7px, "CAPACITY");
-        labelFull.draw(&myFont7px, "FULL");
-
-        for (int32_t i = 0; i < 7; i++)
-            tabLabels[i].draw(&myFont7px, CATEGORY_LABELS[i]);
+        constexpr int16_t badgeW = 32;
+        constexpr int16_t badgeX = CAP_X + CAP_WIDTH - badgeW - 6;
+        constexpr int16_t badgeY = CAP_Y + 4;
+        data->fullBadgeStr = getAtlas7px().render("FULL", badgeX + 4, badgeY + 1, TEXT_RED);
     }
 
     const char* getLevelName(Level level)
@@ -295,13 +257,17 @@ namespace
 
     void updateItemDescription()
     {
+        const int16_t descX = INFO_X + 8;
+        const int16_t descY = INFO_Y + 36;
+
         const auto type = INVENTORY_ITEM_TYPES[INVENTORY_POINTER];
 
         if (type == ItemType::NONE)
         {
-            drawWrappedDescription("", 224);
-            effectString0.clear();
-            effectString1.clear();
+            drawWrappedDescription("", 224, descX, descY);
+            data->itemNameStr = {};
+            data->headlineStr = {};
+            data->detailStr   = {};
             return;
         }
 
@@ -332,42 +298,31 @@ namespace
             }
         }
 
-        drawWrappedDescription(desc, INFO_WIDTH - 16);
+        drawWrappedDescription(desc, INFO_WIDTH - 16, descX, descY);
 
-        effectString0.clear();
-        effectString0.draw(&vanillaFont, info.headline);
-        effectString1.clear();
-        effectString1.draw(&vanillaFont, detail);
+        const auto& info_box = UI_BOX_DATA[BOX_INFO];
+        data->itemNameStr = getAtlasVanilla().render(getItem(type)->name,
+                                                     info_box.finalPos.x + 32,
+                                                     info_box.finalPos.y + 14,
+                                                     TEXT_CYAN);
+        data->headlineStr = getAtlasVanilla().render(info.headline, descX, INFO_Y + 86, TEXT_CYAN);
+        data->detailStr   = getAtlasVanilla().render(detail, descX, INFO_Y + 98, TEXT_LIGHT);
     }
 
     void updateCapacity()
     {
-        capacityUsedStr.clear();
-        capacityMaxStr.clear();
+        const int16_t numX = CAP_X + 8;
+        const int16_t numY = CAP_Y + 4;
         uint8_t bufA[8];
         uint8_t bufB[8];
         sprintf(bufA, "%d", countUsedSlots());
         sprintf(bufB, "%d", INVENTORY_SIZE);
-        capacityUsedStr.draw(&myFont7px, bufA);
-        capacityMaxStr.draw(&myFont7px, bufB);
+        data->capacityUsedStr = getAtlas7px().render(bufA, numX, numY, TEXT_CYAN);
+        const int16_t usedW   = static_cast<int16_t>(data->capacityUsedStr.getWidth());
+        const int16_t slashX  = numX + usedW + 2;
+        data->capacityMaxStr  = getAtlas7px().render(bufB, slashX + 6, numY, TEXT_CYAN);
     }
 
-    void renderSectionBorder(int16_t panelX,
-                             int16_t panelY,
-                             int16_t panelW,
-                             int16_t panelH,
-                             SimpleTextSprite& label,
-                             int32_t depth)
-    {
-        const int16_t labelW = static_cast<int16_t>(label.getWidth());
-        const int16_t notchX = panelX + 6;
-        const int16_t notchW = labelW + 4;
-
-        RECT rect{.x = panelX, .y = panelY, .width = panelW, .height = panelH};
-        renderUIBoxBorderNotched(&rect, depth, notchX, notchW);
-
-        label.render(notchX + 2, panelY - 4, COLOR_CYAN, depth, true);
-    }
 
     void renderInventoryCursor(int16_t x, int16_t y, int16_t w, int16_t h, int32_t depth)
     {
@@ -436,16 +391,26 @@ namespace
             const int32_t col = p & 1;
             const auto posX   = getSlotPosX(col);
             const auto posY   = getSlotPosY(row);
-            const auto nameId = INVENTORY_ITEM_NAMES[i];
 
             renderItemSprite(type, posX + SLOT_SPRITE_OFF_X, posY + SLOT_SPRITE_OFF_Y, depth);
-            itemNames[nameId].render(posX + SLOT_NAME_OFF_X, posY + SLOT_NAME_OFF_Y, COLOR_LIGHT, depth, true);
-            const int16_t amountW = static_cast<int16_t>(itemAmounts[nameId].getWidth());
-            itemAmounts[nameId].render(posX + SLOT_AMOUNT_OFF_X - amountW,
-                                       posY + SLOT_AMOUNT_OFF_Y,
-                                       p == cursorPos ? COLOR_CYAN : COLOR_LIGHT,
-                                       depth,
-                                       true);
+
+            const auto* name = getItem(type)->name;
+            getAtlasVanilla().renderSlow(name,
+                                         posX + SLOT_NAME_OFF_X,
+                                         posY + SLOT_NAME_OFF_Y,
+                                         depth,
+                                         TEXT_LIGHT);
+
+            uint8_t amountBuf[8];
+            sprintf(amountBuf, "x%d", INVENTORY_ITEM_AMOUNTS[i]);
+            auto amountStr = getAtlasVanilla().render(amountBuf, 0, 0,
+                                                     p == cursorPos ? TEXT_CYAN : TEXT_LIGHT);
+            RECT amountRect{.x      = posX,
+                            .y      = static_cast<int16_t>(posY + SLOT_AMOUNT_OFF_Y),
+                            .width  = SLOT_AMOUNT_OFF_X,
+                            .height = 0};
+            amountStr.setAlignment(amountRect, AlignmentX::RIGHT, AlignmentY::TOP);
+            amountStr.render(depth);
         }
 
         if (cursorPos >= firstPos && cursorPos < lastPos)
@@ -486,25 +451,25 @@ namespace
             drawLine2P(0xffc269, trackX, thumbY, trackX, thumbY + thumbH, depth, 0);
         }
 
-        renderCategoryTabs(&tabLabels[0], TAB_Y, labelDepth - 1, &activeTabX, &activeTabW);
+        renderCategoryTabs(TAB_Y, labelDepth - 1, &activeTabX, &activeTabW);
         RECT listRect{.x = LIST_X, .y = LIST_Y, .width = box.finalPos.width, .height = box.finalPos.height};
         renderUIBoxBorder(&listRect, labelDepth);
 
         // Two semi-trans fills = 75/25 blend matching the description-window preset.
         renderBox(CAP_X + 4, CAP_Y + 3, CAP_WIDTH - 8, CAP_HEIGHT - 3, 12, 22, 30, 1, depth);
         renderBox(CAP_X + 4, CAP_Y + 3, CAP_WIDTH - 8, CAP_HEIGHT - 3, 12, 22, 30, 1, depth);
-        renderSectionBorder(CAP_X, CAP_Y, CAP_WIDTH, CAP_HEIGHT, labelCapacity, labelDepth);
+        renderSectionBorder(CAP_X, CAP_Y, CAP_WIDTH, CAP_HEIGHT, data->labelCapacityStr, labelDepth);
 
         const int32_t used = countUsedSlots();
         const int32_t cap  = INVENTORY_SIZE > 0 ? INVENTORY_SIZE : 1;
 
         const int16_t numX  = CAP_X + 8;
         const int16_t numY  = CAP_Y + 4;
-        const int16_t usedW = static_cast<int16_t>(capacityUsedStr.getWidth());
-        capacityUsedStr.render(numX, numY, COLOR_CYAN, labelDepth, true);
+        const int16_t usedW = static_cast<int16_t>(data->capacityUsedStr.getWidth());
+        data->capacityUsedStr.render(labelDepth);
         const int16_t slashX = numX + usedW + 2;
         drawLine2P(SLASH_COLOR, slashX + 3, numY + 1, slashX, numY + 6, labelDepth, 0);
-        capacityMaxStr.render(slashX + 6, numY, COLOR_CYAN, labelDepth, true);
+        data->capacityMaxStr.render(labelDepth);
 
         const int16_t barX = CAP_X + 8;
         const int16_t barY = CAP_Y + 13;
@@ -534,7 +499,7 @@ namespace
                             0x00,
                             0x00,
                             labelDepth + 1);
-            labelFull.render(badgeX + 4, badgeY + 1, 6, labelDepth, true);
+            data->fullBadgeStr.render(labelDepth);
         }
     }
 
@@ -548,7 +513,7 @@ namespace
                             box.finalPos.y,
                             box.finalPos.width,
                             box.finalPos.height,
-                            labelDesc,
+                            data->labelDescStr,
                             labelDepth);
 
         if (INVENTORY_ITEM_TYPES[INVENTORY_POINTER] == ItemType::NONE) return;
@@ -565,47 +530,29 @@ namespace
         const int16_t bw = box.finalPos.width;
 
         renderItemSprite(INVENTORY_ITEM_TYPES[INVENTORY_POINTER], bx + 10, by + 10, depth);
-        const auto nameId = INVENTORY_ITEM_NAMES[INVENTORY_POINTER];
-        itemNames[nameId].render(bx + 32, by + 14, COLOR_CYAN, depth, true);
+        data->itemNameStr.render(depth);
 
         const int16_t hdrSep = by + 30;
         drawLine2P(BAR_OUTLINE_COLOR, bx + 6, hdrSep, bx + bw - 7, hdrSep, labelDepth, 0);
 
-        const int16_t descX = bx + 8;
-        const int16_t descY = by + 36;
-        descLine0.render(descX, descY + 0, COLOR_LIGHT, depth, true);
-        descLine1.render(descX, descY + 9, COLOR_LIGHT, depth, true);
-        descLine2.render(descX, descY + 18, COLOR_LIGHT, depth, true);
-        descLine3.render(descX, descY + 27, COLOR_LIGHT, depth, true);
+        for (const auto& line : data->descLines) line.render(depth);
 
         const int16_t effSep = by + 80;
         drawLine2P(BAR_OUTLINE_COLOR, bx + 6, effSep, bx + bw - 7, effSep, labelDepth, 0);
 
-        effectString0.render(descX, by + 86, COLOR_CYAN, depth, true);
-        effectString1.render(descX, by + 98, COLOR_LIGHT, depth, true);
+        data->headlineStr.render(depth);
+        data->detailStr.render(depth);
     }
 
     void renderItemOptions(int32_t /*instanceId*/)
     {
-        auto& box = UI_BOX_DATA[BOX_OPTIONS];
-        auto type = INVENTORY_ITEM_TYPES[INVENTORY_POINTER];
+        auto& box        = UI_BOX_DATA[BOX_OPTIONS];
+        const auto baseX = box.finalPos.x + 9;
+        const auto baseY = box.finalPos.y + 6;
 
-        auto useColor  = 10;
-        auto dropColor = 10;
-        if (type != ItemType::NONE)
-        {
-            auto* item = getItem(INVENTORY_ITEM_TYPES[INVENTORY_POINTER]);
-            useColor   = getUseColor(item);
-            dropColor  = item->dropable ? 9 : 10;
-        }
-        const bool allTab    = inv_currentCategory == 6;
-        const auto moveColor = (allTab && type != ItemType::NONE) ? 9 : 10;
-        auto       baseX     = box.finalPos.x + 9;
-        auto       baseY     = box.finalPos.y + 6;
-
-        useString.render(baseX + 3, baseY + 2, useColor, 2, true);
-        dropString.render(baseX + 3, baseY + 20, dropColor, 2, true);
-        if (allTab) moveString.render(baseX + 3, baseY + 38, moveColor, 2, true);
+        data->menuUseStr.render(2);
+        data->menuDropStr.render(2);
+        if (inv_currentCategory == 6) data->menuMoveStr.render(2);
 
         renderSelectionCursor(baseX, baseY + menuSelected * 18, 40, 16, 2);
     }
@@ -700,6 +647,27 @@ namespace
             visibleRow >= 7 ? static_cast<int16_t>(start.y - menuH) : static_cast<int16_t>(start.y + 17);
 
         RECT final = {.x = finalX, .y = finalY, .width = MENU_WIDTH, .height = menuH};
+
+        const auto type      = INVENTORY_ITEM_TYPES[INVENTORY_POINTER];
+        auto       useColor  = 10;
+        auto       dropColor = 10;
+        if (type != ItemType::NONE)
+        {
+            auto* item = getItem(type);
+            useColor   = getUseColor(item);
+            dropColor  = item->dropable ? 9 : 10;
+        }
+        const auto moveColor = (allTab && type != ItemType::NONE) ? 9 : 10;
+        const auto settingsFor = [](int32_t c) { return c == 9 ? TEXT_ENABLED : TEXT_DISABLED; };
+
+        const int16_t labelX = static_cast<int16_t>(finalX + 12);
+        const int16_t labelY = static_cast<int16_t>(finalY + 8);
+        data->menuUseStr     = getAtlasVanilla().render("Use",  labelX, labelY,      settingsFor(useColor));
+        data->menuDropStr    = getAtlasVanilla().render("Drop", labelX, labelY + 18, settingsFor(dropColor));
+        if (allTab)
+            data->menuMoveStr = getAtlasVanilla().render("Move", labelX, labelY + 36, settingsFor(moveColor));
+        else
+            data->menuMoveStr = {};
 
         menuSelected = 0;
         createAnimatedUIBox(BOX_OPTIONS, 2, 0x12, &final, &start, tickInventoryOptions, renderItemOptions);
@@ -919,7 +887,7 @@ namespace
                 INVENTORY_POINTER = inv_filteredCount > 0 ? inv_filteredIdx[0] : 0;
                 previousSelection = -1;
                 descNeedsUpdate   = true;
-                drawInventoryText();
+                initFontData();
                 createInventoryTop();
                 updateItemDescription();
                 updateCapacity();
@@ -1020,6 +988,8 @@ extern "C"
         removeStaticUIBox(BOX_OPTIONS);
 
         removeObject(ObjectID::INVENTORY, 0);
+
+        data.reset();
     }
 
     void addInventoryUI()

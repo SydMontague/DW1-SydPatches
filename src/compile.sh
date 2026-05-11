@@ -38,9 +38,14 @@ mips-g++ ItemInfo.cpp -o ../compiled/ItemInfo.lib $FLAGS
 mips-g++ ItemInfoDataA.cpp -o ../compiled/ItemInfoDataA.lib $FLAGS
 mips-g++ ItemInfoDataB.cpp -o ../compiled/ItemInfoDataB.lib $FLAGS
 mips-g++ Map.cpp Model.cpp ItemEffects.cpp ItemFunctions.cpp GameMenu.cpp PlayerMenu.cpp StatsView.cpp TechView.cpp PlayerInfoView.cpp PlayerChartView.cpp PlayerMedalView.cpp PlayerCardView.cpp -o ../compiled/Cave2.lib $FLAGS
-mips-g++ ConditionBubble.cpp VanillaText.cpp Fishing.cpp Matrix.cpp Utils.cpp Files.cpp EFE.cpp MapObjects.cpp Partner.cpp DOOA/DOOA.cpp CombatCommon.cpp Inventory.cpp InventoryUIHelpers.cpp Sound.cpp Math.cpp Camera.cpp Battle.cpp DigimonData.cpp Transformation.cpp Evolution.cpp DigimonMenu.cpp -o ../compiled/Cave3.lib $FLAGS
+mips-g++ ConditionBubble.cpp VanillaText.cpp Fishing.cpp Matrix.cpp Utils.cpp Files.cpp EFE.cpp MapObjects.cpp Partner.cpp DOOA/DOOA.cpp CombatCommon.cpp Inventory.cpp InventoryUIHelpers.cpp Sound.cpp Math.cpp Camera.cpp Battle.cpp DigimonData.cpp Transformation.cpp Evolution.cpp DigimonMenu.cpp Movie.cpp Script.cpp Tournament.cpp -o ../compiled/Cave3.lib $FLAGS
 mips-g++ Butterfly.cpp -o ../compiled/Cave4.lib $FLAGS
-mips-g++ AtlasFont.cpp BuffModel.cpp ThrownItem.cpp Main.cpp BattleEndBox.cpp Timestamp.cpp Helper.cpp Movie.cpp Script.cpp Pause.cpp Tournament.cpp FixedNumbers.cpp Fade.cpp -o ../compiled/Cave5.lib $FLAGS
+mips-g++ AtlasFont.cpp Main.cpp BattleEndBox.cpp Timestamp.cpp FixedNumbers.cpp Fade.cpp -o ../compiled/Cave5.lib $FLAGS
+mips-g++ BuffModel.cpp -o ../compiled/Cave5sub1.lib $FLAGS
 mips-g++ DebugMenu.cpp -o ../compiled/Cave6.lib $FLAGS
+
+mips-g++ Pause.cpp -o ../compiled/Pause.lib $FLAGS
+mips-g++ Helper.cpp -o ../compiled/Helper.lib $FLAGS
+mips-g++ ThrownItem.cpp -o ../compiled/ThrownItem.lib $FLAGS
 
 cd -

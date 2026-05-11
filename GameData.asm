@@ -55,6 +55,7 @@
 
 .org 0x800fbf84
 .area 0x800fc08c-.
+  .importobj "compiled/Cave5sub1.lib"
 
   .notice "Cave5-sub1 Empty space left: " + (0x800fc08c-.) + " bytes"
   .fill 0x800fc08c-.
@@ -79,14 +80,11 @@ EVO_GAINS_DATA:
   .include "EvoGains.asm"
 EVO_PATHS_DATA:
   .include "EvoPaths.asm"
-NAMING_DATA:
-  .include "NamingData.asm"
 
 .align 4
   .importobj "compiled/utils.lib"
   .importobj "compiled/font.lib"
-  .importobj "compiled/CustomUI.lib"
-  
+
   .notice "Empty space left: " + (0x8012344c-.) + " bytes"
   .fill 0x8012344c-.
 .endarea
@@ -94,8 +92,14 @@ NAMING_DATA:
 ; override some menu data
 .org 0x80123860
 .area 0x80124c0c-.
+  .importobj "compiled/CustomUI.lib"
   .importobj "compiled/ItemInfo.lib"
   .importobj "compiled/ItemInfoDataB.lib"
+NAMING_DATA:
+  .include "NamingData.asm"
+
+  .align 4
+  .importobj "compiled/Pause.lib"
 
   .notice "Empty space left: " + (0x80124c0c-.) + " bytes"
   .fill 0x80124c0c-.
@@ -105,6 +109,9 @@ NAMING_DATA:
 .org 0x801289f4
 .area 0x801292d4
   .importobj "compiled/MapData.lib"
+
+  .align 4
+  .importobj "compiled/ThrownItem.lib"
 
   .notice "Empty space left: " + (0x801292d4-.) + " bytes"
   .fill 0x801292d4-.
@@ -122,6 +129,7 @@ NAMING_DATA:
 ; override condition bubble data, some file paths
 .org 0x8012cb8c
 .area 0x8012ceb4-.
+  .importobj "compiled/Helper.lib"
 
   .notice "Empty space left: " + (0x8012ceb4-.) + " bytes"
   .fill 0x8012ceb4-.

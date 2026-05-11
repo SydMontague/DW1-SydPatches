@@ -1,4 +1,5 @@
 #pragma once
+#include "AtlasFont.hpp"
 #include "UIElements.hpp"
 #include "extern/dw1.hpp"
 
@@ -16,6 +17,10 @@ extern "C"
     void rebuildFiltered();
     void compactInventory();
     void renderTabBox(int16_t x, int16_t y, int16_t w, int16_t h, bool active, int32_t depth);
-    void renderCategoryTabs(SimpleTextSprite* labels, int16_t tabY, int32_t depth,
-                            int16_t* outActiveX, int16_t* outActiveW);
 }
+
+void renderCategoryTabs(int16_t tabY, int32_t depth,
+                        int16_t* outActiveX, int16_t* outActiveW);
+
+void renderSectionBorder(int16_t panelX, int16_t panelY, int16_t panelW, int16_t panelH,
+                         const AtlasString& label, int32_t depth);

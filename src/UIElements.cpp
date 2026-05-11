@@ -349,7 +349,7 @@ extern "C"
         UI_BOX_DATA[instanceId].tick(instanceId);
     }
 
-    void renderUIBoxBorderNotched(RECT* size, int32_t layer, int16_t notchX, int16_t notchW)
+    void renderUIBoxBorder(RECT* size, int32_t layer)
     {
         BORDER_CORNER_SPRITES[0].render(size->x, size->y, layer, 0);
         BORDER_CORNER_SPRITES[1].render(size->x + size->width - 4, size->y, layer, 0);
@@ -361,29 +361,9 @@ extern "C"
         auto yMin = size->y;
         auto yMax = size->y + size->height - 3;
 
-        if (notchW > 0)
-        {
-            const int16_t leftEnd    = notchX - 1;
-            const int16_t rightStart = notchX + notchW;
-            if (leftEnd > xMin + 4)
-            {
-                drawLine2P(BORDER_BLACK, xMin + 4, yMin + 0, leftEnd, yMin + 0, layer, 0);
-                drawLine2P(BORDER_COLOR2, xMin + 4, yMin + 1, leftEnd, yMin + 1, layer, 0);
-                drawLine2P(BORDER_BLACK, xMin + 4, yMin + 2, leftEnd, yMin + 2, layer, 0);
-            }
-            if (rightStart < xMax)
-            {
-                drawLine2P(BORDER_BLACK, rightStart, yMin + 0, xMax + 0, yMin + 0, layer, 0);
-                drawLine2P(BORDER_COLOR2, rightStart, yMin + 1, xMax + 0, yMin + 1, layer, 0);
-                drawLine2P(BORDER_BLACK, rightStart, yMin + 2, xMax + 0, yMin + 2, layer, 0);
-            }
-        }
-        else
-        {
-            drawLine2P(BORDER_BLACK, xMin + 4, yMin + 0, xMax + 0, yMin + 0, layer, 0);
-            drawLine2P(BORDER_COLOR2, xMin + 4, yMin + 1, xMax + 0, yMin + 1, layer, 0);
-            drawLine2P(BORDER_BLACK, xMin + 4, yMin + 2, xMax + 0, yMin + 2, layer, 0);
-        }
+        drawLine2P(BORDER_BLACK, xMin + 4, yMin + 0, xMax + 0, yMin + 0, layer, 0);
+        drawLine2P(BORDER_COLOR2, xMin + 4, yMin + 1, xMax + 0, yMin + 1, layer, 0);
+        drawLine2P(BORDER_BLACK, xMin + 4, yMin + 2, xMax + 0, yMin + 2, layer, 0);
 
         drawLine2P(BORDER_BLACK, xMin + 4, yMax + 0, xMax + 0, yMax + 0, layer, 0);
         drawLine2P(BORDER_COLOR2, xMin + 4, yMax + 1, xMax + 0, yMax + 1, layer, 0);
@@ -399,10 +379,6 @@ extern "C"
         drawLine2P(BORDER_COLOR1, xMax + 2, yMin + 4, xMax + 2, yMax + 0, layer, 0);
         drawLine2P(BORDER_BLACK, xMax + 3, yMin + 4, xMax + 3, yMax + 0, layer, 0);
     }
-
-    // 2-arg ABI preserved for vanilla jal callers (UIElements.asm:0x8010d300).
-    void renderUIBoxBorder(RECT* size, int32_t layer)
-    { renderUIBoxBorderNotched(size, layer, 0, 0); }
 
     static void renderUIBoxStatic(int32_t instanceId)
     {

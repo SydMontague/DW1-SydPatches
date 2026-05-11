@@ -1,9 +1,38 @@
 #include "InventoryUIHelpers.hpp"
 
+#include "AtlasFont.hpp"
+#include "Font.hpp"
 #include "Helper.hpp"
 #include "UIElements.hpp"
+#include "Utils.hpp"
 #include "extern/dw1.hpp"
 #include "extern/stddef.hpp"
+
+namespace
+{
+    constexpr const char* CATEGORY_LABELS[7] = {
+        "Heal", "Status", "Food", "Boost", "Digivolve", "Misc", "All",
+    };
+
+    // Doubled-and-clamped versions of TEXT_COLORS[4] (mustard) and TEXT_COLORS[0]
+    // (light gray). AtlasFont halves settings before passing to PSX, so to match
+    // SimpleTextSprite's appearance we pre-double. See InventoryUI.cpp TEXT_*.
+    // Active tab: yellow on the bright-cyan selected-tab fill needs a shadow to
+    // stop the letters from blurring into the background; the AtlasFont shadow
+    // CLUT puts semi-trans black at diagonally-offset pixels for that effect.
+    constexpr RenderSettings TAB_ACTIVE   = {.hasShadow = true, .r = 0xFF, .g = 0xFF, .b = 0x64};
+    constexpr RenderSettings TAB_INACTIVE = {.r = 0xFF, .g = 0xFF, .b = 0xFF};
+
+    int32_t labelWidth(const char* str)
+    {
+        int32_t w = 0;
+        const auto* bstr = reinterpret_cast<const uint8_t*>(str);
+        const auto len   = jis_len(bstr);
+        for (uint32_t i = 0; i < len; i++)
+            w += myFont7px.getWidth(myFont7px.getCodePoint(bstr, i));
+        return w;
+    }
+} // namespace
 
 extern "C"
 {
@@ -139,37 +168,70 @@ extern "C"
         renderRectPolyFT4(x + w - 9, y, 7, height, 0xDB, 0x8C, 5, clut, depth, flag);
     }
 
-    void renderCategoryTabs(SimpleTextSprite* labels, int16_t tabY, int32_t depth,
-                            int16_t* outActiveX, int16_t* outActiveW)
+}
+
+void renderSectionBorder(int16_t panelX, int16_t panelY, int16_t panelW, int16_t panelH,
+                         const AtlasString& label, int32_t depth)
+{
+    const int16_t labelW = static_cast<int16_t>(label.getWidth());
+    const int16_t notchX = panelX + 6;
+    const int16_t notchW = labelW + 4;
+
+    RECT rect{.x = panelX, .y = panelY, .width = panelW, .height = panelH};
+    renderUIBoxBorder(&rect, depth);
+
+    // Submit label first, then erase, so within OT[depth - 1] the erase ends up
+    // at the list head (rendered first = behind) and label sprites trail it
+    // (rendered after = on top). Flipping this hides the bottom of the label
+    // under the erase rect.
+    label.render(depth - 1);
+
+    // Erase the top-edge border across the label notch with the panel-fill color
+    // (boxColors[2] = 12,22,30, shared by every animated UI box this menu uses).
+    GsBOXF erase{
+        .attribute = 0,
+        .x         = static_cast<int16_t>(notchX - 1),
+        .y         = panelY,
+        .width     = static_cast<uint16_t>(notchW + 2),
+        .height    = 3,
+        .r         = 0x0c,
+        .g         = 0x16,
+        .b         = 0x1e,
+    };
+    libgs_GsSortBoxFill(&erase, ACTIVE_ORDERING_TABLE, depth - 1);
+}
+
+void renderCategoryTabs(int16_t tabY, int32_t depth,
+                        int16_t* outActiveX, int16_t* outActiveW)
+{
+    *outActiveX = 0;
+    *outActiveW = 0;
+    if (inv_categoriesPresent == 0) return;
+
+    int16_t cursorX = -152;
+    for (int32_t k = 0; k < 7; k++)
     {
-        *outActiveX = 0;
-        *outActiveW = 0;
-        if (inv_categoriesPresent == 0) return;
+        const int32_t i = TAB_ORDER[k];
+        if (!(inv_categoriesPresent & (1 << i))) continue;
 
-        int16_t cursorX = -152;
-        for (int32_t k = 0; k < 7; k++)
+        const int16_t labelW  = static_cast<int16_t>(labelWidth(CATEGORY_LABELS[i]));
+        const int16_t middleW = static_cast<int16_t>(((labelW + 4) + 3) & ~3);
+        const int16_t tabW    = static_cast<int16_t>(14 + middleW);
+        const bool    active  = (i == static_cast<int32_t>(inv_currentCategory));
+
+        renderTabBox(cursorX, tabY, tabW, 12, active, depth);
+
+        const int16_t labelX = static_cast<int16_t>(cursorX + (tabW - labelW) / 2);
+        // Active = mustard (#c8b432) on bright blue tab; inactive = mid-grey on dark tab.
+        getAtlas7px().renderSlow(CATEGORY_LABELS[i], labelX, static_cast<int16_t>(tabY + 2),
+                                 depth - 1, active ? TAB_ACTIVE : TAB_INACTIVE);
+
+        if (active)
         {
-            const int32_t i = TAB_ORDER[k];
-            if (!(inv_categoriesPresent & (1 << i))) continue;
-
-            const int16_t labelW  = static_cast<int16_t>(labels[i].getWidth());
-            const int16_t middleW = static_cast<int16_t>(((labelW + 4) + 3) & ~3);
-            const int16_t tabW    = static_cast<int16_t>(14 + middleW);
-            const bool    active  = (i == static_cast<int32_t>(inv_currentCategory));
-
-            renderTabBox(cursorX, tabY, tabW, 12, active, depth);
-
-            const int16_t labelX = static_cast<int16_t>(cursorX + (tabW - labelW) / 2);
-            // Active = mustard (#c8b432) on bright blue tab; inactive = mid-grey on dark tab.
-            labels[i].render(labelX, static_cast<int16_t>(tabY + 2), active ? 4 : 0, depth - 1, true);
-
-            if (active)
-            {
-                *outActiveX = cursorX;
-                *outActiveW = tabW;
-            }
-
-            cursorX = static_cast<int16_t>(cursorX + tabW);
+            *outActiveX = cursorX;
+            *outActiveW = tabW;
         }
+
+        cursorX = static_cast<int16_t>(cursorX + tabW);
     }
 }
