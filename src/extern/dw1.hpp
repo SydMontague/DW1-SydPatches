@@ -922,24 +922,6 @@ extern "C"
         uint8_t loadingName;
     };
 
-    struct ParticleFXData
-    {
-        int16_t tickCount;
-        int16_t tickTarget;
-        int16_t color;
-        int16_t mode;
-        int16_t cloudDelay;
-        uint16_t r;
-        uint16_t g;
-        uint16_t b;
-        SVector pos;
-        Entity* entity;
-        int16_t flashX[3];
-        int16_t flashY[3];
-        int16_t flashZ[3];
-        int16_t flashScale[3];
-    };
-
     struct SPosition3D
     {
         int16_t x;
@@ -1841,7 +1823,6 @@ static_assert(sizeof(Item) == 0x20);
 static_assert(sizeof(Chest) == 0x38);
 static_assert(sizeof(DroppedItem) == 0x10);
 static_assert(sizeof(TamerItem) == 0x10);
-static_assert(sizeof(ParticleFXData) == 0x34);
 static_assert(sizeof(ParticleFlashData) == 0x1C);
 static_assert(sizeof(EFEFlashData) == 0x28);
 static_assert(sizeof(LocalMapObject) == 0x0E);

@@ -8,7 +8,6 @@ extern "C"
     void renderParticleFlash(ParticleFlashData* data);
     void translateConditionFXToEntity(Entity* entity, SVector* out);
     void renderSprite(GsSPRITE* sprite, int16_t x, int16_t y, uint32_t distance, int32_t scaleX, int32_t scaleY);
-    void initializeParticleFX();
-    void initializeEntityParticleFX();
     void renderFXParticle(SVector* pos, int16_t scale, const RGB8* color);
+    void addFXPrim(POLY_FT4* prim, int16_t x, int16_t y, uint32_t scaleX, int16_t scaleY, uint32_t distance);
 }
