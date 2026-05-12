@@ -3,6 +3,8 @@
 #include "Font.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
+#include "Timestamp.hpp"
+#include "UIElements.hpp"
 #include "Utils.hpp"
 #include "extern/dtl/runtime_array.hpp"
 
@@ -101,7 +103,7 @@ namespace
         return {rect, glyph_width};
     }
 
-    SPRT getSPRT(const RECT& data, int32_t x, int32_t y, RGB8 color, bool hasShadow)
+    constexpr SPRT getSPRT(const RECT& data, int32_t x, int32_t y, RGB8 color, uint8_t baseClut)
     {
         SPRT prim;
         prim.tag.num = 4;
@@ -109,7 +111,7 @@ namespace
         prim.r       = (color.red + 1) / 2;
         prim.g       = (color.green + 1) / 2;
         prim.b       = (color.blue + 1) / 2;
-        prim.clut    = getClut(CLUT_X, CLUT_Y + hasShadow);
+        prim.clut    = getClut(CLUT_X, CLUT_Y + baseClut);
         prim.x       = x;
         prim.y       = y;
         prim.u       = 4 * (data.x % 64);
@@ -207,7 +209,7 @@ Position AtlasFont::getPosition(const uint8_t* string, const RenderSettings& set
 {
     int16_t x = settings.x;
     int16_t y = settings.y;
-    if (settings.width > 0)
+    if (settings.width > 0 && settings.alignX != AlignmentX::LEFT)
     {
         auto width = getWidth(string);
         switch (settings.alignX)
@@ -247,7 +249,7 @@ void AtlasFont::renderSlow(const uint8_t* string, int32_t depth, const RenderSet
     {
         auto index = font->getGlyphIndex(*itr++);
         auto glyph = glyphs[index];
-        prim2[i]   = getSPRT(glyph.rect, pos.x, pos.y, settings.color, settings.hasShadow);
+        prim2[i]   = getSPRT(glyph.rect, pos.x, pos.y, settings.color, settings.baseClut);
         pos.x += glyph.width;
         addPrim(ACTIVE_ORDERING_TABLE->origin + depth, reinterpret_cast<GsOT_TAG*>(prim2 + i));
     }
@@ -274,13 +276,12 @@ AtlasString AtlasFont::render(const uint8_t* string, const RenderSettings& setti
 
     for (int32_t i = 0; i < size; i++)
     {
-        auto index = font->getGlyphIndex(*itr++);
-        auto glyph = glyphs[index];
-        data[i]    = getSPRT(glyph.rect, pos.x + totalWidth, pos.y, settings.color, settings.hasShadow);
+        auto index = font->getGlyphIndex(*itr++); 
+        const auto& glyph = glyphs[index];
+        data[i]    = getSPRT(glyph.rect, pos.x + totalWidth, pos.y, settings.color, settings.baseClut);
         totalWidth += glyph.width;
     }
-
-    return AtlasString(data, tpage, totalWidth, font->height);
+    return AtlasString(dtl::move(data), tpage, totalWidth, font->height);
 }
 
 void AtlasString::enableShadow(bool enabled)

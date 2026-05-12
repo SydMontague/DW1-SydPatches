@@ -4,8 +4,8 @@
 
 namespace
 {
-    constexpr RenderSettings RNG_POSITION{.x = -159, .y = -119, .hasShadow = true};
-    constexpr RenderSettings TIME_POSITION{.x = -159, .y = -113, .hasShadow = true};
+    constexpr RenderSettings RNG_POSITION{.x = -159, .y = -119, .baseClut = 1};
+    constexpr RenderSettings TIME_POSITION{.x = -159, .y = -113, .baseClut = 1};
 
     void debugOverlayRender(int32_t instanceId)
     {

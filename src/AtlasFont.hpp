@@ -6,9 +6,14 @@
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 
-constexpr RGB8 TEXT_COLOR_WHITE  = {.red = 0xd6, .green = 0xd6, .blue = 0xd6};
-constexpr RGB8 TEXT_COLOR_BLUE   = {.red = 0x29, .green = 0x8e, .blue = 0xd6};
-constexpr RGB8 TEXT_COLOR_YELLOW = {.red = 0xFF, .green = 0xFF, .blue = 0x53};
+constexpr RGB8 TEXT_COLOR_WHITE        = {.red = 0xd6, .green = 0xd6, .blue = 0xd6};
+constexpr RGB8 TEXT_COLOR_BLUE         = {.red = 0x29, .green = 0x8e, .blue = 0xd6};
+constexpr RGB8 TEXT_COLOR_YELLOW       = {.red = 0xFF, .green = 0xFF, .blue = 0x53};
+constexpr RGB8 TEXT_COLOR_LIGHT_YELLOW = {.red = 0xFF, .green = 0xFA, .blue = 0x75};
+constexpr RGB8 TEXT_COLOR_LIGHT_BLUE   = {.red = 0xAF, .green = 0xFF, .blue = 0xFF};
+constexpr RGB8 TEXT_COLOR_GREY         = {.red = 0x84, .green = 0x84, .blue = 0x84};
+constexpr RGB8 TEXT_COLOR_PINK         = {.red = 0xFF, .green = 0x32, .blue = 0x85};
+constexpr RGB8 TEXT_COLOR_GREEN        = {.red = 0x32, .green = 0xFF, .blue = 0x32};
 
 struct AtlasString
 {
@@ -45,7 +50,7 @@ struct RenderSettings
 {
     int16_t x;
     int16_t y;
-    bool hasShadow    = false;
+    uint8_t baseClut  = 0;
     RGB8 color        = TEXT_COLOR_WHITE;
     int16_t width     = 0;
     int16_t height    = 0;

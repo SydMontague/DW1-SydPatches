@@ -18,13 +18,13 @@ namespace
         .height = 24,
     };
     const RenderSettings PAUSE_SETTINGS{
-        .x         = PAUSE_BOX_POS.x,
-        .y         = PAUSE_BOX_POS.y,
-        .hasShadow = true,
-        .width     = PAUSE_BOX_POS.width,
-        .height    = PAUSE_BOX_POS.height,
-        .alignX    = AlignmentX::CENTER,
-        .alignY    = AlignmentY::CENTER,
+        .x        = PAUSE_BOX_POS.x,
+        .y        = PAUSE_BOX_POS.y,
+        .baseClut = 1,
+        .width    = PAUSE_BOX_POS.width,
+        .height   = PAUSE_BOX_POS.height,
+        .alignX   = AlignmentX::CENTER,
+        .alignY   = AlignmentY::CENTER,
     };
 
     bool hasPauseBox       = false;

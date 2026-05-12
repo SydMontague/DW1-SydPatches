@@ -6,11 +6,16 @@ namespace dtl
 {
     template<typename T> using Comparator = bool(const T& left, const T& right);
 
+    template<typename T> remove_reference_t<T>&& move(T&& val)
+    {
+        return static_cast<typename remove_reference<T>::type&&>(val);
+    }
+
     template<typename T> constexpr void swap(T& left, T& right)
     {
-        T tmp = left;
-        left  = right;
-        right = tmp;
+        T tmp = dtl::move(left);
+        left  = dtl::move(right);
+        right = dtl::move(tmp);
     }
 
     template<typename T> constexpr bool less(const T& left, const T& right)
@@ -53,10 +58,5 @@ namespace dtl
             *output = *begin;
 
         return output;
-    }
-
-    template<typename T> remove_reference_t<T>&& move(T&& val)
-    {
-        return static_cast<typename remove_reference<T>::type&&>(val);
     }
 } // namespace dtl
