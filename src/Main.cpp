@@ -10,6 +10,7 @@
 #include "Files.hpp"
 #include "GameObjects.hpp"
 #include "GameTime.hpp"
+#include "HealingParticles.hpp"
 #include "Helper.hpp"
 #include "Input.hpp"
 #include "Inventory.hpp"

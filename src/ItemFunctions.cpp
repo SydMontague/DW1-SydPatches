@@ -1,7 +1,7 @@
 #include "ItemFunctions.hpp"
 
-#include "Effects.hpp"
 #include "Entity.hpp"
+#include "HealingParticles.hpp"
 #include "Helper.hpp"
 #include "InventoryUI.hpp"
 #include "ItemEffects.hpp"
@@ -83,12 +83,12 @@ namespace
 
     void handleBandage(ItemType itemId)
     {
-        if (handleMedicineHealing(100, 20)) addHealingParticleEffect(&PARTNER_ENTITY, 0);
+        if (handleMedicineHealing(100, 20)) addHealingParticleEffect(&PARTNER_ENTITY, false);
     }
 
     void handleMedicine(ItemType itemId)
     {
-        if (handleMedicineHealing(100, 100)) addHealingParticleEffect(&PARTNER_ENTITY, 0);
+        if (handleMedicineHealing(100, 100)) addHealingParticleEffect(&PARTNER_ENTITY, false);
     }
 
     // TODO function for every item
@@ -410,7 +410,7 @@ namespace
 
         addWithLimit(&PARTNER_ENTITY.stats.currentHP, 1500, PARTNER_ENTITY.stats.hp);
         addWithLimit(&PARTNER_ENTITY.stats.currentMP, 1500, PARTNER_ENTITY.stats.mp);
-        addHealingParticleEffect(&PARTNER_ENTITY, 0);
+        addHealingParticleEffect(&PARTNER_ENTITY, false);
         if (GAME_STATE == 1)
         {
             addEntityText(&PARTNER_ENTITY, 0, 11, 1500, 1);
@@ -436,7 +436,7 @@ namespace
         if (PARTNER_ENTITY.stats.currentHP == 0) startAnimation(&PARTNER_ENTITY, 0x2C);
 
         addWithLimit(&PARTNER_ENTITY.stats.currentHP, healAmount, PARTNER_ENTITY.stats.hp);
-        addHealingParticleEffect(&PARTNER_ENTITY, 1);
+        addHealingParticleEffect(&PARTNER_ENTITY, true);
 
         if (GAME_STATE == 1)
         {
@@ -456,7 +456,7 @@ namespace
         handleRestoreItem(9999, true);
     }
 
-    void handleHPHealingItem(int32_t amount, int32_t particleEffect)
+    void handleHPHealingItem(int32_t amount, bool particleEffect)
     {
         if (PARTNER_ENTITY.stats.currentHP == 0) return;
 
@@ -466,7 +466,7 @@ namespace
         if (GAME_STATE == 1) addEntityText(&PARTNER_ENTITY, 0, 11, amount, 1);
     }
 
-    void handleMPHealingItem(int32_t amount, int32_t particleEffect)
+    void handleMPHealingItem(int32_t amount, bool particleEffect)
     {
         if (PARTNER_ENTITY.stats.currentHP == 0) return;
 
@@ -478,37 +478,37 @@ namespace
 
     void handleSmallHP(ItemType item)
     {
-        handleHPHealingItem(500, 0);
+        handleHPHealingItem(500, false);
     }
 
     void handleMediumHP(ItemType item)
     {
-        handleHPHealingItem(1500, 0);
+        handleHPHealingItem(1500, false);
     }
 
     void handleLargeHP(ItemType item)
     {
-        handleHPHealingItem(5000, 1);
+        handleHPHealingItem(5000, true);
     }
 
     void handleSuperHP(ItemType item)
     {
-        handleHPHealingItem(9999, 1);
+        handleHPHealingItem(9999, true);
     }
 
     void handleSmallMP(ItemType item)
     {
-        handleMPHealingItem(500, 0);
+        handleMPHealingItem(500, false);
     }
 
     void handleMediumMP(ItemType item)
     {
-        handleMPHealingItem(1500, 0);
+        handleMPHealingItem(1500, false);
     }
 
     void handleLargeMP(ItemType item)
     {
-        handleMPHealingItem(5000, 1);
+        handleMPHealingItem(5000, true);
     }
 
     void handleNothing(ItemType item) {}
