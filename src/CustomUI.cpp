@@ -4,13 +4,16 @@
 
 namespace
 {
+    constexpr RenderSettings RNG_POSITION{.x = -159, .y = -119, .hasShadow = true};
+    constexpr RenderSettings TIME_POSITION{.x = -159, .y = -113, .hasShadow = true};
+
     void debugOverlayRender(int32_t instanceId)
     {
         uint8_t buffer[64];
         sprintf(buffer, "%u", RNG_STATE);
-        getAtlas5px().renderSlow(buffer, -159, -119, 1, {.hasShadow = true});
+        getAtlas5px().renderSlow(buffer, 1, RNG_POSITION);
         sprintf(buffer, "%u", getTimestamp());
-        getAtlas5px().renderSlow(buffer, -159, -113, 1, {.hasShadow = true});
+        getAtlas5px().renderSlow(buffer, 1, TIME_POSITION);
     }
 } // namespace
 

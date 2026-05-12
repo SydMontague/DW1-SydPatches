@@ -28,7 +28,6 @@ namespace
 
     constexpr dtl::array<const char*, 6> statLabels{"HP", "MP", "Off", "Def", "Speed", "Brain"};
     constexpr auto bitsString = "Bits";
-    constexpr RenderSettings LABEL_SETTINGS{.r = 0xFF, .g = 0xFF, .b = 0x53};
 
     dtl::array<bool, 6> STAT_BOX_HAS_GAIN;
 
@@ -77,7 +76,7 @@ namespace
 
         dtl::array<uint8_t, 16> string;
         sprintf(string.data(), "%d", BITS_TO_GAIN);
-        getAtlasVanilla().renderSlow(string.data(), -18, 28, layer);
+        getAtlasVanilla().renderSlow(string.data(), layer, {.x = -18, .y = 28});
         data->bitString1.render(layer);
 
         if (BTL_END_BOX_TEXTBUFFER[0] != 0)
@@ -90,9 +89,13 @@ namespace
 
     void renderFinalBalance(int32_t)
     {
+        const RenderSettings settings{
+            .x = static_cast<int16_t>(UI_BOX_DATA[2].finalPos.x + 58),
+            .y = static_cast<int16_t>(UI_BOX_DATA[2].finalPos.y + 10),
+        };
         dtl::array<uint8_t, 16> string;
         sprintf(string.data(), "%d", MONEY);
-        getAtlasVanilla().renderSlow(string.data(), UI_BOX_DATA[2].finalPos.x + 58, UI_BOX_DATA[2].finalPos.y + 10, 4);
+        getAtlasVanilla().renderSlow(string.data(), 4, settings);
         data->bitString2.render(4);
     }
 
@@ -132,18 +135,26 @@ namespace
                 libgs_GsSetWorkBase(prim + 1);
             }
 
+            const RenderSettings settings{
+                .x = static_cast<int16_t>(box.finalPos.x + 0x8e),
+                .y = static_cast<int16_t>(box.finalPos.y + 9 + (i * 13)),
+            };
             dtl::array<uint8_t, 8> string;
             sprintf(string.data(), "%d", STATS_GAINS.get(stat));
-            getAtlasVanilla().renderSlow(string.data(), box.finalPos.x + 0x8e, box.finalPos.y + 9 + i * 13, layer);
+            getAtlasVanilla().renderSlow(string.data(), layer, settings);
         }
 
         for (int32_t i = 0; i < 6; i++)
         {
+            const RenderSettings settings{
+                .x = static_cast<int16_t>(box.finalPos.x + 0x44),
+                .y = static_cast<int16_t>(box.finalPos.y + 9 + (i * 13)),
+            };
             auto stat = static_cast<Stat>(i);
             dtl::array<uint8_t, 8> string;
 
             sprintf(string.data(), "%d", INITIAL_COMBAT_STATS[0].get(stat));
-            getAtlasVanilla().renderSlow(string.data(), box.finalPos.x + 0x44, box.finalPos.y + 9 + i * 13, layer);
+            getAtlasVanilla().renderSlow(string.data(), layer, settings);
         }
 
         setTextColor(previous_color);
@@ -258,8 +269,12 @@ namespace
             .width  = 176,
             .height = static_cast<int16_t>(BTL_END_BOX_TEXTBUFFER[0] == 0 ? 31 : 66),
         };
-
-        data->bitString1 = getAtlasVanilla().render(bitsString, finalPos.x + 10, finalPos.y + 10, LABEL_SETTINGS);
+        const RenderSettings settings{
+            .x     = static_cast<int16_t>(finalPos.x + 10),
+            .y     = static_cast<int16_t>(finalPos.y + 10),
+            .color = TEXT_COLOR_YELLOW,
+        };
+        data->bitString1 = getAtlasVanilla().render(bitsString, settings);
 
         createAnimatedUIBox(1, 0, 2, &finalPos, &startPos, tickBitBox, renderBitBox);
     }
@@ -273,7 +288,11 @@ namespace
             .width  = 176,
             .height = 31,
         };
-        data->bitString2 = getAtlasVanilla().render(bitsString, finalPos.x + 10, finalPos.y + 10);
+        const RenderSettings settings{
+            .x = static_cast<int16_t>(finalPos.x + 10),
+            .y = static_cast<int16_t>(finalPos.y + 10),
+        };
+        data->bitString2 = getAtlasVanilla().render(bitsString, settings);
         createAnimatedUIBox(2, 1, 0, &finalPos, &startPos, nullptr, renderFinalBalance);
     }
 
@@ -313,8 +332,14 @@ namespace
 
         data = dtl::make_unique<Data>();
         for (int32_t i = 0; i < statLabels.size(); i++)
-            data->statLabels[i] =
-                getAtlasVanilla().render(statLabels[i], finalPos.x + 10, finalPos.y + 9 + i * 13, LABEL_SETTINGS);
+        {
+            const RenderSettings settings{
+                .x     = static_cast<int16_t>(finalPos.x + 10),
+                .y     = static_cast<int16_t>(finalPos.y + 9 + (i * 13)),
+                .color = TEXT_COLOR_YELLOW,
+            };
+            data->statLabels[i] = getAtlasVanilla().render(statLabels[i], settings);
+        }
 
         createAnimatedUIBox(0, 0, 2, &finalPos, &startPos, tickPostBattleStatsBox, renderPostBattleStatsBox);
     }
