@@ -2,6 +2,7 @@
 
 #include "AtlasFont.hpp"
 #include "Camera.hpp"
+#include "CloudFX.hpp"
 #include "CustomUI.hpp"
 #include "EFE.hpp"
 #include "Effects.hpp"

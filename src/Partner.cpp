@@ -3,6 +3,7 @@
 #include "Battle.h"
 #include "Butterfly.hpp"
 #include "Camera.hpp"
+#include "CloudFX.hpp"
 #include "ConditionBubble.hpp"
 #include "DigimonData.hpp"
 #include "Effects.hpp"
