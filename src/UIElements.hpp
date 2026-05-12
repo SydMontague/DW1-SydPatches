@@ -24,6 +24,9 @@ public:
     void draw(Font* font, const char* string);
     void render(int32_t posX, int32_t posY, int32_t color, int32_t offset, bool hasShadow);
     void clear();
+
+    constexpr uint16_t getWidth() const { return uvWidth; }
+    constexpr uint16_t getHeight() const { return uvHeight; }
 };
 
 extern "C"
@@ -220,5 +223,6 @@ extern "C"
     void setPosDataPolyFT4(POLY_FT4* prim, int16_t posX, int16_t posY, int16_t width, int16_t height);
 
     void renderSelectionCursor(int16_t x, int16_t y, int16_t width, int16_t height, int32_t depth);
+    void renderUIBoxBorder(RECT* size, int32_t layer);
     void initializeUIBoxData();
 }
