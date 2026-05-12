@@ -177,7 +177,7 @@ void AtlasFont::init(Font* f, int32_t x, int32_t y, int32_t maxWidth)
     {
         auto width = f->getGlyphWidth(i);
 
-        if (current_x + ((width + 3) / 4) >= end_x)
+        if (current_x + ((width + 3) / 4) > end_x)
         {
             current_x = x;
             y += f->height;

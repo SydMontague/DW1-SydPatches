@@ -139,7 +139,7 @@ extern "C"
 {
     Font vanillaFont = {
         .height        = 11,
-        .glyph_count   = 78,
+        .glyph_count   = 79,
         .getGlyphWidth = getGlyphWidth,
         .getGlyphRow   = getGlyphRow,
         .getGlyphIndex = getGlyphIndex,

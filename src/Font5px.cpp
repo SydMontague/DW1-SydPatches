@@ -158,7 +158,7 @@ namespace
             if (mapping.codepoint == codepoint) return mapping.index;
         }
 
-        return myFont.mappingCount - 1;
+        return 57;
     }
 
     uint8_t getGlyphWidth(int32_t index)

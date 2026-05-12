@@ -134,7 +134,7 @@ namespace
             if (mapping.codepoint == codepoint) return mapping.index;
         }
 
-        return myFont.mappingCount - 1;
+        return 57;
     }
 
     Glyph7PX* getGlyph7px(uint16_t codepoint)
