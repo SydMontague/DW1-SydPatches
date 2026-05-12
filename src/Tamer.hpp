@@ -23,4 +23,5 @@ extern "C"
                          int32_t rotX,
                          int32_t rotY,
                          int32_t rotZ);
+    void clearTamerWaypoints();
 }

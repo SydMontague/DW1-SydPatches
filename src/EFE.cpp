@@ -9,13 +9,7 @@
 #include "extern/libgte.hpp"
 #include "extern/stddef.hpp"
 
-template<class T> constexpr T pop()
-{
-    EFE_DATA_STACK -= sizeof(T); // NOLINT(bugprone-sizeof-expression)
-    return *reinterpret_cast<T*>(EFE_DATA_STACK);
-}
-
-extern "C"
+namespace
 {
     struct RGB32
     {
@@ -26,36 +20,13 @@ extern "C"
 
     constexpr uint8_t flashBaseU[4] = {64, 0, 0, 0};
 
-    static int32_t EFEDAT_CD_LOCATION;
-
-    void EFE_rotateVector()
+    template<class T> constexpr T pop()
     {
-        Vector* vector    = pop<Vector*>();
-        Vector* rotVector = pop<Vector*>();
-
-        Matrix matrix;
-        SVector work;
-        work.x = rotVector->x;
-        work.y = rotVector->y;
-        work.z = rotVector->z;
-        libgte_RotMatrixZYX(&work, &matrix);
-        work.x = vector->x;
-        work.y = vector->y;
-        work.z = vector->z;
-        libgte_ApplyMatrixSV(&matrix, &work, &work);
-        vector->x = work.x;
-        vector->y = work.y;
-        vector->z = work.z;
+        EFE_DATA_STACK -= sizeof(T); // NOLINT(bugprone-sizeof-expression)
+        return *reinterpret_cast<T*>(EFE_DATA_STACK);
     }
 
-    uint8_t* initializeFlashData(uint8_t* data)
-    {
-        EFE_FLASH_DATA = reinterpret_cast<EFEFlashData*>(data);
-        for (int32_t i = 0; i < 12; i++)
-            EFE_FLASH_DATA[i].progress = -1;
-
-        return data + sizeof(EFEFlashData) * 12;
-    }
+    int32_t EFEDAT_CD_LOCATION;
 
     void tickFlash(int32_t instanceId)
     {
@@ -118,14 +89,6 @@ extern "C"
         if (flashData.depth > 32 && flashData.depth < 4096) renderParticleFlash(&flashData);
     }
 
-    CdlLoc* getEFEDATEntry(int32_t id)
-    {
-        // Vanilla returns a local stack variable here. That's dangerous!
-        // TODO: refactor the function/its callers
-        static CdlLoc loc;
-        return libcd_CdIntToPos(EFEDAT_CD_LOCATION + (id - 256) * 10, &loc);
-    }
-
     void findEFEDATFile()
     {
         while (libcd_CdReadSync(1, nullptr))
@@ -138,6 +101,46 @@ extern "C"
         uint8_t mode = 0x80;
         libcd_CdControl(CdCommand::CdlSetmode, &mode, nullptr);
         EFEDAT_CD_LOCATION = libcd_CdPosToInt(&file.pos);
+    }
+} // namespace
+
+extern "C"
+{
+    void EFE_rotateVector()
+    {
+        Vector* vector    = pop<Vector*>();
+        Vector* rotVector = pop<Vector*>();
+
+        Matrix matrix;
+        SVector work;
+        work.x = rotVector->x;
+        work.y = rotVector->y;
+        work.z = rotVector->z;
+        libgte_RotMatrixZYX(&work, &matrix);
+        work.x = vector->x;
+        work.y = vector->y;
+        work.z = vector->z;
+        libgte_ApplyMatrixSV(&matrix, &work, &work);
+        vector->x = work.x;
+        vector->y = work.y;
+        vector->z = work.z;
+    }
+
+    uint8_t* initializeFlashData(uint8_t* data)
+    {
+        EFE_FLASH_DATA = reinterpret_cast<EFEFlashData*>(data);
+        for (int32_t i = 0; i < 12; i++)
+            EFE_FLASH_DATA[i].progress = -1;
+
+        return data + sizeof(EFEFlashData) * 12;
+    }
+
+    CdlLoc* getEFEDATEntry(int32_t id)
+    {
+        // Vanilla returns a local stack variable here. That's dangerous!
+        // TODO: refactor the function/its callers
+        static CdlLoc loc;
+        return libcd_CdIntToPos(EFEDAT_CD_LOCATION + (id - 256) * 10, &loc);
     }
 
     void initializeEFE()

@@ -1,5 +1,6 @@
 #include "Map.hpp"
 
+#include "AtlasFont.hpp"
 #include "Camera.hpp"
 #include "Entity.hpp"
 #include "Fade.hpp"
@@ -27,8 +28,9 @@
 #include "extern/psx.hpp"
 #include "extern/stddef.hpp"
 
-extern "C"
+namespace
 {
+
     struct QuickTravelData
     {
         uint32_t map;
@@ -66,25 +68,25 @@ extern "C"
 
     constexpr auto NINJAMON_EFFECT_COUNT = 41;
 
-    static int16_t mistOffsetX[4] = {-160, 160, 160, -160};
-    static int16_t mistOffsetY[2] = {-120, 120};
-    static uint8_t moveObjectDeltaX[12];
-    static uint8_t moveObjectDeltaY[12];
+    int16_t mistOffsetX[4] = {-160, 160, 160, -160};
+    int16_t mistOffsetY[2] = {-120, 120};
+    uint8_t moveObjectDeltaX[12];
+    uint8_t moveObjectDeltaY[12];
 
-    static int16_t ninjamonEffecX[NINJAMON_EFFECT_COUNT];
-    static int16_t ninjamonEffecY[NINJAMON_EFFECT_COUNT];
-    static int8_t ninjamonEffecXOffset[NINJAMON_EFFECT_COUNT];
-    static int8_t ninjamonEffecYOffset[NINJAMON_EFFECT_COUNT];
+    int16_t ninjamonEffecX[NINJAMON_EFFECT_COUNT];
+    int16_t ninjamonEffecY[NINJAMON_EFFECT_COUNT];
+    int8_t ninjamonEffecXOffset[NINJAMON_EFFECT_COUNT];
+    int8_t ninjamonEffecYOffset[NINJAMON_EFFECT_COUNT];
 
-    static bool daytimeTransitionActive;
-    static uint8_t daytimeTransitionFrame;
-    static uint8_t daytimeTransitionTarget;
-    static uint8_t currentTimeOfDay;
-    static dtl::array<RGB5551*, 3> mapCluts;
-    static dtl::array<GsF_LIGHT, 3> mapLights;
+    bool daytimeTransitionActive;
+    uint8_t daytimeTransitionFrame;
+    uint8_t daytimeTransitionTarget;
+    uint8_t currentTimeOfDay;
+    dtl::array<RGB5551*, 3> mapCluts;
+    dtl::array<GsF_LIGHT, 3> mapLights;
 
-    static uint8_t mapNameState;
-    static TextSprite mapNameText = {
+    uint8_t mapNameState;
+    TextSprite mapNameText = {
         .font       = &vanillaFont,
         .string     = "",
         .uvX        = 704,
@@ -102,8 +104,10 @@ extern "C"
         .hasShadow  = 0,
     };
 
-    static uint16_t deathMap;
-    static uint16_t deathMapExit;
+    uint16_t deathMap;
+    uint16_t deathMapExit;
+
+    uint8_t DROPPED_ITEM_AMOUNTS[10] = {0};
 
     void loadMapDigimon(uint8_t* buffer, uint32_t mapId)
     {
@@ -172,7 +176,7 @@ extern "C"
         }
     }
 
-    static void loadMapEntities(uint8_t* buffer, uint32_t mapId, uint32_t exitId)
+    void loadMapEntities(uint8_t* buffer, uint32_t mapId, uint32_t exitId)
     {
         memcpy(&MAP_WARPS, buffer, sizeof(MapWarps));
 
@@ -193,14 +197,7 @@ extern "C"
         STORED_TAMER_POS = TAMER_ENTITY.posData->location;
     }
 
-    int16_t getMapRotation()
-    {
-        auto diffZ = GS_VIEWPOINT.viewpointZ - GS_VIEWPOINT.refpointZ;
-        auto diffX = GS_VIEWPOINT.viewpointX - GS_VIEWPOINT.refpointX;
-        return atan(diffZ, diffX);
-    }
-
-    static void clearMapObjects(LocalMapObjectInstance* instances)
+    void clearMapObjects(LocalMapObjectInstance* instances)
     {
         for (uint32_t i = 0; i < 188; i++)
         {
@@ -216,7 +213,7 @@ extern "C"
         }
     }
 
-    static void loadMapObjects(LocalMapObjectInstance* mapObjects, uint8_t* data, uint32_t mapId)
+    void loadMapObjects(LocalMapObjectInstance* mapObjects, uint8_t* data, uint32_t mapId)
     {
         int16_t count  = *reinterpret_cast<int16_t*>(data);
         MapObject* obj = reinterpret_cast<MapObject*>(data + 2);
@@ -253,7 +250,7 @@ extern "C"
             val = 0;
     }
 
-    static void loadMapImage1(uint8_t* buffer)
+    void loadMapImage1(uint8_t* buffer)
     {
         TIM_IMAGE image;
         libgpu_OpenTIM(buffer);
@@ -267,7 +264,7 @@ extern "C"
         }
     }
 
-    static void loadMapImage2(uint8_t* buffer, int32_t id)
+    void loadMapImage2(uint8_t* buffer, int32_t id)
     {
         TIM_IMAGE image;
         libgpu_OpenTIM(buffer);
@@ -285,7 +282,7 @@ extern "C"
         }
     }
 
-    static void calcMapObjectOrder(LocalMapObjectInstance* instances)
+    void calcMapObjectOrder(LocalMapObjectInstance* instances)
     {
         for (int32_t i = 0; i < MAP_OBJECT_INSTANCE_COUNT; i++)
         {
@@ -423,8 +420,7 @@ extern "C"
         if (instance->y > 240) instance->y = 0;
     }
 
-    inline void
-    renderMapOverlay(LocalMapObjectInstance& instance, LocalMapObject& object, int32_t cameraX, int32_t cameraY)
+    void renderMapOverlay(LocalMapObjectInstance& instance, LocalMapObject& object, int32_t cameraX, int32_t cameraY)
     {
         bool onScreenX = (cameraX - 40 < instance.x + object.width) && (instance.x < cameraX + 360);
         bool onScreenY = (cameraY - 60 < instance.y + object.height) && (instance.y < cameraY + 300);
@@ -445,7 +441,7 @@ extern "C"
         libgs_GsSetWorkBase(prim + 1);
     }
 
-    inline bool isMistEnabled(int32_t mapId)
+    bool isMistEnabled(int32_t mapId)
     {
         if (CURRENT_FRAME != 220 && CURRENT_FRAME != 163) return true;
 
@@ -553,6 +549,364 @@ extern "C"
         }
     }
 
+    void renderNinjamonEffect(int32_t instanceId)
+    {
+        for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++)
+        {
+            auto& data = LOCAL_MAP_OBJECT_INSTANCE[i];
+            data.x += ninjamonEffecXOffset[i];
+            data.y += ninjamonEffecYOffset[i];
+            data.orderValue = 10;
+
+            if (data.x > 160)
+            {
+                data.x                  = ninjamonEffecX[i];
+                data.y                  = ninjamonEffecY[i];
+                ninjamonEffecXOffset[i] = random(10) + 12;
+                ninjamonEffecYOffset[i] = random(10) + 3;
+            }
+        }
+
+        NPC_ACTIVE_ANIM[0]++;
+        if (NPC_ACTIVE_ANIM[0] >= 60)
+        {
+            for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++)
+            {
+                LOCAL_MAP_OBJECT_INSTANCE[i].flag = 1;
+            }
+            removeObject(ObjectID::NINJAMON_EFFECT, 0);
+        }
+    }
+
+    constexpr int32_t getFirstSpriteIndex(LocalMapObjectInstance* instance)
+    {
+        for (auto val : instance->animSprites)
+            if (val != -2) return val;
+
+        return -1;
+    }
+
+    void loadMapCollisionData(uint8_t* data)
+    {
+        memcpy(MAP_COLLISION_DATA, data, 10000);
+    }
+
+    void renderDroppedItemShadow(WorldItem* item)
+    {
+        auto posX = item->spriteLocation.x;
+        auto posZ = item->spriteLocation.z;
+
+        SVector point1 = {.x = static_cast<int16_t>(posX - 100), .y = 0, .z = static_cast<int16_t>(posZ - 100)};
+        SVector point2 = {.x = static_cast<int16_t>(posX + 100), .y = 0, .z = static_cast<int16_t>(posZ - 100)};
+        SVector point3 = {.x = static_cast<int16_t>(posX - 100), .y = 0, .z = static_cast<int16_t>(posZ + 100)};
+        SVector point4 = {.x = static_cast<int16_t>(posX + 100), .y = 0, .z = static_cast<int16_t>(posZ + 100)};
+
+        ScreenCoord pos1;
+        ScreenCoord pos2;
+        ScreenCoord pos3;
+        int32_t interpolVal;
+        int32_t flag;
+
+        libgte_RotTransPers3(&point1, &point2, &point3, &pos1.raw, &pos2.raw, &pos3.raw, &interpolVal, &flag);
+        auto mapPos = getMapPosition(point4);
+
+        POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+        libgpu_SetPolyFT4(prim);
+        libgpu_SetSemiTrans(prim, 1);
+        setPolyFT4UV(prim, 64, 128, 63, 63);
+        prim->tpage = 0xDD;
+        prim->clut  = getClut(0, 0x1e7);
+        prim->r0    = 0x30;
+        prim->g0    = 0x30;
+        prim->b0    = 0x30;
+        prim->x0    = pos1.x;
+        prim->y0    = pos1.y;
+        prim->x1    = pos2.x;
+        prim->y1    = pos2.y;
+        prim->x2    = pos3.x;
+        prim->y2    = pos3.y;
+        prim->x3    = mapPos.screenX;
+        prim->y3    = mapPos.screenY;
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 0xFFD, prim);
+        libgs_GsSetWorkBase(prim + 1);
+    }
+
+    void renderDroppedItem(int32_t instanceId)
+    {
+        if (!MAP_LAYER_ENABLED) return;
+
+        renderOverworldItem(&DROPPED_ITEMS[instanceId]);
+        renderDroppedItemShadow(&DROPPED_ITEMS[instanceId]);
+    }
+
+    void deleteDroppedItem(int32_t instanceId)
+    {
+        removeObject(ObjectID::DROPPED_ITEM, instanceId);
+        DROPPED_ITEMS[instanceId].type   = ItemType::NONE;
+        DROPPED_ITEM_AMOUNTS[instanceId] = 0;
+    }
+
+    void clearDroppedItems()
+    {
+        for (int32_t i = 0; i < 10; i++)
+            if (DROPPED_ITEMS[i].type != ItemType::NONE) deleteDroppedItem(i);
+    }
+
+     void setMapTilePosData(POLY_FT4* prim, const MapTileData& data, int32_t offsetX, int32_t offsetY)
+    {
+        auto posX = (data.posX - 160) - (offsetX - (160 - DRAWING_OFFSET_X));
+        auto posY = (data.posY - 120) - (offsetY - (120 - DRAWING_OFFSET_Y));
+
+        setPosDataPolyFT4(prim, posX, posY, 128, 128);
+    }
+
+     void tickCameraFollowPlayer()
+    {
+        if (GAME_STATE != 0) return;
+        if (!isCameraFollowingPlayer()) return;
+        if (Tamer_getState() != 0) return;
+
+        if ((POLLED_INPUT & (InputButtons::BUTTON_DOWN | InputButtons::BUTTON_UP | InputButtons::BUTTON_LEFT |
+                             InputButtons::BUTTON_RIGHT)) == 0)
+            return;
+
+        auto oldPos = getMapPosition(STORED_TAMER_POS);
+        auto newPos = getMapPosition(TAMER_ENTITY.posData->location);
+
+        CAMERA_X += (newPos.screenX - oldPos.screenX);
+        CAMERA_Y += (newPos.screenY - oldPos.screenY);
+
+        updateDrawingOffsets(oldPos, newPos);
+        handleTileUpdate(POLLED_INPUT, false);
+    }
+
+    void loadMapSetup(MapSetup* map)
+    {
+        GS_VIEWPOINT.viewpointX = map->viewpoint.x * 2;
+        GS_VIEWPOINT.viewpointY = map->viewpoint.y * 2;
+        GS_VIEWPOINT.viewpointZ = map->viewpoint.z * 2;
+        GS_VIEWPOINT.refpointX  = map->referencePoint.x * 2;
+        GS_VIEWPOINT.refpointY  = map->referencePoint.y * 2;
+        GS_VIEWPOINT.refpointZ  = map->referencePoint.z * 2;
+        libgs_GsSetRefView2(&GS_VIEWPOINT);
+
+        for (int32_t i = 0; i < map->lights.size(); i++)
+        {
+            LIGHT_DATA[i].r = map->lights[i].red;
+            LIGHT_DATA[i].g = map->lights[i].green;
+            LIGHT_DATA[i].b = map->lights[i].blue;
+            LIGHT_DATA[i].x = map->lights[i].pos.x;
+            LIGHT_DATA[i].y = map->lights[i].pos.y;
+            LIGHT_DATA[i].z = map->lights[i].pos.z;
+            libgs_GsSetFlatLight(i, &LIGHT_DATA[i]);
+            mapLights[i] = LIGHT_DATA[i];
+        }
+
+        // TODO read from unk1-3?
+        libgs_GsSetAmbient(2048, 2048, 2048);
+
+        VIEWPORT_DISTANCE = map->viewDistance;
+        libgs_GsSetProjection(VIEWPORT_DISTANCE);
+
+        // TODO this should be extracted into the partner code somehow
+        auto region           = getRaiseData(PARTNER_ENTITY.type)->favoredRegion;
+        PARTNER_AREA_RESPONSE = 0;
+        for (int32_t i = 0; i < map->likedArea.size(); i++)
+        {
+            if (map->likedArea[i] == region) PARTNER_AREA_RESPONSE = 1;
+            if (map->dislikedArea[i] == region) PARTNER_AREA_RESPONSE = 2;
+        }
+
+        MAP_WIDTH  = map->width;
+        MAP_HEIGHT = map->height;
+        for (int32_t i = 0; i < MAP_WIDTH * MAP_HEIGHT; i++)
+            MAP_TILES[i] = map->tiles[i];
+    }
+
+    void checkCurlingMap(int32_t mapId)
+    {
+        if (mapId == 0x88) loadDynamicLibrary(Overlay::KAR_REL, nullptr, false, nullptr, nullptr);
+    }
+
+    constexpr void
+    fillTileData(MapTileData* tileData, uint8_t* imagePtr, int32_t texU, int32_t texV, int16_t posX, int16_t posY)
+    {
+        tileData->tpage    = getTPage(1, 0, texU, texV);
+        tileData->clut     = getClut(0, 0x1E0);
+        tileData->posX     = posX;
+        tileData->posY     = posY;
+        tileData->imagePtr = imagePtr;
+        tileData->texU     = texU;
+        tileData->texV     = texV;
+    }
+
+
+    void unloadMapObjects()
+    {
+        removeObject(ObjectID::DOORS, 0);
+        removeObject(ObjectID::WARP_CRYSTAL, 0);
+        removeObject(ObjectID::DIRT_CART, 0);
+        removeObject(ObjectID::DIRT_PILE, 0);
+        removeObject(ObjectID::BOULDER, 0);
+        removeObject(ObjectID::TOY_TOWN_BOXES, 0);
+        removeObject(ObjectID::GEARBOX, 0);
+        removeObject(ObjectID::DAYTIME_TRANSITION, 0);
+        removeObject(ObjectID::TRAINING_POOP, 0);
+        for (auto& chest : CHEST_ARRAY)
+        {
+            chest.item = ItemType::NONE;
+        }
+    }
+
+    void unloadMap()
+    {
+        for (auto& val : MAP_TILE_DATA)
+        {
+            val.imagePtr = nullptr;
+            val.posX     = 0;
+            val.posY     = 0;
+            val.texU     = 0;
+            val.texV     = 0;
+        }
+
+        MAP_HEIGHT       = 0;
+        MAP_WIDTH        = 0;
+        CAMERA_X         = 0;
+        CAMERA_Y         = 0;
+        DRAWING_OFFSET_X = 0;
+        DRAWING_OFFSET_Y = 0;
+        unloadMapObjects();
+    }
+
+
+    void tickDaytimeTransition(int32_t instance)
+    {
+        daytimeTransitionActive = true;
+
+        if (GAME_STATE != 0) return;
+        if (SKIP_DAYTIME_TRANSITION == true) return;
+        if (Partner_getState() == 8) return;
+        if (Partner_getState() == 13) return;
+        if (Tamer_getState() == 17) return;
+        if (Tamer_getState() == 19) return;
+
+        auto& clut1 = mapCluts[daytimeTransitionTarget];
+        auto& clut2 = mapCluts[(daytimeTransitionTarget + 1) % mapCluts.size()];
+
+        if (daytimeTransitionFrame < 25)
+        {
+            auto frame = (6 - daytimeTransitionFrame / 5);
+            RGB5551 newClut[256];
+
+            for (int32_t i = 0; i < 256; i++)
+            {
+                newClut[i].red   = clut1[i].red - ((clut1[i].red - clut2[i].red) / frame);
+                newClut[i].green = clut1[i].green - ((clut1[i].green - clut2[i].green) / frame);
+                newClut[i].blue  = clut1[i].blue - ((clut1[i].blue - clut2[i].blue) / frame);
+                newClut[i].alpha = clut1->alpha;
+            }
+
+            libgpu_LoadClut(&newClut, 0, 0x1E0);
+            libgpu_DrawSync(0);
+            daytimeTransitionFrame++;
+            return;
+        }
+
+        libgpu_LoadClut(clut2, 0, 0x1E0);
+
+        for (int32_t i = 0; i < 3; i++)
+        {
+            if (daytimeTransitionTarget == 0)
+            {
+                // vanilla doesn't seem to do red here, but updateTimeOfDay does
+                LIGHT_DATA[i].r = (mapLights[i].r * 7) / 10;
+                LIGHT_DATA[i].g = (mapLights[i].g * 7) / 10;
+                LIGHT_DATA[i].b = (mapLights[i].b * 7) / 10;
+            }
+            else if (daytimeTransitionTarget == 1)
+            {
+                LIGHT_DATA[i].r = mapLights[i].r / 2;
+                LIGHT_DATA[i].g = mapLights[i].g / 2;
+                LIGHT_DATA[i].b = mapLights[i].b / 2;
+            }
+            else
+                LIGHT_DATA[i] = mapLights[i];
+
+            libgs_GsSetFlatLight(i, &LIGHT_DATA[i]);
+        }
+
+        removeObject(ObjectID::DAYTIME_TRANSITION, 0);
+        daytimeTransitionActive = false;
+        SKIP_DAYTIME_TRANSITION = false;
+    }
+
+    void updateTileRow(int32_t yOffset)
+    {
+        if (MAP_TILE_Y == PREV_TILE_Y) return;
+
+        for (int32_t i = 0; i < min(MAP_WIDTH, 4); i++)
+        {
+            auto offset = MAP_TILE_X + (MAP_TILE_Y + yOffset * 2) * MAP_WIDTH + i;
+            auto& data  = MAP_TILE_DATA[offset];
+
+            RECT rect = {.x = data.texU, .y = data.texV, .width = 64, .height = 128};
+            if (data.tileId == -1)
+                libgpu_ClearImage(&rect, 0, 0, 0);
+            else
+                libgpu_LoadImage(&rect, reinterpret_cast<uint32_t*>(data.imagePtr));
+            libgpu_DrawSync(0);
+        }
+
+        PREV_TILE_Y = MAP_TILE_Y;
+    }
+
+    void updateTileCol(int32_t xOffset)
+    {
+        if (MAP_TILE_X == PREV_TILE_X) return;
+
+        for (int32_t i = 0; i < min(MAP_HEIGHT, 3); i++)
+        {
+            auto offset = MAP_TILE_X + (MAP_TILE_Y + i) * MAP_WIDTH + xOffset * 3;
+            auto& data  = MAP_TILE_DATA[offset];
+
+            RECT rect = {.x = data.texU, .y = data.texV, .width = 64, .height = 128};
+            if (data.tileId == -1)
+                libgpu_ClearImage(&rect, 0, 0, 0);
+            else
+                libgpu_LoadImage(&rect, reinterpret_cast<uint32_t*>(data.imagePtr));
+            libgpu_DrawSync(0);
+        }
+
+        PREV_TILE_X = MAP_TILE_X;
+    }
+
+    void tickMapName(int32_t mapId)
+    {
+        if (mapNameState == 0)
+        {
+            mapNameText.string = MAP_NAME_PTR[MAP_ENTRIES[mapId].loadingName];
+            clearTextArea();
+            drawTextSprite(mapNameText);
+            mapNameState = 1;
+        }
+    }
+
+    void renderMapName(int32_t mapId)
+    {
+        if (mapNameState == 0) return;
+        renderTextSprite(mapNameText);
+    }
+} // namespace
+
+extern "C"
+{
+    int16_t getMapRotation()
+    {
+        auto diffZ = GS_VIEWPOINT.viewpointZ - GS_VIEWPOINT.refpointZ;
+        auto diffX = GS_VIEWPOINT.viewpointX - GS_VIEWPOINT.refpointX;
+        return atan(diffZ, diffX);
+    }
+
     void storeMapObjectPosition(int16_t* xPtr, int16_t* yPtr, int32_t start, int32_t count)
     {
         for (int32_t i = 0; i < count; i++)
@@ -620,35 +974,6 @@ extern "C"
         }
     }
 
-    static void renderNinjamonEffect(int32_t instanceId)
-    {
-        for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++)
-        {
-            auto& data = LOCAL_MAP_OBJECT_INSTANCE[i];
-            data.x += ninjamonEffecXOffset[i];
-            data.y += ninjamonEffecYOffset[i];
-            data.orderValue = 10;
-
-            if (data.x > 160)
-            {
-                data.x                  = ninjamonEffecX[i];
-                data.y                  = ninjamonEffecY[i];
-                ninjamonEffecXOffset[i] = random(10) + 12;
-                ninjamonEffecYOffset[i] = random(10) + 3;
-            }
-        }
-
-        NPC_ACTIVE_ANIM[0]++;
-        if (NPC_ACTIVE_ANIM[0] >= 60)
-        {
-            for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++)
-            {
-                LOCAL_MAP_OBJECT_INSTANCE[i].flag = 1;
-            }
-            removeObject(ObjectID::NINJAMON_EFFECT, 0);
-        }
-    }
-
     void createNinjamonEffect()
     {
         NPC_ACTIVE_ANIM[0] = 0;
@@ -700,14 +1025,6 @@ extern "C"
         }
 
         return false;
-    }
-
-    constexpr int32_t getFirstSpriteIndex(LocalMapObjectInstance* instance)
-    {
-        for (auto val : instance->animSprites)
-            if (val != -2) return val;
-
-        return -1;
     }
 
     void spawnSpriteAtLocation(int16_t x, int16_t y, int16_t z, int32_t sprite, int16_t count)
@@ -768,11 +1085,6 @@ extern "C"
         return false;
     }
 
-    static void loadMapCollisionData(uint8_t* data)
-    {
-        memcpy(MAP_COLLISION_DATA, data, 10000);
-    }
-
     int32_t getTileTrigger(Vector* position)
     {
         auto tileX = getTileX(position->x);
@@ -806,46 +1118,6 @@ extern "C"
         setImpassableRect(tileX - radius, tileY - radius, radius * 2, radius * 2);
     }
 
-    static void renderDroppedItemShadow(WorldItem* item)
-    {
-        auto posX = item->spriteLocation.x;
-        auto posZ = item->spriteLocation.z;
-
-        SVector point1 = {.x = static_cast<int16_t>(posX - 100), .y = 0, .z = static_cast<int16_t>(posZ - 100)};
-        SVector point2 = {.x = static_cast<int16_t>(posX + 100), .y = 0, .z = static_cast<int16_t>(posZ - 100)};
-        SVector point3 = {.x = static_cast<int16_t>(posX - 100), .y = 0, .z = static_cast<int16_t>(posZ + 100)};
-        SVector point4 = {.x = static_cast<int16_t>(posX + 100), .y = 0, .z = static_cast<int16_t>(posZ + 100)};
-
-        ScreenCoord pos1;
-        ScreenCoord pos2;
-        ScreenCoord pos3;
-        int32_t interpolVal;
-        int32_t flag;
-
-        libgte_RotTransPers3(&point1, &point2, &point3, &pos1.raw, &pos2.raw, &pos3.raw, &interpolVal, &flag);
-        auto mapPos = getMapPosition(point4);
-
-        POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
-        libgpu_SetPolyFT4(prim);
-        libgpu_SetSemiTrans(prim, 1);
-        setPolyFT4UV(prim, 64, 128, 63, 63);
-        prim->tpage = 0xDD;
-        prim->clut  = getClut(0, 0x1e7);
-        prim->r0    = 0x30;
-        prim->g0    = 0x30;
-        prim->b0    = 0x30;
-        prim->x0    = pos1.x;
-        prim->y0    = pos1.y;
-        prim->x1    = pos2.x;
-        prim->y1    = pos2.y;
-        prim->x2    = pos3.x;
-        prim->y2    = pos3.y;
-        prim->x3    = mapPos.screenX;
-        prim->y3    = mapPos.screenY;
-        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 0xFFD, prim);
-        libgs_GsSetWorkBase(prim + 1);
-    }
-
     void renderOverworldItem(WorldItem* item)
     {
         auto mapPos = getMapPosition(item->spriteLocation);
@@ -875,17 +1147,10 @@ extern "C"
             item.type = ItemType::NONE;
     }
 
-    static void renderDroppedItem(int32_t instanceId)
+    uint8_t getDroppedItemAmount(int32_t dropId)
     {
-        if (!MAP_LAYER_ENABLED) return;
-
-        renderOverworldItem(&DROPPED_ITEMS[instanceId]);
-        renderDroppedItemShadow(&DROPPED_ITEMS[instanceId]);
+        return DROPPED_ITEM_AMOUNTS[dropId];
     }
-
-    static uint8_t DROPPED_ITEM_AMOUNTS[10] = {0};
-
-    uint8_t getDroppedItemAmount(int32_t dropId) { return DROPPED_ITEM_AMOUNTS[dropId]; }
 
     void spawnDroppedItem(Entity* entity, ItemType item, uint8_t amount)
     {
@@ -921,19 +1186,6 @@ extern "C"
             addObject(ObjectID::DROPPED_ITEM, i, nullptr, renderDroppedItem);
             return;
         }
-    }
-
-    void deleteDroppedItem(int32_t instanceId)
-    {
-        removeObject(ObjectID::DROPPED_ITEM, instanceId);
-        DROPPED_ITEMS[instanceId].type   = ItemType::NONE;
-        DROPPED_ITEM_AMOUNTS[instanceId] = 0;
-    }
-
-    void clearDroppedItems()
-    {
-        for (int32_t i = 0; i < 10; i++)
-            if (DROPPED_ITEMS[i].type != ItemType::NONE) deleteDroppedItem(i);
     }
 
     bool pickupItem(int32_t dropId)
@@ -1005,34 +1257,6 @@ extern "C"
         }
 
         return false;
-    }
-
-    static void setMapTilePosData(POLY_FT4* prim, const MapTileData& data, int32_t offsetX, int32_t offsetY)
-    {
-        auto posX = (data.posX - 160) - (offsetX - (160 - DRAWING_OFFSET_X));
-        auto posY = (data.posY - 120) - (offsetY - (120 - DRAWING_OFFSET_Y));
-
-        setPosDataPolyFT4(prim, posX, posY, 128, 128);
-    }
-
-    static void tickCameraFollowPlayer()
-    {
-        if (GAME_STATE != 0) return;
-        if (!isCameraFollowingPlayer()) return;
-        if (Tamer_getState() != 0) return;
-
-        if ((POLLED_INPUT & (InputButtons::BUTTON_DOWN | InputButtons::BUTTON_UP | InputButtons::BUTTON_LEFT |
-                             InputButtons::BUTTON_RIGHT)) == 0)
-            return;
-
-        auto oldPos = getMapPosition(STORED_TAMER_POS);
-        auto newPos = getMapPosition(TAMER_ENTITY.posData->location);
-
-        CAMERA_X += (newPos.screenX - oldPos.screenX);
-        CAMERA_Y += (newPos.screenY - oldPos.screenY);
-
-        updateDrawingOffsets(oldPos, newPos);
-        handleTileUpdate(POLLED_INPUT, false);
     }
 
     void renderMap(int32_t instanceId)
@@ -1115,54 +1339,6 @@ extern "C"
         return MAP_ENTRIES[mapId].flags & 0x1F;
     }
 
-    static void loadMapSetup(MapSetup* map)
-    {
-        GS_VIEWPOINT.viewpointX = map->viewpoint.x * 2;
-        GS_VIEWPOINT.viewpointY = map->viewpoint.y * 2;
-        GS_VIEWPOINT.viewpointZ = map->viewpoint.z * 2;
-        GS_VIEWPOINT.refpointX  = map->referencePoint.x * 2;
-        GS_VIEWPOINT.refpointY  = map->referencePoint.y * 2;
-        GS_VIEWPOINT.refpointZ  = map->referencePoint.z * 2;
-        libgs_GsSetRefView2(&GS_VIEWPOINT);
-
-        for (int32_t i = 0; i < map->lights.size(); i++)
-        {
-            LIGHT_DATA[i].r = map->lights[i].red;
-            LIGHT_DATA[i].g = map->lights[i].green;
-            LIGHT_DATA[i].b = map->lights[i].blue;
-            LIGHT_DATA[i].x = map->lights[i].pos.x;
-            LIGHT_DATA[i].y = map->lights[i].pos.y;
-            LIGHT_DATA[i].z = map->lights[i].pos.z;
-            libgs_GsSetFlatLight(i, &LIGHT_DATA[i]);
-            mapLights[i] = LIGHT_DATA[i];
-        }
-
-        // TODO read from unk1-3?
-        libgs_GsSetAmbient(2048, 2048, 2048);
-
-        VIEWPORT_DISTANCE = map->viewDistance;
-        libgs_GsSetProjection(VIEWPORT_DISTANCE);
-
-        // TODO this should be extracted into the partner code somehow
-        auto region           = getRaiseData(PARTNER_ENTITY.type)->favoredRegion;
-        PARTNER_AREA_RESPONSE = 0;
-        for (int32_t i = 0; i < map->likedArea.size(); i++)
-        {
-            if (map->likedArea[i] == region) PARTNER_AREA_RESPONSE = 1;
-            if (map->dislikedArea[i] == region) PARTNER_AREA_RESPONSE = 2;
-        }
-
-        MAP_WIDTH  = map->width;
-        MAP_HEIGHT = map->height;
-        for (int32_t i = 0; i < MAP_WIDTH * MAP_HEIGHT; i++)
-            MAP_TILES[i] = map->tiles[i];
-    }
-
-    static void checkCurlingMap(int32_t mapId)
-    {
-        if (mapId == 0x88) loadDynamicLibrary(Overlay::KAR_REL, nullptr, false, nullptr, nullptr);
-    }
-
     void loadMap(uint32_t mapId)
     {
         auto& entry = MAP_ENTRIES[mapId];
@@ -1214,18 +1390,6 @@ extern "C"
 
         sprintf(path, "\\MAP\\MAP%d\\%s.TFS", (mapId / 15) + 1, entry.filename);
         readFile(reinterpret_cast<char*>(path), GENERAL_BUFFER.data());
-    }
-
-    constexpr void
-    fillTileData(MapTileData* tileData, uint8_t* imagePtr, int32_t texU, int32_t texV, int16_t posX, int16_t posY)
-    {
-        tileData->tpage    = getTPage(1, 0, texU, texV);
-        tileData->clut     = getClut(0, 0x1E0);
-        tileData->posX     = posX;
-        tileData->posY     = posY;
-        tileData->imagePtr = imagePtr;
-        tileData->texU     = texU;
-        tileData->texV     = texV;
     }
 
     void initializeDrawingOffsets()
@@ -1402,107 +1566,9 @@ extern "C"
         SKIP_DAYTIME_TRANSITION = 0;
     }
 
-    static void unloadMapObjects()
-    {
-        removeObject(ObjectID::DOORS, 0);
-        removeObject(ObjectID::WARP_CRYSTAL, 0);
-        removeObject(ObjectID::DIRT_CART, 0);
-        removeObject(ObjectID::DIRT_PILE, 0);
-        removeObject(ObjectID::BOULDER, 0);
-        removeObject(ObjectID::TOY_TOWN_BOXES, 0);
-        removeObject(ObjectID::GEARBOX, 0);
-        removeObject(ObjectID::DAYTIME_TRANSITION, 0);
-        removeObject(ObjectID::TRAINING_POOP, 0);
-        for (auto& chest : CHEST_ARRAY)
-        {
-            chest.item = ItemType::NONE;
-        }
-    }
-
-    void unloadMap()
-    {
-        for (auto& val : MAP_TILE_DATA)
-        {
-            val.imagePtr = nullptr;
-            val.posX     = 0;
-            val.posY     = 0;
-            val.texU     = 0;
-            val.texV     = 0;
-        }
-
-        MAP_HEIGHT       = 0;
-        MAP_WIDTH        = 0;
-        CAMERA_X         = 0;
-        CAMERA_Y         = 0;
-        DRAWING_OFFSET_X = 0;
-        DRAWING_OFFSET_Y = 0;
-        unloadMapObjects();
-    }
-
     bool isInDaytimeTransition()
     {
         return daytimeTransitionFrame > 24;
-    }
-
-    void tickDaytimeTransition(int32_t instance)
-    {
-        daytimeTransitionActive = true;
-
-        if (GAME_STATE != 0) return;
-        if (SKIP_DAYTIME_TRANSITION == true) return;
-        if (Partner_getState() == 8) return;
-        if (Partner_getState() == 13) return;
-        if (Tamer_getState() == 17) return;
-        if (Tamer_getState() == 19) return;
-
-        auto& clut1 = mapCluts[daytimeTransitionTarget];
-        auto& clut2 = mapCluts[(daytimeTransitionTarget + 1) % mapCluts.size()];
-
-        if (daytimeTransitionFrame < 25)
-        {
-            auto frame = (6 - daytimeTransitionFrame / 5);
-            RGB5551 newClut[256];
-
-            for (int32_t i = 0; i < 256; i++)
-            {
-                newClut[i].red   = clut1[i].red - ((clut1[i].red - clut2[i].red) / frame);
-                newClut[i].green = clut1[i].green - ((clut1[i].green - clut2[i].green) / frame);
-                newClut[i].blue  = clut1[i].blue - ((clut1[i].blue - clut2[i].blue) / frame);
-                newClut[i].alpha = clut1->alpha;
-            }
-
-            libgpu_LoadClut(&newClut, 0, 0x1E0);
-            libgpu_DrawSync(0);
-            daytimeTransitionFrame++;
-            return;
-        }
-
-        libgpu_LoadClut(clut2, 0, 0x1E0);
-
-        for (int32_t i = 0; i < 3; i++)
-        {
-            if (daytimeTransitionTarget == 0)
-            {
-                // vanilla doesn't seem to do red here, but updateTimeOfDay does
-                LIGHT_DATA[i].r = (mapLights[i].r * 7) / 10;
-                LIGHT_DATA[i].g = (mapLights[i].g * 7) / 10;
-                LIGHT_DATA[i].b = (mapLights[i].b * 7) / 10;
-            }
-            else if (daytimeTransitionTarget == 1)
-            {
-                LIGHT_DATA[i].r = mapLights[i].r / 2;
-                LIGHT_DATA[i].g = mapLights[i].g / 2;
-                LIGHT_DATA[i].b = mapLights[i].b / 2;
-            }
-            else
-                LIGHT_DATA[i] = mapLights[i];
-
-            libgs_GsSetFlatLight(i, &LIGHT_DATA[i]);
-        }
-
-        removeObject(ObjectID::DAYTIME_TRANSITION, 0);
-        daytimeTransitionActive = false;
-        SKIP_DAYTIME_TRANSITION = false;
     }
 
     void initializeDaytimeTransition(int32_t mode)
@@ -1517,46 +1583,6 @@ extern "C"
         daytimeTransitionTarget = mode;
         daytimeTransitionFrame  = 0;
         addObject(ObjectID::DAYTIME_TRANSITION, 0, tickDaytimeTransition, nullptr);
-    }
-
-    static void updateTileRow(int32_t yOffset)
-    {
-        if (MAP_TILE_Y == PREV_TILE_Y) return;
-
-        for (int32_t i = 0; i < min(MAP_WIDTH, 4); i++)
-        {
-            auto offset = MAP_TILE_X + (MAP_TILE_Y + yOffset * 2) * MAP_WIDTH + i;
-            auto& data  = MAP_TILE_DATA[offset];
-
-            RECT rect = {.x = data.texU, .y = data.texV, .width = 64, .height = 128};
-            if (data.tileId == -1)
-                libgpu_ClearImage(&rect, 0, 0, 0);
-            else
-                libgpu_LoadImage(&rect, reinterpret_cast<uint32_t*>(data.imagePtr));
-            libgpu_DrawSync(0);
-        }
-
-        PREV_TILE_Y = MAP_TILE_Y;
-    }
-
-    static void updateTileCol(int32_t xOffset)
-    {
-        if (MAP_TILE_X == PREV_TILE_X) return;
-
-        for (int32_t i = 0; i < min(MAP_HEIGHT, 3); i++)
-        {
-            auto offset = MAP_TILE_X + (MAP_TILE_Y + i) * MAP_WIDTH + xOffset * 3;
-            auto& data  = MAP_TILE_DATA[offset];
-
-            RECT rect = {.x = data.texU, .y = data.texV, .width = 64, .height = 128};
-            if (data.tileId == -1)
-                libgpu_ClearImage(&rect, 0, 0, 0);
-            else
-                libgpu_LoadImage(&rect, reinterpret_cast<uint32_t*>(data.imagePtr));
-            libgpu_DrawSync(0);
-        }
-
-        PREV_TILE_X = MAP_TILE_X;
     }
 
     void handleTileUpdate(uint32_t input, bool updateAll)
@@ -1617,23 +1643,6 @@ extern "C"
         }
 
         return false;
-    }
-
-    void tickMapName(int32_t mapId)
-    {
-        if (mapNameState == 0)
-        {
-            mapNameText.string = MAP_NAME_PTR[MAP_ENTRIES[mapId].loadingName];
-            clearTextArea();
-            drawTextSprite(mapNameText);
-            mapNameState = 1;
-        }
-    }
-
-    void renderMapName(int32_t mapId)
-    {
-        if (mapNameState == 0) return;
-        renderTextSprite(mapNameText);
     }
 
     void addMapNameObject(int32_t mapId)

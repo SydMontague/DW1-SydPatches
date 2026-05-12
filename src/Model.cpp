@@ -18,41 +18,585 @@
 #include "extern/psx.hpp"
 #include "extern/stddef.hpp"
 
-struct UV1Packet
+namespace
 {
-    uint8_t u;
-    uint8_t v;
-    uint16_t clut;
-};
+    struct UV1Packet
+    {
+        uint8_t u;
+        uint8_t v;
+        uint16_t clut;
+    };
 
-struct UV2Packet
-{
-    uint8_t u;
-    uint8_t v;
-    uint16_t tpage     : 5;
-    uint16_t abr       : 2;
-    uint16_t colorMode : 2;
-};
+    struct UV2Packet
+    {
+        uint8_t u;
+        uint8_t v;
+        uint16_t tpage     : 5;
+        uint16_t abr       : 2;
+        uint16_t colorMode : 2;
+    };
 
-struct UVPacket
-{
-    uint8_t u;
-    uint8_t v;
-    uint16_t pad;
-};
+    struct UVPacket
+    {
+        uint8_t u;
+        uint8_t v;
+        uint16_t pad;
+    };
 
-struct PrimHeader
-{
-    uint8_t olen;
-    uint8_t ilen;
-    uint8_t flag;
-    uint8_t mode;
-};
+    struct PrimHeader
+    {
+        uint8_t olen;
+        uint8_t ilen;
+        uint8_t flag;
+        uint8_t mode;
+    };
+
+    CVector colorInput = {0x80, 0x80, 0x80, 0};
+
+    void renderFlatDigimon(Entity* entity)
+    {
+        auto entityType = getEntityType(entity);
+        auto* model     = getEntityModelComponent(static_cast<int32_t>(entity->type), entityType);
+
+        POLY_FT4* prim = (POLY_FT4*)libgs_GsGetWorkBase();
+        libgpu_SetPolyFT4(prim);
+        prim->r0    = 0x80;
+        prim->g0    = 0x80;
+        prim->b0    = 0x80;
+        prim->clut  = model->clutPage + 0x3C0;
+        prim->tpage = model->pixelPage;
+
+        if (entity->flatSprite < 2)
+        {
+            if (entity->flatTimer++ % 10 == 0) entity->flatSprite ^= 1;
+        }
+
+        auto activeSprite = entity->flatSprite % 2;
+
+        // TODO: Vanilla only creates a 15x15 sprite here, since the PSX doesn't allow the last row/column in a texture
+        //       page to be addressed. A workaround would be to copy the texture into an addressable memory region.
+        prim->u0 = (activeSprite == 0 ? 224 : 240);
+        prim->v0 = (entity->flatSprite < 2 ? 0x60 : 0x70) + model->pixelOffsetY;
+
+        prim->u1 = (activeSprite == 0 ? 224 : 240) + 15;
+        prim->v1 = (entity->flatSprite < 2 ? 0x60 : 0x70) + model->pixelOffsetY;
+
+        prim->u2 = (activeSprite == 0 ? 224 : 240);
+        prim->v2 = (entity->flatSprite < 2 ? 0x60 : 0x70) + model->pixelOffsetY + 15;
+
+        prim->u3 = (activeSprite == 0 ? 224 : 240) + 15;
+        prim->v3 = (entity->flatSprite < 2 ? 0x60 : 0x70) + model->pixelOffsetY + 15;
+
+        Matrix matrix;
+        auto height   = getDigimonData(entity->type)->height;
+        auto* posData = entity->posData;
+
+        SVector inVecs[4];
+        SVector outVecs[4];
+        inVecs[0].x = 0;
+        inVecs[0].y = -height;
+        inVecs[0].z = -height / 2;
+
+        inVecs[1].x = 0;
+        inVecs[1].y = -height;
+        inVecs[1].z = height / 2;
+
+        inVecs[2].x = 0;
+        inVecs[2].y = 0;
+        inVecs[2].z = -height / 2;
+
+        inVecs[3].x = 0;
+        inVecs[3].y = 0;
+        inVecs[3].z = height / 2;
+
+        libgte_RotMatrix(&posData->rotation, &matrix);
+        libgte_ScaleMatrix(&matrix, &posData->scale);
+
+        for (int32_t i = 0; i < 4; i++)
+        {
+            libgte_ApplyMatrixSV(&matrix, &inVecs[i], &outVecs[i]);
+
+            outVecs[i].x += posData->location.x;
+            outVecs[i].y += posData->location.y;
+            outVecs[i].z += posData->location.z;
+        }
+
+        addScreenPolyFT4(prim, &outVecs[0], &outVecs[1], &outVecs[2], &outVecs[3]);
+    }
+
+    void* _renderWireframedTriangle(void* primPtr,
+                                           uint8_t* currentPrim,
+                                           SVector* vertTop,
+                                           SVector* normalTop,
+                                           bool isPoly,
+                                           uint8_t color)
+    {
+        ScreenCoord sXY0;
+        ScreenCoord sXY1;
+        ScreenCoord sXY2;
+        int32_t i;
+        int32_t otz;
+        int32_t flag;
+        SVector* v0   = vertTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x12);
+        SVector* v1   = vertTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x16);
+        SVector* v2   = vertTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x1A);
+        int32_t depth = libgte_RotNclip3(v0, v1, v2, &sXY0.raw, &sXY1.raw, &sXY2.raw, &i, &otz, &flag);
+
+        // invalid primitive, not visible?
+        if (depth <= 0) return primPtr;
+
+        if (isPoly)
+        {
+            // draw normal
+            POLY_GT3* prim = reinterpret_cast<POLY_GT3*>(primPtr);
+
+            SVector* normal0 = normalTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x10);
+            SVector* normal1 = normalTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x14);
+            SVector* normal2 = normalTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x18);
+            CVector* color0  = reinterpret_cast<CVector*>(&prim->r0);
+            CVector* color1  = reinterpret_cast<CVector*>(&prim->r1);
+            CVector* color2  = reinterpret_cast<CVector*>(&prim->r2);
+            libgte_NormalColorCol3(normal0, normal1, normal2, &colorInput, color0, color1, color2);
+
+            // make sure to call this *after* NormalColorCol3, otherwise things get overwritten
+            libgpu_SetPolyGT3(prim);
+
+            prim->x0 = sXY0.x;
+            prim->y0 = sXY0.y;
+            prim->x1 = sXY1.x;
+            prim->y1 = sXY1.y;
+            prim->x2 = sXY2.x;
+            prim->y2 = sXY2.y;
+
+            prim->u0 = currentPrim[4];
+            prim->v0 = currentPrim[5];
+            prim->u1 = currentPrim[8];
+            prim->v1 = currentPrim[9];
+            prim->u2 = currentPrim[12];
+            prim->v2 = currentPrim[13];
+
+            prim->clut  = *reinterpret_cast<uint16_t*>(currentPrim + 6);
+            prim->tpage = *reinterpret_cast<uint16_t*>(currentPrim + 10);
+
+            libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + otz / 4, prim);
+            primPtr = prim + 1; // advance WorkBase
+        }
+        else
+        {
+            LINE_F4* prim = reinterpret_cast<LINE_F4*>(primPtr);
+            libgpu_SetLineF4(prim);
+
+            prim->x0 = sXY0.x;
+            prim->y0 = sXY0.y;
+            prim->x1 = sXY1.x;
+            prim->y1 = sXY1.y;
+            prim->x2 = sXY2.x;
+            prim->y2 = sXY2.y;
+            prim->x3 = prim->x0;
+            prim->y3 = prim->y0;
+
+            prim->r0 = color;
+            prim->g0 = color;
+            prim->b0 = color;
+            libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + otz / 4, prim);
+            primPtr = prim + 1; // advance WorkBase
+        }
+
+        return primPtr;
+    }
+
+    void* _renderWiredframedQuad(void* primPtr,
+                                        uint8_t* currentPrim,
+                                        SVector* vertTop,
+                                        SVector* normalTop,
+                                        bool isPoly,
+                                        uint8_t color)
+    {
+        ScreenCoord sXY0;
+        ScreenCoord sXY1;
+        ScreenCoord sXY2;
+        ScreenCoord sXY3;
+        int32_t i;
+        int32_t otz;
+        int32_t flag;
+        SVector* v0   = vertTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x16);
+        SVector* v1   = vertTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x1A);
+        SVector* v2   = vertTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x1E);
+        SVector* v3   = vertTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x22);
+        int32_t depth = libgte_RotNclip4(v0, v1, v2, v3, &sXY0.raw, &sXY1.raw, &sXY2.raw, &sXY3.raw, &i, &otz, &flag);
+
+        // invalid primitive, not visible?
+        if (depth <= 0) return primPtr;
+
+        if (isPoly)
+        {
+            // draw normal
+            POLY_GT4* prim = reinterpret_cast<POLY_GT4*>(primPtr);
+
+            SVector* normal0 = normalTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x14);
+            SVector* normal1 = normalTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x18);
+            SVector* normal2 = normalTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x1C);
+            SVector* normal3 = normalTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x20);
+            CVector* color0  = reinterpret_cast<CVector*>(&prim->r0);
+            CVector* color1  = reinterpret_cast<CVector*>(&prim->r1);
+            CVector* color2  = reinterpret_cast<CVector*>(&prim->r2);
+            CVector* color3  = reinterpret_cast<CVector*>(&prim->r3);
+            libgte_NormalColorCol3(normal0, normal1, normal2, &colorInput, color0, color1, color2);
+            libgte_NormalColorCol(normal3, &colorInput, color3);
+
+            // make sure to call this *after* NormalColorCol3, otherwise things get overwritten
+            libgpu_SetPolyGT4(prim);
+
+            prim->x0 = sXY0.x;
+            prim->y0 = sXY0.y;
+            prim->x1 = sXY1.x;
+            prim->y1 = sXY1.y;
+            prim->x2 = sXY2.x;
+            prim->y2 = sXY2.y;
+            prim->x3 = sXY3.x;
+            prim->y3 = sXY3.y;
+
+            prim->u0 = currentPrim[4];
+            prim->v0 = currentPrim[5];
+            prim->u1 = currentPrim[8];
+            prim->v1 = currentPrim[9];
+            prim->u2 = currentPrim[12];
+            prim->v2 = currentPrim[13];
+            prim->u3 = currentPrim[16];
+            prim->v3 = currentPrim[17];
+
+            prim->clut  = *reinterpret_cast<uint16_t*>(currentPrim + 6);
+            prim->tpage = *reinterpret_cast<uint16_t*>(currentPrim + 10);
+
+            libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + otz / 4, prim);
+            primPtr = prim + 1; // advance WorkBase
+        }
+        else
+        {
+            LINE_F4* prim = reinterpret_cast<LINE_F4*>(primPtr);
+            libgpu_SetLineF4(prim);
+
+            prim->x0 = sXY0.x;
+            prim->y0 = sXY0.y;
+            prim->x1 = sXY1.x;
+            prim->y1 = sXY1.y;
+            prim->x2 = sXY3.x;
+            prim->y2 = sXY3.y;
+            prim->x3 = sXY2.x;
+            prim->y3 = sXY2.y;
+            prim->r0 = color;
+            prim->g0 = color;
+            prim->b0 = color;
+            libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + otz / 4, prim);
+            primPtr = prim + 1; // advance WorkBase
+
+            LINE_F2* prim2 = reinterpret_cast<LINE_F2*>(primPtr);
+            libgpu_SetLineF2(prim2);
+            prim2->x0 = sXY2.x;
+            prim2->y0 = sXY2.y;
+            prim2->x1 = sXY0.x;
+            prim2->y1 = sXY0.y;
+            prim2->r0 = color;
+            prim2->g0 = color;
+            prim2->b0 = color;
+            libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + otz / 4, prim2);
+            primPtr = prim2 + 1; // advance WorkBase
+        }
+
+        return primPtr;
+    }
+
+    void uploadModelTexture(uint32_t* timData, ModelComponent* model)
+    {
+        GsIMAGE imageData;
+        libgs_GsGetTimInfo(timData + 1, &imageData);
+
+        imageData.pixelX = (model->pixelPage & 15) * 0x40 + model->pixelOffsetX;
+        imageData.pixelY = (model->pixelPage >> 4) * 0x100 + model->pixelOffsetY;
+        imageData.clutX  = (model->clutPage & 63) << 4;
+        imageData.clutY  = (model->clutPage >> 6);
+
+        RECT pixelRect = {
+            .x      = imageData.pixelX,
+            .y      = imageData.pixelY,
+            .width  = static_cast<int16_t>(imageData.pixelWidth),
+            .height = static_cast<int16_t>(imageData.pixelHeight),
+        };
+        libgpu_LoadImage(&pixelRect, imageData.pixelPtr);
+        // if has CLUT
+        if ((imageData.pixelMode >> 3 & 1) != 0)
+        {
+            RECT clutRect = {
+                .x      = imageData.clutX,
+                .y      = imageData.clutY,
+                .width  = static_cast<int16_t>(imageData.clutWidth),
+                .height = static_cast<int16_t>(imageData.clutHeight),
+            };
+            libgpu_LoadImage(&clutRect, imageData.clutPtr);
+        }
+        libgpu_DrawSync(0);
+    }
+
+    void loadDigimonTexture(DigimonType type, ModelComponent* model)
+    {
+        auto buffer = dtl::make_unique<dtl::array<uint8_t, 0x4800>>();
+        readFileSectors("CHDAT\\ALLTIM.TIM", buffer.get(), static_cast<uint32_t>(type) * 9, 9);
+        uploadModelTexture(reinterpret_cast<uint32_t*>(buffer.get()), model);
+    }
+
+    ModelComponent* getNPCComponent(DigimonType type)
+    {
+        for (auto& component : NPC_MODEL)
+        {
+            if (component.useCount == 0) return &component;
+            if (component.digiType == type) return &component;
+        }
+
+        return nullptr;
+    }
+
+    // this function blows up in size otherwise
+    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
+    __attribute__((optimize("Os"))) void unloadNPCModel(DigimonType type)
+    {
+        for (auto& model : NPC_MODEL)
+        {
+            if (model.digiType != type) continue;
+
+            model.useCount--;
+            if (model.useCount <= 0)
+            {
+                model.digiType = DigimonType::INVALID; // NOLINT
+                if (model.mmdPtr != nullptr) libapi_free3(model.mmdPtr);
+                model.modelPtr     = nullptr;
+                model.animTablePtr = nullptr;
+                model.mmdPtr       = nullptr;
+                if (model.modelId != -1) NPC_MODEL_TAKEN[model.modelId] = 0;
+                model.modelId = -1;
+            }
+        }
+    }
+
+    // this function blows up in size otherwise
+    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
+    __attribute__((optimize("Os"))) void unloadUnknowModel(int32_t id)
+    {
+        for (auto& model : UNKNOWN_MODEL)
+        {
+            if (model.useCount != id) continue;
+
+            model.useCount = 0;
+            if (model.modelId != -1) UNKNOWN_MODEL_TAKEN[model.modelId] = 0;
+            model.modelId = -1;
+        }
+    }
+
+    void calculatePosMatrix(PositionData* posData, bool hasTranslation)
+    {
+        // TODO hasRotation and hasScale are not used if used break animations?
+        if (hasTranslation) libgte_TransMatrix(&posData->posMatrix.coord, &posData->location);
+        libgte_RotMatrix(&posData->rotation, &posData->posMatrix.coord);
+        libgte_ScaleMatrix(&posData->posMatrix.coord, &posData->scale);
+        posData->posMatrix.flag = 0;
+    }
+
+    void resetMomentumData(MomentumData* data)
+    {
+        memset(data->delta, 0, sizeof(data->delta));
+        memset(data->subDelta, 0, sizeof(data->subDelta));
+    }
+
+    constexpr int32_t getAnimatedTextureHeight(DigimonType type)
+    {
+        switch (type)
+        {
+            case DigimonType::DEMIMERAMON: return 44;
+            case DigimonType::FLAREIZAMON: [[fallthrough]];
+            case DigimonType::DARKRIZAMON: return 16;
+            case DigimonType::BIRDRAMON: [[fallthrough]];
+            case DigimonType::SABERDRAMON: [[fallthrough]];
+            case DigimonType::NPC_BIRDRAMON: return 40;
+            case DigimonType::MERAMON: [[fallthrough]];
+            case DigimonType::NPC_MERAMON: [[fallthrough]];
+            case DigimonType::BLUEMERAMON: return 30;
+            default: return -1;
+        }
+    }
+
+    void animateEntityTexture(Entity* entity)
+    {
+        auto width = getAnimatedTextureHeight(entity->type);
+        if (width <= 0) return;
+        if ((PLAYTIME_FRAMES % 2) != 0) return;
+
+        auto frame = 0;
+        if ((PLAYTIME_FRAMES % 6) == 0)
+            frame = 2;
+        else if ((PLAYTIME_FRAMES % 4) == 0)
+            frame = 1;
+
+        RECT rect{
+            .x      = entity->textureX,
+            .y      = static_cast<int16_t>(entity->textureY + 32 + (frame * 32)),
+            .width  = static_cast<int16_t>(width),
+            .height = 32,
+        };
+        libgpu_MoveImage(&rect, entity->textureX, entity->textureY);
+    }
+
+    // this function blows up in size otherwise
+    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
+    __attribute__((optimize("Os"))) void handleKeyFrameInstruction(MomentumData* momentum, int16_t*& instructionPtrPtr)
+    {
+        while ((instructionPtrPtr[0] & 0x8000) != 0)
+        {
+            auto nodeId   = instructionPtrPtr[0] & 0x3F;
+            auto axisMask = (instructionPtrPtr[0] >> 6) & 0x1FF;
+            auto scale    = instructionPtrPtr[1];
+            auto& data    = momentum[nodeId];
+
+            instructionPtrPtr += 2;
+
+            for (int32_t i = 0; i < 9; i++)
+            {
+                if ((axisMask & (0x100 >> i)) != 0)
+                {
+                    auto value       = instructionPtrPtr[0];
+                    data.delta[i]    = value / scale;
+                    int16_t subDelta = value % scale;
+                    if (subDelta != 0)
+                    {
+                        data.subValue[i] = subDelta < 1 ? -1 : 1;
+                        data.scale1[i]   = scale;
+                        data.subScale[i] = scale;
+                    }
+                    data.subDelta[i] = abs(subDelta);
+                    instructionPtrPtr += 1;
+                }
+            }
+        }
+    }
+
+    constexpr Pair<int32_t, int32_t>
+    calculateMomentum(int16_t delta, int16_t scale, int16_t subDelta, int16_t scale2, int8_t subValue)
+    {
+        auto newValue  = delta;
+        auto newScale2 = scale2;
+
+        if (subDelta != 0)
+        {
+            newScale2 -= subDelta;
+            if (newScale2 < 1)
+            {
+                newScale2 += scale;
+                newValue += subValue;
+            }
+        }
+
+        return {newValue, newScale2};
+    }
+
+    void applyRootMomentum(Entity* entity)
+    {
+        auto& momentum = entity->momentum[0];
+
+        Vector vel;
+        for (int32_t i = 0; i < 3; i++)
+        {
+            if (i == 0 && (entity->animId == 0x23 || entity->animId == 0x24))
+            {
+                vel.x = 0;
+                continue;
+            }
+
+            momentum.subScale[6 + i] -= momentum.subDelta[6 + i];
+            if (momentum.subDelta[6 + i] == 0 || momentum.subScale[6 + i] > 0)
+            {
+                vel[i] = momentum.delta[6 + i] << 0x0F;
+                continue;
+            }
+
+            vel[i] = (momentum.delta[6 + i] + momentum.subValue[6 + i]) << 0x0F;
+            momentum.subScale[6 + i] += momentum.scale1[6 + i];
+        }
+
+        if ((entity->animFlag & 2) == 0)
+        {
+            Vector result;
+            auto& posData = entity->posData[0];
+            libgte_ApplyMatrixLV(&posData.posMatrix.coord, &vel, &result);
+
+            if ((entity->animFlag & 0x08) && (result.z < 0)) result.z = 0;
+            if ((entity->animFlag & 0x10) && (result.x < 0)) result.x = 0;
+            if ((entity->animFlag & 0x20) && (result.z > 0)) result.z = 0;
+            if ((entity->animFlag & 0x40) && (result.x > 0)) result.x = 0;
+
+            entity->locX += result.x;
+            entity->locY += result.y;
+            entity->locZ += result.z;
+            posData.location.x = entity->locX >> 0x0F;
+            posData.location.y = entity->locY >> 0x0F;
+            posData.location.z = entity->locZ >> 0x0F;
+        }
+    }
+
+    void tickMomentum(Entity* entity, MomentumData* momentum)
+    {
+        auto boneCount = getDigimonData(entity->type)->boneCount;
+
+        for (int32_t i = 0; i < boneCount; i++)
+        {
+            auto& node          = entity->momentum[i];
+            auto& posData       = entity->posData[i];
+            auto hasScale       = false;
+            auto hasRotation    = false;
+            auto hasTranslation = false;
+
+            for (int32_t j = 0; j < 9; j++)
+            {
+                auto delta    = node.delta[j];
+                auto subDelta = node.subDelta[j];
+                auto scale    = node.scale1[j];
+                auto subScale = node.subScale[j];
+                auto subValue = node.subValue[j];
+
+                if (delta == 0 && subDelta == 0) continue;
+
+                auto newVals     = calculateMomentum(delta, scale, subDelta, subScale, subValue);
+                node.subScale[j] = newVals.second;
+
+                if (j < 3)
+                {
+                    posData.scale[j] += newVals.first;
+                    hasScale = true;
+                }
+                else if (j < 6)
+                {
+                    posData.rotation[j - 3] += newVals.first;
+                    hasRotation = true;
+                }
+                else if (j < 9 && i != 0)
+                {
+                    posData.location[j - 6] += newVals.first;
+                    hasTranslation = true;
+                }
+            }
+
+            if (i == 0)
+            {
+                calculatePosMatrix(&posData, false);
+                applyRootMomentum(entity);
+                setupModelMatrix(&posData);
+            }
+            else
+                calculatePosMatrix(&posData, hasTranslation);
+        }
+    }
+
+} // namespace
 
 extern "C"
 {
-    static CVector colorInput = {0x80, 0x80, 0x80, 0};
-
     void projectPosition(GsCOORDINATE2* position, Vector* translation, SVector* rotation, Vector* scale)
     {
         libgte_RotMatrix(rotation, &position->coord);
@@ -179,77 +723,6 @@ extern "C"
                 currentPrim += header->ilen + 1;
             }
         }
-    }
-
-    void renderFlatDigimon(Entity* entity)
-    {
-        auto entityType = getEntityType(entity);
-        auto* model     = getEntityModelComponent(static_cast<int32_t>(entity->type), entityType);
-
-        POLY_FT4* prim = (POLY_FT4*)libgs_GsGetWorkBase();
-        libgpu_SetPolyFT4(prim);
-        prim->r0    = 0x80;
-        prim->g0    = 0x80;
-        prim->b0    = 0x80;
-        prim->clut  = model->clutPage + 0x3C0;
-        prim->tpage = model->pixelPage;
-
-        if (entity->flatSprite < 2)
-        {
-            if (entity->flatTimer++ % 10 == 0) entity->flatSprite ^= 1;
-        }
-
-        auto activeSprite = entity->flatSprite % 2;
-
-        // TODO: Vanilla only creates a 15x15 sprite here, since the PSX doesn't allow the last row/column in a texture
-        //       page to be addressed. A workaround would be to copy the texture into an addressable memory region.
-        prim->u0 = (activeSprite == 0 ? 224 : 240);
-        prim->v0 = (entity->flatSprite < 2 ? 0x60 : 0x70) + model->pixelOffsetY;
-
-        prim->u1 = (activeSprite == 0 ? 224 : 240) + 15;
-        prim->v1 = (entity->flatSprite < 2 ? 0x60 : 0x70) + model->pixelOffsetY;
-
-        prim->u2 = (activeSprite == 0 ? 224 : 240);
-        prim->v2 = (entity->flatSprite < 2 ? 0x60 : 0x70) + model->pixelOffsetY + 15;
-
-        prim->u3 = (activeSprite == 0 ? 224 : 240) + 15;
-        prim->v3 = (entity->flatSprite < 2 ? 0x60 : 0x70) + model->pixelOffsetY + 15;
-
-        Matrix matrix;
-        auto height   = getDigimonData(entity->type)->height;
-        auto* posData = entity->posData;
-
-        SVector inVecs[4];
-        SVector outVecs[4];
-        inVecs[0].x = 0;
-        inVecs[0].y = -height;
-        inVecs[0].z = -height / 2;
-
-        inVecs[1].x = 0;
-        inVecs[1].y = -height;
-        inVecs[1].z = height / 2;
-
-        inVecs[2].x = 0;
-        inVecs[2].y = 0;
-        inVecs[2].z = -height / 2;
-
-        inVecs[3].x = 0;
-        inVecs[3].y = 0;
-        inVecs[3].z = height / 2;
-
-        libgte_RotMatrix(&posData->rotation, &matrix);
-        libgte_ScaleMatrix(&matrix, &posData->scale);
-
-        for (int32_t i = 0; i < 4; i++)
-        {
-            libgte_ApplyMatrixSV(&matrix, &inVecs[i], &outVecs[i]);
-
-            outVecs[i].x += posData->location.x;
-            outVecs[i].y += posData->location.y;
-            outVecs[i].z += posData->location.z;
-        }
-
-        addScreenPolyFT4(prim, &outVecs[0], &outVecs[1], &outVecs[2], &outVecs[3]);
     }
 
     void renderDigimon(int32_t instanceId)
@@ -402,199 +875,6 @@ extern "C"
         entity->locZ        = posZ << 0x0F;
     }
 
-    void setEntityRotation(int32_t entityId, int32_t rotX, int32_t rotY, int32_t rotZ)
-    {
-        auto* entity = ENTITY_TABLE.getEntityById(entityId);
-        if (entity == nullptr) return;
-
-        auto* posData       = entity->posData;
-        posData->rotation.x = rotX;
-        posData->rotation.y = rotY;
-        posData->rotation.z = rotZ;
-    }
-
-    inline void* _renderWireframedTriangle(void* primPtr,
-                                           uint8_t* currentPrim,
-                                           SVector* vertTop,
-                                           SVector* normalTop,
-                                           bool isPoly,
-                                           uint8_t color)
-    {
-        ScreenCoord sXY0;
-        ScreenCoord sXY1;
-        ScreenCoord sXY2;
-        int32_t i;
-        int32_t otz;
-        int32_t flag;
-        SVector* v0   = vertTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x12);
-        SVector* v1   = vertTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x16);
-        SVector* v2   = vertTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x1A);
-        int32_t depth = libgte_RotNclip3(v0, v1, v2, &sXY0.raw, &sXY1.raw, &sXY2.raw, &i, &otz, &flag);
-
-        // invalid primitive, not visible?
-        if (depth <= 0) return primPtr;
-
-        if (isPoly)
-        {
-            // draw normal
-            POLY_GT3* prim = reinterpret_cast<POLY_GT3*>(primPtr);
-
-            SVector* normal0 = normalTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x10);
-            SVector* normal1 = normalTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x14);
-            SVector* normal2 = normalTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x18);
-            CVector* color0  = reinterpret_cast<CVector*>(&prim->r0);
-            CVector* color1  = reinterpret_cast<CVector*>(&prim->r1);
-            CVector* color2  = reinterpret_cast<CVector*>(&prim->r2);
-            libgte_NormalColorCol3(normal0, normal1, normal2, &colorInput, color0, color1, color2);
-
-            // make sure to call this *after* NormalColorCol3, otherwise things get overwritten
-            libgpu_SetPolyGT3(prim);
-
-            prim->x0 = sXY0.x;
-            prim->y0 = sXY0.y;
-            prim->x1 = sXY1.x;
-            prim->y1 = sXY1.y;
-            prim->x2 = sXY2.x;
-            prim->y2 = sXY2.y;
-
-            prim->u0 = currentPrim[4];
-            prim->v0 = currentPrim[5];
-            prim->u1 = currentPrim[8];
-            prim->v1 = currentPrim[9];
-            prim->u2 = currentPrim[12];
-            prim->v2 = currentPrim[13];
-
-            prim->clut  = *reinterpret_cast<uint16_t*>(currentPrim + 6);
-            prim->tpage = *reinterpret_cast<uint16_t*>(currentPrim + 10);
-
-            libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + otz / 4, prim);
-            primPtr = prim + 1; // advance WorkBase
-        }
-        else
-        {
-            LINE_F4* prim = reinterpret_cast<LINE_F4*>(primPtr);
-            libgpu_SetLineF4(prim);
-
-            prim->x0 = sXY0.x;
-            prim->y0 = sXY0.y;
-            prim->x1 = sXY1.x;
-            prim->y1 = sXY1.y;
-            prim->x2 = sXY2.x;
-            prim->y2 = sXY2.y;
-            prim->x3 = prim->x0;
-            prim->y3 = prim->y0;
-
-            prim->r0 = color;
-            prim->g0 = color;
-            prim->b0 = color;
-            libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + otz / 4, prim);
-            primPtr = prim + 1; // advance WorkBase
-        }
-
-        return primPtr;
-    }
-
-    inline void* _renderWiredframedQuad(void* primPtr,
-                                        uint8_t* currentPrim,
-                                        SVector* vertTop,
-                                        SVector* normalTop,
-                                        bool isPoly,
-                                        uint8_t color)
-    {
-        ScreenCoord sXY0;
-        ScreenCoord sXY1;
-        ScreenCoord sXY2;
-        ScreenCoord sXY3;
-        int32_t i;
-        int32_t otz;
-        int32_t flag;
-        SVector* v0   = vertTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x16);
-        SVector* v1   = vertTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x1A);
-        SVector* v2   = vertTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x1E);
-        SVector* v3   = vertTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x22);
-        int32_t depth = libgte_RotNclip4(v0, v1, v2, v3, &sXY0.raw, &sXY1.raw, &sXY2.raw, &sXY3.raw, &i, &otz, &flag);
-
-        // invalid primitive, not visible?
-        if (depth <= 0) return primPtr;
-
-        if (isPoly)
-        {
-            // draw normal
-            POLY_GT4* prim = reinterpret_cast<POLY_GT4*>(primPtr);
-
-            SVector* normal0 = normalTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x14);
-            SVector* normal1 = normalTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x18);
-            SVector* normal2 = normalTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x1C);
-            SVector* normal3 = normalTop + *reinterpret_cast<uint16_t*>(currentPrim + 0x20);
-            CVector* color0  = reinterpret_cast<CVector*>(&prim->r0);
-            CVector* color1  = reinterpret_cast<CVector*>(&prim->r1);
-            CVector* color2  = reinterpret_cast<CVector*>(&prim->r2);
-            CVector* color3  = reinterpret_cast<CVector*>(&prim->r3);
-            libgte_NormalColorCol3(normal0, normal1, normal2, &colorInput, color0, color1, color2);
-            libgte_NormalColorCol(normal3, &colorInput, color3);
-
-            // make sure to call this *after* NormalColorCol3, otherwise things get overwritten
-            libgpu_SetPolyGT4(prim);
-
-            prim->x0 = sXY0.x;
-            prim->y0 = sXY0.y;
-            prim->x1 = sXY1.x;
-            prim->y1 = sXY1.y;
-            prim->x2 = sXY2.x;
-            prim->y2 = sXY2.y;
-            prim->x3 = sXY3.x;
-            prim->y3 = sXY3.y;
-
-            prim->u0 = currentPrim[4];
-            prim->v0 = currentPrim[5];
-            prim->u1 = currentPrim[8];
-            prim->v1 = currentPrim[9];
-            prim->u2 = currentPrim[12];
-            prim->v2 = currentPrim[13];
-            prim->u3 = currentPrim[16];
-            prim->v3 = currentPrim[17];
-
-            prim->clut  = *reinterpret_cast<uint16_t*>(currentPrim + 6);
-            prim->tpage = *reinterpret_cast<uint16_t*>(currentPrim + 10);
-
-            libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + otz / 4, prim);
-            primPtr = prim + 1; // advance WorkBase
-        }
-        else
-        {
-            LINE_F4* prim = reinterpret_cast<LINE_F4*>(primPtr);
-            libgpu_SetLineF4(prim);
-
-            prim->x0 = sXY0.x;
-            prim->y0 = sXY0.y;
-            prim->x1 = sXY1.x;
-            prim->y1 = sXY1.y;
-            prim->x2 = sXY3.x;
-            prim->y2 = sXY3.y;
-            prim->x3 = sXY2.x;
-            prim->y3 = sXY2.y;
-            prim->r0 = color;
-            prim->g0 = color;
-            prim->b0 = color;
-            libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + otz / 4, prim);
-            primPtr = prim + 1; // advance WorkBase
-
-            LINE_F2* prim2 = reinterpret_cast<LINE_F2*>(primPtr);
-            libgpu_SetLineF2(prim2);
-            prim2->x0 = sXY2.x;
-            prim2->y0 = sXY2.y;
-            prim2->x1 = sXY0.x;
-            prim2->y1 = sXY0.y;
-            prim2->r0 = color;
-            prim2->g0 = color;
-            prim2->b0 = color;
-            libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + otz / 4, prim2);
-            primPtr = prim2 + 1; // advance WorkBase
-        }
-
-        return primPtr;
-    }
-
     void renderWireframed(GsDOBJ2* obj, int32_t wireFrameShare)
     {
         auto* tmd          = obj->tmd;
@@ -642,6 +922,16 @@ extern "C"
         libgs_GsSetWorkBase(primPtr);
     }
 
+    void setEntityRotation(int32_t entityId, int32_t rotX, int32_t rotY, int32_t rotZ)
+    {
+        auto* entity = ENTITY_TABLE.getEntityById(entityId);
+        if (entity == nullptr) return;
+
+        auto* posData       = entity->posData;
+        posData->rotation.x = rotX;
+        posData->rotation.y = rotY;
+        posData->rotation.z = rotZ;
+    }
     void resetFlattenGlobal()
     {
         TAMER_ENTITY.flatSprite = 0xFF;
@@ -654,44 +944,6 @@ extern "C"
             entity.flatSprite = 0xFF;
             entity.flatTimer  = 0;
         }
-    }
-
-    void uploadModelTexture(uint32_t* timData, ModelComponent* model)
-    {
-        GsIMAGE imageData;
-        libgs_GsGetTimInfo(timData + 1, &imageData);
-
-        imageData.pixelX = (model->pixelPage & 15) * 0x40 + model->pixelOffsetX;
-        imageData.pixelY = (model->pixelPage >> 4) * 0x100 + model->pixelOffsetY;
-        imageData.clutX  = (model->clutPage & 63) << 4;
-        imageData.clutY  = (model->clutPage >> 6);
-
-        RECT pixelRect = {
-            .x      = imageData.pixelX,
-            .y      = imageData.pixelY,
-            .width  = static_cast<int16_t>(imageData.pixelWidth),
-            .height = static_cast<int16_t>(imageData.pixelHeight),
-        };
-        libgpu_LoadImage(&pixelRect, imageData.pixelPtr);
-        // if has CLUT
-        if ((imageData.pixelMode >> 3 & 1) != 0)
-        {
-            RECT clutRect = {
-                .x      = imageData.clutX,
-                .y      = imageData.clutY,
-                .width  = static_cast<int16_t>(imageData.clutWidth),
-                .height = static_cast<int16_t>(imageData.clutHeight),
-            };
-            libgpu_LoadImage(&clutRect, imageData.clutPtr);
-        }
-        libgpu_DrawSync(0);
-    }
-
-    void loadDigimonTexture(DigimonType type, ModelComponent* model)
-    {
-        auto buffer = dtl::make_unique<dtl::array<uint8_t, 0x4800>>();
-        readFileSectors("CHDAT\\ALLTIM.TIM", buffer.get(), static_cast<uint32_t>(type) * 9, 9);
-        uploadModelTexture(reinterpret_cast<uint32_t*>(buffer.get()), model);
     }
 
     void initializeModelComponents()
@@ -709,17 +961,6 @@ extern "C"
             model = base;
         for (auto& taken : UNKNOWN_MODEL_TAKEN)
             taken = 0;
-    }
-
-    inline ModelComponent* getNPCComponent(DigimonType type)
-    {
-        for (auto& component : NPC_MODEL)
-        {
-            if (component.useCount == 0) return &component;
-            if (component.digiType == type) return &component;
-        }
-
-        return nullptr;
     }
 
     void loadMMD(DigimonType digimonType, EntityType entityType)
@@ -797,42 +1038,6 @@ extern "C"
                              comp->pixelOffsetX,
                              comp->pixelOffsetY,
                              comp->clutPage - 0x7A00);
-    }
-
-    // this function blows up in size otherwise
-    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-    __attribute__((optimize("Os"))) inline void unloadNPCModel(DigimonType type)
-    {
-        for (auto& model : NPC_MODEL)
-        {
-            if (model.digiType != type) continue;
-
-            model.useCount--;
-            if (model.useCount <= 0)
-            {
-                model.digiType = DigimonType::INVALID; // NOLINT
-                if (model.mmdPtr != nullptr) libapi_free3(model.mmdPtr);
-                model.modelPtr     = nullptr;
-                model.animTablePtr = nullptr;
-                model.mmdPtr       = nullptr;
-                if (model.modelId != -1) NPC_MODEL_TAKEN[model.modelId] = 0;
-                model.modelId = -1;
-            }
-        }
-    }
-
-    // this function blows up in size otherwise
-    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-    __attribute__((optimize("Os"))) inline void unloadUnknowModel(int32_t id)
-    {
-        for (auto& model : UNKNOWN_MODEL)
-        {
-            if (model.useCount != id) continue;
-
-            model.useCount = 0;
-            if (model.modelId != -1) UNKNOWN_MODEL_TAKEN[model.modelId] = 0;
-            model.modelId = -1;
-        }
     }
 
     void unloadModel(int32_t id, EntityType type)
@@ -948,59 +1153,6 @@ extern "C"
                              PARTNER_MODEL.clutPage - 0x7a00);
     }
 
-    static void calculatePosMatrix(PositionData* posData, bool hasTranslation)
-    {
-        // TODO hasRotation and hasScale are not used if used break animations?
-        if (hasTranslation) libgte_TransMatrix(&posData->posMatrix.coord, &posData->location);
-        libgte_RotMatrix(&posData->rotation, &posData->posMatrix.coord);
-        libgte_ScaleMatrix(&posData->posMatrix.coord, &posData->scale);
-        posData->posMatrix.flag = 0;
-    }
-
-    void resetMomentumData(MomentumData* data)
-    {
-        memset(data->delta, 0, sizeof(data->delta));
-        memset(data->subDelta, 0, sizeof(data->subDelta));
-    }
-
-    constexpr int32_t getAnimatedTextureHeight(DigimonType type)
-    {
-        switch (type)
-        {
-            case DigimonType::DEMIMERAMON: return 44;
-            case DigimonType::FLAREIZAMON: [[fallthrough]];
-            case DigimonType::DARKRIZAMON: return 16;
-            case DigimonType::BIRDRAMON: [[fallthrough]];
-            case DigimonType::SABERDRAMON: [[fallthrough]];
-            case DigimonType::NPC_BIRDRAMON: return 40;
-            case DigimonType::MERAMON: [[fallthrough]];
-            case DigimonType::NPC_MERAMON: [[fallthrough]];
-            case DigimonType::BLUEMERAMON: return 30;
-            default: return -1;
-        }
-    }
-
-    void animateEntityTexture(Entity* entity)
-    {
-        auto width = getAnimatedTextureHeight(entity->type);
-        if (width <= 0) return;
-        if ((PLAYTIME_FRAMES % 2) != 0) return;
-
-        auto frame = 0;
-        if ((PLAYTIME_FRAMES % 6) == 0)
-            frame = 2;
-        else if ((PLAYTIME_FRAMES % 4) == 0)
-            frame = 1;
-
-        RECT rect{
-            .x      = entity->textureX,
-            .y      = static_cast<int16_t>(entity->textureY + 32 + (frame * 32)),
-            .width  = static_cast<int16_t>(width),
-            .height = 32,
-        };
-        libgpu_MoveImage(&rect, entity->textureX, entity->textureY);
-    }
-
     void setupModelMatrix(PositionData* node)
     {
         libgte_TransMatrix(&node->posMatrix.coord, &node->location);
@@ -1068,155 +1220,6 @@ extern "C"
         }
 
         entity->animInstrPtr = reinterpret_cast<int16_t*>(animDataPtr.buffer);
-    }
-
-    // this function blows up in size otherwise
-    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-    __attribute__((optimize("Os"))) void handleKeyFrameInstruction(MomentumData* momentum, int16_t*& instructionPtrPtr)
-    {
-        while ((instructionPtrPtr[0] & 0x8000) != 0)
-        {
-            auto nodeId   = instructionPtrPtr[0] & 0x3F;
-            auto axisMask = (instructionPtrPtr[0] >> 6) & 0x1FF;
-            auto scale    = instructionPtrPtr[1];
-            auto& data    = momentum[nodeId];
-
-            instructionPtrPtr += 2;
-
-            for (int32_t i = 0; i < 9; i++)
-            {
-                if ((axisMask & (0x100 >> i)) != 0)
-                {
-                    auto value       = instructionPtrPtr[0];
-                    data.delta[i]    = value / scale;
-                    int16_t subDelta = value % scale;
-                    if (subDelta != 0)
-                    {
-                        data.subValue[i] = subDelta < 1 ? -1 : 1;
-                        data.scale1[i]   = scale;
-                        data.subScale[i] = scale;
-                    }
-                    data.subDelta[i] = abs(subDelta);
-                    instructionPtrPtr += 1;
-                }
-            }
-        }
-    }
-
-    static constexpr Pair<int32_t, int32_t>
-    calculateMomentum(int16_t delta, int16_t scale, int16_t subDelta, int16_t scale2, int8_t subValue)
-    {
-        auto newValue  = delta;
-        auto newScale2 = scale2;
-
-        if (subDelta != 0)
-        {
-            newScale2 -= subDelta;
-            if (newScale2 < 1)
-            {
-                newScale2 += scale;
-                newValue += subValue;
-            }
-        }
-
-        return {newValue, newScale2};
-    }
-
-    static void applyRootMomentum(Entity* entity)
-    {
-        auto& momentum = entity->momentum[0];
-
-        Vector vel;
-        for (int32_t i = 0; i < 3; i++)
-        {
-            if (i == 0 && (entity->animId == 0x23 || entity->animId == 0x24))
-            {
-                vel.x = 0;
-                continue;
-            }
-
-            momentum.subScale[6 + i] -= momentum.subDelta[6 + i];
-            if (momentum.subDelta[6 + i] == 0 || momentum.subScale[6 + i] > 0)
-            {
-                vel[i] = momentum.delta[6 + i] << 0x0F;
-                continue;
-            }
-
-            vel[i] = (momentum.delta[6 + i] + momentum.subValue[6 + i]) << 0x0F;
-            momentum.subScale[6 + i] += momentum.scale1[6 + i];
-        }
-
-        if ((entity->animFlag & 2) == 0)
-        {
-            Vector result;
-            auto& posData = entity->posData[0];
-            libgte_ApplyMatrixLV(&posData.posMatrix.coord, &vel, &result);
-
-            if ((entity->animFlag & 0x08) && (result.z < 0)) result.z = 0;
-            if ((entity->animFlag & 0x10) && (result.x < 0)) result.x = 0;
-            if ((entity->animFlag & 0x20) && (result.z > 0)) result.z = 0;
-            if ((entity->animFlag & 0x40) && (result.x > 0)) result.x = 0;
-
-            entity->locX += result.x;
-            entity->locY += result.y;
-            entity->locZ += result.z;
-            posData.location.x = entity->locX >> 0x0F;
-            posData.location.y = entity->locY >> 0x0F;
-            posData.location.z = entity->locZ >> 0x0F;
-        }
-    }
-
-    static void tickMomentum(Entity* entity, MomentumData* momentum)
-    {
-        auto boneCount = getDigimonData(entity->type)->boneCount;
-
-        for (int32_t i = 0; i < boneCount; i++)
-        {
-            auto& node          = entity->momentum[i];
-            auto& posData       = entity->posData[i];
-            auto hasScale       = false;
-            auto hasRotation    = false;
-            auto hasTranslation = false;
-
-            for (int32_t j = 0; j < 9; j++)
-            {
-                auto delta    = node.delta[j];
-                auto subDelta = node.subDelta[j];
-                auto scale    = node.scale1[j];
-                auto subScale = node.subScale[j];
-                auto subValue = node.subValue[j];
-
-                if (delta == 0 && subDelta == 0) continue;
-
-                auto newVals     = calculateMomentum(delta, scale, subDelta, subScale, subValue);
-                node.subScale[j] = newVals.second;
-
-                if (j < 3)
-                {
-                    posData.scale[j] += newVals.first;
-                    hasScale = true;
-                }
-                else if (j < 6)
-                {
-                    posData.rotation[j - 3] += newVals.first;
-                    hasRotation = true;
-                }
-                else if (j < 9 && i != 0)
-                {
-                    posData.location[j - 6] += newVals.first;
-                    hasTranslation = true;
-                }
-            }
-
-            if (i == 0)
-            {
-                calculatePosMatrix(&posData, false);
-                applyRootMomentum(entity);
-                setupModelMatrix(&posData);
-            }
-            else
-                calculatePosMatrix(&posData, hasTranslation);
-        }
     }
 
     void tickAnimation(Entity* entity)

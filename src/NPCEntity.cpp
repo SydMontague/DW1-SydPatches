@@ -11,55 +11,13 @@
 
 namespace
 {
+    constexpr auto ROTATION_SPEED = 113;
+
     void NPCEntity_tickBattle(int32_t instanceId)
     {
         auto* entity = ENTITY_TABLE.getEntityById(instanceId);
         tickAnimation(entity);
         if ((entity->animFlag & 4) != 0) tickAnimation(entity);
-    }
-} // namespace
-
-extern "C"
-{
-    constexpr auto ROTATION_SPEED = 113;
-
-    void loadNPCModel(DigimonType digimonId)
-    {
-        loadMMD(digimonId, EntityType::NPC);
-    }
-
-    void setActiveAnim(uint32_t scriptId, uint8_t animId)
-    {
-        // TODO figure out if this function is even useful. All callers are hardcoded to use scriptId 12
-        for (int32_t i = 0; i < 8; i++)
-        {
-            NPCEntity* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i + 2));
-            if (entity != nullptr && entity->scriptId == scriptId)
-            {
-                NPC_ACTIVE_ANIM[i + 2] = animId;
-                return;
-            }
-        }
-    }
-
-    void startNPCAnimation(uint32_t scriptId, uint8_t animId)
-    {
-        for (int32_t i = 0; i < 8; i++)
-        {
-            NPCEntity* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i + 2));
-            if (entity != nullptr && entity->scriptId == scriptId)
-            {
-                startAnimation(entity, animId);
-                return;
-            }
-        }
-    }
-
-    void setLoopCountToOne(uint32_t scriptId)
-    {
-        auto* entity = getEntityFromScriptId(scriptId).first;
-        // vanilla doesn't do the nullptr check
-        if (entity != nullptr) entity->loopCount = 1;
     }
 
     void tickWaypointWalk(MapDigimonEntity* mapDigimon, Entity* entity, int32_t animation, int32_t instanceId)
@@ -436,14 +394,6 @@ extern "C"
         }
     }
 
-    void scriptUnloadEntity(int32_t entityId)
-    {
-        uint8_t _entityId     = entityId;
-        auto entity           = getEntityFromScriptId(entityId);
-        entity.first->isOnMap = false;
-        removeEntity(entity.first->type, entity.second);
-    }
-
     void clearMapAITable(int32_t entityId)
     {
         if (entityId != -1)
@@ -461,6 +411,69 @@ extern "C"
                 MAP_DIGIMON_TABLE[i].activeSecton      = 0;
             }
         }
+    }
+
+    inline void _setMovementEnabled(int32_t entityId, uint32_t mode)
+    {
+        if (entityId == 0)
+            Tamer_setState(mode == 0 ? 0 : 6);
+        else if (entityId == 1)
+            Partner_setState(mode == 0 ? 1 : 11);
+        else
+        {
+            MAP_DIGIMON_TABLE[entityId - 2].stopAnim = mode;
+            if (mode == 1) clearMapAITable(entityId - 2);
+        }
+    }
+} // namespace
+
+extern "C"
+{
+    void loadNPCModel(DigimonType digimonId)
+    {
+        loadMMD(digimonId, EntityType::NPC);
+    }
+
+    void setActiveAnim(uint32_t scriptId, uint8_t animId)
+    {
+        // TODO figure out if this function is even useful. All callers are hardcoded to use scriptId 12
+        for (int32_t i = 0; i < 8; i++)
+        {
+            NPCEntity* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i + 2));
+            if (entity != nullptr && entity->scriptId == scriptId)
+            {
+                NPC_ACTIVE_ANIM[i + 2] = animId;
+                return;
+            }
+        }
+    }
+
+    void startNPCAnimation(uint32_t scriptId, uint8_t animId)
+    {
+        for (int32_t i = 0; i < 8; i++)
+        {
+            NPCEntity* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i + 2));
+            if (entity != nullptr && entity->scriptId == scriptId)
+            {
+                startAnimation(entity, animId);
+                return;
+            }
+        }
+    }
+
+    void setLoopCountToOne(uint32_t scriptId)
+    {
+        auto* entity = getEntityFromScriptId(scriptId).first;
+        // vanilla doesn't do the nullptr check
+        if (entity != nullptr) entity->loopCount = 1;
+    }
+
+    void scriptUnloadEntity(int32_t entityId)
+    {
+        uint8_t _entityId     = entityId;
+        auto entity           = getEntityFromScriptId(entityId);
+        entity.first->isOnMap = false;
+        removeEntity(entity.first->type, entity.second);
     }
 
     void resetEntityOrigin(uint32_t scriptId)
@@ -488,19 +501,6 @@ extern "C"
                     }
                 }
             }
-        }
-    }
-
-    inline void _setMovementEnabled(int32_t entityId, uint32_t mode)
-    {
-        if (entityId == 0)
-            Tamer_setState(mode == 0 ? 0 : 6);
-        else if (entityId == 1)
-            Partner_setState(mode == 0 ? 1 : 11);
-        else
-        {
-            MAP_DIGIMON_TABLE[entityId - 2].stopAnim = mode;
-            if (mode == 1) clearMapAITable(entityId - 2);
         }
     }
 

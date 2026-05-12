@@ -12,7 +12,7 @@
 #include "extern/BTL.hpp"
 #include "extern/dw1.hpp"
 
-extern "C"
+namespace
 {
     void handleAutopilot(ItemType itemId)
     {
@@ -381,62 +381,6 @@ extern "C"
         addWithLimit(&PARTNER_ENTITY.stats.brain, data.addedBrain, 999);
     }
 
-    DigimonType getEvoItemTarget(ItemType item)
-    {
-        switch (item)
-        {
-            case ItemType::GREY_CLAWS: return DigimonType::GREYMON;
-            case ItemType::FIREBALL: return DigimonType::MERAMON;
-            case ItemType::FLAMEWING: return DigimonType::BIRDRAMON;
-            case ItemType::IRON_HOOF: return DigimonType::CENTARUMON;
-            case ItemType::MONO_STONE: return DigimonType::MONOCHROMON;
-            case ItemType::STEEL_DRILL: return DigimonType::DRIMOGEMON;
-            case ItemType::WHITE_FANG: return DigimonType::TYRANNOMON;
-            case ItemType::BLACK_WING: return DigimonType::DEVIMON;
-            case ItemType::SPIKE_CLUB: return DigimonType::OGREMON;
-            case ItemType::FLAMEINGMANE: return DigimonType::LEOMON;
-            case ItemType::WHITE_WING: return DigimonType::ANGEMON;
-            case ItemType::TORN_TATTER: return DigimonType::BAKEMON;
-            case ItemType::ELECTRO_RING: return DigimonType::INVALID;
-            case ItemType::RAINBOWHORN: return DigimonType::AIRDRAMON;
-            case ItemType::ROOSTER: return DigimonType::KOKATORIMON;
-            case ItemType::UNIHORN: return DigimonType::UNIMON;
-            case ItemType::HORN_HELMET: return DigimonType::KABUTERIMON;
-            case ItemType::SCISSOR_JAW: return DigimonType::KUWAGAMON;
-            case ItemType::FERTILIZER: return DigimonType::VEGIEMON;
-            case ItemType::KOGA_LAWS: return DigimonType::NINJAMON;
-            case ItemType::WATERBOTTLE: return DigimonType::SEADRAMON;
-            case ItemType::NORTH_STAR: return DigimonType::WHAMON;
-            case ItemType::RED_SHELL: return DigimonType::SHELLMON;
-            case ItemType::HARD_SCALE: return DigimonType::COELAMON;
-            case ItemType::BLUECRYSTAL: return DigimonType::GARURUMON;
-            case ItemType::ICE_CRYSTAL: return DigimonType::FRIGIMON;
-            case ItemType::HAIR_GROWER: return DigimonType::MOJYAMON;
-            case ItemType::SUNGLASSES: return DigimonType::NANIMON;
-            case ItemType::METAL_PART: return DigimonType::METALGREYMON;
-            case ItemType::FATAL_BONE: return DigimonType::SKULLGREYMON;
-            case ItemType::CYBER_PART: return DigimonType::ANDROMON;
-            case ItemType::MEGA_HAND: return DigimonType::MEGADRAMON;
-            case ItemType::SILVER_BALL: return DigimonType::MAMEMON;
-            case ItemType::METAL_ARMOR: return DigimonType::METALMAMEMON;
-            case ItemType::CHAINSAW: return DigimonType::GIROMON;
-            case ItemType::SMALL_SPEAR: return DigimonType::PIXIMON;
-            case ItemType::X_BANDAGE: return DigimonType::MONZAEMON;
-            case ItemType::RAY_GUN: return DigimonType::VADEMON;
-            case ItemType::GOLD_BANANA: return DigimonType::ETEMON;
-            case ItemType::MYSTY_EGG: return DigimonType::DIGITAMAMON;
-            case ItemType::RED_RUBY: return DigimonType::PHOENIXMON;
-            case ItemType::BETTLEPEARL: return DigimonType::HERCULESKABUTERIMON;
-            case ItemType::CORAL_CHARM: return DigimonType::MEGASEADRAMON;
-            case ItemType::MOON_MIRROR: return DigimonType::WEREGARURUMON;
-            case ItemType::GIGA_HAND: return DigimonType::GIGADRAMON;
-            case ItemType::NOBLE_MANE: return DigimonType::PANJYAMON;
-            case ItemType::METAL_BANANA: return DigimonType::METALETEMON;
-
-            default: return DigimonType::INVALID;
-        }
-    }
-
     void handleEvoItem(ItemType item)
     {
         auto target = getEvoItemTarget(item);
@@ -453,14 +397,14 @@ extern "C"
         Partner_setState(13);
     }
 
-    static void handleVarious(ItemType item)
+    void handleVarious(ItemType item)
     {
         if (PARTNER_ENTITY.stats.currentHP == 0) return;
 
         BTL_healStatusEffect(true);
     }
 
-    static void handleDoubleFloppy(ItemType item)
+    void handleDoubleFloppy(ItemType item)
     {
         if (PARTNER_ENTITY.stats.currentHP == 0) return;
 
@@ -474,7 +418,7 @@ extern "C"
         }
     }
 
-    static void handleOmnipotent(ItemType item)
+    void handleOmnipotent(ItemType item)
     {
         if (PARTNER_ENTITY.stats.currentHP == 0) return;
 
@@ -482,12 +426,12 @@ extern "C"
         handleDoubleFloppy(item);
     }
 
-    static void handleProtection(ItemType item)
+    void handleProtection(ItemType item)
     {
         COMBAT_DATA_PTR->fighter[0].flags.isProtected = true;
     }
 
-    static void handleRestoreItem(int32_t healAmount, bool removeStatus)
+    void handleRestoreItem(int32_t healAmount, bool removeStatus)
     {
         if (PARTNER_ENTITY.stats.currentHP == 0) startAnimation(&PARTNER_ENTITY, 0x2C);
 
@@ -502,17 +446,17 @@ extern "C"
         }
     }
 
-    static void handleRestore(ItemType item)
+    void handleRestore(ItemType item)
     {
         handleRestoreItem(PARTNER_ENTITY.stats.hp / 2, false);
     }
 
-    static void handleSuperRestore(ItemType item)
+    void handleSuperRestore(ItemType item)
     {
         handleRestoreItem(9999, true);
     }
 
-    static void handleHPHealingItem(int32_t amount, int32_t particleEffect)
+    void handleHPHealingItem(int32_t amount, int32_t particleEffect)
     {
         if (PARTNER_ENTITY.stats.currentHP == 0) return;
 
@@ -522,7 +466,7 @@ extern "C"
         if (GAME_STATE == 1) addEntityText(&PARTNER_ENTITY, 0, 11, amount, 1);
     }
 
-    static void handleMPHealingItem(int32_t amount, int32_t particleEffect)
+    void handleMPHealingItem(int32_t amount, int32_t particleEffect)
     {
         if (PARTNER_ENTITY.stats.currentHP == 0) return;
 
@@ -532,51 +476,51 @@ extern "C"
         if (GAME_STATE == 1) addEntityText(&PARTNER_ENTITY, 0, 11, amount, 2);
     }
 
-    static void handleSmallHP(ItemType item)
+    void handleSmallHP(ItemType item)
     {
         handleHPHealingItem(500, 0);
     }
 
-    static void handleMediumHP(ItemType item)
+    void handleMediumHP(ItemType item)
     {
         handleHPHealingItem(1500, 0);
     }
 
-    static void handleLargeHP(ItemType item)
+    void handleLargeHP(ItemType item)
     {
         handleHPHealingItem(5000, 1);
     }
 
-    static void handleSuperHP(ItemType item)
+    void handleSuperHP(ItemType item)
     {
         handleHPHealingItem(9999, 1);
     }
 
-    static void handleSmallMP(ItemType item)
+    void handleSmallMP(ItemType item)
     {
         handleMPHealingItem(500, 0);
     }
 
-    static void handleMediumMP(ItemType item)
+    void handleMediumMP(ItemType item)
     {
         handleMPHealingItem(1500, 0);
     }
 
-    static void handleLargeMP(ItemType item)
+    void handleLargeMP(ItemType item)
     {
         handleMPHealingItem(5000, 1);
     }
 
-    static void handleNothing(ItemType item) {}
+    void handleNothing(ItemType item) {}
 
-    static void
+    void
     buffStats(DigimonEntity* entity, int32_t entityId, int32_t amount, int16_t* valuePtr, uint8_t color, uint8_t icon)
     {
         addWithLimit(valuePtr, amount, 999);
         addEntityText(entity, entityId, color, amount, icon);
     }
 
-    static void handleBuffDisk(ItemType item)
+    void handleBuffDisk(ItemType item)
     {
         if (PARTNER_ENTITY.stats.currentHP == 0) return;
 
@@ -633,6 +577,65 @@ extern "C"
         }
 
         BTL_addBuffDiskEffect(&PARTNER_ENTITY);
+    }
+} // namespace
+
+extern "C"
+{
+    DigimonType getEvoItemTarget(ItemType item)
+    {
+        switch (item)
+        {
+            case ItemType::GREY_CLAWS: return DigimonType::GREYMON;
+            case ItemType::FIREBALL: return DigimonType::MERAMON;
+            case ItemType::FLAMEWING: return DigimonType::BIRDRAMON;
+            case ItemType::IRON_HOOF: return DigimonType::CENTARUMON;
+            case ItemType::MONO_STONE: return DigimonType::MONOCHROMON;
+            case ItemType::STEEL_DRILL: return DigimonType::DRIMOGEMON;
+            case ItemType::WHITE_FANG: return DigimonType::TYRANNOMON;
+            case ItemType::BLACK_WING: return DigimonType::DEVIMON;
+            case ItemType::SPIKE_CLUB: return DigimonType::OGREMON;
+            case ItemType::FLAMEINGMANE: return DigimonType::LEOMON;
+            case ItemType::WHITE_WING: return DigimonType::ANGEMON;
+            case ItemType::TORN_TATTER: return DigimonType::BAKEMON;
+            case ItemType::ELECTRO_RING: return DigimonType::INVALID;
+            case ItemType::RAINBOWHORN: return DigimonType::AIRDRAMON;
+            case ItemType::ROOSTER: return DigimonType::KOKATORIMON;
+            case ItemType::UNIHORN: return DigimonType::UNIMON;
+            case ItemType::HORN_HELMET: return DigimonType::KABUTERIMON;
+            case ItemType::SCISSOR_JAW: return DigimonType::KUWAGAMON;
+            case ItemType::FERTILIZER: return DigimonType::VEGIEMON;
+            case ItemType::KOGA_LAWS: return DigimonType::NINJAMON;
+            case ItemType::WATERBOTTLE: return DigimonType::SEADRAMON;
+            case ItemType::NORTH_STAR: return DigimonType::WHAMON;
+            case ItemType::RED_SHELL: return DigimonType::SHELLMON;
+            case ItemType::HARD_SCALE: return DigimonType::COELAMON;
+            case ItemType::BLUECRYSTAL: return DigimonType::GARURUMON;
+            case ItemType::ICE_CRYSTAL: return DigimonType::FRIGIMON;
+            case ItemType::HAIR_GROWER: return DigimonType::MOJYAMON;
+            case ItemType::SUNGLASSES: return DigimonType::NANIMON;
+            case ItemType::METAL_PART: return DigimonType::METALGREYMON;
+            case ItemType::FATAL_BONE: return DigimonType::SKULLGREYMON;
+            case ItemType::CYBER_PART: return DigimonType::ANDROMON;
+            case ItemType::MEGA_HAND: return DigimonType::MEGADRAMON;
+            case ItemType::SILVER_BALL: return DigimonType::MAMEMON;
+            case ItemType::METAL_ARMOR: return DigimonType::METALMAMEMON;
+            case ItemType::CHAINSAW: return DigimonType::GIROMON;
+            case ItemType::SMALL_SPEAR: return DigimonType::PIXIMON;
+            case ItemType::X_BANDAGE: return DigimonType::MONZAEMON;
+            case ItemType::RAY_GUN: return DigimonType::VADEMON;
+            case ItemType::GOLD_BANANA: return DigimonType::ETEMON;
+            case ItemType::MYSTY_EGG: return DigimonType::DIGITAMAMON;
+            case ItemType::RED_RUBY: return DigimonType::PHOENIXMON;
+            case ItemType::BETTLEPEARL: return DigimonType::HERCULESKABUTERIMON;
+            case ItemType::CORAL_CHARM: return DigimonType::MEGASEADRAMON;
+            case ItemType::MOON_MIRROR: return DigimonType::WEREGARURUMON;
+            case ItemType::GIGA_HAND: return DigimonType::GIGADRAMON;
+            case ItemType::NOBLE_MANE: return DigimonType::PANJYAMON;
+            case ItemType::METAL_BANANA: return DigimonType::METALETEMON;
+
+            default: return DigimonType::INVALID;
+        }
     }
 
     void fillItemTable()
