@@ -94,6 +94,11 @@ NAMING_DATA:
 ; override some menu data
 .org 0x80123860
 .area 0x80124c0c-.
+  .importobj "compiled/ItemInfo.lib"
+  .importobj "compiled/ItemInfoDataB.lib"
+
+  .align 4
+  .importobj "compiled/Pause.lib"
 
   .notice "Empty space left: " + (0x80124c0c-.) + " bytes"
   .fill 0x80124c0c-.
@@ -104,6 +109,9 @@ NAMING_DATA:
 .area 0x801292d4
   .importobj "compiled/MapData.lib"
 
+  .align 4
+  .importobj "compiled/ThrownItem.lib"
+
   .notice "Empty space left: " + (0x801292d4-.) + " bytes"
   .fill 0x801292d4-.
 .endarea
@@ -111,6 +119,10 @@ NAMING_DATA:
 ; override vanilla raise data, dynamic library data
 .org 0x8012abec
 .area 0x8012bacc-.
+  .importobj "compiled/ItemInfoDataA.lib"
+
+  .align 4
+  .importobj "compiled/Timestamp.lib"
 
   .notice "Empty space left: " + (0x8012bacc-.) + " bytes"
   .fill 0x8012bacc-.
@@ -119,6 +131,7 @@ NAMING_DATA:
 ; override condition bubble data, some file paths
 .org 0x8012cb8c
 .area 0x8012ceb4-.
+  .importobj "compiled/Helper.lib"
 
   .notice "Empty space left: " + (0x8012ceb4-.) + " bytes"
   .fill 0x8012ceb4-.
