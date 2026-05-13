@@ -340,6 +340,8 @@ void AtlasString::setPosition(int32_t x, int32_t y)
 
 void AtlasString::render(int32_t depth) const
 {
+    if(data.size() == 0) return;
+
     auto* sprites = reinterpret_cast<SPRT*>(libgs_GsGetWorkBase());
     dtl::copy(data.begin(), data.end(), sprites);
     for (int32_t i = 0; i < data.size(); i++)
