@@ -114,7 +114,19 @@ namespace
         box.finalPos.height = static_cast<int16_t>(rows * SLOT_HEIGHT + 14);
     }
 
-    RECT getCursorSlotRect();
+    RECT getCursorSlotRect()
+    {
+        const int32_t cursorPos = getVisibleRow(INVENTORY_POINTER);
+        if (cursorPos < 0) return RECT{.x = 0, .y = 0, .width = 16, .height = 16};
+        const int32_t cursorRow = cursorPos / 2 - UI_BOX_DATA[BOX_LIST].rowOffset;
+        const int32_t cursorCol = cursorPos & 1;
+        return RECT{
+            .x      = getSlotPosX(cursorCol),
+            .y      = getSlotPosY(cursorRow),
+            .width  = 16,
+            .height = 16,
+        };
+    }
 
     struct Data
     {
@@ -133,6 +145,9 @@ namespace
         AtlasString menuUseStr;
         AtlasString menuDropStr;
         AtlasString menuMoveStr;
+
+        dtl::array<AtlasString, 30> slotNameStrs;
+        dtl::array<AtlasString, 30> slotAmountStrs;
     };
 
     dtl::unique_ptr<Data> data;
@@ -157,6 +172,8 @@ namespace
     int16_t activeTabW;
 
     int8_t inv_moveSourceSlot = -1;
+
+    uint32_t scrollBopPhase = 0;
 
     bool isInventoryKeyDown(InputButtons button)
     { return (POLLED_INPUT & ~POLLED_INPUT_PREVIOUS & button) != 0; }
@@ -228,6 +245,26 @@ namespace
         }
     }
 
+    void bakeSlot(int32_t i)
+    {
+        const auto type = INVENTORY_ITEM_TYPES[i];
+        if (type == ItemType::NONE)
+        {
+            data->slotNameStrs[i]   = {};
+            data->slotAmountStrs[i] = {};
+            return;
+        }
+        data->slotNameStrs[i] = getAtlasVanilla().render(getItem(type)->name, 0, 0, TEXT_LIGHT);
+        uint8_t amountBuf[8];
+        sprintf(amountBuf, "x%d", INVENTORY_ITEM_AMOUNTS[i]);
+        data->slotAmountStrs[i] = getAtlasVanilla().render(amountBuf, 0, 0, TEXT_LIGHT);
+    }
+
+    void bakeSlotStrings()
+    {
+        for (int32_t i = 0; i < INVENTORY_SIZE; i++) bakeSlot(i);
+    }
+
     void initFontData()
     {
         data = dtl::make_unique<Data>();
@@ -240,6 +277,8 @@ namespace
         constexpr int16_t badgeX = CAP_X + CAP_WIDTH - badgeW - 6;
         constexpr int16_t badgeY = CAP_Y + 4;
         data->fullBadgeStr = getAtlas7px().render("FULL", badgeX + 4, badgeY + 1, TEXT_RED);
+
+        bakeSlotStrings();
     }
 
     const char* getLevelName(Level level)
@@ -394,22 +433,18 @@ namespace
 
             renderItemSprite(type, posX + SLOT_SPRITE_OFF_X, posY + SLOT_SPRITE_OFF_Y, depth);
 
-            const auto* name = getItem(type)->name;
-            getAtlasVanilla().renderSlow(name,
-                                         posX + SLOT_NAME_OFF_X,
-                                         posY + SLOT_NAME_OFF_Y,
-                                         depth,
-                                         TEXT_LIGHT);
+            auto& nameStr = data->slotNameStrs[i];
+            nameStr.setPosition(posX + SLOT_NAME_OFF_X, posY + SLOT_NAME_OFF_Y);
+            nameStr.render(depth);
 
-            uint8_t amountBuf[8];
-            sprintf(amountBuf, "x%d", INVENTORY_ITEM_AMOUNTS[i]);
-            auto amountStr = getAtlasVanilla().render(amountBuf, 0, 0,
-                                                     p == cursorPos ? TEXT_CYAN : TEXT_LIGHT);
+            auto& amountStr = data->slotAmountStrs[i];
             RECT amountRect{.x      = posX,
                             .y      = static_cast<int16_t>(posY + SLOT_AMOUNT_OFF_Y),
                             .width  = SLOT_AMOUNT_OFF_X,
                             .height = 0};
             amountStr.setAlignment(amountRect, AlignmentX::RIGHT, AlignmentY::TOP);
+            const auto& amountColor = (p == cursorPos) ? TEXT_CYAN : TEXT_LIGHT;
+            amountStr.setColor(amountColor.r, amountColor.g, amountColor.b);
             amountStr.render(depth);
         }
 
@@ -433,7 +468,6 @@ namespace
 
         const int16_t arrowCx     = LIST_X + LIST_WIDTH / 2;
         const int16_t listBottomY = box.finalPos.y + box.finalPos.height - 1;
-        static uint32_t scrollBopPhase = 0;
         scrollBopPhase++;
         const int16_t bop = static_cast<int16_t>((scrollBopPhase >> 4) & 1);
         if (box.rowOffset > 0) renderScrollArrow(arrowCx, LIST_Y + 3 - bop, false, depth);
@@ -605,6 +639,7 @@ namespace
                     removeItem(type, amount);
                     compactInventory();
                     rebuildFiltered();
+                    bakeSlotStrings();
                     applyListSize();
                     UI_BOX_DATA[BOX_LIST].totalRows = inv_filteredCount;
                     if (inv_filteredCount == 0)
@@ -747,6 +782,8 @@ namespace
                     dtl::swap(INVENTORY_ITEM_AMOUNTS[src], INVENTORY_ITEM_AMOUNTS[dst]);
                     dtl::swap(INVENTORY_ITEM_NAMES[src], INVENTORY_ITEM_NAMES[dst]);
                     rebuildFiltered();
+                    bakeSlot(src);
+                    bakeSlot(dst);
                     descNeedsUpdate = true;
                 }
                 inv_moveSourceSlot = -1;
@@ -810,20 +847,6 @@ namespace
 
         // features bits: 2 = translucent fill, 8 = skip engine auto-border (we draw a notched one), 16 = 75/25 blend.
         createAnimatedUIBox(BOX_LIST, 2, 26, &finalPos, &startPos, tickInventoryTop, renderInventoryTop);
-    }
-
-    RECT getCursorSlotRect()
-    {
-        const int32_t cursorPos = getVisibleRow(INVENTORY_POINTER);
-        if (cursorPos < 0) return RECT{.x = 0, .y = 0, .width = 16, .height = 16};
-        const int32_t cursorRow = cursorPos / 2 - UI_BOX_DATA[BOX_LIST].rowOffset;
-        const int32_t cursorCol = cursorPos & 1;
-        return RECT{
-            .x      = getSlotPosX(cursorCol),
-            .y      = getSlotPosY(cursorRow),
-            .width  = 16,
-            .height = 16,
-        };
     }
 
     void tickInventoryInfo(int32_t /*instanceId*/)
