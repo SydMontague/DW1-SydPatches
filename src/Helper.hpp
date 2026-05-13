@@ -57,6 +57,14 @@ public:
 constexpr auto SCREEN_WIDTH  = 320;
 constexpr auto SCREEN_HEIGHT = 240;
 
+template<size_t size = 256, typename... Args>
+constexpr dtl::array<uint8_t, size> format(const char* format, Args... args)
+{
+    dtl::array<uint8_t, size> buffer;
+    sprintf(buffer.data(), format, args...);
+    return buffer;
+}
+
 /*
  * Calculates whether a given time is within a given timeframe, where start being larger than end represents the
  * timeframe covering the day-change (or equivalent).

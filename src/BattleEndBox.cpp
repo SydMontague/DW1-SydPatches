@@ -74,9 +74,7 @@ namespace
     {
         uint8_t layer = 6 - index;
 
-        dtl::array<uint8_t, 16> string;
-        sprintf(string.data(), "%d", BITS_TO_GAIN);
-        getAtlasVanilla().renderSlow(string.data(), layer, {.x = -18, .y = 28});
+        getAtlasVanilla().renderSlow(format("%d", BITS_TO_GAIN).data(), layer, {.x = -18, .y = 28});
         data->bitString1.render(layer);
 
         if (BTL_END_BOX_TEXTBUFFER[0] != 0)
@@ -93,9 +91,7 @@ namespace
             .x = static_cast<int16_t>(UI_BOX_DATA[2].finalPos.x + 58),
             .y = static_cast<int16_t>(UI_BOX_DATA[2].finalPos.y + 10),
         };
-        dtl::array<uint8_t, 16> string;
-        sprintf(string.data(), "%d", MONEY);
-        getAtlasVanilla().renderSlow(string.data(), 4, settings);
+        getAtlasVanilla().renderSlow(format("%d", MONEY).data(), 4, settings);
         data->bitString2.render(4);
     }
 
@@ -139,9 +135,7 @@ namespace
                 .x = static_cast<int16_t>(box.finalPos.x + 0x8e),
                 .y = static_cast<int16_t>(box.finalPos.y + 9 + (i * 13)),
             };
-            dtl::array<uint8_t, 8> string;
-            sprintf(string.data(), "%d", STATS_GAINS.get(stat));
-            getAtlasVanilla().renderSlow(string.data(), layer, settings);
+            getAtlasVanilla().renderSlow(format("%d", STATS_GAINS.get(stat)).data(), layer, settings);
         }
 
         for (int32_t i = 0; i < 6; i++)
@@ -151,10 +145,7 @@ namespace
                 .y = static_cast<int16_t>(box.finalPos.y + 9 + (i * 13)),
             };
             auto stat = static_cast<Stat>(i);
-            dtl::array<uint8_t, 8> string;
-
-            sprintf(string.data(), "%d", INITIAL_COMBAT_STATS[0].get(stat));
-            getAtlasVanilla().renderSlow(string.data(), layer, settings);
+            getAtlasVanilla().renderSlow(format("%d", INITIAL_COMBAT_STATS[0].get(stat)).data(), layer, settings);
         }
 
         setTextColor(previous_color);

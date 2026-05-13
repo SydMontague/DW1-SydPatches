@@ -1,6 +1,8 @@
 #include "AtlasFont.hpp"
 #include "GameObjects.hpp"
+#include "Helper.hpp"
 #include "Timestamp.hpp"
+#include "extern/libc.hpp"
 
 namespace
 {
@@ -9,11 +11,8 @@ namespace
 
     void debugOverlayRender(int32_t instanceId)
     {
-        uint8_t buffer[64];
-        sprintf(buffer, "%u", RNG_STATE);
-        getAtlas5px().renderSlow(buffer, 1, RNG_POSITION);
-        sprintf(buffer, "%u", getTimestamp());
-        getAtlas5px().renderSlow(buffer, 1, TIME_POSITION);
+        getAtlas5px().renderSlow(format("%u", RNG_STATE).data(), 1, RNG_POSITION);
+        getAtlas5px().renderSlow(format("%u", getTimestamp()).data(), 1, TIME_POSITION);
     }
 } // namespace
 
