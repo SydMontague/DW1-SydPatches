@@ -121,7 +121,7 @@ namespace
                     int16_t targetAngle;
                     int16_t ccDiff;
                     int16_t cwDiff;
-                    getRotationDifference(entity->posData, &mapDigimon->targetLocation, &targetAngle, &ccDiff, &cwDiff);
+                    getRotationDifference(entity->posData, &otherEntity->posData->location, &targetAngle, &ccDiff, &cwDiff);
                     rotateEntity(&entity->posData->rotation, targetAngle, ccDiff, cwDiff, ROTATION_SPEED);
                 }
             }
