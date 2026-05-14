@@ -291,7 +291,7 @@ namespace
     {
         if (UI_BOX_DATA[id].state != 0) removeAnimatedUIBox(id, nullptr);
 
-        data.release();
+        data.reset();
     }
 
     void createPostBattleStatsBox()
