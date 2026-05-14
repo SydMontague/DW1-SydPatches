@@ -21,7 +21,6 @@
 #include "Map.hpp"
 #include "MapObjects.hpp"
 #include "Model.hpp"
-#include "Movie.hpp"
 #include "ParticleFX.hpp"
 #include "Partner.hpp"
 #include "Pause.hpp"
@@ -676,30 +675,45 @@ namespace
         initializeEntityText();
     }
 
+    void initializeFramebuffer()
+    {
+        constexpr RECT frameBuffers{.x = 0, .y = 0, .width = 320, .height = 480};
+        constexpr dtl::array<uint16_t, 2> drawOffset0 = {160, 360};
+        constexpr dtl::array<uint16_t, 2> drawOffset1 = {160, 120};
+
+        libgpu_SetDispMask(0);
+        libgs_GsInitGraph(320, 240, 4, 0, 0);
+        libgs_GsDefDispBuff(0, 0, 0, 0xf0);
+        libgpu_ClearImage(&frameBuffers, 0, 0, 0);
+        GS_ORDERING_TABLE[0].length = 12;
+        GS_ORDERING_TABLE[0].origin = GSOT_TAGS_0.data();
+        GS_ORDERING_TABLE[1].length = 12;
+        GS_ORDERING_TABLE[1].origin = GSOT_TAGS_1.data();
+        libgs_GsInit3D();
+        DRAWING_OFFSET_X = 160;
+        DRAWING_OFFSET_Y = 120;
+        libgpu_SetDrawOffset(&DR_OFFSETS[0], drawOffset0.data());
+        libgpu_SetDrawOffset(&DR_OFFSETS[1], drawOffset1.data());
+        MAP_LAYER_ENABLED = true;
+        libgpu_SetDispMask(1);
+    }
+
+    void startMovie(Movies movie)
+    {
+        libcd_CdInit(0);
+        libgpu_ResetGraph(0);
+        libgpu_SetGraphDebug(0);
+        loadDynamicLibrary(Overlay::MOV_REL, nullptr, false, nullptr, nullptr);
+        MOV_startMovie(movie);
+        libgpu_ResetGraph(3);
+    };
+
+    void playMovie(Movies movie)
+    {
+        startMovie(movie);
+        initializeFramebuffer();
+    }
 } // namespace
-
-void initializeFramebuffer()
-{
-    constexpr RECT frameBuffers{.x = 0, .y = 0, .width = 320, .height = 480};
-    constexpr dtl::array<uint16_t, 2> drawOffset0 = {160, 360};
-    constexpr dtl::array<uint16_t, 2> drawOffset1 = {160, 120};
-
-    libgpu_SetDispMask(0);
-    libgs_GsInitGraph(320, 240, 4, 0, 0);
-    libgs_GsDefDispBuff(0, 0, 0, 0xf0);
-    libgpu_ClearImage(&frameBuffers, 0, 0, 0);
-    GS_ORDERING_TABLE[0].length = 12;
-    GS_ORDERING_TABLE[0].origin = GSOT_TAGS_0.data();
-    GS_ORDERING_TABLE[1].length = 12;
-    GS_ORDERING_TABLE[1].origin = GSOT_TAGS_1.data();
-    libgs_GsInit3D();
-    DRAWING_OFFSET_X = 160;
-    DRAWING_OFFSET_Y = 120;
-    libgpu_SetDrawOffset(&DR_OFFSETS[0], drawOffset0.data());
-    libgpu_SetDrawOffset(&DR_OFFSETS[1], drawOffset1.data());
-    MAP_LAYER_ENABLED = true;
-    libgpu_SetDispMask(1);
-}
 
 int32_t main()
 {
@@ -740,7 +754,7 @@ int32_t main()
         bool confirmed = false;
         do
         {
-            playMovie(Movies::INTRO, true);
+            playMovie(Movies::INTRO);
             initializeMusic();
             initFonts();
             confirmed = runLandingScreen();
@@ -758,7 +772,7 @@ int32_t main()
             {
                 newGameScene();
                 finalizeMusic();
-                playMovie(Movies::NEWGAME, true);
+                playMovie(Movies::NEWGAME);
                 initializeMusic();
                 loadStackedTIMFile("\\ETCDAT\\ETCTIM.BIN");
                 initFonts();
@@ -790,7 +804,7 @@ int32_t main()
             case 2:
             {
                 finalizeMusic();
-                playMovie(Movies::POST_CREDITS, true);
+                playMovie(Movies::POST_CREDITS);
                 initializeMusic();
                 loadStackedTIMFile("\\ETCDAT\\ETCTIM.BIN");
                 initFonts();
@@ -812,7 +826,7 @@ int32_t main()
             gameLoop();
         cleanupGame();
         finalizeMusic();
-        playMovie(Movies::CREDITS, true);
+        playMovie(Movies::CREDITS);
     }
 
     return 0;
