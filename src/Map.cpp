@@ -13,6 +13,7 @@
 #include "Inventory.hpp"
 #include "InventoryUI.hpp"
 #include "MapData.hpp"
+#include "MapName.hpp"
 #include "MapObjects.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
@@ -84,25 +85,6 @@ namespace
     uint8_t currentTimeOfDay;
     dtl::array<RGB5551*, 3> mapCluts;
     dtl::array<GsF_LIGHT, 3> mapLights;
-
-    uint8_t mapNameState;
-    TextSprite mapNameText = {
-        .font       = &vanillaFont,
-        .string     = "",
-        .uvX        = 704,
-        .uvY        = 256,
-        .uvWidth    = 0,
-        .uvHeight   = 0,
-        .posX       = -SCREEN_WIDTH / 2,
-        .posY       = -SCREEN_HEIGHT / 2,
-        .boxWidth   = SCREEN_WIDTH,
-        .boxHeight  = SCREEN_HEIGHT,
-        .alignmentX = AlignmentX::CENTER,
-        .alignmentY = AlignmentY::CENTER,
-        .color      = 0,
-        .layer      = 0,
-        .hasShadow  = 0,
-    };
 
     uint16_t deathMap;
     uint16_t deathMapExit;
@@ -652,7 +634,7 @@ namespace
             if (DROPPED_ITEMS[i].type != ItemType::NONE) deleteDroppedItem(i);
     }
 
-     void setMapTilePosData(POLY_FT4* prim, const MapTileData& data, int32_t offsetX, int32_t offsetY)
+    void setMapTilePosData(POLY_FT4* prim, const MapTileData& data, int32_t offsetX, int32_t offsetY)
     {
         auto posX = (data.posX - 160) - (offsetX - (160 - DRAWING_OFFSET_X));
         auto posY = (data.posY - 120) - (offsetY - (120 - DRAWING_OFFSET_Y));
@@ -660,7 +642,7 @@ namespace
         setPosDataPolyFT4(prim, posX, posY, 128, 128);
     }
 
-     void tickCameraFollowPlayer()
+    void tickCameraFollowPlayer()
     {
         if (GAME_STATE != 0) return;
         if (!isCameraFollowingPlayer()) return;
@@ -740,7 +722,6 @@ namespace
         tileData->texV     = texV;
     }
 
-
     void unloadMapObjects()
     {
         removeObject(ObjectID::DOORS, 0);
@@ -777,7 +758,6 @@ namespace
         DRAWING_OFFSET_Y = 0;
         unloadMapObjects();
     }
-
 
     void tickDaytimeTransition(int32_t instance)
     {
@@ -878,23 +858,6 @@ namespace
         }
 
         PREV_TILE_X = MAP_TILE_X;
-    }
-
-    void tickMapName(int32_t mapId)
-    {
-        if (mapNameState == 0)
-        {
-            mapNameText.string = MAP_NAME_PTR[MAP_ENTRIES[mapId].loadingName];
-            clearTextArea();
-            drawTextSprite(mapNameText);
-            mapNameState = 1;
-        }
-    }
-
-    void renderMapName(int32_t mapId)
-    {
-        if (mapNameState == 0) return;
-        renderTextSprite(mapNameText);
     }
 } // namespace
 
@@ -1643,13 +1606,6 @@ extern "C"
         }
 
         return false;
-    }
-
-    void addMapNameObject(int32_t mapId)
-    {
-        // vanilla draws the string in here, but we can also do it within the object render
-        mapNameState = 0;
-        addObject(ObjectID::MAP_NAME, mapId, tickMapName, renderMapName);
     }
 
     void changeMap(uint32_t map, uint32_t exit)
