@@ -1,6 +1,15 @@
+#pragma once
 
-extern "C"
+#include "AtlasFont.hpp"
+#include "extern/dtl/array.hpp"
+
+struct DigimonStatsView
 {
-    void tickDigimonStatsView();
-    void renderDigimonStatsView();
-}
+    // NOLINTNEXTLINE
+    __attribute__((optimize("Os"))) DigimonStatsView();
+    void tick();
+    void render();
+
+private:
+    dtl::array<AtlasString, 40> labels;
+};

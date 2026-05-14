@@ -39,6 +39,7 @@ namespace
     {
         AtlasString statusLabel;
         AtlasString techLabel;
+        DigimonStatsView statsView;
 
         Data()
         {
@@ -53,7 +54,7 @@ namespace
     void renderDigimonMenu(int32_t instanceId)
     {
         if (digimonMenuState == 0)
-            renderDigimonStatsView();
+            data->statsView.render();
         else if (digimonMenuState == 1)
             renderDigimonMovesView();
 
@@ -81,7 +82,7 @@ namespace
     {
         // stats menu doesn't need special interaction
         if (digimonMenuState == 0)
-            tickDigimonStatsView();
+            data->statsView.tick();
         else if (digimonMenuState == 1)
             tickDigimonMenuTechs();
 
