@@ -529,19 +529,14 @@ extern "C"
                 closeUIBoxIfOpen(0);
                 if (UI_BOX_DATA[0].frame == 0)
                 {
-                    createMenuBox(1, -150, -89, 300, 190, 0, tickDigimonMenu, renderDigimonMenu);
-                    MENU_STATE          = 0;
-                    MENU_SUB_STATE      = 0;
                     TRIANGLE_MENU_STATE = 0xFFFFFFFF;
-                    setDigimonMenuState(0);
+                    addDigimonMenu();
                 }
                 break;
             }
             case 4:
             {
-                TAMER_ENTITY.isOnScreen   = true;
-                PARTNER_ENTITY.isOnScreen = true;
-                closeUIBoxIfOpen(1);
+                removeDigimonMenu();
                 if (UI_BOX_DATA[1].frame == 0) TRIANGLE_MENU_STATE = 0;
                 break;
             }

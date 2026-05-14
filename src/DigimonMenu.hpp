@@ -1,5 +1,4 @@
-#include "extern/stddef.hpp"
+#pragma once
 
-void setDigimonMenuState(int32_t state);
-void tickDigimonMenu(int32_t instance);
-void renderDigimonMenu(int32_t instance);
+void addDigimonMenu();
+void removeDigimonMenu();

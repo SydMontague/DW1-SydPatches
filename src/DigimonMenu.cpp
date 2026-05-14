@@ -1,3 +1,4 @@
+#include "AtlasFont.hpp"
 #include "Entity.hpp"
 #include "Font.hpp"
 #include "Helper.hpp"
@@ -6,86 +7,88 @@
 #include "Sound.hpp"
 #include "StatsView.hpp"
 #include "TechView.hpp"
+#include "Timestamp.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
 #include "extern/dw1.hpp"
 
-constexpr auto PLAYER_MENU_TAB_DRAW_X = 704;
-constexpr auto PLAYER_MENU_TAB_DRAW_Y = 256;
-
-static TextSprite statusLabel = {
-    .font       = &vanillaFont,
-    .string     = "Status",
-    .uvX        = PLAYER_MENU_TAB_DRAW_X + 0,
-    .uvY        = PLAYER_MENU_TAB_DRAW_Y + 0,
-    .uvWidth    = 0,
-    .uvHeight   = 0,
-    .posX       = -138,
-    .posY       = -101,
-    .boxWidth   = 60,
-    .boxHeight  = 12,
-    .alignmentX = AlignmentX::CENTER,
-    .alignmentY = AlignmentY::CENTER,
-    .color      = 0,
-    .layer      = 5,
-    .hasShadow  = 1,
-};
-
-static TextSprite techLabel = {
-    .font       = &vanillaFont,
-    .string     = "Tech",
-    .uvX        = PLAYER_MENU_TAB_DRAW_X + 16,
-    .uvY        = PLAYER_MENU_TAB_DRAW_Y + 0,
-    .uvWidth    = 0,
-    .uvHeight   = 0,
-    .posX       = -63,
-    .posY       = -101,
-    .boxWidth   = 48,
-    .boxHeight  = 12,
-    .alignmentX = AlignmentX::CENTER,
-    .alignmentY = AlignmentY::CENTER,
-    .color      = 0,
-    .layer      = 5,
-    .hasShadow  = 1,
-};
-
-static uint8_t digimonMenuState;
-
-void renderDigimonMenu(int32_t instanceId)
+namespace
 {
-    if (digimonMenuState == 0)
-        renderDigimonStatsView();
-    else if (digimonMenuState == 1)
-        renderDigimonMovesView();
+    constexpr RenderSettings STATUS_SETTINGS{
+        .x        = -138,
+        .y        = -101,
+        .baseClut = 1,
+        .color    = TEXT_COLOR_WHITE,
+        .width    = 60,
+        .height   = 12,
+        .alignX   = AlignmentX::CENTER,
+        .alignY   = AlignmentY::CENTER,
+    };
+    constexpr RenderSettings TECH_SETTINGS{
+        .x        = -63,
+        .y        = -101,
+        .baseClut = 1,
+        .color    = TEXT_COLOR_BLUE,
+        .width    = 48,
+        .height   = 12,
+        .alignX   = AlignmentX::CENTER,
+        .alignY   = AlignmentY::CENTER,
+    };
 
-    statusLabel.color = digimonMenuState != 0 ? 1 : 0;
-    techLabel.color   = digimonMenuState != 1 ? 1 : 0;
-    renderTextSprite(statusLabel);
-    renderTextSprite(techLabel);
-    renderMenuTab(-145, 76, digimonMenuState != 0);
-    renderMenuTab(-70, 64, digimonMenuState != 1);
-}
-
-void tickDigimonMenu(int32_t instanceId)
-{
-    if (MENU_STATE == 0)
+    struct Data
     {
-        clearTextSubArea2(0, 0, 256, 12);
-        drawTextSprite(statusLabel);
-        drawTextSprite(techLabel);
+        AtlasString statusLabel;
+        AtlasString techLabel;
+
+        Data()
+        {
+            statusLabel = getAtlasVanilla().render("Status", STATUS_SETTINGS);
+            techLabel   = getAtlasVanilla().render("Tech", TECH_SETTINGS);
+        }
+    };
+
+    dtl::unique_ptr<Data> data{};
+    uint8_t digimonMenuState;
+
+    void renderDigimonMenu(int32_t instanceId)
+    {
+        if (digimonMenuState == 0)
+            renderDigimonStatsView();
+        else if (digimonMenuState == 1)
+            renderDigimonMovesView();
+
+        data->statusLabel.render(5);
+        data->techLabel.render(5);
+        renderMenuTab(-145, 76, digimonMenuState != 0);
+        renderMenuTab(-70, 64, digimonMenuState != 1);
     }
 
-    // stats menu doesn't need special interaction
-    if (digimonMenuState == 0)
-        tickDigimonStatsView();
-    else if (digimonMenuState == 1)
-        tickDigimonMenuTechs();
-
-    if (MENU_STATE == 1)
+    void updateLabelColors()
     {
+        if (digimonMenuState == 0)
+        {
+            data->statusLabel.setColor(TEXT_COLOR_WHITE);
+            data->techLabel.setColor(TEXT_COLOR_BLUE);
+        }
+        else
+        {
+            data->statusLabel.setColor(TEXT_COLOR_BLUE);
+            data->techLabel.setColor(TEXT_COLOR_WHITE);
+        }
+    }
+
+    void tickDigimonMenu(int32_t instanceId)
+    {
+        // stats menu doesn't need special interaction
+        if (digimonMenuState == 0)
+            tickDigimonStatsView();
+        else if (digimonMenuState == 1)
+            tickDigimonMenuTechs();
+
         if (isKeyDown(InputButtons::BUTTON_LEFT) && digimonMenuState >= 1)
         {
             digimonMenuState -= 1;
+            updateLabelColors();
             MENU_STATE     = 0;
             MENU_SUB_STATE = 0;
             playSound(0, 2);
@@ -93,6 +96,7 @@ void tickDigimonMenu(int32_t instanceId)
         if (isKeyDown(InputButtons::BUTTON_RIGHT) && digimonMenuState < 1)
         {
             digimonMenuState += 1;
+            updateLabelColors();
             MENU_STATE     = 0;
             MENU_SUB_STATE = 0;
             playSound(0, 2);
@@ -103,13 +107,24 @@ void tickDigimonMenu(int32_t instanceId)
             TRIANGLE_MENU_STATE = 4;
             playSound(0, 4);
         }
-    }
 
-    TAMER_ENTITY.isOnScreen   = false;
-    PARTNER_ENTITY.isOnScreen = false;
+        TAMER_ENTITY.isOnScreen   = false;
+        PARTNER_ENTITY.isOnScreen = false;
+    }
+} // namespace
+
+void addDigimonMenu()
+{
+    MENU_STATE     = 0;
+    MENU_SUB_STATE = 0;
+    data           = dtl::make_unique<Data>();
+    createMenuBox(1, -150, -89, 300, 190, 0, tickDigimonMenu, renderDigimonMenu);
 }
 
-void setDigimonMenuState(int32_t state)
+void removeDigimonMenu()
 {
-    digimonMenuState = state;
+    TAMER_ENTITY.isOnScreen   = true;
+    PARTNER_ENTITY.isOnScreen = true;
+    closeUIBoxIfOpen(1);
+    data.release();
 }
