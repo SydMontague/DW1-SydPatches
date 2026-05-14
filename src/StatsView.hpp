@@ -8,7 +8,7 @@ struct DigimonStatsView
     // NOLINTNEXTLINE
     __attribute__((optimize("Os"))) DigimonStatsView();
     void tick();
-    void render();
+    void render(int32_t depth);
 
 private:
     dtl::array<AtlasString, 40> labels;

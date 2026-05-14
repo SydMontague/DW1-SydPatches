@@ -701,7 +701,7 @@ void DigimonStatsView::tick()
     MENU_STATE = 1;
 }
 
-void DigimonStatsView::render()
+void DigimonStatsView::render(int32_t depth)
 {
     sprites[SpriteIndex::SICK].posY    = CONDITION_OFFSET_Y + CONDITION_OFFSETS[PLAYTIME_FRAMES % 16];
     sprites[SpriteIndex::INJURY].posY  = CONDITION_OFFSET_Y + CONDITION_OFFSETS[PLAYTIME_FRAMES % 16];
@@ -712,7 +712,7 @@ void DigimonStatsView::render()
     sprites[SpriteIndex::POOP].posY    = CONDITION_OFFSET_Y + CONDITION_OFFSETS[PLAYTIME_FRAMES % 16];
 
     for (const auto& entry : labels)
-        entry.render(5);
+        entry.render(depth);
 
     for (auto& entry : sprites)
     {
@@ -720,7 +720,7 @@ void DigimonStatsView::render()
         if ((entry.flag & 1) == 1 && PLAYTIME_FRAMES % 10 < 5) offsetX = entry.width;
 
         // clang-format off
-        renderRectPolyFT4(entry.posX, entry.posY, entry.width, entry.height, entry.uvX + offsetX, entry.uvY, entry.texture_page, entry.clut, 5, 0);
+        renderRectPolyFT4(entry.posX, entry.posY, entry.width, entry.height, entry.uvX + offsetX, entry.uvY, entry.texture_page, entry.clut, depth, 0);
     }
 
     renderDigimonStatsBar(PARTNER_ENTITY.stats.hp, HP_MAX, 77, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 24);
@@ -729,15 +729,15 @@ void DigimonStatsView::render()
     renderDigimonStatsBar(PARTNER_ENTITY.stats.def, DEF_MAX, 42, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 69);
     renderDigimonStatsBar(PARTNER_ENTITY.stats.speed, SPEED_MAX, 42, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 84);
     renderDigimonStatsBar(PARTNER_ENTITY.stats.brain, BRAIN_MAX, 42, STATS_OFFSET_X + 34, STATS_OFFSET_Y + 99);
-    renderBox(CONDITION_OFFSET_X + 62, CONDITION_OFFSET_Y + 81, (PARTNER_PARA.tiredness * 48 / (TIREDNESS_MAX - TIREDNESS_MIN)), 5, 50, 150, 255, 0, 5);
-    renderBox(CONDITION_OFFSET_X + 62, CONDITION_OFFSET_Y + 95, PARTNER_PARA.virusBar * 48 / (VIRUS_MAX - VIRUS_MIN), 5, 200, 200, 60, 0, 5);
+    renderBox(CONDITION_OFFSET_X + 62, CONDITION_OFFSET_Y + 81, (PARTNER_PARA.tiredness * 48 / (TIREDNESS_MAX - TIREDNESS_MIN)), 5, 50, 150, 255, 0, depth);
+    renderBox(CONDITION_OFFSET_X + 62, CONDITION_OFFSET_Y + 95, PARTNER_PARA.virusBar * 48 / (VIRUS_MAX - VIRUS_MIN), 5, 200, 200, 60, 0, depth);
     // clang-format on
 
     // profile insets
     for (auto& inset : insets)
-        inset.render(5);
+        inset.render(depth);
 
-    renderSeperatorLines(lines, 6, 5);
+    renderSeperatorLines(lines, 6, depth);
 
     renderDigiviceEntity(&PARTNER_ENTITY, 1, -350);
 }

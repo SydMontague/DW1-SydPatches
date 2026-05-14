@@ -4,6 +4,7 @@
 #include "Helper.hpp"
 #include "Input.hpp"
 #include "Math.hpp"
+#include "MenuTab.hpp"
 #include "Sound.hpp"
 #include "StatsView.hpp"
 #include "TechView.hpp"
@@ -14,94 +15,69 @@
 
 namespace
 {
-    constexpr RenderSettings STATUS_SETTINGS{
-        .x        = -138,
-        .y        = -101,
-        .baseClut = 1,
-        .color    = TEXT_COLOR_WHITE,
-        .width    = 60,
-        .height   = 12,
-        .alignX   = AlignmentX::CENTER,
-        .alignY   = AlignmentY::CENTER,
-    };
-    constexpr RenderSettings TECH_SETTINGS{
-        .x        = -63,
-        .y        = -101,
-        .baseClut = 1,
-        .color    = TEXT_COLOR_BLUE,
-        .width    = 48,
-        .height   = 12,
-        .alignX   = AlignmentX::CENTER,
-        .alignY   = AlignmentY::CENTER,
-    };
-
     struct Data
     {
-        AtlasString statusLabel;
-        AtlasString techLabel;
-        DigimonStatsView statsView;
+    public:
+        Data();
 
-        Data()
-        {
-            statusLabel = getAtlasVanilla().render("Status", STATUS_SETTINGS);
-            techLabel   = getAtlasVanilla().render("Tech", TECH_SETTINGS);
-        }
+        void tick();
+        void render();
+
+    private:
+        void updateLabelColors();
+
+        MenuTab statusTab;
+        MenuTab techTab;
+        DigimonStatsView statsView;
+        TechView techView;
+        uint8_t state;
     };
 
+    constexpr auto WINDOW_X      = -150;
+    constexpr auto WINDOW_Y      = -89;
+    constexpr auto WINDOW_WIDTH  = 300;
+    constexpr auto WINDOW_HEIGHT = 190;
+    constexpr auto TAB1_WIDTH    = 76;
+    constexpr auto TAB2_WIDTH    = 64;
+    constexpr auto TAB1_X        = WINDOW_X + 5;
+    constexpr auto TAB2_X        = TAB1_X + TAB1_WIDTH - 1;
+    constexpr auto TAB_Y         = WINDOW_Y - 15;
+
     dtl::unique_ptr<Data> data{};
-    uint8_t digimonMenuState;
 
-    void renderDigimonMenu(int32_t instanceId)
+    Data::Data()
+        : state(0)
+        , statusTab(TAB1_X, TAB_Y, TAB1_WIDTH, false, "Status")
+        , techTab(TAB2_X, TAB_Y, TAB2_WIDTH, true, "Tech")
     {
-        if (digimonMenuState == 0)
-            data->statsView.render();
-        else if (digimonMenuState == 1)
-            renderDigimonMovesView();
-
-        data->statusLabel.render(5);
-        data->techLabel.render(5);
-        renderMenuTab(-145, 76, digimonMenuState != 0);
-        renderMenuTab(-70, 64, digimonMenuState != 1);
     }
 
-    void updateLabelColors()
+    void Data::tick()
     {
-        if (digimonMenuState == 0)
+        bool handleInput = true;
+        if (state == 0)
         {
-            data->statusLabel.setColor(TEXT_COLOR_WHITE);
-            data->techLabel.setColor(TEXT_COLOR_BLUE);
+            // stats menu doesn't need special interaction
+            statsView.tick();
         }
-        else
+        else if (state == 1)
         {
-            data->statusLabel.setColor(TEXT_COLOR_BLUE);
-            data->techLabel.setColor(TEXT_COLOR_WHITE);
+            techView.tick();
+            handleInput = techView.canBeClosed();
         }
-    }
 
-    void tickDigimonMenu(int32_t instanceId)
-    {
-        // stats menu doesn't need special interaction
-        if (digimonMenuState == 0)
-            data->statsView.tick();
-        else if (digimonMenuState == 1)
-            tickDigimonMenuTechs();
-
-        if (MENU_STATE == 1)
+        if (handleInput)
         {
-            if (isKeyDown(InputButtons::BUTTON_LEFT) && digimonMenuState >= 1)
+            if (isKeyDown(InputButtons::BUTTON_LEFT) && state >= 1)
             {
-                digimonMenuState -= 1;
+                state -= 1;
                 updateLabelColors();
-                MENU_STATE     = 0;
-                MENU_SUB_STATE = 0;
                 playSound(0, 2);
             }
-            if (isKeyDown(InputButtons::BUTTON_RIGHT) && digimonMenuState < 1)
+            if (isKeyDown(InputButtons::BUTTON_RIGHT) && state < 1)
             {
-                digimonMenuState += 1;
+                state += 1;
                 updateLabelColors();
-                MENU_STATE     = 0;
-                MENU_SUB_STATE = 0;
                 playSound(0, 2);
             }
 
@@ -111,18 +87,42 @@ namespace
                 playSound(0, 4);
             }
         }
+    }
 
-        TAMER_ENTITY.isOnScreen   = false;
-        PARTNER_ENTITY.isOnScreen = false;
+    void Data::render()
+    {
+        if (state == 0)
+            statsView.render(5);
+        else if (state == 1)
+            techView.render(5);
+
+        statusTab.render(5);
+        techTab.render(5);
+    }
+
+    void Data::updateLabelColors()
+    {
+        statusTab.setState(state != 0);
+        techTab.setState(state != 1);
+    }
+
+    void renderDigimonMenu(int32_t instanceId)
+    {
+        data->render();
+    }
+
+    void tickDigimonMenu(int32_t instanceId)
+    {
+        data->tick();
     }
 } // namespace
 
 void addDigimonMenu()
 {
-    MENU_STATE     = 0;
-    MENU_SUB_STATE = 0;
-    data           = dtl::make_unique<Data>();
-    createMenuBox(1, -150, -89, 300, 190, 0, tickDigimonMenu, renderDigimonMenu);
+    TAMER_ENTITY.isOnScreen   = false;
+    PARTNER_ENTITY.isOnScreen = false;
+    data                      = dtl::make_unique<Data>();
+    createMenuBox(1, WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, tickDigimonMenu, renderDigimonMenu);
 }
 
 void removeDigimonMenu()
@@ -130,5 +130,5 @@ void removeDigimonMenu()
     TAMER_ENTITY.isOnScreen   = true;
     PARTNER_ENTITY.isOnScreen = true;
     closeUIBoxIfOpen(1);
-    data.release();
+    data.reset();
 }
