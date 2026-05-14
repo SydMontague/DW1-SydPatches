@@ -157,7 +157,8 @@ void initFonts()
 
     // use space in ETCTIM8
     fontAtlasVanilla.init(&vanillaFont, 351, 176);
-    fontAtlas5px.init(&myFont5px, 350, 242);
+    // use space in ETCTIM1
+    fontAtlas5px.init(&myFont5px, 997, 480);
     // use space in ETCTIM5
     fontAtlas7px.init(&myFont7px, 768, 432);
     // use space below ETCTIM2
