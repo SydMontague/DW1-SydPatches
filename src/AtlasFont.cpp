@@ -3,6 +3,8 @@
 #include "Font.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
+#include "Timestamp.hpp"
+#include "UIElements.hpp"
 #include "Utils.hpp"
 #include "extern/dtl/runtime_array.hpp"
 
@@ -101,15 +103,15 @@ namespace
         return {rect, glyph_width};
     }
 
-    SPRT getSPRT(const RECT& data, int32_t x, int32_t y, RenderSettings settings)
+    constexpr SPRT getSPRT(const RECT& data, int32_t x, int32_t y, RGB8 color, uint8_t baseClut)
     {
         SPRT prim;
         prim.tag.num = 4;
         prim.code    = 0x64;
-        prim.r       = (settings.r + 1) / 2;
-        prim.g       = (settings.g + 1) / 2;
-        prim.b       = (settings.b + 1) / 2;
-        prim.clut    = getClut(CLUT_X, CLUT_Y + settings.hasShadow);
+        prim.r       = (color.red + 1) / 2;
+        prim.g       = (color.green + 1) / 2;
+        prim.b       = (color.blue + 1) / 2;
+        prim.clut    = getClut(CLUT_X, CLUT_Y + baseClut);
         prim.x       = x;
         prim.y       = y;
         prim.u       = 4 * (data.x % 64);
@@ -155,7 +157,8 @@ void initFonts()
 
     // use space in ETCTIM8
     fontAtlasVanilla.init(&vanillaFont, 351, 176);
-    fontAtlas5px.init(&myFont5px, 350, 242);
+    // use space in ETCTIM1
+    fontAtlas5px.init(&myFont5px, 997, 480);
     // use space in ETCTIM5
     fontAtlas7px.init(&myFont7px, 768, 432);
     // use space below ETCTIM2
@@ -188,13 +191,57 @@ void AtlasFont::init(Font* f, int32_t x, int32_t y, int32_t maxWidth)
     }
 }
 
-void AtlasFont::renderSlow(const char* string, int32_t x, int32_t y, int32_t depth, RenderSettings settings) const
+int32_t AtlasFont::getWidth(const uint8_t* string) const
 {
-    renderSlow(reinterpret_cast<const uint8_t*>(string), x, y, depth, settings);
+    auto size = jis_len(string);
+    JISIterator itr{string};
+    auto width = 0;
+
+    for (int32_t i = 0; i < size; i++)
+    {
+        auto index = font->getGlyphIndex(*itr++);
+        width += glyphs[index].width;
+    }
+
+    return width;
 }
 
-void AtlasFont::renderSlow(const uint8_t* string, int32_t x, int32_t y, int32_t depth, RenderSettings settings) const
+Position AtlasFont::getPosition(const uint8_t* string, const RenderSettings& settings) const
 {
+    int16_t x = settings.x;
+    int16_t y = settings.y;
+    if (settings.width > 0 && settings.alignX != AlignmentX::LEFT)
+    {
+        auto width = getWidth(string);
+        switch (settings.alignX)
+        {
+            case AlignmentX::LEFT: x += 0; break;
+            case AlignmentX::CENTER: x += (settings.width - width) / 2; break;
+            case AlignmentX::RIGHT: x += (settings.width - width); break;
+        }
+    }
+
+    if (settings.height > 0)
+    {
+        switch (settings.alignY)
+        {
+            case AlignmentY::TOP: y += 0; break;
+            case AlignmentY::CENTER: y += (settings.height - font->height) / 2; break;
+            case AlignmentY::BOTTOM: y += (settings.height - font->height); break;
+        }
+    }
+
+    return {x, y};
+}
+
+void AtlasFont::renderSlow(const char* string, int32_t depth, const RenderSettings& settings) const
+{
+    renderSlow(reinterpret_cast<const uint8_t*>(string), depth, settings);
+}
+
+void AtlasFont::renderSlow(const uint8_t* string, int32_t depth, const RenderSettings& settings) const
+{
+    auto pos  = getPosition(string, settings);
     auto size = jis_len(string);
     JISIterator itr{string};
 
@@ -203,8 +250,8 @@ void AtlasFont::renderSlow(const uint8_t* string, int32_t x, int32_t y, int32_t 
     {
         auto index = font->getGlyphIndex(*itr++);
         auto glyph = glyphs[index];
-        prim2[i]   = getSPRT(glyph.rect, x, y, settings);
-        x += glyph.width;
+        prim2[i]   = getSPRT(glyph.rect, pos.x, pos.y, settings.color, settings.baseClut);
+        pos.x += glyph.width;
         addPrim(ACTIVE_ORDERING_TABLE->origin + depth, reinterpret_cast<GsOT_TAG*>(prim2 + i));
     }
 
@@ -215,13 +262,14 @@ void AtlasFont::renderSlow(const uint8_t* string, int32_t x, int32_t y, int32_t 
     libgs_GsSetWorkBase(prim + 1);
 }
 
-AtlasString AtlasFont::render(const char* string, int32_t x, int32_t y, RenderSettings settings) const
+AtlasString AtlasFont::render(const char* string, const RenderSettings& settings) const
 {
-    return render(reinterpret_cast<const uint8_t*>(string), x, y, settings);
+    return render(reinterpret_cast<const uint8_t*>(string), settings);
 }
 
-AtlasString AtlasFont::render(const uint8_t* string, int32_t x, int32_t y, RenderSettings settings) const
+AtlasString AtlasFont::render(const uint8_t* string, const RenderSettings& settings) const
 {
+    auto pos  = getPosition(string, settings);
     auto size = jis_len(string);
     JISIterator itr{string};
     dtl::runtime_array<SPRT> data(size);
@@ -229,13 +277,12 @@ AtlasString AtlasFont::render(const uint8_t* string, int32_t x, int32_t y, Rende
 
     for (int32_t i = 0; i < size; i++)
     {
-        auto index = font->getGlyphIndex(*itr++);
-        auto glyph = glyphs[index];
-        data[i]    = getSPRT(glyph.rect, x + totalWidth, y, settings);
+        auto index = font->getGlyphIndex(*itr++); 
+        const auto& glyph = glyphs[index];
+        data[i]    = getSPRT(glyph.rect, pos.x + totalWidth, pos.y, settings.color, settings.baseClut);
         totalWidth += glyph.width;
     }
-
-    return AtlasString(data, tpage, totalWidth, font->height);
+    return AtlasString(dtl::move(data), tpage, totalWidth, font->height);
 }
 
 void AtlasString::enableShadow(bool enabled)
@@ -252,6 +299,11 @@ void AtlasString::setColor(uint8_t r, uint8_t g, uint8_t b)
         entry.g = (g + 1) / 2;
         entry.b = (b + 1) / 2;
     }
+}
+
+void AtlasString::setColor(RGB8 color)
+{
+    setColor(color.red, color.green, color.blue);
 }
 
 void AtlasString::setAlignment(RECT rect, AlignmentX alignX, AlignmentY alignY)
@@ -289,6 +341,8 @@ void AtlasString::setPosition(int32_t x, int32_t y)
 
 void AtlasString::render(int32_t depth) const
 {
+    if(data.size() == 0) return;
+
     auto* sprites = reinterpret_cast<SPRT*>(libgs_GsGetWorkBase());
     dtl::copy(data.begin(), data.end(), sprites);
     for (int32_t i = 0; i < data.size(); i++)

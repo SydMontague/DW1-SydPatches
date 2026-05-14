@@ -11,6 +11,22 @@
 
 namespace
 {
+    constexpr RECT PAUSE_BOX_POS{
+        .x      = -26,
+        .y      = -14,
+        .width  = 56,
+        .height = 24,
+    };
+    const RenderSettings PAUSE_SETTINGS{
+        .x        = PAUSE_BOX_POS.x,
+        .y        = PAUSE_BOX_POS.y,
+        .baseClut = 1,
+        .width    = PAUSE_BOX_POS.width,
+        .height   = PAUSE_BOX_POS.height,
+        .alignX   = AlignmentX::CENTER,
+        .alignY   = AlignmentY::CENTER,
+    };
+
     bool hasPauseBox       = false;
     uint32_t inputCurrent  = 0;
     uint32_t inputPrevious = 0;
@@ -29,11 +45,7 @@ namespace
         };
 
         libgs_GsSortBoxFill(&box, ACTIVE_ORDERING_TABLE, 7 - instance);
-        getAtlasVanilla().renderSlow("Pause",
-                                     UI_BOX_DATA[5].finalPos.x + 6,
-                                     UI_BOX_DATA[5].finalPos.y + 6,
-                                     0,
-                                     {.hasShadow = true});
+        getAtlasVanilla().renderSlow("Pause", 0, PAUSE_SETTINGS);
     };
 
     void pauseFrame()
@@ -77,14 +89,7 @@ extern "C"
     {
         if (hasPauseBox) return;
 
-        RECT rect{
-            .x      = -26,
-            .y      = -14,
-            .width  = 56,
-            .height = 24,
-        };
-
-        createStaticUIBox(5, 1, 0, &rect, nullptr, renderPauseBox);
+        createStaticUIBox(5, 1, 0, &PAUSE_BOX_POS, nullptr, renderPauseBox);
         hasPauseBox = true;
         playSound(0, 3);
     }

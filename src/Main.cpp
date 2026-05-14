@@ -108,6 +108,7 @@ namespace
     {
         constexpr dtl::array<uint16_t, 16> noShadow{0x0000, 0x7FFF};
         constexpr dtl::array<uint16_t, 16> shadow{0x0000, 0x7FFF, 0x8000};
+        constexpr dtl::array<uint16_t, 16> greyShadow{0x0000, 0x8000, 0x7FFF};
         constexpr RECT rectNoShadow{
             .x      = 208,
             .y      = 489,
@@ -120,8 +121,15 @@ namespace
             .width  = 16,
             .height = 1,
         };
+        constexpr RECT rectGreyShadow{
+            .x      = 208,
+            .y      = 491,
+            .width  = 16,
+            .height = 1,
+        };
         libgpu_LoadImage(&rectNoShadow, noShadow.data());
         libgpu_LoadImage(&rectShadow, shadow.data());
+        libgpu_LoadImage(&rectGreyShadow, greyShadow.data());
     }
 
     void customInit()
