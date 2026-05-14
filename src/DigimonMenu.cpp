@@ -86,27 +86,30 @@ namespace
         else if (digimonMenuState == 1)
             tickDigimonMenuTechs();
 
-        if (isKeyDown(InputButtons::BUTTON_LEFT) && digimonMenuState >= 1)
+        if (MENU_STATE == 1)
         {
-            digimonMenuState -= 1;
-            updateLabelColors();
-            MENU_STATE     = 0;
-            MENU_SUB_STATE = 0;
-            playSound(0, 2);
-        }
-        if (isKeyDown(InputButtons::BUTTON_RIGHT) && digimonMenuState < 1)
-        {
-            digimonMenuState += 1;
-            updateLabelColors();
-            MENU_STATE     = 0;
-            MENU_SUB_STATE = 0;
-            playSound(0, 2);
-        }
+            if (isKeyDown(InputButtons::BUTTON_LEFT) && digimonMenuState >= 1)
+            {
+                digimonMenuState -= 1;
+                updateLabelColors();
+                MENU_STATE     = 0;
+                MENU_SUB_STATE = 0;
+                playSound(0, 2);
+            }
+            if (isKeyDown(InputButtons::BUTTON_RIGHT) && digimonMenuState < 1)
+            {
+                digimonMenuState += 1;
+                updateLabelColors();
+                MENU_STATE     = 0;
+                MENU_SUB_STATE = 0;
+                playSound(0, 2);
+            }
 
-        if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
-        {
-            TRIANGLE_MENU_STATE = 4;
-            playSound(0, 4);
+            if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
+            {
+                TRIANGLE_MENU_STATE = 4;
+                playSound(0, 4);
+            }
         }
 
         TAMER_ENTITY.isOnScreen   = false;

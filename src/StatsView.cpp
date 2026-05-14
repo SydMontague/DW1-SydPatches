@@ -702,7 +702,10 @@ DigimonStatsView::DigimonStatsView()
     labels[index++] = buildString(getAtlas5px(), VALUE_CURSE, "%d", PARTNER_PARA.virusBar);
 }
 
-void DigimonStatsView::tick() {}
+void DigimonStatsView::tick()
+{
+    MENU_STATE = 1;
+}
 
 void DigimonStatsView::render()
 {
