@@ -12,8 +12,10 @@ constexpr RGB8 TEXT_COLOR_YELLOW       = {.red = 0xFF, .green = 0xFF, .blue = 0x
 constexpr RGB8 TEXT_COLOR_LIGHT_YELLOW = {.red = 0xFF, .green = 0xFA, .blue = 0x75};
 constexpr RGB8 TEXT_COLOR_LIGHT_BLUE   = {.red = 0xAF, .green = 0xFF, .blue = 0xFF};
 constexpr RGB8 TEXT_COLOR_GREY         = {.red = 0x84, .green = 0x84, .blue = 0x84};
+constexpr RGB8 TEXT_COLOR_LIGHT_GREY   = {.red = 0xb7, .green = 0xb7, .blue = 0xb7};
 constexpr RGB8 TEXT_COLOR_PINK         = {.red = 0xFF, .green = 0x32, .blue = 0x85};
 constexpr RGB8 TEXT_COLOR_GREEN        = {.red = 0x32, .green = 0xFF, .blue = 0x32};
+constexpr RGB8 TEXT_COLOR_X_BLUE       = {.red = 0x78, .green = 0x7c, .blue = 0xcf}; // PS1 X Button
 
 struct AtlasString
 {
