@@ -12,6 +12,7 @@
 namespace
 {
     constexpr auto ROTATION_SPEED = 113;
+    dtl::array<uint8_t, 8> NPC_ACTIVE_ANIM;
 
     void NPCEntity_tickBattle(int32_t instanceId)
     {
@@ -304,7 +305,7 @@ namespace
         if (entity == nullptr) return;
         if (IS_IN_MENU == 1) return;
 
-        if (NPC_ACTIVE_ANIM[instanceId] != 0) {}
+        if (NPC_ACTIVE_ANIM[instanceId - 2] != 0) {}
         else if (mapDigimon->stopAnim)
         {
             if (mapDigimon->animation != 0)
@@ -442,7 +443,7 @@ extern "C"
             NPCEntity* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i + 2));
             if (entity != nullptr && entity->scriptId == scriptId)
             {
-                NPC_ACTIVE_ANIM[i + 2] = animId;
+                NPC_ACTIVE_ANIM[i] = animId;
                 return;
             }
         }
@@ -561,7 +562,7 @@ extern "C"
             MAP_DIGIMON_TABLE[i].targetAngle       = 0;
             MAP_DIGIMON_TABLE[i].hasWaypointTarget = 0;
             MAP_DIGIMON_TABLE[i].lookAtTamerState  = 0;
-            NPC_ACTIVE_ANIM[i + 2]                 = 0;
+            NPC_ACTIVE_ANIM[i]                     = 0;
         }
     }
 

@@ -67,17 +67,10 @@ namespace
         {.map = 105, .previousMap = 106, .previousExit = 0},
     };
 
-    constexpr auto NINJAMON_EFFECT_COUNT = 41;
-
     int16_t mistOffsetX[4] = {-160, 160, 160, -160};
     int16_t mistOffsetY[2] = {-120, 120};
     uint8_t moveObjectDeltaX[12];
     uint8_t moveObjectDeltaY[12];
-
-    int16_t ninjamonEffecX[NINJAMON_EFFECT_COUNT];
-    int16_t ninjamonEffecY[NINJAMON_EFFECT_COUNT];
-    int8_t ninjamonEffecXOffset[NINJAMON_EFFECT_COUNT];
-    int8_t ninjamonEffecYOffset[NINJAMON_EFFECT_COUNT];
 
     bool daytimeTransitionActive;
     uint8_t daytimeTransitionFrame;
@@ -531,35 +524,6 @@ namespace
         }
     }
 
-    void renderNinjamonEffect(int32_t instanceId)
-    {
-        for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++)
-        {
-            auto& data = LOCAL_MAP_OBJECT_INSTANCE[i];
-            data.x += ninjamonEffecXOffset[i];
-            data.y += ninjamonEffecYOffset[i];
-            data.orderValue = 10;
-
-            if (data.x > 160)
-            {
-                data.x                  = ninjamonEffecX[i];
-                data.y                  = ninjamonEffecY[i];
-                ninjamonEffecXOffset[i] = random(10) + 12;
-                ninjamonEffecYOffset[i] = random(10) + 3;
-            }
-        }
-
-        NPC_ACTIVE_ANIM[0]++;
-        if (NPC_ACTIVE_ANIM[0] >= 60)
-        {
-            for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++)
-            {
-                LOCAL_MAP_OBJECT_INSTANCE[i].flag = 1;
-            }
-            removeObject(ObjectID::NINJAMON_EFFECT, 0);
-        }
-    }
-
     constexpr int32_t getFirstSpriteIndex(LocalMapObjectInstance* instance)
     {
         for (auto val : instance->animSprites)
@@ -935,20 +899,6 @@ extern "C"
             LOCAL_MAP_OBJECT_INSTANCE[start + i].y = yPtr[i];
             LOCAL_MAP_OBJECT_INSTANCE[start + i].flag &= 0xEF;
         }
-    }
-
-    void createNinjamonEffect()
-    {
-        NPC_ACTIVE_ANIM[0] = 0;
-        storeMapObjectPosition(ninjamonEffecX, ninjamonEffecY, 0, NINJAMON_EFFECT_COUNT);
-
-        for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++)
-        {
-            ninjamonEffecXOffset[i] = random(10) + 12;
-            ninjamonEffecYOffset[i] = random(10) + 3;
-        }
-
-        addObject(ObjectID::NINJAMON_EFFECT, 0, nullptr, renderNinjamonEffect);
     }
 
     bool tickMoveObjectTo(int32_t objectId, int32_t actorId, int32_t speed, int32_t posX, int32_t posY)

@@ -1681,7 +1681,6 @@ extern "C"
     extern int16_t CAMERA_Y;
     extern int16_t CAMERA_X_PREVIOUS;
     extern int16_t CAMERA_Y_PREVIOUS;
-    extern uint8_t NPC_ACTIVE_ANIM[10];
     extern LocalMapObjectInstance LOCAL_MAP_OBJECT_INSTANCE[188];
     extern int32_t LOADED_DIGIMON_MODELS[8];
     extern CollisionCode NPC_COLLISION_STATE[8];

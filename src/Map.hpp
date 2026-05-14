@@ -38,4 +38,5 @@ extern "C"
     void initializeDrawingOffsets();
     void updateMapTile();
     void initializeDroppedItems();
+    void storeMapObjectPosition(int16_t* xPtr, int16_t* yPtr, int32_t start, int32_t count);
 }
