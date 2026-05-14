@@ -621,14 +621,6 @@ namespace
         {CONDITION_OFFSET_X + 2, CONDITION_OFFSET_Y + 78, 8, 11, 54, 203, 0, 5, getClut(0x60, 0x1e8 + 1)},
         {CONDITION_OFFSET_X + 1, CONDITION_OFFSET_Y + 92, 9, 12, 44, 244, 0, 5, getClut(0x60, 0x1e8 + 10)},
     };
-
-    template<typename... Args>
-    AtlasString buildString(const AtlasFont& font, const RenderSettings& settings, const char* format, Args... args)
-    {
-        uint8_t buffer[256];
-        sprintf(buffer, format, args...);
-        return font.render(buffer, settings);
-    }
 } // namespace
 
 DigimonStatsView::DigimonStatsView()
@@ -673,33 +665,35 @@ DigimonStatsView::DigimonStatsView()
     for (const auto& entry : LABELS_5PX)
         labels[index++] = getAtlas5px().render(entry.first, entry.second);
 
-    auto& pattern = SLEEP_PATTERN[raisePara->sleepCycle];
+    auto& pattern           = SLEEP_PATTERN[raisePara->sleepCycle];
+    const auto& font7px     = getAtlas7px();
+    const auto& font5px     = getAtlas5px();
+    const auto& fontVanilla = getAtlasVanilla();
 
-    labels[index++] = buildString(getAtlasVanilla(), VALUE_DIGIMON, "%s", para->name);
-    labels[index++] = buildString(getAtlasVanilla(), VALUE_NAME, "%s", PARTNER_ENTITY.name);
-    labels[index++] = buildString(getAtlasVanilla(), VALUE_AGE, "%d", PARTNER_PARA.age);
-    labels[index++] = buildString(getAtlasVanilla(), VALUE_WEIGHT, "%d", PARTNER_PARA.weight);
-    labels[index++] = buildString(getAtlasVanilla(), VALUE_BATTLES, "%d", PARTNER_PARA.battles);
-    labels[index++] = buildString(getAtlasVanilla(), VALUE_CARE, "%d", PARTNER_PARA.careMistakes);
-    labels[index++] = buildString(getAtlas7px(),
-                                  VALUE_ACTIVE,
-                                  "%02d:%02d - %02d:%02d",
-                                  pattern.wakeupHour,
-                                  pattern.wakeupMinute,
-                                  pattern.sleepyHour,
-                                  pattern.sleepyMinute);
+    labels[index++]   = fontVanilla.render(format("%s", para->name).data(), VALUE_DIGIMON);
+    labels[index++]   = fontVanilla.render(format("%s", PARTNER_ENTITY.name).data(), VALUE_NAME);
+    labels[index++]   = fontVanilla.render(format("%d", PARTNER_PARA.age).data(), VALUE_AGE);
+    labels[index++]   = fontVanilla.render(format("%d", PARTNER_PARA.weight).data(), VALUE_WEIGHT);
+    labels[index++]   = fontVanilla.render(format("%d", PARTNER_PARA.battles).data(), VALUE_BATTLES);
+    labels[index++]   = fontVanilla.render(format("%d", PARTNER_PARA.careMistakes).data(), VALUE_CARE);
+    const auto active = format("%02d:%02d - %02d:%02d",
+                               pattern.wakeupHour,
+                               pattern.wakeupMinute,
+                               pattern.sleepyHour,
+                               pattern.sleepyMinute);
+    labels[index++]   = font7px.render(active.data(), VALUE_ACTIVE);
     labels[index++] =
-        buildString(getAtlas7px(), VALUE_HP, "%d  /  %d", PARTNER_ENTITY.stats.currentHP, PARTNER_ENTITY.stats.hp);
+        font7px.render(format("%d  /  %d", PARTNER_ENTITY.stats.currentHP, PARTNER_ENTITY.stats.hp).data(), VALUE_HP);
     labels[index++] =
-        buildString(getAtlas7px(), VALUE_MP, "%d  /  %d", PARTNER_ENTITY.stats.currentMP, PARTNER_ENTITY.stats.mp);
-    labels[index++] = buildString(getAtlas7px(), VALUE_OFF, "%d", PARTNER_ENTITY.stats.off);
-    labels[index++] = buildString(getAtlas7px(), VALUE_DEF, "%d", PARTNER_ENTITY.stats.def);
-    labels[index++] = buildString(getAtlas7px(), VALUE_SPD, "%d", PARTNER_ENTITY.stats.speed);
-    labels[index++] = buildString(getAtlas7px(), VALUE_BRN, "%d", PARTNER_ENTITY.stats.brain);
-    labels[index++] = buildString(getAtlas5px(), VALUE_HAPPINESS, "%d", PARTNER_PARA.happiness);
-    labels[index++] = buildString(getAtlas5px(), VALUE_DISCIPLINE, "%d", PARTNER_PARA.discipline);
-    labels[index++] = buildString(getAtlas5px(), VALUE_TIREDNESS, "%d", PARTNER_PARA.tiredness);
-    labels[index++] = buildString(getAtlas5px(), VALUE_CURSE, "%d", PARTNER_PARA.virusBar);
+        font7px.render(format("%d  /  %d", PARTNER_ENTITY.stats.currentMP, PARTNER_ENTITY.stats.mp).data(), VALUE_MP);
+    labels[index++] = font7px.render(format("%d", PARTNER_ENTITY.stats.off).data(), VALUE_OFF);
+    labels[index++] = font7px.render(format("%d", PARTNER_ENTITY.stats.def).data(), VALUE_DEF);
+    labels[index++] = font7px.render(format("%d", PARTNER_ENTITY.stats.speed).data(), VALUE_SPD);
+    labels[index++] = font7px.render(format("%d", PARTNER_ENTITY.stats.brain).data(), VALUE_BRN);
+    labels[index++] = font5px.render(format("%d", PARTNER_PARA.happiness).data(), VALUE_HAPPINESS);
+    labels[index++] = font5px.render(format("%d", PARTNER_PARA.discipline).data(), VALUE_DISCIPLINE);
+    labels[index++] = font5px.render(format("%d", PARTNER_PARA.tiredness).data(), VALUE_TIREDNESS);
+    labels[index++] = font5px.render(format("%d", PARTNER_PARA.virusBar).data(), VALUE_CURSE);
 }
 
 void DigimonStatsView::tick()
