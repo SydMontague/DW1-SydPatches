@@ -70,7 +70,7 @@ namespace
             .x        = toRelativeX(174),
             .y        = toRelativeY(40),
             .baseClut = 1,
-            .color    = TEXT_COLOR_GREY,
+            .color    = TEXT_COLOR_LIGHT_GREY,
             .width    = 36,
             .height   = 10,
             .alignX   = AlignmentX::CENTER,
@@ -81,7 +81,7 @@ namespace
             .x        = toRelativeX(214),
             .y        = toRelativeY(40),
             .baseClut = 1,
-            .color    = TEXT_COLOR_GREY,
+            .color    = TEXT_COLOR_LIGHT_GREY,
             .width    = 36,
             .height   = 10,
             .alignX   = AlignmentX::CENTER,
@@ -92,7 +92,7 @@ namespace
             .x        = toRelativeX(254),
             .y        = toRelativeY(40),
             .baseClut = 1,
-            .color    = TEXT_COLOR_GREY,
+            .color    = TEXT_COLOR_LIGHT_GREY,
             .width    = 22,
             .height   = 10,
             .alignX   = AlignmentX::CENTER,
@@ -103,7 +103,7 @@ namespace
             .x        = toRelativeX(280),
             .y        = toRelativeY(40),
             .baseClut = 1,
-            .color    = TEXT_COLOR_GREY,
+            .color    = TEXT_COLOR_LIGHT_GREY,
             .width    = 22,
             .height   = 10,
             .alignX   = AlignmentX::CENTER,
@@ -117,7 +117,7 @@ namespace
             .x        = toRelativeX(174),
             .y        = toRelativeY(109),
             .baseClut = 1,
-            .color    = TEXT_COLOR_GREY,
+            .color    = TEXT_COLOR_LIGHT_GREY,
             .width    = 36,
             .height   = 10,
             .alignX   = AlignmentX::CENTER,
@@ -128,7 +128,7 @@ namespace
             .x        = toRelativeX(254),
             .y        = toRelativeY(109),
             .baseClut = 1,
-            .color    = TEXT_COLOR_GREY,
+            .color    = TEXT_COLOR_LIGHT_GREY,
             .width    = 22,
             .height   = 10,
             .alignX   = AlignmentX::CENTER,
@@ -139,7 +139,7 @@ namespace
             .x        = toRelativeX(280),
             .y        = toRelativeY(109),
             .baseClut = 1,
-            .color    = TEXT_COLOR_GREY,
+            .color    = TEXT_COLOR_LIGHT_GREY,
             .width    = 22,
             .height   = 10,
             .alignX   = AlignmentX::CENTER,
@@ -303,7 +303,7 @@ namespace
             .alignX   = AlignmentX::RIGHT,
             .alignY   = AlignmentY::CENTER,
         },
-        "FLITH",
+        "FILTH",
         {
             .x        = MOVE_BOX_X - 28,
             .y        = MOVE_BOX_Y + MOVE_BOX_OFFSET_Y * 6,
@@ -320,7 +320,7 @@ namespace
             .x        = toRelativeX(187),
             .y        = toRelativeY(128),
             .baseClut = 1,
-            .color    = TEXT_COLOR_GREY,
+            .color    = TEXT_COLOR_LIGHT_GREY,
             .width    = 36,
             .height   = 10,
             .alignX   = AlignmentX::LEFT,
@@ -331,7 +331,7 @@ namespace
             .x        = toRelativeX(187),
             .y        = toRelativeY(150),
             .baseClut = 1,
-            .color    = TEXT_COLOR_GREY,
+            .color    = TEXT_COLOR_LIGHT_GREY,
             .width    = 36,
             .height   = 10,
             .alignX   = AlignmentX::LEFT,
@@ -342,7 +342,7 @@ namespace
             .x        = toRelativeX(187),
             .y        = toRelativeY(172),
             .baseClut = 1,
-            .color    = TEXT_COLOR_GREY,
+            .color    = TEXT_COLOR_LIGHT_GREY,
             .width    = 22,
             .height   = 10,
             .alignX   = AlignmentX::LEFT,
@@ -353,7 +353,7 @@ namespace
             .x        = toRelativeX(187),
             .y        = toRelativeY(194),
             .baseClut = 1,
-            .color    = TEXT_COLOR_GREY,
+            .color    = TEXT_COLOR_LIGHT_GREY,
             .width    = 22,
             .height   = 10,
             .alignX   = AlignmentX::LEFT,
@@ -740,8 +740,8 @@ struct Private
     MoveEntry move2{toRelativeX(19), toRelativeY(82)};
     MoveEntry moveFinish{toRelativeX(19), toRelativeY(119), true};
     MoveDetail detail{};
-    int8_t moveSelectedRow;
-    int8_t moveSelectedColumn;
+    int8_t moveSelectedRow = 0;
+    int8_t moveSelectedColumn = 0;
 
     uint8_t state = 0;
     // NOLINTNEXTLINE
