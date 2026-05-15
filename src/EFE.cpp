@@ -58,8 +58,8 @@ namespace
         }
         else
         {
-            flashData.screenPos.x += ((data.offsetX * VIEWPORT_DISTANCE) / mapPos.depth);
-            flashData.screenPos.y += ((data.offsetY * VIEWPORT_DISTANCE) / mapPos.depth);
+            flashData.screenPos.x += (static_cast<int16_t>(data.offsetX * VIEWPORT_DISTANCE) / mapPos.depth);
+            flashData.screenPos.y += (static_cast<int16_t>(data.offsetY * VIEWPORT_DISTANCE) / mapPos.depth);
         }
         flashData.sizeX = 64;
         flashData.sizeY = 64;
