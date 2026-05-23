@@ -1,182 +1,238 @@
 #include "PlayerCardView.hpp"
 
+#include "AtlasFont.hpp"
 #include "DigimonData.hpp"
 #include "Files.hpp"
 #include "Helper.hpp"
 #include "Input.hpp"
 #include "Math.hpp"
 #include "Sound.hpp"
+#include "UIBox.hpp"
 #include "UIElements.hpp"
+#include "extern/dtl/unique_ptr.hpp"
 #include "extern/dw1.hpp"
 
-constexpr auto CARD_ROW_COUNT = 6;
-constexpr auto CARD_COL_COUNT = 11;
-constexpr auto DRAW_X         = 704;
-constexpr auto DRAW_Y         = 272;
-constexpr auto CARD_BASE_X    = toRelativeX(30);
-constexpr auto CARD_BASE_Y    = toRelativeY(58);
-constexpr auto CARD_OFFSET_X  = 24;
-constexpr auto CARD_OFFSET_Y  = 24;
-
-static TextSprite textLabels[] = {
-    {
-        .font       = &vanillaFont,
-        .string     = "Card List",
-        .uvX        = DRAW_X + 0,
-        .uvY        = DRAW_Y + 0,
-        .uvWidth    = 0,
-        .uvHeight   = 0,
-        .posX       = toRelativeX(14),
-        .posY       = toRelativeY(34),
-        .boxWidth   = 292,
-        .boxHeight  = 19,
-        .alignmentX = AlignmentX::CENTER,
-        .alignmentY = AlignmentY::CENTER,
-        .color      = 3,
-        .layer      = 5,
-        .hasShadow  = 1,
-    },
-    {
-        .font       = &vanillaFont,
-        .string     = "\x81\xa2",
-        .uvX        = DRAW_X + 0,
-        .uvY        = DRAW_Y + 12,
-        .uvWidth    = 0,
-        .uvHeight   = 0,
-        .posX       = toRelativeX(120),
-        .posY       = toRelativeY(202),
-        .boxWidth   = 20,
-        .boxHeight  = 16,
-        .alignmentX = AlignmentX::RIGHT,
-        .alignmentY = AlignmentY::CENTER,
-        .color      = 15,
-        .layer      = 5,
-        .hasShadow  = 1,
-    },
-    {
-        .font       = &vanillaFont,
-        .string     = "Select",
-        .uvX        = DRAW_X + 32,
-        .uvY        = DRAW_Y + 0,
-        .uvWidth    = 0,
-        .uvHeight   = 0,
-        .posX       = toRelativeX(140),
-        .posY       = toRelativeY(202),
-        .boxWidth   = 64,
-        .boxHeight  = 16,
-        .alignmentX = AlignmentX::LEFT,
-        .alignmentY = AlignmentY::CENTER,
-        .color      = 0,
-        .layer      = 5,
-        .hasShadow  = 1,
-    },
-    {
-        .font       = &vanillaFont,
-        .string     = "\x81\x7e",
-        .uvX        = DRAW_X + 8,
-        .uvY        = DRAW_Y + 12,
-        .uvWidth    = 0,
-        .uvHeight   = 0,
-        .posX       = toRelativeX(204),
-        .posY       = toRelativeY(202),
-        .boxWidth   = 20,
-        .boxHeight  = 16,
-        .alignmentX = AlignmentX::RIGHT,
-        .alignmentY = AlignmentY::CENTER,
-        .color      = 7,
-        .layer      = 5,
-        .hasShadow  = 1,
-    },
-    {
-        .font       = &vanillaFont,
-        .string     = "Cancel",
-        .uvX        = DRAW_X + 48,
-        .uvY        = DRAW_Y + 0,
-        .uvWidth    = 0,
-        .uvHeight   = 0,
-        .posX       = toRelativeX(224),
-        .posY       = toRelativeY(202),
-        .boxWidth   = 64,
-        .boxHeight  = 16,
-        .alignmentX = AlignmentX::LEFT,
-        .alignmentY = AlignmentY::CENTER,
-        .color      = 0,
-        .layer      = 5,
-        .hasShadow  = 1,
-    },
-};
-
-static TextSprite cardCount = {
-    .font       = &vanillaFont,
-    .string     = "1",
-    .uvX        = 640,
-    .uvY        = 496,
-    .uvWidth    = 0,
-    .uvHeight   = 0,
-    .posX       = 79,
-    .posY       = 73,
-    .boxWidth   = 44,
-    .boxHeight  = 16,
-    .alignmentX = AlignmentX::CENTER,
-    .alignmentY = AlignmentY::CENTER,
-    .color      = 0,
-    .layer      = 3,
-    .hasShadow  = 1,
-};
-
-constexpr Sprite selector = {
-    .uvX          = 0,
-    .uvV          = 0xE8,
-    .width        = 24,
-    .height       = 20,
-    .texture_page = 24,
-    .clut         = 0x7DC7,
-};
-
-static bool isCardCountDrawn = false;
-static int8_t selectedCardCol;
-static int8_t selectedCardRow;
-
-static void loadCardImage(int32_t card)
+namespace
 {
-    loadStackedTIMEntry("\\CARD\\CARD.ALL", TEXTURE_BUFFER, card * 14, 14);
+    constexpr auto CARD_ROW_COUNT = 6;
+    constexpr auto CARD_COL_COUNT = 11;
+    constexpr auto CARD_BASE_X    = toRelativeX(30);
+    constexpr auto CARD_BASE_Y    = toRelativeY(58);
+    constexpr auto CARD_OFFSET_X  = 24;
+    constexpr auto CARD_OFFSET_Y  = 24;
+    constexpr RECT CARD_BOX       = {.x = -75, .y = -83, .width = 150, .height = 180};
+    constexpr RECT COUNT_BOX      = {.x = 74, .y = 69, .width = 54, .height = 24};
+
+    constexpr dtl::array<Pair<const char*, RenderSettings>, 5> LABELS = {{
+        "Card List",
+        {
+            .x        = toRelativeX(14),
+            .y        = toRelativeY(34),
+            .baseClut = 1,
+            .color    = TEXT_COLOR_YELLOW,
+            .width    = 292,
+            .height   = 19,
+            .alignX   = AlignmentX::CENTER,
+            .alignY   = AlignmentY::CENTER,
+        },
+
+        "\x81\xa2",
+        {
+            .x        = toRelativeX(120),
+            .y        = toRelativeY(202),
+            .baseClut = 1,
+            .color    = TEXT_COLOR_X_BLUE,
+            .width    = 20,
+            .height   = 16,
+            .alignX   = AlignmentX::RIGHT,
+            .alignY   = AlignmentY::CENTER,
+        },
+        "Select",
+        {
+            .x        = toRelativeX(140),
+            .y        = toRelativeY(202),
+            .baseClut = 1,
+            .color    = TEXT_COLOR_WHITE,
+            .width    = 64,
+            .height   = 16,
+            .alignX   = AlignmentX::LEFT,
+            .alignY   = AlignmentY::CENTER,
+        },
+
+        "\x81\x7e",
+        {
+            .x        = toRelativeX(204),
+            .y        = toRelativeY(202),
+            .baseClut = 1,
+            .color    = TEXT_COLOR_GREEN,
+            .width    = 20,
+            .height   = 16,
+            .alignX   = AlignmentX::RIGHT,
+            .alignY   = AlignmentY::CENTER,
+        },
+        "Cancel",
+        {
+            .x        = toRelativeX(224),
+            .y        = toRelativeY(202),
+            .baseClut = 1,
+            .color    = TEXT_COLOR_WHITE,
+            .width    = 64,
+            .height   = 16,
+            .alignX   = AlignmentX::LEFT,
+            .alignY   = AlignmentY::CENTER,
+        },
+
+    }};
+
+    constexpr RenderSettings CARD_COUNT_SETTINGS{
+        .x        = COUNT_BOX.x,
+        .y        = COUNT_BOX.y,
+        .baseClut = 1,
+        .color    = TEXT_COLOR_WHITE,
+        .width    = COUNT_BOX.width,
+        .height   = COUNT_BOX.height,
+        .alignX   = AlignmentX::CENTER,
+        .alignY   = AlignmentY::CENTER,
+    };
+
+    constexpr Sprite selector = {
+        .uvX          = 0,
+        .uvV          = 0xE8,
+        .width        = 24,
+        .height       = 20,
+        .texture_page = 24,
+        .clut         = 0x7DC7,
+    };
+
+    constexpr void loadCardImage(int32_t card)
+    {
+        loadStackedTIMEntry("\\CARD\\CARD.ALL", TEXTURE_BUFFER, card * 14, 14);
+    }
+
+    constexpr dtl::array<AtlasString, 5> getLabels()
+    {
+        dtl::array<AtlasString, 5> array;
+        int32_t i = 0;
+        for(const auto& label : LABELS)
+            array[i++] = getAtlasVanilla().render(LABELS[i].first, LABELS[i].second);
+        return array;
+    }
+} // namespace
+
+struct CardView::Private
+{
+public:
+    void tick();
+    // NOLINTNEXTLINE
+    __attribute__((optimize("Os"))) void render(int32_t depth);
+    bool canBeClosed();
+
+private:
+    inline void renderCardCount(int32_t depth);
+    inline void renderCard(int32_t depth);
+
+    dtl::array<AtlasString, 5> labels{getLabels()};
+    AtlasString cardCount;
+    UIBox cardImageBox;
+    UIBox cardCountBox;
+    int8_t state{0};
+    int8_t selectedCardCol{0};
+    int8_t selectedCardRow{0};
+};
+
+bool CardView::Private::canBeClosed()
+{
+    return state == 0;
 }
 
-static void renderCardImage(int32_t instanceId)
+void CardView::Private::tick()
 {
-    auto clut  = getClut(0x1C0, 0x1FF);
-    auto tpage = getTPage(1, 2, 0x240, 0x100);
-    renderRectPolyFT4(-75, -84, 150, 180, 0, 0, tpage, clut, 4, 0);
-}
+    cardCountBox.tick();
+    cardImageBox.tick();
 
-static void tickCardCount(int32_t instanceId)
-{
-    if (!isCardCountDrawn)
+    if (state == 2)
     {
-        uint8_t buffer[8];
-        sprintf(buffer, "%d", getCardAmount(SELECTED_CARD));
-        cardCount.string = reinterpret_cast<const char*>(buffer);
-        drawTextSprite(cardCount);
-        isCardCountDrawn = true;
+        if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
+        {
+            playSound(0, 4);
+            playSound(0, 1);
+            state = 1;
+            cardCountBox.close();
+            cardImageBox.close();
+        }
+    }
+    else if (state == 1)
+    {
+        if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
+        {
+            playSound(0, 4);
+            state = 0;
+        }
+
+        auto oldCard = selectedCardRow * CARD_COL_COUNT + selectedCardCol;
+        if (isKeyDownRepeat(InputButtons::BUTTON_LEFT)) selectedCardCol -= 1;
+        if (isKeyDownRepeat(InputButtons::BUTTON_RIGHT)) selectedCardCol += 1;
+        if (isKeyDownRepeat(InputButtons::BUTTON_UP)) selectedCardRow -= 1;
+        if (isKeyDownRepeat(InputButtons::BUTTON_DOWN)) selectedCardRow += 1;
+        selectedCardCol = clamp(selectedCardCol, 0, CARD_COL_COUNT - 1);
+        selectedCardRow = clamp(selectedCardRow, 0, CARD_ROW_COUNT - 1);
+
+        auto newCard = selectedCardRow * CARD_COL_COUNT + selectedCardCol;
+        if (oldCard != newCard) playSound(0, 2);
+
+        // vanilla doesn't check for the boxes to be available, causing the card glitch
+        // but since we don't use the vanilla boxes anymore we avoid this bug
+        if (isKeyDown(InputButtons::BUTTON_CROSS) && getCardAmount(newCard) != 0)
+        {
+            playSound(0, 3);
+            state = 2;
+            loadCardImage(newCard);
+            cardCount = getAtlasVanilla().render(format("%d", getCardAmount(newCard)).data(), CARD_COUNT_SETTINGS);
+            RECT start = {
+                .x      = static_cast<int16_t>(selectedCardCol * 24 + CARD_BASE_X + 9),
+                .y      = static_cast<int16_t>(selectedCardRow * 24 + CARD_BASE_Y + 8),
+                .width  = 1,
+                .height = 1,
+            };
+
+            playSound(0, 0);
+            cardImageBox = UIBox(CARD_BOX, {}, false, start);
+            cardCountBox = UIBox(COUNT_BOX, UIBox::DEFAULT_COLOR, false, start);
+        }
+    }
+    else if (state == 0)
+    {
+        if (isKeyDown(InputButtons::BUTTON_CROSS))
+        {
+            state = 1;
+            playSound(0, 3);
+        }
     }
 }
 
-static void renderCardCount(int32_t instanceId)
+void CardView::Private::renderCard(int32_t depth)
 {
-    if (!isCardCountDrawn) return;
-    renderTextSprite(cardCount);
+    constexpr auto clut  = getClut(0x1C0, 0x1FF);
+    constexpr auto tpage = getTPage(1, 2, 0x240, 0x100);
+    renderRectPolyFT4(-75, -84, 150, 180, 0, 0, tpage, clut, depth, 0);
 }
 
-static void tickCardsView()
+void CardView::Private::renderCardCount(int32_t depth)
 {
+    cardCount.render(depth);
 }
 
-void renderCardsView()
+void CardView::Private::render(int32_t depth)
 {
-    if (MENU_STATE == 2)
+    if (cardCountBox.getState() == UIBox::State::OPENED) renderCardCount(depth - 1);
+    if (cardImageBox.getState() == UIBox::State::OPENED) renderCard(depth - 1);
+    cardCountBox.render(depth - 1);
+    cardImageBox.render(depth - 1);
+
+    if (state != 0)
         selector.render(CARD_BASE_X + selectedCardCol * CARD_OFFSET_X - 4,
                         CARD_BASE_Y + selectedCardRow * CARD_OFFSET_Y - 2,
-                        5,
+                        depth,
                         0);
 
     for (int row = 0; row < CARD_ROW_COUNT; row++)
@@ -189,88 +245,34 @@ void renderCardsView()
             if (getCardAmount(cardId) > 0)
             {
                 auto type = CARD_DATA[cardId].type;
-                if (type != 0xFF) getDigimonSprite(static_cast<DigimonType>(type)).render(posX, posY, 5, 0, 0);
+                if (type != 0xFF) getDigimonSprite(static_cast<DigimonType>(type)).render(posX, posY, depth, 0, 0);
             }
 
-            renderBorderBox(posX - 1, posY - 1, 17, 17, 0xBEBEBE, 0x3C3C3C, 0x67, 0x67, 0x67, 5);
+            renderBorderBox(posX - 1, posY - 1, 17, 17, 0xBEBEBE, 0x3C3C3C, 0x67, 0x67, 0x67, depth);
         }
 
-    if (MENU_STATE != 0)
-    {
-        for (auto& label : textLabels)
-            renderTextSprite(label);
-    }
+    for (const auto& label : labels)
+        label.render(depth);
 }
 
-void tickPlayerMenuCardView()
+CardView::CardView()
+    : impl(dtl::make_unique<Private>())
 {
-    if (MENU_STATE == 3)
-    {
-        if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
-        {
-            playSound(0, 4);
-            RECT start = {
-                .x      = static_cast<int16_t>(selectedCardCol * 24 - 121),
-                .y      = static_cast<int16_t>(selectedCardRow * 24 - 54),
-                .width  = 1,
-                .height = 1,
-            };
-            MENU_STATE = 2;
-            removeAnimatedUIBox(2, &start);
-            removeAnimatedUIBox(3, &start);
-        }
-    }
-    else if (MENU_STATE == 2)
-    {
-        if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
-        {
-            playSound(0, 4);
-            MENU_STATE = 1;
-        }
+}
 
-        auto oldCard = SELECTED_CARD;
-        if (isKeyDownRepeat(InputButtons::BUTTON_LEFT)) selectedCardCol -= 1;
-        if (isKeyDownRepeat(InputButtons::BUTTON_RIGHT)) selectedCardCol += 1;
-        if (isKeyDownRepeat(InputButtons::BUTTON_UP)) selectedCardRow -= 1;
-        if (isKeyDownRepeat(InputButtons::BUTTON_DOWN)) selectedCardRow += 1;
-        selectedCardCol = clamp(selectedCardCol, 0, CARD_COL_COUNT - 1);
-        selectedCardRow = clamp(selectedCardRow, 0, CARD_ROW_COUNT - 1);
+CardView::~CardView() = default;
 
-        SELECTED_CARD = selectedCardRow * CARD_COL_COUNT + selectedCardCol;
-        if (oldCard != SELECTED_CARD) playSound(0, 2);
+bool CardView::canBeClosed()
+{
+    return impl->canBeClosed();
+}
 
-        // vanilla doesn't check for the boxes to be available, causing the card glitch
-        if (isKeyDown(InputButtons::BUTTON_CROSS) && getCardAmount(SELECTED_CARD) != 0 && isUIBoxAvailable(2) &&
-            isUIBoxAvailable(3))
-        {
-            playSound(0, 3);
-            MENU_STATE = 3;
-            loadCardImage(SELECTED_CARD);
-            RECT start = {
-                .x      = static_cast<int16_t>(selectedCardCol * 24 - 121),
-                .y      = static_cast<int16_t>(selectedCardRow * 24 - 54),
-                .width  = 1,
-                .height = 1,
-            };
-            RECT card        = {.x = -75, .y = -83, .width = 150, .height = 180};
-            RECT count       = {.x = 74, .y = 69, .width = 54, .height = 24};
-            isCardCountDrawn = false;
-            createAnimatedUIBox(2, 1, 0, &card, &start, nullptr, renderCardImage);
-            createAnimatedUIBox(3, 1, 0, &count, &start, tickCardCount, renderCardCount);
-        }
-    }
-    else if (MENU_STATE == 1)
-    {
-        if (isKeyDown(InputButtons::BUTTON_CROSS))
-        {
-            MENU_STATE = 2;
-            playSound(0, 3);
-        }
-    }
-    else if (MENU_STATE == 0)
-    {
-        for (auto& label : textLabels)
-            drawTextSprite(label);
-        MENU_STATE = 1;
-    }
+void CardView::render(int32_t depth)
+{
+    impl->render(depth);
+}
+
+void CardView::tick()
+{
+    impl->tick();
 }
