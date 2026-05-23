@@ -78,4 +78,30 @@ namespace dtl
     };
     template<typename T> using remove_reference_t = remove_reference<T>::type;
 
+    template<class T> struct remove_cv
+    {
+        using type = T;
+    };
+    template<class T> struct remove_cv<const T>
+    {
+        using type = T;
+    };
+    template<class T> struct remove_cv<volatile T>
+    {
+        using type = T;
+    };
+    template<class T> struct remove_cv<const volatile T>
+    {
+        using type = T;
+    };
+    template<class T> using remove_cv_t = typename remove_cv<T>::type;
+
+    template<class T, class U> struct is_same : dtl::false_type
+    {
+    };
+    template<class T> struct is_same<T, T> : dtl::true_type
+    {
+    };
+    template<class T, class U> constexpr bool is_same_v = is_same<T, U>::value;
+
 } // namespace dtl
