@@ -545,19 +545,14 @@ extern "C"
                 closeUIBoxIfOpen(0);
                 if (UI_BOX_DATA[0].frame == 0)
                 {
-                    createMenuBox(1, -150, -89, 300, 190, 0, tickPlayerMenu, renderPlayerMenu);
-                    MENU_STATE          = 0;
-                    MENU_SUB_STATE      = 0;
                     TRIANGLE_MENU_STATE = 0xFFFFFFFF;
-                    setPlayerMenuState(0);
+                    addPlayerMenu();
                 }
                 break;
             }
             case 6:
             {
-                TAMER_ENTITY.isOnScreen   = true;
-                PARTNER_ENTITY.isOnScreen = true;
-                closeUIBoxIfOpen(1);
+                removePlayerMenu();
                 if (UI_BOX_DATA[1].frame == 0) TRIANGLE_MENU_STATE = 0;
                 break;
             }

@@ -13,7 +13,7 @@ MenuTab::MenuTab(int16_t x, int16_t y, int16_t width, bool isInactive, const cha
         .x        = static_cast<int16_t>(x + 7),
         .y        = static_cast<int16_t>(y + 3),
         .baseClut = 1,
-        .color    = TEXT_COLOR_WHITE,
+        .color    = isInactive ? TEXT_COLOR_BLUE : TEXT_COLOR_WHITE,
         .width    = static_cast<int16_t>(width - 16),
         .height   = 12,
         .alignX   = AlignmentX::CENTER,
