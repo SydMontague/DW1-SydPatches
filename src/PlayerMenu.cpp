@@ -37,6 +37,7 @@ namespace
         MenuTab chartTab{TAB2_X, TAB_Y, TAB2_WIDTH, true, "Chart"};
         MenuTab medalTab{TAB3_X, TAB_Y, TAB3_WIDTH, true, "Medal"};
         MenuTab cardTab{TAB4_X, TAB_Y, TAB4_WIDTH, true, "Card"};
+        PlayerInfoView infoView;
         CardView cardView;
         MedalView medalView;
         uint8_t state{0};
@@ -59,7 +60,7 @@ namespace
     void PlayerMenu::tick()
     {
         bool handleInput = MENU_STATE < 2;
-        if (state == 0) { tickPlayerMenuPlayerView(); }
+        if (state == 0) { infoView.tick(); }
         else if (state == 1) { tickPlayerMenuChartView(); }
         else if (state == 2)
         {
@@ -102,7 +103,7 @@ namespace
     void PlayerMenu::render()
     {
         if (state == 0)
-            renderPlayerInfoView();
+            infoView.render(5);
         else if (state == 1)
             renderEvoChartView();
         else if (state == 2)
