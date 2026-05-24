@@ -299,6 +299,7 @@
 .definelabel FRAMEBUFFER0_ORIGIN, 0x801344e4
 .definelabel FRAMEBUFFER1_ORIGIN, 0x801344e8
 .definelabel LIGHT_DATA, 0x801b1c24
+.definelabel MEDAL_MESH, 0x80153ea0
 .definelabel MEDAL_OBJECT, 0x801546a0
 .definelabel MEDAL_COORDINATES, 0x801546b0
 .definelabel COMBAT_DATA_PTR, 0x80134d4c

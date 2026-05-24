@@ -38,6 +38,7 @@ namespace
         MenuTab medalTab{TAB3_X, TAB_Y, TAB3_WIDTH, true, "Medal"};
         MenuTab cardTab{TAB4_X, TAB_Y, TAB4_WIDTH, true, "Card"};
         CardView cardView;
+        MedalView medalView;
         uint8_t state{0};
 
         void tick();
@@ -60,7 +61,11 @@ namespace
         bool handleInput = MENU_STATE < 2;
         if (state == 0) { tickPlayerMenuPlayerView(); }
         else if (state == 1) { tickPlayerMenuChartView(); }
-        else if (state == 2) { tickPlayerMenuMedalView(); }
+        else if (state == 2)
+        {
+            handleInput = medalView.canBeClosed();
+            medalView.tick();
+        }
         else if (state == 3)
         {
             handleInput = cardView.canBeClosed();
@@ -101,7 +106,7 @@ namespace
         else if (state == 1)
             renderEvoChartView();
         else if (state == 2)
-            renderMedalView();
+            medalView.render(5);
         else if (state == 3)
             cardView.render(5);
 

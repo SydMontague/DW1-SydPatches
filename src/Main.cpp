@@ -713,6 +713,11 @@ namespace
         startMovie(movie);
         initializeFramebuffer();
     }
+
+    void initializeMedalModel()
+    {
+        loadStaticTMD("\\ETCNA\\MEDAL.TMD", MEDAL_MESH.data(), &MEDAL_OBJECT, &MEDAL_COORDINATES);
+    }
 } // namespace
 
 int32_t main()

@@ -1692,8 +1692,6 @@ extern "C"
     extern GsOT_TAG* FRAMEBUFFER0_ORIGIN;
     extern GsOT_TAG* FRAMEBUFFER1_ORIGIN;
     extern GsF_LIGHT LIGHT_DATA[3];
-    extern GsDOBJ2 MEDAL_OBJECT;
-    extern GsCOORDINATE2 MEDAL_COORDINATES;
     extern uint8_t MAP_COLLISION_DATA[10000];
     extern uint8_t INVENTORY_SIZE;
     extern dtl::array<int8_t, 35> MAP_TILES;
@@ -1745,6 +1743,9 @@ extern "C"
     extern TMDModel* BUFF_MODEL;
 
     // TODO can be relocated
+    extern dtl::array<uint8_t, 2048> MEDAL_MESH;
+    extern GsCOORDINATE2 MEDAL_COORDINATES;
+    extern GsDOBJ2 MEDAL_OBJECT;
     extern dtl::array<GsOT_TAG, 4096> GSOT_TAGS_0;
     extern dtl::array<GsOT_TAG, 4096> GSOT_TAGS_1;
     extern dtl::array<dtl::array<uint8_t, 8>, 180> DIGIMON_FILE_NAMES;
