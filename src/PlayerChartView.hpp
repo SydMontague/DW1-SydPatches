@@ -1,4 +1,17 @@
+#pragma once
+#include "extern/dtl/unique_ptr.hpp"
 
-void renderEvoChartDetail();
-void renderEvoChartView();
-void tickPlayerMenuChartView();
+struct ChartView
+{
+    struct Private;
+
+    ChartView();
+    ~ChartView();
+    void tick();
+    void render(int32_t depth);
+
+    bool canBeClosed();
+
+private:
+    dtl::unique_ptr<Private> impl;
+};

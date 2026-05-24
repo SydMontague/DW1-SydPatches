@@ -38,6 +38,7 @@ namespace
         MenuTab medalTab{TAB3_X, TAB_Y, TAB3_WIDTH, true, "Medal"};
         MenuTab cardTab{TAB4_X, TAB_Y, TAB4_WIDTH, true, "Card"};
         PlayerInfoView infoView;
+        ChartView chartView;
         CardView cardView;
         MedalView medalView;
         uint8_t state{0};
@@ -59,9 +60,13 @@ namespace
 
     void PlayerMenu::tick()
     {
-        bool handleInput = MENU_STATE < 2;
+        bool handleInput = true;
         if (state == 0) { infoView.tick(); }
-        else if (state == 1) { tickPlayerMenuChartView(); }
+        else if (state == 1)
+        {
+            handleInput = chartView.canBeClosed();
+            chartView.tick();
+        }
         else if (state == 2)
         {
             handleInput = medalView.canBeClosed();
@@ -79,16 +84,12 @@ namespace
             {
                 state -= 1;
                 updateLabelColors();
-                MENU_STATE     = 0;
-                MENU_SUB_STATE = 0;
                 playSound(0, 2);
             }
             if (isKeyDownRepeat(InputButtons::BUTTON_RIGHT) && state < 3)
             {
                 state += 1;
                 updateLabelColors();
-                MENU_STATE     = 0;
-                MENU_SUB_STATE = 0;
                 playSound(0, 2);
             }
 
@@ -105,7 +106,7 @@ namespace
         if (state == 0)
             infoView.render(5);
         else if (state == 1)
-            renderEvoChartView();
+            chartView.render(5);
         else if (state == 2)
             medalView.render(5);
         else if (state == 3)
@@ -130,8 +131,6 @@ namespace
 
 void addPlayerMenu()
 {
-    MENU_STATE                = 0;
-    MENU_SUB_STATE            = 0;
     TAMER_ENTITY.isOnScreen   = false;
     PARTNER_ENTITY.isOnScreen = false;
     data                      = dtl::make_unique<PlayerMenu>();
