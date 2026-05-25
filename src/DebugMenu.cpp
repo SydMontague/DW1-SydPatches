@@ -1,406 +1,379 @@
 #include "DebugMenu.hpp"
 
+#include "AtlasFont.hpp"
 #include "Helper.hpp"
 #include "Input.hpp"
 #include "Math.hpp"
+#include "MenuTab.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
+#include "extern/dtl/unique_ptr.hpp"
 #include "extern/dw1.hpp"
 
 namespace
 {
-constexpr int32_t DRAW_X = 704;
-constexpr int32_t DRAW_Y = 272;
+    constexpr auto WINDOW_X      = -150;
+    constexpr auto WINDOW_Y      = -89;
+    constexpr auto WINDOW_WIDTH  = 300;
+    constexpr auto WINDOW_HEIGHT = 190;
 
-constexpr int32_t VISIBLE_ROWS  = 11;
-constexpr int32_t ROW_HEIGHT    = 12;
-constexpr int32_t PSTAT_COUNT   = 256;
-constexpr int32_t TRIGGER_COUNT = 800;
+    constexpr int32_t VISIBLE_ROWS  = 11;
+    constexpr int32_t ROW_HEIGHT    = 14;
+    constexpr int32_t PSTAT_COUNT   = 256;
+    constexpr int32_t TRIGGER_COUNT = 800;
 
-constexpr int32_t TAB_PSTAT_X   = -120;
-constexpr int32_t TAB_TRIGGER_X = -40;
-constexpr int32_t TAB_STATS_X   = 40;
-constexpr int32_t TAB_BOX_W     = 80;
-constexpr int32_t TAB_NAME_W    = TAB_BOX_W - 14;
+    constexpr int32_t TAB_PSTAT_X   = -120;
+    constexpr int32_t TAB_TRIGGER_X = -40;
+    constexpr int32_t TAB_STATS_X   = 40;
+    constexpr int32_t TAB_BOX_W     = 80;
+    constexpr int32_t TAB_NAME_W    = TAB_BOX_W - 14;
 
-constexpr int32_t LIST_X = -130;
-constexpr int32_t LIST_Y = -75;
-constexpr int32_t LIST_W = 260;
+    constexpr int32_t LIST_X = -130;
+    constexpr int32_t LIST_Y = -75;
+    constexpr int32_t LIST_W = 260;
 
-constexpr int32_t COL_IDX_W   = 28;
-constexpr int32_t COL_VALUE_W = 50;
-constexpr int32_t COL_NAME_X  = LIST_X + COL_IDX_W;
-constexpr int32_t COL_VALUE_X = LIST_X + LIST_W - COL_VALUE_W;
+    constexpr int32_t DATA_Y = LIST_Y + ROW_HEIGHT + 2;
 
-constexpr int32_t HEADER_Y = LIST_Y;
-constexpr int32_t DATA_Y   = LIST_Y + ROW_HEIGHT + 2;
+    constexpr uint8_t PAGE_PSTAT   = 0;
+    constexpr uint8_t PAGE_TRIGGER = 1;
+    constexpr uint8_t PAGE_STATS   = 2;
+    constexpr uint8_t NUM_PAGES    = 3;
 
-constexpr uint8_t PAGE_PSTAT   = 0;
-constexpr uint8_t PAGE_TRIGGER = 1;
-constexpr uint8_t PAGE_STATS   = 2;
-constexpr uint8_t NUM_PAGES    = 3;
-
-struct Named
-{
-    int16_t index;
-    const char* name;
-};
-
-constexpr Named PSTAT_NAMES[] = {
-    {0,   "gameSpeed"  },
-    {1,   "prosperity" },
-    {2,   "tournDay"   },
-    {3,   "tournId"    },
-    {4,   "tournReg"   },
-    {243, "bootFlag"   },
-    {250, "isPreBattle"},
-    {251, "savedHP"    },
-    {252, "savedMP"    },
-    {254, "starter"    },
-    {255, "tournWins"  },
-};
-
-constexpr Named TRIGGER_NAMES[] = {
-    {45,  "oldRod"    },
-    {46,  "amazingRod"},
-    {47,  "keychain1" },
-    {48,  "keychain2" },
-    {203, "Agumon"    },
-    {214, "Monzaemon" },
-    {220, "Angemon"   },
-    {221, "Birdramon" },
-    {225, "Vegimon"   },
-    {246, "Palmon"    },
-};
-
-struct StatRow
-{
-    const char* name;
-    int16_t* valuePtr;
-};
-
-struct EditInput
-{
-    uint16_t button;
-    int8_t delta;
-};
-
-constexpr dtl::array<EditInput, 5> EDIT_INPUTS = {{
-    {InputButtons::BUTTON_LEFT,   -1 },
-    {InputButtons::BUTTON_RIGHT,  +1 },
-    {InputButtons::BUTTON_SQUARE, -10},
-    {InputButtons::BUTTON_CIRCLE, +10},
-    {InputButtons::BUTTON_CROSS,  +1 }, // triggers only
-}};
-
-constexpr dtl::array<StatRow, 15> STATS_ROWS = {{
-    {"HP max",     &PARTNER_ENTITY.stats.hp},
-    {"MP max",     &PARTNER_ENTITY.stats.mp},
-    {"HP cur",     &PARTNER_ENTITY.stats.currentHP},
-    {"MP cur",     &PARTNER_ENTITY.stats.currentMP},
-    {"Off",        &PARTNER_ENTITY.stats.off},
-    {"Def",        &PARTNER_ENTITY.stats.def},
-    {"Speed",      &PARTNER_ENTITY.stats.speed},
-    {"Brain",      &PARTNER_ENTITY.stats.brain},
-    {"Happiness",  &PARTNER_PARA.happiness},
-    {"Discipline", &PARTNER_PARA.discipline},
-    {"Tiredness",  &PARTNER_PARA.tiredness},
-    {"Weight",     &PARTNER_PARA.weight},
-    {"Age",        &PARTNER_PARA.age},
-    {"Battles",    &PARTNER_PARA.battles},
-    {"CareMis",    &PARTNER_PARA.careMistakes},
-}};
-
-const char* lookupName(const Named* arr, int32_t count, int32_t idx)
-{
-    for (int32_t i = 0; i < count; i++)
-        if (arr[i].index == idx) return arr[i].name;
-    return "";
-}
-
-uint8_t debugPage;
-int32_t cursors[NUM_PAGES];
-int32_t scrolls[NUM_PAGES];
-char rowStrings[VISIBLE_ROWS][24];
-
-TextSprite headerTabs[3] = {
+    struct Named
     {
-        .font       = &vanillaFont,
-        .string     = "PStat",
-        .uvX        = DRAW_X + 0,
-        .uvY        = DRAW_Y + 0,
-        .uvWidth    = 0,
-        .uvHeight   = 0,
-        .posX       = TAB_PSTAT_X,
-        .posY       = -101,
-        .boxWidth   = TAB_NAME_W,
-        .boxHeight  = 12,
-        .alignmentX = AlignmentX::CENTER,
-        .alignmentY = AlignmentY::CENTER,
-        .color      = 0,
-        .layer      = 5,
-        .hasShadow  = 1,
-    },
-    {
-        .font       = &vanillaFont,
-        .string     = "Trigger",
-        .uvX        = DRAW_X + 16,
-        .uvY        = DRAW_Y + 0,
-        .uvWidth    = 0,
-        .uvHeight   = 0,
-        .posX       = TAB_TRIGGER_X,
-        .posY       = -101,
-        .boxWidth   = TAB_NAME_W,
-        .boxHeight  = 12,
-        .alignmentX = AlignmentX::CENTER,
-        .alignmentY = AlignmentY::CENTER,
-        .color      = 0,
-        .layer      = 5,
-        .hasShadow  = 1,
-    },
-    {
-        .font       = &vanillaFont,
-        .string     = "Stats",
-        .uvX        = DRAW_X + 32,
-        .uvY        = DRAW_Y + 0,
-        .uvWidth    = 0,
-        .uvHeight   = 0,
-        .posX       = TAB_STATS_X,
-        .posY       = -101,
-        .boxWidth   = TAB_NAME_W,
-        .boxHeight  = 12,
-        .alignmentX = AlignmentX::CENTER,
-        .alignmentY = AlignmentY::CENTER,
-        .color      = 0,
-        .layer      = 5,
-        .hasShadow  = 1,
-    },
-};
-
-uint16_t rowUvWidths[VISIBLE_ROWS];
-
-TextSprite makeRowSprite(int32_t i)
-{
-    return TextSprite{
-        .font       = &vanillaFont,
-        .string     = rowStrings[i],
-        .uvX        = DRAW_X + 0,
-        .uvY        = static_cast<uint16_t>(DRAW_Y + 28 + i * ROW_HEIGHT),
-        .uvWidth    = 0,
-        .uvHeight   = 0,
-        .posX       = LIST_X + 4,
-        .posY       = static_cast<int16_t>(DATA_Y + i * ROW_HEIGHT),
-        .boxWidth   = LIST_W - 8,
-        .boxHeight  = ROW_HEIGHT,
-        .alignmentX = AlignmentX::LEFT,
-        .alignmentY = AlignmentY::CENTER,
-        .color      = 0,
-        .layer      = 5,
-        .hasShadow  = 1,
+        int16_t index;
+        const char* name;
     };
-}
 
-int32_t entryCount()
-{
-    if (debugPage == PAGE_PSTAT) return PSTAT_COUNT;
-    if (debugPage == PAGE_TRIGGER) return TRIGGER_COUNT;
-    return STATS_ROWS.size();
-}
-
-void formatRow(int32_t rowIndex, int32_t entryIndex)
-{
-    char* dst = rowStrings[rowIndex];
-    if (debugPage == PAGE_PSTAT)
+    struct StatRow
     {
-        uint8_t v        = readPStat(entryIndex);
-        const char* name = lookupName(PSTAT_NAMES, sizeof(PSTAT_NAMES) / sizeof(PSTAT_NAMES[0]), entryIndex);
-        sprintf(reinterpret_cast<uint8_t*>(dst), "%3d  %-12s %5d", entryIndex, name, v);
-    }
-    else if (debugPage == PAGE_TRIGGER)
-    {
-        bool on          = isTriggerSet(entryIndex);
-        const char* name = lookupName(TRIGGER_NAMES, sizeof(TRIGGER_NAMES) / sizeof(TRIGGER_NAMES[0]), entryIndex);
-        sprintf(reinterpret_cast<uint8_t*>(dst), "%3d  %-12s %5s", entryIndex, name, on ? "ON" : "OFF");
-    }
-    else
-    {
-        const StatRow& row = STATS_ROWS[entryIndex];
-        sprintf(reinterpret_cast<uint8_t*>(dst), "%3d  %-12s %5d", entryIndex, row.name, *row.valuePtr);
-    }
-}
+        const char* name;
+        int16_t* valuePtr;
+        int16_t min;
+        int16_t max;
+    };
 
-void redrawAllRows()
-{
-    clearTextSubArea2(0, 16 + 28, 256, VISIBLE_ROWS * ROW_HEIGHT);
-    int32_t scroll = scrolls[debugPage];
-    int32_t count  = entryCount();
-    for (int32_t i = 0; i < VISIBLE_ROWS; i++)
+    constexpr dtl::array<Named, 11> PSTAT_NAMES = {{
+        {0, "gameSpeed"},
+        {1, "prosperity"},
+        {2, "tournDay"},
+        {3, "tournId"},
+        {4, "tournReg"},
+        {243, "bootFlag"},
+        {250, "isPreBattle"},
+        {251, "savedHP"},
+        {252, "savedMP"},
+        {254, "starter"},
+        {255, "tournWins"},
+    }};
+
+    constexpr dtl::array<Named, 10> TRIGGER_NAMES = {{
+        {45, "oldRod"},
+        {46, "amazingRod"},
+        {47, "keychain1"},
+        {48, "keychain2"},
+        {203, "Agumon"},
+        {214, "Monzaemon"},
+        {220, "Angemon"},
+        {221, "Birdramon"},
+        {225, "Vegimon"},
+        {246, "Palmon"},
+    }};
+
+    constexpr dtl::array<StatRow, 15> STATS_ROWS = {{
+        {"HP max", &PARTNER_ENTITY.stats.hp, 1, 9999},
+        {"MP max", &PARTNER_ENTITY.stats.mp, 1, 9999},
+        {"HP cur", &PARTNER_ENTITY.stats.currentHP, 1, 9999},
+        {"MP cur", &PARTNER_ENTITY.stats.currentMP, 1, 9999},
+        {"Off", &PARTNER_ENTITY.stats.off, 1, 999},
+        {"Def", &PARTNER_ENTITY.stats.def, 1, 999},
+        {"Speed", &PARTNER_ENTITY.stats.speed, 1, 999},
+        {"Brain", &PARTNER_ENTITY.stats.brain, 1, 999},
+        {"Happiness", &PARTNER_PARA.happiness, -100, 100},
+        {"Discipline", &PARTNER_PARA.discipline, 0, 100},
+        {"Tiredness", &PARTNER_PARA.tiredness, 0, 100},
+        {"Weight", &PARTNER_PARA.weight, 1, 99},
+        {"Age", &PARTNER_PARA.age, 0, 9999},
+        {"Battles", &PARTNER_PARA.battles, 0, 9999},
+        {"CareMis", &PARTNER_PARA.careMistakes, 0, 9999},
+    }};
+
+    constexpr const char* lookupName(const Named* begin, const Named* end, int32_t idx)
     {
-        int32_t entry = scroll + i;
-        if (entry >= count) { rowStrings[i][0] = 0; }
-        else { formatRow(i, entry); }
-        TextSprite s = makeRowSprite(i);
-        drawTextSprite(s);
-        rowUvWidths[i] = s.uvWidth;
+        auto current = begin;
+        while (current != end)
+        {
+            if (current->index == idx) return current->name;
+            current++;
+        }
+        return "";
     }
-}
 
-void clampScroll()
-{
-    int32_t cursor = cursors[debugPage];
-    int32_t scroll = scrolls[debugPage];
-    int32_t count  = entryCount();
-    if (cursor < scroll) scroll = cursor;
-    else if (cursor >= scroll + VISIBLE_ROWS) scroll = cursor - VISIBLE_ROWS + 1;
-    int32_t maxScroll = count - VISIBLE_ROWS;
-    if (maxScroll < 0) maxScroll = 0;
-    if (scroll > maxScroll) scroll = maxScroll;
-    if (scroll < 0) scroll = 0;
-    scrolls[debugPage] = scroll;
-}
-
-void changeValue(int32_t delta)
-{
-    int32_t entry = cursors[debugPage];
-    if (debugPage == PAGE_TRIGGER)
+    constexpr const char* getRowName(int8_t page, int16_t index)
     {
-        if (isTriggerSet(entry)) unsetTrigger(entry);
-        else setTrigger(entry);
-        return;
+        switch (page)
+        {
+            case PAGE_PSTAT: return lookupName(PSTAT_NAMES.begin(), PSTAT_NAMES.end(), index);
+            case PAGE_TRIGGER: return lookupName(TRIGGER_NAMES.begin(), TRIGGER_NAMES.end(), index);
+            case PAGE_STATS: return index < STATS_ROWS.size() ? STATS_ROWS[index].name : "";
+            default: return "";
+        }
     }
-    int32_t cur, max;
-    int16_t* statPtr = nullptr;
-    if (debugPage == PAGE_PSTAT) { cur = readPStat(entry); max = 255; }
-    else { statPtr = STATS_ROWS[entry].valuePtr; cur = *statPtr; max = 9999; }
-    int32_t v = cur + delta;
-    if (v < 0) v = 0;
-    if (v > max) v = max;
-    if (debugPage == PAGE_PSTAT) writePStat(entry, static_cast<uint8_t>(v));
-    else *statPtr = static_cast<int16_t>(v);
-}
 
+    constexpr dtl::array<uint8_t, 256> getRowValue(int8_t page, int16_t index)
+    {
+        switch (page)
+        {
+            case PAGE_PSTAT: return format("%d", readPStat(index));
+            case PAGE_TRIGGER: return format("%s", isTriggerSet(index) ? "On" : "Off");
+            case PAGE_STATS:
+                return index < STATS_ROWS.size() ? format("%d", *STATS_ROWS[index].valuePtr)
+                                                 : dtl::array<uint8_t, 256>{};
+            default: return {};
+        }
+    }
+
+    constexpr int16_t getEntryCount(int8_t page)
+    {
+        switch (page)
+        {
+            case PAGE_PSTAT: return PSTAT_COUNT;
+            case PAGE_TRIGGER: return TRIGGER_COUNT;
+            case PAGE_STATS: return STATS_ROWS.size();
+            default: return 0;
+        }
+    }
+
+    void changeValue(int8_t page, int16_t index, int32_t value)
+    {
+        switch (page)
+        {
+            case PAGE_TRIGGER: isTriggerSet(index) ? unsetTrigger(index) : setTrigger(index); return;
+            case PAGE_PSTAT: writePStat(index, clamp(readPStat(index) + value, 0, 255)); return;
+            case PAGE_STATS:
+            {
+                if (index > STATS_ROWS.size()) return;
+
+                auto& stat     = STATS_ROWS[index];
+                *stat.valuePtr = clamp(*stat.valuePtr + value, stat.min, stat.max);
+                return;
+            }
+        }
+    }
+
+    struct DebugMenu
+    {
+    public:
+        DebugMenu();
+        void render(int32_t depth);
+        void tick();
+
+    private:
+        void updateRows();
+        void clampScroll();
+
+        MenuTab pstatTab{TAB_PSTAT_X, WINDOW_Y - 15, TAB_BOX_W, false, "PStat"};
+        MenuTab triggerTab{TAB_TRIGGER_X, WINDOW_Y - 15, TAB_BOX_W, true, "Trigger"};
+        MenuTab statsTab{TAB_STATS_X, WINDOW_Y - 15, TAB_BOX_W, true, "Stats"};
+
+        dtl::array<AtlasString, VISIBLE_ROWS * 3> rows;
+        dtl::array<int16_t, NUM_PAGES> scrolls{};
+        dtl::array<int16_t, NUM_PAGES> cursors{};
+        int8_t page{PAGE_PSTAT};
+    };
+
+    DebugMenu::DebugMenu()
+    {
+        updateRows();
+    }
+
+    void DebugMenu::updateRows()
+    {
+        auto scroll = scrolls[page];
+        auto cursor = cursors[page];
+        auto count  = getEntryCount(page);
+
+        const auto& font = getAtlasVanilla();
+        for (int32_t i = 0; i < VISIBLE_ROWS; i++)
+        {
+            auto index = i + scroll;
+            const RenderSettings numberSetting{
+                .x        = LIST_X,
+                .y        = static_cast<int16_t>(DATA_Y + i * ROW_HEIGHT),
+                .baseClut = 1,
+                .color    = cursor == index ? TEXT_COLOR_WHITE : TEXT_COLOR_BLUE,
+                .width    = 28,
+                .height   = ROW_HEIGHT,
+                .alignX   = AlignmentX::RIGHT,
+                .alignY   = AlignmentY::CENTER,
+            };
+            const RenderSettings nameSetting{
+                .x        = LIST_X + 32,
+                .y        = static_cast<int16_t>(DATA_Y + i * ROW_HEIGHT),
+                .baseClut = 1,
+                .color    = cursor == index ? TEXT_COLOR_WHITE : TEXT_COLOR_BLUE,
+                .width    = 120,
+                .height   = ROW_HEIGHT,
+                .alignX   = AlignmentX::LEFT,
+                .alignY   = AlignmentY::CENTER,
+            };
+            const RenderSettings valueSetting{
+                .x        = LIST_X + 152,
+                .y        = static_cast<int16_t>(DATA_Y + i * ROW_HEIGHT),
+                .baseClut = 1,
+                .color    = cursor == index ? TEXT_COLOR_WHITE : TEXT_COLOR_BLUE,
+                .width    = 28,
+                .height   = ROW_HEIGHT,
+                .alignX   = AlignmentX::RIGHT,
+                .alignY   = AlignmentY::CENTER,
+            };
+
+            if (index > count)
+            {
+                rows[i]                    = {};
+                rows[i + VISIBLE_ROWS]     = {};
+                rows[i + VISIBLE_ROWS * 2] = {};
+            }
+            else
+            {
+                rows[i]                    = font.render(format("%d", index).data(), numberSetting);
+                rows[i + VISIBLE_ROWS]     = font.render(format("%s", getRowName(page, index)).data(), nameSetting);
+                rows[i + VISIBLE_ROWS * 2] = font.render(getRowValue(page, index).data(), valueSetting);
+            }
+        }
+    }
+    void DebugMenu::clampScroll()
+    {
+        int32_t cursor = cursors[page];
+        int32_t scroll = scrolls[page];
+        int32_t count  = getEntryCount(page);
+        if (cursor < scroll)
+            scroll = cursor;
+        else if (cursor >= scroll + VISIBLE_ROWS)
+            scroll = cursor - VISIBLE_ROWS + 1;
+        int32_t maxScroll = count - VISIBLE_ROWS;
+        if (maxScroll < 0) maxScroll = 0;
+        if (scroll > maxScroll) scroll = maxScroll;
+        if (scroll < 0) scroll = 0;
+        scrolls[page] = scroll;
+    }
+
+    void DebugMenu::tick()
+    {
+        if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
+        {
+            TRIANGLE_MENU_STATE = 8;
+            playSound(0, 4);
+            return;
+        }
+
+        bool changed = false;
+
+        if (isKeyDownRepeat(InputButtons::BUTTON_L1) && page > 0)
+        {
+            page--;
+            changed = true;
+        }
+        if (isKeyDownRepeat(InputButtons::BUTTON_R1) && page < (NUM_PAGES - 1))
+        {
+            page++;
+            changed = true;
+        }
+        if (isKeyDownRepeat(InputButtons::BUTTON_L2))
+        {
+            cursors[page] = clamp(cursors[page] - VISIBLE_ROWS, 0, getEntryCount(page) - 1);
+            changed       = true;
+        }
+        if (isKeyDownRepeat(InputButtons::BUTTON_R2))
+        {
+            cursors[page] = clamp(cursors[page] + VISIBLE_ROWS, 0, getEntryCount(page) - 1);
+            changed       = true;
+        }
+        if (isKeyDownRepeat(InputButtons::BUTTON_UP) && cursors[page] > 0)
+        {
+            cursors[page]--;
+            changed = true;
+        }
+        if (isKeyDownRepeat(InputButtons::BUTTON_DOWN) && cursors[page] < getEntryCount(page) - 1)
+        {
+            cursors[page]++;
+            changed = true;
+        }
+        if (isKeyDownRepeat(InputButtons::BUTTON_CROSS) && page == PAGE_TRIGGER)
+        {
+            changeValue(page, cursors[page], +1);
+            changed = true;
+        }
+        if (isKeyDownRepeat(InputButtons::BUTTON_SQUARE))
+        {
+            changeValue(page, cursors[page], -10);
+            changed = true;
+        }
+        if (isKeyDownRepeat(InputButtons::BUTTON_CIRCLE))
+        {
+            changeValue(page, cursors[page], +10);
+            changed = true;
+        }
+        if (isKeyDownRepeat(InputButtons::BUTTON_LEFT))
+        {
+            changeValue(page, cursors[page], -1);
+            changed = true;
+        }
+        if (isKeyDownRepeat(InputButtons::BUTTON_RIGHT))
+        {
+            changeValue(page, cursors[page], +1);
+            changed = true;
+        }
+
+        if (changed)
+        {
+            playSound(0, 2);
+            clampScroll();
+            updateRows();
+            pstatTab.setState(page != 0);
+            triggerTab.setState(page != 1);
+            statsTab.setState(page != 2);
+        }
+    }
+
+    void DebugMenu::render(int32_t depth)
+    {
+        pstatTab.render(depth);
+        triggerTab.render(depth);
+        statsTab.render(depth);
+
+        for (const auto& row : rows)
+            row.render(depth);
+
+        drawLine2P(0xc59f4a, LIST_X, DATA_Y - 2, LIST_X + LIST_W, DATA_Y - 2, 4, 0);
+
+        auto cursorRow = cursors[page] - scrolls[page];
+        if (cursorRow >= 0 && cursorRow < VISIBLE_ROWS)
+            renderSelectionCursor(LIST_X + 2, DATA_Y - 2 + cursorRow * ROW_HEIGHT, LIST_W - 4, ROW_HEIGHT, 4);
+    }
+
+    dtl::unique_ptr<DebugMenu> data;
+
+    void tickPlayerMenu(int32_t instance)
+    {
+        data->tick();
+    }
+
+    void renderPlayerMenu(int32_t instance)
+    {
+        data->render(5);
+    }
 } // namespace
 
-void resetDebugMenu()
+void addDebugMenu()
 {
-    debugPage = PAGE_PSTAT;
-    for (int32_t i = 0; i < NUM_PAGES; i++)
-    {
-        cursors[i] = 0;
-        scrolls[i] = 0;
-    }
+    data = dtl::make_unique<DebugMenu>();
+    createMenuBox(1, WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, tickPlayerMenu, renderPlayerMenu);
 }
 
-void renderDebugIcon(int16_t posX, int16_t posY, int16_t width, int16_t height)
+void removeDebugMenu()
 {
-    uint8_t pulse = (PLAYTIME_FRAMES % 16 < 8) ? 220 : 150;
-    renderBox(posX + 1, posY + 1, width - 2, height - 2, 60, pulse, 220, 0, 6);
-}
-
-void tickDebugMenu(int32_t)
-{
-    if (MENU_STATE == 0)
-    {
-        clearTextSubArea2(0, 16, 256, VISIBLE_ROWS * ROW_HEIGHT + 28);
-        for (int32_t i = 0; i < 3; i++) drawTextSprite(headerTabs[i]);
-        redrawAllRows();
-        MENU_STATE = 1;
-        return;
-    }
-
-    if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
-    {
-        TRIANGLE_MENU_STATE = 8;
-        playSound(0, 4);
-        return;
-    }
-
-    bool changed  = false;
-    int32_t count = entryCount();
-
-    if (isKeyDownRepeat(InputButtons::BUTTON_L1))
-    {
-        if (debugPage > 0) { debugPage--; }
-        else
-        {
-            cursors[0] -= VISIBLE_ROWS;
-            if (cursors[0] < 0) cursors[0] = 0;
-        }
-        changed = true;
-        playSound(0, 2);
-    }
-    if (isKeyDownRepeat(InputButtons::BUTTON_R1))
-    {
-        if (debugPage + 1 < NUM_PAGES) { debugPage++; }
-        else
-        {
-            cursors[debugPage] += VISIBLE_ROWS;
-            int32_t c = entryCount();
-            if (cursors[debugPage] >= c) cursors[debugPage] = c - 1;
-        }
-        changed = true;
-        playSound(0, 2);
-    }
-    if (isKeyDownRepeat(InputButtons::BUTTON_UP))
-    {
-        if (cursors[debugPage] > 0) { cursors[debugPage]--; changed = true; playSound(0, 2); }
-    }
-    if (isKeyDownRepeat(InputButtons::BUTTON_DOWN))
-    {
-        if (cursors[debugPage] + 1 < count) { cursors[debugPage]++; changed = true; playSound(0, 2); }
-    }
-    for (auto& e : EDIT_INPUTS)
-    {
-        if (!isKeyDownRepeat(e.button)) continue;
-        if (e.button == InputButtons::BUTTON_CROSS && debugPage != PAGE_TRIGGER) continue;
-        changeValue(e.delta);
-        changed = true;
-        playSound(0, 3);
-    }
-
-    if (changed)
-    {
-        clampScroll();
-        redrawAllRows();
-    }
-}
-
-void renderDebugMenu(int32_t)
-{
-    for (int32_t i = 0; i < 3; i++)
-    {
-        headerTabs[i].color = (debugPage == i) ? 0 : 1;
-        renderTextSprite(headerTabs[i]);
-    }
-    renderMenuTab(TAB_PSTAT_X - 5,   TAB_BOX_W, debugPage != PAGE_PSTAT);
-    renderMenuTab(TAB_TRIGGER_X - 5, TAB_BOX_W, debugPage != PAGE_TRIGGER);
-    renderMenuTab(TAB_STATS_X - 5,   TAB_BOX_W, debugPage != PAGE_STATS);
-
-    int32_t cursor    = cursors[debugPage];
-    int32_t scroll    = scrolls[debugPage];
-    int32_t cursorRow = cursor - scroll;
-    int32_t count     = entryCount();
-    for (int32_t i = 0; i < VISIBLE_ROWS; i++)
-    {
-        int32_t entry = scroll + i;
-        if (entry >= count) continue;
-        TextSprite s = makeRowSprite(i);
-        s.uvWidth    = rowUvWidths[i];
-        s.uvHeight   = vanillaFont.height;
-        s.color      = (i == cursorRow) ? 0 : 1;
-        renderTextSprite(s);
-    }
-
-    int16_t headLineY = static_cast<int16_t>(DATA_Y - 2);
-    drawLine2P(0xc59f4a, LIST_X, headLineY, LIST_X + LIST_W, headLineY, 4, 0);
-
-    if (cursorRow >= 0 && cursorRow < VISIBLE_ROWS)
-    {
-        renderSelectionCursor(LIST_X + 2,
-                              DATA_Y - 2 + cursorRow * ROW_HEIGHT,
-                              LIST_W - 4,
-                              ROW_HEIGHT,
-                              4);
-    }
+    closeUIBoxIfOpen(1);
+    data.reset();
 }

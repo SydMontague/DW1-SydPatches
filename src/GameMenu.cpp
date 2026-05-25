@@ -24,6 +24,15 @@
 #include "extern/libgs.hpp"
 #include "extern/stddef.hpp"
 
+namespace
+{
+    void renderDebugIcon(int16_t posX, int16_t posY, int16_t width, int16_t height)
+    {
+        uint8_t pulse = (PLAYTIME_FRAMES % 16 < 8) ? 220 : 150;
+        renderBox(posX + 1, posY + 1, width - 2, height - 2, 60, pulse, 220, 0, 6);
+    }
+} // namespace
+
 extern "C"
 {
     constexpr auto GAME_MENU_X            = -66;
@@ -359,10 +368,7 @@ extern "C"
             badge.hasShadow = option ? 0 : 1;
             badge.color     = option ? -1 : 0;
 
-            if (i == 7)
-            {
-                renderDebugIcon(sprite.posX, sprite.posY + yOffset, sprite.width, sprite.height);
-            }
+            if (i == 7) { renderDebugIcon(sprite.posX, sprite.posY + yOffset, sprite.width, sprite.height); }
             else
             {
                 renderRectPolyFT4(sprite.posX,
@@ -421,8 +427,8 @@ extern "C"
 
     static constexpr int8_t SLOT_MAPPING[3][3] = {
         {6, -1, 7},
-        {0,  1, 2},
-        {3,  4, 5},
+        {0, 1, 2},
+        {3, 4, 5},
     };
 
     static int8_t verticalMove(int8_t slot, int8_t dir)
@@ -431,7 +437,11 @@ extern "C"
         int8_t col = slot % 3;
         for (int8_t r = 0; r < 3; r++)
             for (int8_t c = 0; c < 3; c++)
-                if (SLOT_MAPPING[r][c] == slot) { row = r; col = c; }
+                if (SLOT_MAPPING[r][c] == slot)
+                {
+                    row = r;
+                    col = c;
+                }
         for (int8_t i = 1; i <= 3; i++)
         {
             int8_t r = ((row + dir * i) % 3 + 3) % 3;
@@ -561,19 +571,14 @@ extern "C"
                 closeUIBoxIfOpen(0);
                 if (UI_BOX_DATA[0].frame == 0)
                 {
-                    createMenuBox(1, -150, -89, 300, 190, 0, tickDebugMenu, renderDebugMenu);
-                    MENU_STATE          = 0;
-                    MENU_SUB_STATE      = 0;
                     TRIANGLE_MENU_STATE = 0xFFFFFFFF;
-                    resetDebugMenu();
+                    addDebugMenu();
                 }
                 break;
             }
             case 8:
             {
-                TAMER_ENTITY.isOnScreen   = true;
-                PARTNER_ENTITY.isOnScreen = true;
-                closeUIBoxIfOpen(1);
+                removePlayerMenu();
                 if (UI_BOX_DATA[1].frame == 0) TRIANGLE_MENU_STATE = 0;
                 break;
             }
@@ -583,7 +588,8 @@ extern "C"
     void addGameMenu()
     {
         fishingRodState = hasFishingRod();
-        const bool fishUnavailable = (fishingRodState == 0) || (fishingRodState == 1) || PARTNER_PARA.condition.isSleepy;
+        const bool fishUnavailable =
+            (fishingRodState == 0) || (fishingRodState == 1) || PARTNER_PARA.condition.isSleepy;
         menuOptionDisabled[6] = isDebugEnabled() && fishUnavailable;
         menuOptionDisabled[7] = false;
         fishHidden            = !isDebugEnabled() && fishUnavailable;
