@@ -4,7 +4,7 @@
 
 inline constexpr bool isDebugEnabled()
 {
-    return true;
+    return false;
 }
 
 void addDebugMenu();
