@@ -17,6 +17,9 @@
 .area 0x800afd78-.
   .importobj "compiled/Cave1.lib"
 
+  .align 4
+  .importobj "compiled/InventoryUI.lib"
+
   .notice "Cave1 Empty space left: " + (0x800afd78-.) + " bytes"
   .fill 0x800afd78-.
 .endarea
@@ -25,6 +28,9 @@
 .area 0x800c67b4-.
   .importobj "compiled/Cave2.lib"
 
+  .align 4
+  .importobj "compiled/PlayerMenu.lib"
+
   .notice "Cave2 Empty space left: " + (0x800c67b4-.) + " bytes"
   .fill 0x800c67b4-.
 .endarea
@@ -32,6 +38,9 @@
 .org 0x800d3078
 .area 0x800e9294-.
   .importobj "compiled/Cave3.lib"
+
+  .align 4
+  .importobj "compiled/DigimonMenu.lib"
 
   .notice "Cave3 Empty space left: " + (0x800e9294-.) + " bytes"
   .fill 0x800e9294-.
@@ -48,6 +57,9 @@
 .org 0x800ec520
 .area 0x800f1ac4-.
   .importobj "compiled/Cave5.lib"
+
+  .align 4
+  .importobj "compiled/BattleEndBox.lib"
 
   .notice "Cave5 Empty space left: " + (0x800f1ac4-.) + " bytes"
   .fill 0x800f1ac4-.
@@ -123,6 +135,9 @@ NAMING_DATA:
 
   .align 4
   .importobj "compiled/Timestamp.lib"
+
+  .align 4
+  .importobj "compiled/dw1.lib"
 
   .notice "Empty space left: " + (0x8012bacc-.) + " bytes"
   .fill 0x8012bacc-.

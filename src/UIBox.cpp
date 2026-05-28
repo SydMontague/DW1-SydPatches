@@ -1,29 +1,71 @@
 #include "UIBox.hpp"
 
 #include "Math.hpp"
+#include "Sound.hpp"
 #include "UIElements.hpp"
 
-UIBox::UIBox(RECT final, RGB8 color, bool isSemiTrans, dtl::optional<RECT> start)
-    : final(final)
-    , start(start)
-    , color(color)
-    , semiTrans(isSemiTrans)
-    , state(start.has_value() ? State::OPENING : State::OPENED)
+UIBox::UIBox(Style style)
+    : style(style)
 {
+}
+
+UIBox::UIBox(RECT final)
+    : final(final)
+    , state(State::OPENED)
+{
+}
+
+UIBox::UIBox(RECT final, Style style)
+    : final(final)
+    , state(State::OPENED)
+    , style(style)
+{
+}
+
+UIBox::UIBox(RECT final, Style style, dtl::optional<RECT> start)
+    : start(start)
+    , final(final)
+    , state(start.has_value() ? State::OPENING : State::OPENED)
+    , style(style)
+{
+}
+
+UIBox::UIBox(RECT final, RGB8 color, bool isSemiTrans, dtl::optional<RECT> start)
+    : start(start)
+    , final(final)
+    , state(start.has_value() ? State::OPENING : State::OPENED)
+    , style{.color = color, .semiTrans = isSemiTrans, .playOpenSound = false, .playCloseSound = false}
+{
+}
+
+void UIBox::open()
+{
+    state = State::OPENING;
+    frame = 0;
+    if (style.playOpenSound) playSound(0, 0);
+}
+
+void UIBox::open(RECT finalRect, RECT startRect)
+{
+    final = finalRect;
+    start = startRect;
+    open();
 }
 
 void UIBox::close()
 {
     state = State::CLOSING;
 }
-void UIBox::open()
+
+void UIBox::close(RECT target)
 {
-    state = State::OPENING;
+    start = target;
+    close();
 }
 
-UIBox::State UIBox::getState()
+void UIBox::closeIfOpen()
 {
-    return state;
+    if (state == State::OPENED) state = State::CLOSING;
 }
 
 void UIBox::tick()
@@ -34,7 +76,8 @@ void UIBox::tick()
         case State::CLOSED: break;
         case State::CLOSING:
         {
-            if (!start.has_value() || frame-- <= 0) state = State::CLOSED;
+            if (!start.has_value() || frame-- <= 0) { state = State::CLOSED; break; }
+            if (frame == 4 && style.playCloseSound) playSound(0, 1);
             break;
         }
         case State::OPENING:
@@ -81,16 +124,19 @@ void UIBox::renderOpeningClosing(int32_t depth)
 
 void UIBox::renderOpened(int32_t depth)
 {
-    renderUIBoxBorder(&final, depth);
+    if (style.drawBorder) renderUIBoxBorder(&final, depth);
+
+    if (!style.drawFill) return;
 
     GsBOXF box;
-    box.attribute = semiTrans != 0 ? 0x40000000 : 0;
-    box.r         = color.red;
-    box.g         = color.green;
-    box.b         = color.blue;
+    box.attribute = style.semiTrans ? 0x40000000 : 0;
+    box.r         = style.color.red;
+    box.g         = style.color.green;
+    box.b         = style.color.blue;
     box.x         = final.x + 4;
     box.y         = final.y + 3;
     box.width     = final.width - 8;
     box.height    = final.height - 3;
     libgs_GsSortBoxFill(&box, ACTIVE_ORDERING_TABLE, depth);
+    if (style.doubleFill) libgs_GsSortBoxFill(&box, ACTIVE_ORDERING_TABLE, depth);
 }

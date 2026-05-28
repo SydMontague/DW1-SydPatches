@@ -15,6 +15,7 @@
 #include "Sound.hpp"
 #include "Tamer.hpp"
 #include "ThrownItem.hpp"
+#include "UIBox.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
 #include "extern/dtl/unique_ptr.hpp"
@@ -25,9 +26,10 @@
 
 namespace
 {
-    constexpr int32_t BOX_LIST    = 0;
-    constexpr int32_t BOX_INFO    = 2;
-    constexpr int32_t BOX_OPTIONS = 4;
+    constexpr int8_t FOCUS_NONE    = -1;
+    constexpr int8_t FOCUS_LIST    = 0;
+    constexpr int8_t FOCUS_INFO    = 1;
+    constexpr int8_t FOCUS_OPTIONS = 2;
 
     constexpr int16_t TAB_X     = -152;
     constexpr int16_t TAB_WIDTH = 148;
@@ -75,6 +77,8 @@ namespace
     constexpr uint32_t SLASH_COLOR          = 0xffef84;
     constexpr uint32_t BADGE_RED_COLOR      = 0x2020ff;
 
+    constexpr RGB8 PANEL_FILL_COLOR = {.red = 12, .green = 22, .blue = 30};
+
     // Render colors are doubled-and-clamped versions of VanillaText.hpp's TEXT_COLORS.
     // AtlasFont halves color.red/green/blue (`(c+1)/2`) before storing as prim color.
     // Combined with PSX modulation `output = texture*prim/128` over a pure-white
@@ -99,83 +103,12 @@ namespace
     inline int16_t getSlotPosY(int32_t visibleRowIdx)
     { return LIST_Y + SLOT_OFFSET_Y + SLOT_HEIGHT * visibleRowIdx; }
 
-    void applyListSize()
-    {
-        auto& box       = UI_BOX_DATA[BOX_LIST];
-        const auto rows = clamp((inv_filteredCount + 1) / 2, 1, 10);
-        box.visibleRows = static_cast<uint16_t>(rows);
-
-        box.finalPos.y      = LIST_Y;
-        box.finalPos.height = static_cast<int16_t>(rows * SLOT_HEIGHT + 14);
-    }
-
-    RECT getCursorSlotRect()
-    {
-        const int32_t cursorPos = getVisibleRow(INVENTORY_POINTER);
-        if (cursorPos < 0) return RECT{.x = 0, .y = 0, .width = 16, .height = 16};
-        const int32_t cursorRow = cursorPos / 2 - UI_BOX_DATA[BOX_LIST].rowOffset;
-        const int32_t cursorCol = cursorPos & 1;
-        return RECT{
-            .x      = getSlotPosX(cursorCol),
-            .y      = getSlotPosY(cursorRow),
-            .width  = 16,
-            .height = 16,
-        };
-    }
-
-    struct Data
-    {
-        AtlasString labelDescStr;
-        AtlasString labelCapacityStr;
-
-        AtlasString itemNameStr;
-        AtlasString headlineStr;
-        AtlasString detailStr;
-        dtl::array<AtlasString, 4> descLines;
-
-        AtlasString capacityUsedStr;
-        AtlasString capacityMaxStr;
-        AtlasString fullBadgeStr;
-
-        AtlasString menuUseStr;
-        AtlasString menuDropStr;
-        AtlasString menuMoveStr;
-
-        dtl::array<AtlasString, 30> slotNameStrs;
-    };
-
-    dtl::unique_ptr<Data> data;
-
     uint8_t getUseColor(Item* item)
     {
         if (item->itemColor == 2) return 9;
         if (GAME_STATE == 0 && item->itemColor == 0) return 9;
         if ((GAME_STATE == 1 || GAME_STATE == 2 || GAME_STATE == 3) && item->itemColor == 1) return 9;
         return 10;
-    }
-
-    bool isInventoryOpen = false;
-    uint32_t state;
-    uint8_t previousSelection;
-    uint8_t menuSelected;
-    uint8_t focusedWindow;
-    uint8_t repeatTimer;
-    bool descNeedsUpdate;
-
-    int16_t activeTabX;
-    int16_t activeTabW;
-
-    int8_t inv_moveSourceSlot = -1;
-
-    uint32_t scrollBopPhase = 0;
-
-    bool isInventoryKeyDown(InputButtons button)
-    { return (POLLED_INPUT & ~POLLED_INPUT_PREVIOUS & button) != 0; }
-
-    bool isInventoryKeyDownRepeat(InputButtons button)
-    {
-        if (!isInventoryKeyDown(button) && (repeatTimer < 7 || (POLLED_INPUT & button) == 0)) return false;
-        return true;
     }
 
     bool isMenuEnabled(int32_t menuId, ItemType type)
@@ -196,9 +129,159 @@ namespace
         return used;
     }
 
-    void drawWrappedDescription(const char* src, int16_t maxWidth, int16_t baseX, int16_t baseY)
+    const char* getLevelName(Level level)
     {
-        for (auto& l : data->descLines) l = {};
+        switch (level)
+        {
+            case Level::FRESH: return "Fresh";
+            case Level::IN_TRAINING: return "In-training";
+            case Level::ROOKIE: return "Rookie";
+            case Level::CHAMPION: return "Champion";
+            case Level::ULTIMATE: return "Ultimate";
+            default: return "?";
+        }
+    }
+
+    struct ListView
+    {
+        // List & info panels: caller draws its own notched border, so drawBorder=false.
+        UIBox box{UIBox::Style{
+            .color = PANEL_FILL_COLOR, .doubleFill = true, .drawBorder = false}};
+        dtl::array<AtlasString, 30> slotNameStrs;
+        uint32_t scrollBopPhase = 0;
+        int16_t  rowOffset      = 0;
+        int16_t  visibleRows    = 0;
+        int16_t  totalRows      = 0;
+        int16_t  activeTabX     = 0;
+        int16_t  activeTabW     = 0;
+        int8_t   moveSourceSlot = -1;
+
+        void applySize();
+        RECT getCursorRect() const;
+        void bakeSlot(int32_t i);
+        void bakeAll();
+        void open();
+        void close();
+        void tickInput();
+        void render();
+    };
+
+    struct InfoView
+    {
+        UIBox box{UIBox::Style{
+            .color = PANEL_FILL_COLOR, .doubleFill = true, .drawBorder = false}};
+        AtlasString labelDescStr;
+        AtlasString itemNameStr;
+        AtlasString headlineStr;
+        AtlasString detailStr;
+        dtl::array<AtlasString, 4> descLines;
+        uint8_t previousSelection = 0xFF;
+        bool    needsUpdate       = true;
+
+        void open();
+        void updateDescription();
+        void drawWrappedDescription(const char* src, int16_t maxWidth, int16_t baseX, int16_t baseY);
+        void tickInput();
+        void render();
+    };
+
+    struct OptionsView
+    {
+        // Options panel uses the auto-drawn border.
+        UIBox box{UIBox::Style{
+            .color = PANEL_FILL_COLOR, .doubleFill = true}};
+        AtlasString menuUseStr;
+        AtlasString menuDropStr;
+        AtlasString menuMoveStr;
+        uint8_t menuSelected = 0;
+
+        void open();
+        void tickInput();
+        void render();
+    };
+
+    struct CapacityBar
+    {
+        AtlasString labelCapacityStr;
+        AtlasString capacityUsedStr;
+        AtlasString capacityMaxStr;
+        AtlasString fullBadgeStr;
+
+        void update();
+        void render(int32_t labelDepth);
+    };
+
+    struct InventoryUI
+    {
+        ListView    listView;
+        InfoView    infoView;
+        OptionsView optionsView;
+        CapacityBar capacityBar;
+
+        uint32_t state         = 0;
+        int8_t   focusedWindow = FOCUS_LIST;
+        uint8_t  repeatTimer   = 0;
+
+        void tick();
+        void render();
+    };
+
+    dtl::unique_ptr<InventoryUI> data;
+
+    bool isKey(InputButtons button)
+    { return (POLLED_INPUT & ~POLLED_INPUT_PREVIOUS & button) != 0; }
+
+    bool isKeyRepeat(InputButtons button)
+    {
+        if (!isKey(button) && (data->repeatTimer < 7 || (POLLED_INPUT & button) == 0)) return false;
+        return true;
+    }
+
+    void ListView::applySize()
+    {
+        const auto rows = clamp((inv_filteredCount + 1) / 2, 1, 10);
+        visibleRows     = static_cast<int16_t>(rows);
+        box.resize({
+            .x      = LIST_X,
+            .y      = LIST_Y,
+            .width  = LIST_WIDTH,
+            .height = static_cast<int16_t>(rows * SLOT_HEIGHT + 14),
+        });
+    }
+
+    RECT ListView::getCursorRect() const
+    {
+        const int32_t cursorPos = getVisibleRow(INVENTORY_POINTER);
+        if (cursorPos < 0) return RECT{.x = 0, .y = 0, .width = 16, .height = 16};
+        const int32_t cursorRow = cursorPos / 2 - rowOffset;
+        const int32_t cursorCol = cursorPos & 1;
+        return RECT{
+            .x      = getSlotPosX(cursorCol),
+            .y      = getSlotPosY(cursorRow),
+            .width  = 16,
+            .height = 16,
+        };
+    }
+
+    void ListView::bakeSlot(int32_t i)
+    {
+        const auto type = INVENTORY_ITEM_TYPES[i];
+        if (type == ItemType::NONE)
+        {
+            slotNameStrs[i] = {};
+            return;
+        }
+        slotNameStrs[i] = getAtlasVanilla().render(getItem(type)->name, {.color = TEXT_LIGHT});
+    }
+
+    void ListView::bakeAll()
+    {
+        for (int32_t i = 0; i < INVENTORY_SIZE; i++) bakeSlot(i);
+    }
+
+    void InfoView::drawWrappedDescription(const char* src, int16_t maxWidth, int16_t baseX, int16_t baseY)
+    {
+        for (auto& l : descLines) l = {};
 
         if (src == nullptr) return;
 
@@ -231,7 +314,7 @@ namespace
             for (int32_t j = 0; j < takeLen; j++)
                 buf[j] = src[srcPos + j];
             buf[takeLen] = '\0';
-            data->descLines[lineIdx] = getAtlas7px().render(
+            descLines[lineIdx] = getAtlas7px().render(
                 buf,
                 {.x = baseX, .y = static_cast<int16_t>(baseY + lineIdx * 9), .color = TEXT_LIGHT});
             lineIdx++;
@@ -241,55 +324,7 @@ namespace
         }
     }
 
-    void bakeSlot(int32_t i)
-    {
-        const auto type = INVENTORY_ITEM_TYPES[i];
-        if (type == ItemType::NONE)
-        {
-            data->slotNameStrs[i] = {};
-            return;
-        }
-        data->slotNameStrs[i] = getAtlasVanilla().render(getItem(type)->name, {.color = TEXT_LIGHT});
-    }
-
-    void bakeSlotStrings()
-    {
-        for (int32_t i = 0; i < INVENTORY_SIZE; i++) bakeSlot(i);
-    }
-
-    void initFontData()
-    {
-        data = dtl::make_unique<Data>();
-
-        // Section-border labels live at panelX + 8, panelY - 4 (see renderSectionBorder).
-        data->labelDescStr     = getAtlas7px().render(
-            "ITEM DESCRIPTION", {.x = INFO_X + 8, .y = INFO_Y - 4, .color = TEXT_CYAN});
-        data->labelCapacityStr = getAtlas7px().render(
-            "CAPACITY", {.x = CAP_X + 8, .y = CAP_Y - 4, .color = TEXT_CYAN});
-
-        constexpr int16_t badgeW = 32;
-        constexpr int16_t badgeX = CAP_X + CAP_WIDTH - badgeW - 6;
-        constexpr int16_t badgeY = CAP_Y + 4;
-        data->fullBadgeStr = getAtlas7px().render(
-            "FULL", {.x = badgeX + 4, .y = badgeY + 1, .color = TEXT_RED});
-
-        bakeSlotStrings();
-    }
-
-    const char* getLevelName(Level level)
-    {
-        switch (level)
-        {
-            case Level::FRESH: return "Fresh";
-            case Level::IN_TRAINING: return "In-training";
-            case Level::ROOKIE: return "Rookie";
-            case Level::CHAMPION: return "Champion";
-            case Level::ULTIMATE: return "Ultimate";
-            default: return "?";
-        }
-    }
-
-    void updateItemDescription()
+    void InfoView::updateDescription()
     {
         const int16_t descX = INFO_X + 8;
         const int16_t descY = INFO_Y + 36;
@@ -299,9 +334,9 @@ namespace
         if (type == ItemType::NONE)
         {
             drawWrappedDescription("", 224, descX, descY);
-            data->itemNameStr = {};
-            data->headlineStr = {};
-            data->detailStr   = {};
+            itemNameStr = {};
+            headlineStr = {};
+            detailStr   = {};
             return;
         }
 
@@ -334,26 +369,25 @@ namespace
 
         drawWrappedDescription(desc, INFO_WIDTH - 16, descX, descY);
 
-        const auto& info_box = UI_BOX_DATA[BOX_INFO];
-        data->itemNameStr = getAtlasVanilla().render(getItem(type)->name,
-            {.x     = static_cast<int16_t>(info_box.finalPos.x + 32),
-             .y     = static_cast<int16_t>(info_box.finalPos.y + 14),
+        itemNameStr = getAtlasVanilla().render(getItem(type)->name,
+            {.x     = static_cast<int16_t>(box.finalPos().x + 32),
+             .y     = static_cast<int16_t>(box.finalPos().y + 14),
              .color = TEXT_CYAN});
-        data->headlineStr = getAtlasVanilla().render(
+        headlineStr = getAtlasVanilla().render(
             info.headline, {.x = descX, .y = INFO_Y + 86, .color = TEXT_CYAN});
-        data->detailStr = getAtlasVanilla().render(
+        detailStr = getAtlasVanilla().render(
             detail, {.x = descX, .y = INFO_Y + 98, .color = TEXT_LIGHT});
     }
 
-    void updateCapacity()
+    void CapacityBar::update()
     {
         const int16_t numX = CAP_X + 8;
         const int16_t numY = CAP_Y + 4;
-        data->capacityUsedStr = getAtlas7px().render(
+        capacityUsedStr = getAtlas7px().render(
             format<8>("%d", countUsedSlots()).data(), {.x = numX, .y = numY, .color = TEXT_CYAN});
-        const int16_t usedW  = static_cast<int16_t>(data->capacityUsedStr.getWidth());
+        const int16_t usedW  = static_cast<int16_t>(capacityUsedStr.getWidth());
         const int16_t slashX = numX + usedW + 2;
-        data->capacityMaxStr = getAtlas7px().render(
+        capacityMaxStr = getAtlas7px().render(
             format<8>("%d", INVENTORY_SIZE).data(),
             {.x = static_cast<int16_t>(slashX + 6), .y = numY, .color = TEXT_CYAN});
     }
@@ -407,15 +441,19 @@ namespace
         }
     }
 
-    void renderInventoryTop(int32_t /*instanceId*/)
+    void ListView::render()
     {
+        constexpr int32_t layer      = 6;
         constexpr int32_t depth      = 6;
         constexpr int32_t labelDepth = 5;
-        auto& box                    = UI_BOX_DATA[BOX_LIST];
+
+        if (!box.isOpen()) { box.render(layer); return; }
+        // Content first, chrome last. PSX OT is LIFO at same depth — latest
+        // submitted = head = drawn first = BEHIND. We want fills behind content.
 
         const int32_t cursorPos = getVisibleRow(INVENTORY_POINTER);
-        const int32_t winLo     = box.rowOffset;
-        const int32_t winHi     = box.rowOffset + box.visibleRows;
+        const int32_t winLo     = rowOffset;
+        const int32_t winHi     = rowOffset + visibleRows;
         const int32_t firstPos  = winLo * 2;
         const int32_t lastPos   = winHi * 2;
         for (int32_t p = firstPos; p < lastPos && p < inv_filteredCount; p++)
@@ -429,7 +467,7 @@ namespace
 
             renderItemSprite(type, posX + SLOT_SPRITE_OFF_X, posY + SLOT_SPRITE_OFF_Y, depth);
 
-            auto& nameStr = data->slotNameStrs[i];
+            auto& nameStr = slotNameStrs[i];
             nameStr.setPosition(posX + SLOT_NAME_OFF_X, posY + SLOT_NAME_OFF_Y);
             nameStr.render(depth);
 
@@ -452,9 +490,9 @@ namespace
             renderInventoryCursor(cursorX, cursorY, SLOT_WIDTH, SLOT_HEIGHT, depth);
         }
 
-        if (inv_moveSourceSlot >= 0)
+        if (moveSourceSlot >= 0)
         {
-            const int32_t srcPos = getVisibleRow(inv_moveSourceSlot);
+            const int32_t srcPos = getVisibleRow(moveSourceSlot);
             if (srcPos >= firstPos && srcPos < lastPos)
             {
                 const auto srcX = getSlotPosX(srcPos & 1);
@@ -464,43 +502,52 @@ namespace
         }
 
         const int16_t arrowCx     = LIST_X + LIST_WIDTH / 2;
-        const int16_t listBottomY = box.finalPos.y + box.finalPos.height - 1;
+        const int16_t listBottomY = box.finalPos().y + box.finalPos().height - 1;
         scrollBopPhase++;
         const int16_t bop = static_cast<int16_t>((scrollBopPhase >> 4) & 1);
-        if (box.rowOffset > 0) renderScrollArrow(arrowCx, LIST_Y + 3 - bop, false, depth);
-        if (box.rowOffset + box.visibleRows < box.totalRows)
+        if (rowOffset > 0) renderScrollArrow(arrowCx, LIST_Y + 3 - bop, false, depth);
+        if (rowOffset + visibleRows < totalRows)
             renderScrollArrow(arrowCx, listBottomY - 5 + bop, true, depth);
 
-        if (box.totalRows > box.visibleRows)
+        if (totalRows > visibleRows)
         {
             const int16_t trackX = LIST_X + LIST_WIDTH - 7;
             const int16_t trackY = static_cast<int16_t>(LIST_Y + 8);
             const int16_t trackH = static_cast<int16_t>(listBottomY - 7 - trackY);
-            const int16_t thumbH = static_cast<int16_t>((trackH * box.visibleRows) / box.totalRows);
+            const int16_t thumbH = static_cast<int16_t>((trackH * visibleRows) / totalRows);
             const int16_t thumbY = static_cast<int16_t>(
-                trackY + ((trackH - thumbH) * box.rowOffset) / (box.totalRows - box.visibleRows));
+                trackY + ((trackH - thumbH) * rowOffset) / (totalRows - visibleRows));
             drawLine2P(0xffc269, trackX, thumbY, trackX, thumbY + thumbH, depth, 0);
         }
 
         renderCategoryTabs(TAB_Y, labelDepth - 1, &activeTabX, &activeTabW);
-        RECT listRect{.x = LIST_X, .y = LIST_Y, .width = box.finalPos.width, .height = box.finalPos.height};
+        RECT listRect{.x = LIST_X, .y = LIST_Y, .width = box.finalPos().width, .height = box.finalPos().height};
         renderUIBoxBorder(&listRect, labelDepth);
+
+        data->capacityBar.render(labelDepth);
+
+        box.render(layer);
+    }
+
+    void CapacityBar::render(int32_t labelDepth)
+    {
+        constexpr int32_t depth = 6;
 
         // Two semi-trans fills = 75/25 blend matching the description-window preset.
         renderBox(CAP_X + 4, CAP_Y + 3, CAP_WIDTH - 8, CAP_HEIGHT - 3, 12, 22, 30, 1, depth);
         renderBox(CAP_X + 4, CAP_Y + 3, CAP_WIDTH - 8, CAP_HEIGHT - 3, 12, 22, 30, 1, depth);
-        renderSectionBorder(CAP_X, CAP_Y, CAP_WIDTH, CAP_HEIGHT, data->labelCapacityStr, labelDepth);
+        renderSectionBorder(CAP_X, CAP_Y, CAP_WIDTH, CAP_HEIGHT, labelCapacityStr, labelDepth);
 
         const int32_t used = countUsedSlots();
         const int32_t cap  = INVENTORY_SIZE > 0 ? INVENTORY_SIZE : 1;
 
         const int16_t numX  = CAP_X + 8;
         const int16_t numY  = CAP_Y + 4;
-        const int16_t usedW = static_cast<int16_t>(data->capacityUsedStr.getWidth());
-        data->capacityUsedStr.render(labelDepth);
+        const int16_t usedW = static_cast<int16_t>(capacityUsedStr.getWidth());
+        capacityUsedStr.render(labelDepth);
         const int16_t slashX = numX + usedW + 2;
         drawLine2P(SLASH_COLOR, slashX + 3, numY + 1, slashX, numY + 6, labelDepth, 0);
-        data->capacityMaxStr.render(labelDepth);
+        capacityMaxStr.render(labelDepth);
 
         const int16_t barX = CAP_X + 8;
         const int16_t barY = CAP_Y + 13;
@@ -530,87 +577,93 @@ namespace
                             0x00,
                             0x00,
                             labelDepth + 1);
-            data->fullBadgeStr.render(labelDepth);
+            fullBadgeStr.render(labelDepth);
         }
     }
 
-    void renderInventoryInfo(int32_t /*instanceId*/)
+    void InfoView::render()
     {
+        constexpr int32_t layer      = 4;
         constexpr int32_t depth      = 2;
         constexpr int32_t labelDepth = 1;
-        auto& box                    = UI_BOX_DATA[BOX_INFO];
 
-        renderSectionBorder(box.finalPos.x,
-                            box.finalPos.y,
-                            box.finalPos.width,
-                            box.finalPos.height,
-                            data->labelDescStr,
+        if (!box.isOpen()) { box.render(layer); return; }
+        // Content first, chrome last (PSX OT LIFO at same depth).
+
+        renderSectionBorder(box.finalPos().x,
+                            box.finalPos().y,
+                            box.finalPos().width,
+                            box.finalPos().height,
+                            labelDescStr,
                             labelDepth);
 
         if (INVENTORY_ITEM_TYPES[INVENTORY_POINTER] == ItemType::NONE) return;
 
-        if (descNeedsUpdate || INVENTORY_POINTER != previousSelection)
+        if (needsUpdate || INVENTORY_POINTER != previousSelection)
         {
-            updateItemDescription();
+            updateDescription();
             previousSelection = INVENTORY_POINTER;
-            descNeedsUpdate   = false;
+            needsUpdate       = false;
         }
 
-        const int16_t bx = box.finalPos.x;
-        const int16_t by = box.finalPos.y;
-        const int16_t bw = box.finalPos.width;
+        const int16_t bx = box.finalPos().x;
+        const int16_t by = box.finalPos().y;
+        const int16_t bw = box.finalPos().width;
 
         renderItemSprite(INVENTORY_ITEM_TYPES[INVENTORY_POINTER], bx + 10, by + 10, depth);
-        data->itemNameStr.render(depth);
+        itemNameStr.render(depth);
 
         const int16_t hdrSep = by + 30;
         drawLine2P(BAR_OUTLINE_COLOR, bx + 6, hdrSep, bx + bw - 7, hdrSep, labelDepth, 0);
 
-        for (const auto& line : data->descLines) line.render(depth);
+        for (const auto& line : descLines) line.render(depth);
 
         const int16_t effSep = by + 80;
         drawLine2P(BAR_OUTLINE_COLOR, bx + 6, effSep, bx + bw - 7, effSep, labelDepth, 0);
 
-        data->headlineStr.render(depth);
-        data->detailStr.render(depth);
+        headlineStr.render(depth);
+        detailStr.render(depth);
+
+        box.render(layer);
     }
 
-    void renderItemOptions(int32_t /*instanceId*/)
+    void OptionsView::render()
     {
-        auto& box        = UI_BOX_DATA[BOX_OPTIONS];
-        const auto baseX = box.finalPos.x + 9;
-        const auto baseY = box.finalPos.y + 6;
+        constexpr int32_t layer = 2;
+        if (!box.isOpen()) { box.render(layer); return; }
 
-        data->menuUseStr.render(2);
-        data->menuDropStr.render(2);
-        if (inv_currentCategory == 6) data->menuMoveStr.render(2);
+        const auto baseX = box.finalPos().x + 9;
+        const auto baseY = box.finalPos().y + 6;
+
+        menuUseStr.render(2);
+        menuDropStr.render(2);
+        if (inv_currentCategory == 6) menuMoveStr.render(2);
 
         renderSelectionCursor(baseX, baseY + menuSelected * 18, 40, 16, 2);
+
+        box.render(layer);
     }
 
-    void tickInventoryOptions(int32_t /*instanceId*/)
+    void OptionsView::tickInput()
     {
-        if (focusedWindow != BOX_OPTIONS) return;
-
         const uint8_t maxOption = inv_currentCategory == 6 ? 2 : 1;
 
-        if (isInventoryKeyDownRepeat(InputButtons::BUTTON_UP) && menuSelected > 0)
+        if (isKeyRepeat(InputButtons::BUTTON_UP) && menuSelected > 0)
         {
             playSound(0, 2);
             menuSelected--;
         }
-        if (isInventoryKeyDownRepeat(InputButtons::BUTTON_DOWN) && menuSelected < maxOption)
+        if (isKeyRepeat(InputButtons::BUTTON_DOWN) && menuSelected < maxOption)
         {
             playSound(0, 2);
             menuSelected++;
         }
 
-        if (isInventoryKeyDown(InputButtons::BUTTON_TRIANGLE))
+        if (isKey(InputButtons::BUTTON_TRIANGLE))
         {
-            RECT target = getCursorSlotRect();
-            removeAnimatedUIBox(BOX_OPTIONS, &target);
+            box.close(data->listView.getCursorRect());
         }
-        else if (isInventoryKeyDown(InputButtons::BUTTON_CROSS))
+        else if (isKey(InputButtons::BUTTON_CROSS))
         {
             if (!isMenuEnabled(menuSelected, INVENTORY_ITEM_TYPES[INVENTORY_POINTER]))
             {
@@ -622,9 +675,8 @@ namespace
             {
                 case 0:
                 {
-                    state       = 201;
-                    RECT target = getCursorSlotRect();
-                    removeAnimatedUIBox(BOX_OPTIONS, &target);
+                    data->state = 201;
+                    box.close(data->listView.getCursorRect());
                     break;
                 }
                 case 1:
@@ -636,36 +688,34 @@ namespace
                     removeItem(type, amount);
                     compactInventory();
                     rebuildFiltered();
-                    bakeSlotStrings();
-                    applyListSize();
-                    UI_BOX_DATA[BOX_LIST].totalRows = inv_filteredCount;
+                    data->listView.bakeAll();
+                    data->listView.applySize();
+                    data->listView.totalRows = static_cast<int16_t>(inv_filteredCount);
                     if (inv_filteredCount == 0)
                     {
-                        UI_BOX_DATA[BOX_LIST].rowOffset = 0;
-                        INVENTORY_POINTER               = 0;
+                        data->listView.rowOffset = 0;
+                        INVENTORY_POINTER        = 0;
                     }
                     else if (getVisibleRow(INVENTORY_POINTER) < 0)
                         INVENTORY_POINTER = inv_filteredIdx[0];
-                    descNeedsUpdate = true;
-                    updateCapacity();
-                    RECT target = getCursorSlotRect();
-                    removeAnimatedUIBox(BOX_OPTIONS, &target);
+                    data->infoView.needsUpdate = true;
+                    data->capacityBar.update();
+                    box.close(data->listView.getCursorRect());
                     break;
                 }
                 case 2:
                 {
-                    inv_moveSourceSlot = static_cast<int8_t>(INVENTORY_POINTER);
-                    RECT target        = getCursorSlotRect();
-                    removeAnimatedUIBox(BOX_OPTIONS, &target);
+                    data->listView.moveSourceSlot = static_cast<int8_t>(INVENTORY_POINTER);
+                    box.close(data->listView.getCursorRect());
                     break;
                 }
             }
         }
     }
 
-    void createInventoryOptions()
+    void OptionsView::open()
     {
-        RECT start   = getCursorSlotRect();
+        RECT start   = data->listView.getCursorRect();
         start.width  = SLOT_WIDTH;
         start.height = SLOT_HEIGHT;
 
@@ -673,7 +723,7 @@ namespace
         const int16_t menuH  = allTab ? static_cast<int16_t>(MENU_HEIGHT + 18) : MENU_HEIGHT;
 
         const int32_t cursorPos  = getVisibleRow(INVENTORY_POINTER);
-        const int32_t visibleRow = cursorPos < 0 ? 0 : (cursorPos / 2 - UI_BOX_DATA[BOX_LIST].rowOffset);
+        const int32_t visibleRow = cursorPos < 0 ? 0 : (cursorPos / 2 - data->listView.rowOffset);
         const int16_t finalX     = static_cast<int16_t>(start.x + 3);
         const int16_t finalY =
             visibleRow >= 7 ? static_cast<int16_t>(start.y - menuH) : static_cast<int16_t>(start.y + 17);
@@ -694,46 +744,42 @@ namespace
 
         const int16_t labelX = static_cast<int16_t>(finalX + 12);
         const int16_t labelY = static_cast<int16_t>(finalY + 8);
-        data->menuUseStr  = getAtlasVanilla().render(
+        menuUseStr  = getAtlasVanilla().render(
             "Use",  {.x = labelX, .y = labelY,                                   .color = colorFor(useColor)});
-        data->menuDropStr = getAtlasVanilla().render(
+        menuDropStr = getAtlasVanilla().render(
             "Drop", {.x = labelX, .y = static_cast<int16_t>(labelY + 18),        .color = colorFor(dropColor)});
         if (allTab)
-            data->menuMoveStr = getAtlasVanilla().render(
+            menuMoveStr = getAtlasVanilla().render(
                 "Move", {.x = labelX, .y = static_cast<int16_t>(labelY + 36),    .color = colorFor(moveColor)});
         else
-            data->menuMoveStr = {};
+            menuMoveStr = {};
 
         menuSelected = 0;
-        createAnimatedUIBox(BOX_OPTIONS, 2, 0x12, &final, &start, tickInventoryOptions, renderItemOptions);
+        box.open(final, start);
     }
 
-    void tickInventoryTop(int32_t /*instanceId*/)
+    void ListView::tickInput()
     {
-        if (focusedWindow != BOX_LIST) return;
-
-        auto& box = UI_BOX_DATA[BOX_LIST];
-
         // Don't touch previousSelection here - it tracks what the description
         // panel currently shows in VRAM and is updated by the renderer.
         const auto soundPrev = INVENTORY_POINTER;
 
         if (inv_categoriesPresent != 0)
         {
-            const bool tabLeft  = isInventoryKeyDown(InputButtons::BUTTON_L1);
-            const bool tabRight = isInventoryKeyDown(InputButtons::BUTTON_R1);
+            const bool tabLeft  = isKey(InputButtons::BUTTON_L1);
+            const bool tabRight = isKey(InputButtons::BUTTON_R1);
             if (tabLeft || tabRight)
             {
                 int32_t newCat = shiftCategory(inv_currentCategory, inv_categoriesPresent, tabRight);
                 if (newCat != static_cast<int32_t>(inv_currentCategory))
                 {
-                    inv_moveSourceSlot  = -1;
+                    moveSourceSlot      = -1;
                     inv_currentCategory = static_cast<uint8_t>(newCat);
                     rebuildFiltered();
-                    applyListSize();
+                    applySize();
                     INVENTORY_POINTER = inv_filteredCount > 0 ? inv_filteredIdx[0] : 0;
-                    box.rowOffset     = 0;
-                    descNeedsUpdate   = true;
+                    rowOffset         = 0;
+                    data->infoView.needsUpdate = true;
                     playSound(0, 2);
                 }
             }
@@ -746,10 +792,10 @@ namespace
 
             int32_t deltaRow = 0;
             int32_t deltaCol = 0;
-            if (isInventoryKeyDownRepeat(InputButtons::BUTTON_UP))        deltaRow = -1;
-            else if (isInventoryKeyDownRepeat(InputButtons::BUTTON_DOWN)) deltaRow = +1;
-            if (isInventoryKeyDownRepeat(InputButtons::BUTTON_LEFT))         deltaCol = -1;
-            else if (isInventoryKeyDownRepeat(InputButtons::BUTTON_RIGHT))   deltaCol = +1;
+            if (isKeyRepeat(InputButtons::BUTTON_UP))        deltaRow = -1;
+            else if (isKeyRepeat(InputButtons::BUTTON_DOWN)) deltaRow = +1;
+            if (isKeyRepeat(InputButtons::BUTTON_LEFT))         deltaCol = -1;
+            else if (isKeyRepeat(InputButtons::BUTTON_RIGHT))   deltaCol = +1;
 
             if (deltaRow != 0 || deltaCol != 0)
             {
@@ -764,17 +810,17 @@ namespace
         }
         if (soundPrev != INVENTORY_POINTER) playSound(0, 2);
 
-        box.totalRows           = (inv_filteredCount + 1) / 2;
+        totalRows               = static_cast<int16_t>((inv_filteredCount + 1) / 2);
         const int32_t cursorRow = inv_filteredCount > 0 ? (getVisibleRow(INVENTORY_POINTER) / 2) : 0;
-        if (box.rowOffset > cursorRow) box.rowOffset = cursorRow;
-        if (box.rowOffset + box.visibleRows - 1 < cursorRow) box.rowOffset = cursorRow - box.visibleRows + 1;
-        if (box.rowOffset < 0) box.rowOffset = 0;
+        if (rowOffset > cursorRow) rowOffset = static_cast<int16_t>(cursorRow);
+        if (rowOffset + visibleRows - 1 < cursorRow) rowOffset = static_cast<int16_t>(cursorRow - visibleRows + 1);
+        if (rowOffset < 0) rowOffset = 0;
 
-        if (inv_moveSourceSlot >= 0)
+        if (moveSourceSlot >= 0)
         {
-            if (isInventoryKeyDown(InputButtons::BUTTON_CROSS))
+            if (isKey(InputButtons::BUTTON_CROSS))
             {
-                const int32_t src = inv_moveSourceSlot;
+                const int32_t src = moveSourceSlot;
                 const int32_t dst = INVENTORY_POINTER;
                 if (src != dst)
                 {
@@ -784,50 +830,49 @@ namespace
                     rebuildFiltered();
                     bakeSlot(src);
                     bakeSlot(dst);
-                    descNeedsUpdate = true;
+                    data->infoView.needsUpdate = true;
                 }
-                inv_moveSourceSlot = -1;
+                moveSourceSlot = -1;
                 playSound(0, 4);
             }
-            else if (isInventoryKeyDown(InputButtons::BUTTON_TRIANGLE))
+            else if (isKey(InputButtons::BUTTON_TRIANGLE))
             {
-                inv_moveSourceSlot = -1;
+                moveSourceSlot = -1;
                 playSound(0, 4);
             }
             return;
         }
 
-        if (isInventoryKeyDown(InputButtons::BUTTON_CROSS))
+        if (isKey(InputButtons::BUTTON_CROSS))
         {
             if (inv_filteredCount == 0) { playSound(0, 11); }
-            else if (GAME_STATE >= 1 && GAME_STATE <= 3) { state = 201; }
+            else if (GAME_STATE >= 1 && GAME_STATE <= 3) { data->state = 201; }
             else
             {
-                createInventoryOptions();
-                state         = 51;
-                focusedWindow = BOX_OPTIONS;
+                data->optionsView.open();
+                data->state         = 51;
+                data->focusedWindow = FOCUS_OPTIONS;
             }
         }
-        else if (isInventoryKeyDown(InputButtons::BUTTON_SQUARE))
+        else if (isKey(InputButtons::BUTTON_SQUARE))
         {
             if (inv_filteredCount > 0)
             {
-                state         = 70;
-                focusedWindow = -1;
+                data->state         = 70;
+                data->focusedWindow = FOCUS_NONE;
                 playSound(0, 2);
             }
         }
-        else if (isInventoryKeyDown(InputButtons::BUTTON_TRIANGLE)) { state = 3; }
+        else if (isKey(InputButtons::BUTTON_TRIANGLE)) { data->state = 3; }
     }
 
-    void createInventoryTop()
+    void ListView::open()
     {
-        auto& box = UI_BOX_DATA[BOX_LIST];
-        if (box.frame != 0) return;
+        if (!box.isClosed()) return;
 
-        box.rowOffset = 0;
-        box.totalRows = inv_filteredCount;
-        applyListSize();
+        rowOffset = 0;
+        totalRows = static_cast<int16_t>(inv_filteredCount);
+        applySize();
 
         auto& work     = TAMER_ENTITY.posData[1].posMatrix.work.t;
         auto entityPos = getScreenPosition(work[0], work[1], work[2]);
@@ -836,7 +881,7 @@ namespace
             .x      = LIST_X,
             .y      = LIST_Y,
             .width  = LIST_WIDTH,
-            .height = box.finalPos.height,
+            .height = box.finalPos().height,
         };
         RECT startPos = {
             .x      = static_cast<int16_t>(entityPos.screenX),
@@ -845,32 +890,10 @@ namespace
             .height = 10,
         };
 
-        // features bits: 2 = translucent fill, 8 = skip engine auto-border (we draw a notched one), 16 = 75/25 blend.
-        createAnimatedUIBox(BOX_LIST, 2, 26, &finalPos, &startPos, tickInventoryTop, renderInventoryTop);
+        box.open(finalPos, startPos);
     }
 
-    void tickInventoryInfo(int32_t /*instanceId*/)
-    {
-        if (focusedWindow != BOX_INFO) return;
-        if (isInventoryKeyDown(InputButtons::BUTTON_TRIANGLE) || isInventoryKeyDown(InputButtons::BUTTON_SQUARE) ||
-            isInventoryKeyDown(InputButtons::BUTTON_CROSS))
-        {
-            RECT target = getCursorSlotRect();
-            removeAnimatedUIBox(BOX_INFO, &target);
-            focusedWindow = -1;
-            state         = 72;
-            playSound(0, 4);
-        }
-    }
-
-    void createInventoryInfo()
-    {
-        constexpr RECT finalPos = {.x = INFO_X, .y = INFO_Y, .width = INFO_WIDTH, .height = INFO_HEIGHT};
-        RECT startPos           = getCursorSlotRect();
-        createAnimatedUIBox(BOX_INFO, 2, 26, &finalPos, &startPos, tickInventoryInfo, renderInventoryInfo);
-    }
-
-    void closeInventoryTop()
+    void ListView::close()
     {
         auto& work     = TAMER_ENTITY.posData[1].posMatrix.work.t;
         auto entityPos = getScreenPosition(work[0], work[1], work[2]);
@@ -880,7 +903,25 @@ namespace
             .width  = 10,
             .height = 10,
         };
-        removeAnimatedUIBox(BOX_LIST, &target);
+        box.close(target);
+    }
+
+    void InfoView::tickInput()
+    {
+        if (isKey(InputButtons::BUTTON_TRIANGLE) || isKey(InputButtons::BUTTON_SQUARE) ||
+            isKey(InputButtons::BUTTON_CROSS))
+        {
+            box.close(data->listView.getCursorRect());
+            data->focusedWindow = FOCUS_NONE;
+            data->state         = 72;
+            playSound(0, 4);
+        }
+    }
+
+    void InfoView::open()
+    {
+        constexpr RECT finalPos = {.x = INFO_X, .y = INFO_Y, .width = INFO_WIDTH, .height = INFO_HEIGHT};
+        box.open(finalPos, data->listView.getCursorRect());
     }
 
     void startThrowingItem()
@@ -890,7 +931,7 @@ namespace
         removeItem(INVENTORY_ITEM_TYPES[INVENTORY_POINTER], 1);
     }
 
-    void tickInventoryUI(int32_t /*instanceId*/)
+    void InventoryUI::tick()
     {
         if (POLLED_INPUT == POLLED_INPUT_PREVIOUS)
             repeatTimer++;
@@ -899,42 +940,53 @@ namespace
 
         if (COMBAT_DATA_PTR->player.currentCommand[0] == BattleCommand::RUN) return;
 
+        if (focusedWindow == FOCUS_LIST    && listView.box.isOpen())    listView.tickInput();
+        if (focusedWindow == FOCUS_INFO    && infoView.box.isOpen())    infoView.tickInput();
+        if (focusedWindow == FOCUS_OPTIONS && optionsView.box.isOpen()) optionsView.tickInput();
+
         switch (state)
         {
             case 0:
             {
                 compactInventory();
-                inv_currentCategory = static_cast<uint8_t>(pickSmartDefault());
-                inv_moveSourceSlot  = -1;
+                inv_currentCategory          = static_cast<uint8_t>(pickSmartDefault());
+                listView.moveSourceSlot      = -1;
                 rebuildFiltered();
-                INVENTORY_POINTER = inv_filteredCount > 0 ? inv_filteredIdx[0] : 0;
-                previousSelection = -1;
-                descNeedsUpdate   = true;
-                initFontData();
-                createInventoryTop();
-                updateItemDescription();
-                updateCapacity();
+                INVENTORY_POINTER            = inv_filteredCount > 0 ? inv_filteredIdx[0] : 0;
+                infoView.previousSelection   = 0xFF;
+                infoView.needsUpdate         = true;
+                // Section-border labels live at panelX + 8, panelY - 4 (see renderSectionBorder).
+                infoView.labelDescStr = getAtlas7px().render(
+                    "ITEM DESCRIPTION", {.x = INFO_X + 8, .y = INFO_Y - 4, .color = TEXT_CYAN});
+                capacityBar.labelCapacityStr = getAtlas7px().render(
+                    "CAPACITY", {.x = CAP_X + 8, .y = CAP_Y - 4, .color = TEXT_CYAN});
+                capacityBar.fullBadgeStr = getAtlas7px().render(
+                    "FULL", {.x = CAP_X + CAP_WIDTH - 32 - 6 + 4, .y = CAP_Y + 4 + 1, .color = TEXT_RED});
+                listView.bakeAll();
+                listView.open();
+                infoView.updateDescription();
+                capacityBar.update();
                 if (TAMER_ENTITY.animId != 4) startAnimation(&TAMER_ENTITY, 4);
                 state = 1;
                 break;
             }
             case 1:
             {
-                if (UI_BOX_DATA[BOX_LIST].state == 1) state = 2;
+                if (listView.box.isOpen()) state = 2;
                 break;
             }
             case 2: break;
             case 3:
             {
-                focusedWindow = -1;
-                closeInventoryTop();
+                focusedWindow = FOCUS_NONE;
+                listView.close();
                 state = 4;
                 break;
             }
             case 4:
             {
-                if (UI_BOX_DATA[BOX_LIST].state != 0) return;
-                closeInventoryBoxes();
+                if (!listView.box.isClosed()) break;
+                closeInventoryBoxes();   // data.reset() — `this` is dangling after this point
 
                 if (GAME_STATE == 0)
                 {
@@ -942,58 +994,72 @@ namespace
                     addGameMenu();
                     startAnimation(&TAMER_ENTITY, 0);
                 }
-                break;
+                return;
             }
 
             case 51:
             {
-                if (UI_BOX_DATA[BOX_OPTIONS].state != 0) return;
-                focusedWindow = BOX_LIST;
+                if (!optionsView.box.isClosed()) break;
+                focusedWindow = FOCUS_LIST;
                 state         = 2;
                 break;
             }
 
             case 70:
             {
-                createInventoryInfo();
-                focusedWindow = BOX_INFO;
+                infoView.open();
+                focusedWindow = FOCUS_INFO;
                 state         = 71;
                 break;
             }
             case 71: break;
             case 72:
             {
-                if (UI_BOX_DATA[BOX_INFO].state != 0) return;
-                focusedWindow = BOX_LIST;
+                if (!infoView.box.isClosed()) break;
+                focusedWindow = FOCUS_LIST;
                 state         = 2;
                 break;
             }
 
             case 201:
             {
-                if (UI_BOX_DATA[BOX_OPTIONS].state != 0) return;
-                closeInventoryTop();
+                if (!optionsView.box.isClosed()) break;
+                listView.close();
                 state = 202;
                 break;
             }
             case 202:
             {
-                if (UI_BOX_DATA[BOX_LIST].state != 0) return;
+                if (!listView.box.isClosed()) break;
                 state = 203;
                 break;
             }
             case 203:
             {
-                if (UI_BOX_DATA[BOX_LIST].state != 0) return;
-                closeInventoryBoxes();
+                if (!listView.box.isClosed()) break;
+                closeInventoryBoxes();   // data.reset() — `this` is dangling after this point
                 if (GAME_STATE == 0)
                     startFeedingItem(INVENTORY_ITEM_TYPES[INVENTORY_POINTER]);
                 else if (GAME_STATE == 1)
                     startThrowingItem();
-                break;
+                return;
             }
         }
+
+        listView.box.tick();
+        infoView.box.tick();
+        optionsView.box.tick();
     }
+
+    void InventoryUI::render()
+    {
+        listView.render();
+        infoView.render();
+        optionsView.render();
+    }
+
+    void tickInventoryUI(int32_t /*instanceId*/)   { data->tick(); }
+    void renderInventoryUI(int32_t /*instanceId*/) { data->render(); }
 
 } // namespace
 
@@ -1001,36 +1067,23 @@ extern "C"
 {
     void closeInventoryBoxes()
     {
-        if (!isInventoryOpen) return;
-
-        isInventoryOpen = false;
-        state           = -1;
-
-        removeStaticUIBox(BOX_LIST);
-        removeStaticUIBox(BOX_INFO);
-        removeStaticUIBox(BOX_OPTIONS);
-
+        if (!data) return;
         removeObject(ObjectID::INVENTORY, 0);
-
         data.reset();
     }
 
     void addInventoryUI()
     {
-        if (isInventoryOpen) return;
-        if (UI_BOX_DATA[BOX_LIST].state != 0) return;
+        if (data) return;
         if (TAMER_ITEM.type != ItemType::NONE) return;
 
-        focusedWindow   = BOX_LIST;
-        state           = 0;
-        isInventoryOpen = true;
-        addObject(ObjectID::INVENTORY, 0, tickInventoryUI, nullptr);
+        data = dtl::make_unique<InventoryUI>();
+        addObject(ObjectID::INVENTORY, 0, tickInventoryUI, renderInventoryUI);
     }
 
     void initializeInventoryUI()
     {
-        state           = -1;
-        isInventoryOpen = false;
+        data.reset();
     }
 
     void setItemTexture(POLY_FT4* prim, ItemType item)

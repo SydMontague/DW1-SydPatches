@@ -76,9 +76,10 @@ extern "C"
         FISHING              = 12289,
 
         // Custom Objects
-        DEBUG_OVERLAY = 20000,
-        STATUS_BAR    = 20001,
+        DEBUG_OVERLAY  = 20000,
+        STATUS_BAR     = 20001,
         BATTLE_END_BOX = 20002,
+        TAMER_TEXTBOX  = 20003,
 
         NONE = 0xFFFF,
     };

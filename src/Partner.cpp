@@ -1025,7 +1025,7 @@ namespace
                 sleepRegen();
                 handleSleeping();
 
-                if (UI_BOX_DATA[0].state == 0)
+                if (!isGameMenuActive())
                 {
                     CHECKED_MEMORY_CARD = 0x10;
                     if (MEMORY_CARD_ID == -1 || MEMORY_CARD_SLOT == -1)

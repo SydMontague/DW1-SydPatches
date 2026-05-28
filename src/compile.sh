@@ -36,15 +36,20 @@ mips-g++ ItemInfo.cpp -o ../compiled/ItemInfo.lib $FLAGS
 mips-g++ ItemInfoDataA.cpp -o ../compiled/ItemInfoDataA.lib $FLAGS
 mips-g++ ItemInfoDataB.cpp -o ../compiled/ItemInfoDataB.lib $FLAGS
 
-mips-g++ Input.cpp dw1.cpp GameTime.cpp InventoryUI.cpp FixedNumbers.cpp Fade.cpp GameObjects.cpp NPCEntity.cpp Entity.cpp Tamer.cpp Effects.cpp HealingParticles.cpp ParticleFX.cpp CloudFX.cpp Fishing.cpp -o ../compiled/Cave1.lib $FLAGS
-mips-g++ NinjamonEffect.cpp MapName.cpp Map.cpp Model.cpp ItemEffects.cpp ItemFunctions.cpp GameMenu.cpp PlayerMenu.cpp StatsView.cpp TechView.cpp PlayerInfoView.cpp PlayerCardView.cpp PlayerChartView.cpp PlayerMedalView.cpp UIBox.cpp Inventory.cpp -o ../compiled/Cave2.lib $FLAGS
-mips-g++ MenuTab.cpp ConditionBubble.cpp VanillaText.cpp Matrix.cpp Utils.cpp Files.cpp EFE.cpp MapObjects.cpp Partner.cpp DOOA/DOOA.cpp CombatCommon.cpp InventoryUIHelpers.cpp Sound.cpp Math.cpp Camera.cpp Battle.cpp Tournament.cpp DigimonData.cpp Transformation.cpp Evolution.cpp DigimonMenu.cpp -o ../compiled/Cave3.lib $FLAGS
+mips-g++ Input.cpp GameTime.cpp FixedNumbers.cpp Fade.cpp GameObjects.cpp NPCEntity.cpp Entity.cpp Tamer.cpp Effects.cpp HealingParticles.cpp ParticleFX.cpp CloudFX.cpp Fishing.cpp UIBox.cpp -o ../compiled/Cave1.lib $FLAGS
+mips-g++ InventoryUI.cpp -o ../compiled/InventoryUI.lib ${FLAGS/-O3/-Os}
+mips-g++ NinjamonEffect.cpp MapName.cpp Map.cpp Model.cpp ItemEffects.cpp ItemFunctions.cpp GameMenu.cpp StatsView.cpp TechView.cpp PlayerInfoView.cpp PlayerCardView.cpp PlayerChartView.cpp PlayerMedalView.cpp Inventory.cpp -o ../compiled/Cave2.lib $FLAGS
+mips-g++ PlayerMenu.cpp -o ../compiled/PlayerMenu.lib ${FLAGS/-O3/-Os}
+mips-g++ MenuTab.cpp ConditionBubble.cpp VanillaText.cpp Matrix.cpp Utils.cpp Files.cpp EFE.cpp MapObjects.cpp Partner.cpp DOOA/DOOA.cpp CombatCommon.cpp InventoryUIHelpers.cpp Sound.cpp Math.cpp Camera.cpp Battle.cpp Tournament.cpp DigimonData.cpp Transformation.cpp Evolution.cpp -o ../compiled/Cave3.lib $FLAGS
+mips-g++ DigimonMenu.cpp -o ../compiled/DigimonMenu.lib ${FLAGS/-O3/-Os}
 mips-g++ Butterfly.cpp -o ../compiled/Cave4.lib $FLAGS
-mips-g++ AtlasFont.cpp BuffModel.cpp Main.cpp BattleEndBox.cpp MeramonShake.cpp EntityParticleFX.cpp -o ../compiled/Cave5.lib $FLAGS
+mips-g++ AtlasFont.cpp BuffModel.cpp Main.cpp MeramonShake.cpp EntityParticleFX.cpp -o ../compiled/Cave5.lib $FLAGS
+mips-g++ BattleEndBox.cpp -o ../compiled/BattleEndBox.lib ${FLAGS/-O3/-Os}
 mips-g++ DebugMenu.cpp Script.cpp -o ../compiled/Cave6.lib $FLAGS
 
 # Spillover libs placed in memory-cave holes (see GameData.asm).
 mips-g++ Pause.cpp      -o ../compiled/Pause.lib      $FLAGS
+mips-g++ dw1.cpp        -o ../compiled/dw1.lib        $FLAGS
 mips-g++ Helper.cpp     -o ../compiled/Helper.lib     $FLAGS
 mips-g++ Timestamp.cpp  -o ../compiled/Timestamp.lib  $FLAGS
 mips-g++ ThrownItem.cpp -o ../compiled/ThrownItem.lib $FLAGS
