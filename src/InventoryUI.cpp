@@ -9,6 +9,7 @@
 #include "InventoryUIHelpers.hpp"
 #include "ItemFunctions.hpp"
 #include "ItemInfo.hpp"
+#include "LabeledBorder.hpp"
 #include "Map.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
@@ -170,7 +171,7 @@ namespace
     {
         UIBox box{UIBox::Style{
             .color = PANEL_FILL_COLOR, .doubleFill = true, .drawBorder = false}};
-        AtlasString labelDescStr;
+        LabeledBorder descBorder;
         AtlasString itemNameStr;
         AtlasString headlineStr;
         AtlasString detailStr;
@@ -202,7 +203,7 @@ namespace
 
     struct CapacityBar
     {
-        AtlasString labelCapacityStr;
+        LabeledBorder capBorder;
         AtlasString capacityUsedStr;
         AtlasString capacityMaxStr;
         AtlasString fullBadgeStr;
@@ -536,7 +537,7 @@ namespace
         // Two semi-trans fills = 75/25 blend matching the description-window preset.
         renderBox(CAP_X + 4, CAP_Y + 3, CAP_WIDTH - 8, CAP_HEIGHT - 3, 12, 22, 30, 1, depth);
         renderBox(CAP_X + 4, CAP_Y + 3, CAP_WIDTH - 8, CAP_HEIGHT - 3, 12, 22, 30, 1, depth);
-        renderSectionBorder(CAP_X, CAP_Y, CAP_WIDTH, CAP_HEIGHT, labelCapacityStr, labelDepth);
+        capBorder.render(labelDepth);
 
         const int32_t used = countUsedSlots();
         const int32_t cap  = INVENTORY_SIZE > 0 ? INVENTORY_SIZE : 1;
@@ -590,12 +591,7 @@ namespace
         if (!box.isOpen()) { box.render(layer); return; }
         // Content first, chrome last (PSX OT LIFO at same depth).
 
-        renderSectionBorder(box.finalPos().x,
-                            box.finalPos().y,
-                            box.finalPos().width,
-                            box.finalPos().height,
-                            labelDescStr,
-                            labelDepth);
+        descBorder.render(labelDepth);
 
         if (INVENTORY_ITEM_TYPES[INVENTORY_POINTER] == ItemType::NONE) return;
 
@@ -953,13 +949,14 @@ namespace
                 listView.moveSourceSlot      = -1;
                 rebuildFiltered();
                 INVENTORY_POINTER            = inv_filteredCount > 0 ? inv_filteredIdx[0] : 0;
-                infoView.previousSelection   = 0xFF;
-                infoView.needsUpdate         = true;
-                // Section-border labels live at panelX + 8, panelY - 4 (see renderSectionBorder).
-                infoView.labelDescStr = getAtlas7px().render(
-                    "ITEM DESCRIPTION", {.x = INFO_X + 8, .y = INFO_Y - 4, .color = TEXT_CYAN});
-                capacityBar.labelCapacityStr = getAtlas7px().render(
-                    "CAPACITY", {.x = CAP_X + 8, .y = CAP_Y - 4, .color = TEXT_CYAN});
+                infoView.previousSelection = 0xFF;
+                infoView.needsUpdate       = true;
+                infoView.descBorder.init(
+                    {.x = INFO_X, .y = INFO_Y, .width = INFO_WIDTH, .height = INFO_HEIGHT},
+                    "ITEM DESCRIPTION", TEXT_CYAN);
+                capacityBar.capBorder.init(
+                    {.x = CAP_X, .y = CAP_Y, .width = CAP_WIDTH, .height = CAP_HEIGHT},
+                    "CAPACITY", TEXT_CYAN);
                 capacityBar.fullBadgeStr = getAtlas7px().render(
                     "FULL", {.x = CAP_X + CAP_WIDTH - 32 - 6 + 4, .y = CAP_Y + 4 + 1, .color = TEXT_RED});
                 listView.bakeAll();
