@@ -1494,7 +1494,6 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
-    extern int16_t POST_BATTLE_STATS_TIMER;
     extern int32_t HAS_TAKEN_DAMAGE;
     extern POLY_FT4 UNUSED_BIT_TEXT;
     extern dtl::array<StatsGains, 4> INITIAL_COMBAT_STATS;
@@ -1713,8 +1712,6 @@ extern "C"
     extern int32_t NO_AI_FLAG;
     extern Entity* FINISHING_ENTITY;
     extern bool FLEE_DISABLED;
-    extern int32_t BITS_TO_GAIN;
-    extern bool SHOULD_SKIP_BIT_COUNTING;
     extern uint32_t FIRST_SCREEN_PRESSED_START;
     extern uint8_t SAVED_CURRENT_SCREEN;
     extern uint8_t SAVED_PREVIOUS_SCREEN;
