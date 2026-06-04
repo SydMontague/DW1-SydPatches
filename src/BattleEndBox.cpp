@@ -1,11 +1,13 @@
 #include "AtlasFont.hpp"
 #include "Battle.h"
 #include "Font.hpp"
+#include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Input.hpp"
 #include "Map.hpp"
 #include "Math.hpp"
 #include "Sound.hpp"
+#include "UIBox.hpp"
 #include "UIElements.hpp"
 #include "VanillaText.hpp"
 #include "extern/BTL.hpp"
@@ -17,19 +19,52 @@
 
 namespace
 {
-    struct Data
-    {
-        dtl::array<AtlasString, 6> statLabels{};
-        AtlasString bitString1;
-        AtlasString bitString2;
+    constexpr dtl::array<const char*, 6> STATS_LABELS{"HP", "MP", "Off", "Def", "Speed", "Brain"};
+    constexpr auto bitsString                = "Bits";
+    constexpr auto BOX_X                     = -88;
+    constexpr auto BITS_BOX_Y                = 18;
+    constexpr auto STATS_BOX_Y               = -78;
+    constexpr auto BALANCE_BOX_Y             = -13;
+    constexpr auto BOX_WIDTH                 = 176;
+    constexpr auto STATS_BOX_HEIGHT          = 96;
+    constexpr int16_t BOTTOM_BOX_HEIGHT_BASE = 31;
+    constexpr int16_t BOTTOM_BOX_HEIGHT_FULL = 66;
+
+    constexpr RECT finalPos{
+        .x      = BOX_X,
+        .y      = STATS_BOX_Y,
+        .width  = BOX_WIDTH,
+        .height = STATS_BOX_HEIGHT,
     };
 
-    dtl::unique_ptr<Data> data;
+    constexpr RECT balanceFinalPos{
+        .x      = BOX_X,
+        .y      = BALANCE_BOX_Y,
+        .width  = BOX_WIDTH,
+        .height = BOTTOM_BOX_HEIGHT_BASE,
+    };
 
-    constexpr dtl::array<const char*, 6> statLabels{"HP", "MP", "Off", "Def", "Speed", "Brain"};
-    constexpr auto bitsString = "Bits";
+    constexpr RECT getStartPos()
+    {
+        auto& work     = TAMER_ENTITY.posData[1].posMatrix.work.t;
+        auto entityPos = getScreenPosition(work[0], work[1], work[2]);
+        return {
+            .x      = static_cast<int16_t>(entityPos.screenX - 5),
+            .y      = static_cast<int16_t>(entityPos.screenY - 5),
+            .width  = 10,
+            .height = 10,
+        };
+    }
 
-    dtl::array<bool, 6> STAT_BOX_HAS_GAIN;
+    constexpr RECT getBitBoxRect()
+    {
+        return {
+            .x      = BOX_X,
+            .y      = BITS_BOX_Y,
+            .width  = BOX_WIDTH,
+            .height = BTL_END_BOX_TEXTBUFFER[0] == 0 ? BOTTOM_BOX_HEIGHT_BASE : BOTTOM_BOX_HEIGHT_FULL,
+        };
+    }
 
     constexpr int32_t getLimit(Stat stat)
     {
@@ -41,64 +76,111 @@ namespace
         }
     }
 
-    void tickBitBox(int32_t)
-    {
-        if (UI_BOX_DATA[2].state != 1) return;
+    constexpr RenderSettings BITS_SETTING1{
+        .x     = static_cast<int16_t>(BOX_X + 10),
+        .y     = static_cast<int16_t>(BITS_BOX_Y + 10),
+        .color = TEXT_COLOR_YELLOW,
+    };
+    constexpr RenderSettings BITS_SETTING2{
+        .x = static_cast<int16_t>(BOX_X + 10),
+        .y = static_cast<int16_t>(BALANCE_BOX_Y + 10),
+    };
 
-        if (BITS_TO_GAIN == 0)
+    struct Data
+    {
+        UIBox statsBox{finalPos, {}, true, getStartPos()};
+        UIBox bitsBox{getBitBoxRect(), {}, true, getStartPos()};
+        UIBox finalBitsBox{balanceFinalPos, {0x2D, 0x38, 0x40}, false, getStartPos()};
+        int32_t bitsToGain{};
+        int16_t statsTimer{};
+
+        Data();
+        void tick();
+        void render(int32_t depth);
+        void close();
+        bool isClosed();
+
+    private:
+        void tickBitBox();
+        void tickPostBattleStatsBox();
+
+        void renderBitBox(int32_t depth);
+        void renderFinalBalance(int32_t depth);
+        // NOLINTNEXTLINE
+        __attribute__((optimize("Os"))) void renderPostBattleStatsBox(int32_t depth);
+
+        dtl::array<AtlasString, 6> statLabels{};
+        AtlasString bitString1{getAtlasVanilla().render(bitsString, BITS_SETTING1)};
+        AtlasString bitString2{getAtlasVanilla().render(bitsString, BITS_SETTING2)};
+        dtl::array<bool, 6> hasStatGain{};
+        bool skipBitCounting{false};
+    };
+
+    dtl::unique_ptr<Data> data;
+
+    void Data::tickBitBox()
+    {
+        if (finalBitsBox.getState() != UIBox::State::OPENED) return;
+
+        if (bitsToGain == 0)
         {
             BTL_tickBattleEndText();
             return;
         }
 
         if (isKeyDownPolled(InputButtons::BUTTON_CROSS) || isKeyDownPolled(InputButtons::BUTTON_TRIANGLE))
-            SHOULD_SKIP_BIT_COUNTING = true;
+            skipBitCounting = true;
 
-        if (SHOULD_SKIP_BIT_COUNTING)
+        if (skipBitCounting)
         {
-            MONEY += BITS_TO_GAIN;
-            BITS_TO_GAIN = 0;
+            MONEY += bitsToGain;
+            bitsToGain = 0;
         }
         else
         {
             playSound(0, 22);
-            BITS_TO_GAIN -= 1;
+            bitsToGain -= 1;
             MONEY += 1;
         }
 
         MONEY = min(MONEY, 999999);
-        if (BITS_TO_GAIN == 0) playSound(0, 23);
+        if (bitsToGain == 0) playSound(0, 23);
     }
 
-    void renderBitBox(int32_t index)
+    void Data::renderBitBox(int32_t depth)
     {
-        uint8_t layer = 6 - index;
+        if (bitsBox.getState() != UIBox::State::OPENED) return;
 
-        getAtlasVanilla().renderSlow(format("%d", BITS_TO_GAIN).data(), layer, {.x = -18, .y = 28});
-        data->bitString1.render(layer);
+        getAtlasVanilla().renderSlow(format("%d", bitsToGain).data(), depth, {.x = -18, .y = 28});
+        data->bitString1.render(depth);
 
         if (BTL_END_BOX_TEXTBUFFER[0] != 0)
         {
-            drawLine2P(0x8e8e8e, -86, 50, 84, 50, layer, 0);
-            drawLine2P(0x121212, -85, 51, 85, 51, layer, 0);
+            drawLine2P(0x8e8e8e, -86, 50, 84, 50, depth, 0);
+            drawLine2P(0x121212, -85, 51, 85, 51, depth, 0);
             BTL_renderBattleEndText(1);
         }
+
+        bitsBox.render(depth);
     }
 
-    void renderFinalBalance(int32_t)
+    void Data::renderFinalBalance(int32_t depth)
     {
+        if (finalBitsBox.getState() != UIBox::State::OPENED) return;
+
         const RenderSettings settings{
-            .x = static_cast<int16_t>(UI_BOX_DATA[2].finalPos.x + 58),
-            .y = static_cast<int16_t>(UI_BOX_DATA[2].finalPos.y + 10),
+            .x = static_cast<int16_t>(BOX_X + 58),
+            .y = static_cast<int16_t>(BALANCE_BOX_Y + 10),
         };
-        getAtlasVanilla().renderSlow(format("%d", MONEY).data(), 4, settings);
-        data->bitString2.render(4);
+        getAtlasVanilla().renderSlow(format("%d", MONEY).data(), depth, settings);
+        data->bitString2.render(depth);
+
+        finalBitsBox.render(depth);
     }
 
-    void renderPostBattleStatsBox(int32_t instance)
+    void Data::renderPostBattleStatsBox(int32_t depth)
     {
-        const auto& box  = UI_BOX_DATA[0];
-        const auto layer = 6 - instance;
+        if (statsBox.getState() != UIBox::State::OPENED) return;
 
         auto previous_color = COLORCODE_LOWBITS;
         setTextColor(1);
@@ -110,7 +192,7 @@ namespace
 
             if (remaining == 0) continue;
 
-            if (POST_BATTLE_STATS_TIMER == 0 && first)
+            if (statsTimer == 0 && first)
             {
                 playSound(0, 22);
                 INITIAL_COMBAT_STATS[0].set(stat, min(INITIAL_COMBAT_STATS[0].get(stat) + 1, getLimit(stat)));
@@ -126,46 +208,34 @@ namespace
                 prim->g0 = 0x80;
                 prim->b0 = 0x80;
                 setUVDataPolyFT4(prim, 0x60, 0xb4, 12, 12);
-                setPosDataPolyFT4(prim, box.finalPos.x + 0x82, box.finalPos.y + 9 + i * 13, 12, 12);
-                libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + layer, prim);
+                setPosDataPolyFT4(prim, BOX_X + 0x82, STATS_BOX_Y + 9 + i * 13, 12, 12);
+                libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + depth, prim);
                 libgs_GsSetWorkBase(prim + 1);
             }
 
             const RenderSettings settings{
-                .x = static_cast<int16_t>(box.finalPos.x + 0x8e),
-                .y = static_cast<int16_t>(box.finalPos.y + 9 + (i * 13)),
+                .x = static_cast<int16_t>(BOX_X + 0x8e),
+                .y = static_cast<int16_t>(STATS_BOX_Y + 9 + (i * 13)),
             };
-            getAtlasVanilla().renderSlow(format("%d", STATS_GAINS.get(stat)).data(), layer, settings);
+            getAtlasVanilla().renderSlow(format("%d", STATS_GAINS.get(stat)).data(), depth, settings);
         }
 
         for (int32_t i = 0; i < 6; i++)
         {
             const RenderSettings settings{
-                .x = static_cast<int16_t>(box.finalPos.x + 0x44),
-                .y = static_cast<int16_t>(box.finalPos.y + 9 + (i * 13)),
+                .x = static_cast<int16_t>(BOX_X + 0x44),
+                .y = static_cast<int16_t>(STATS_BOX_Y + 9 + (i * 13)),
             };
             auto stat = static_cast<Stat>(i);
-            getAtlasVanilla().renderSlow(format("%d", INITIAL_COMBAT_STATS[0].get(stat)).data(), layer, settings);
+            getAtlasVanilla().renderSlow(format("%d", INITIAL_COMBAT_STATS[0].get(stat)).data(), depth, settings);
         }
 
         setTextColor(previous_color);
-        drawLine2P(0xfad990,
-                   box.finalPos.x + 0x7a,
-                   box.finalPos.y + 2,
-                   box.finalPos.x + 0x7a,
-                   box.finalPos.y + box.finalPos.height - 3,
-                   layer,
-                   0);
-        drawLine2P(0x20202,
-                   box.finalPos.x + 0x7b,
-                   box.finalPos.y + 2,
-                   box.finalPos.x + 0x7b,
-                   box.finalPos.y + box.finalPos.height - 3,
-                   layer,
-                   0);
+        drawLine2P(0xfad990, BOX_X + 0x7a, STATS_BOX_Y + 2, BOX_X + 0x7a, STATS_BOX_Y + STATS_BOX_HEIGHT - 3, depth, 0);
+        drawLine2P(0x20202, BOX_X + 0x7b, STATS_BOX_Y + 2, BOX_X + 0x7b, STATS_BOX_Y + STATS_BOX_HEIGHT - 3, depth, 0);
 
         for (const auto& entry : data->statLabels)
-            entry.render(layer);
+            entry.render(depth);
 
         GsBOXF rect{
             .attribute = 0,
@@ -175,17 +245,17 @@ namespace
 
         for (int32_t i = 0; i < 6; i++)
         {
-            auto yOffset = box.finalPos.y + 20 + i * 13;
+            auto yOffset = STATS_BOX_Y + 20 + i * 13;
             auto stat    = static_cast<Stat>(i);
             rect.width   = INITIAL_COMBAT_STATS[0].get(stat) * 50 / getLimit(stat);
             rect.y       = yOffset - 2;
 
-            if (STAT_BOX_HAS_GAIN[i])
+            if (hasStatGain[i])
             {
                 rect.r = 0x69;
                 rect.g = 0xc2;
                 rect.b = 0xff;
-                libgs_GsSortBoxFill(&rect, ACTIVE_ORDERING_TABLE, layer);
+                libgs_GsSortBoxFill(&rect, ACTIVE_ORDERING_TABLE, depth);
                 rect.r = 0x00;
                 rect.g = 0x5a;
                 rect.b = 0x96;
@@ -195,43 +265,29 @@ namespace
                 rect.r = 0x78;
                 rect.g = 0x78;
                 rect.b = 0x78;
-                libgs_GsSortBoxFill(&rect, ACTIVE_ORDERING_TABLE, layer);
+                libgs_GsSortBoxFill(&rect, ACTIVE_ORDERING_TABLE, depth);
                 rect.r = 0x28;
                 rect.g = 0x28;
                 rect.b = 0x28;
             }
             rect.width = 50;
 
-            drawLine3P(0x20202,
-                       box.finalPos.x + 0x40,
-                       yOffset,
-                       box.finalPos.x + 0x40,
-                       yOffset - 3,
-                       box.finalPos.x + 0x75,
-                       yOffset - 3,
-                       layer,
-                       0);
-            drawLine3P(0x666666,
-                       box.finalPos.x + 0x75,
-                       yOffset - 2,
-                       box.finalPos.x + 0x75,
-                       yOffset,
-                       box.finalPos.x + 0x41,
-                       yOffset,
-                       layer,
-                       0);
-            libgs_GsSortBoxFill(&rect, ACTIVE_ORDERING_TABLE, layer);
+            drawLine3P(0x20202, BOX_X + 0x40, yOffset, BOX_X + 0x40, yOffset - 3, BOX_X + 0x75, yOffset - 3, depth, 0);
+            drawLine3P(0x666666, BOX_X + 0x75, yOffset - 2, BOX_X + 0x75, yOffset, BOX_X + 0x41, yOffset, depth, 0);
+            libgs_GsSortBoxFill(&rect, ACTIVE_ORDERING_TABLE, depth);
         }
+
+        statsBox.render(depth);
     }
 
-    void tickPostBattleStatsBox(int32_t)
+    void Data::tickPostBattleStatsBox()
     {
-        if (POST_BATTLE_STATS_TIMER > 0) POST_BATTLE_STATS_TIMER--;
+        if (statsTimer > 0) statsTimer--;
 
         if (isKeyDownPolled(InputButtons::BUTTON_CROSS) || isKeyDownPolled(InputButtons::BUTTON_TRIANGLE))
-            SHOULD_SKIP_BIT_COUNTING = true;
+            skipBitCounting = true;
 
-        if (!SHOULD_SKIP_BIT_COUNTING) return;
+        if (!skipBitCounting) return;
 
         INITIAL_COMBAT_STATS[0].hp      = min(INITIAL_COMBAT_STATS[0].hp + STATS_GAINS.hp, 9999);
         INITIAL_COMBAT_STATS[0].mp      = min(INITIAL_COMBAT_STATS[0].mp + STATS_GAINS.mp, 9999);
@@ -241,98 +297,85 @@ namespace
         INITIAL_COMBAT_STATS[0].brains  = min(INITIAL_COMBAT_STATS[0].brains + STATS_GAINS.brains, 999);
         STATS_GAINS                     = {};
 
-        POST_BATTLE_STATS_TIMER = 0;
+        statsTimer = 0;
     }
 
-    void createBitsBox()
+    Data::Data()
     {
-        auto& work     = TAMER_ENTITY.posData[1].posMatrix.work.t;
-        auto entityPos = getScreenPosition(work[0], work[1], work[2]);
-        const RECT startPos{
-            .x      = static_cast<int16_t>(entityPos.screenX - 5),
-            .y      = static_cast<int16_t>(entityPos.screenY - 5),
-            .width  = 10,
-            .height = 10,
-        };
-        const RECT finalPos{
-            .x      = -88,
-            .y      = 18,
-            .width  = 176,
-            .height = static_cast<int16_t>(BTL_END_BOX_TEXTBUFFER[0] == 0 ? 31 : 66),
-        };
-        const RenderSettings settings{
-            .x     = static_cast<int16_t>(finalPos.x + 10),
-            .y     = static_cast<int16_t>(finalPos.y + 10),
-            .color = TEXT_COLOR_YELLOW,
-        };
-        data->bitString1 = getAtlasVanilla().render(bitsString, settings);
+        finalBitsBox.close();
 
-        createAnimatedUIBox(1, 0, 2, &finalPos, &startPos, tickBitBox, renderBitBox);
-    }
-
-    void createFinalBalanceBox()
-    {
-        const RECT startPos = UI_BOX_DATA[1].startPos;
-        const RECT finalPos{
-            .x      = -88,
-            .y      = -13,
-            .width  = 176,
-            .height = 31,
-        };
-        const RenderSettings settings{
-            .x = static_cast<int16_t>(finalPos.x + 10),
-            .y = static_cast<int16_t>(finalPos.y + 10),
-        };
-        data->bitString2 = getAtlasVanilla().render(bitsString, settings);
-        createAnimatedUIBox(2, 1, 0, &finalPos, &startPos, nullptr, renderFinalBalance);
-    }
-
-    void removeBattleEndBox(int32_t id)
-    {
-        if (UI_BOX_DATA[id].state != 0) removeAnimatedUIBox(id, nullptr);
-
-        data.reset();
-    }
-
-    void createPostBattleStatsBox()
-    {
-        SHOULD_SKIP_BIT_COUNTING = false;
-
+        statsTimer = 100;
         for (int32_t i = 0; i < 6; i++)
         {
-            auto stat            = static_cast<Stat>(i);
-            STAT_BOX_HAS_GAIN[i] = STATS_GAINS.get(stat) != 0;
+            auto stat      = static_cast<Stat>(i);
+            hasStatGain[i] = STATS_GAINS.get(stat) != 0;
         }
 
-        POST_BATTLE_STATS_TIMER = 100;
-
-        auto& work     = PARTNER_ENTITY.posData[1].posMatrix.work.t;
-        auto entityPos = getScreenPosition(work[0], work[1], work[2]);
-        const RECT finalPos{
-            .x      = -88,
-            .y      = -78,
-            .width  = 176,
-            .height = 96,
-        };
-        const RECT startPos{
-            .x      = static_cast<int16_t>(entityPos.screenX - 5),
-            .y      = static_cast<int16_t>(entityPos.screenY - 5),
-            .width  = 10,
-            .height = 10,
-        };
-
-        data = dtl::make_unique<Data>();
-        for (int32_t i = 0; i < statLabels.size(); i++)
+        for (int32_t i = 0; i < STATS_LABELS.size(); i++)
         {
             const RenderSettings settings{
                 .x     = static_cast<int16_t>(finalPos.x + 10),
                 .y     = static_cast<int16_t>(finalPos.y + 9 + (i * 13)),
                 .color = TEXT_COLOR_YELLOW,
             };
-            data->statLabels[i] = getAtlasVanilla().render(statLabels[i], settings);
+            statLabels[i] = getAtlasVanilla().render(STATS_LABELS[i], settings);
         }
+    }
 
-        createAnimatedUIBox(0, 0, 2, &finalPos, &startPos, tickPostBattleStatsBox, renderPostBattleStatsBox);
+    void Data::tick()
+    {
+        tickBitBox();
+        tickPostBattleStatsBox();
+
+        bitsBox.tick();
+        finalBitsBox.tick();
+        statsBox.tick();
+    }
+
+    void Data::render(int32_t depth)
+    {
+        this->renderPostBattleStatsBox(depth);
+        this->renderBitBox(depth - 1);
+        this->renderFinalBalance(depth - 2);
+    }
+
+    void Data::close()
+    {
+        bitsBox.close();
+        finalBitsBox.close();
+        statsBox.close();
+    }
+
+    bool Data::isClosed()
+    {
+        return bitsBox.getState() == UIBox::State::CLOSED && finalBitsBox.getState() == UIBox::State::CLOSED &&
+               statsBox.getState() == UIBox::State::CLOSED;
+    }
+
+    void removeBattleEndBox()
+    {
+        data->close();
+    }
+
+    void tick(int32_t)
+    {
+        data->tick();
+        if (data->isClosed())
+        {
+            removeObject(ObjectID::BATTLE_END_BOX, 0);
+            data.reset();
+        }
+    }
+
+    void render(int32_t)
+    {
+        data->render(6);
+    }
+
+    void createBattleEndBox()
+    {
+        data = dtl::make_unique<Data>();
+        addObject(ObjectID::BATTLE_END_BOX, 0, tick, render);
     }
 } // namespace
 
@@ -351,10 +394,11 @@ extern "C"
     void handleBattleEndBox()
     {
         dtl::array<ItemType, 3> droppedItems{};
+        createBattleEndBox();
         // vanilla initializes the unused bit text, we don't need to
-        BITS_TO_GAIN = 0;
+        data->bitsToGain = 0;
         for (int32_t i = 1; i <= ENEMY_COUNT; i++)
-            BITS_TO_GAIN += NPC_ENTITIES[COMBAT_DATA_PTR->player.entityIds[i] - 2].bits;
+            data->bitsToGain += NPC_ENTITIES[COMBAT_DATA_PTR->player.entityIds[i] - 2].bits;
         battleStatsGainsAndDrops(droppedItems.data());
         RECT boxPosition{
             .x      = -78,
@@ -380,10 +424,8 @@ extern "C"
         BTL_appendMPBonusText();
         battleMoveLearning();
         GAME_STATE = 2;
-        createPostBattleStatsBox();
-        createBitsBox();
 
-        while (UI_BOX_DATA[0].state != 1 || UI_BOX_DATA[1].state != 1)
+        while (data->statsBox.getState() != UIBox::State::OPENED || data->bitsBox.getState() != UIBox::State::OPENED)
             BTL_battleTickFrame();
 
         if (BTL_END_BOX_TEXTBUFFER[0] != 0)
@@ -395,17 +437,16 @@ extern "C"
             }
         }
 
-        while (!STATS_GAINS.isAllZero() || POST_BATTLE_STATS_TIMER != 0)
+        while (!STATS_GAINS.isAllZero() || data->statsTimer != 0)
             BTL_battleTickFrame();
 
-        createFinalBalanceBox();
-        while (UI_BOX_DATA[2].state != 1)
+        data->finalBitsBox.open();
+        while (data->finalBitsBox.getState() != UIBox::State::OPENED)
             BTL_battleTickFrame();
 
-        while (BITS_TO_GAIN != 0)
+        while (data->bitsToGain != 0)
             BTL_battleTickFrame();
 
-        SHOULD_SKIP_BIT_COUNTING = 0;
         while (!BTL_isEndBoxTextFinished())
             BTL_battleTickFrame();
 
@@ -417,8 +458,6 @@ extern "C"
         }
 
         resetStatsAfterCombat();
-        removeBattleEndBox(0);
-        removeBattleEndBox(1);
-        removeBattleEndBox(2);
+        removeBattleEndBox();
     }
 }
