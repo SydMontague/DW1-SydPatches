@@ -9,7 +9,7 @@
 #include "InventoryUIHelpers.hpp"
 #include "ItemFunctions.hpp"
 #include "ItemInfo.hpp"
-#include "LabeledBorder.hpp"
+#include "LabeledUIBox.hpp"
 #include "Map.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
@@ -80,10 +80,11 @@ namespace
 
     constexpr RGB8 PANEL_FILL_COLOR = {.red = 12, .green = 22, .blue = 30};
 
-    // List & info panels draw their own notched border, so drawBorder=false.
+    // List panel draws its own (tabbed) border, so drawBorder=false.
     constexpr UIBox::Style PANEL_STYLE{.color = PANEL_FILL_COLOR, .fill = UIBox::Fill::DOUBLE, .drawBorder = false};
-    // Options panel uses the auto-drawn border.
+    // Options panel and the labeled (info/capacity) panels use the auto-drawn border.
     constexpr UIBox::Style OPTIONS_STYLE{.color = PANEL_FILL_COLOR, .fill = UIBox::Fill::DOUBLE};
+    constexpr UIBox::Style LABELED_PANEL_STYLE = OPTIONS_STYLE;
 
     // Render colors are doubled-and-clamped versions of VanillaText.hpp's TEXT_COLORS.
     // AtlasFont halves color.red/green/blue (`(c+1)/2`) before storing as prim color.
@@ -172,8 +173,7 @@ namespace
 
     struct InfoView
     {
-        UIBox box;   // opened with PANEL_STYLE
-        LabeledBorder descBorder;
+        LabeledUIBox box;   // fill + border + "ITEM DESCRIPTION" label
         AtlasString itemNameStr;
         AtlasString headlineStr;
         AtlasString detailStr;
@@ -203,7 +203,7 @@ namespace
 
     struct CapacityBar
     {
-        LabeledBorder capBorder;
+        LabeledUIBox capBorder;   // fill + border + "CAPACITY" label
         AtlasString capacityUsedStr;
         AtlasString capacityMaxStr;
         AtlasString fullBadgeStr;
@@ -534,10 +534,8 @@ namespace
     {
         constexpr int32_t depth = 6;
 
-        // Two semi-trans fills = 75/25 blend matching the description-window preset.
-        renderBox(CAP_X + 4, CAP_Y + 3, CAP_WIDTH - 8, CAP_HEIGHT - 3, 12, 22, 30, 1, depth);
-        renderBox(CAP_X + 4, CAP_Y + 3, CAP_WIDTH - 8, CAP_HEIGHT - 3, 12, 22, 30, 1, depth);
-        capBorder.render(labelDepth);
+        // fill (75/25 blend) + border + "CAPACITY" label, behind the readout below.
+        capBorder.render(depth);
 
         const int32_t used = countUsedSlots();
         const int32_t cap  = INVENTORY_SIZE > 0 ? INVENTORY_SIZE : 1;
@@ -589,9 +587,10 @@ namespace
         constexpr int32_t labelDepth = 1;
 
         if (!box.isOpen()) { box.render(layer); return; }
-        // Content first, chrome last (PSX OT LIFO at same depth).
 
-        descBorder.render(labelDepth);
+        // Panel chrome: fill + border at `layer`, label/notch at `layer - 1`.
+        // Content sits at lower depths (in front) and never overlaps the label.
+        box.render(layer);
 
         if (INVENTORY_ITEM_TYPES[INVENTORY_POINTER] == ItemType::NONE) return;
 
@@ -619,8 +618,6 @@ namespace
 
         headlineStr.render(depth);
         detailStr.render(depth);
-
-        box.render(layer);
     }
 
     void OptionsView::render()
@@ -917,7 +914,7 @@ namespace
     void InfoView::open()
     {
         constexpr RECT finalPos = {.x = INFO_X, .y = INFO_Y, .width = INFO_WIDTH, .height = INFO_HEIGHT};
-        box = UIBox(finalPos, PANEL_STYLE, data->listView.getCursorRect());
+        box = LabeledUIBox(finalPos, "ITEM DESCRIPTION", LABELED_PANEL_STYLE, TEXT_CYAN, data->listView.getCursorRect());
     }
 
     void startThrowingItem()
@@ -951,12 +948,10 @@ namespace
                 INVENTORY_POINTER            = inv_filteredCount > 0 ? inv_filteredIdx[0] : 0;
                 infoView.previousSelection = 0xFF;
                 infoView.needsUpdate       = true;
-                infoView.descBorder = LabeledBorder(
-                    {.x = INFO_X, .y = INFO_Y, .width = INFO_WIDTH, .height = INFO_HEIGHT},
-                    "ITEM DESCRIPTION", TEXT_CYAN);
-                capacityBar.capBorder = LabeledBorder(
+                // InfoView's labeled box is (re)constructed in InfoView::open().
+                capacityBar.capBorder = LabeledUIBox(
                     {.x = CAP_X, .y = CAP_Y, .width = CAP_WIDTH, .height = CAP_HEIGHT},
-                    "CAPACITY", TEXT_CYAN);
+                    "CAPACITY", LABELED_PANEL_STYLE, TEXT_CYAN);
                 capacityBar.fullBadgeStr = getAtlas7px().render(
                     "FULL", {.x = CAP_X + CAP_WIDTH - 32 - 6 + 4, .y = CAP_Y + 4 + 1, .color = TEXT_RED});
                 listView.bakeAll();

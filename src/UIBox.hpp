@@ -62,6 +62,10 @@ struct UIBox
     // animation `start`, so a live resize doesn't break the close animation.
     void resize(RECT newFinal) { final = newFinal; }
 
+protected:
+    // For subclasses (e.g. LabeledUIBox) that draw over the box's own fill.
+    RGB8 fillColor() const { return style.color; }
+
 private:
     inline void renderOpeningClosing(int32_t depth);
     inline void renderOpened(int32_t depth);

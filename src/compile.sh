@@ -36,7 +36,7 @@ mips-g++ ItemInfo.cpp -o ../compiled/ItemInfo.lib $FLAGS
 mips-g++ ItemInfoDataA.cpp -o ../compiled/ItemInfoDataA.lib $FLAGS
 mips-g++ ItemInfoDataB.cpp -o ../compiled/ItemInfoDataB.lib $FLAGS
 
-mips-g++ Input.cpp GameTime.cpp FixedNumbers.cpp Fade.cpp GameObjects.cpp NPCEntity.cpp Entity.cpp Tamer.cpp Effects.cpp HealingParticles.cpp ParticleFX.cpp CloudFX.cpp Fishing.cpp UIBox.cpp LabeledBorder.cpp -o ../compiled/Cave1.lib $FLAGS
+mips-g++ Input.cpp GameTime.cpp FixedNumbers.cpp Fade.cpp GameObjects.cpp NPCEntity.cpp Entity.cpp Tamer.cpp Effects.cpp HealingParticles.cpp ParticleFX.cpp CloudFX.cpp Fishing.cpp UIBox.cpp LabeledUIBox.cpp -o ../compiled/Cave1.lib $FLAGS
 mips-g++ InventoryUI.cpp -o ../compiled/InventoryUI.lib ${FLAGS/-O3/-Os}
 mips-g++ NinjamonEffect.cpp MapName.cpp Map.cpp Model.cpp ItemEffects.cpp ItemFunctions.cpp GameMenu.cpp StatsView.cpp TechView.cpp PlayerInfoView.cpp PlayerCardView.cpp PlayerChartView.cpp PlayerMedalView.cpp -o ../compiled/Cave2.lib $FLAGS
 mips-g++ PlayerMenu.cpp -o ../compiled/PlayerMenu.lib ${FLAGS/-O3/-Os}
