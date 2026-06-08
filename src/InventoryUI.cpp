@@ -951,10 +951,10 @@ namespace
                 INVENTORY_POINTER            = inv_filteredCount > 0 ? inv_filteredIdx[0] : 0;
                 infoView.previousSelection = 0xFF;
                 infoView.needsUpdate       = true;
-                infoView.descBorder.init(
+                infoView.descBorder = LabeledBorder(
                     {.x = INFO_X, .y = INFO_Y, .width = INFO_WIDTH, .height = INFO_HEIGHT},
                     "ITEM DESCRIPTION", TEXT_CYAN);
-                capacityBar.capBorder.init(
+                capacityBar.capBorder = LabeledBorder(
                     {.x = CAP_X, .y = CAP_Y, .width = CAP_WIDTH, .height = CAP_HEIGHT},
                     "CAPACITY", TEXT_CYAN);
                 capacityBar.fullBadgeStr = getAtlas7px().render(

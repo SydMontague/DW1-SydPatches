@@ -13,14 +13,14 @@ struct LabeledBorder
 {
     LabeledBorder() = default;
 
-    // Bake the label sprite at the canonical notch position (panel.x+8, panel.y-4).
+    // Bakes the label sprite at the canonical notch position (panel.x+8, panel.y-4).
     // fillColor is used to erase the top border across the notch and should match
     // whatever panel fill sits behind this border (defaults to the inventory's
     // {12, 22, 30} blue-grey).
-    void init(RECT panel,
-              const char* label,
-              RGB8 labelColor = {0xD2, 0xFF, 0xFF},
-              RGB8 fillColor  = {0x0c, 0x16, 0x1e});
+    LabeledBorder(RECT panel,
+                  const char* label,
+                  RGB8 labelColor = {0xD2, 0xFF, 0xFF},
+                  RGB8 fillColor  = {0x0c, 0x16, 0x1e});
 
     void render(int32_t depth) const;
 

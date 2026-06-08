@@ -3,15 +3,15 @@
 #include "UIElements.hpp"
 #include "extern/libgs.hpp"
 
-void LabeledBorder::init(RECT panelRect, const char* label, RGB8 labelColor, RGB8 fill)
+LabeledBorder::LabeledBorder(RECT panelRect, const char* label, RGB8 labelColor, RGB8 fill)
+    : panel(panelRect)
+    , labelStr(getAtlas7px().render(
+          label,
+          {.x = static_cast<int16_t>(panelRect.x + 8),
+           .y = static_cast<int16_t>(panelRect.y - 4),
+           .color = labelColor}))
+    , fillColor(fill)
 {
-    panel     = panelRect;
-    fillColor = fill;
-    labelStr  = getAtlas7px().render(
-        label,
-        {.x = static_cast<int16_t>(panelRect.x + 8),
-         .y = static_cast<int16_t>(panelRect.y - 4),
-         .color = labelColor});
 }
 
 void LabeledBorder::render(int32_t depth) const
