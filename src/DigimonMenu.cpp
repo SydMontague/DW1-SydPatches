@@ -38,7 +38,7 @@ namespace
         void render();
 
         // Original Digimon menu used createMenuBox features=0 → opaque fill.
-        UIBox box{UIBox::Style{.semiTrans = false}};
+        UIBox box;
 
     private:
         void updateLabelColors();
@@ -130,7 +130,9 @@ void addDigimonMenu()
     TAMER_ENTITY.isOnScreen   = false;
     PARTNER_ENTITY.isOnScreen = false;
     data                      = dtl::make_unique<Data>();
-    data->box.open({WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT}, tamerStartRect());
+    data->box = UIBox({WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT},
+                      {.fill = UIBox::Fill::OPAQUE},
+                      tamerStartRect());
 }
 
 void removeDigimonMenu()

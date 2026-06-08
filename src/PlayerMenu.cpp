@@ -36,7 +36,7 @@ namespace
     struct Data
     {
         // Original Player menu used createMenuBox features=0 → opaque fill.
-        UIBox box{UIBox::Style{.semiTrans = false}};
+        UIBox box;
         MenuTab playerTab{TAB1_X, TAB_Y, TAB1_WIDTH, false, "Player"};
         MenuTab chartTab{TAB2_X, TAB_Y, TAB2_WIDTH, true, "Chart"};
         MenuTab medalTab{TAB3_X, TAB_Y, TAB3_WIDTH, true, "Medal"};
@@ -139,7 +139,9 @@ void addPlayerMenu()
     TAMER_ENTITY.isOnScreen   = false;
     PARTNER_ENTITY.isOnScreen = false;
     data                      = dtl::make_unique<Data>();
-    data->box.open({WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT}, tamerStartRect());
+    data->box = UIBox({WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT},
+                      {.fill = UIBox::Fill::OPAQUE},
+                      tamerStartRect());
 }
 
 void removePlayerMenu()

@@ -2,9 +2,35 @@
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 
+inline constexpr RGB8 UIBOX_DEFAULT_COLOR = {0x2D, 0x38, 0x40};
+
+// How a UIBox interior is filled. The blended modes use the GPU's
+// semi-transparency; DOUBLE submits the fill twice for a 75/25 blend.
+enum class UIBoxFill
+{
+    NONE,    // caller draws its own fill
+    OPAQUE,
+    SEMI,    // 50/50 blend
+    DOUBLE,  // 75/25 blend
+};
+
+// Defined at namespace scope (rather than nested in UIBox) so its default
+// member initializers can be used for a defaulted `Style style = {}` parameter;
+// a nested class can't be value-initialized from within its own enclosing class.
+struct UIBoxStyle
+{
+    RGB8      color          = UIBOX_DEFAULT_COLOR;
+    UIBoxFill fill           = UIBoxFill::SEMI;
+    bool      drawBorder     = true;   // false → caller draws own border
+    bool      playOpenSound  = true;
+    bool      playCloseSound = true;
+};
+
 struct UIBox
 {
-    static inline constexpr RGB8 DEFAULT_COLOR = {0x2D, 0x38, 0x40};
+    static inline constexpr RGB8 DEFAULT_COLOR = UIBOX_DEFAULT_COLOR;
+    using Fill  = UIBoxFill;
+    using Style = UIBoxStyle;
 
     enum class State
     {
@@ -14,27 +40,10 @@ struct UIBox
         CLOSING,
     };
 
-    struct Style
-    {
-        RGB8 color           = {0x2D, 0x38, 0x40}; // keep in sync with DEFAULT_COLOR
-        bool semiTrans       = true;
-        bool doubleFill      = false;   // submit fill twice for 75/25 blend
-        bool drawBorder      = true;    // false → caller draws own border
-        bool drawFill        = true;    // false → caller draws own fill
-        bool playOpenSound   = true;
-        bool playCloseSound  = true;
-    };
-
     UIBox() = default;
-    explicit UIBox(Style style);
-    UIBox(RECT final);
-    UIBox(RECT final, Style style);
-    UIBox(RECT final, Style style, dtl::optional<RECT> start);
-    // Back-compat for callers predating Style; preserves no-sound behavior.
-    UIBox(RECT final, RGB8 color, bool isSemiTrans, dtl::optional<RECT> start = {});
+    UIBox(RECT final, Style style = {}, dtl::optional<RECT> start = {});
 
     void open();
-    void open(RECT final, RECT start);
     void close();
     void close(RECT target);
     void closeIfOpen();   // No-op unless currently OPENED; matches old closeUIBoxIfOpen
@@ -48,6 +57,9 @@ struct UIBox
     bool isAnimating() const { return state == State::OPENING || state == State::CLOSING; }
 
     const RECT& finalPos() const { return final; }
+
+    // Geometry-only update for an already-constructed box. Preserves the
+    // animation `start`, so a live resize doesn't break the close animation.
     void resize(RECT newFinal) { final = newFinal; }
 
 private:

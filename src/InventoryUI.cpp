@@ -80,6 +80,11 @@ namespace
 
     constexpr RGB8 PANEL_FILL_COLOR = {.red = 12, .green = 22, .blue = 30};
 
+    // List & info panels draw their own notched border, so drawBorder=false.
+    constexpr UIBox::Style PANEL_STYLE{.color = PANEL_FILL_COLOR, .fill = UIBox::Fill::DOUBLE, .drawBorder = false};
+    // Options panel uses the auto-drawn border.
+    constexpr UIBox::Style OPTIONS_STYLE{.color = PANEL_FILL_COLOR, .fill = UIBox::Fill::DOUBLE};
+
     // Render colors are doubled-and-clamped versions of VanillaText.hpp's TEXT_COLORS.
     // AtlasFont halves color.red/green/blue (`(c+1)/2`) before storing as prim color.
     // Combined with PSX modulation `output = texture*prim/128` over a pure-white
@@ -145,9 +150,7 @@ namespace
 
     struct ListView
     {
-        // List & info panels: caller draws its own notched border, so drawBorder=false.
-        UIBox box{UIBox::Style{
-            .color = PANEL_FILL_COLOR, .doubleFill = true, .drawBorder = false}};
+        UIBox box;   // opened with PANEL_STYLE
         dtl::array<AtlasString, 30> slotNameStrs;
         uint32_t scrollBopPhase = 0;
         int16_t  rowOffset      = 0;
@@ -169,8 +172,7 @@ namespace
 
     struct InfoView
     {
-        UIBox box{UIBox::Style{
-            .color = PANEL_FILL_COLOR, .doubleFill = true, .drawBorder = false}};
+        UIBox box;   // opened with PANEL_STYLE
         LabeledBorder descBorder;
         AtlasString itemNameStr;
         AtlasString headlineStr;
@@ -188,9 +190,7 @@ namespace
 
     struct OptionsView
     {
-        // Options panel uses the auto-drawn border.
-        UIBox box{UIBox::Style{
-            .color = PANEL_FILL_COLOR, .doubleFill = true}};
+        UIBox box;   // opened with OPTIONS_STYLE
         AtlasString menuUseStr;
         AtlasString menuDropStr;
         AtlasString menuMoveStr;
@@ -751,7 +751,7 @@ namespace
             menuMoveStr = {};
 
         menuSelected = 0;
-        box.open(final, start);
+        box          = UIBox(final, OPTIONS_STYLE, start);
     }
 
     void ListView::tickInput()
@@ -886,7 +886,7 @@ namespace
             .height = 10,
         };
 
-        box.open(finalPos, startPos);
+        box = UIBox(finalPos, PANEL_STYLE, startPos);
     }
 
     void ListView::close()
@@ -917,7 +917,7 @@ namespace
     void InfoView::open()
     {
         constexpr RECT finalPos = {.x = INFO_X, .y = INFO_Y, .width = INFO_WIDTH, .height = INFO_HEIGHT};
-        box.open(finalPos, data->listView.getCursorRect());
+        box = UIBox(finalPos, PANEL_STYLE, data->listView.getCursorRect());
     }
 
     void startThrowingItem()

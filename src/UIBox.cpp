@@ -4,24 +4,6 @@
 #include "Sound.hpp"
 #include "UIElements.hpp"
 
-UIBox::UIBox(Style style)
-    : style(style)
-{
-}
-
-UIBox::UIBox(RECT final)
-    : final(final)
-    , state(State::OPENED)
-{
-}
-
-UIBox::UIBox(RECT final, Style style)
-    : final(final)
-    , state(State::OPENED)
-    , style(style)
-{
-}
-
 UIBox::UIBox(RECT final, Style style, dtl::optional<RECT> start)
     : start(start)
     , final(final)
@@ -30,26 +12,11 @@ UIBox::UIBox(RECT final, Style style, dtl::optional<RECT> start)
 {
 }
 
-UIBox::UIBox(RECT final, RGB8 color, bool isSemiTrans, dtl::optional<RECT> start)
-    : start(start)
-    , final(final)
-    , state(start.has_value() ? State::OPENING : State::OPENED)
-    , style{.color = color, .semiTrans = isSemiTrans, .playOpenSound = false, .playCloseSound = false}
-{
-}
-
 void UIBox::open()
 {
     state = State::OPENING;
     frame = 0;
     if (style.playOpenSound) playSound(0, 0);
-}
-
-void UIBox::open(RECT finalRect, RECT startRect)
-{
-    final = finalRect;
-    start = startRect;
-    open();
 }
 
 void UIBox::close()
@@ -126,10 +93,10 @@ void UIBox::renderOpened(int32_t depth)
 {
     if (style.drawBorder) renderUIBoxBorder(&final, depth);
 
-    if (!style.drawFill) return;
+    if (style.fill == Fill::NONE) return;
 
     GsBOXF box;
-    box.attribute = style.semiTrans ? 0x40000000 : 0;
+    box.attribute = style.fill == Fill::OPAQUE ? 0 : 0x40000000;
     box.r         = style.color.red;
     box.g         = style.color.green;
     box.b         = style.color.blue;
@@ -138,5 +105,5 @@ void UIBox::renderOpened(int32_t depth)
     box.width     = final.width - 8;
     box.height    = final.height - 3;
     libgs_GsSortBoxFill(&box, ACTIVE_ORDERING_TABLE, depth);
-    if (style.doubleFill) libgs_GsSortBoxFill(&box, ACTIVE_ORDERING_TABLE, depth);
+    if (style.fill == Fill::DOUBLE) libgs_GsSortBoxFill(&box, ACTIVE_ORDERING_TABLE, depth);
 }
