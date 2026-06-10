@@ -64,8 +64,11 @@ static void seqClose()
     SEQ_ACCESS_NUM = -1;
 }
 
-static int32_t
-readVHBFileSectors(int32_t vabId, const char* filename, uint8_t* buffer, uint32_t offset, int32_t sectors)
+static int32_t readVHBFileSectors(int32_t vabId,
+                                  const char* filename,
+                                  uint8_t* buffer,
+                                  uint32_t offset,
+                                  int32_t sectors)
 {
     readFileSectors(filename, buffer, offset, sectors);
 

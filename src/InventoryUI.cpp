@@ -318,7 +318,10 @@ namespace
             sortSelected++;
         }
 
-        if (isInventoryKeyDown(InputButtons::BUTTON_TRIANGLE)) { removeAnimatedUIBox(3, nullptr); }
+        if (isInventoryKeyDown(InputButtons::BUTTON_TRIANGLE))
+        {
+            removeAnimatedUIBox(3, nullptr);
+        }
         else if (isInventoryKeyDown(InputButtons::BUTTON_CROSS))
         {
             removeAnimatedUIBox(3, nullptr);
@@ -516,10 +519,10 @@ namespace
         auto& work     = TAMER_ENTITY.posData[1].posMatrix.work.t;
         auto entityPos = getScreenPosition(work[0], work[1], work[2]);
         RECT finalPos  = {
-             .x      = TOP_X,
-             .y      = TOP_Y,
-             .width  = 304,
-             .height = static_cast<int16_t>((box.visibleRows * 18) + 14),
+            .x      = TOP_X,
+            .y      = TOP_Y,
+            .width  = 304,
+            .height = static_cast<int16_t>((box.visibleRows * 18) + 14),
         };
         RECT startPos = {
             .x      = static_cast<int16_t>(entityPos.screenX),
@@ -553,10 +556,10 @@ namespace
         auto& work     = TAMER_ENTITY.posData[1].posMatrix.work.t;
         auto entityPos = getScreenPosition(work[0], work[1], work[2]);
         RECT target    = {
-               .x      = static_cast<int16_t>(entityPos.screenX - 5),
-               .y      = static_cast<int16_t>(entityPos.screenY - 5),
-               .width  = 10,
-               .height = 10,
+            .x      = static_cast<int16_t>(entityPos.screenX - 5),
+            .y      = static_cast<int16_t>(entityPos.screenY - 5),
+            .width  = 10,
+            .height = 10,
         };
 
         removeAnimatedUIBox(0, &target);

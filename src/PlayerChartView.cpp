@@ -52,9 +52,8 @@ namespace
         int16_t posX;
         int16_t posY;
 
-        // NOLINTNEXTLINE
-        __attribute__((optimize("Os"))) void
-        render(uint8_t texX, uint8_t texY, uint16_t clut, uint16_t tpage, int32_t layer, bool spriteVisible) const
+        [[gnu::optimize("Os")]]
+        void render(uint8_t texX, uint8_t texY, uint16_t clut, uint16_t tpage, int32_t layer, bool spriteVisible) const
         {
             if (spriteVisible) renderRectPolyFT4(posX, posY, 16, 16, texX, texY, tpage, clut, layer, 0);
             // vanilla is 18x18, resulting in a 19x19 box
@@ -373,8 +372,8 @@ namespace
     constexpr ChartSprite toOdd[]      = {{66, -69}, {84, -45}, {102, -21}, {84, 3}, {66, 27}};
     constexpr ChartSprite toEven[]     = {{66, -81}, {84, -57}, {102, -33}, {102, -9}, {84, 15}, {66, 39}};
 
-    // NOLINTNEXTLINE
-    __attribute__((optimize("Os"))) constexpr char const* getLevelName(Level level)
+    [[gnu::optimize("Os")]]
+    constexpr char const* getLevelName(Level level)
     {
         switch (level)
         {
@@ -425,8 +424,8 @@ namespace
 struct ChartView::Private
 {
 public:
-    // NOLINTNEXTLINE
-    __attribute__((optimize("Os"))) void tick();
+    [[gnu::optimize("Os")]]
+    void tick();
     void render(int32_t depth);
     bool canBeClosed();
 
@@ -584,10 +583,10 @@ void ChartView::Private::tick()
             int16_t posX         = cols[selectedCol].posX;
             int16_t posY         = CHART_ENTRY_BASE_Y + CHART_ENTRY_OFFSET_Y * selectedRow;
             RECT start           = {
-                          .x      = static_cast<int16_t>(posX),
-                          .y      = static_cast<int16_t>(posY),
-                          .width  = 10,
-                          .height = 10,
+                .x      = static_cast<int16_t>(posX),
+                .y      = static_cast<int16_t>(posY),
+                .width  = 10,
+                .height = 10,
             };
 
             auto* para  = getDigimonData(selectedDigimon);

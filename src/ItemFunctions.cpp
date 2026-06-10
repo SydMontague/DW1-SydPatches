@@ -513,8 +513,12 @@ namespace
 
     void handleNothing(ItemType item) {}
 
-    void
-    buffStats(DigimonEntity* entity, int32_t entityId, int32_t amount, int16_t* valuePtr, uint8_t color, uint8_t icon)
+    void buffStats(DigimonEntity* entity,
+                   int32_t entityId,
+                   int32_t amount,
+                   int16_t* valuePtr,
+                   uint8_t color,
+                   uint8_t icon)
     {
         addWithLimit(valuePtr, amount, 999);
         addEntityText(entity, entityId, color, amount, icon);

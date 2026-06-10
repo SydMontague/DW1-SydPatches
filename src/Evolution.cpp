@@ -280,7 +280,10 @@ extern "C"
 
             if (type == DigimonType::DRIMOGEMON && def >= 500 && discipline == 100) target = DigimonType::MONOCHROMON;
         }
-        if (rand < 50 && level == Level::IN_TRAINING && CURRENT_SCREEN == 1) { target = DigimonType::KUNEMON; }
+        if (rand < 50 && level == Level::IN_TRAINING && CURRENT_SCREEN == 1)
+        {
+            target = DigimonType::KUNEMON;
+        }
 
         if (target != DigimonType::INVALID)
         {

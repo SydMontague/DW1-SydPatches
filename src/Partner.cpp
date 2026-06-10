@@ -288,7 +288,10 @@ namespace
         }
 
         // set sleepy
-        if (!isSleepy && !shouldBeAwake) { PARTNER_PARA.condition.isSleepy = true; }
+        if (!isSleepy && !shouldBeAwake)
+        {
+            PARTNER_PARA.condition.isSleepy = true;
+        }
 
         // vanilla sets the menu opion to disabled here, but the logic moved to tickGameMenu
     }
@@ -1730,7 +1733,10 @@ namespace
                 readMapTFS(CURRENT_SCREEN);
                 setFishingEnabled();
                 Partner_setState(1);
-                if (SOME_SCRIPT_SYNC_BIT == 0) { SOME_SCRIPT_SYNC_BIT = 1; }
+                if (SOME_SCRIPT_SYNC_BIT == 0)
+                {
+                    SOME_SCRIPT_SYNC_BIT = 1;
+                }
                 else
                 {
                     Tamer_setState(0);
@@ -2194,7 +2200,10 @@ extern "C"
             PARTNER_PARA.sicknessCounter += amount;
             PARTNER_PARA.missedSleepHours += amount;
         }
-        if (!PARTNER_PARA.condition.isHungry) { PARTNER_PARA.foodLevel -= amount * 60; }
+        if (!PARTNER_PARA.condition.isHungry)
+        {
+            PARTNER_PARA.foodLevel -= amount * 60;
+        }
         else
         {
             PARTNER_PARA.starvationTimer -= amount * 120;

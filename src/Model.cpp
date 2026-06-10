@@ -125,11 +125,11 @@ namespace
     }
 
     void* _renderWireframedTriangle(void* primPtr,
-                                           uint8_t* currentPrim,
-                                           SVector* vertTop,
-                                           SVector* normalTop,
-                                           bool isPoly,
-                                           uint8_t color)
+                                    uint8_t* currentPrim,
+                                    SVector* vertTop,
+                                    SVector* normalTop,
+                                    bool isPoly,
+                                    uint8_t color)
     {
         ScreenCoord sXY0;
         ScreenCoord sXY1;
@@ -206,11 +206,11 @@ namespace
     }
 
     void* _renderWiredframedQuad(void* primPtr,
-                                        uint8_t* currentPrim,
-                                        SVector* vertTop,
-                                        SVector* normalTop,
-                                        bool isPoly,
-                                        uint8_t color)
+                                 uint8_t* currentPrim,
+                                 SVector* vertTop,
+                                 SVector* normalTop,
+                                 bool isPoly,
+                                 uint8_t color)
     {
         ScreenCoord sXY0;
         ScreenCoord sXY1;
@@ -356,8 +356,8 @@ namespace
     }
 
     // this function blows up in size otherwise
-    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-    __attribute__((optimize("Os"))) void unloadNPCModel(DigimonType type)
+    [[gnu::optimize("Os")]]
+    void unloadNPCModel(DigimonType type)
     {
         for (auto& model : NPC_MODEL)
         {
@@ -378,8 +378,8 @@ namespace
     }
 
     // this function blows up in size otherwise
-    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-    __attribute__((optimize("Os"))) void unloadUnknowModel(int32_t id)
+    [[gnu::optimize("Os")]]
+    void unloadUnknowModel(int32_t id)
     {
         for (auto& model : UNKNOWN_MODEL)
         {
@@ -445,8 +445,8 @@ namespace
     }
 
     // this function blows up in size otherwise
-    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-    __attribute__((optimize("Os"))) void handleKeyFrameInstruction(MomentumData* momentum, int16_t*& instructionPtrPtr)
+    [[gnu::optimize("Os")]]
+    void handleKeyFrameInstruction(MomentumData* momentum, int16_t*& instructionPtrPtr)
     {
         while ((instructionPtrPtr[0] & 0x8000) != 0)
         {
@@ -477,8 +477,11 @@ namespace
         }
     }
 
-    constexpr Pair<int32_t, int32_t>
-    calculateMomentum(int16_t delta, int16_t scale, int16_t subDelta, int16_t scale2, int8_t subValue)
+    constexpr Pair<int32_t, int32_t> calculateMomentum(int16_t delta,
+                                                       int16_t scale,
+                                                       int16_t subDelta,
+                                                       int16_t scale2,
+                                                       int8_t subValue)
     {
         auto newValue  = delta;
         auto newScale2 = scale2;
@@ -1026,7 +1029,7 @@ extern "C"
         // load MMD file
         readFile(reinterpret_cast<char*>(pathBuffer), comp->mmdPtr);
         comp->modelPtr     = reinterpret_cast<TMDModel*>(reinterpret_cast<uint8_t*>(comp->mmdPtr) +
-                                                     reinterpret_cast<uint32_t*>(comp->mmdPtr)[0]);
+                                                         reinterpret_cast<uint32_t*>(comp->mmdPtr)[0]);
         comp->animTablePtr = reinterpret_cast<int32_t*>(reinterpret_cast<uint8_t*>(comp->mmdPtr) +
                                                         reinterpret_cast<uint32_t*>(comp->mmdPtr)[1]);
         libgs_GsMapModelingData(&comp->modelPtr->flags);
@@ -1142,7 +1145,7 @@ extern "C"
         memcpy(PARTNER_MODEL.mmdPtr, modelData->modelPtr, modelData->modelSize);
 
         PARTNER_MODEL.modelPtr     = reinterpret_cast<TMDModel*>(reinterpret_cast<uint8_t*>(PARTNER_MODEL.mmdPtr) +
-                                                             reinterpret_cast<uint32_t*>(PARTNER_MODEL.mmdPtr)[0]);
+                                                                 reinterpret_cast<uint32_t*>(PARTNER_MODEL.mmdPtr)[0]);
         PARTNER_MODEL.animTablePtr = reinterpret_cast<int32_t*>(reinterpret_cast<uint8_t*>(PARTNER_MODEL.mmdPtr) +
                                                                 reinterpret_cast<uint32_t*>(PARTNER_MODEL.mmdPtr)[1]);
         libgs_GsMapModelingData(&PARTNER_MODEL.modelPtr->flags);

@@ -291,7 +291,10 @@ bool MedalView::Private::canBeClosed()
 
 void MedalView::Private::render(int32_t depth)
 {
-    if (state == 1) { selector.render(selectedMedalCol * 0x26 - 0x7E, selectedMedalRow * 24 - 0x3D, 1, 0); }
+    if (state == 1)
+    {
+        selector.render(selectedMedalCol * 0x26 - 0x7E, selectedMedalRow * 24 - 0x3D, 1, 0);
+    }
 
     for (int32_t i = 0; i < MEDAL_COL_COUNT; i++)
         for (int32_t j = 0; j < MEDAL_ROW_COUNT; j++)

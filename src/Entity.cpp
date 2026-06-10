@@ -142,12 +142,24 @@ extern "C"
             // the target location. If the game waits for the movement to complete, this will cause a softlock.
             // We solve this by treating DELTA speeds of 0 as always completed
             bool finishedX = moveToDeltaX == 0;
-            if (moveToDeltaX < 0) { finishedX = entity1.first->posData->location.x <= targetX; }
-            else if (moveToDeltaX > 0) { finishedX = entity1.first->posData->location.x >= targetX; }
+            if (moveToDeltaX < 0)
+            {
+                finishedX = entity1.first->posData->location.x <= targetX;
+            }
+            else if (moveToDeltaX > 0)
+            {
+                finishedX = entity1.first->posData->location.x >= targetX;
+            }
 
             bool finishedZ = moveToDeltaZ == 0;
-            if (moveToDeltaZ < 0) { finishedZ = entity1.first->posData->location.z <= targetZ; }
-            else if (moveToDeltaZ > 0) { finishedZ = entity1.first->posData->location.z >= targetZ; }
+            if (moveToDeltaZ < 0)
+            {
+                finishedZ = entity1.first->posData->location.z <= targetZ;
+            }
+            else if (moveToDeltaZ > 0)
+            {
+                finishedZ = entity1.first->posData->location.z >= targetZ;
+            }
 
             if (finishedX) entity1.first->posData->location.x = targetX;
             if (finishedZ) entity1.first->posData->location.z = targetZ;
@@ -238,7 +250,10 @@ extern "C"
         }
 
         CollisionCode collision = CollisionCode::NONE;
-        if (entity2.first != nullptr) { collision = entityCheckCollision(nullptr, entity1.first, 0, 0); }
+        if (entity2.first != nullptr)
+        {
+            collision = entityCheckCollision(nullptr, entity1.first, 0, 0);
+        }
 
         // In vanilla a movement is complete once the entity location is on the same tile as the target location.
         // However, in some constellations this might never happen and cause softlocks.
@@ -306,8 +321,11 @@ extern "C"
         return false;
     }
 
-    static bool
-    entityCheckCombatArea(Entity* entity, const Vector& newPos, const Vector& oldPos, int16_t width, int16_t height)
+    static bool entityCheckCombatArea(Entity* entity,
+                                      const Vector& newPos,
+                                      const Vector& oldPos,
+                                      int16_t width,
+                                      int16_t height)
     {
         if (width == 0 || height == 0) return false;
         if (GAME_STATE == 4) return false;
@@ -432,8 +450,11 @@ extern "C"
         return false;
     }
 
-    static bool
-    entityCheckEntityCollision(Entity* self, const Vector& selfLoc, Entity* other, int32_t diffX, int32_t diffZ)
+    static bool entityCheckEntityCollision(Entity* self,
+                                           const Vector& selfLoc,
+                                           Entity* other,
+                                           int32_t diffX,
+                                           int32_t diffZ)
     {
         // TODO refactor, this code is kinda ugly and entity collision sucks in vanilla
         auto selfRadius  = getDigimonData(self->type)->radius;

@@ -213,10 +213,10 @@ extern "C"
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT final    = {.x = posX, .y = posY, .width = width, .height = height};
             RECT start    = {
-                   .x      = static_cast<int16_t>(pos.screenX - 5),
-                   .y      = static_cast<int16_t>(pos.screenY - 5),
-                   .width  = 10,
-                   .height = 10,
+                .x      = static_cast<int16_t>(pos.screenX - 5),
+                .y      = static_cast<int16_t>(pos.screenY - 5),
+                .width  = 10,
+                .height = 10,
             };
 
             createAnimatedUIBox(instanceId, 1, features, &final, &start, tickFunc, renderFunc);
@@ -533,7 +533,10 @@ extern "C"
             if (data.frame > 4) data.state = 1;
             if (data.frame == 0) removeStaticUIBox(instanceId);
         }
-        else { renderUIBoxStatic(instanceId); }
+        else
+        {
+            renderUIBoxStatic(instanceId);
+        }
     }
 
     void createStaticUIBox(int32_t id,

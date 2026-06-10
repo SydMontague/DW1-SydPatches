@@ -106,8 +106,8 @@ namespace
 
         void renderBitBox(int32_t depth);
         void renderFinalBalance(int32_t depth);
-        // NOLINTNEXTLINE
-        __attribute__((optimize("Os"))) void renderPostBattleStatsBox(int32_t depth);
+        [[gnu::optimize("Os")]]
+        void renderPostBattleStatsBox(int32_t depth);
 
         dtl::array<AtlasString, 6> statLabels{};
         AtlasString bitString1{getAtlasVanilla().render(bitsString, BITS_SETTING1)};

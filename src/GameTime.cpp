@@ -1,8 +1,8 @@
 
+#include "Fishing.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Map.hpp"
-#include "Fishing.hpp"
 #include "Math.hpp"
 #include "Tamer.hpp"
 #include "UIElements.hpp"

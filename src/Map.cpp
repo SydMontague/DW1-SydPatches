@@ -674,8 +674,12 @@ namespace
         if (mapId == 0x88) loadDynamicLibrary(Overlay::KAR_REL, nullptr, false, nullptr, nullptr);
     }
 
-    constexpr void
-    fillTileData(MapTileData* tileData, uint8_t* imagePtr, int32_t texU, int32_t texV, int16_t posX, int16_t posY)
+    constexpr void fillTileData(MapTileData* tileData,
+                                uint8_t* imagePtr,
+                                int32_t texU,
+                                int32_t texV,
+                                int16_t posX,
+                                int16_t posY)
     {
         tileData->tpage    = getTPage(1, 0, texU, texV);
         tileData->clut     = getClut(0, 0x1E0);
@@ -872,8 +876,12 @@ extern "C"
         *outY = DRAWING_OFFSET_Y + val.y + CAMERA_Y;
     }
 
-    bool
-    moveMapObjectsWithLimit(int32_t start, int32_t count, int32_t xOffset, int32_t yOffset, int32_t maxX, int32_t maxY)
+    bool moveMapObjectsWithLimit(int32_t start,
+                                 int32_t count,
+                                 int32_t xOffset,
+                                 int32_t yOffset,
+                                 int32_t maxX,
+                                 int32_t maxY)
     {
         // this function only checks the limit on the first object?
         for (int32_t i = 0; i < count; i++)
@@ -1279,7 +1287,10 @@ extern "C"
         clearMapDigimon();
         loadMapEntities(GENERAL_BUFFER.data() + *headerPtr++, mapId, CURRENT_EXIT);
 
-        if (entry.doorsId != 0) { loadDoors(entry.doorsId - 1); }
+        if (entry.doorsId != 0)
+        {
+            loadDoors(entry.doorsId - 1);
+        }
         if (mapId > 100 && mapId < 104) loadWarpCrystals(mapId);
         if (mapId == 165) loadTrainingPoop();
 
@@ -1440,7 +1451,10 @@ extern "C"
     {
         if (daytimeTransitionActive) removeObject(ObjectID::DAYTIME_TRANSITION, 0);
 
-        if ((MAP_ENTRIES[CURRENT_SCREEN].flags & 0x40) != 0) { libgpu_LoadClut(mapCluts[0], 0, 0x1E0); }
+        if ((MAP_ENTRIES[CURRENT_SCREEN].flags & 0x40) != 0)
+        {
+            libgpu_LoadClut(mapCluts[0], 0, 0x1E0);
+        }
         else
         {
             auto factor = 10;
@@ -1584,7 +1598,10 @@ extern "C"
         }
 
         // seadramon to beetleland
-        if (CURRENT_SCREEN == 6 && map == 105) { PREVIOUS_SCREEN = 106; }
+        if (CURRENT_SCREEN == 6 && map == 105)
+        {
+            PREVIOUS_SCREEN = 106;
+        }
 
         // Whamon's cave back to Freezeland
         if (CURRENT_SCREEN == 142 && map == 135)

@@ -113,7 +113,7 @@ namespace
     {
         dtl::array<AtlasString, 5> array;
         int32_t i = 0;
-        for(const auto& label : LABELS)
+        for (const auto& label : LABELS)
             array[i++] = getAtlasVanilla().render(LABELS[i].first, LABELS[i].second);
         return array;
     }
@@ -123,8 +123,8 @@ struct CardView::Private
 {
 public:
     void tick();
-    // NOLINTNEXTLINE
-    __attribute__((optimize("Os"))) void render(int32_t depth);
+    [[gnu::optimize("Os")]]
+    void render(int32_t depth);
     bool canBeClosed();
 
 private:
@@ -187,7 +187,7 @@ void CardView::Private::tick()
             playSound(0, 3);
             state = 2;
             loadCardImage(newCard);
-            cardCount = getAtlasVanilla().render(format("%d", getCardAmount(newCard)).data(), CARD_COUNT_SETTINGS);
+            cardCount  = getAtlasVanilla().render(format("%d", getCardAmount(newCard)).data(), CARD_COUNT_SETTINGS);
             RECT start = {
                 .x      = static_cast<int16_t>(selectedCardCol * 24 + CARD_BASE_X + 9),
                 .y      = static_cast<int16_t>(selectedCardRow * 24 + CARD_BASE_Y + 8),

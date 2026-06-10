@@ -1,5 +1,6 @@
 #include "Battle.h"
 
+#include "BuffModel.hpp"
 #include "Camera.hpp"
 #include "Entity.hpp"
 #include "Files.hpp"
@@ -14,7 +15,6 @@
 #include "Partner.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
-#include "BuffModel.hpp"
 #include "extern/BTL.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libetc.hpp"
@@ -656,8 +656,8 @@ extern "C"
     }
 
     // this function blows up in size otherwise
-    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-    __attribute__((optimize("Os"))) void battleStatsGainsAndDrops(ItemType* droppedItems)
+    [[gnu::optimize("Os")]]
+    void battleStatsGainsAndDrops(ItemType* droppedItems)
     {
         constexpr dtl::array<uint8_t, 4> enemyCountFactor{0, 10, 12, 16};
         StatsGains gains{};

@@ -536,8 +536,9 @@ namespace
         return -1;
     }
 
-    constexpr RenderSettings
-    getSettings(const Inset& inset, AlignmentX alignX = AlignmentX::LEFT, AlignmentY alignY = AlignmentY::CENTER)
+    constexpr RenderSettings getSettings(const Inset& inset,
+                                         AlignmentX alignX = AlignmentX::LEFT,
+                                         AlignmentY alignY = AlignmentY::CENTER)
     {
         return {
             .x        = static_cast<int16_t>(inset.posX + 3),
@@ -571,8 +572,8 @@ namespace
         dtl::array<AtlasString, 5> strings{};
         bool isValid;
 
-        // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-        __attribute__((optimize("Os"))) void setMove(int32_t moveId)
+        [[gnu::optimize("Os")]]
+        void setMove(int32_t moveId)
         {
             isValid = moveId != 0xFF && hasMove(moveId);
             if (isValid)
@@ -668,8 +669,8 @@ namespace
             };
         }
 
-        // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-        __attribute__((optimize("Os"))) void setMove(uint8_t moveId)
+        [[gnu::optimize("Os")]]
+        void setMove(uint8_t moveId)
         {
             isValid = moveId != 0xFF;
             if (isValid)
@@ -740,12 +741,12 @@ struct Private
     MoveEntry move2{toRelativeX(19), toRelativeY(82)};
     MoveEntry moveFinish{toRelativeX(19), toRelativeY(119), true};
     MoveDetail detail{};
-    int8_t moveSelectedRow = 0;
+    int8_t moveSelectedRow    = 0;
     int8_t moveSelectedColumn = 0;
 
     uint8_t state = 0;
-    // NOLINTNEXTLINE
-    __attribute__((optimize("Os"))) Private();
+    [[gnu::optimize("Os")]]
+    Private();
 
     void render(int32_t depth);
     void tick();
