@@ -28,6 +28,10 @@
   li t2,0xc
   sll v0,t2,0x10
 
+.org 0x80111ba4
+  li.u a3,renderMainMenuBackground
+.org 0x80111bb8
+  li.l a3,renderMainMenuBackground
 
 .close
 

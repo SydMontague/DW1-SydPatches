@@ -197,61 +197,6 @@ namespace
         libgs_GsDrawOt(GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER);
     }
 
-    void renderMainMenuBackground(int32_t instance)
-    {
-        auto* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
-        libgpu_SetPolyFT4(prim);
-        prim->x0    = -160;
-        prim->y0    = -120;
-        prim->x1    = 96;
-        prim->y1    = -120;
-        prim->x2    = -160;
-        prim->y2    = 120;
-        prim->x3    = 96;
-        prim->y3    = 120;
-        prim->u0    = 0;
-        prim->v0    = 0;
-        prim->u1    = 255;
-        prim->v1    = 0;
-        prim->u2    = 0;
-        prim->v2    = 240;
-        prim->u3    = 255;
-        prim->v3    = 240;
-        prim->r0    = 128;
-        prim->g0    = 128;
-        prim->b0    = 128;
-        prim->tpage = getTPage(1, 0, 0x300, 0);
-        prim->clut  = getClut(0, 0x1e0);
-        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 30, prim);
-
-        prim++;
-        libgpu_SetPolyFT4(prim);
-        prim->x0    = 96;
-        prim->y0    = -120;
-        prim->x1    = 160;
-        prim->y1    = -120;
-        prim->x2    = 96;
-        prim->y2    = 120;
-        prim->x3    = 160;
-        prim->y3    = 120;
-        prim->u0    = 0;
-        prim->v0    = 0;
-        prim->u1    = 64;
-        prim->v1    = 0;
-        prim->u2    = 0;
-        prim->v2    = 240;
-        prim->u3    = 64;
-        prim->v3    = 240;
-        prim->r0    = 128;
-        prim->g0    = 128;
-        prim->b0    = 128;
-        prim->tpage = getTPage(1, 0, 0x380, 0);
-        prim->clut  = getClut(0, 0x1e0);
-        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 30, prim);
-
-        libgs_GsSetWorkBase(prim + 1);
-    }
-
     void renderPressStartToContinue(int32_t instance)
     {
         auto* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
@@ -839,6 +784,61 @@ int32_t main()
 
 extern "C"
 {
+    void renderMainMenuBackground(int32_t instance)
+    {
+        auto* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+        libgpu_SetPolyFT4(prim);
+        prim->x0    = -160;
+        prim->y0    = -120;
+        prim->x1    = 96;
+        prim->y1    = -120;
+        prim->x2    = -160;
+        prim->y2    = 120;
+        prim->x3    = 96;
+        prim->y3    = 120;
+        prim->u0    = 0;
+        prim->v0    = 0;
+        prim->u1    = 255;
+        prim->v1    = 0;
+        prim->u2    = 0;
+        prim->v2    = 240;
+        prim->u3    = 255;
+        prim->v3    = 240;
+        prim->r0    = 128;
+        prim->g0    = 128;
+        prim->b0    = 128;
+        prim->tpage = getTPage(1, 0, 0x300, 0);
+        prim->clut  = getClut(0, 0x1e0);
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 30, prim);
+
+        prim++;
+        libgpu_SetPolyFT4(prim);
+        prim->x0    = 96;
+        prim->y0    = -120;
+        prim->x1    = 160;
+        prim->y1    = -120;
+        prim->x2    = 96;
+        prim->y2    = 120;
+        prim->x3    = 160;
+        prim->y3    = 120;
+        prim->u0    = 0;
+        prim->v0    = 0;
+        prim->u1    = 64;
+        prim->v1    = 0;
+        prim->u2    = 0;
+        prim->v2    = 240;
+        prim->u3    = 64;
+        prim->v3    = 240;
+        prim->r0    = 128;
+        prim->g0    = 128;
+        prim->b0    = 128;
+        prim->tpage = getTPage(1, 0, 0x380, 0);
+        prim->clut  = getClut(0, 0x1e0);
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 30, prim);
+
+        libgs_GsSetWorkBase(prim + 1);
+    }
+
     void EntryPoint()
     {
         // vanilla resets r2-27 and r30 here
