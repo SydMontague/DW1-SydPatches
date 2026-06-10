@@ -105,30 +105,30 @@ namespace
 
     void initializeCustomFontCLUTs()
     {
-        constexpr dtl::array<uint16_t, 16> noShadow{0x0000, 0x7FFF};
-        constexpr dtl::array<uint16_t, 16> shadow{0x0000, 0x7FFF, 0x8000};
-        constexpr dtl::array<uint16_t, 16> greyShadow{0x0000, 0x8000, 0x7FFF};
-        constexpr RECT rectNoShadow{
+        constexpr dtl::array<uint16_t, 16> NO_SHADOW{0x0000, 0x7FFF};
+        constexpr dtl::array<uint16_t, 16> SHADOW{0x0000, 0x7FFF, 0x8000};
+        constexpr dtl::array<uint16_t, 16> GREY_SHADOW{0x0000, 0x8000, 0x7FFF};
+        constexpr RECT RECT_NO_SHADOW{
             .x      = 208,
             .y      = 489,
             .width  = 16,
             .height = 1,
         };
-        constexpr RECT rectShadow{
+        constexpr RECT RECT_SHADOW{
             .x      = 208,
             .y      = 490,
             .width  = 16,
             .height = 1,
         };
-        constexpr RECT rectGreyShadow{
+        constexpr RECT RECT_GREY_SHADOW{
             .x      = 208,
             .y      = 491,
             .width  = 16,
             .height = 1,
         };
-        libgpu_LoadImage(&rectNoShadow, noShadow.data());
-        libgpu_LoadImage(&rectShadow, shadow.data());
-        libgpu_LoadImage(&rectGreyShadow, greyShadow.data());
+        libgpu_LoadImage(&RECT_NO_SHADOW, NO_SHADOW.data());
+        libgpu_LoadImage(&RECT_SHADOW, SHADOW.data());
+        libgpu_LoadImage(&RECT_GREY_SHADOW, GREY_SHADOW.data());
     }
 
     void customInit()
@@ -367,7 +367,7 @@ namespace
 
     void loadNewGameScene()
     {
-        constexpr GsRVIEW2 refView{
+        constexpr GsRVIEW2 REF_VIEW{
             .viewpointX      = 0,
             .viewpointY      = 0,
             .viewpointZ      = -4200,
@@ -377,7 +377,7 @@ namespace
             .viewpoint_twist = 0,
             .super           = nullptr,
         };
-        constexpr GsF_LIGHT light0{
+        constexpr GsF_LIGHT LIGHT0{
             .x = 30,
             .y = 100,
             .z = 30,
@@ -385,7 +385,7 @@ namespace
             .g = 64,
             .b = 64,
         };
-        constexpr GsF_LIGHT light1{
+        constexpr GsF_LIGHT LIGHT1{
             .x = -30,
             .y = 100,
             .z = 0,
@@ -393,7 +393,7 @@ namespace
             .g = 40,
             .b = 40,
         };
-        constexpr GsF_LIGHT light2{
+        constexpr GsF_LIGHT LIGHT2{
             .x = 0,
             .y = 100,
             .z = -30,
@@ -415,12 +415,12 @@ namespace
         setupEntityMatrix(2);
         startAnimation(entity, 2);
         libgs_GsSetProjection(1000);
-        libgs_GsSetRefView2(&refView);
+        libgs_GsSetRefView2(&REF_VIEW);
         DRAWING_OFFSET_X = 160;
         DRAWING_OFFSET_Y = 185;
-        libgs_GsSetFlatLight(0, &light0);
-        libgs_GsSetFlatLight(1, &light1);
-        libgs_GsSetFlatLight(2, &light2);
+        libgs_GsSetFlatLight(0, &LIGHT0);
+        libgs_GsSetFlatLight(1, &LIGHT1);
+        libgs_GsSetFlatLight(2, &LIGHT2);
         libgs_GsSetAmbient(0x800, 0x800, 0x800);
     }
 
@@ -586,7 +586,7 @@ namespace
         updateMinuteHand(HOUR, MINUTE);
     }
 
-    void view_init()
+    void viewInit()
     {
         libgs_GsSetProjection(1024);
         GS_VIEWPOINT.viewpointX      = 0;
@@ -622,14 +622,14 @@ namespace
 
     void initializeFramebuffer()
     {
-        constexpr RECT frameBuffers{.x = 0, .y = 0, .width = 320, .height = 480};
-        constexpr dtl::array<uint16_t, 2> drawOffset0 = {160, 360};
-        constexpr dtl::array<uint16_t, 2> drawOffset1 = {160, 120};
+        constexpr RECT FRAME_BUFFERS{.x = 0, .y = 0, .width = 320, .height = 480};
+        constexpr dtl::array<uint16_t, 2> DRAW_OFFSET0 = {160, 360};
+        constexpr dtl::array<uint16_t, 2> DRAW_OFFSET1 = {160, 120};
 
         libgpu_SetDispMask(0);
         libgs_GsInitGraph(320, 240, 4, 0, 0);
         libgs_GsDefDispBuff(0, 0, 0, 0xf0);
-        libgpu_ClearImage(&frameBuffers, 0, 0, 0);
+        libgpu_ClearImage(&FRAME_BUFFERS, 0, 0, 0);
         GS_ORDERING_TABLE[0].length = 12;
         GS_ORDERING_TABLE[0].origin = GSOT_TAGS_0.data();
         GS_ORDERING_TABLE[1].length = 12;
@@ -637,8 +637,8 @@ namespace
         libgs_GsInit3D();
         DRAWING_OFFSET_X = 160;
         DRAWING_OFFSET_Y = 120;
-        libgpu_SetDrawOffset(&DR_OFFSETS[0], drawOffset0.data());
-        libgpu_SetDrawOffset(&DR_OFFSETS[1], drawOffset1.data());
+        libgpu_SetDrawOffset(&DR_OFFSETS[0], DRAW_OFFSET0.data());
+        libgpu_SetDrawOffset(&DR_OFFSETS[1], DRAW_OFFSET1.data());
         MAP_LAYER_ENABLED = true;
         libgpu_SetDispMask(1);
     }
@@ -687,7 +687,7 @@ int32_t main()
     // fillEFEXTable(); does nothing
     initializeFadeData();
     initializeScripts();
-    view_init();
+    viewInit();
     initializeFadeData();
     initializeEffectData();
     initializeInventoryModules();
@@ -839,6 +839,7 @@ extern "C"
         libgs_GsSetWorkBase(prim + 1);
     }
 
+    // NOLINTNEXTLINE
     void EntryPoint()
     {
         // vanilla resets r2-27 and r30 here

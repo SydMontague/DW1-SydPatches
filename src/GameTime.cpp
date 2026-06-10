@@ -17,7 +17,7 @@ namespace
     constexpr int32_t STATUS_UI_X_MIN = 75;
     constexpr int32_t STATUS_UI_X_MAX = 240;
 
-    constexpr Sprite bellLeft = {
+    constexpr Sprite BELL_LEFT = {
         .uvX          = 0xC0,
         .uvV          = 0xE0,
         .width        = 16,
@@ -26,7 +26,7 @@ namespace
         .clut         = getClut(0x100, 0x1F1),
     };
 
-    constexpr Sprite bellRight = {
+    constexpr Sprite BELL_RIGHT = {
         .uvX          = 0xC0,
         .uvV          = 0xF0,
         .width        = 16,
@@ -35,7 +35,7 @@ namespace
         .clut         = getClut(0x100, 0x1F1),
     };
 
-    constexpr Sprite clockBody = {
+    constexpr Sprite CLOCK_BODY = {
         .uvX          = 0xD0,
         .uvV          = 0xD8, // vanilla is at 0xD7, which contains one invalid pixel
         .width        = 47,
@@ -221,14 +221,14 @@ extern "C"
 
     void renderGameClock(int32_t instanceId)
     {
-        constexpr dtl::array<uint8_t, 24> hourX = {
+        constexpr dtl::array<uint8_t, 24> HOUR_X = {
             20, 23, 26, 31, 34, 36, 36, 36, 34, 31, 26, 23, 20, 17, 14, 9, 6, 4, 4, 4, 6, 9, 14, 17,
         };
-        constexpr dtl::array<uint8_t, 24> hourY = {
+        constexpr dtl::array<uint8_t, 24> HOUR_Y = {
             5, 6, 6, 8, 12, 15, 19, 23, 26, 30, 32, 32, 33, 32, 32, 30, 26, 23, 19, 15, 12, 8, 6, 6,
         };
-        constexpr dtl::array<uint8_t, 8> uOffsets = {0x80, 0xA0, 0x80, 0xA0, 0xA0, 0x80, 0xA0, 0x80};
-        constexpr dtl::array<uint8_t, 8> vOffsets = {0xC0, 0xC0, 0xD0, 0xC0, 0xD0, 0xE0, 0xD0, 0xE0};
+        constexpr dtl::array<uint8_t, 8> U_OFFSETS = {0x80, 0xA0, 0x80, 0xA0, 0xA0, 0x80, 0xA0, 0x80};
+        constexpr dtl::array<uint8_t, 8> V_OFFSETS = {0xC0, 0xC0, 0xD0, 0xC0, 0xD0, 0xE0, 0xD0, 0xE0};
 
         bool isDark = (HOUR < 6 || HOUR > 16);
         auto time   = (CURRENT_FRAME % 16) >> 2;
@@ -242,24 +242,24 @@ extern "C"
 
         clockOffsetX = clamp(clockOffsetX, -220, -135);
 
-        bellLeft.render(clockOffsetX - 2, -90, 9, 0);
-        bellRight.render(clockOffsetX + 34, -90, 9, 0);
+        BELL_LEFT.render(clockOffsetX - 2, -90, 9, 0);
+        BELL_RIGHT.render(clockOffsetX + 34, -90, 9, 0);
         renderRectPolyFT4(clockOffsetX + 8,
                           -100,
                           32,
                           16,
-                          uOffsets[animFrame],
-                          vOffsets[animFrame],
+                          U_OFFSETS[animFrame],
+                          V_OFFSETS[animFrame],
                           getTPage(0, 0, 0x380, 0x1C0),
                           getClut(0x100, 0x1F2),
                           9,
                           0);
-        clockBody.render(clockOffsetX, -87, 10, 0);
+        CLOCK_BODY.render(clockOffsetX, -87, 10, 0);
 
         clockSprite.x = clockOffsetX + 23;
         libgs_GsSortSprite(&clockSprite, ACTIVE_ORDERING_TABLE, 9);
-        renderRectPolyFT4(clockOffsetX + hourX[HOUR],
-                          hourY[HOUR] - 88,
+        renderRectPolyFT4(clockOffsetX + HOUR_X[HOUR],
+                          HOUR_Y[HOUR] - 88,
                           6,
                           6,
                           0xcb,

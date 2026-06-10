@@ -427,11 +427,11 @@ namespace
 
     void renderIcon1(int32_t frame, MapPos mapPos, int32_t scale)
     {
-        constexpr dtl::array<uint8_t, 19> offset{0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3};
+        constexpr dtl::array<uint8_t, 19> OFFSET{0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3};
 
-        spriteIcon1.u  = offset[frame % offset.size()] * 16 + 144;
-        spriteIcon1.v  = offset[frame % offset.size()] == 3 ? 0xb0 : 0x80;
-        spriteIcon1.my = (((frame % offset.size()) + 1) % 5) == 0 ? 29 : 26;
+        spriteIcon1.u  = OFFSET[frame % OFFSET.size()] * 16 + 144;
+        spriteIcon1.v  = OFFSET[frame % OFFSET.size()] == 3 ? 0xb0 : 0x80;
+        spriteIcon1.my = (((frame % OFFSET.size()) + 1) % 5) == 0 ? 29 : 26;
         renderSprite(&spriteIcon1, mapPos.screenX, mapPos.screenY, mapPos.depth, scale, scale);
     }
 
@@ -450,11 +450,11 @@ namespace
 
     void renderIcon9(int32_t frame, MapPos mapPos, int32_t scale)
     {
-        constexpr dtl::array<uint8_t, 13> offsetU{0, 0, 16, 16, 32, 32, 48, 48, 48, 48, 48, 48, 48};
-        constexpr dtl::array<uint8_t, 13> offsetMy{9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 6, 3, 0};
+        constexpr dtl::array<uint8_t, 13> OFFSET_U{0, 0, 16, 16, 32, 32, 48, 48, 48, 48, 48, 48, 48};
+        constexpr dtl::array<uint8_t, 13> OFFSET_MY{9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 6, 3, 0};
 
-        spriteIcon9.u  = offsetU[frame % offsetU.size()] + 0xc0;
-        spriteIcon9.my = offsetMy[frame % offsetMy.size()] + 0x17;
+        spriteIcon9.u  = OFFSET_U[frame % OFFSET_U.size()] + 0xc0;
+        spriteIcon9.my = OFFSET_MY[frame % OFFSET_MY.size()] + 0x17;
         renderSprite(&spriteIcon9, mapPos.screenX, mapPos.screenY, mapPos.depth, scale, scale);
     }
 
@@ -466,17 +466,17 @@ namespace
 
     void renderIcon11(int32_t frame, MapPos mapPos, int32_t scale)
     {
-        constexpr dtl::array<uint8_t, 20> offset{0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 0};
-        spriteIcon11.u = offset[frame % offset.size()] * 16 + 0xd0;
+        constexpr dtl::array<uint8_t, 20> OFFSET{0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 0};
+        spriteIcon11.u = OFFSET[frame % OFFSET.size()] * 16 + 0xd0;
         renderSprite(&spriteIcon11, mapPos.screenX, mapPos.screenY, mapPos.depth, scale, scale);
     }
 
     void renderIcon12(int32_t frame, MapPos mapPos, int32_t scale)
     {
-        constexpr dtl::array<uint8_t, 19> offset{0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3};
+        constexpr dtl::array<uint8_t, 19> OFFSET{0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3};
 
-        spriteIcon12.u = offset[frame % offset.size()] * 16 + 128;
-        if (offset[frame % offset.size()] == 0)
+        spriteIcon12.u = OFFSET[frame % OFFSET.size()] * 16 + 128;
+        if (OFFSET[frame % OFFSET.size()] == 0)
         {
             spriteIcon12.v      = 0xb8;
             spriteIcon12.my     = 18;

@@ -12,7 +12,7 @@ namespace
         int16_t scale;
     };
 
-    constexpr dtl::array<FrameData, 14> frameData{{
+    constexpr dtl::array<FrameData, 14> FRAME_DATA{{
         {.y = -50, .u = 0, .color = 0x80, .scale = 0x2000},
         {.y = -54, .u = 0, .color = 0x80, .scale = 0x2EE0},
         {.y = -58, .u = 32, .color = 0x80, .scale = 0x3840},
@@ -61,7 +61,7 @@ namespace
     void renderCloudFX(int32_t instanceId)
     {
         auto& data        = cloudFXData[instanceId];
-        const auto& fData = frameData[data.frame];
+        const auto& fData = FRAME_DATA[data.frame];
         auto mapPos       = getMapPosition(data.posX, fData.y, data.posZ);
 
         cloudFXSprite.u      = fData.u;

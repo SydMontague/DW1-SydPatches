@@ -3,7 +3,7 @@
 #include "extern/libgte.hpp"
 #include "extern/stddef.hpp"
 
-struct _CoordinateType
+struct CoordinateType
 {
     int16_t screenX;
     int16_t screenY;
@@ -11,9 +11,9 @@ struct _CoordinateType
 };
 
 // represents screen coordinates, relative to the center of the visible screen
-using ScreenPos = _CoordinateType;
+using ScreenPos = CoordinateType;
 // represents map coordinates, relative to the center of the map background
-using MapPos = _CoordinateType;
+using MapPos = CoordinateType;
 
 extern "C"
 {

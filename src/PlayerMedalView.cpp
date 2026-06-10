@@ -19,7 +19,7 @@ namespace
     constexpr auto MEDAL_ROW_COUNT = 3;
     constexpr auto MEDAL_COL_COUNT = 5;
 
-    constexpr Line lines[] = {
+    constexpr Line LINES[] = {
         {.x1 = toRelativeX(229), .y1 = toRelativeY(55), .x2 = toRelativeX(229), .y2 = toRelativeY(134), .clut = 0},
         {.x1 = toRelativeX(230), .y1 = toRelativeY(55), .x2 = toRelativeX(230), .y2 = toRelativeY(134), .clut = 1},
         {.x1 = toRelativeX(231), .y1 = toRelativeY(55), .x2 = toRelativeX(231), .y2 = toRelativeY(134), .clut = 0},
@@ -37,14 +37,14 @@ namespace
         {.x1 = toRelativeX(13), .y1 = toRelativeY(201), .x2 = toRelativeX(306), .y2 = toRelativeY(201), .clut = 0},
     };
 
-    constexpr Inset inset = {
+    constexpr Inset INSET = {
         .posX   = toRelativeX(62),
         .posY   = toRelativeY(141),
         .width  = 176,
         .height = 14,
     };
 
-    constexpr Sprite selector = {
+    constexpr Sprite SELECTOR = {
         .uvX          = 0,
         .uvV          = 0xD0,
         .width        = 24,
@@ -53,7 +53,7 @@ namespace
         .clut         = 0x7DC7,
     };
 
-    constexpr Sprite medalFull = {
+    constexpr Sprite MEDAL_FULL = {
         .uvX          = 0xF0,
         .uvV          = 0xB0,
         .width        = 15,
@@ -62,7 +62,7 @@ namespace
         .clut         = 0x7DC7,
     };
 
-    constexpr Sprite medalEmpty = {
+    constexpr Sprite MEDAL_EMPTY = {
         .uvX          = 0xF0,
         .uvV          = 0xC8,
         .width        = 15,
@@ -293,21 +293,21 @@ void MedalView::Private::render(int32_t depth)
 {
     if (state == 1)
     {
-        selector.render(selectedMedalCol * 0x26 - 0x7E, selectedMedalRow * 24 - 0x3D, 1, 0);
+        SELECTOR.render(selectedMedalCol * 0x26 - 0x7E, selectedMedalRow * 24 - 0x3D, 1, 0);
     }
 
     for (int32_t i = 0; i < MEDAL_COL_COUNT; i++)
         for (int32_t j = 0; j < MEDAL_ROW_COUNT; j++)
         {
             if (!hasMedal(static_cast<Medal>(j * MEDAL_COL_COUNT + i)))
-                medalEmpty.render(i * 0x26 - 0x7C, j * 24 - 0x3D, 5, 0);
+                MEDAL_EMPTY.render(i * 0x26 - 0x7C, j * 24 - 0x3D, 5, 0);
 
-            medalFull.render(i * 0x26 - 0x7A, j * 24 - 0x3D, 5, 0);
+            MEDAL_FULL.render(i * 0x26 - 0x7A, j * 24 - 0x3D, 5, 0);
         }
 
     if (hasMedal(selectedMedal)) renderMedal(depth);
 
-    renderSeperatorLines(lines, 12, 5);
+    renderSeperatorLines(LINES, 12, 5);
 
     for (auto& text : labels)
         text.render(depth);
@@ -316,7 +316,7 @@ void MedalView::Private::render(int32_t depth)
     titleString.render(depth);
     descriptionString.render(depth);
 
-    inset.render(5);
+    INSET.render(5);
 }
 
 void MedalView::Private::updateMedal(Medal medal)

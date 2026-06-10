@@ -42,7 +42,7 @@ namespace
     constexpr auto SLOT_AMOUNT_OFFSET_Y    = 3;
     constexpr uint32_t MOVE_SELECTOR_COLOR = 0x5d4af1;
 
-    constexpr dtl::array<dtl::array<uint8_t, 6>, 3> sortOrder = {{
+    constexpr dtl::array<dtl::array<uint8_t, 6>, 3> SORT_ORDER = {{
         {0, 1, 3, 2, 5, 4},
         {2, 3, 0, 5, 4, 1},
         {1, 2, 0, 3, 5, 4},
@@ -148,7 +148,7 @@ namespace
 
     void sortItems(int32_t sortMode)
     {
-        const auto& orderData = sortOrder[sortMode];
+        const auto& orderData = SORT_ORDER[sortMode];
 
         struct Entry
         {
@@ -536,10 +536,10 @@ namespace
 
     void createInventoryBottom()
     {
-        constexpr RECT finalPos = {.x = BOTTOM_X, .y = BOTTOM_Y, .width = 304, .height = 28};
-        constexpr RECT startPos = {.x = TOP_X + 8, .y = TOP_Y + 14, .width = 16, .height = 16};
+        constexpr RECT FINAL_POS = {.x = BOTTOM_X, .y = BOTTOM_Y, .width = 304, .height = 28};
+        constexpr RECT START_POS = {.x = TOP_X + 8, .y = TOP_Y + 14, .width = 16, .height = 16};
 
-        createAnimatedUIBox(1, 0, 2, &finalPos, &startPos, nullptr, renderInventoryBottom);
+        createAnimatedUIBox(1, 0, 2, &FINAL_POS, &START_POS, nullptr, renderInventoryBottom);
     }
 
     void closeInventoryBottom()

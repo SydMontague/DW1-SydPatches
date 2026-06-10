@@ -63,14 +63,14 @@ namespace
 
     int32_t combatIdleTimer;
 
-    constexpr uint8_t findItemStr[]       = "Woah!";
-    constexpr uint8_t emptyChestStr[]     = "Hey! It's empty!";
-    constexpr uint8_t inventoryFullStr[]  = "But I can't hold any more!";
-    constexpr uint8_t tamerLevelUpStr[]   = "Tamer level went up!!!";
-    constexpr uint8_t tamerLevelDownStr[] = "Tamer level went down!!!";
-    constexpr uint8_t medalLine1[]        = "Congratulations!";
-    constexpr uint8_t medalLine2[]        = "To recognize your great";
-    constexpr uint8_t medalLine3[]        = "records, we sent you a medal!";
+    constexpr uint8_t FIND_ITEM_STR[]        = "Woah!";
+    constexpr uint8_t EMPTY_CHEST_STR[]      = "Hey! It's empty!";
+    constexpr uint8_t INVENTORY_FULL_STR[]   = "But I can't hold any more!";
+    constexpr uint8_t TAMER_LEVEL_UP_STR[]   = "Tamer level went up!!!";
+    constexpr uint8_t TAMER_LEVEL_DOWN_STR[] = "Tamer level went down!!!";
+    constexpr uint8_t MEDAL_LINE1[]          = "Congratulations!";
+    constexpr uint8_t MEDAL_LINE2[]          = "To recognize your great";
+    constexpr uint8_t MEDAL_LINE3[]          = "records, we sent you a medal!";
 
     uint8_t takeItemFrameCount;
     bool isStandingOnDrop;
@@ -452,11 +452,11 @@ namespace
             drawStringNew(&vanillaFont, getDigimonData(DigimonType::TAMER)->name, 704 + 0, 256 + 12);
             if (chest.isTaken)
             {
-                drawStringNew(&vanillaFont, emptyChestStr, 704 + 0, 256 + 24);
+                drawStringNew(&vanillaFont, EMPTY_CHEST_STR, 704 + 0, 256 + 24);
             }
             else
             {
-                auto offset = drawStringNew(&vanillaFont, findItemStr, 704 + 0, 256 + 24) / 4;
+                auto offset = drawStringNew(&vanillaFont, FIND_ITEM_STR, 704 + 0, 256 + 24) / 4;
                 setTextColor(5);
                 drawStringNew(&vanillaFont, getItem(itemType)->name, 704 + offset + 1, 256 + 24);
                 setTextColor(1);
@@ -492,7 +492,7 @@ namespace
             takeItemFrameCount = 0;
             if (!giveItem(itemType, 1))
             {
-                drawStringNew(&vanillaFont, inventoryFullStr, 704 + 0, 256 + 24);
+                drawStringNew(&vanillaFont, INVENTORY_FULL_STR, 704 + 0, 256 + 24);
                 Tamer_setSubState(3);
             }
             else
@@ -547,7 +547,7 @@ namespace
             unsetCameraFollowPlayer();
             clearTextSubArea(&textArea);
             drawStringNew(&vanillaFont, getDigimonData(DigimonType::TAMER)->name, 704 + 0, 256 + 12);
-            auto offset = drawStringNew(&vanillaFont, findItemStr, 704 + 0, 256 + 24) / 4;
+            auto offset = drawStringNew(&vanillaFont, FIND_ITEM_STR, 704 + 0, 256 + 24) / 4;
             setTextColor(5);
             auto nameOffset = drawStringNew(&vanillaFont, getItem(itemType)->name, 704 + offset + 1, 256 + 24) / 4;
             const uint8_t pickupAmount = getDroppedItemAmount(pickedDropId);
@@ -594,7 +594,7 @@ namespace
             {
                 clearTextSubArea(&textArea);
                 drawStringNew(&vanillaFont, getDigimonData(DigimonType::TAMER)->name, 704 + 0, 256 + 12);
-                drawStringNew(&vanillaFont, inventoryFullStr, 704 + 0, 256 + 24);
+                drawStringNew(&vanillaFont, INVENTORY_FULL_STR, 704 + 0, 256 + 24);
                 takeItemFrameCount = 0;
                 Tamer_setSubState(3);
             }
@@ -651,9 +651,9 @@ namespace
                 clearTextArea();
                 setTextColor(7);
                 // vanilla draws these strings in multiple frames/states
-                drawStringNew(&vanillaFont, medalLine1, 704, 256 + 120);
-                drawStringNew(&vanillaFont, medalLine2, 704, 256 + 132);
-                drawStringNew(&vanillaFont, medalLine3, 704, 256 + 144);
+                drawStringNew(&vanillaFont, MEDAL_LINE1, 704, 256 + 120);
+                drawStringNew(&vanillaFont, MEDAL_LINE2, 704, 256 + 132);
+                drawStringNew(&vanillaFont, MEDAL_LINE3, 704, 256 + 144);
             }
             else if (hasLevelsAwardPending)
             {
@@ -661,12 +661,12 @@ namespace
                 if (levelsAwarded > 0)
                 {
                     setTextColor(7);
-                    drawStringNew(&vanillaFont, tamerLevelUpStr, 704, 256 + 120);
+                    drawStringNew(&vanillaFont, TAMER_LEVEL_UP_STR, 704, 256 + 120);
                 }
                 else
                 {
                     setTextColor(3);
-                    drawStringNew(&vanillaFont, tamerLevelDownStr, 704, 256 + 120);
+                    drawStringNew(&vanillaFont, TAMER_LEVEL_DOWN_STR, 704, 256 + 120);
                 }
             }
 
@@ -726,10 +726,10 @@ namespace
 
     inline bool hasAllDigimonRaised()
     {
-        constexpr auto begin = static_cast<uint32_t>(DigimonType::BOTAMON);
-        constexpr auto end   = static_cast<uint32_t>(DigimonType::WEREGARURUMON);
+        constexpr auto BEGIN = static_cast<uint32_t>(DigimonType::BOTAMON);
+        constexpr auto END   = static_cast<uint32_t>(DigimonType::WEREGARURUMON);
 
-        for (auto i = begin; i < end; i++)
+        for (auto i = BEGIN; i < END; i++)
             if (!hasDigimonRaised(static_cast<DigimonType>(i))) return false;
 
         return true;

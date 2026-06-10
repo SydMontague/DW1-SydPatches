@@ -61,7 +61,7 @@ namespace
         }
     };
 
-    constexpr BorderBox boxes[] = {
+    constexpr BorderBox BOXES[] = {
         {
             .posX   = toRelativeX(17),
             .posY   = toRelativeY(39),
@@ -124,7 +124,7 @@ namespace
         },
     };
 
-    constexpr Sprite selector = {
+    constexpr Sprite SELECTOR = {
         .uvX          = 0,
         .uvV          = 0xE8,
         .width        = 24,
@@ -133,7 +133,7 @@ namespace
         .clut         = 0x7DC7,
     };
 
-    constexpr ChartBoxColumn cols[] = {
+    constexpr ChartBoxColumn COLS[] = {
         {
             .posX = toRelativeX(22),
             .digimon =
@@ -316,7 +316,7 @@ namespace
         },
     };
 
-    constexpr Inset detailInsets[] = {
+    constexpr Inset DETAIL_INSETS[] = {
         {.posX = toRelativeX(28), .posY = toRelativeY(42), .width = 78, .height = 130},
         {.posX = toRelativeX(214), .posY = toRelativeY(42), .width = 78, .height = 130},
         {.posX = toRelativeX(136), .posY = toRelativeY(85), .width = 48, .height = 46},
@@ -325,14 +325,14 @@ namespace
         {.posX = toRelativeX(26), .posY = toRelativeY(206), .width = 132, .height = 4},
     };
 
-    constexpr Line4Points fromLineEven[] = {
+    constexpr Line4Points FROM_LINE_EVEN[] = {
         {-84, -68, -37, -10, -48, -48, -17, -17},
         {-102, -74, -64, -10, -24, -24, -14, -14},
         {-102, -74, -64, -10, -1, -1, -11, -11},
         {-84, -68, -37, -10, 23, 23, -8, -8},
     };
 
-    constexpr Line4Points fromLineOdd[] = {
+    constexpr Line4Points FROM_LINE_ODD[] = {
         {-66, -52, -15, -10, -60, -60, -18, -18},
         {-84, -58, -37, -10, -36, -36, -15, -15},
         {-102, -10, -10, -10, -12, -12, -12, -12},
@@ -340,7 +340,7 @@ namespace
         {-66, -52, -15, -10, 36, 36, -6, -6},
     };
 
-    constexpr Line4Points toLinesOdd[] = {
+    constexpr Line4Points TO_LINES_ODD[] = {
         {9, 51, 64, 64, -18, -60, -60, -60},
         {9, 36, 57, 82, -15, -15, -36, -36},
         {9, 100, 100, 100, -12, -12, -12, -12},
@@ -348,7 +348,7 @@ namespace
         {9, 51, 64, 64, -6, 36, 36, 36},
     };
 
-    constexpr Line4Points toLinesEven[] = {
+    constexpr Line4Points TO_LINES_EVEN[] = {
         {9, 61, 64, 64, -20, -72, -72, -72},
         {9, 36, 67, 82, -17, -17, -48, -48},
         {9, 63, 73, 100, -14, -14, -24, -24},
@@ -366,11 +366,11 @@ namespace
         {{0xBE, 0x00, 0x1E}, {0x82, 0x1E, 0x1E}},
     };
 
-    constexpr ChartSprite centerSprite = {.posX = -8, .posY = -20};
-    constexpr ChartSprite fromOdd[]    = {{-83, -68}, {-101, -44}, {-119, -20}, {-101, 4}, {-83, 28}};
-    constexpr ChartSprite fromEven[]   = {{-101, -56}, {-119, -32}, {-119, -8}, {-101, 16}};
-    constexpr ChartSprite toOdd[]      = {{66, -69}, {84, -45}, {102, -21}, {84, 3}, {66, 27}};
-    constexpr ChartSprite toEven[]     = {{66, -81}, {84, -57}, {102, -33}, {102, -9}, {84, 15}, {66, 39}};
+    constexpr ChartSprite CENTER_SPRITE = {.posX = -8, .posY = -20};
+    constexpr ChartSprite FROM_ODD[]    = {{-83, -68}, {-101, -44}, {-119, -20}, {-101, 4}, {-83, 28}};
+    constexpr ChartSprite FROM_EVEN[]   = {{-101, -56}, {-119, -32}, {-119, -8}, {-101, 16}};
+    constexpr ChartSprite TO_ODD[]      = {{66, -69}, {84, -45}, {102, -21}, {84, 3}, {66, 27}};
+    constexpr ChartSprite TO_EVEN[]     = {{66, -81}, {84, -57}, {102, -33}, {102, -9}, {84, 15}, {66, 39}};
 
     [[gnu::optimize("Os")]]
     constexpr char const* getLevelName(Level level)
@@ -459,12 +459,12 @@ void ChartView::Private::render(int32_t depth)
 void ChartView::Private::renderChart(int32_t depth)
 {
     if (state != 0)
-        selector.render(cols[selectedCol].posX - 4, CHART_ENTRY_BASE_Y + CHART_ENTRY_OFFSET_Y * selectedRow - 2, 5, 0);
+        SELECTOR.render(COLS[selectedCol].posX - 4, CHART_ENTRY_BASE_Y + CHART_ENTRY_OFFSET_Y * selectedRow - 2, 5, 0);
 
-    for (auto& col : cols)
+    for (auto& col : COLS)
         col.render(selectedDigimon);
 
-    for (auto& box : boxes)
+    for (auto& box : BOXES)
         box.render();
 
     detailView.tick();
@@ -489,13 +489,13 @@ void ChartView::Private::renderDetail(int32_t depth)
 
     auto& data = getDigimonSprite(selectedDigimon);
 
-    centerSprite.render(data.uvX, data.uvV, DIGIMON_SPRITE_CLUTS[data.clut], data.tpage, 4, true);
+    CENTER_SPRITE.render(data.uvX, data.uvV, DIGIMON_SPRITE_CLUTS[data.clut], data.tpage, 4, true);
 
-    auto* toLines        = (toCount & 1) == 0 ? toLinesEven : toLinesOdd;
-    auto* toSprite       = (toCount & 1) == 0 ? toEven : toOdd;
+    auto* toLines        = (toCount & 1) == 0 ? TO_LINES_EVEN : TO_LINES_ODD;
+    auto* toSprite       = (toCount & 1) == 0 ? TO_EVEN : TO_ODD;
     auto toSpriteCount   = (toCount & 1) == 0 ? 6 : 5;
-    auto* fromLines      = (fromCount & 1) == 0 ? fromLineEven : fromLineOdd;
-    auto* fromSprite     = (fromCount & 1) == 0 ? fromEven : fromOdd;
+    auto* fromLines      = (fromCount & 1) == 0 ? FROM_LINE_EVEN : FROM_LINE_ODD;
+    auto* fromSprite     = (fromCount & 1) == 0 ? FROM_EVEN : FROM_ODD;
     auto fromSpriteCount = (fromCount & 1) == 0 ? 4 : 5;
 
     for (int32_t i = 0; i < toSpriteCount; i++)
@@ -526,7 +526,7 @@ void ChartView::Private::renderDetail(int32_t depth)
     levelString.render(depth);
     nameString.render(depth);
 
-    for (auto& val : detailInsets)
+    for (auto& val : DETAIL_INSETS)
         val.render(depth);
 }
 
@@ -560,13 +560,13 @@ void ChartView::Private::tick()
         auto rowAmount = 0;
         if (isKeyDownRepeat(InputButtons::BUTTON_UP)) rowAmount = -1;
         if (isKeyDownRepeat(InputButtons::BUTTON_DOWN)) rowAmount = 1;
-        if (cols[selectedCol].digimon[selectedRow] == DigimonType::INVALID) rowAmount = -1;
+        if (COLS[selectedCol].digimon[selectedRow] == DigimonType::INVALID) rowAmount = -1;
 
         auto tmpRow = selectedRow;
         while (rowAmount != 0 && tmpRow + rowAmount >= 0 && tmpRow + rowAmount < 9)
         {
             tmpRow += rowAmount;
-            if (cols[selectedCol].digimon[tmpRow] != DigimonType::INVALID)
+            if (COLS[selectedCol].digimon[tmpRow] != DigimonType::INVALID)
             {
                 selectedRow = tmpRow;
                 break;
@@ -575,12 +575,12 @@ void ChartView::Private::tick()
 
         if (initialCol != selectedCol || initialRow != selectedRow) playSound(0, 2);
 
-        selectedDigimon = cols[selectedCol].digimon[selectedRow];
+        selectedDigimon = COLS[selectedCol].digimon[selectedRow];
 
         if (isKeyDown(InputButtons::BUTTON_CROSS) && hasDigimonRaised(selectedDigimon))
         {
-            constexpr RECT final = {.x = -150, .y = -89, .width = 300, .height = 190};
-            int16_t posX         = cols[selectedCol].posX;
+            constexpr RECT FINAL = {.x = -150, .y = -89, .width = 300, .height = 190};
+            int16_t posX         = COLS[selectedCol].posX;
             int16_t posY         = CHART_ENTRY_BASE_Y + CHART_ENTRY_OFFSET_Y * selectedRow;
             RECT start           = {
                 .x      = static_cast<int16_t>(posX),
@@ -592,7 +592,7 @@ void ChartView::Private::tick()
             auto* para  = getDigimonData(selectedDigimon);
             nameString  = getAtlasVanilla().render(getDigimonData(selectedDigimon)->name, NAME_LABEL);
             levelString = getAtlasVanilla().render(getLevelName(para->level), LEVEL_LABEL);
-            detailView  = UIBox(final, UIBox::DEFAULT_COLOR, false, start);
+            detailView  = UIBox(FINAL, UIBox::DEFAULT_COLOR, false, start);
             state       = 2;
         }
     }

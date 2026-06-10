@@ -17,7 +17,7 @@ namespace
     constexpr auto KEY_X = BASE_X + 105;
     constexpr auto KEY_Y = BASE_Y + 142;
 
-    constexpr Inset insets[] = {
+    constexpr Inset INSETS[] = {
         {.posX = BASE_X + 70, .posY = BASE_Y + 3, .width = 120, .height = 14},
 
         {.posX = DETAIL_X + 67, .posY = DETAIL_Y, .width = 19, .height = 14},
@@ -37,7 +37,7 @@ namespace
         {.posX = KEY_X + 67, .posY = KEY_Y + 20, .width = 32, .height = 14},
     };
 
-    constexpr Line lines[]{
+    constexpr Line LINES[]{
         {.x1 = -45, .y1 = 50, .x2 = 146, .y2 = 50, .clut = 0},
         {.x1 = -45, .y1 = 51, .x2 = 146, .y2 = 51, .clut = 1},
         {.x1 = -45, .y1 = 52, .x2 = 146, .y2 = 52, .clut = 0},
@@ -51,7 +51,7 @@ namespace
         {.x1 = -147, .y1 = -63, .x2 = 146, .y2 = -63, .clut = 0},
     };
 
-    constexpr IconSprite oldRodSprite = {
+    constexpr IconSprite OLD_ROD_SPRITE = {
         .posX         = KEY_X + 67 + 1,
         .posY         = KEY_Y,
         .width        = 16,
@@ -63,7 +63,7 @@ namespace
         .clut         = 0x7bc6,
     };
 
-    constexpr IconSprite amazingRodSprite = {
+    constexpr IconSprite AMAZING_ROD_SPRITE = {
         .posX         = KEY_X + 67 + 18 + 1,
         .posY         = KEY_Y,
         .width        = 16,
@@ -75,7 +75,7 @@ namespace
         .clut         = 0x7bc6,
     };
 
-    constexpr IconSprite keychain1Sprite = {
+    constexpr IconSprite KEYCHAIN1_SPRITE = {
         .posX         = KEY_X + 67 + 36 + 1,
         .posY         = KEY_Y,
         .width        = 16,
@@ -87,7 +87,7 @@ namespace
         .clut         = 0x7bc6,
     };
 
-    constexpr IconSprite keychain2Sprite = {
+    constexpr IconSprite KEYCHAIN2_SPRITE = {
         .posX         = KEY_X + 67 + 55 + 1,
         .posY         = KEY_Y,
         .width        = 16,
@@ -376,12 +376,12 @@ void PlayerInfoView::render(int32_t depth)
     for (const auto& str : strings)
         str.render(depth);
 
-    if (isTriggerSet(45)) oldRodSprite.render(5);
-    if (isTriggerSet(46)) amazingRodSprite.render(5);
-    if (isTriggerSet(47)) keychain1Sprite.render(5);
-    if (isTriggerSet(48)) keychain2Sprite.render(5);
+    if (isTriggerSet(45)) OLD_ROD_SPRITE.render(5);
+    if (isTriggerSet(46)) AMAZING_ROD_SPRITE.render(5);
+    if (isTriggerSet(47)) KEYCHAIN1_SPRITE.render(5);
+    if (isTriggerSet(48)) KEYCHAIN2_SPRITE.render(5);
 
-    for (auto& inset : insets)
+    for (auto& inset : INSETS)
         inset.render(5);
-    renderSeperatorLines(lines, 9, 5);
+    renderSeperatorLines(LINES, 9, 5);
 }

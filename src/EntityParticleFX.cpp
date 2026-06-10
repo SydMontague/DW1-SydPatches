@@ -27,7 +27,7 @@ namespace
         uint8_t height;
     };
 
-    constexpr EntityParticleFXMode entityParticleFXModes[9] = {
+    constexpr EntityParticleFXMode ENTITY_PARTICLE_FX_MODES[9] = {
         {.scaleX = 0x78, .scaleY = 0x50, .x = 0x80, .y = 0x80, .width = 0x0F, .height = 0x0F},
         {.scaleX = 0x78, .scaleY = 0x50, .x = 0xC0, .y = 0x80, .width = 0x0F, .height = 0x0F},
         {.scaleX = 0xC8, .scaleY = 0x50, .x = 0x80, .y = 0x90, .width = 0x1F, .height = 0x07},
@@ -50,7 +50,7 @@ namespace
     void renderEntityParticleFX(int32_t instanceId)
     {
         auto& data          = entityParticleFXData[instanceId];
-        auto& modeData      = entityParticleFXModes[data.mode];
+        auto& modeData      = ENTITY_PARTICLE_FX_MODES[data.mode];
         const auto& bonePos = data.entity->posData->posMatrix.work.t;
         auto mapPos         = getMapPosition(bonePos[0], bonePos[1], bonePos[2]);
 

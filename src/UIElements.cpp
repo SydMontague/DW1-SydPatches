@@ -468,7 +468,7 @@ extern "C"
         else
             box.attribute = 0;
 
-        constexpr RGB8 boxColors[] = {
+        constexpr RGB8 BOX_COLORS[] = {
             {0, 0, 0},
             {45, 56, 64},
             {0, 0, 0},
@@ -476,9 +476,9 @@ extern "C"
             {0, 0, 0},
         };
 
-        box.r      = boxColors[data.color].red;
-        box.g      = boxColors[data.color].green;
-        box.b      = boxColors[data.color].blue;
+        box.r      = BOX_COLORS[data.color].red;
+        box.g      = BOX_COLORS[data.color].green;
+        box.b      = BOX_COLORS[data.color].blue;
         box.x      = data.finalPos.x + 4;
         box.y      = data.finalPos.y + 3;
         box.width  = data.finalPos.width - 8;

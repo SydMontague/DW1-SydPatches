@@ -26,9 +26,9 @@ namespace
         int16_t flashScale[3];
     };
 
-    constexpr uint8_t flashCountMapping[4]    = {2, 3, 2, 0};
-    constexpr uint8_t particleCountMapping[4] = {25, 48, 20, 0};
-    constexpr RGB8 particleColors[7]          = {
+    constexpr uint8_t FLASH_COUNT_MAPPING[4]    = {2, 3, 2, 0};
+    constexpr uint8_t PARTICLE_COUNT_MAPPING[4] = {25, 48, 20, 0};
+    constexpr RGB8 PARTICLE_COLORS[7]           = {
         {.red = 0xFF, .green = 0x6E, .blue = 0x46},
         {.red = 0xFF, .green = 0x6E, .blue = 0x46},
         {.red = 0xC8, .green = 0xC8, .blue = 0x64},
@@ -60,8 +60,8 @@ namespace
     void renderParticleFX(int32_t instanceId)
     {
         auto& data         = particleFXData[instanceId];
-        auto flashCount    = flashCountMapping[data.mode];
-        auto particleCount = particleCountMapping[data.mode];
+        auto flashCount    = FLASH_COUNT_MAPPING[data.mode];
+        auto particleCount = PARTICLE_COUNT_MAPPING[data.mode];
         auto tickTarget    = data.tickTarget;
         auto tickCount     = data.tickCount;
 
@@ -209,7 +209,7 @@ extern "C"
             return;
 
         if (color > 6) return;
-        auto& colorData = particleColors[color];
+        auto& colorData = PARTICLE_COLORS[color];
         data->r         = colorData.red;
         data->g         = colorData.green;
         data->b         = colorData.blue;

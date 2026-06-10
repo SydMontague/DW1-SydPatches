@@ -36,4 +36,4 @@ constexpr auto MAX_TAMER_LEVEL = 10;
 /*
  * User facing strings go here.
  */
-constexpr uint8_t isSickStr[] = "is sick.";
+constexpr uint8_t IS_SICK_STR[] = "is sick.";

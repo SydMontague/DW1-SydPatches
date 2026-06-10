@@ -18,7 +18,7 @@ namespace
         int32_t blue;
     };
 
-    constexpr uint8_t flashBaseU[4] = {64, 0, 0, 0};
+    constexpr uint8_t FLASH_BASE_U[4] = {64, 0, 0, 0};
 
     template<class T> constexpr T pop()
     {
@@ -66,7 +66,7 @@ namespace
         if (absMode == 0x20) flashData.tpage = 0xDD;
         if (absMode == 1 || absMode == 0) flashData.tpage = 0xBD;
 
-        flashData.uBase = flashBaseU[absMode % 4];
+        flashData.uBase = FLASH_BASE_U[absMode % 4];
         flashData.vBase = 192;
         flashData.clut  = 0x79C0;
 

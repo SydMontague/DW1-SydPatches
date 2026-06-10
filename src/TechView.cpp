@@ -361,7 +361,7 @@ namespace
         },
     }};
 
-    constexpr Sprite typeSprites[] = {
+    constexpr Sprite TYPE_SPRITES[] = {
         {.uvX = 0, .uvV = 140, .width = 0, .height = 0, .texture_page = 5, .clut = getClut(0x60, 0x1e8)},
         {.uvX = 0, .uvV = 140, .width = 12, .height = 12, .texture_page = 5, .clut = getClut(0x60, 0x1e8)},
         {.uvX = 12, .uvV = 140, .width = 12, .height = 12, .texture_page = 5, .clut = getClut(0x60, 0x1e8)},
@@ -383,25 +383,25 @@ namespace
         {49, 50, 51, 52, 53, 54, 55, 56},
     };
 
-    constexpr Line lines[] = {
+    constexpr Line LINES[] = {
         {.x1 = -147, .y1 = -20, .x2 = 146, .y2 = -20, .clut = 0},
         {.x1 = -147, .y1 = -19, .x2 = 146, .y2 = -19, .clut = 1},
         {.x1 = -147, .y1 = -18, .x2 = 146, .y2 = -18, .clut = 0},
     };
 
-    constexpr Line lines2[] = {
+    constexpr Line LINES2[] = {
         {.x1 = -147, .y1 = 17, .x2 = 146, .y2 = 17, .clut = 0},
         {.x1 = -147, .y1 = 18, .x2 = 146, .y2 = 18, .clut = 1},
         {.x1 = -147, .y1 = 19, .x2 = 146, .y2 = 19, .clut = 0},
     };
 
-    constexpr Line linesSeparator[] = {
+    constexpr Line LINES_SEPARATOR[] = {
         {.x1 = 20, .y1 = -18, .x2 = 20, .y2 = 98, .clut = 0},
         {.x1 = 21, .y1 = -18, .x2 = 21, .y2 = 98, .clut = 1},
         {.x1 = 22, .y1 = -18, .x2 = 22, .y2 = 98, .clut = 0},
     };
 
-    constexpr Sprite specialSprites[] = {
+    constexpr Sprite SPECIAL_SPRITES[] = {
         {.uvX = 36, .uvV = 128, .width = 12, .height = 12, .texture_page = 5, .clut = 0x7a06},
         {.uvX = 48, .uvV = 128, .width = 12, .height = 12, .texture_page = 5, .clut = 0x7a06},
 
@@ -424,7 +424,7 @@ namespace
         {.uvX = 192, .uvV = 128, .width = 12, .height = 12, .texture_page = 5, .clut = 0x7a06},
     };
 
-    constexpr Sprite selectorSprite =
+    constexpr Sprite SELECTOR_SPRITE =
         {.uvX = 192, .uvV = 140, .width = 18, .height = 16, .texture_page = 5, .clut = 0x7b06};
 
     constexpr bool canUseMove(DigimonType type, int32_t move)
@@ -557,17 +557,17 @@ namespace
         static constexpr auto BASE_X = toRelativeX(186);
         static constexpr auto BASE_Y = toRelativeY(106);
 
-        static constexpr Inset nameInset   = {.posX = BASE_X, .posY = BASE_Y + 10, .width = 117, .height = 10};
-        static constexpr Inset powerInset  = {.posX = BASE_X, .posY = BASE_Y + 32, .width = 45, .height = 10};
-        static constexpr Inset costInset   = {.posX = BASE_X, .posY = BASE_Y + 54, .width = 45, .height = 10};
-        static constexpr Inset rangeInset  = {.posX = BASE_X, .posY = BASE_Y + 76, .width = 45, .height = 10};
-        static constexpr Inset statusInset = {.posX = BASE_X, .posY = BASE_Y + 98, .width = 45, .height = 10};
+        static constexpr Inset NAME_INSET   = {.posX = BASE_X, .posY = BASE_Y + 10, .width = 117, .height = 10};
+        static constexpr Inset POWER_INSET  = {.posX = BASE_X, .posY = BASE_Y + 32, .width = 45, .height = 10};
+        static constexpr Inset COST_INSET   = {.posX = BASE_X, .posY = BASE_Y + 54, .width = 45, .height = 10};
+        static constexpr Inset RANGE_INSET  = {.posX = BASE_X, .posY = BASE_Y + 76, .width = 45, .height = 10};
+        static constexpr Inset STATUS_INSET = {.posX = BASE_X, .posY = BASE_Y + 98, .width = 45, .height = 10};
 
-        static constexpr RenderSettings nameSetting   = getSettings(nameInset);
-        static constexpr RenderSettings powerSetting  = getSettings(powerInset);
-        static constexpr RenderSettings costSetting   = getSettings(costInset);
-        static constexpr RenderSettings rangeSetting  = getSettings(rangeInset);
-        static constexpr RenderSettings statusSetting = getSettings(statusInset);
+        static constexpr RenderSettings NAME_SETTING   = getSettings(NAME_INSET);
+        static constexpr RenderSettings POWER_SETTING  = getSettings(POWER_INSET);
+        static constexpr RenderSettings COST_SETTING   = getSettings(COST_INSET);
+        static constexpr RenderSettings RANGE_SETTING  = getSettings(RANGE_INSET);
+        static constexpr RenderSettings STATUS_SETTING = getSettings(STATUS_INSET);
 
         dtl::array<AtlasString, 5> strings{};
         bool isValid;
@@ -580,11 +580,11 @@ namespace
             {
                 const auto* move = getMove(moveId);
                 const auto& font = getAtlas7px();
-                strings[0]       = font.render(MOVE_NAMES[moveId], nameSetting);
-                strings[1]       = font.render(format("%d", move->mpCost * 3).data(), costSetting);
-                strings[2]       = font.render(format("%d", move->power).data(), powerSetting);
-                strings[3]       = font.render(getRangeStringLong(move->range), rangeSetting);
-                strings[4]       = font.render(getStatusString(move->status), statusSetting);
+                strings[0]       = font.render(MOVE_NAMES[moveId], NAME_SETTING);
+                strings[1]       = font.render(format("%d", move->mpCost * 3).data(), COST_SETTING);
+                strings[2]       = font.render(format("%d", move->power).data(), POWER_SETTING);
+                strings[3]       = font.render(getRangeStringLong(move->range), RANGE_SETTING);
+                strings[4]       = font.render(getStatusString(move->status), STATUS_SETTING);
             }
         }
 
@@ -594,11 +594,11 @@ namespace
                 for (const auto& string : strings)
                     string.render(5);
 
-            nameInset.render(5);
-            powerInset.render(5);
-            costInset.render(5);
-            rangeInset.render(5);
-            statusInset.render(5);
+            NAME_INSET.render(5);
+            POWER_INSET.render(5);
+            COST_INSET.render(5);
+            RANGE_INSET.render(5);
+            STATUS_INSET.render(5);
         }
     };
 
@@ -610,11 +610,11 @@ namespace
 
     struct MoveEntry
     {
-        static constexpr RECT nameDimension{.x = 0, .y = 0, .width = 150, .height = 14};
-        static constexpr RECT powerDimension{.x = 155, .y = 0, .width = 35, .height = 14};
-        static constexpr RECT rangeDimension{.x = 235, .y = 0, .width = 21, .height = 14};
-        static constexpr RECT statusDimension{.x = 261, .y = 0, .width = 20, .height = 14};
-        static constexpr RECT costDimension{.x = 195, .y = 0, .width = 35, .height = 14};
+        static constexpr RECT NAME_DIMENSION{.x = 0, .y = 0, .width = 150, .height = 14};
+        static constexpr RECT POWER_DIMENSION{.x = 155, .y = 0, .width = 35, .height = 14};
+        static constexpr RECT RANGE_DIMENSION{.x = 235, .y = 0, .width = 21, .height = 14};
+        static constexpr RECT STATUS_DIMENSION{.x = 261, .y = 0, .width = 20, .height = 14};
+        static constexpr RECT COST_DIMENSION{.x = 195, .y = 0, .width = 35, .height = 14};
 
         Inset nameInset;
         Inset powerInset;
@@ -638,34 +638,34 @@ namespace
             , isFinisher(isFinisher)
         {
             nameInset = {
-                .posX   = static_cast<int16_t>(nameDimension.x + baseX),
-                .posY   = static_cast<int16_t>(nameDimension.y + baseY),
-                .width  = nameDimension.width,
-                .height = nameDimension.height,
+                .posX   = static_cast<int16_t>(NAME_DIMENSION.x + baseX),
+                .posY   = static_cast<int16_t>(NAME_DIMENSION.y + baseY),
+                .width  = NAME_DIMENSION.width,
+                .height = NAME_DIMENSION.height,
             };
             powerInset = {
-                .posX   = static_cast<int16_t>(powerDimension.x + baseX),
-                .posY   = static_cast<int16_t>(powerDimension.y + baseY),
-                .width  = powerDimension.width,
-                .height = powerDimension.height,
+                .posX   = static_cast<int16_t>(POWER_DIMENSION.x + baseX),
+                .posY   = static_cast<int16_t>(POWER_DIMENSION.y + baseY),
+                .width  = POWER_DIMENSION.width,
+                .height = POWER_DIMENSION.height,
             };
             rangeInset = {
-                .posX   = static_cast<int16_t>(rangeDimension.x + baseX),
-                .posY   = static_cast<int16_t>(rangeDimension.y + baseY),
-                .width  = rangeDimension.width,
-                .height = rangeDimension.height,
+                .posX   = static_cast<int16_t>(RANGE_DIMENSION.x + baseX),
+                .posY   = static_cast<int16_t>(RANGE_DIMENSION.y + baseY),
+                .width  = RANGE_DIMENSION.width,
+                .height = RANGE_DIMENSION.height,
             };
             statusInset = {
-                .posX   = static_cast<int16_t>(statusDimension.x + baseX),
-                .posY   = static_cast<int16_t>(statusDimension.y + baseY),
-                .width  = statusDimension.width,
-                .height = statusDimension.height,
+                .posX   = static_cast<int16_t>(STATUS_DIMENSION.x + baseX),
+                .posY   = static_cast<int16_t>(STATUS_DIMENSION.y + baseY),
+                .width  = STATUS_DIMENSION.width,
+                .height = STATUS_DIMENSION.height,
             };
             costInset = {
-                .posX   = static_cast<int16_t>(costDimension.x + baseX),
-                .posY   = static_cast<int16_t>(costDimension.y + baseY),
-                .width  = costDimension.width,
-                .height = costDimension.height,
+                .posX   = static_cast<int16_t>(COST_DIMENSION.x + baseX),
+                .posY   = static_cast<int16_t>(COST_DIMENSION.y + baseY),
+                .width  = COST_DIMENSION.width,
+                .height = COST_DIMENSION.height,
             };
         }
 
@@ -697,7 +697,7 @@ namespace
                 powerString.render(order);
                 nameString.render(order);
             }
-            typeSprites[static_cast<uint8_t>(status)].render(statusInset.posX + 5, statusInset.posY + 2, 5, 0);
+            TYPE_SPRITES[static_cast<uint8_t>(status)].render(statusInset.posX + 5, statusInset.posY + 2, 5, 0);
 
             if (!isFinisher) costInset.render(order);
             statusInset.render(order);
@@ -718,7 +718,7 @@ namespace
 
         if (hasMoveEquipped(&PARTNER_ENTITY, moveId)) renderBox(posX, posY, 12, 12, 200, 0, 40, 1, 5);
         if (!canUseMove(PARTNER_ENTITY.type, moveId)) renderBox(posX, posY, 12, 12, 0x68, 0x68, 0x68, 3, 5);
-        if (hasMove(moveId)) specialSprites[index].render(posX, posY, 5, 0);
+        if (hasMove(moveId)) SPECIAL_SPRITES[index].render(posX, posY, 5, 0);
 
         renderBorderBox(posX - 1, posY - 1, 13, 13, 0x020202, 0x20202, 0x4E, 0x60, 0x6E, 5);
     }
@@ -820,19 +820,19 @@ void Private::render(int32_t depth)
         for (const auto& entry : middle)
             entry.render(depth);
         moveFinish.render(depth);
-        renderSeperatorLines(lines2, 3, depth);
+        renderSeperatorLines(LINES2, 3, depth);
     }
     if (state == 3)
     {
         for (const auto& entry : bottom)
             entry.render(depth);
         detail.render();
-        selectorSprite.render(MOVE_BOX_X + MOVE_BOX_OFFSET_X * moveSelectedColumn - 3,
-                              MOVE_BOX_Y + MOVE_BOX_OFFSET_Y * moveSelectedRow - 2,
-                              depth,
-                              0);
+        SELECTOR_SPRITE.render(MOVE_BOX_X + MOVE_BOX_OFFSET_X * moveSelectedColumn - 3,
+                               MOVE_BOX_Y + MOVE_BOX_OFFSET_Y * moveSelectedRow - 2,
+                               depth,
+                               0);
         renderMoveBoxes();
-        renderSeperatorLines(linesSeparator, 3, depth);
+        renderSeperatorLines(LINES_SEPARATOR, 3, depth);
     }
 
     // always visible
@@ -841,7 +841,7 @@ void Private::render(int32_t depth)
     move0.render(depth);
     move1.render(depth);
     move2.render(depth);
-    renderSeperatorLines(lines, 3, depth);
+    renderSeperatorLines(LINES, 3, depth);
 }
 
 void Private::tick()

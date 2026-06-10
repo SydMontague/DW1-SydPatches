@@ -340,7 +340,7 @@ extern "C"
         };
 
         // TODO shouldn't this be the Digimon type height instead of a fixed value?
-        constexpr AreaPoint points[] = {
+        constexpr AreaPoint POINTS[] = {
             {.height = 0, .modX = -1, .modY = 1},
             {.height = 0, .modX = 1, .modY = 1},
             {.height = 0, .modX = -1, .modY = -1},
@@ -351,7 +351,7 @@ extern "C"
             {.height = -200, .modX = 1, .modY = -1},
         };
 
-        for (auto point : points)
+        for (auto point : POINTS)
         {
             auto screenNew = getScreenPosition(newPos.x + radius * point.modX,
                                                newPos.y + point.height,
@@ -629,9 +629,9 @@ extern "C"
     {
         // vanilla sorts the activeList
 
-        constexpr dtl::array<int8_t, 24> yOffsets{0,  -7, -5, -5, -2, -1, 1, 2, 5, 5, 7, -4,
-                                                  -3, -2, 0,  -1, 1,  0,  2, 3, 0, 0, 0, 0};
-        constexpr dtl::array<uint8_t, 9> iconOffsets{0xE0, 0xB0, 0xC8, 0xB8, 0xC0, 0xD0, 0, 0, 0};
+        constexpr dtl::array<int8_t, 24> Y_OFFSETS{0,  -7, -5, -5, -2, -1, 1, 2, 5, 5, 7, -4,
+                                                   -3, -2, 0,  -1, 1,  0,  2, 3, 0, 0, 0, 0};
+        constexpr dtl::array<uint8_t, 9> ICON_OFFSETS{0xE0, 0xB0, 0xC8, 0xB8, 0xC0, 0xD0, 0, 0, 0};
 
         auto& textEntry = entityTextData[id];
 
@@ -646,7 +646,7 @@ extern "C"
                 auto val = textEntry.entries[textEntry.activeList[i] - 1].frameId;
                 if (val != -1 && val < 11) continue; // delay
             }
-            if (entry.frameId < 21) entry.y += yOffsets[entry.frameId];
+            if (entry.frameId < 21) entry.y += Y_OFFSETS[entry.frameId];
 
             auto posX = entry.x;
             auto posY = entry.y;
@@ -661,8 +661,8 @@ extern "C"
             }
 
             drawEntityText(entry.color, entry.numDigits, posX, posY, entry.value, 14 - i);
-            if (entry.icon != 0 && entry.icon < iconOffsets.size())
-                drawEntityTextIcon(posX - 8, posY, iconOffsets[entry.icon], 14 - i);
+            if (entry.icon != 0 && entry.icon < ICON_OFFSETS.size())
+                drawEntityTextIcon(posX - 8, posY, ICON_OFFSETS[entry.icon], 14 - i);
 
             entry.frameId += 1;
             if (entry.frameId > 30)
@@ -773,11 +773,11 @@ void renderDigiviceEntity(Entity* entity, int32_t entityId, int32_t refX)
     libgs_GsSetRefView2(&digiviceView);
     libgs_GsClearOt(0, 5, FRAMEBUFFER_OT[ACTIVE_FRAMEBUFFER]);
 
-    constexpr GsF_LIGHT light1{.x = 100, .y = 100, .z = 100, .r = 128, .g = 128, .b = 128};
-    constexpr GsF_LIGHT light2{.x = 0, .y = 0, .z = 0, .r = 128, .g = 128, .b = 128};
-    libgs_GsSetFlatLight(0, &light1);
-    libgs_GsSetFlatLight(1, &light2);
-    libgs_GsSetFlatLight(2, &light2);
+    constexpr GsF_LIGHT LIGHT1{.x = 100, .y = 100, .z = 100, .r = 128, .g = 128, .b = 128};
+    constexpr GsF_LIGHT LIGHT2{.x = 0, .y = 0, .z = 0, .r = 128, .g = 128, .b = 128};
+    libgs_GsSetFlatLight(0, &LIGHT1);
+    libgs_GsSetFlatLight(1, &LIGHT2);
+    libgs_GsSetFlatLight(2, &LIGHT2);
 
     auto data     = getRaiseData(entity->type);
     auto digiData = getDigimonData(entity->type);

@@ -4,7 +4,7 @@
 
 #include "extern/dw1.hpp"
 
-constexpr DigimonSprite digimonSprites[] = {
+constexpr DigimonSprite DIGIMON_SPRITES[] = {
     {.uvX = 0x00, .uvV = 0x00, .clut = 0x0, .tpage = 24}, // TAMER
     {.uvX = 0x40, .uvV = 0x90, .clut = 0x0, .tpage = 24}, // BOTAMON
     {.uvX = 0x60, .uvV = 0x90, .clut = 0x0, .tpage = 24}, // KOROMON
@@ -187,7 +187,7 @@ constexpr DigimonSprite digimonSprites[] = {
     {.uvX = 0x00, .uvV = 0x00, .clut = 0x0, .tpage = 0},  // NPC2_METALGREYMON
 };
 
-constexpr dtl::array<DigimonType, 180> originalType{
+constexpr dtl::array<DigimonType, 180> ORIGINAL_TYPE{
     DigimonType::TAMER,
     DigimonType::BOTAMON,
     DigimonType::KOROMON,
@@ -375,12 +375,12 @@ bool hasValidSprite(DigimonType type)
     if (type == DigimonType::INVALID) return false;
     if (type >= DigimonType::NPC2_METALGREYMON) return false;
 
-    return digimonSprites[static_cast<uint32_t>(type)].tpage != 0;
+    return DIGIMON_SPRITES[static_cast<uint32_t>(type)].tpage != 0;
 }
 
 DigimonSprite const& getDigimonSprite(DigimonType type)
 {
-    return digimonSprites[static_cast<int32_t>(type)];
+    return DIGIMON_SPRITES[static_cast<int32_t>(type)];
 }
 
 void DigimonSprite::render(int16_t posX, int16_t posY, uint8_t layer, uint8_t flag, int32_t frame) const
@@ -397,6 +397,6 @@ extern "C"
 {
     DigimonType getOriginalType(DigimonType type)
     {
-        return originalType[static_cast<int32_t>(type)];
+        return ORIGINAL_TYPE[static_cast<int32_t>(type)];
     }
 }

@@ -31,7 +31,6 @@
 
 namespace
 {
-
     struct QuickTravelData
     {
         uint32_t map;
@@ -48,7 +47,7 @@ namespace
         uint16_t trigger;
     };
 
-    constexpr dtl::array<MapLightUpdateData, 1> mapLightUpdateData = {{
+    constexpr dtl::array<MapLightUpdateData, 1> MAP_LIGHT_UPDATE_DATA = {{
         {
             .mapId   = 0xB7,
             .mode    = 1,
@@ -58,7 +57,7 @@ namespace
         },
     }};
 
-    constexpr QuickTravelData quickTravelData[] = {
+    constexpr QuickTravelData QUICK_TRAVEL_DATA[] = {
         {.map = 38, .previousMap = 88, .previousExit = 2},
         {.map = 70, .previousMap = 69, .previousExit = 2},
         {.map = 79, .previousMap = 17, .previousExit = 1},
@@ -1580,7 +1579,7 @@ extern "C"
         PREVIOUS_SCREEN = CURRENT_SCREEN;
 
         // birdra transport
-        for (auto data : quickTravelData)
+        for (auto data : QUICK_TRAVEL_DATA)
         {
             if (map == data.map)
             {
@@ -1690,7 +1689,7 @@ extern "C"
 
     void updateMapLightState()
     {
-        for (const auto data : mapLightUpdateData)
+        for (const auto data : MAP_LIGHT_UPDATE_DATA)
         {
             if (CURRENT_SCRIPT_ID != data.mapId) continue;
             if (data.trigger != 0xFFFF && isTriggerSet(data.trigger)) continue;
