@@ -8,7 +8,9 @@
 #include "PlayerChartView.hpp"
 #include "PlayerInfoView.hpp"
 #include "PlayerMedalView.hpp"
+#include "PlayerMenu.hpp"
 #include "Sound.hpp"
+#include "UIBox.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
 #include "extern/dtl/unique_ptr.hpp"
@@ -31,8 +33,10 @@ namespace
     constexpr auto TAB4_X        = TAB3_X + TAB3_WIDTH - 1;
     constexpr auto TAB_Y         = WINDOW_Y - 15;
 
-    struct PlayerMenu
+    struct Data
     {
+        // Original Player menu used createMenuBox features=0 → opaque fill.
+        UIBox box;
         MenuTab playerTab{TAB1_X, TAB_Y, TAB1_WIDTH, false, "Player"};
         MenuTab chartTab{TAB2_X, TAB_Y, TAB2_WIDTH, true, "Chart"};
         MenuTab medalTab{TAB3_X, TAB_Y, TAB3_WIDTH, true, "Medal"};
@@ -48,9 +52,9 @@ namespace
         void updateLabelColors();
     };
 
-    dtl::unique_ptr<PlayerMenu> data;
+    dtl::unique_ptr<Data> data;
 
-    void PlayerMenu::updateLabelColors()
+    void Data::updateLabelColors()
     {
         playerTab.setState(state != 0);
         chartTab.setState(state != 1);
@@ -58,7 +62,7 @@ namespace
         cardTab.setState(state != 3);
     }
 
-    void PlayerMenu::tick()
+    void Data::tick()
     {
         bool handleInput = true;
         if (state == 0) { infoView.tick(); }
@@ -101,7 +105,7 @@ namespace
         }
     }
 
-    void PlayerMenu::render()
+    void Data::render()
     {
         if (state == 0)
             infoView.render(5);
@@ -118,14 +122,15 @@ namespace
         cardTab.render(5);
     }
 
-    void tickPlayerMenu(int32_t instanceId)
+    RECT tamerStartRect()
     {
-        data->tick();
-    }
-
-    void renderPlayerMenu(int32_t instanceId)
-    {
-        data->render();
+        ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
+        return {
+            .x      = static_cast<int16_t>(pos.screenX - 5),
+            .y      = static_cast<int16_t>(pos.screenY - 5),
+            .width  = 10,
+            .height = 10,
+        };
     }
 } // namespace
 
@@ -133,14 +138,45 @@ void addPlayerMenu()
 {
     TAMER_ENTITY.isOnScreen   = false;
     PARTNER_ENTITY.isOnScreen = false;
-    data                      = dtl::make_unique<PlayerMenu>();
-    createMenuBox(1, WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, tickPlayerMenu, renderPlayerMenu);
+    data                      = dtl::make_unique<Data>();
+    data->box = UIBox({WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT},
+                      {.fill = UIBox::Fill::OPAQUE},
+                      tamerStartRect());
 }
 
 void removePlayerMenu()
 {
-    TAMER_ENTITY.isOnScreen   = true;
-    PARTNER_ENTITY.isOnScreen = true;
-    closeUIBoxIfOpen(1);
-    data.reset();
+    if (!data) return;
+    data->box.closeIfOpen();
+}
+
+bool isPlayerMenuActive()
+{
+    return static_cast<bool>(data);
+}
+
+bool isPlayerMenuOpened()
+{
+    return data && data->box.isOpen();
+}
+
+void tickPlayerMenu()
+{
+    if (!data) return;
+    data->box.tick();
+    if (data->box.isClosed())
+    {
+        TAMER_ENTITY.isOnScreen   = true;
+        PARTNER_ENTITY.isOnScreen = true;
+        data.reset();
+        return;
+    }
+    if (data->box.isOpen()) data->tick();
+}
+
+void renderPlayerMenu(int32_t layer)
+{
+    if (!data) return;
+    if (data->box.isOpen()) data->render();
+    data->box.render(layer);
 }

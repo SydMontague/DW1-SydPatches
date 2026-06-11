@@ -1,6 +1,7 @@
 #include "TechView.hpp"
 
 #include "AtlasFont.hpp"
+#include "DigimonMenu.hpp"
 #include "Entity.hpp"
 #include "Font.hpp"
 #include "Helper.hpp"
@@ -853,18 +854,21 @@ void Private::tick()
 
     if (state == 5)
     {
-        UI_BOX_DATA[1].finalPos.height += 39;
-        if (UI_BOX_DATA[1].finalPos.height > 189) state = 0;
+        auto h = digimonMenuBoxHeight() + 39;
+        setDigimonMenuBoxHeight(h);
+        if (h > 189) state = 0;
     }
     if (state == 2)
     {
-        UI_BOX_DATA[1].finalPos.height += 39;
-        if (UI_BOX_DATA[1].finalPos.height > 189) state = 3;
+        auto h = digimonMenuBoxHeight() + 39;
+        setDigimonMenuBoxHeight(h);
+        if (h > 189) state = 3;
     }
     if (state == 1 || state == 4)
     {
-        UI_BOX_DATA[1].finalPos.height -= 39;
-        if (UI_BOX_DATA[1].finalPos.height < 74) state++;
+        auto h = digimonMenuBoxHeight() - 39;
+        setDigimonMenuBoxHeight(h);
+        if (h < 74) state++;
     }
 
     if (state == 3)

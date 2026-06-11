@@ -17,6 +17,9 @@
 .area 0x800afd78-.
   .importobj "compiled/Cave1.lib"
 
+  .align 4
+  .importobj "compiled/InventoryUI.lib"
+
   .notice "Cave1 Empty space left: " + (0x800afd78-.) + " bytes"
   .fill 0x800afd78-.
 .endarea
@@ -25,6 +28,9 @@
 .area 0x800c67b4-.
   .importobj "compiled/Cave2.lib"
 
+  .align 4
+  .importobj "compiled/PlayerMenu.lib"
+
   .notice "Cave2 Empty space left: " + (0x800c67b4-.) + " bytes"
   .fill 0x800c67b4-.
 .endarea
@@ -32,6 +38,9 @@
 .org 0x800d3078
 .area 0x800e9294-.
   .importobj "compiled/Cave3.lib"
+
+  .align 4
+  .importobj "compiled/DigimonMenu.lib"
 
   .notice "Cave3 Empty space left: " + (0x800e9294-.) + " bytes"
   .fill 0x800e9294-.
@@ -48,6 +57,9 @@
 .org 0x800ec520
 .area 0x800f1ac4-.
   .importobj "compiled/Cave5.lib"
+
+  .align 4
+  .importobj "compiled/BattleEndBox.lib"
 
   .notice "Cave5 Empty space left: " + (0x800f1ac4-.) + " bytes"
   .fill 0x800f1ac4-.
@@ -94,6 +106,11 @@ NAMING_DATA:
 ; override some menu data
 .org 0x80123860
 .area 0x80124c0c-.
+  .importobj "compiled/ItemInfo.lib"
+  .importobj "compiled/ItemInfoDataB.lib"
+
+  .align 4
+  .importobj "compiled/Pause.lib"
 
   .notice "Empty space left: " + (0x80124c0c-.) + " bytes"
   .fill 0x80124c0c-.
@@ -104,6 +121,9 @@ NAMING_DATA:
 .area 0x801292d4
   .importobj "compiled/MapData.lib"
 
+  .align 4
+  .importobj "compiled/ThrownItem.lib"
+
   .notice "Empty space left: " + (0x801292d4-.) + " bytes"
   .fill 0x801292d4-.
 .endarea
@@ -111,6 +131,13 @@ NAMING_DATA:
 ; override vanilla raise data, dynamic library data
 .org 0x8012abec
 .area 0x8012bacc-.
+  .importobj "compiled/ItemInfoDataA.lib"
+
+  .align 4
+  .importobj "compiled/Timestamp.lib"
+
+  .align 4
+  .importobj "compiled/dw1.lib"
 
   .notice "Empty space left: " + (0x8012bacc-.) + " bytes"
   .fill 0x8012bacc-.
@@ -119,6 +146,7 @@ NAMING_DATA:
 ; override condition bubble data, some file paths
 .org 0x8012cb8c
 .area 0x8012ceb4-.
+  .importobj "compiled/Helper.lib"
 
   .notice "Empty space left: " + (0x8012ceb4-.) + " bytes"
   .fill 0x8012ceb4-.

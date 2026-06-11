@@ -24,6 +24,9 @@ public:
     void draw(Font* font, const char* string);
     void render(int32_t posX, int32_t posY, int32_t color, int32_t offset, bool hasShadow);
     void clear();
+
+    constexpr uint16_t getWidth() const { return uvWidth; }
+    constexpr uint16_t getHeight() const { return uvHeight; }
 };
 
 extern "C"
