@@ -20,6 +20,7 @@ extern "C"
         BATTLE_TEXT          = 422,
         ARENA_MESH           = 423,
         VS_CAMERA            = 424,
+        VS_INTRO_STATS       = 425,
         VS_INTRO_CAMERA_REEL = 426,
         VS_INTRO_NAME        = 427,
         VS_TIMER             = 428,

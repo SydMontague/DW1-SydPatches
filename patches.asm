@@ -45,3 +45,4 @@
 .include "VanillaText.asm"
 .include "Pause.asm"
 .include "Input.asm"
+.include "VS.asm"

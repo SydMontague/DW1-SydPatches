@@ -5,12 +5,12 @@
 ;  jal stopBGM
 ;.org 0x800e72d0
 ;  jal stopBGM
-.org 0x800f2438
-  jal stopBGM
-.org 0x800f2524
-  jal stopBGM
-.org 0x800f25d0
-  jal stopBGM
+;.org 0x800f2438
+;  jal stopBGM
+;.org 0x800f2524
+;  jal stopBGM
+;.org 0x800f25d0
+;  jal stopBGM
 .org 0x800f4754
   jal stopBGM
 .org 0x800f4824
@@ -50,10 +50,10 @@
 ;  jal playMusic
 ;.org 0x800e75fc
 ;  jal playMusic
-.org 0x800f244c
-  jal playMusic
-.org 0x800f2538
-  jal playMusic
+;.org 0x800f244c
+;  jal playMusic
+;.org 0x800f2538
+;  jal playMusic
 .org 0x800f4838
   jal playMusic
 .org 0x800f71a4
@@ -76,12 +76,12 @@
 
 ;.org 0x800e7400
 ;  jal stopSound
-.org 0x800f2440
-  jal stopSound
-.org 0x800f252c
-  jal stopSound
-.org 0x800f25d8
-  jal stopSound
+;.org 0x800f2440
+;  jal stopSound
+;.org 0x800f252c
+;  jal stopSound
+;.org 0x800f25d8
+;  jal stopSound
 .org 0x800f475c
   jal stopSound
 .org 0x800f482c
@@ -135,8 +135,8 @@
 ;  jal playSound
 ;.org 0x800f0fdc
 ;  jal playSound
-.org 0x800f28c4
-  jal playSound
+;.org 0x800f28c4
+;  jal playSound
 .org 0x800f36a0
   jal playSound
 .org 0x800f3704

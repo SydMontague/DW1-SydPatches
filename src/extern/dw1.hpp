@@ -1738,6 +1738,8 @@ extern "C"
     extern bool IS_TAMERLESS_BATTLE;
     extern uint8_t FLEE_TIMER;
     extern TMDModel* BUFF_MODEL;
+    extern uint8_t VS_MUSIC;
+    extern int16_t VS_INTRO_CAMERA_FRAME_COUNT;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -1777,7 +1779,6 @@ extern "C"
     bool hasMedal(Medal medal);
     void unlockMedal(Medal medal);
     uint8_t getCardAmount(uint8_t cardId);
-    int32_t main();
     uint8_t readPStat(int32_t address);
     void writePStat(int32_t address, uint8_t value);
     void clearTextSubArea(RECT* rect);

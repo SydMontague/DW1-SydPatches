@@ -66,16 +66,6 @@ namespace
         };
     }
 
-    constexpr int32_t getLimit(Stat stat)
-    {
-        switch (stat)
-        {
-            case Stat::HP:
-            case Stat::MP: return 9999;
-            default: return 999;
-        }
-    }
-
     constexpr RenderSettings BITS_SETTING1{
         .x     = static_cast<int16_t>(BOX_X + 10),
         .y     = static_cast<int16_t>(BITS_BOX_Y + 10),
@@ -195,7 +185,7 @@ namespace
             if (statsTimer == 0 && first)
             {
                 playSound(0, 22);
-                INITIAL_COMBAT_STATS[0].set(stat, min(INITIAL_COMBAT_STATS[0].get(stat) + 1, getLimit(stat)));
+                INITIAL_COMBAT_STATS[0].set(stat, min(INITIAL_COMBAT_STATS[0].get(stat) + 1, getStatLimit(stat)));
                 STATS_GAINS.set(stat, STATS_GAINS.get(stat) - 1);
                 first = false;
             }
@@ -247,7 +237,7 @@ namespace
         {
             auto yOffset = STATS_BOX_Y + 20 + i * 13;
             auto stat    = static_cast<Stat>(i);
-            rect.width   = INITIAL_COMBAT_STATS[0].get(stat) * 50 / getLimit(stat);
+            rect.width   = INITIAL_COMBAT_STATS[0].get(stat) * 50 / getStatLimit(stat);
             rect.y       = yOffset - 2;
 
             if (hasStatGain[i])

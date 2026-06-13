@@ -1,8 +1,8 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800f299c
-  jal convertValueToDigits
+;.org 0x800f299c
+;  jal convertValueToDigits
 .org 0x800f997c
   jal convertValueToDigits
 
@@ -12,8 +12,8 @@
 ;  jal renderString
 ;.org 0x800ee548
 ;  jal renderString
-.org 0x800f27d8
-  jal renderString
+;.org 0x800f27d8
+;  jal renderString
 .org 0x800f73c4
   jal renderString
 .org 0x800f73f8

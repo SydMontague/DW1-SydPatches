@@ -17,10 +17,10 @@
 ;  jal setEntityPosition
 ;.org 0x800f158c
 ;  jal setEntityPosition
-.org 0x800f1af8
-  jal setEntityPosition
-.org 0x800f1b68
-  jal setEntityPosition
+;.org 0x800f1af8
+;  jal setEntityPosition
+;.org 0x800f1b68
+;  jal setEntityPosition
 
 
 ;.org 0x800a9888
@@ -37,10 +37,10 @@
 ;  jal setEntityRotation
 ;.org 0x800f15a0
 ;  jal setEntityRotation
-.org 0x800f1b0c
-  jal setEntityRotation
-.org 0x800f1b7c
-  jal setEntityRotation
+;.org 0x800f1b0c
+;  jal setEntityRotation
+;.org 0x800f1b7c
+;  jal setEntityRotation
 
 ;.org 0x800f03d4
 ;  jal resetFlattenGlobal
@@ -268,14 +268,14 @@
 ;  jal startAnimation
 ;.org 0x800f15b8
 ;  jal startAnimation
-.org 0x800f1b1c
-  jal startAnimation
-.org 0x800f1b8c
-  jal startAnimation
-.org 0x800f1e40
-  jal startAnimation
-.org 0x800f2b74
-  jal startAnimation
+;.org 0x800f1b1c
+;  jal startAnimation
+;.org 0x800f1b8c
+;  jal startAnimation
+;.org 0x800f1e40
+;  jal startAnimation
+;.org 0x800f2b74
+;  jal startAnimation
 .org 0x800f3510
   jal startAnimation
 .org 0x800f3540

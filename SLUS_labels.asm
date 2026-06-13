@@ -38,6 +38,8 @@
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
 
+.definelabel VS_INTRO_CAMERA_FRAME_COUNT, 0x801352a4
+.definelabel VS_MUSIC, 0x80135274
 .definelabel COMBAT_DATA, 0x8013d640
 .definelabel SAVED_PREVIOUS_SCREEN, 0x80155726
 .definelabel SAVED_PLAYER_POS, 0x801555d0
@@ -385,6 +387,13 @@
 
 // MOV_REL
 .definelabel MOV_startMovie, 0x80010620
+
+// VS_REL
+.definelabel VS__setupIntroCamera, 0x8005a498
+.definelabel VS__tickFrame, 0x8005d6dc
+
+.definelabel INTRO_TARGET_POS, 0x80071744
+.definelabel VS__INTRO_DIGIMON_NAMES, 0x8006ff20
 
 // libapi
 .definelabel libapi_malloc3, 0x80090f84

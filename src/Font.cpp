@@ -150,6 +150,11 @@ extern "C"
         .getCodePoint  = getCodePointVanilla,
     };
 
+    uint16_t drawStringNew2(Font* font, const char* string, int16_t start_x, int16_t start_y)
+    {
+        return drawStringNew(font, reinterpret_cast<const uint8_t*>(string), start_x, start_y);
+    }
+
     uint16_t drawStringNew(Font* font, const uint8_t* string, int16_t start_x, int16_t start_y)
     {
         uint32_t string_width = getStringWidth(font, string);

@@ -13,4 +13,5 @@ extern "C"
 }
 
 bool isKeyDownPolled(InputButtons button);
+bool isKeyDownPolledP2(InputButtons button);
 bool isKeyPressed(InputButtons button);

@@ -202,6 +202,16 @@ constexpr uint16_t getTPage(uint32_t pixelMode, uint32_t abr, uint32_t dx, uint3
     return (pixelMode & 3) << 7 | (abr & 3) << 5 | (dy & 0x100) >> 4 | (dx & 0x3FF) >> 6 | (dy & 0x200) << 2;
 }
 
+constexpr int32_t getStatLimit(Stat stat)
+{
+    switch (stat)
+    {
+        case Stat::HP:
+        case Stat::MP: return 9999;
+        default: return 999;
+    }
+}
+
 constexpr inline void addPrim(GsOT_TAG* ptr1, GsOT_TAG* ptr2)
 {
     ptr2->p = ptr1->p;

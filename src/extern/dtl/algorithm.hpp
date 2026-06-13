@@ -59,4 +59,21 @@ namespace dtl
 
         return output;
     }
+
+    template<class T> constexpr const T& min(const T& a, const T& b)
+    {
+        return (b < a) ? b : a;
+    }
+
+    template<class T> constexpr const T& max(const T& a, const T& b)
+    {
+        return (b > a) ? b : a;
+    }
+
+    template<class T> constexpr const T& clamp(const T& val, const T& min, const T& max)
+    {
+        if (min > val) return min;
+        if (max < val) return max;
+        return val;
+    }
 } // namespace dtl

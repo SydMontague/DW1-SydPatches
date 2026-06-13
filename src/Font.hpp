@@ -61,6 +61,7 @@ extern "C"
     extern Font myFont7px;
     extern Font fixedNumbersFont;
 
+    uint16_t drawStringNew2(Font* font, const char* string, int16_t start_x, int16_t start_y);
     uint16_t drawStringNew(Font* font, const uint8_t* string, int16_t start_x, int16_t start_y);
 
     void renderStringNew(int32_t colorId,
