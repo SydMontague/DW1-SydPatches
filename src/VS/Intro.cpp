@@ -122,6 +122,7 @@ namespace
                     .color    = TEXT_COLOR_WHITE,
                     .width    = 48,
                     .height   = 12,
+                    .alignX   = AlignmentX::RIGHT,
                 };
                 Stat stat = static_cast<Stat>(i);
                 getAtlasVanilla().renderSlow(format("%d", stats.get(stat)).data(), 3, settings);
