@@ -37,7 +37,17 @@
 .definelabel initializeTextbox,         0x8010020c
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
+.definelabel VS__initializePlayerMarker,0x800f6d98
 
+.definelabel VS__DAMAGE, 0x80135280
+.definelabel VS__IS_DRAW, 0x80134f40
+.definelabel VS__ACTIVE_FINISHER_AURA_ID, 0x80134f4c
+.definelabel VS__CHARGE_MODES, 0x80134f3c
+.definelabel BATTLE_FRAME_COUNT, 0x80134d66
+.definelabel VS__STARTING_HP, 0x8013527c
+.definelabel VS__AOE_TIMER, 0x80134d80
+.definelabel VS__TIMER_ACTIVE, 0x8013528c
+.definelabel VS__DISABLE_HITTING, 0x80135290
 .definelabel VS_INTRO_CAMERA_FRAME_COUNT, 0x801352a4
 .definelabel VS_MUSIC, 0x80135274
 .definelabel COMBAT_DATA, 0x8013d640
@@ -391,6 +401,9 @@
 // VS_REL
 .definelabel VS__setupIntroCamera, 0x8005a498
 .definelabel VS__tickFrame, 0x8005d6dc
+.definelabel VS__addTimer, 0x8005b2fc
+.definelabel VS__addHPMPBar, 0x8006206c
+.definelabel VS__addCommandBar, 0x8005fb5c
 
 .definelabel INTRO_TARGET_POS, 0x80071744
 .definelabel VS__INTRO_DIGIMON_NAMES, 0x8006ff20

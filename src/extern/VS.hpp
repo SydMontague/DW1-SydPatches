@@ -9,4 +9,7 @@ extern "C"
 
     void VS__setupIntroCamera(Entity* entity, int32_t distance, int32_t spot);
     void VS__tickFrame();
+    void VS__addTimer(int32_t seconds);
+    void VS__addHPMPBar(int32_t player);
+    void VS__addCommandBar(int32_t player);
 }

@@ -156,20 +156,20 @@ namespace
         {
             playSound(0, 2);
             data->hoveredCommand[0] += 1;
-            if (FLEE_DISABLED && data->hoveredCommand[0] == BattleCommand::RUN)
-                data->hoveredCommand[0] = BattleCommand::ATTACK;
+            if (FLEE_DISABLED && data->hoveredCommand[0] == 1)
+                data->hoveredCommand[0] = 2;
             if (data->numCommands[0] - 1 < static_cast<int32_t>(data->hoveredCommand[0]))
-                data->hoveredCommand[0] = FLEE_DISABLED ? BattleCommand::ATTACK : BattleCommand::RUN;
+                data->hoveredCommand[0] = FLEE_DISABLED ? 2 : 1;
         }
 
         if (isKeyDownPolled(InputButtons::BUTTON_RIGHT))
         {
             playSound(0, 2);
             data->hoveredCommand[0] -= 1;
-            if (FLEE_DISABLED && data->hoveredCommand[0] == BattleCommand::RUN)
-                data->hoveredCommand[0] = static_cast<BattleCommand>(0);
+            if (FLEE_DISABLED && data->hoveredCommand[0] == 1)
+                data->hoveredCommand[0] = 0;
             if (static_cast<int32_t>(data->hoveredCommand[0]) < 1)
-                data->hoveredCommand[0] = static_cast<BattleCommand>(data->numCommands[0] - 1);
+                data->hoveredCommand[0] = data->numCommands[0] - 1;
         }
 
         if (isKeyDownPolled(InputButtons::BUTTON_CROSS))

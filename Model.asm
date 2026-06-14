@@ -42,11 +42,6 @@
 ;.org 0x800f1b7c
 ;  jal setEntityRotation
 
-;.org 0x800f03d4
-;  jal resetFlattenGlobal
-.org 0x800f2e94
-  jal resetFlattenGlobal
-
 ;.org 0x800c1a8c
 ;  jal getEntityModelComponent
 

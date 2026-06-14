@@ -1301,7 +1301,7 @@ extern "C"
         uint8_t queuedAnim;
         uint8_t buffsRemaining;
         uint8_t buffPrioTimer;
-        uint8_t unk16;
+        uint8_t hasCollidedWhileDistanceCmd;
         uint8_t table1[150];
         uint8_t table2[150];
     };
@@ -1366,7 +1366,7 @@ extern "C"
         int16_t commandDelay[2];
         BattleCommand currentCommand[2];
         BattleCommand buffereCommand[2];
-        BattleCommand hoveredCommand[2];
+        int8_t hoveredCommand[2];
         BattleCommand availableCommands[2][9];
         uint8_t numCommands[2];
         uint8_t finisherChargeup[2];
@@ -1740,6 +1740,16 @@ extern "C"
     extern TMDModel* BUFF_MODEL;
     extern uint8_t VS_MUSIC;
     extern int16_t VS_INTRO_CAMERA_FRAME_COUNT;
+    extern dtl::array<int16_t, 2> VS__DAMAGE;
+    extern int32_t VS__IS_DRAW;
+    extern int32_t VS__ACTIVE_FINISHER_AURA_ID;
+    extern dtl::array<uint8_t, 4> VS__CHARGE_MODES;
+    extern int16_t BATTLE_FRAME_COUNT;
+    extern dtl::array<int16_t, 2> VS__STARTING_HP;
+    extern dtl::array<int32_t,2> VS__AOE_TIMER;
+    extern int32_t VS__P2_AOE_TIMER;
+    extern int32_t VS__TIMER_ACTIVE;
+    extern int32_t VS__DISABLE_HITTING;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -1759,6 +1769,7 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void VS__initializePlayerMarker();
     void tickScript();
     void setDigimonRaised(DigimonType type);
     uint8_t* getScript(uint32_t scriptId);
