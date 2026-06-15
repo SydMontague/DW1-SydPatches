@@ -71,8 +71,14 @@ constexpr dtl::array<uint8_t, size> format(const char* format, Args... args)
  */
 constexpr bool isWithinTimeframe(int32_t currentTime, int32_t start, int32_t end)
 {
-    if (start < end) { return currentTime >= start && currentTime < end; }
-    else { return !(currentTime >= end && currentTime < start); }
+    if (start < end)
+    {
+        return currentTime >= start && currentTime < end;
+    }
+    else
+    {
+        return !(currentTime >= end && currentTime < start);
+    }
 }
 
 /*

@@ -3,7 +3,7 @@
 #include "extern/libgte.hpp"
 #include "extern/stddef.hpp"
 
-struct _CoordinateType
+struct CoordinateType
 {
     int16_t screenX;
     int16_t screenY;
@@ -11,9 +11,9 @@ struct _CoordinateType
 };
 
 // represents screen coordinates, relative to the center of the visible screen
-using ScreenPos = _CoordinateType;
+using ScreenPos = CoordinateType;
 // represents map coordinates, relative to the center of the map background
-using MapPos = _CoordinateType;
+using MapPos = CoordinateType;
 
 extern "C"
 {
@@ -126,8 +126,10 @@ extern "C"
     void getRotationDifference(PositionData* pos, Vector* target, int16_t* outAngle, int16_t* ccDiff, int16_t* cwDiff);
     bool rotateEntity(SVector* rotVector, int16_t targetAngle, int16_t ccDiff, int16_t cwDiff, int16_t speed);
     void addWithLimit(int16_t* valuePtr, int16_t value, int32_t limit);
-    [[deprecated("getMapPosition")]] int32_t worldPosToScreenPos(SVector* worldPos, Position* screenPos);
-    [[deprecated("getScreenPosition")]] void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos);
+    [[deprecated("getMapPosition")]]
+    int32_t worldPosToScreenPos(SVector* worldPos, Position* screenPos);
+    [[deprecated("getScreenPosition")]]
+    void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos);
 }
 
 /*

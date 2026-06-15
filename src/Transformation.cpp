@@ -4,14 +4,14 @@
 
 extern "C"
 {
-    constexpr RECT rect1{.x = 0, .y = 480, .width = 256, .height = 7};
-    constexpr RECT rect2{.x = 272, .y = 480, .width = 16, .height = 1};
-    constexpr RECT rect3{.x = 96, .y = 501, .width = 16, .height = 1};
-    constexpr RECT rect4{.x = 224, .y = 488, .width = 16, .height = 24};
+    constexpr RECT RECT1{.x = 0, .y = 480, .width = 256, .height = 7};
+    constexpr RECT RECT2{.x = 272, .y = 480, .width = 16, .height = 1};
+    constexpr RECT RECT3{.x = 96, .y = 501, .width = 16, .height = 1};
+    constexpr RECT RECT4{.x = 224, .y = 488, .width = 16, .height = 24};
 
     void downloadCLUT1(uint32_t* target)
     {
-        libgpu_StoreImage(&rect1, target);
+        libgpu_StoreImage(&RECT1, target);
         libgpu_DrawSync(0);
     }
 
@@ -40,14 +40,14 @@ extern "C"
             bla[i].blue  = (entry.blue * factor) / 255;
         }
 
-        libgpu_LoadImage(&rect1, reinterpret_cast<uint32_t*>(bla.data()));
+        libgpu_LoadImage(&RECT1, reinterpret_cast<uint32_t*>(bla.data()));
     }
 
     void downloadCLUT2(uint32_t* target)
     {
-        libgpu_StoreImage(&rect2, target);
-        libgpu_StoreImage(&rect3, target + 8);
-        libgpu_StoreImage(&rect4, target + 16);
+        libgpu_StoreImage(&RECT2, target);
+        libgpu_StoreImage(&RECT3, target + 8);
+        libgpu_StoreImage(&RECT4, target + 16);
         libgpu_DrawSync(0);
     }
 
@@ -65,8 +65,8 @@ extern "C"
             bla[i].blue  = (entry.blue * factor) / 255;
         }
 
-        libgpu_LoadImage(&rect2, reinterpret_cast<uint32_t*>(bla.data()));
-        libgpu_LoadImage(&rect2, reinterpret_cast<uint32_t*>(bla.data() + 16));
-        libgpu_LoadImage(&rect2, reinterpret_cast<uint32_t*>(bla.data() + 32));
+        libgpu_LoadImage(&RECT2, reinterpret_cast<uint32_t*>(bla.data()));
+        libgpu_LoadImage(&RECT2, reinterpret_cast<uint32_t*>(bla.data() + 16));
+        libgpu_LoadImage(&RECT2, reinterpret_cast<uint32_t*>(bla.data() + 32));
     }
 }

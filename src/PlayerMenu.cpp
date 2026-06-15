@@ -61,7 +61,10 @@ namespace
     void PlayerMenu::tick()
     {
         bool handleInput = true;
-        if (state == 0) { infoView.tick(); }
+        if (state == 0)
+        {
+            infoView.tick();
+        }
         else if (state == 1)
         {
             handleInput = chartView.canBeClosed();

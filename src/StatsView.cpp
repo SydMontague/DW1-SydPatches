@@ -18,6 +18,8 @@
 
 namespace
 {
+    // hack to access C array like C++ array without polluting the global namespace
+    // NOLINTNEXTLINE(readability-identifier-naming)
     namespace SpriteIndex
     {
         enum SpriteIndex
@@ -53,7 +55,7 @@ namespace
     constexpr int32_t CONDITION_OFFSET_Y     = toRelativeY(108);
     constexpr uint16_t CONDITION_OFFSETS[16] = {14, 15, 16, 17, 18, 19, 20, 21, 21, 20, 19, 18, 17, 16, 15, 14};
 
-    constexpr Line lines[] = {
+    constexpr Line LINES[] = {
         {.x1 = 18, .y1 = -15, .x2 = 18, .y2 = 98, .clut = 0},
         {.x1 = 19, .y1 = -16, .x2 = 19, .y2 = 98, .clut = 1},
         {.x1 = 20, .y1 = -15, .x2 = 20, .y2 = 98, .clut = 0},
@@ -62,7 +64,7 @@ namespace
         {.x1 = -146, .y1 = -16, .x2 = 146, .y2 = -16, .clut = 0},
     };
 
-    constexpr Inset insets[] = {
+    constexpr Inset INSETS[] = {
         //{PROFILE_OFFSET_X + 190, PROFILE_OFFSET_Y + 14, 86, 14}, // Active/Type
         //{PROFILE_OFFSET_X + 190, PROFILE_OFFSET_Y + 30, 86, 14}, // Special
 
@@ -734,10 +736,10 @@ void DigimonStatsView::render(int32_t depth)
     // clang-format on
 
     // profile insets
-    for (auto& inset : insets)
+    for (auto& inset : INSETS)
         inset.render(depth);
 
-    renderSeperatorLines(lines, 6, depth);
+    renderSeperatorLines(LINES, 6, depth);
 
     renderDigiviceEntity(&PARTNER_ENTITY, 1, -350);
 }

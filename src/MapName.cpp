@@ -8,7 +8,7 @@
 
 namespace
 {
-    constexpr RenderSettings settings{
+    constexpr RenderSettings SETTINGS{
         .x      = -SCREEN_WIDTH / 2,
         .y      = -SCREEN_HEIGHT / 2,
         .width  = SCREEN_WIDTH,
@@ -19,7 +19,7 @@ namespace
 
     void renderMapName(int32_t mapId)
     {
-        getAtlasVanilla().renderSlow(MAP_NAME_PTR[MAP_ENTRIES[mapId].loadingName], 0, settings);
+        getAtlasVanilla().renderSlow(MAP_NAME_PTR[MAP_ENTRIES[mapId].loadingName], 0, SETTINGS);
     }
 } // namespace
 

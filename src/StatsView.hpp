@@ -5,8 +5,8 @@
 
 struct DigimonStatsView
 {
-    // NOLINTNEXTLINE
-    __attribute__((optimize("Os"))) DigimonStatsView();
+    [[gnu::optimize("Os")]]
+    DigimonStatsView();
     void tick();
     void render(int32_t depth);
 

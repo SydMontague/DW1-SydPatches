@@ -63,14 +63,14 @@ namespace
 
     int32_t combatIdleTimer;
 
-    constexpr uint8_t findItemStr[]       = "Woah!";
-    constexpr uint8_t emptyChestStr[]     = "Hey! It's empty!";
-    constexpr uint8_t inventoryFullStr[]  = "But I can't hold any more!";
-    constexpr uint8_t tamerLevelUpStr[]   = "Tamer level went up!!!";
-    constexpr uint8_t tamerLevelDownStr[] = "Tamer level went down!!!";
-    constexpr uint8_t medalLine1[]        = "Congratulations!";
-    constexpr uint8_t medalLine2[]        = "To recognize your great";
-    constexpr uint8_t medalLine3[]        = "records, we sent you a medal!";
+    constexpr uint8_t FIND_ITEM_STR[]        = "Woah!";
+    constexpr uint8_t EMPTY_CHEST_STR[]      = "Hey! It's empty!";
+    constexpr uint8_t INVENTORY_FULL_STR[]   = "But I can't hold any more!";
+    constexpr uint8_t TAMER_LEVEL_UP_STR[]   = "Tamer level went up!!!";
+    constexpr uint8_t TAMER_LEVEL_DOWN_STR[] = "Tamer level went down!!!";
+    constexpr uint8_t MEDAL_LINE1[]          = "Congratulations!";
+    constexpr uint8_t MEDAL_LINE2[]          = "To recognize your great";
+    constexpr uint8_t MEDAL_LINE3[]          = "records, we sent you a medal!";
 
     uint8_t takeItemFrameCount;
     bool isStandingOnDrop;
@@ -231,7 +231,10 @@ namespace
 
         if (COMBAT_DATA_PTR->player.currentCommand[0] != BattleCommand::RUN)
         {
-            if (!IS_TAMERLESS_BATTLE && isKeyDownPolled(InputButtons::BUTTON_TRIANGLE)) { addInventoryUI(); }
+            if (!IS_TAMERLESS_BATTLE && isKeyDownPolled(InputButtons::BUTTON_TRIANGLE))
+            {
+                addInventoryUI();
+            }
             entityLookAtLocation(entity, &PARTNER_ENTITY.posData->location);
 
             if (UI_BOX_DATA[0].state == 0)
@@ -263,8 +266,8 @@ namespace
     }
 
     // this function blows up in size otherwise
-    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-    __attribute__((optimize("Os"))) uint8_t checkChestCollision()
+    [[gnu::optimize("Os")]]
+    uint8_t checkChestCollision()
     {
         int16_t tileX;
         int16_t tileY;
@@ -304,8 +307,8 @@ namespace
     }
 
     // this function blows up in size otherwise
-    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-    __attribute__((optimize("Os"))) void checkItemPickup()
+    [[gnu::optimize("Os")]]
+    void checkItemPickup()
     {
         int16_t tileX;
         int16_t tileY;
@@ -348,7 +351,10 @@ namespace
             startAnimation(&TAMER_ENTITY, 10);
             Tamer_setSubState(1);
         }
-        else if (Tamer_getSubState() == 1) { entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location); }
+        else if (Tamer_getSubState() == 1)
+        {
+            entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
+        }
     }
 
     void Tamer_tickPraise()
@@ -401,7 +407,10 @@ namespace
         }
         else if (Tamer_getSubState() == 1)
         {
-            if (FADE_DATA.fadeOutCurrent == 10) { addMapNameObject(TARGET_MAP); }
+            if (FADE_DATA.fadeOutCurrent == 10)
+            {
+                addMapNameObject(TARGET_MAP);
+            }
 
             if (FADE_DATA.fadeOutCurrent >= 20)
             {
@@ -441,10 +450,13 @@ namespace
             clearTextSubArea(&textArea);
 
             drawStringNew(&vanillaFont, getDigimonData(DigimonType::TAMER)->name, 704 + 0, 256 + 12);
-            if (chest.isTaken) { drawStringNew(&vanillaFont, emptyChestStr, 704 + 0, 256 + 24); }
+            if (chest.isTaken)
+            {
+                drawStringNew(&vanillaFont, EMPTY_CHEST_STR, 704 + 0, 256 + 24);
+            }
             else
             {
-                auto offset = drawStringNew(&vanillaFont, findItemStr, 704 + 0, 256 + 24) / 4;
+                auto offset = drawStringNew(&vanillaFont, FIND_ITEM_STR, 704 + 0, 256 + 24) / 4;
                 setTextColor(5);
                 drawStringNew(&vanillaFont, getItem(itemType)->name, 704 + offset + 1, 256 + 24);
                 setTextColor(1);
@@ -459,10 +471,10 @@ namespace
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT target   = {.x = -130, .y = 42, .width = 262, .height = 59};
             RECT source   = {
-                  .x      = static_cast<int16_t>(pos.screenX - 5),
-                  .y      = static_cast<int16_t>(pos.screenY - 5),
-                  .width  = 10,
-                  .height = 10,
+                .x      = static_cast<int16_t>(pos.screenX - 5),
+                .y      = static_cast<int16_t>(pos.screenY - 5),
+                .width  = 10,
+                .height = 10,
             };
 
             createAnimatedUIBox(1, 0, 2, &target, &source, nullptr, renderItemPickupTextbox);
@@ -480,7 +492,7 @@ namespace
             takeItemFrameCount = 0;
             if (!giveItem(itemType, 1))
             {
-                drawStringNew(&vanillaFont, inventoryFullStr, 704 + 0, 256 + 24);
+                drawStringNew(&vanillaFont, INVENTORY_FULL_STR, 704 + 0, 256 + 24);
                 Tamer_setSubState(3);
             }
             else
@@ -506,10 +518,10 @@ namespace
         {
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT target   = {
-                  .x      = static_cast<int16_t>(pos.screenX - 5),
-                  .y      = static_cast<int16_t>(pos.screenY - 5),
-                  .width  = 10,
-                  .height = 10,
+                .x      = static_cast<int16_t>(pos.screenX - 5),
+                .y      = static_cast<int16_t>(pos.screenY - 5),
+                .width  = 10,
+                .height = 10,
             };
 
             removeAnimatedUIBox(1, &target);
@@ -535,7 +547,7 @@ namespace
             unsetCameraFollowPlayer();
             clearTextSubArea(&textArea);
             drawStringNew(&vanillaFont, getDigimonData(DigimonType::TAMER)->name, 704 + 0, 256 + 12);
-            auto offset = drawStringNew(&vanillaFont, findItemStr, 704 + 0, 256 + 24) / 4;
+            auto offset = drawStringNew(&vanillaFont, FIND_ITEM_STR, 704 + 0, 256 + 24) / 4;
             setTextColor(5);
             auto nameOffset = drawStringNew(&vanillaFont, getItem(itemType)->name, 704 + offset + 1, 256 + 24) / 4;
             const uint8_t pickupAmount = getDroppedItemAmount(pickedDropId);
@@ -558,10 +570,10 @@ namespace
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT target   = {.x = -130, .y = 42, .width = 262, .height = 59};
             RECT source   = {
-                  .x      = static_cast<int16_t>(pos.screenX - 5),
-                  .y      = static_cast<int16_t>(pos.screenY - 5),
-                  .width  = 10,
-                  .height = 10,
+                .x      = static_cast<int16_t>(pos.screenX - 5),
+                .y      = static_cast<int16_t>(pos.screenY - 5),
+                .width  = 10,
+                .height = 10,
             };
             // vanilla writes TAKE_CHEST_ITEM here, but it's never used so skip that
 
@@ -582,7 +594,7 @@ namespace
             {
                 clearTextSubArea(&textArea);
                 drawStringNew(&vanillaFont, getDigimonData(DigimonType::TAMER)->name, 704 + 0, 256 + 12);
-                drawStringNew(&vanillaFont, inventoryFullStr, 704 + 0, 256 + 24);
+                drawStringNew(&vanillaFont, INVENTORY_FULL_STR, 704 + 0, 256 + 24);
                 takeItemFrameCount = 0;
                 Tamer_setSubState(3);
             }
@@ -607,10 +619,10 @@ namespace
         {
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT target   = {
-                  .x      = static_cast<int16_t>(pos.screenX - 5),
-                  .y      = static_cast<int16_t>(pos.screenY - 5),
-                  .width  = 10,
-                  .height = 10,
+                .x      = static_cast<int16_t>(pos.screenX - 5),
+                .y      = static_cast<int16_t>(pos.screenY - 5),
+                .width  = 10,
+                .height = 10,
             };
 
             removeAnimatedUIBox(1, &target);
@@ -639,9 +651,9 @@ namespace
                 clearTextArea();
                 setTextColor(7);
                 // vanilla draws these strings in multiple frames/states
-                drawStringNew(&vanillaFont, medalLine1, 704, 256 + 120);
-                drawStringNew(&vanillaFont, medalLine2, 704, 256 + 132);
-                drawStringNew(&vanillaFont, medalLine3, 704, 256 + 144);
+                drawStringNew(&vanillaFont, MEDAL_LINE1, 704, 256 + 120);
+                drawStringNew(&vanillaFont, MEDAL_LINE2, 704, 256 + 132);
+                drawStringNew(&vanillaFont, MEDAL_LINE3, 704, 256 + 144);
             }
             else if (hasLevelsAwardPending)
             {
@@ -649,12 +661,12 @@ namespace
                 if (levelsAwarded > 0)
                 {
                     setTextColor(7);
-                    drawStringNew(&vanillaFont, tamerLevelUpStr, 704, 256 + 120);
+                    drawStringNew(&vanillaFont, TAMER_LEVEL_UP_STR, 704, 256 + 120);
                 }
                 else
                 {
                     setTextColor(3);
-                    drawStringNew(&vanillaFont, tamerLevelDownStr, 704, 256 + 120);
+                    drawStringNew(&vanillaFont, TAMER_LEVEL_DOWN_STR, 704, 256 + 120);
                 }
             }
 
@@ -668,10 +680,10 @@ namespace
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT target   = {.x = -130, .y = 42, .width = 262, .height = 59};
             RECT source   = {
-                  .x      = static_cast<int16_t>(pos.screenX - 5),
-                  .y      = static_cast<int16_t>(pos.screenY - 5),
-                  .width  = 10,
-                  .height = 10,
+                .x      = static_cast<int16_t>(pos.screenX - 5),
+                .y      = static_cast<int16_t>(pos.screenY - 5),
+                .width  = 10,
+                .height = 10,
             };
             // vanilla writes TAKE_CHEST_ITEM here, but it's never used so skip that
 
@@ -684,10 +696,10 @@ namespace
 
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT target   = {
-                  .x      = static_cast<int16_t>(pos.screenX - 5),
-                  .y      = static_cast<int16_t>(pos.screenY - 5),
-                  .width  = 10,
-                  .height = 10,
+                .x      = static_cast<int16_t>(pos.screenX - 5),
+                .y      = static_cast<int16_t>(pos.screenY - 5),
+                .width  = 10,
+                .height = 10,
             };
 
             removeAnimatedUIBox(1, &target);
@@ -714,10 +726,10 @@ namespace
 
     inline bool hasAllDigimonRaised()
     {
-        constexpr auto begin = static_cast<uint32_t>(DigimonType::BOTAMON);
-        constexpr auto end   = static_cast<uint32_t>(DigimonType::WEREGARURUMON);
+        constexpr auto BEGIN = static_cast<uint32_t>(DigimonType::BOTAMON);
+        constexpr auto END   = static_cast<uint32_t>(DigimonType::WEREGARURUMON);
 
-        for (auto i = begin; i < end; i++)
+        for (auto i = BEGIN; i < END; i++)
             if (!hasDigimonRaised(static_cast<DigimonType>(i))) return false;
 
         return true;
@@ -850,8 +862,14 @@ namespace
 
         if (tileX != TAMER_PREVIOUS_TILE_X || tileZ != TAMER_PREVIOUS_TILE_Y)
         {
-            if (!isLinearPathBlocked(tileX, tileZ, TAMER_START_TILE_X, TAMER_START_TILE_Y)) { clearTamerWaypoints(); }
-            else if (TAMER_WAYPOINT_COUNT == 0) { addTamerWaypoint(0, TAMER_PREVIOUS_TILE_X, TAMER_PREVIOUS_TILE_Y); }
+            if (!isLinearPathBlocked(tileX, tileZ, TAMER_START_TILE_X, TAMER_START_TILE_Y))
+            {
+                clearTamerWaypoints();
+            }
+            else if (TAMER_WAYPOINT_COUNT == 0)
+            {
+                addTamerWaypoint(0, TAMER_PREVIOUS_TILE_X, TAMER_PREVIOUS_TILE_Y);
+            }
             else
             {
                 auto id = (TAMER_WAYPOINT_CURRENT + TAMER_WAYPOINT_COUNT - 1) % 30;
@@ -904,7 +922,10 @@ namespace
         // potential useless/unused state, log to see if it gets used
         printf("Debug: tickOpening called.");
 
-        if (Tamer_getSubState() == 0) { Tamer_setSubState(1); }
+        if (Tamer_getSubState() == 0)
+        {
+            Tamer_setSubState(1);
+        }
         else if (Tamer_getSubState() == 1)
         {
             setMapLayerEnabled(1);
@@ -1107,7 +1128,10 @@ extern "C"
         // vanilla checks for CHANGED_INPUT instead of isKeyDown, but this allows buffering input
         auto collision = entityCheckCollision(&PARTNER_ENTITY, &TAMER_ENTITY, 0, 0);
 
-        if (collision == CollisionCode::MAP) { collisionGrace(nullptr, &TAMER_ENTITY, 0, 0); }
+        if (collision == CollisionCode::MAP)
+        {
+            collisionGrace(nullptr, &TAMER_ENTITY, 0, 0);
+        }
         else if (collision >= CollisionCode::NPC1 && collision <= CollisionCode::NPC8)
         {
             TAMER_ENTITY.animFlag |= 2;

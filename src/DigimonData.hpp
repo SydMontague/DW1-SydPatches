@@ -5,7 +5,7 @@
 
 constexpr uint16_t DIGIMON_SPRITE_CLUTS[] = {0x7A07, 0x7A47, 0x7A87, 0x7AC7, 0x7B07, 0x7B47, 0x7B87};
 
-constexpr dtl::array<uint8_t, 67> itemTakeDistance = {
+constexpr dtl::array<uint8_t, 67> ITEM_TAKE_DISTANCE = {
     10, 10, 10, 10, 10, 15, 10, 10, 15, 10, 15, 10, 15, 10, 10, 10, 10, 10, 10, 15, 10, 10, 15,
     10, 15, 10, 25, 10, 10, 10, 10, 10, 10, 10, 10, 15, 15, 10, 10, 10, 10, 10, 10, 10, 10, 10,
     10, 10, 10, 10, 10, 15, 10, 10, 10, 10, 10, 10, 10, 10, 15, 15, 10, 10, 10, 10, 10,
@@ -13,7 +13,7 @@ constexpr dtl::array<uint8_t, 67> itemTakeDistance = {
 
 constexpr uint8_t getItemTakeDistance(DigimonType type)
 {
-    return itemTakeDistance[static_cast<uint32_t>(type)];
+    return ITEM_TAKE_DISTANCE[static_cast<uint32_t>(type)];
 }
 
 struct DigimonSprite

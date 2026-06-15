@@ -7,7 +7,7 @@ namespace
 {
     int32_t buffModelFrame;
 
-    constexpr dtl::array<int16_t, 2> buffModelValue{31436, 31500};
+    constexpr dtl::array<int16_t, 2> BUFF_MODEL_VALUE{31436, 31500};
 
     void morphBuffModel(TMDModel* model, int32_t node, int16_t value)
     {
@@ -36,7 +36,7 @@ namespace
 
     void tickBuffModelObject(int32_t instanceId)
     {
-        morphBuffModel(BUFF_MODEL, 5, buffModelValue[buffModelFrame % 2]);
+        morphBuffModel(BUFF_MODEL, 5, BUFF_MODEL_VALUE[buffModelFrame % 2]);
         buffModelFrame++;
     }
 } // namespace

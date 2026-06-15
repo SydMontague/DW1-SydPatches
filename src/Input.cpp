@@ -18,7 +18,7 @@ namespace
         }
 
         const uint16_t cnt = INPUT_REPEAT_COUNTER;
-        uint32_t      fire = 0;
+        uint32_t fire      = 0;
         if (cnt == REPEAT_WRAP)
         {
             INPUT_REPEAT_COUNTER = REPEAT_FIRST_FIRE;
@@ -31,7 +31,7 @@ namespace
         INPUT_REPEAT_COUNTER = static_cast<uint16_t>(INPUT_REPEAT_COUNTER + 1);
         return fire;
     }
-}
+} // namespace
 
 bool isKeyDownPolled(InputButtons button)
 {
@@ -73,9 +73,8 @@ extern "C"
         const uint32_t held = polled & INPUT_REPEAT_MASK;
         if (held == 0) INPUT_REPEAT_COUNTER = 0;
 
-        const uint32_t fire = (INPUT_REPEAT_MASK != 0)
-            ? tickAutoRepeat(held, POLLED_INPUT_PREVIOUS & INPUT_REPEAT_MASK)
-            : 0u;
+        const uint32_t fire =
+            (INPUT_REPEAT_MASK != 0) ? tickAutoRepeat(held, POLLED_INPUT_PREVIOUS & INPUT_REPEAT_MASK) : 0u;
 
         const uint32_t result = fire | (polled & INPUT_FRESH_MASK);
         INPUT_PENDING_MASK    = result;

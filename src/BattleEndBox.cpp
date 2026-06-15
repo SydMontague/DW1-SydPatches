@@ -20,7 +20,7 @@
 namespace
 {
     constexpr dtl::array<const char*, 6> STATS_LABELS{"HP", "MP", "Off", "Def", "Speed", "Brain"};
-    constexpr auto bitsString                = "Bits";
+    constexpr auto BITS_STRING               = "Bits";
     constexpr auto BOX_X                     = -88;
     constexpr auto BITS_BOX_Y                = 18;
     constexpr auto STATS_BOX_Y               = -78;
@@ -30,14 +30,14 @@ namespace
     constexpr int16_t BOTTOM_BOX_HEIGHT_BASE = 31;
     constexpr int16_t BOTTOM_BOX_HEIGHT_FULL = 66;
 
-    constexpr RECT finalPos{
+    constexpr RECT FINAL_POS{
         .x      = BOX_X,
         .y      = STATS_BOX_Y,
         .width  = BOX_WIDTH,
         .height = STATS_BOX_HEIGHT,
     };
 
-    constexpr RECT balanceFinalPos{
+    constexpr RECT BALANCE_FINAL_POS{
         .x      = BOX_X,
         .y      = BALANCE_BOX_Y,
         .width  = BOX_WIDTH,
@@ -78,9 +78,9 @@ namespace
 
     struct Data
     {
-        UIBox statsBox{finalPos, {}, true, getStartPos()};
+        UIBox statsBox{FINAL_POS, {}, true, getStartPos()};
         UIBox bitsBox{getBitBoxRect(), {}, true, getStartPos()};
-        UIBox finalBitsBox{balanceFinalPos, {0x2D, 0x38, 0x40}, false, getStartPos()};
+        UIBox finalBitsBox{BALANCE_FINAL_POS, {0x2D, 0x38, 0x40}, false, getStartPos()};
         int32_t bitsToGain{};
         int16_t statsTimer{};
 
@@ -96,12 +96,12 @@ namespace
 
         void renderBitBox(int32_t depth);
         void renderFinalBalance(int32_t depth);
-        // NOLINTNEXTLINE
-        __attribute__((optimize("Os"))) void renderPostBattleStatsBox(int32_t depth);
+        [[gnu::optimize("Os")]]
+        void renderPostBattleStatsBox(int32_t depth);
 
         dtl::array<AtlasString, 6> statLabels{};
-        AtlasString bitString1{getAtlasVanilla().render(bitsString, BITS_SETTING1)};
-        AtlasString bitString2{getAtlasVanilla().render(bitsString, BITS_SETTING2)};
+        AtlasString bitString1{getAtlasVanilla().render(BITS_STRING, BITS_SETTING1)};
+        AtlasString bitString2{getAtlasVanilla().render(BITS_STRING, BITS_SETTING2)};
         dtl::array<bool, 6> hasStatGain{};
         bool skipBitCounting{false};
     };
@@ -304,8 +304,8 @@ namespace
         for (int32_t i = 0; i < STATS_LABELS.size(); i++)
         {
             const RenderSettings settings{
-                .x     = static_cast<int16_t>(finalPos.x + 10),
-                .y     = static_cast<int16_t>(finalPos.y + 9 + (i * 13)),
+                .x     = static_cast<int16_t>(FINAL_POS.x + 10),
+                .y     = static_cast<int16_t>(FINAL_POS.y + 9 + (i * 13)),
                 .color = TEXT_COLOR_YELLOW,
             };
             statLabels[i] = getAtlasVanilla().render(STATS_LABELS[i], settings);

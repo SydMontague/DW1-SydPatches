@@ -121,7 +121,11 @@ namespace
                     int16_t targetAngle;
                     int16_t ccDiff;
                     int16_t cwDiff;
-                    getRotationDifference(entity->posData, &otherEntity->posData->location, &targetAngle, &ccDiff, &cwDiff);
+                    getRotationDifference(entity->posData,
+                                          &otherEntity->posData->location,
+                                          &targetAngle,
+                                          &ccDiff,
+                                          &cwDiff);
                     rotateEntity(&entity->posData->rotation, targetAngle, ccDiff, cwDiff, ROTATION_SPEED);
                 }
             }
@@ -305,7 +309,9 @@ namespace
         if (entity == nullptr) return;
         if (IS_IN_MENU == 1) return;
 
-        if (NPC_ACTIVE_ANIM[instanceId - 2] != 0) {}
+        if (NPC_ACTIVE_ANIM[instanceId - 2] != 0)
+        {
+        }
         else if (mapDigimon->stopAnim)
         {
             if (mapDigimon->animation != 0)

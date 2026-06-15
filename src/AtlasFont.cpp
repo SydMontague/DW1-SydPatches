@@ -277,9 +277,9 @@ AtlasString AtlasFont::render(const uint8_t* string, const RenderSettings& setti
 
     for (int32_t i = 0; i < size; i++)
     {
-        auto index = font->getGlyphIndex(*itr++); 
+        auto index        = font->getGlyphIndex(*itr++);
         const auto& glyph = glyphs[index];
-        data[i]    = getSPRT(glyph.rect, pos.x + totalWidth, pos.y, settings.color, settings.baseClut);
+        data[i]           = getSPRT(glyph.rect, pos.x + totalWidth, pos.y, settings.color, settings.baseClut);
         totalWidth += glyph.width;
     }
     return AtlasString(dtl::move(data), tpage, totalWidth, font->height);
@@ -341,7 +341,7 @@ void AtlasString::setPosition(int32_t x, int32_t y)
 
 void AtlasString::render(int32_t depth) const
 {
-    if(data.size() == 0) return;
+    if (data.size() == 0) return;
 
     auto* sprites = reinterpret_cast<SPRT*>(libgs_GsGetWorkBase());
     dtl::copy(data.begin(), data.end(), sprites);

@@ -95,7 +95,7 @@ namespace
         .alignY   = AlignmentY::CENTER,
     };
 
-    constexpr Sprite selector = {
+    constexpr Sprite SELECTOR = {
         .uvX          = 0,
         .uvV          = 0xE8,
         .width        = 24,
@@ -113,7 +113,7 @@ namespace
     {
         dtl::array<AtlasString, 5> array;
         int32_t i = 0;
-        for(const auto& label : LABELS)
+        for (const auto& label : LABELS)
             array[i++] = getAtlasVanilla().render(LABELS[i].first, LABELS[i].second);
         return array;
     }
@@ -123,8 +123,8 @@ struct CardView::Private
 {
 public:
     void tick();
-    // NOLINTNEXTLINE
-    __attribute__((optimize("Os"))) void render(int32_t depth);
+    [[gnu::optimize("Os")]]
+    void render(int32_t depth);
     bool canBeClosed();
 
 private:
@@ -187,7 +187,7 @@ void CardView::Private::tick()
             playSound(0, 3);
             state = 2;
             loadCardImage(newCard);
-            cardCount = getAtlasVanilla().render(format("%d", getCardAmount(newCard)).data(), CARD_COUNT_SETTINGS);
+            cardCount  = getAtlasVanilla().render(format("%d", getCardAmount(newCard)).data(), CARD_COUNT_SETTINGS);
             RECT start = {
                 .x      = static_cast<int16_t>(selectedCardCol * 24 + CARD_BASE_X + 9),
                 .y      = static_cast<int16_t>(selectedCardRow * 24 + CARD_BASE_Y + 8),
@@ -212,9 +212,9 @@ void CardView::Private::tick()
 
 void CardView::Private::renderCard(int32_t depth)
 {
-    constexpr auto clut  = getClut(0x1C0, 0x1FF);
-    constexpr auto tpage = getTPage(1, 2, 0x240, 0x100);
-    renderRectPolyFT4(-75, -84, 150, 180, 0, 0, tpage, clut, depth, 0);
+    constexpr auto CLUT  = getClut(0x1C0, 0x1FF);
+    constexpr auto TPAGE = getTPage(1, 2, 0x240, 0x100);
+    renderRectPolyFT4(-75, -84, 150, 180, 0, 0, TPAGE, CLUT, depth, 0);
 }
 
 void CardView::Private::renderCardCount(int32_t depth)
@@ -230,7 +230,7 @@ void CardView::Private::render(int32_t depth)
     cardImageBox.render(depth - 1);
 
     if (state != 0)
-        selector.render(CARD_BASE_X + selectedCardCol * CARD_OFFSET_X - 4,
+        SELECTOR.render(CARD_BASE_X + selectedCardCol * CARD_OFFSET_X - 4,
                         CARD_BASE_Y + selectedCardRow * CARD_OFFSET_Y - 2,
                         depth,
                         0);

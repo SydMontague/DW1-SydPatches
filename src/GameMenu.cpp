@@ -330,13 +330,18 @@ extern "C"
             auto digit     = val - '0';
             uint8_t uCoord = 121;
             uint8_t vCoord = 52;
-            if (digit == 0) {}
+            if (digit == 0)
+            {
+            }
             else if (digit < 5)
             {
                 vCoord = 40;
                 uCoord = (digit - 1) * 8 + 97;
             }
-            else { uCoord = (digit - 5) * 8 + 81; }
+            else
+            {
+                uCoord = (digit - 5) * 8 + 81;
+            }
 
             renderRectPolyFT4(posX + i * 9, -74, 7, 12, uCoord, vCoord - 64, 30, 0x7F10, 5, 0);
         }
@@ -368,7 +373,10 @@ extern "C"
             badge.hasShadow = option ? 0 : 1;
             badge.color     = option ? -1 : 0;
 
-            if (i == 7) { renderDebugIcon(sprite.posX, sprite.posY + yOffset, sprite.width, sprite.height); }
+            if (i == 7)
+            {
+                renderDebugIcon(sprite.posX, sprite.posY + yOffset, sprite.width, sprite.height);
+            }
             else
             {
                 renderRectPolyFT4(sprite.posX,

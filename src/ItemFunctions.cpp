@@ -117,7 +117,7 @@ namespace
             int16_t addedBrain;
         };
 
-        constexpr FoodData foodData[36] = {
+        constexpr FoodData FOOD_DATA[36] = {
             {
                 .itemId         = ItemType::STEAK,
                 .energy         = 32,
@@ -349,8 +349,8 @@ namespace
             },
         };
 
-        FoodData data = foodData[35];
-        for (auto& ptr : foodData)
+        FoodData data = FOOD_DATA[35];
+        for (auto& ptr : FOOD_DATA)
         {
             if (ptr.itemId == itemId) data = ptr;
         }
@@ -513,8 +513,12 @@ namespace
 
     void handleNothing(ItemType item) {}
 
-    void
-    buffStats(DigimonEntity* entity, int32_t entityId, int32_t amount, int16_t* valuePtr, uint8_t color, uint8_t icon)
+    void buffStats(DigimonEntity* entity,
+                   int32_t entityId,
+                   int32_t amount,
+                   int16_t* valuePtr,
+                   uint8_t color,
+                   uint8_t icon)
     {
         addWithLimit(valuePtr, amount, 999);
         addEntityText(entity, entityId, color, amount, icon);

@@ -213,10 +213,10 @@ extern "C"
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT final    = {.x = posX, .y = posY, .width = width, .height = height};
             RECT start    = {
-                   .x      = static_cast<int16_t>(pos.screenX - 5),
-                   .y      = static_cast<int16_t>(pos.screenY - 5),
-                   .width  = 10,
-                   .height = 10,
+                .x      = static_cast<int16_t>(pos.screenX - 5),
+                .y      = static_cast<int16_t>(pos.screenY - 5),
+                .width  = 10,
+                .height = 10,
             };
 
             createAnimatedUIBox(instanceId, 1, features, &final, &start, tickFunc, renderFunc);
@@ -468,7 +468,7 @@ extern "C"
         else
             box.attribute = 0;
 
-        constexpr RGB8 boxColors[] = {
+        constexpr RGB8 BOX_COLORS[] = {
             {0, 0, 0},
             {45, 56, 64},
             {0, 0, 0},
@@ -476,9 +476,9 @@ extern "C"
             {0, 0, 0},
         };
 
-        box.r      = boxColors[data.color].red;
-        box.g      = boxColors[data.color].green;
-        box.b      = boxColors[data.color].blue;
+        box.r      = BOX_COLORS[data.color].red;
+        box.g      = BOX_COLORS[data.color].green;
+        box.b      = BOX_COLORS[data.color].blue;
         box.x      = data.finalPos.x + 4;
         box.y      = data.finalPos.y + 3;
         box.width  = data.finalPos.width - 8;
@@ -533,7 +533,10 @@ extern "C"
             if (data.frame > 4) data.state = 1;
             if (data.frame == 0) removeStaticUIBox(instanceId);
         }
-        else { renderUIBoxStatic(instanceId); }
+        else
+        {
+            renderUIBoxStatic(instanceId);
+        }
     }
 
     void createStaticUIBox(int32_t id,

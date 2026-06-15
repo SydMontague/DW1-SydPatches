@@ -83,7 +83,7 @@ namespace
     FileRequestCallback FILE_REQUEST_CALLBACK2;
     dtl::RingQueue<FileRequest, 32> fileRequestQueue{};
 
-    void _tickFileReadQueue(int32_t instance)
+    void tickFileReadQueueObject(int32_t instance)
     {
         tickFileReadQueue();
     }
@@ -293,7 +293,7 @@ extern "C"
 
     void initializeFileReadQueue()
     {
-        addObject(ObjectID::FILE_READ_QUEUE, 0, _tickFileReadQueue, nullptr);
+        addObject(ObjectID::FILE_READ_QUEUE, 0, tickFileReadQueueObject, nullptr);
     }
 
     int32_t addFileReadRequest(const char* filename,
@@ -304,10 +304,10 @@ extern "C"
                                CdlLoc* loc,
                                size_t size)
     {
-        constexpr auto max_length = decltype(FileRequest::filename)::element_count;
+        constexpr auto MAX_LENGTH = decltype(FileRequest::filename)::element_count;
 
-        auto stringLength = strnlen_s(filename, max_length);
-        if (stringLength == max_length) return -1;
+        auto stringLength = strnlen_s(filename, MAX_LENGTH);
+        if (stringLength == MAX_LENGTH) return -1;
 
         FileRequest request;
         request.isRunningPtr        = readComplete;

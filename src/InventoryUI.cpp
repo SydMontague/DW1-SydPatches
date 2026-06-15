@@ -42,7 +42,7 @@ namespace
     constexpr auto SLOT_AMOUNT_OFFSET_Y    = 3;
     constexpr uint32_t MOVE_SELECTOR_COLOR = 0x5d4af1;
 
-    constexpr dtl::array<dtl::array<uint8_t, 6>, 3> sortOrder = {{
+    constexpr dtl::array<dtl::array<uint8_t, 6>, 3> SORT_ORDER = {{
         {0, 1, 3, 2, 5, 4},
         {2, 3, 0, 5, 4, 1},
         {1, 2, 0, 3, 5, 4},
@@ -148,7 +148,7 @@ namespace
 
     void sortItems(int32_t sortMode)
     {
-        const auto& orderData = sortOrder[sortMode];
+        const auto& orderData = SORT_ORDER[sortMode];
 
         struct Entry
         {
@@ -318,7 +318,10 @@ namespace
             sortSelected++;
         }
 
-        if (isInventoryKeyDown(InputButtons::BUTTON_TRIANGLE)) { removeAnimatedUIBox(3, nullptr); }
+        if (isInventoryKeyDown(InputButtons::BUTTON_TRIANGLE))
+        {
+            removeAnimatedUIBox(3, nullptr);
+        }
         else if (isInventoryKeyDown(InputButtons::BUTTON_CROSS))
         {
             removeAnimatedUIBox(3, nullptr);
@@ -516,10 +519,10 @@ namespace
         auto& work     = TAMER_ENTITY.posData[1].posMatrix.work.t;
         auto entityPos = getScreenPosition(work[0], work[1], work[2]);
         RECT finalPos  = {
-             .x      = TOP_X,
-             .y      = TOP_Y,
-             .width  = 304,
-             .height = static_cast<int16_t>((box.visibleRows * 18) + 14),
+            .x      = TOP_X,
+            .y      = TOP_Y,
+            .width  = 304,
+            .height = static_cast<int16_t>((box.visibleRows * 18) + 14),
         };
         RECT startPos = {
             .x      = static_cast<int16_t>(entityPos.screenX),
@@ -533,10 +536,10 @@ namespace
 
     void createInventoryBottom()
     {
-        constexpr RECT finalPos = {.x = BOTTOM_X, .y = BOTTOM_Y, .width = 304, .height = 28};
-        constexpr RECT startPos = {.x = TOP_X + 8, .y = TOP_Y + 14, .width = 16, .height = 16};
+        constexpr RECT FINAL_POS = {.x = BOTTOM_X, .y = BOTTOM_Y, .width = 304, .height = 28};
+        constexpr RECT START_POS = {.x = TOP_X + 8, .y = TOP_Y + 14, .width = 16, .height = 16};
 
-        createAnimatedUIBox(1, 0, 2, &finalPos, &startPos, nullptr, renderInventoryBottom);
+        createAnimatedUIBox(1, 0, 2, &FINAL_POS, &START_POS, nullptr, renderInventoryBottom);
     }
 
     void closeInventoryBottom()
@@ -553,10 +556,10 @@ namespace
         auto& work     = TAMER_ENTITY.posData[1].posMatrix.work.t;
         auto entityPos = getScreenPosition(work[0], work[1], work[2]);
         RECT target    = {
-               .x      = static_cast<int16_t>(entityPos.screenX - 5),
-               .y      = static_cast<int16_t>(entityPos.screenY - 5),
-               .width  = 10,
-               .height = 10,
+            .x      = static_cast<int16_t>(entityPos.screenX - 5),
+            .y      = static_cast<int16_t>(entityPos.screenY - 5),
+            .width  = 10,
+            .height = 10,
         };
 
         removeAnimatedUIBox(0, &target);

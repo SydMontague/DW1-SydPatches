@@ -1,5 +1,6 @@
 #include "Battle.h"
 
+#include "BuffModel.hpp"
 #include "Camera.hpp"
 #include "Entity.hpp"
 #include "Files.hpp"
@@ -14,7 +15,6 @@
 #include "Partner.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
-#include "BuffModel.hpp"
 #include "extern/BTL.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libetc.hpp"
@@ -36,10 +36,10 @@ namespace
 
     bool isScreenConcave()
     {
-        static constexpr dtl::array<uint8_t, 18> maps =
+        static constexpr dtl::array<uint8_t, 18> MAPS =
             {166, 167, 210, 212, 219, 226, 227, 228, 247, 248, 249, 253, 254, 161, 132, 2, 13, 101};
 
-        for (auto map : maps)
+        for (auto map : MAPS)
             if (map == CURRENT_SCREEN) return true;
 
         return false;
@@ -83,7 +83,7 @@ namespace
 
     int32_t playBattleMusic(uint32_t talkedToEntity)
     {
-        static constexpr dtl::array<uint8_t, 45> music{
+        static constexpr dtl::array<uint8_t, 45> MUSIC{
             2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 1, 1,
             1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 1, 1, 2, 1, 2, 2, 2,
         };
@@ -97,9 +97,9 @@ namespace
 
         auto enemyType = static_cast<uint32_t>(ENTITY_TABLE.getEntityById(talkedToEntity)->type) - 67;
 
-        if (enemyType < 0 || enemyType > music.size()) return 1;
+        if (enemyType < 0 || enemyType > MUSIC.size()) return 1;
 
-        return music[enemyType];
+        return MUSIC[enemyType];
     }
 
     void loadBattleData(uint32_t talkedToEntity, uint32_t enemyCount)
@@ -226,7 +226,7 @@ namespace
 
     void renderFleeBubble(int32_t id)
     {
-        constexpr dtl::array<int8_t, 10> offsetArray{0x64, 0x68, 0x6C, 0x70, 0x74, 0x78, 0x74, 0x70, 0x6c, 0x68};
+        constexpr dtl::array<int8_t, 10> OFFSET_ARRAY{0x64, 0x68, 0x6C, 0x70, 0x74, 0x78, 0x74, 0x70, 0x6c, 0x68};
 
         auto* entity = ENTITY_TABLE.getEntityById(id);
         auto& bubble = FLEE_BUBBLE_DATA[id - 2];
@@ -246,7 +246,7 @@ namespace
         if (bubble.frame < 5)
             depth = (depth * (bubble.frame + 1)) / 5;
         else
-            depth = (depth * offsetArray[(bubble.frame - 5) % 10]) / 100;
+            depth = (depth * OFFSET_ARRAY[(bubble.frame - 5) % 10]) / 100;
 
         GsSPRITE sprite{
             .attribute = 0,
@@ -341,7 +341,7 @@ namespace
 
     int8_t getFleeChance(DigimonType partner, DigimonType enemy)
     {
-        constexpr dtl::array<dtl::array<int8_t, 3>, 3> lookup{{
+        constexpr dtl::array<dtl::array<int8_t, 3>, 3> LOOKUP{{
             {60, 70, 100},
             {80, 60, 100},
             {90, 100, 30},
@@ -355,7 +355,7 @@ namespace
         if (static_cast<uint8_t>(partnerTypus) == 0xFF) return 70;
         if (static_cast<uint8_t>(enemyTypus) == 0xFF) return 70;
 
-        return lookup[static_cast<uint8_t>(partnerTypus) - 1][static_cast<uint8_t>(enemyTypus) - 1];
+        return LOOKUP[static_cast<uint8_t>(partnerTypus) - 1][static_cast<uint8_t>(enemyTypus) - 1];
     }
 
     uint32_t handleBattleStartRandom(uint32_t talkedToEntity)
@@ -656,10 +656,10 @@ extern "C"
     }
 
     // this function blows up in size otherwise
-    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-    __attribute__((optimize("Os"))) void battleStatsGainsAndDrops(ItemType* droppedItems)
+    [[gnu::optimize("Os")]]
+    void battleStatsGainsAndDrops(ItemType* droppedItems)
     {
-        constexpr dtl::array<uint8_t, 4> enemyCountFactor{0, 10, 12, 16};
+        constexpr dtl::array<uint8_t, 4> ENEMY_COUNT_FACTOR{0, 10, 12, 16};
         StatsGains gains{};
 
         for (int32_t i = 0; i < 6; i++)
@@ -673,12 +673,12 @@ extern "C"
 
             if (enemyStat < partnerStat)
             {
-                auto chance = (enemyStat * enemyCountFactor[ENEMY_COUNT] * 100) / (partnerStat * 10);
+                auto chance = (enemyStat * ENEMY_COUNT_FACTOR[ENEMY_COUNT] * 100) / (partnerStat * 10);
                 STATS_GAINS.set(stat, random(100) < chance ? 1 : 0);
             }
             else
                 STATS_GAINS.set(stat,
-                                (partnerStat + enemyStat * enemyCountFactor[ENEMY_COUNT] - 1) / (partnerStat * 10));
+                                (partnerStat + enemyStat * ENEMY_COUNT_FACTOR[ENEMY_COUNT] - 1) / (partnerStat * 10));
         }
 
         for (int32_t i = 0; i < 6; i++)

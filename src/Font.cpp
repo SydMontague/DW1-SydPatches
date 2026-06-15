@@ -41,7 +41,7 @@ namespace
 
     uint16_t getRowVanilla(uint16_t codepoint, uint8_t row)
     {
-        if(row > 10) return 0xFFFF;
+        if (row > 10) return 0xFFFF;
         return getGlyphVanilla(codepoint)->pixelData[row];
     }
 
@@ -67,7 +67,7 @@ namespace
 
     uint16_t getGlyphRow(int32_t glyph, int32_t row)
     {
-        if(row > 10) return 0xFFFF;
+        if (row > 10) return 0xFFFF;
         return GLYPH_DATA[glyph].pixelData[row];
     }
 
