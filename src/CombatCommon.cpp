@@ -21,8 +21,7 @@ extern "C"
         auto left  = 0;
         auto right = count - 1;
 
-        while (left < right)
-        {
+        while (left < right) {
             auto mid = (left + right) / 2;
 
             if (array1[mid] < value)
@@ -90,8 +89,7 @@ extern "C"
         matrixY[2] = point1->max.y - point2->min.y;
         matrixY[3] = point1->max.y - point2->min.y;
 
-        for (int32_t i = 1; i < 4; i++)
-        {
+        for (int32_t i = 1; i < 4; i++) {
             auto factor1 = (diffX * matrixY[0] - diffY * matrixX[0]);
             auto factor2 = (diffX * matrixY[i] - diffY * matrixX[i]);
 

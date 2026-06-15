@@ -25,8 +25,7 @@ extern "C"
 
     bool hasFoodItem()
     {
-        for (auto& type : INVENTORY_ITEM_TYPES)
-        {
+        for (auto& type : INVENTORY_ITEM_TYPES) {
             if (type == ItemType::NONE) continue;
             if (getItem(type)->sortingValue == 2) return true;
         }
@@ -78,8 +77,7 @@ extern "C"
     void checkFishingMap(int32_t mapId)
     {
         deinitializeFishing();
-        if (mapId == 6 || mapId == 8)
-        {
+        if (mapId == 6 || mapId == 8) {
             loadDynamicLibrary(Overlay::FISH_REL, nullptr, false, nullptr, 0);
 
             FISHING_DATA_PTR = &FISHING_DATA;
@@ -87,8 +85,7 @@ extern "C"
             FISHING_DATA_PTR->header  = 0x55dddd55;
             FISHING_DATA_PTR->trailer = 0x55dddd55;
             FISHING_DATA_PTR->mapId   = mapId;
-            for (auto& mapData : FISHING_MAP_DATA)
-            {
+            for (auto& mapData : FISHING_MAP_DATA) {
                 if (mapId != mapData.mapId) continue;
                 FISHING_DATA_PTR->mapDataPtr = &mapData;
                 break;

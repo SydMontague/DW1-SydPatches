@@ -1,6 +1,8 @@
 Diagnostics:
   UnusedIncludes: None
-  Suppress: asm_unknown_register_name
+  Suppress: 
+    - asm_unknown_register_name
+    - unknown-attributes
 
 CompileFlags:
   Add: [-mabi=32, -march=mips1, -std=c++23]

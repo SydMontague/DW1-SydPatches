@@ -133,8 +133,7 @@ extern "C"
         if (outTexPage) *outTexPage = getTPage(imageData.pixelMode & 3, 0, imageData.pixelX, imageData.pixelY);
 
         // if has CLUT
-        if ((imageData.pixelMode >> 3 & 1) != 0)
-        {
+        if ((imageData.pixelMode >> 3 & 1) != 0) {
             RECT clutRect = {
                 .x      = imageData.clutX,
                 .y      = imageData.clutY,
@@ -238,10 +237,8 @@ extern "C"
         auto* request = fileRequestQueue.front();
         if (request == nullptr) return;
 
-        if (request->state == 2)
-        {
-            if (request->size < 0)
-            {
+        if (request->state == 2) {
+            if (request->size < 0) {
                 dtl::array<uint8_t, 64> path;
                 CdlFILE file;
                 sprintf(path.data(), "\\%s;1", request->filename.data());
@@ -263,18 +260,15 @@ extern "C"
             return;
         }
 
-        if (request->state == 1)
-        {
+        if (request->state == 1) {
             auto remainingSectors = libcd_CdReadSync(1, nullptr);
             if (remainingSectors < 0)
                 request->state = 2; // on error, restart request
-            else if (remainingSectors == 0)
-            {
+            else if (remainingSectors == 0) {
                 FILE_REQUEST_CALLBACK2.isEnabled = false;
                 if (request->finishCallback) request->finishCallback(request->finishCallbackParam);
 
-                if (FILE_REQUEST_CALLBACK2.isEnabled)
-                {
+                if (FILE_REQUEST_CALLBACK2.isEnabled) {
                     request->state             = 10;
                     request->waitCallback      = FILE_REQUEST_CALLBACK2.callback;
                     request->waitCallbackParam = FILE_REQUEST_CALLBACK2.parameter;
@@ -371,8 +365,7 @@ extern "C"
         auto* head = GENERAL_BUFFER.data();
         readFile(file, head);
 
-        while (*head == 0x10)
-        {
+        while (*head == 0x10) {
             GsIMAGE image;
             libgs_GsGetTimInfo(reinterpret_cast<uint32_t*>(head + 4), &image);
             head += 20 + (image.pixelWidth * image.pixelHeight) * 2;
@@ -385,8 +378,7 @@ extern "C"
             };
             libgpu_LoadImage(&pixelRect, image.pixelPtr);
 
-            if ((image.pixelMode >> 3 & 1) != 0)
-            {
+            if ((image.pixelMode >> 3 & 1) != 0) {
                 RECT clutRect = {
                     .x      = image.clutX,
                     .y      = image.clutY,

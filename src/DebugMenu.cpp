@@ -102,8 +102,7 @@ namespace
     constexpr const char* lookupName(const Named* begin, const Named* end, int32_t idx)
     {
         auto current = begin;
-        while (current != end)
-        {
+        while (current != end) {
             if (current->index == idx) return current->name;
             current++;
         }
@@ -112,8 +111,7 @@ namespace
 
     constexpr const char* getRowName(int8_t page, int16_t index)
     {
-        switch (page)
-        {
+        switch (page) {
             case PAGE_PSTAT: return lookupName(PSTAT_NAMES.begin(), PSTAT_NAMES.end(), index);
             case PAGE_TRIGGER: return lookupName(TRIGGER_NAMES.begin(), TRIGGER_NAMES.end(), index);
             case PAGE_STATS: return index < STATS_ROWS.size() ? STATS_ROWS[index].name : "";
@@ -123,8 +121,7 @@ namespace
 
     constexpr dtl::array<uint8_t, 256> getRowValue(int8_t page, int16_t index)
     {
-        switch (page)
-        {
+        switch (page) {
             case PAGE_PSTAT: return format("%d", readPStat(index));
             case PAGE_TRIGGER: return format("%s", isTriggerSet(index) ? "On" : "Off");
             case PAGE_STATS:
@@ -136,8 +133,7 @@ namespace
 
     constexpr int16_t getEntryCount(int8_t page)
     {
-        switch (page)
-        {
+        switch (page) {
             case PAGE_PSTAT: return PSTAT_COUNT;
             case PAGE_TRIGGER: return TRIGGER_COUNT;
             case PAGE_STATS: return STATS_ROWS.size();
@@ -147,8 +143,7 @@ namespace
 
     void changeValue(int8_t page, int16_t index, int32_t value)
     {
-        switch (page)
-        {
+        switch (page) {
             case PAGE_TRIGGER: isTriggerSet(index) ? unsetTrigger(index) : setTrigger(index); return;
             case PAGE_PSTAT: writePStat(index, clamp(readPStat(index) + value, 0, 255)); return;
             case PAGE_STATS:
@@ -195,8 +190,7 @@ namespace
         auto count  = getEntryCount(page);
 
         const auto& font = getAtlasVanilla();
-        for (int32_t i = 0; i < VISIBLE_ROWS; i++)
-        {
+        for (int32_t i = 0; i < VISIBLE_ROWS; i++) {
             auto index = i + scroll;
             const RenderSettings numberSetting{
                 .x        = LIST_X,
@@ -229,14 +223,12 @@ namespace
                 .alignY   = AlignmentY::CENTER,
             };
 
-            if (index > count)
-            {
+            if (index > count) {
                 rows[i]                    = {};
                 rows[i + VISIBLE_ROWS]     = {};
                 rows[i + VISIBLE_ROWS * 2] = {};
             }
-            else
-            {
+            else {
                 rows[i]                    = font.render(format("%d", index).data(), numberSetting);
                 rows[i + VISIBLE_ROWS]     = font.render(format("%s", getRowName(page, index)).data(), nameSetting);
                 rows[i + VISIBLE_ROWS * 2] = font.render(getRowValue(page, index).data(), valueSetting);
@@ -261,8 +253,7 @@ namespace
 
     void DebugMenu::tick()
     {
-        if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
-        {
+        if (isKeyDown(InputButtons::BUTTON_TRIANGLE)) {
             TRIANGLE_MENU_STATE = 8;
             playSound(0, 4);
             return;
@@ -270,64 +261,52 @@ namespace
 
         bool changed = false;
 
-        if (isKeyDownRepeat(InputButtons::BUTTON_L1) && page > 0)
-        {
+        if (isKeyDownRepeat(InputButtons::BUTTON_L1) && page > 0) {
             page--;
             changed = true;
         }
-        if (isKeyDownRepeat(InputButtons::BUTTON_R1) && page < (NUM_PAGES - 1))
-        {
+        if (isKeyDownRepeat(InputButtons::BUTTON_R1) && page < (NUM_PAGES - 1)) {
             page++;
             changed = true;
         }
-        if (isKeyDownRepeat(InputButtons::BUTTON_L2))
-        {
+        if (isKeyDownRepeat(InputButtons::BUTTON_L2)) {
             cursors[page] = clamp(cursors[page] - VISIBLE_ROWS, 0, getEntryCount(page) - 1);
             changed       = true;
         }
-        if (isKeyDownRepeat(InputButtons::BUTTON_R2))
-        {
+        if (isKeyDownRepeat(InputButtons::BUTTON_R2)) {
             cursors[page] = clamp(cursors[page] + VISIBLE_ROWS, 0, getEntryCount(page) - 1);
             changed       = true;
         }
-        if (isKeyDownRepeat(InputButtons::BUTTON_UP) && cursors[page] > 0)
-        {
+        if (isKeyDownRepeat(InputButtons::BUTTON_UP) && cursors[page] > 0) {
             cursors[page]--;
             changed = true;
         }
-        if (isKeyDownRepeat(InputButtons::BUTTON_DOWN) && cursors[page] < getEntryCount(page) - 1)
-        {
+        if (isKeyDownRepeat(InputButtons::BUTTON_DOWN) && cursors[page] < getEntryCount(page) - 1) {
             cursors[page]++;
             changed = true;
         }
-        if (isKeyDownRepeat(InputButtons::BUTTON_CROSS) && page == PAGE_TRIGGER)
-        {
+        if (isKeyDownRepeat(InputButtons::BUTTON_CROSS) && page == PAGE_TRIGGER) {
             changeValue(page, cursors[page], +1);
             changed = true;
         }
-        if (isKeyDownRepeat(InputButtons::BUTTON_SQUARE))
-        {
+        if (isKeyDownRepeat(InputButtons::BUTTON_SQUARE)) {
             changeValue(page, cursors[page], -10);
             changed = true;
         }
-        if (isKeyDownRepeat(InputButtons::BUTTON_CIRCLE))
-        {
+        if (isKeyDownRepeat(InputButtons::BUTTON_CIRCLE)) {
             changeValue(page, cursors[page], +10);
             changed = true;
         }
-        if (isKeyDownRepeat(InputButtons::BUTTON_LEFT))
-        {
+        if (isKeyDownRepeat(InputButtons::BUTTON_LEFT)) {
             changeValue(page, cursors[page], -1);
             changed = true;
         }
-        if (isKeyDownRepeat(InputButtons::BUTTON_RIGHT))
-        {
+        if (isKeyDownRepeat(InputButtons::BUTTON_RIGHT)) {
             changeValue(page, cursors[page], +1);
             changed = true;
         }
 
-        if (changed)
-        {
+        if (changed) {
             playSound(0, 2);
             clampScroll();
             updateRows();

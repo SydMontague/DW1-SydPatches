@@ -89,8 +89,7 @@ namespace
         auto digimonCount = *reinterpret_cast<int16_t*>(buffer);
         auto* currentPtr  = buffer + 2;
 
-        for (int32_t i = 0; i < digimonCount; i++)
-        {
+        for (int32_t i = 0; i < digimonCount; i++) {
             auto* mapDigimon = reinterpret_cast<MapDigimon*>(currentPtr);
 
             MAP_DIGIMON_TABLE[i].typeId        = static_cast<DigimonType>(mapDigimon->typeId);
@@ -139,8 +138,7 @@ namespace
             MAP_DIGIMON_TABLE[i].aiSections[6] = mapDigimon->aiSections[6];
             MAP_DIGIMON_TABLE[i].aiSections[7] = mapDigimon->aiSections[7];
 
-            for (int32_t j = 0; j < mapDigimon->waypointCount; j++)
-            {
+            for (int32_t j = 0; j < mapDigimon->waypointCount; j++) {
                 MAP_DIGIMON_TABLE[i].waypoints[j].x = mapDigimon->waypoints[j].x;
                 MAP_DIGIMON_TABLE[i].waypoints[j].y = mapDigimon->waypoints[j].y;
                 MAP_DIGIMON_TABLE[i].waypoints[j].z = mapDigimon->waypoints[j].z;
@@ -174,8 +172,7 @@ namespace
 
     void clearMapObjects(LocalMapObjectInstance* instances)
     {
-        for (uint32_t i = 0; i < 188; i++)
-        {
+        for (uint32_t i = 0; i < 188; i++) {
             auto& data = instances[i];
             for (auto& val : data.animSprites)
                 val = -1;
@@ -200,12 +197,10 @@ namespace
         MAP_OBJECT_INSTANCE_COUNT = *localInstanceCount;
         auto* instancePtr         = reinterpret_cast<MapObjectInstance*>(localInstanceCount + 1);
 
-        for (int32_t i = 0; i < MAP_OBJECT_INSTANCE_COUNT; i++)
-        {
+        for (int32_t i = 0; i < MAP_OBJECT_INSTANCE_COUNT; i++) {
             auto& instance = instancePtr[i];
             auto& object   = mapObjects[i];
-            for (int32_t j = 0; j < 8; j++)
-            {
+            for (int32_t j = 0; j < 8; j++) {
                 object.animSprites[j] = instance.animState[j];
                 object.animTimes[j]   = instance.animDuration[j];
             }
@@ -214,8 +209,7 @@ namespace
             object.flag = instance.flag;
 
             // snow
-            if (((mapId > 0x57 && mapId < 0x61) || (mapId > 0x83 && mapId < 0x88)) && i < 0x23)
-            {
+            if (((mapId > 0x57 && mapId < 0x61) || (mapId > 0x83 && mapId < 0x88)) && i < 0x23) {
                 if (i > 0x13) object.x = random(320);
                 object.y = random(240);
                 object.flag |= 0x80;
@@ -232,8 +226,7 @@ namespace
         libgpu_ReadTIM(&image);
         libgpu_LoadImage(image.pixelRect, image.pixelPtr);
         libgpu_DrawSync(0);
-        if (image.clutRect->y != 480)
-        {
+        if (image.clutRect->y != 480) {
             libgpu_LoadImage(image.clutRect, image.clutPtr);
             libgpu_DrawSync(0);
         }
@@ -249,8 +242,7 @@ namespace
 
         if (id != 0) return;
 
-        for (int32_t i = 0; i < image.clutRect->height; i++)
-        {
+        for (int32_t i = 0; i < image.clutRect->height; i++) {
             RECT rect{.x = static_cast<int16_t>(16 * i), .y = 486, .width = 16, .height = 1};
             libgpu_LoadImage(&rect, image.clutPtr + (i * 8));
             libgpu_DrawSync(0); // vanilla doesn't do a sync here
@@ -259,20 +251,17 @@ namespace
 
     void calcMapObjectOrder(LocalMapObjectInstance* instances)
     {
-        for (int32_t i = 0; i < MAP_OBJECT_INSTANCE_COUNT; i++)
-        {
+        for (int32_t i = 0; i < MAP_OBJECT_INSTANCE_COUNT; i++) {
             auto& data = instances[i];
 
             data.currentFrame = 0;
-            if ((data.flag & 0x80) != 0)
-            {
+            if ((data.flag & 0x80) != 0) {
                 data.orderValue = 30;
                 continue;
             }
 
             SVector worldPos;
-            for (auto val : data.animSprites)
-            {
+            for (auto val : data.animSprites) {
                 if (val == -1 || val == -2) continue;
 
                 worldPos.x = LOCAL_MAP_OBJECTS[val].someX;
@@ -309,8 +298,7 @@ namespace
     {
         if (isFixedPos)
             setPosDataPolyFT4(prim, instance->x, instance->y, object->width, object->height);
-        else
-        {
+        else {
             auto posX = (instance->x - 160) - (cameraX - (160 - DRAWING_OFFSET_X));
             auto posY = (instance->y - 120) - (cameraY - (120 - DRAWING_OFFSET_Y));
             setPosDataPolyFT4(prim, posX, posY, object->width, object->height);
@@ -322,18 +310,15 @@ namespace
         setPolyFT4UV(prim, object->texX, object->texY, object->width, object->height);
 
         auto clut = object->clut;
-        if (clut == 0xFF)
-        {
+        if (clut == 0xFF) {
             prim->tpage = getTPage(1, object->transparency, (object->texX / 256) * 128 + 384, 0);
             prim->clut  = getClut(0, 480);
         }
-        else if (clut < 16)
-        {
+        else if (clut < 16) {
             prim->tpage = getTPage(0, object->transparency, (object->texX / 256) * 64 + 384, 0);
             prim->clut  = getClut(object->clut * 16, 486);
         }
-        else
-        {
+        else {
             prim->tpage = getTPage(1, object->transparency, (object->texX / 256) * 128 + 384, 0);
             prim->clut  = getClut(0, 468 + object->clut);
         }
@@ -344,8 +329,7 @@ namespace
         auto firstSprite = instance->animSprites[0];
         int32_t xOffsetLimit;
         int32_t yOffset;
-        switch (firstSprite)
-        {
+        switch (firstSprite) {
             case 0:
             case 3:
             case 4:
@@ -378,16 +362,13 @@ namespace
         prim->tpage = getTPage(0, object->transparency, (object->texX / 256) * 64 + 384, 0);
         prim->clut  = getClut(object->clut * 16, 486);
         instance->y += yOffset;
-        if (firstSprite != 2 && instance->y > 130)
-        {
+        if (firstSprite != 2 && instance->y > 130) {
             auto roll = random(10);
-            if (roll < 2 && instance->currentFrame == 0)
-            {
+            if (roll < 2 && instance->currentFrame == 0) {
                 instance->currentFrame = 1;
                 instance->timer        = 0;
             }
-            if (instance->currentFrame > 1 && instance->animSprites[instance->currentFrame + 1] == -1)
-            {
+            if (instance->currentFrame > 1 && instance->animSprites[instance->currentFrame + 1] == -1) {
                 instance->currentFrame = 0;
                 instance->y            = 0;
             }
@@ -427,8 +408,7 @@ namespace
     {
         if (!isMistEnabled(CURRENT_SCREEN)) return;
 
-        if (CURRENT_SCREEN != 220 && isTriggerSet(148))
-        {
+        if (CURRENT_SCREEN != 220 && isTriggerSet(148)) {
             MIST_CLUT_Y[0] = 192;
             MIST_CLUT_Y[1] = 128;
         }
@@ -450,13 +430,11 @@ namespace
         mistOffsetY[0] = ring(mistOffsetY[0], -360, 120);
         mistOffsetY[1] = ring(mistOffsetY[0] + 240, -360, 120);
 
-        for (int32_t i = -4; i < 4; i++)
-        {
+        for (int32_t i = -4; i < 4; i++) {
             POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
             libgpu_SetPolyFT4(prim);
             libgpu_SetSemiTrans(prim, 1);
-            if (i < 0)
-            {
+            if (i < 0) {
                 prim->tpage = getTPage(0, 3, 704, 0);
                 prim->clut  = getClut(0, 486);
 
@@ -465,8 +443,7 @@ namespace
                 prim->g0 = 150;
                 prim->b0 = 150;
             }
-            else
-            {
+            else {
                 prim->tpage = getTPage(0, 1, 704, 0);
                 if (CURRENT_SCREEN == 163 || CURRENT_SCREEN == 220)
                     prim->clut = getClut(0, 486);
@@ -500,23 +477,20 @@ namespace
         if (MAP_LAYER_ENABLED == 0) return;
         if (hasMist(CURRENT_SCREEN)) renderMist();
 
-        for (int32_t i = 0; i < 188; i++)
-        {
+        for (int32_t i = 0; i < 188; i++) {
             auto& data         = objects[i];
             auto currentFrame  = data.currentFrame;
             auto currentSprite = data.animSprites[currentFrame];
 
             if (currentFrame == -1 || currentSprite == -1) continue;
 
-            if (currentSprite != -2 && data.flag != 1)
-            {
+            if (currentSprite != -2 && data.flag != 1) {
                 auto& mapObj = LOCAL_MAP_OBJECTS[currentSprite];
                 renderMapOverlay(data, mapObj, cameraX, cameraY);
             }
 
             data.timer++;
-            if (data.timer == data.animTimes[currentFrame])
-            {
+            if (data.timer == data.animTimes[currentFrame]) {
                 data.currentFrame++;
                 data.timer = 0;
                 if (data.currentFrame >= 8 || data.animSprites[data.currentFrame] == -1) data.currentFrame = 0;
@@ -636,8 +610,7 @@ namespace
         GS_VIEWPOINT.refpointZ  = map->referencePoint.z * 2;
         libgs_GsSetRefView2(&GS_VIEWPOINT);
 
-        for (int32_t i = 0; i < map->lights.size(); i++)
-        {
+        for (int32_t i = 0; i < map->lights.size(); i++) {
             LIGHT_DATA[i].r = map->lights[i].red;
             LIGHT_DATA[i].g = map->lights[i].green;
             LIGHT_DATA[i].b = map->lights[i].blue;
@@ -657,8 +630,7 @@ namespace
         // TODO this should be extracted into the partner code somehow
         auto region           = getRaiseData(PARTNER_ENTITY.type)->favoredRegion;
         PARTNER_AREA_RESPONSE = 0;
-        for (int32_t i = 0; i < map->likedArea.size(); i++)
-        {
+        for (int32_t i = 0; i < map->likedArea.size(); i++) {
             if (map->likedArea[i] == region) PARTNER_AREA_RESPONSE = 1;
             if (map->dislikedArea[i] == region) PARTNER_AREA_RESPONSE = 2;
         }
@@ -674,8 +646,12 @@ namespace
         if (mapId == 0x88) loadDynamicLibrary(Overlay::KAR_REL, nullptr, false, nullptr, nullptr);
     }
 
-    constexpr void
-    fillTileData(MapTileData* tileData, uint8_t* imagePtr, int32_t texU, int32_t texV, int16_t posX, int16_t posY)
+    constexpr void fillTileData(MapTileData* tileData,
+                                uint8_t* imagePtr,
+                                int32_t texU,
+                                int32_t texV,
+                                int16_t posX,
+                                int16_t posY)
     {
         tileData->tpage    = getTPage(1, 0, texU, texV);
         tileData->clut     = getClut(0, 0x1E0);
@@ -697,16 +673,14 @@ namespace
         removeObject(ObjectID::GEARBOX, 0);
         removeObject(ObjectID::DAYTIME_TRANSITION, 0);
         removeObject(ObjectID::TRAINING_POOP, 0);
-        for (auto& chest : CHEST_ARRAY)
-        {
+        for (auto& chest : CHEST_ARRAY) {
             chest.item = ItemType::NONE;
         }
     }
 
     void unloadMap()
     {
-        for (auto& val : MAP_TILE_DATA)
-        {
+        for (auto& val : MAP_TILE_DATA) {
             val.imagePtr = nullptr;
             val.posX     = 0;
             val.posY     = 0;
@@ -737,13 +711,11 @@ namespace
         auto& clut1 = mapCluts[daytimeTransitionTarget];
         auto& clut2 = mapCluts[(daytimeTransitionTarget + 1) % mapCluts.size()];
 
-        if (daytimeTransitionFrame < 25)
-        {
+        if (daytimeTransitionFrame < 25) {
             auto frame = (6 - daytimeTransitionFrame / 5);
             RGB5551 newClut[256];
 
-            for (int32_t i = 0; i < 256; i++)
-            {
+            for (int32_t i = 0; i < 256; i++) {
                 newClut[i].red   = clut1[i].red - ((clut1[i].red - clut2[i].red) / frame);
                 newClut[i].green = clut1[i].green - ((clut1[i].green - clut2[i].green) / frame);
                 newClut[i].blue  = clut1[i].blue - ((clut1[i].blue - clut2[i].blue) / frame);
@@ -758,17 +730,14 @@ namespace
 
         libgpu_LoadClut(clut2, 0, 0x1E0);
 
-        for (int32_t i = 0; i < 3; i++)
-        {
-            if (daytimeTransitionTarget == 0)
-            {
+        for (int32_t i = 0; i < 3; i++) {
+            if (daytimeTransitionTarget == 0) {
                 // vanilla doesn't seem to do red here, but updateTimeOfDay does
                 LIGHT_DATA[i].r = (mapLights[i].r * 7) / 10;
                 LIGHT_DATA[i].g = (mapLights[i].g * 7) / 10;
                 LIGHT_DATA[i].b = (mapLights[i].b * 7) / 10;
             }
-            else if (daytimeTransitionTarget == 1)
-            {
+            else if (daytimeTransitionTarget == 1) {
                 LIGHT_DATA[i].r = mapLights[i].r / 2;
                 LIGHT_DATA[i].g = mapLights[i].g / 2;
                 LIGHT_DATA[i].b = mapLights[i].b / 2;
@@ -788,8 +757,7 @@ namespace
     {
         if (MAP_TILE_Y == PREV_TILE_Y) return;
 
-        for (int32_t i = 0; i < min(MAP_WIDTH, 4); i++)
-        {
+        for (int32_t i = 0; i < min(MAP_WIDTH, 4); i++) {
             auto offset = MAP_TILE_X + (MAP_TILE_Y + yOffset * 2) * MAP_WIDTH + i;
             auto& data  = MAP_TILE_DATA[offset];
 
@@ -808,8 +776,7 @@ namespace
     {
         if (MAP_TILE_X == PREV_TILE_X) return;
 
-        for (int32_t i = 0; i < min(MAP_HEIGHT, 3); i++)
-        {
+        for (int32_t i = 0; i < min(MAP_HEIGHT, 3); i++) {
             auto offset = MAP_TILE_X + (MAP_TILE_Y + i) * MAP_WIDTH + xOffset * 3;
             auto& data  = MAP_TILE_DATA[offset];
 
@@ -836,8 +803,7 @@ extern "C"
 
     void storeMapObjectPosition(int16_t* xPtr, int16_t* yPtr, int32_t start, int32_t count)
     {
-        for (int32_t i = 0; i < count; i++)
-        {
+        for (int32_t i = 0; i < count; i++) {
             xPtr[i] = LOCAL_MAP_OBJECT_INSTANCE[start + i].x;
             yPtr[i] = LOCAL_MAP_OBJECT_INSTANCE[start + i].y;
         }
@@ -845,8 +811,7 @@ extern "C"
 
     void moveMapObjects(int32_t start, int32_t count, int32_t xOffset, int32_t yOffset)
     {
-        for (int32_t i = 0; i < count; i++)
-        {
+        for (int32_t i = 0; i < count; i++) {
             LOCAL_MAP_OBJECT_INSTANCE[start + i].x += xOffset;
             LOCAL_MAP_OBJECT_INSTANCE[start + i].y += yOffset;
         }
@@ -872,12 +837,15 @@ extern "C"
         *outY = DRAWING_OFFSET_Y + val.y + CAMERA_Y;
     }
 
-    bool
-    moveMapObjectsWithLimit(int32_t start, int32_t count, int32_t xOffset, int32_t yOffset, int32_t maxX, int32_t maxY)
+    bool moveMapObjectsWithLimit(int32_t start,
+                                 int32_t count,
+                                 int32_t xOffset,
+                                 int32_t yOffset,
+                                 int32_t maxX,
+                                 int32_t maxY)
     {
         // this function only checks the limit on the first object?
-        for (int32_t i = 0; i < count; i++)
-        {
+        for (int32_t i = 0; i < count; i++) {
             LOCAL_MAP_OBJECT_INSTANCE[start + i].x += xOffset;
             LOCAL_MAP_OBJECT_INSTANCE[start + i].y += yOffset;
         }
@@ -893,8 +861,7 @@ extern "C"
 
     void loadMapObjectPosition(int16_t* xPtr, int16_t* yPtr, int32_t start, int32_t count)
     {
-        for (int32_t i = 0; i < count; i++)
-        {
+        for (int32_t i = 0; i < count; i++) {
             LOCAL_MAP_OBJECT_INSTANCE[start + i].x = xPtr[i];
             LOCAL_MAP_OBJECT_INSTANCE[start + i].y = yPtr[i];
             LOCAL_MAP_OBJECT_INSTANCE[start + i].flag &= 0xEF;
@@ -905,8 +872,7 @@ extern "C"
     {
         auto& data = LOCAL_MAP_OBJECT_INSTANCE[objectId];
 
-        if (MAP_OBJECT_MOVE_TO_DATA[actorId] == 0)
-        {
+        if (MAP_OBJECT_MOVE_TO_DATA[actorId] == 0) {
             moveObjectDeltaX[actorId]        = posX - data.x / speed;
             moveObjectDeltaY[actorId]        = posY - data.y / speed;
             MAP_OBJECT_MOVE_TO_DATA[actorId] = 1;
@@ -931,8 +897,7 @@ extern "C"
         else if (deltaY == 0)
             data.y = posY;
 
-        if (data.x == posX && data.y == posY)
-        {
+        if (data.x == posX && data.y == posY) {
             MAP_OBJECT_MOVE_TO_DATA[actorId] = 0;
             return true;
         }
@@ -951,8 +916,7 @@ extern "C"
 
         getDrawPosition(&pos, &drawX, &drawY);
 
-        for (int32_t i = 0; i < count; i++)
-        {
+        for (int32_t i = 0; i < count; i++) {
             int32_t spriteIndex = getFirstSpriteIndex(&LOCAL_MAP_OBJECT_INSTANCE[i]);
 
             // vanilla doesn't check if no sprite got found and thus potentially trashes its stack
@@ -976,8 +940,7 @@ extern "C"
 
     void resetMapObjectAnimation(int32_t start, int32_t count)
     {
-        for (int32_t i = 0; i < count; i++)
-        {
+        for (int32_t i = 0; i < count; i++) {
             LOCAL_MAP_OBJECT_INSTANCE[start + i].timer        = 0;
             LOCAL_MAP_OBJECT_INSTANCE[start + i].currentFrame = 0;
         }
@@ -988,8 +951,7 @@ extern "C"
         MIST_CLUT_Y[0] += 0x10;
         MIST_CLUT_Y[1] += 0x10;
 
-        if (MIST_CLUT_Y[0] >= 192)
-        {
+        if (MIST_CLUT_Y[0] >= 192) {
             MIST_CLUT_Y[0] = 192;
             MIST_CLUT_Y[1] = 128;
             return true;
@@ -1011,13 +973,11 @@ extern "C"
 
     void setImpassableRect(int32_t tileX, int32_t tileY, int32_t width, int32_t height)
     {
-        for (int32_t y = 0; y < height; y++)
-        {
+        for (int32_t y = 0; y < height; y++) {
             auto curY = tileY + y;
             if (curY < 0 || curY >= 100) continue;
 
-            for (int32_t x = 0; x < width; x++)
-            {
+            for (int32_t x = 0; x < width; x++) {
                 auto curX = tileX + x;
                 if (curX < 0 || curX >= 100) continue;
 
@@ -1067,8 +1027,7 @@ extern "C"
 
     void spawnDroppedItem(Entity* entity, ItemType item, uint8_t amount)
     {
-        for (int32_t i = 0; i < 10; i++)
-        {
+        for (int32_t i = 0; i < 10; i++) {
             auto& data = DROPPED_ITEMS[i];
             if (data.type != ItemType::NONE) continue;
 
@@ -1085,8 +1044,7 @@ extern "C"
 
     void spawnItem(ItemType itemId, int16_t tileX, int16_t tileY)
     {
-        for (int32_t i = 0; i < 10; i++)
-        {
+        for (int32_t i = 0; i < 10; i++) {
             auto& data = DROPPED_ITEMS[i];
             if (data.type != ItemType::NONE) continue;
 
@@ -1104,8 +1062,7 @@ extern "C"
     bool pickupItem(int32_t dropId)
     {
         const uint8_t amount = DROPPED_ITEM_AMOUNTS[dropId] != 0 ? DROPPED_ITEM_AMOUNTS[dropId] : 1;
-        if (giveItem(DROPPED_ITEMS[dropId].type, amount))
-        {
+        if (giveItem(DROPPED_ITEMS[dropId].type, amount)) {
             deleteDroppedItem(dropId);
             return true;
         }
@@ -1123,8 +1080,7 @@ extern "C"
     {
         TileIterator itr(startX, startY, targetX, targetY);
 
-        for (; itr.hasNext(); ++itr)
-        {
+        for (; itr.hasNext(); ++itr) {
             auto val = *itr;
             if (isTileOffScreen(val.tileX, val.tileY)) return val;
         }
@@ -1142,8 +1098,7 @@ extern "C"
         if (tileX1 == tileX2 && tileY1 == tileY2) return false;
 
         TileIterator itr(tileX1, tileY1, tileX2, tileY2);
-        for (; itr.hasNext(); ++itr)
-        {
+        for (; itr.hasNext(); ++itr) {
             auto val = *itr;
 
             if ((getTile(val.tileX, val.tileY) & 0x80) != 0) return true;
@@ -1154,17 +1109,13 @@ extern "C"
 
     bool isFiveTileWidePathBlocked(int32_t tileX1, int32_t tileY1, int32_t tileX2, int32_t tileY2)
     {
-        if (abs(tileX2 - tileX1) < abs(tileY2 - tileY1))
-        {
-            for (int32_t i = -2; i < 3; i++)
-            {
+        if (abs(tileX2 - tileX1) < abs(tileY2 - tileY1)) {
+            for (int32_t i = -2; i < 3; i++) {
                 if (isLinearPathBlocked(tileX1 + i, tileY1, tileX2 + i, tileY2)) return true;
             }
         }
-        else
-        {
-            for (int32_t i = -2; i < 3; i++)
-            {
+        else {
+            for (int32_t i = -2; i < 3; i++) {
                 if (isLinearPathBlocked(tileX1, tileY1 + i, tileX2, tileY2 + i)) return true;
             }
         }
@@ -1178,17 +1129,14 @@ extern "C"
 
         auto& mapEntry = MAP_ENTRIES[CURRENT_SCREEN];
 
-        if ((mapEntry.flags & 0x40) == 0 && (CURRENT_FRAME % 1200) == 0)
-        {
+        if ((mapEntry.flags & 0x40) == 0 && (CURRENT_FRAME % 1200) == 0) {
             if (HOUR == 16) initializeDaytimeTransition(0);
             if (HOUR == 20) initializeDaytimeTransition(1);
             if (HOUR == 6) initializeDaytimeTransition(2);
         }
 
-        for (int32_t i = 0; i < 3; i++)
-        {
-            for (int32_t j = 0; j < min(4, MAP_WIDTH); j++)
-            {
+        for (int32_t i = 0; i < 3; i++) {
+            for (int32_t j = 0; j < min(4, MAP_WIDTH); j++) {
                 auto tileId = (MAP_TILE_X + MAP_TILE_Y * MAP_WIDTH) + (MAP_WIDTH * i) + j;
 
                 // vanilla draws a transparent primitive, but we can just skip it
@@ -1222,8 +1170,7 @@ extern "C"
         for (auto& val : MAP_TILES)
             val = -1;
 
-        for (auto& val : MAP_TILE_DATA)
-        {
+        for (auto& val : MAP_TILE_DATA) {
             val.imagePtr = nullptr;
             val.posX     = 0;
             val.posY     = 0;
@@ -1266,8 +1213,7 @@ extern "C"
         loadMapSetup(setup);
         clearMapObjects(LOCAL_MAP_OBJECT_INSTANCE);
 
-        if (entry.num4bppImages != 0 || entry.num8bppImages != 0)
-        {
+        if (entry.num4bppImages != 0 || entry.num8bppImages != 0) {
             for (int32_t i = 0; i < entry.num8bppImages; i++)
                 loadMapImage1(GENERAL_BUFFER.data() + *headerPtr++);
             for (int32_t i = 0; i < entry.num4bppImages; i++)
@@ -1279,7 +1225,9 @@ extern "C"
         clearMapDigimon();
         loadMapEntities(GENERAL_BUFFER.data() + *headerPtr++, mapId, CURRENT_EXIT);
 
-        if (entry.doorsId != 0) { loadDoors(entry.doorsId - 1); }
+        if (entry.doorsId != 0) {
+            loadDoors(entry.doorsId - 1);
+        }
         if (mapId > 100 && mapId < 104) loadWarpCrystals(mapId);
         if (mapId == 165) loadTrainingPoop();
 
@@ -1322,24 +1270,20 @@ extern "C"
         auto maxX = MAP_WIDTH * 128 - 320;
         auto maxY = MAP_HEIGHT * 128 - 240;
 
-        if (CAMERA_X < 0)
-        {
+        if (CAMERA_X < 0) {
             DRAWING_OFFSET_X = DRAW_OFFSET_LIMIT_X_MAX;
             CAMERA_X         = 0;
         }
-        else if (CAMERA_X > maxX)
-        {
+        else if (CAMERA_X > maxX) {
             DRAWING_OFFSET_X = DRAW_OFFSET_LIMIT_X_MIN;
             CAMERA_X         = maxX;
         }
 
-        if (CAMERA_Y < 0)
-        {
+        if (CAMERA_Y < 0) {
             DRAWING_OFFSET_Y = DRAW_OFFSET_LIMIT_Y_MAX;
             CAMERA_Y         = 0;
         }
-        else if (CAMERA_Y > maxY)
-        {
+        else if (CAMERA_Y > maxY) {
             DRAWING_OFFSET_Y = DRAW_OFFSET_LIMIT_Y_MIN;
             CAMERA_Y         = maxY;
         }
@@ -1347,10 +1291,8 @@ extern "C"
 
     void uploadMapTileImages(MapTileData* tileData, int32_t tileOffset)
     {
-        for (int32_t i = 0; i < min(MAP_WIDTH, 4); i++)
-        {
-            for (int32_t j = 0; j < min(MAP_HEIGHT, 3); j++)
-            {
+        for (int32_t i = 0; i < min(MAP_WIDTH, 4); i++) {
+            for (int32_t j = 0; j < min(MAP_HEIGHT, 3); j++) {
                 auto& tile = tileData[tileOffset + i + j * MAP_WIDTH];
                 RECT rect{.x = tile.texU, .y = tile.texV, .width = 64, .height = 128};
 
@@ -1386,8 +1328,7 @@ extern "C"
         auto height       = buff.read<uint16_t>();
         auto paletteCount = buff.read<uint32_t>();
 
-        for (int32_t i = 0; i < paletteCount; i++)
-        {
+        for (int32_t i = 0; i < paletteCount; i++) {
             mapCluts[i] = reinterpret_cast<RGB5551*>(buff.buffer);
             libgpu_LoadClut(buff.buffer, 0, 0x1E1 + i);
             buff.skip(sizeof(uint16_t) * 256);
@@ -1395,17 +1336,14 @@ extern "C"
 
         updateTimeOfDay();
 
-        for (int32_t y = 0; y < MAP_HEIGHT; y++)
-        {
-            for (int32_t x = 0; x < MAP_WIDTH; x++)
-            {
+        for (int32_t y = 0; y < MAP_HEIGHT; y++) {
+            for (int32_t x = 0; x < MAP_WIDTH; x++) {
                 auto& tileData  = MAP_TILE_DATA[y * MAP_WIDTH + x];
                 tileData.tileId = MAP_TILES[y * MAP_WIDTH + x];
 
                 uint8_t* tileBuffer = nullptr;
 
-                if (tileData.tileId != -1)
-                {
+                if (tileData.tileId != -1) {
                     buff.skip(4); // tile X/Y offset? Unused?
                     tileBuffer = buff.buffer;
                     buff.skip(128 * 128);
@@ -1440,33 +1378,30 @@ extern "C"
     {
         if (daytimeTransitionActive) removeObject(ObjectID::DAYTIME_TRANSITION, 0);
 
-        if ((MAP_ENTRIES[CURRENT_SCREEN].flags & 0x40) != 0) { libgpu_LoadClut(mapCluts[0], 0, 0x1E0); }
-        else
-        {
+        if ((MAP_ENTRIES[CURRENT_SCREEN].flags & 0x40) != 0) {
+            libgpu_LoadClut(mapCluts[0], 0, 0x1E0);
+        }
+        else {
             auto factor = 10;
 
-            if (HOUR >= 16 && HOUR <= 19)
-            {
+            if (HOUR >= 16 && HOUR <= 19) {
                 libgpu_LoadClut(mapCluts[1], 0, 0x1E0);
                 factor           = 7;
                 currentTimeOfDay = 0;
             }
-            else if (HOUR < 6 || HOUR > 19)
-            {
+            else if (HOUR < 6 || HOUR > 19) {
                 factor = 5;
                 libgpu_LoadClut(mapCluts[2], 0, 0x1E0);
                 currentTimeOfDay = 1;
             }
-            else
-            {
+            else {
                 factor = 10;
 
                 libgpu_LoadClut(mapCluts[0], 0, 0x1E0);
                 currentTimeOfDay = 2;
             }
 
-            for (int32_t i = 0; i < 3; i++)
-            {
+            for (int32_t i = 0; i < 3; i++) {
                 LIGHT_DATA[i].r = (mapLights[i].r * factor) / 10;
                 LIGHT_DATA[i].g = (mapLights[i].g * factor) / 10;
                 LIGHT_DATA[i].b = (mapLights[i].b * factor) / 10;
@@ -1505,8 +1440,7 @@ extern "C"
 
         updateMapTile();
 
-        if (!updateAll)
-        {
+        if (!updateAll) {
             if (CAMERA_Y_PREVIOUS < CAMERA_Y)
                 updateTileRow(1);
             else if (CAMERA_Y_PREVIOUS > CAMERA_Y)
@@ -1523,16 +1457,14 @@ extern "C"
 
     bool scriptTickChangeMap(uint32_t mapId, uint8_t exit, bool showMapName)
     {
-        if (SCRIPT_MAP_CHANGE_STATE == 0)
-        {
+        if (SCRIPT_MAP_CHANGE_STATE == 0) {
             SCRIPT_MAP_CHANGE_STATE = 1;
             fadeToBlack(20);
             PREVIOUS_EXIT = CURRENT_EXIT;
             return false;
         }
 
-        if (SCRIPT_MAP_CHANGE_STATE == 1)
-        {
+        if (SCRIPT_MAP_CHANGE_STATE == 1) {
             if (showMapName && FADE_DATA.fadeOutCurrent == 10) addMapNameObject(mapId);
 
             if (FADE_DATA.fadeOutCurrent < 20) return false;
@@ -1545,8 +1477,7 @@ extern "C"
             Tamer_setState(6);
             fadeFromBlack(20);
             SCRIPT_MAP_CHANGE_STATE = 0;
-            if (IS_SCRIPT_PAUSED == 1)
-            {
+            if (IS_SCRIPT_PAUSED == 1) {
                 Tamer_setState(0);
                 Partner_setState(1);
                 setCameraFollowPlayer();
@@ -1566,10 +1497,8 @@ extern "C"
         PREVIOUS_SCREEN = CURRENT_SCREEN;
 
         // birdra transport
-        for (auto data : quickTravelData)
-        {
-            if (map == data.map)
-            {
+        for (auto data : quickTravelData) {
+            if (map == data.map) {
                 PREVIOUS_SCREEN = data.previousMap;
                 PREVIOUS_EXIT   = data.previousExit;
                 break;
@@ -1577,25 +1506,24 @@ extern "C"
         }
 
         // canyon, falling off the cliff
-        if (CURRENT_SCREEN == 43 && map == 42)
-        {
+        if (CURRENT_SCREEN == 43 && map == 42) {
             PREVIOUS_SCREEN = 41;
             PREVIOUS_EXIT   = 1;
         }
 
         // seadramon to beetleland
-        if (CURRENT_SCREEN == 6 && map == 105) { PREVIOUS_SCREEN = 106; }
+        if (CURRENT_SCREEN == 6 && map == 105) {
+            PREVIOUS_SCREEN = 106;
+        }
 
         // Whamon's cave back to Freezeland
-        if (CURRENT_SCREEN == 142 && map == 135)
-        {
+        if (CURRENT_SCREEN == 142 && map == 135) {
             PREVIOUS_SCREEN = 132;
             PREVIOUS_EXIT   = 1;
         }
 
         // coelamon to jungle
-        if (CURRENT_SCREEN == 5 && map == 12)
-        {
+        if (CURRENT_SCREEN == 5 && map == 12) {
             PREVIOUS_SCREEN = 13;
             PREVIOUS_EXIT   = 1;
         }
@@ -1638,10 +1566,8 @@ extern "C"
 
         if (!hasAgumon) return 204;
 
-        if (hasNewHouse)
-        {
-            if (hasBirdramon)
-            {
+        if (hasNewHouse) {
+            if (hasBirdramon) {
                 if (hasVegimon) return 179;
                 if (hasPalmon) return 178;
                 return 177;
@@ -1651,10 +1577,8 @@ extern "C"
             if (hasPalmon) return 175;
             return 174;
         }
-        else
-        {
-            if (hasBirdramon)
-            {
+        else {
+            if (hasBirdramon) {
                 if (hasVegimon) return 173;
                 if (hasPalmon) return 172;
                 return 171;
@@ -1673,8 +1597,7 @@ extern "C"
 
     void updateMapLightState()
     {
-        for (const auto data : mapLightUpdateData)
-        {
+        for (const auto data : mapLightUpdateData) {
             if (CURRENT_SCRIPT_ID != data.mapId) continue;
             if (data.trigger != 0xFFFF && isTriggerSet(data.trigger)) continue;
 

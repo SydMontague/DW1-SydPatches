@@ -84,14 +84,12 @@ namespace
     {
         auto& data = entityParticleFXData[instanceId];
 
-        if (data.counter <= 0)
-        {
+        if (data.counter <= 0) {
             removeEntityParticleFX(instanceId);
             return;
         }
 
-        if (data.counter % 4 == 0)
-        {
+        if (data.counter % 4 == 0) {
             data.bone = random2(getDigimonData(data.entity->type)->boneCount - 1) + 1;
             data.mode = random2(9);
         }
@@ -109,10 +107,8 @@ extern "C"
     void addEntityParticleFX(Entity* entity, int32_t counter)
     {
         int32_t i = 0;
-        for (auto& data : entityParticleFXData)
-        {
-            if (data.counter < 0)
-            {
+        for (auto& data : entityParticleFXData) {
+            if (data.counter < 0) {
                 data.counter = counter;
                 data.bone    = random2(getDigimonData(entity->type)->boneCount - 1) + 1;
                 data.mode    = 0;

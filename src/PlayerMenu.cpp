@@ -61,40 +61,35 @@ namespace
     void PlayerMenu::tick()
     {
         bool handleInput = true;
-        if (state == 0) { infoView.tick(); }
-        else if (state == 1)
-        {
+        if (state == 0) {
+            infoView.tick();
+        }
+        else if (state == 1) {
             handleInput = chartView.canBeClosed();
             chartView.tick();
         }
-        else if (state == 2)
-        {
+        else if (state == 2) {
             handleInput = medalView.canBeClosed();
             medalView.tick();
         }
-        else if (state == 3)
-        {
+        else if (state == 3) {
             handleInput = cardView.canBeClosed();
             cardView.tick();
         }
 
-        if (handleInput)
-        {
-            if (isKeyDownRepeat(InputButtons::BUTTON_LEFT) && state >= 1)
-            {
+        if (handleInput) {
+            if (isKeyDownRepeat(InputButtons::BUTTON_LEFT) && state >= 1) {
                 state -= 1;
                 updateLabelColors();
                 playSound(0, 2);
             }
-            if (isKeyDownRepeat(InputButtons::BUTTON_RIGHT) && state < 3)
-            {
+            if (isKeyDownRepeat(InputButtons::BUTTON_RIGHT) && state < 3) {
                 state += 1;
                 updateLabelColors();
                 playSound(0, 2);
             }
 
-            if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
-            {
+            if (isKeyDown(InputButtons::BUTTON_TRIANGLE)) {
                 TRIANGLE_MENU_STATE = 6;
                 playSound(0, 4);
             }

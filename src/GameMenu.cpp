@@ -281,8 +281,7 @@ extern "C"
         auto posX = GAME_MENU_SPRITES[selection].posX - 4;
         auto posY = GAME_MENU_SPRITES[selection].posY - 4;
 
-        for (auto& val : GAME_MENU_SELECTOR)
-        {
+        for (auto& val : GAME_MENU_SELECTOR) {
             POLY_FT4* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
             libgpu_SetPolyFT4(prim);
             prim->u0 = val.uMin;
@@ -321,8 +320,7 @@ extern "C"
         uint8_t buffer[8]{};
         sprintf(buffer, "%d", value);
 
-        for (int32_t i = 0; i < sizeof(buffer); i++)
-        {
+        for (int32_t i = 0; i < sizeof(buffer); i++) {
             auto val = buffer[i];
             if (val == 0) break;
             if (val < '0' || val > '9') continue;
@@ -330,13 +328,15 @@ extern "C"
             auto digit     = val - '0';
             uint8_t uCoord = 121;
             uint8_t vCoord = 52;
-            if (digit == 0) {}
-            else if (digit < 5)
-            {
+            if (digit == 0) {
+            }
+            else if (digit < 5) {
                 vCoord = 40;
                 uCoord = (digit - 1) * 8 + 97;
             }
-            else { uCoord = (digit - 5) * 8 + 81; }
+            else {
+                uCoord = (digit - 5) * 8 + 81;
+            }
 
             renderRectPolyFT4(posX + i * 9, -74, 7, 12, uCoord, vCoord - 64, 30, 0x7F10, 5, 0);
         }
@@ -346,8 +346,7 @@ extern "C"
     {
         const auto yOffset = (!isDebugEnabled() && fishHidden) ? -39 : 0;
 
-        if (MENU_STATE == 0)
-        {
+        if (MENU_STATE == 0) {
             drawGameMenu();
             MENU_STATE = 1;
         }
@@ -357,8 +356,7 @@ extern "C"
         renderDateNumber(YEAR + 1, -22, -74);
         renderTriangleCursor(selectedOption, yOffset);
 
-        for (int32_t i = 0; i < optionCount; i++)
-        {
+        for (int32_t i = 0; i < optionCount; i++) {
             auto option  = menuOptionDisabled[i];
             auto& badge  = gameMenuLabels[i];
             auto& sprite = GAME_MENU_SPRITES[i];
@@ -368,9 +366,10 @@ extern "C"
             badge.hasShadow = option ? 0 : 1;
             badge.color     = option ? -1 : 0;
 
-            if (i == 7) { renderDebugIcon(sprite.posX, sprite.posY + yOffset, sprite.width, sprite.height); }
-            else
-            {
+            if (i == 7) {
+                renderDebugIcon(sprite.posX, sprite.posY + yOffset, sprite.width, sprite.height);
+            }
+            else {
                 renderRectPolyFT4(sprite.posX,
                                   sprite.posY + yOffset,
                                   sprite.width,
@@ -391,8 +390,7 @@ extern "C"
 
     void handleGameMenuSelection(int32_t option)
     {
-        switch (option)
-        {
+        switch (option) {
             case 0: TRIANGLE_MENU_STATE = 2; break;
             case 1: TRIANGLE_MENU_STATE = 3; break;
             case 2: TRIANGLE_MENU_STATE = 5; break;
@@ -437,13 +435,11 @@ extern "C"
         int8_t col = slot % 3;
         for (int8_t r = 0; r < 3; r++)
             for (int8_t c = 0; c < 3; c++)
-                if (SLOT_MAPPING[r][c] == slot)
-                {
+                if (SLOT_MAPPING[r][c] == slot) {
                     row = r;
                     col = c;
                 }
-        for (int8_t i = 1; i <= 3; i++)
-        {
+        for (int8_t i = 1; i <= 3; i++) {
             int8_t r = ((row + dir * i) % 3 + 3) % 3;
             int8_t s = SLOT_MAPPING[r][col];
             if (s == -1) continue;
@@ -466,28 +462,23 @@ extern "C"
         if (isKeyDown(InputButtons::BUTTON_RIGHT)) newSelection = ring(newSelection + 1, 0, optionCount);
         if (isKeyDown(InputButtons::BUTTON_UP)) newSelection = verticalMove(newSelection, -1);
 
-        if (newSelection != selectedOption)
-        {
+        if (newSelection != selectedOption) {
             selectedOption = newSelection;
             playSound(0, 2);
         }
 
-        if (MENU_STATE == 1)
-        {
-            if (isKeyDown(InputButtons::BUTTON_CROSS))
-            {
+        if (MENU_STATE == 1) {
+            if (isKeyDown(InputButtons::BUTTON_CROSS)) {
                 if (menuOptionDisabled[selectedOption])
                     playSound(0, 4);
-                else
-                {
+                else {
                     playSound(0, 3);
                     // vanilla does this unconditional, but that seems stupid
                     handleGameMenuSelection(selectedOption);
                 }
             }
 
-            if (isKeyDown(InputButtons::BUTTON_TRIANGLE) && (UI_BOX_DATA[0].state == 1 || UI_BOX_DATA[0].frame == 0))
-            {
+            if (isKeyDown(InputButtons::BUTTON_TRIANGLE) && (UI_BOX_DATA[0].state == 1 || UI_BOX_DATA[0].frame == 0)) {
                 playSound(0, 4);
                 closeTriangleMenu();
                 Tamer_setState(0);
@@ -507,8 +498,7 @@ extern "C"
 
     void tickTriangleMenu(int32_t instanceId)
     {
-        switch (TRIANGLE_MENU_STATE)
-        {
+        switch (TRIANGLE_MENU_STATE) {
             case 0:
             {
                 auto height = GAME_MENU_HEIGHT;
@@ -527,8 +517,7 @@ extern "C"
             case 2:
             {
                 closeUIBoxIfOpen(0);
-                if (UI_BOX_DATA[0].frame == 0)
-                {
+                if (UI_BOX_DATA[0].frame == 0) {
                     addInventoryUI();
                     TRIANGLE_MENU_STATE = 0xFFFFFFFF;
                 }
@@ -537,8 +526,7 @@ extern "C"
             case 3:
             {
                 closeUIBoxIfOpen(0);
-                if (UI_BOX_DATA[0].frame == 0)
-                {
+                if (UI_BOX_DATA[0].frame == 0) {
                     TRIANGLE_MENU_STATE = 0xFFFFFFFF;
                     addDigimonMenu();
                 }
@@ -553,8 +541,7 @@ extern "C"
             case 5:
             {
                 closeUIBoxIfOpen(0);
-                if (UI_BOX_DATA[0].frame == 0)
-                {
+                if (UI_BOX_DATA[0].frame == 0) {
                     TRIANGLE_MENU_STATE = 0xFFFFFFFF;
                     addPlayerMenu();
                 }
@@ -569,8 +556,7 @@ extern "C"
             case 7:
             {
                 closeUIBoxIfOpen(0);
-                if (UI_BOX_DATA[0].frame == 0)
-                {
+                if (UI_BOX_DATA[0].frame == 0) {
                     TRIANGLE_MENU_STATE = 0xFFFFFFFF;
                     addDebugMenu();
                 }

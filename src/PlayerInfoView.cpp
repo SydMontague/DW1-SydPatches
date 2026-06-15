@@ -320,8 +320,7 @@ namespace
 
     constexpr char const* getTamerLevelName(uint8_t level)
     {
-        switch (level)
-        {
+        switch (level) {
             default:
             case 0: return "Amateur";
             case 1: return "Novice";
@@ -340,8 +339,7 @@ namespace
     int32_t getMedalCount()
     {
         int32_t medalCount = 0;
-        for (int32_t i = 0; i < 20; i++)
-        {
+        for (int32_t i = 0; i < 20; i++) {
             if (hasMedal(static_cast<Medal>(i))) medalCount++;
         }
 

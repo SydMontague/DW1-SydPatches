@@ -25,8 +25,7 @@ extern "C"
         string[0] = glyph[0];
 
         int idx = 1;
-        if (jis_is_two_byte(glyph[0]))
-        {
+        if (jis_is_two_byte(glyph[0])) {
             string[1] = glyph[1];
             idx++;
         }
@@ -35,8 +34,7 @@ extern "C"
 
     const uint8_t* jis_at_index(const uint8_t* string, uint32_t index)
     {
-        for (int i = 0; i < index; i++)
-        {
+        for (int i = 0; i < index; i++) {
             uint8_t firstByte = *string;
             if (firstByte == 0) return string;
 
@@ -50,8 +48,7 @@ extern "C"
         int32_t glyphs = 0;
         int32_t bytes  = 0;
 
-        while (str[0] != 0)
-        {
+        while (str[0] != 0) {
             glyphs++;
             bytes += jis_is_two_byte(str[0]) + 1;
             str += jis_is_two_byte(str[0]) + 1;

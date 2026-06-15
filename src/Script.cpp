@@ -12,8 +12,7 @@ extern "C"
     void scriptStartTournament()
     {
         if (SCRIPT_STATE_2 == 3) ACTIVE_INSTRUCTION = 0;
-        if (SCRIPT_STATE_2 == 2)
-        {
+        if (SCRIPT_STATE_2 == 2) {
             closeBox(0);
             startTournament();
             ACTIVE_INSTRUCTION = 0;
@@ -22,12 +21,13 @@ extern "C"
         if (SCRIPT_STATE_2 == 0) SCRIPT_STATE_2 = 2;
     }
 
-    void checkTournamentMedalConditions() {
+    void checkTournamentMedalConditions()
+    {
         // in vanilla this is leftover code that is duplicated elsewhere
         // removing this fixes the ability to get the 100 tournament won medal by winning just 100 battles
         return;
     }
-    
+
     void scriptCheckTournamentMedal()
     {
         ACTIVE_INSTRUCTION = 0;

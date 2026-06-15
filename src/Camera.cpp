@@ -51,14 +51,12 @@ namespace
 
     bool checkCameraMovement(int32_t speed)
     {
-        if (CAMERA_REACHED_TARGET == -1)
-        {
+        if (CAMERA_REACHED_TARGET == -1) {
             CAMERA_REACHED_TARGET = 0;
             addObject(ObjectID::CAMERA_MOVEMENT, speed, tickCameraMovement, nullptr);
             return false;
         }
-        if (CAMERA_REACHED_TARGET == 1)
-        {
+        if (CAMERA_REACHED_TARGET == 1) {
             CAMERA_REACHED_TARGET = -1;
             return true;
         }
@@ -70,27 +68,23 @@ namespace
     {
         CameraAtEdge result{.canMoveX = true, .canMoveY = true};
 
-        if (CAMERA_X < 0)
-        {
+        if (CAMERA_X < 0) {
             DRAWING_OFFSET_X = DRAW_OFFSET_LIMIT_X_MAX;
             CAMERA_X         = 0;
             result.canMoveX  = false;
         }
-        else if (CAMERA_X > (MAP_WIDTH * 128 - SCREEN_WIDTH))
-        {
+        else if (CAMERA_X > (MAP_WIDTH * 128 - SCREEN_WIDTH)) {
             DRAWING_OFFSET_X = DRAW_OFFSET_LIMIT_X_MIN;
             CAMERA_X         = (MAP_WIDTH * 128 - SCREEN_WIDTH);
             result.canMoveX  = false;
         }
 
-        if (CAMERA_Y < 0)
-        {
+        if (CAMERA_Y < 0) {
             DRAWING_OFFSET_Y = DRAW_OFFSET_LIMIT_Y_MAX;
             CAMERA_Y         = 0;
             result.canMoveY  = false;
         }
-        else if (CAMERA_Y > (MAP_HEIGHT * 128 - SCREEN_HEIGHT))
-        {
+        else if (CAMERA_Y > (MAP_HEIGHT * 128 - SCREEN_HEIGHT)) {
             DRAWING_OFFSET_Y = DRAW_OFFSET_LIMIT_Y_MIN;
             CAMERA_Y         = (MAP_HEIGHT * 128 - SCREEN_HEIGHT);
             result.canMoveY  = false;
@@ -109,36 +103,28 @@ void updateDrawingOffsets(const MapPos& oldPos, const MapPos& newPos)
     PLAYER_OFFSET_X += diffX;
     PLAYER_OFFSET_Y += diffY;
 
-    if (result.canMoveX)
-    {
+    if (result.canMoveX) {
         DRAWING_OFFSET_X += diffX;
-        if ((POLLED_INPUT & InputButtons::BUTTON_LEFT) != 0)
-        {
-            if (PLAYER_OFFSET_X < DRAWING_OFFSET_X)
-            {
+        if ((POLLED_INPUT & InputButtons::BUTTON_LEFT) != 0) {
+            if (PLAYER_OFFSET_X < DRAWING_OFFSET_X) {
                 DRAWING_OFFSET_X -= diffX;
                 CAMERA_X += diffX;
             }
         }
-        else if ((POLLED_INPUT & InputButtons::BUTTON_RIGHT) != 0 && DRAWING_OFFSET_X < PLAYER_OFFSET_X)
-        {
+        else if ((POLLED_INPUT & InputButtons::BUTTON_RIGHT) != 0 && DRAWING_OFFSET_X < PLAYER_OFFSET_X) {
             DRAWING_OFFSET_X -= diffX;
             CAMERA_X += diffX;
         }
     }
-    if (result.canMoveY)
-    {
+    if (result.canMoveY) {
         DRAWING_OFFSET_Y += diffY;
-        if ((POLLED_INPUT & InputButtons::BUTTON_UP) != 0)
-        {
-            if (PLAYER_OFFSET_Y < DRAWING_OFFSET_Y)
-            {
+        if ((POLLED_INPUT & InputButtons::BUTTON_UP) != 0) {
+            if (PLAYER_OFFSET_Y < DRAWING_OFFSET_Y) {
                 DRAWING_OFFSET_Y -= diffY;
                 CAMERA_Y += diffY;
             }
         }
-        else if ((POLLED_INPUT & InputButtons::BUTTON_DOWN) != 0 && DRAWING_OFFSET_Y < PLAYER_OFFSET_Y)
-        {
+        else if ((POLLED_INPUT & InputButtons::BUTTON_DOWN) != 0 && DRAWING_OFFSET_Y < PLAYER_OFFSET_Y) {
             DRAWING_OFFSET_Y -= diffY;
             CAMERA_Y += diffY;
         }
@@ -149,8 +135,7 @@ extern "C"
 {
     void tickCameraMovement(int32_t speed)
     {
-        if (!CAMERA_HAS_TARGET)
-        {
+        if (!CAMERA_HAS_TARGET) {
             auto viewPos   = getMapPosition(GS_VIEWPOINT.refpointX, GS_VIEWPOINT.refpointY, GS_VIEWPOINT.refpointZ);
             auto cameraPos = getMapPosition(CAMERA_TARGET);
 
@@ -182,15 +167,13 @@ extern "C"
         DRAWING_OFFSET_X += (drawDiffX / speed);
         DRAWING_OFFSET_Y += (drawDiffY / speed);
 
-        if (data.deltaX >= 0)
-        {
+        if (data.deltaX >= 0) {
             CAMERA_X += cameraDiffX < 1 ? -1 : 1;
             DRAWING_OFFSET_X += drawDiffX < 1 ? -1 : 1;
             data.deltaX--;
         }
 
-        if (data.deltaY >= 0)
-        {
+        if (data.deltaY >= 0) {
             CAMERA_Y += cameraDiffY < 1 ? -1 : 1;
             DRAWING_OFFSET_Y += drawDiffY < 1 ? -1 : 1;
             data.deltaY--;
@@ -198,35 +181,29 @@ extern "C"
 
         auto result = cameraIsAtEdge();
 
-        if (result.canMoveX)
-        {
+        if (result.canMoveX) {
             if (drawDiffX < 0)
                 DRAWING_OFFSET_X = max(DRAWING_OFFSET_X, data.diffX);
-            else
-            {
+            else {
                 DRAWING_OFFSET_X = min(DRAWING_OFFSET_X, data.diffX);
                 if (data.drawOffsetX == data.diffX) DRAWING_OFFSET_X = data.diffX;
             }
 
-            if (DRAWING_OFFSET_X == data.diffX)
-            {
+            if (DRAWING_OFFSET_X == data.diffX) {
                 CAMERA_X        = data.finalX;
                 result.canMoveX = false;
             }
         }
 
-        if (result.canMoveY)
-        {
+        if (result.canMoveY) {
             if (drawDiffY < 0)
                 DRAWING_OFFSET_Y = max(DRAWING_OFFSET_Y, data.diffY);
-            else
-            {
+            else {
                 DRAWING_OFFSET_Y = min(DRAWING_OFFSET_Y, data.diffY);
                 if (data.drawOffsetY == data.diffY) DRAWING_OFFSET_Y = data.diffY;
             }
 
-            if (DRAWING_OFFSET_Y == data.diffY)
-            {
+            if (DRAWING_OFFSET_Y == data.diffY) {
                 CAMERA_Y        = data.finalY;
                 result.canMoveY = false;
             }
@@ -234,15 +211,13 @@ extern "C"
 
         handleTileUpdate(0, (cameraDiffX / speed) >= 80);
 
-        if (!result.canMoveX && !result.canMoveY)
-        {
+        if (!result.canMoveX && !result.canMoveY) {
             CAMERA_HAS_TARGET = false;
             setCameraFollowPlayer();
             if (CAMERA_REACHED_TARGET == 0) CAMERA_REACHED_TARGET = 1;
 
             removeObject(ObjectID::CAMERA_MOVEMENT, speed);
-            if (CAMERA_UPDATE_TILES == 1)
-            {
+            if (CAMERA_UPDATE_TILES == 1) {
                 uploadMapTileImages(MAP_TILE_DATA.data(), MAP_TILE_X + MAP_TILE_Y * MAP_WIDTH);
                 CAMERA_UPDATE_TILES = false;
             }

@@ -64,8 +64,11 @@ static void seqClose()
     SEQ_ACCESS_NUM = -1;
 }
 
-static int32_t
-readVHBFileSectors(int32_t vabId, const char* filename, uint8_t* buffer, uint32_t offset, int32_t sectors)
+static int32_t readVHBFileSectors(int32_t vabId,
+                                  const char* filename,
+                                  uint8_t* buffer,
+                                  uint32_t offset,
+                                  int32_t sectors)
 {
     readFileSectors(filename, buffer, offset, sectors);
 
@@ -114,8 +117,7 @@ static bool loadMusicFont(int32_t font)
 
 static inline uint32_t getFreeChannelIndex()
 {
-    for (int32_t i = 0; i < 14; i++)
-    {
+    for (int32_t i = 0; i < 14; i++) {
         auto val = ((freeChannelIndex + i) % 14) + 10;
         if (libspu_SpuGetKeyStatus(1 << (val & 0x1F)) != 1) return val;
     }
@@ -135,8 +137,7 @@ static uint32_t startSound(int32_t vabId, int32_t prog, uint32_t note)
     auto header = VHB_HEADER_ADDR[vabId];
     auto mask   = 0;
 
-    for (int32_t i = 0; i < 16; i++)
-    {
+    for (int32_t i = 0; i < 16; i++) {
         if (note != header[i * 0x20 + prog * 0x200 + 0x827]) continue;
 
         auto voice = getNextFreeChannel();
@@ -160,11 +161,9 @@ static bool loadSoundCompleteCallback(void* para)
 {
     auto param = reinterpret_cast<uint32_t>(para);
 
-    if (LOAD_SOUND_COMPLETE_STATE == 0)
-    {
+    if (LOAD_SOUND_COMPLETE_STATE == 0) {
         auto result = uploadSoundStart(SOUND_BUFFERS[param].buffer, param);
-        if (!result)
-        {
+        if (!result) {
             SOUND_BUFFERS[param].vabId = 0xFFFF;
             return false;
         }
@@ -174,14 +173,12 @@ static bool loadSoundCompleteCallback(void* para)
         return true;
     }
 
-    if (LOAD_SOUND_COMPLETE_STATE == 4)
-    {
+    if (LOAD_SOUND_COMPLETE_STATE == 4) {
         if (libsnd_SsVabTransCompleted(0) != 0) LOAD_SOUND_COMPLETE_STATE = 5;
         return true;
     }
 
-    if (LOAD_SOUND_COMPLETE_STATE == 5)
-    {
+    if (LOAD_SOUND_COMPLETE_STATE == 5) {
         libsnd_SsUtGetVBaddrInSB(SOUND_BUFFERS[param].vabId);
         return false;
     }
@@ -199,8 +196,7 @@ static bool loadSoundFinishCallback(void* param)
 static void uploadSoundBuffer(uint32_t param)
 {
     auto result = uploadSoundStart(SOUND_BUFFERS[param].buffer, param);
-    if (!result)
-    {
+    if (!result) {
         SOUND_BUFFERS[param].vabId = 0xFFFF;
         return;
     }
@@ -250,8 +246,7 @@ extern "C"
 
     void stopSoundMask(uint32_t mask)
     {
-        for (int32_t i = 0; i < 0x18; i++)
-        {
+        for (int32_t i = 0; i < 0x18; i++) {
             if ((mask & (1 << i)) == 0) continue;
 
             libsnd_SsUtAutoVol(i, 0x7f, 0, 6);
@@ -274,10 +269,8 @@ extern "C"
         libsnd_SsUtAllKeyOff(0);
 
         // TODO why 10?
-        for (int32_t i = 10; i < 0x18; i++)
-        {
-            if (libspu_SpuGetKeyStatus(1 << i) == 1)
-            {
+        for (int32_t i = 10; i < 0x18; i++) {
+            if (libspu_SpuGetKeyStatus(1 << i) == 1) {
                 libsnd_SsUtAutoVol(i, 0x7f, 0, 6);
                 libsnd_SsUtKeyOffV(i);
             }
@@ -339,8 +332,7 @@ extern "C"
         seqStop();
         seqClose();
 
-        if (CURRENT_SEQ_FONT != font)
-        {
+        if (CURRENT_SEQ_FONT != font) {
             loadMusicFont(font);
             CURRENT_SEQ_FONT = font;
         }
@@ -396,8 +388,7 @@ extern "C"
 
     int32_t isSoundLoaded(bool isAsync, int32_t soundId)
     {
-        if (isAsync)
-        {
+        if (isAsync) {
             while (SOUND_BUFFERS[soundId].finishedLoading != 0)
                 tickFileReadQueue();
         }

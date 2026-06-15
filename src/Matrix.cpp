@@ -90,8 +90,7 @@ extern "C"
 
     void matrixToEuler1(Matrix* input, SVector* output)
     {
-        if (input->m00 == 0 && input->m22 == 0)
-        {
+        if (input->m00 == 0 && input->m22 == 0) {
             output->x = libgte_ratan2(input->m21, input->m11);
             output->y = input->m02 > 0 ? 1024 : -1024;
             output->z = 0;
@@ -130,8 +129,7 @@ extern "C"
 
     void matrixToEuler2(Matrix* input, SVector* output)
     {
-        if (input->m02 == 0 && input->m22 == 0)
-        {
+        if (input->m02 == 0 && input->m22 == 0) {
             output->y = libgte_ratan2(-input->m20, input->m00);
             output->x = input->m12 > 0 ? -1024 : 1024;
             output->z = 0;
@@ -173,8 +171,7 @@ extern "C"
         dtl::array<GsCOORDINATE2*, 100> arr;
         int32_t i = 0;
 
-        while (coord != nullptr)
-        {
+        while (coord != nullptr) {
             arr[i++] = coord;
             coord    = coord->super;
         }

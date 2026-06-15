@@ -28,8 +28,7 @@ UIBox::State UIBox::getState()
 
 void UIBox::tick()
 {
-    switch (state)
-    {
+    switch (state) {
         case State::OPENED:
         case State::CLOSED: break;
         case State::CLOSING:
@@ -47,8 +46,7 @@ void UIBox::tick()
 
 void UIBox::render(int32_t depth)
 {
-    switch (state)
-    {
+    switch (state) {
         case State::CLOSED: return;
         case State::OPENED: renderOpened(depth); break;
         case State::OPENING:

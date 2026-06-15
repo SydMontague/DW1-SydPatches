@@ -20,8 +20,7 @@ extern "C"
         dtl::array<RGB5551, 1792> bla;
         const auto factor = 255 - progress;
 
-        for (int32_t i = 0; i < 256; i++)
-        {
+        for (int32_t i = 0; i < 256; i++) {
             RGB5551 entry = clut[i];
 
             bla[i].alpha = entry.alpha;
@@ -30,8 +29,7 @@ extern "C"
             bla[i].blue  = (entry.blue * factor) / 255;
         }
 
-        for (int32_t i = 1024; i < bla.size(); i++)
-        {
+        for (int32_t i = 1024; i < bla.size(); i++) {
             RGB5551 entry = clut[i];
 
             bla[i].alpha = entry.alpha;
@@ -55,8 +53,7 @@ extern "C"
     {
         auto factor = 255 - progress;
         dtl::array<RGB5551, 16 * 26> bla;
-        for (int32_t i = 0; i < bla.size(); i++)
-        {
+        for (int32_t i = 0; i < bla.size(); i++) {
             RGB5551 entry = clut[i];
 
             bla[i].alpha = entry.alpha;

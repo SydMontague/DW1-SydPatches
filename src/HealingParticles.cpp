@@ -81,15 +81,13 @@ namespace
     {
         auto frameId = particles.frameId++;
 
-        if (frameId >= 44)
-        {
+        if (frameId >= 44) {
             particles.frameId = -1;
             removeObject(ObjectID::HEALING_PARTICLES, instanceId);
             return;
         }
 
-        if (frameId < 20)
-        {
+        if (frameId < 20) {
             Matrix mat;
             auto& particle = particles.particles1[frameId];
 
@@ -104,18 +102,15 @@ namespace
             particle.pos.z += particles.offsetZ;
         }
 
-        for (auto& particle : particles.particles1)
-        {
+        for (auto& particle : particles.particles1) {
             particle.counter--;
             particle.pos.pad = (rand() % 70) + 15;
         }
 
-        if (frameId < 39)
-        {
+        if (frameId < 39) {
             auto id = frameId % 5;
 
-            for (int32_t i = 0; i < 4; i++)
-            {
+            for (int32_t i = 0; i < 4; i++) {
                 auto& particle = particles.particles2[id + i * 5];
 
                 auto val1          = lerp(0, 512, 0, 13, frameId);
@@ -137,8 +132,7 @@ namespace
 
     void renderHealingParticles(int32_t instanceId)
     {
-        for (auto& particle : particles.particles1)
-        {
+        for (auto& particle : particles.particles1) {
             if (particle.counter < 0) continue;
 
             renderFXParticle(&particle.pos, particle.pos.pad, &PARTICLE_COLOR1[particle.counter]);
@@ -147,8 +141,7 @@ namespace
 
         if (!particles.hasParticle2) return;
 
-        for (auto& particle : particles.particles2)
-        {
+        for (auto& particle : particles.particles2) {
             if (particle.counter < 0) continue;
 
             renderFXParticle(&particle.pos, 24, &PARTICLE_COLOR3[particle.counter]);
@@ -168,8 +161,7 @@ void addHealingParticleEffect(Entity* entity, bool param)
     particles.radius       = data->radius * 12 / 10;
     particles.hasParticle2 = param;
 
-    for (int32_t i = 0; i < particles.particles1.size(); i++)
-    {
+    for (int32_t i = 0; i < particles.particles1.size(); i++) {
         particles.particles1[i].counter = -1;
         particles.particles2[i].counter = -1;
     }

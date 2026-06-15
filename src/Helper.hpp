@@ -71,8 +71,12 @@ constexpr dtl::array<uint8_t, size> format(const char* format, Args... args)
  */
 constexpr bool isWithinTimeframe(int32_t currentTime, int32_t start, int32_t end)
 {
-    if (start < end) { return currentTime >= start && currentTime < end; }
-    else { return !(currentTime >= end && currentTime < start); }
+    if (start < end) {
+        return currentTime >= start && currentTime < end;
+    }
+    else {
+        return !(currentTime >= end && currentTime < start);
+    }
 }
 
 /*
@@ -204,8 +208,7 @@ constexpr uint16_t getTPage(uint32_t pixelMode, uint32_t abr, uint32_t dx, uint3
 
 constexpr int32_t getStatLimit(Stat stat)
 {
-    switch (stat)
-    {
+    switch (stat) {
         case Stat::HP:
         case Stat::MP: return 9999;
         default: return 999;

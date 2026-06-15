@@ -390,33 +390,28 @@ namespace
 
         auto& entry = data[id];
 
-        if (entry.frameCount < 10)
-        {
+        if (entry.frameCount < 10) {
             auto scale         = lerp(0, 0x6000, 0, 10, entry.frameCount);
             entry.scale        = scale;
             auto height        = lerp(0, -65, 0, 10, entry.frameCount - 10);
             entry.activeHeight = entry.baseHeight + height;
         }
-        else if (entry.frameCount < 50)
-        {
+        else if (entry.frameCount < 50) {
             entry.scale        = 0x6000;
             entry.activeHeight = entry.baseHeight - 65;
             auto val           = sin(lerp(0, 512, 0, 20, entry.frameCount));
             entry.activeHeight = (entry.baseHeight - 65) + (val * 12) / 4096;
         }
-        else if (entry.frameCount == 50)
-        {
+        else if (entry.frameCount == 50) {
             entry.activeHeight = entry.baseHeight - 230;
             entry.scale        = 0xf000;
         }
-        else
-        {
+        else {
             removeConditionBubble(id);
             return;
         }
 
-        if (entry.iconPtr->duration <= entry.frameCount2)
-        {
+        if (entry.iconPtr->duration <= entry.frameCount2) {
             entry.frameCount2 = 0;
             entry.iconPtr     = entry.iconPtr + entry.iconPtr->nextIcon;
         }
@@ -476,14 +471,12 @@ namespace
         constexpr dtl::array<uint8_t, 19> offset{0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3};
 
         spriteIcon12.u = offset[frame % offset.size()] * 16 + 128;
-        if (offset[frame % offset.size()] == 0)
-        {
+        if (offset[frame % offset.size()] == 0) {
             spriteIcon12.v      = 0xb8;
             spriteIcon12.my     = 18;
             spriteIcon12.height = 8;
         }
-        else
-        {
+        else {
             spriteIcon12.v      = 0xb0;
             spriteIcon12.my     = 26;
             spriteIcon12.height = 16;
@@ -503,8 +496,7 @@ namespace
         auto mapPos = getMapPosition(pos);
         auto scale  = entry.scale;
 
-        if (entry.entity->isOnScreen)
-        {
+        if (entry.entity->isOnScreen) {
             auto val1    = entry.frameCount > 50 ? 8 : 32;
             auto yOffset = (val1 * (scale * VIEWPORT_DISTANCE) / mapPos.depth) / 4096;
             auto val2    = (mapPos.depth / 16);
@@ -520,15 +512,13 @@ namespace
 
         auto frame = entry.frameCount;
 
-        if (frame >= 51)
-        {
+        if (frame >= 51) {
             renderSprite(&spriteCloudPop, mapPos.screenX, mapPos.screenY, mapPos.depth, scale, scale);
             return;
         }
 
         auto iconSprite = entry.iconPtr->icon;
-        switch (iconSprite)
-        {
+        switch (iconSprite) {
             case 1: renderIcon1(frame, mapPos, scale); break;
             case 2: renderIcon2(frame, mapPos, scale); break;
             case 3: renderIcon3(frame, mapPos, scale); break;

@@ -114,15 +114,13 @@ namespace
     void updateSleepingTimes()
     {
         auto level = getDigimonData(PARTNER_ENTITY.type)->level;
-        if (level < Level::ROOKIE)
-        {
+        if (level < Level::ROOKIE) {
             PARTNER_PARA.sleepyHour   = (PARTNER_PARA.wakeupHour + PARTNER_PARA.hoursAwakeDefault) % 24;
             PARTNER_PARA.sleepyMinute = 0;
             PARTNER_PARA.wakeupHour   = (PARTNER_PARA.sleepyHour + PARTNER_PARA.hoursAsleepDefault) % 24;
             PARTNER_PARA.wakeupMinute = 0;
         }
-        else
-        {
+        else {
             auto pattern              = SLEEP_PATTERN[getRaiseData(PARTNER_ENTITY.type)->sleepCycle];
             PARTNER_PARA.sleepyHour   = pattern.sleepyHour;
             PARTNER_PARA.sleepyMinute = pattern.sleepyMinute;
@@ -133,23 +131,19 @@ namespace
 
     void tickTirednessMechanics()
     {
-        if (PARTNER_PARA.areaEffectTimer % 1200 == 0 && PARTNER_PARA.areaEffectTimer > 0)
-        {
-            if (PARTNER_AREA_RESPONSE == 1)
-            {
+        if (PARTNER_PARA.areaEffectTimer % 1200 == 0 && PARTNER_PARA.areaEffectTimer > 0) {
+            if (PARTNER_AREA_RESPONSE == 1) {
                 PARTNER_PARA.happiness += 1;
                 PARTNER_PARA.tiredness -= 2;
             }
-            if (PARTNER_AREA_RESPONSE == 2)
-            {
+            if (PARTNER_AREA_RESPONSE == 2) {
                 PARTNER_PARA.happiness -= 1;
                 PARTNER_PARA.tiredness += 1;
             }
         }
 
         // never used?
-        if (PARTNER_PARA.subTiredness >= 60)
-        {
+        if (PARTNER_PARA.subTiredness >= 60) {
             PARTNER_PARA.tiredness += 1;
             if (PARTNER_PARA.tiredness > TIREDNESS_MAX) PARTNER_PARA.tiredness = TIREDNESS_MAX;
             PARTNER_PARA.subTiredness = 0;
@@ -183,8 +177,7 @@ namespace
     {
         auto condition = PARTNER_PARA.condition;
 
-        if (condition.raw == 0)
-        {
+        if (condition.raw == 0) {
             if (PARTNER_PARA.happiness < -30)
                 partnerAnimation = 7;
             else if (PARTNER_PARA.happiness <= 30)
@@ -192,8 +185,7 @@ namespace
             else
                 partnerAnimation = 5;
         }
-        else
-        {
+        else {
             auto anim = 0;
 
             if (condition.isSleepy)
@@ -217,21 +209,18 @@ namespace
     {
         bool isSleepy = PARTNER_PARA.condition.isSleepy;
         auto level    = getDigimonData(PARTNER_ENTITY.type)->level;
-        if (CURRENT_FRAME != LAST_HANDLED_FRAME)
-        {
+        if (CURRENT_FRAME != LAST_HANDLED_FRAME) {
             // increase tiredness sleep timer
             if (CURRENT_FRAME % 20 == 0) PARTNER_PARA.tirednessSleepTimer += PARTNER_PARA.tiredness * 3 / 10;
 
             // handle tiredness sleep timer overflow
-            if (!isSleepy && PARTNER_PARA.tirednessSleepTimer >= 180 && CURRENT_FRAME % 200 == 0)
-            {
+            if (!isSleepy && PARTNER_PARA.tirednessSleepTimer >= 180 && CURRENT_FRAME % 200 == 0) {
                 PARTNER_PARA.timeAwakeToday -= 1;
                 PARTNER_PARA.tirednessSleepTimer -= 180;
 
                 PARTNER_PARA.sleepyHour   = PARTNER_PARA.wakeupHour + PARTNER_PARA.timeAwakeToday / 6;
                 PARTNER_PARA.sleepyMinute = PARTNER_PARA.wakeupMinute + (PARTNER_PARA.timeAwakeToday % 6) * 10;
-                while (PARTNER_PARA.sleepyMinute > 60)
-                {
+                while (PARTNER_PARA.sleepyMinute > 60) {
                     PARTNER_PARA.sleepyMinute -= 60;
                     PARTNER_PARA.sleepyHour += 1;
                 }
@@ -239,32 +228,25 @@ namespace
             }
 
             // handle sleepy status effects
-            if (isSleepy)
-            {
-                if (level == Level::FRESH)
-                {
-                    if (CURRENT_FRAME % 200 == 0)
-                    {
+            if (isSleepy) {
+                if (level == Level::FRESH) {
+                    if (CURRENT_FRAME % 200 == 0) {
                         PARTNER_PARA.happiness -= 1;
                         PARTNER_PARA.discipline -= 1;
                     }
                 }
-                else if (level == Level::IN_TRAINING)
-                {
-                    if (CURRENT_FRAME % 300 == 0)
-                    {
+                else if (level == Level::IN_TRAINING) {
+                    if (CURRENT_FRAME % 300 == 0) {
                         PARTNER_PARA.happiness -= 1;
                         PARTNER_PARA.discipline -= 1;
                     }
                 }
-                else if (CURRENT_FRAME % 1200 == 0)
-                {
+                else if (CURRENT_FRAME % 1200 == 0) {
                     PARTNER_PARA.happiness -= 2;
                     PARTNER_PARA.discipline -= 4;
                 }
 
-                if (CURRENT_FRAME % 1200 == 0 && PARTNER_PARA.sleepyHour != HOUR)
-                {
+                if (CURRENT_FRAME % 1200 == 0 && PARTNER_PARA.sleepyHour != HOUR) {
                     PARTNER_PARA.sicknessCounter++;
                     PARTNER_PARA.missedSleepHours++;
                 }
@@ -276,8 +258,7 @@ namespace
         auto currentTime   = HOUR * 60 + MINUTE;
         auto shouldBeAwake = isWithinTimeframe(currentTime, wakeupTime, sleepyTime);
         // handle sleepy care mistake
-        if (isSleepy && shouldBeAwake)
-        {
+        if (isSleepy && shouldBeAwake) {
             updateSleepingTimes();
             PARTNER_PARA.timeAwakeToday      = PARTNER_PARA.hoursAwakeDefault * 6;
             PARTNER_PARA.tirednessSleepTimer = 0;
@@ -288,29 +269,27 @@ namespace
         }
 
         // set sleepy
-        if (!isSleepy && !shouldBeAwake) { PARTNER_PARA.condition.isSleepy = true; }
+        if (!isSleepy && !shouldBeAwake) {
+            PARTNER_PARA.condition.isSleepy = true;
+        }
 
         // vanilla sets the menu opion to disabled here, but the logic moved to tickGameMenu
     }
 
     void tickUnhappinessMechanics()
     {
-        if (CURRENT_FRAME != LAST_HANDLED_FRAME)
-        {
+        if (CURRENT_FRAME != LAST_HANDLED_FRAME) {
             // roll butterfly chance
-            if (PARTNER_PARA.condition.raw == 0 && PARTNER_PARA.happiness < 0 && CURRENT_FRAME % 200 == 0)
-            {
+            if (PARTNER_PARA.condition.raw == 0 && PARTNER_PARA.happiness < 0 && CURRENT_FRAME % 200 == 0) {
                 auto rand = random(100);
                 if (rand < (-PARTNER_PARA.happiness - PARTNER_PARA.discipline)) PARTNER_PARA.condition.isUnhappy = true;
             }
 
             // perform butterfly effects
-            if (PARTNER_PARA.condition.isUnhappy)
-            {
+            if (PARTNER_PARA.condition.isUnhappy) {
                 if (CURRENT_FRAME % 15 == 0) PARTNER_PARA.happiness += 1;
 
-                if (CURRENT_FRAME % 300 == 0)
-                {
+                if (CURRENT_FRAME % 300 == 0) {
                     PARTNER_ENTITY.stats.hp -= (PARTNER_ENTITY.stats.hp / 50);
                     PARTNER_ENTITY.stats.mp -= (PARTNER_ENTITY.stats.mp / 50);
                     PARTNER_ENTITY.stats.off -= (PARTNER_ENTITY.stats.off / 50);
@@ -333,8 +312,7 @@ namespace
         }
 
         // check if condition should be removed
-        if (PARTNER_PARA.condition.isUnhappy && PARTNER_PARA.happiness >= 0)
-        {
+        if (PARTNER_PARA.condition.isUnhappy && PARTNER_PARA.happiness >= 0) {
             PARTNER_PARA.condition.isUnhappy = false;
             PARTNER_ENTITY.loopCount         = 1;
             removeButterfly();
@@ -351,23 +329,20 @@ namespace
         if (PARTNER_PARA.condition.isHungry && CURRENT_FRAME % 10 == 0) PARTNER_PARA.starvationTimer -= 1;
 
         // reduce energy level per hour
-        if (CURRENT_FRAME % 1200 == 0)
-        {
+        if (CURRENT_FRAME % 1200 == 0) {
             PARTNER_PARA.energyLevel -= raise->energyUsage;
             if (PARTNER_PARA.energyLevel < ENERGY_MIN) PARTNER_PARA.energyLevel = ENERGY_MIN;
         }
 
         // check if hungry condition should be set
-        if (!PARTNER_PARA.condition.isHungry && PARTNER_PARA.foodLevel < 1)
-        {
+        if (!PARTNER_PARA.condition.isHungry && PARTNER_PARA.foodLevel < 1) {
             PARTNER_PARA.starvationTimer    = 180; // 90 ingame minutes
             PARTNER_PARA.condition.isHungry = 1;
             // handleConditionBubble(); // TODO does this even belong here?
         }
 
         // check if hungry condition timed out
-        if (PARTNER_PARA.condition.isHungry && PARTNER_PARA.starvationTimer < 1)
-        {
+        if (PARTNER_PARA.condition.isHungry && PARTNER_PARA.starvationTimer < 1) {
             setFoodTimer(PARTNER_ENTITY.type);
             PARTNER_PARA.starvationTimer    = 0;
             PARTNER_PARA.condition.isHungry = false;
@@ -375,10 +350,8 @@ namespace
         }
 
         // perform empty stomach weight reduction
-        if (PARTNER_PARA.energyLevel < 1)
-        {
-            if (CURRENT_FRAME % 200 == 0)
-            {
+        if (PARTNER_PARA.energyLevel < 1) {
+            if (CURRENT_FRAME % 200 == 0) {
                 PARTNER_PARA.weight -= 1;
                 if (PARTNER_PARA.weight < WEIGHT_MIN) PARTNER_PARA.weight = WEIGHT_MIN;
                 if (CURRENT_SCREEN % 20) PARTNER_PARA.emptyStomachTimer += 1; // unused
@@ -399,12 +372,10 @@ namespace
 
         bool gotSick = false;
 
-        if (!PARTNER_PARA.condition.isSick && PARTNER_PARA.sicknessCounter >= 10 && CURRENT_FRAME % 1200 == 0)
-        {
+        if (!PARTNER_PARA.condition.isSick && PARTNER_PARA.sicknessCounter >= 10 && CURRENT_FRAME % 1200 == 0) {
             PARTNER_PARA.sicknessTries += 1;
             auto roll = random(100);
-            if (roll < PARTNER_PARA.tiredness - 50 + (PARTNER_PARA.sicknessTries - 10) * 5)
-            {
+            if (roll < PARTNER_PARA.tiredness - 50 + (PARTNER_PARA.sicknessTries - 10) * 5) {
                 PARTNER_PARA.condition.isSick = true;
                 PARTNER_PARA.timesBeingSick += 1;
                 PARTNER_PARA.sicknessTimer = 0; // vanilla sets it to 1, but the hourly check later makes it the same
@@ -416,8 +387,7 @@ namespace
         }
 
         if (!PARTNER_PARA.condition.isSick && PARTNER_PARA.areaEffectTimer >= 12000 && CURRENT_SCREEN % 1200 == 0 &&
-            PARTNER_AREA_RESPONSE == 2)
-        {
+            PARTNER_AREA_RESPONSE == 2) {
             PARTNER_PARA.condition.isSick = true;
             PARTNER_PARA.timesBeingSick += 1;
             PARTNER_PARA.sicknessTimer   = 1;
@@ -426,8 +396,7 @@ namespace
             gotSick = true;
         }
 
-        if (CURRENT_FRAME % 1200 == 0 && PARTNER_PARA.condition.isSick)
-        {
+        if (CURRENT_FRAME % 1200 == 0 && PARTNER_PARA.condition.isSick) {
             PARTNER_PARA.happiness -= 10;
             PARTNER_PARA.discipline -= 5;
             PARTNER_PARA.tiredness += 5;
@@ -435,16 +404,13 @@ namespace
 
         if (!PARTNER_PARA.condition.isSick && PARTNER_PARA.sicknessTimer > 0) PARTNER_PARA.sicknessTimer = 0;
 
-        if (CURRENT_FRAME % 1200 == 0)
-        {
+        if (CURRENT_FRAME % 1200 == 0) {
             if (PARTNER_PARA.condition.isSick) PARTNER_PARA.sicknessTimer += 1;
             if (PARTNER_PARA.condition.isInjured) PARTNER_PARA.injuryTimer += 1;
         }
 
-        if (!HAS_IMMORTAL_HOUR || IMMORTAL_HOUR != HOUR)
-        {
-            if (Tamer_getState() == 0 && PARTNER_PARA.injuryTimer >= 12)
-            {
+        if (!HAS_IMMORTAL_HOUR || IMMORTAL_HOUR != HOUR) {
+            if (Tamer_getState() == 0 && PARTNER_PARA.injuryTimer >= 12) {
                 PARTNER_PARA.timesBeingSick += 1;
                 PARTNER_PARA.sicknessTimer       = 1;
                 PARTNER_PARA.condition.isSick    = true;
@@ -454,8 +420,7 @@ namespace
                 gotSick = true;
             }
 
-            if (gotSick)
-            {
+            if (gotSick) {
                 Tamer_setState(20);
                 clearTextArea();
                 setTextColor(10);
@@ -465,8 +430,7 @@ namespace
             }
 
             if (PARTNER_PARA.sicknessTimer >= 12 && Partner_getState() != 8 && Tamer_getState() == 0 &&
-                PARTNER_PARA.remainingLifetime != 0 && IS_SCRIPT_PAUSED == 1)
-            {
+                PARTNER_PARA.remainingLifetime != 0 && IS_SCRIPT_PAUSED == 1) {
                 writePStat(255, 0);
                 PARTNER_ENTITY.lives -= 1;
                 callScriptSection(0, 1246, 0);
@@ -509,30 +473,26 @@ namespace
         if (PARTNER_PARA.areaEffectTimer > 28800) PARTNER_PARA.areaEffectTimer = 0;
 
         PARTNER_PARA.trainBoostTimer -= 1;
-        if (PARTNER_PARA.trainBoostTimer < 1)
-        {
+        if (PARTNER_PARA.trainBoostTimer < 1) {
             PARTNER_PARA.trainBoostFlag  = 0;
             PARTNER_PARA.trainBoostTimer = 0;
             PARTNER_PARA.trainBoostValue = 10; // reset to 10 -> 100%, not done in vanilla
         }
 
-        if (CURRENT_FRAME % 4800 == 0)
-        {
+        if (CURRENT_FRAME % 4800 == 0) {
             PARTNER_PARA.remainingLifetime -= getHappinessLifetimePenalty(PARTNER_PARA.happiness);
             if (PARTNER_PARA.remainingLifetime < 0) PARTNER_PARA.remainingLifetime = 0;
         }
 
         if (!isInDaytimeTransition()) return;
-        if (HAS_IMMORTAL_HOUR)
-        {
+        if (HAS_IMMORTAL_HOUR) {
             if (IMMORTAL_HOUR == HOUR) return;
 
             HAS_IMMORTAL_HOUR = 0;
             IMMORTAL_HOUR     = -1;
         }
 
-        if (Tamer_getState() == 0 && Partner_getState() == 1)
-        {
+        if (Tamer_getState() == 0 && Partner_getState() == 1) {
             auto type     = PARTNER_ENTITY.type;
             auto level    = getDigimonData(type)->level;
             auto evoTimer = PARTNER_PARA.evoTimer;
@@ -550,8 +510,7 @@ namespace
                 EVOLUTION_TARGET = static_cast<int16_t>(handleSpecialEvolutionPraise(3, &PARTNER_ENTITY));
         }
 
-        if (PARTNER_PARA.virusBar >= VIRUS_MAX && PARTNER_ENTITY.type != DigimonType::SUKAMON)
-        {
+        if (PARTNER_PARA.virusBar >= VIRUS_MAX && PARTNER_ENTITY.type != DigimonType::SUKAMON) {
             EVOLUTION_TARGET = static_cast<int16_t>(DigimonType::SUKAMON);
             writePStat(5, static_cast<uint8_t>(PARTNER_ENTITY.type));
             PARTNER_PARA.sukaBackupHP    = PARTNER_ENTITY.stats.hp;
@@ -563,8 +522,7 @@ namespace
             PARTNER_PARA.virusBar        = VIRUS_MIN;
         }
 
-        if (EVOLUTION_TARGET != -1 && Partner_getState() != 13)
-        {
+        if (EVOLUTION_TARGET != -1 && Partner_getState() != 13) {
             Tamer_setState(6);
             Partner_setState(13);
         }
@@ -575,22 +533,18 @@ namespace
         // TODO: this stops the timer during transitions
         if (Tamer_getState() != 0) return;
 
-        if (!PARTNER_PARA.condition.isPoopy)
-        {
+        if (!PARTNER_PARA.condition.isPoopy) {
             if (CURRENT_FRAME % 200 == 0 && CURRENT_FRAME != LAST_HANDLED_FRAME) PARTNER_PARA.poopLevel -= 1;
 
-            if (PARTNER_PARA.poopLevel < 1)
-            {
+            if (PARTNER_PARA.poopLevel < 1) {
                 PARTNER_PARA.condition.isPoopy = true;
                 PARTNER_PARA.poopingTimer      = ((PARTNER_PARA.discipline + 20) * 12);
             }
         }
-        else
-        {
+        else {
             if (CURRENT_FRAME != LAST_HANDLED_FRAME) PARTNER_PARA.poopingTimer -= 1;
 
-            if (PARTNER_PARA.poopingTimer < 1)
-            {
+            if (PARTNER_PARA.poopingTimer < 1) {
                 Partner_setState(7);
                 PARTNER_PARA.poopingTimer = -1;
                 ITEM_SCOLD_FLAG           = 1;
@@ -602,8 +556,7 @@ namespace
     {
         if (PARTNER_ENTITY.type != DigimonType::NUMEMON && PARTNER_ENTITY.type != DigimonType::SUKAMON) return;
 
-        for (int32_t i = 0; i < 100; i++)
-        {
+        for (int32_t i = 0; i < 100; i++) {
             auto& poop = WORLD_POOP[i];
             if (poop.size == 0) continue;
             if (poop.map != CURRENT_SCREEN) continue;
@@ -612,8 +565,7 @@ namespace
             auto centerX = convertTileToPosX(poop.x);
             auto centerY = convertTileToPosZ(poop.y);
 
-            if (isWithinRect(centerX, centerY, radius, &TAMER_ENTITY.posData->location))
-            {
+            if (isWithinRect(centerX, centerY, radius, &TAMER_ENTITY.posData->location)) {
                 Partner_setState(9);
                 poopToEat = i;
                 return;
@@ -650,14 +602,12 @@ namespace
         auto closeness = getPartnerTamerCloseness();
         auto isUnhappy = PARTNER_PARA.condition.isUnhappy;
 
-        switch (closeness)
-        {
+        switch (closeness) {
             case Closeness::SPRINT_DISTANCE:
             {
                 if (isUnhappy)
                     partnerAnimation = 2;
-                else if (PARTNER_ENTITY.animId == 2 || PARTNER_ENTITY.animId == 3)
-                {
+                else if (PARTNER_ENTITY.animId == 2 || PARTNER_ENTITY.animId == 3) {
                     if (PARTNER_ENTITY.loopCount == 0xFF) PARTNER_ENTITY.loopCount = 1;
                     if (PARTNER_ENTITY.loopCount == 0) partnerAnimation = 4;
                 }
@@ -671,12 +621,10 @@ namespace
             {
                 if (PARTNER_ENTITY.animId == 4)
                     setPartnerSlowWalking();
-                else if ((PARTNER_ENTITY.animId == 2 || PARTNER_ENTITY.animId == 3))
-                {
+                else if ((PARTNER_ENTITY.animId == 2 || PARTNER_ENTITY.animId == 3)) {
                     if (PARTNER_ENTITY.loopCount == 0) setPartnerSlowWalking();
                 }
-                else
-                {
+                else {
                     if (PARTNER_ENTITY.loopCount == 0xFF) PARTNER_ENTITY.loopCount = 1;
                     if (PARTNER_ENTITY.frameCount <= PARTNER_ENTITY.animFrame) setPartnerSlowWalking();
                 }
@@ -687,27 +635,22 @@ namespace
             }
             case Closeness::STOP_DISTANCE:
             {
-                if (PARTNER_ENTITY.animId == 0 || PARTNER_ENTITY.animId == 1)
-                {
+                if (PARTNER_ENTITY.animId == 0 || PARTNER_ENTITY.animId == 1) {
                     if (!isStandingStill || (PARTNER_ENTITY.frameCount * emotionAnimTimeout < stopDistanceTimer))
                         updateConditionAnimation();
                 }
-                else
-                {
-                    if ((PARTNER_ENTITY.animId > 1) && (PARTNER_ENTITY.animId < 5))
-                    {
+                else {
+                    if ((PARTNER_ENTITY.animId > 1) && (PARTNER_ENTITY.animId < 5)) {
                         auto collision = entityCheckCollision(nullptr, &PARTNER_ENTITY, 0, 0);
                         if (PARTNER_ENTITY.loopCount == 0xFF) PARTNER_ENTITY.loopCount = 1;
-                        if (PARTNER_ENTITY.loopCount == 0 || collision == CollisionCode::TAMER)
-                        {
+                        if (PARTNER_ENTITY.loopCount == 0 || collision == CollisionCode::TAMER) {
                             emotionAnimTimeout = random(5) + 1;
                             setPartnerIdle();
                             stopDistanceTimer = 0;
                         }
                     }
 
-                    if ((PARTNER_ENTITY.animFlag & 1) == 0)
-                    {
+                    if ((PARTNER_ENTITY.animFlag & 1) == 0) {
                         emotionAnimTimeout = random(5) + 1;
                         setPartnerIdle();
                         stopDistanceTimer = 0;
@@ -720,8 +663,7 @@ namespace
             }
         }
 
-        if (partnerAnimation != PARTNER_ENTITY.animId)
-        {
+        if (partnerAnimation != PARTNER_ENTITY.animId) {
             startAnimation(&PARTNER_ENTITY, partnerAnimation);
             stopDistanceTimer = 0;
         }
@@ -731,10 +673,8 @@ namespace
 
     void tickHealthSandals()
     {
-        if (TAMER_ENTITY.animId == 2 && getItemCount(ItemType::HEALTH_SHOE) > 0)
-        {
-            if (healthShoeFrames >= 20)
-            {
+        if (TAMER_ENTITY.animId == 2 && getItemCount(ItemType::HEALTH_SHOE) > 0) {
+            if (healthShoeFrames >= 20) {
                 PARTNER_ENTITY.stats.currentHP += 5;
                 PARTNER_ENTITY.stats.currentMP += 5;
 
@@ -764,24 +704,20 @@ namespace
         // having this here saves like 150 bytes...
         if (++conditionBubbleTimer >= 60) conditionBubbleType = -1;
 
-        if (bubbleType != -1)
-        {
-            if (hasButterfly())
-            {
+        if (bubbleType != -1) {
+            if (hasButterfly()) {
                 removeButterfly();
                 PARTNER_PARA.condition.isUnhappy = false;
                 PARTNER_ENTITY.loopCount         = 1;
             }
-            if (bubbleType != conditionBubbleType && conditionBubbleTimer >= 50)
-            {
+            if (bubbleType != conditionBubbleType && conditionBubbleTimer >= 50) {
                 removeConditionBubble(conditionBubbleId);
                 conditionBubbleId    = addConditionBubble(bubbleType, &PARTNER_ENTITY);
                 conditionBubbleTimer = 0;
                 conditionBubbleType  = bubbleType;
             }
         }
-        else if (PARTNER_PARA.condition.isUnhappy && !hasButterfly())
-        {
+        else if (PARTNER_PARA.condition.isUnhappy && !hasButterfly()) {
             removeConditionBubble(conditionBubbleId);
             addButterfly(&PARTNER_ENTITY);
         }
@@ -829,8 +765,7 @@ namespace
 
     bool hasSpotPoop(int16_t tileX, int16_t tileY, uint8_t map)
     {
-        for (auto& poop : WORLD_POOP)
-        {
+        for (auto& poop : WORLD_POOP) {
             if (poop.x == tileX && poop.y == tileY && poop.map == map) return true;
         }
 
@@ -849,10 +784,8 @@ namespace
     PoopPile* getPoopSlotToFill()
     {
         auto countOnMap = countPoopsOnMap(CURRENT_SCREEN);
-        if (countOnMap >= 16)
-        {
-            for (int32_t i = 0; i < 100; i++)
-            {
+        if (countOnMap >= 16) {
+            for (int32_t i = 0; i < 100; i++) {
                 auto& poop = WORLD_POOP[(CURRENT_POOP_ID + i) % 100];
                 if (poop.map == CURRENT_SCREEN) return &poop;
             }
@@ -874,10 +807,8 @@ namespace
         if (rotation <= 0xF00 && rotation >= 0x900) tileX -= 1;
         if (rotation < 0x700 && rotation >= 0x100) tileX += 1;
 
-        while (hasSpotPoop(tileX, tileY, CURRENT_SCREEN))
-        {
-            switch (random(4))
-            {
+        while (hasSpotPoop(tileX, tileY, CURRENT_SCREEN)) {
+            switch (random(4)) {
                 case 0: tileX -= 1; break;
                 case 1: tileX += 1; break;
                 case 2: tileY -= 1; break;
@@ -933,8 +864,7 @@ namespace
         IMMORTAL_HOUR                    = HOUR;
         // vanilla sets the menu opion to disabled here, but the logic moved to tickGameMenu
 
-        if (PARTNER_PARA.condition.isPoopy)
-        {
+        if (PARTNER_PARA.condition.isPoopy) {
             int16_t tileX;
             int16_t tileY;
             getModelTile(&PARTNER_ENTITY.posData->location, &tileX, &tileY);
@@ -945,22 +875,19 @@ namespace
             addTamerLevel(1, -1);
         }
 
-        if (PARTNER_PARA.condition.isHungry)
-        {
+        if (PARTNER_PARA.condition.isHungry) {
             PARTNER_PARA.weight -= 1;
             // TODO care mistakes? reset condition?
         }
 
-        if (PARTNER_PARA.condition.isSick)
-        {
+        if (PARTNER_PARA.condition.isSick) {
             PARTNER_PARA.sicknessTimer += hoursSlept;
             PARTNER_PARA.happiness -= 20;
             PARTNER_PARA.discipline -= 10;
             PARTNER_PARA.tiredness += 10;
         }
 
-        if (PARTNER_PARA.condition.isInjured)
-        {
+        if (PARTNER_PARA.condition.isInjured) {
             PARTNER_PARA.injuryTimer += hoursSlept;
             PARTNER_PARA.happiness -= 10;
             PARTNER_PARA.discipline -= 5;
@@ -970,8 +897,7 @@ namespace
 
     void tickSleep()
     {
-        switch (PARTNER_SUB_STATE)
-        {
+        switch (PARTNER_SUB_STATE) {
             case 0:
             {
                 stopGameTime();
@@ -986,8 +912,7 @@ namespace
             {
                 entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
                 entityLookAtLocation(&PARTNER_ENTITY, &TAMER_ENTITY.posData->location);
-                if (getPartnerTamerCloseness() == Closeness::STOP_DISTANCE)
-                {
+                if (getPartnerTamerCloseness() == Closeness::STOP_DISTANCE) {
                     playSound(0, 15);
                     startAnimation(&TAMER_ENTITY, 8);
                     startAnimation(&PARTNER_ENTITY, 0);
@@ -1025,16 +950,13 @@ namespace
                 sleepRegen();
                 handleSleeping();
 
-                if (UI_BOX_DATA[0].state == 0)
-                {
+                if (UI_BOX_DATA[0].state == 0) {
                     CHECKED_MEMORY_CARD = 0x10;
-                    if (MEMORY_CARD_ID == -1 || MEMORY_CARD_SLOT == -1)
-                    {
+                    if (MEMORY_CARD_ID == -1 || MEMORY_CARD_SLOT == -1) {
                         CURRENT_MENU = -1;
                         TARGET_MENU  = -1;
                     }
-                    else
-                    {
+                    else {
                         CURRENT_MENU = -2;
                         TARGET_MENU  = 40;
                         MAIN_STATE   = 1;
@@ -1080,13 +1002,11 @@ namespace
     void handleScold()
     {
         auto deltaDisc = 0;
-        if (ITEM_SCOLD_FLAG == 1)
-        {
+        if (ITEM_SCOLD_FLAG == 1) {
             PARTNER_PARA.discipline += 8;
             ITEM_SCOLD_FLAG = 2;
         }
-        else
-        {
+        else {
             PARTNER_PARA.happiness -= 10;
             PARTNER_PARA.discipline += 2;
         }
@@ -1105,8 +1025,7 @@ namespace
 
     void tickPraiseScold(bool isScold)
     {
-        switch (PARTNER_SUB_STATE)
-        {
+        switch (PARTNER_SUB_STATE) {
             case 0:
             {
                 unsetCameraFollowPlayer();
@@ -1120,14 +1039,12 @@ namespace
                 entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
                 entityLookAtLocation(&PARTNER_ENTITY, &TAMER_ENTITY.posData->location);
 
-                if (getPartnerTamerCloseness() == Closeness::STOP_DISTANCE)
-                {
+                if (getPartnerTamerCloseness() == Closeness::STOP_DISTANCE) {
                     startAnimation(&PARTNER_ENTITY, 0);
 
                     if (isScold)
                         Tamer_setState(9);
-                    else
-                    {
+                    else {
                         playSound(0, 14);
                         Tamer_setState(13);
                     }
@@ -1151,8 +1068,7 @@ namespace
             {
                 if (PARTNER_ENTITY.loopCount == 0xFF) PARTNER_ENTITY.loopCount = 1;
 
-                if (PARTNER_ENTITY.frameCount <= PARTNER_ENTITY.animFrame)
-                {
+                if (PARTNER_ENTITY.frameCount <= PARTNER_ENTITY.animFrame) {
                     Partner_setState(1);
                     Tamer_setState(0);
                     setCameraFollowPlayer();
@@ -1192,26 +1108,22 @@ namespace
         // evolution items
         auto level  = getDigimonData(type)->level;
         auto target = getEvoItemTarget(itemType);
-        if (target != DigimonType::INVALID)
-        {
+        if (target != DigimonType::INVALID) {
             auto targetLevel = getDigimonData(target)->level;
             auto levelDiff   = static_cast<int32_t>(targetLevel) - static_cast<int32_t>(level);
             if (levelDiff != 1) return true;
         }
 
         // take any item after successful scold
-        if (ITEM_SCOLD_FLAG == 2)
-        {
+        if (ITEM_SCOLD_FLAG == 2) {
             ITEM_SCOLD_FLAG = 0;
             return false;
         }
 
-        if (itemType < ItemType::MEAT)
-        {
+        if (itemType < ItemType::MEAT) {
             auto roll1 = random(100);
             auto roll2 = random(10);
-            if (roll1 < (110 - PARTNER_PARA.discipline - roll2 - 10))
-            {
+            if (roll1 < (110 - PARTNER_PARA.discipline - roll2 - 10)) {
                 ITEM_SCOLD_FLAG = 1;
                 return true;
             }
@@ -1232,15 +1144,12 @@ namespace
 
         auto* raise = getRaiseData(PARTNER_ENTITY.type);
 
-        if (!PARTNER_PARA.condition.isHungry)
-        {
+        if (!PARTNER_PARA.condition.isHungry) {
             PARTNER_PARA.happiness -= 3;
             PARTNER_PARA.discipline -= 2;
         }
-        else
-        {
-            if (PARTNER_PARA.energyLevel >= raise->energyThreshold)
-            {
+        else {
+            if (PARTNER_PARA.energyLevel >= raise->energyThreshold) {
                 PARTNER_PARA.happiness += 5;
                 PARTNER_PARA.discipline += 1;
                 PARTNER_PARA.condition.isHungry = false;
@@ -1248,8 +1157,7 @@ namespace
                 PARTNER_PARA.starvationTimer = 0;
             }
 
-            if (PARTNER_PARA.energyLevel >= raise->energyThreshold || raise->favoriteFood == item)
-            {
+            if (PARTNER_PARA.energyLevel >= raise->energyThreshold || raise->favoriteFood == item) {
                 partnerAnimation = 11;
                 startAnimation(&PARTNER_ENTITY, 11);
             }
@@ -1266,8 +1174,7 @@ namespace
 
     void tickFeedItem()
     {
-        switch (PARTNER_SUB_STATE)
-        {
+        switch (PARTNER_SUB_STATE) {
             case 0:
             {
                 if (checkEatDistance(getItemTakeDistance(PARTNER_ENTITY.type)))
@@ -1308,13 +1215,11 @@ namespace
             {
                 if (TAMER_ENTITY.animFrame < 8) return;
 
-                if (willRefuseItem())
-                {
+                if (willRefuseItem()) {
                     startAnimation(&PARTNER_ENTITY, 13);
                     PARTNER_SUB_STATE = 7;
                 }
-                else
-                {
+                else {
                     startAnimation(&PARTNER_ENTITY, 8);
                     PARTNER_SUB_STATE = 5;
                 }
@@ -1385,8 +1290,7 @@ namespace
 
     void tickPartnerToilet()
     {
-        switch (PARTNER_SUB_STATE)
-        {
+        switch (PARTNER_SUB_STATE) {
             case 0:
             {
                 auto toiletId    = MAP_ENTRIES[CURRENT_SCREEN].toiletId - 1;
@@ -1415,8 +1319,7 @@ namespace
             {
                 entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
 
-                if (tickEntityWalkTo(0xFC, 0xFF, toiletPos2.x, toiletPos2.z, false))
-                {
+                if (tickEntityWalkTo(0xFC, 0xFF, toiletPos2.x, toiletPos2.z, false)) {
                     // vanilla doesn't change orientation here, causing the Digimon to look into "random" directions
                     entityLookAtLocation(&PARTNER_ENTITY, &toiletPos1);
                     startAnimation(&PARTNER_ENTITY, 10);
@@ -1446,8 +1349,7 @@ namespace
 
     void tickWildPoop()
     {
-        switch (PARTNER_SUB_STATE)
-        {
+        switch (PARTNER_SUB_STATE) {
             case 0:
             {
                 startAnimation(&PARTNER_ENTITY, 4);
@@ -1461,8 +1363,7 @@ namespace
             {
                 entityLookAtLocation(&PARTNER_ENTITY, &TAMER_ENTITY.posData->location);
 
-                if (getPartnerTamerCloseness() > Closeness::SPRINT_DISTANCE)
-                {
+                if (getPartnerTamerCloseness() > Closeness::SPRINT_DISTANCE) {
                     startAnimation(&PARTNER_ENTITY, 10);
                     PARTNER_SUB_STATE = 2;
                 }
@@ -1497,8 +1398,7 @@ namespace
 
     void tickDying()
     {
-        switch (PARTNER_SUB_STATE)
-        {
+        switch (PARTNER_SUB_STATE) {
             case 0:
             {
                 deinitializeFishing();
@@ -1517,8 +1417,7 @@ namespace
             case 1:
             {
                 entityLookAtLocation(&PARTNER_ENTITY, &TAMER_ENTITY.posData->location);
-                if (getPartnerTamerCloseness() > Closeness::SPRINT_DISTANCE)
-                {
+                if (getPartnerTamerCloseness() > Closeness::SPRINT_DISTANCE) {
                     isSoundLoaded(false, 8);
                     DoOA_tick(&PARTNER_ENTITY, DOOA_DATA_PTR, false);
                     setFishingDisabled();
@@ -1549,22 +1448,19 @@ namespace
         auto& poop         = WORLD_POOP[poopToEat];
         auto healingChance = 0;
 
-        if (poop.size < 11)
-        {
+        if (poop.size < 11) {
             PARTNER_ENTITY.stats.currentHP += (PARTNER_ENTITY.stats.currentHP * 5) / 100;
             PARTNER_ENTITY.stats.currentMP += (PARTNER_ENTITY.stats.currentMP * 2) / 100;
             PARTNER_PARA.weight += 1;
             healingChance = 2;
         }
-        else if (poop.size < 14)
-        {
+        else if (poop.size < 14) {
             PARTNER_ENTITY.stats.currentHP += (PARTNER_ENTITY.stats.currentHP * 10) / 100;
             PARTNER_ENTITY.stats.currentMP += (PARTNER_ENTITY.stats.currentMP * 5) / 100;
             PARTNER_PARA.weight += 3;
             healingChance = 7;
         }
-        else
-        {
+        else {
             PARTNER_ENTITY.stats.currentHP += (PARTNER_ENTITY.stats.currentHP * 50) / 100;
             PARTNER_ENTITY.stats.currentMP += (PARTNER_ENTITY.stats.currentMP * 10) / 100;
             PARTNER_PARA.weight += 10;
@@ -1587,8 +1483,7 @@ namespace
 
     void tickEatShit()
     {
-        switch (PARTNER_SUB_STATE)
-        {
+        switch (PARTNER_SUB_STATE) {
             case 0:
             {
                 startAnimation(&TAMER_ENTITY, 0);
@@ -1605,8 +1500,7 @@ namespace
                 auto tileZ = convertTileToPosZ(WORLD_POOP[poopToEat].y);
                 entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
                 auto finished = tickEntityWalkTo(0xFC, 0xFF, tileX, tileZ, false);
-                if (finished)
-                {
+                if (finished) {
                     startAnimation(&PARTNER_ENTITY, 8);
                     PARTNER_SUB_STATE = 2; // vanilla uses state 3 here
                 }
@@ -1637,10 +1531,8 @@ namespace
 
     void tickEvoSequenceLoading(int32_t id)
     {
-        if (EVO_SEQUENCE_DATA.state == 1)
-        {
-            if (EVO_SEQUENCE_DATA.timer > 0x37)
-            {
+        if (EVO_SEQUENCE_DATA.state == 1) {
+            if (EVO_SEQUENCE_DATA.timer > 0x37) {
                 removeObject(ObjectID::EVO_SEQUENCE_LOADING, id);
                 stopBGM();
                 EVL_initEvoSequence();
@@ -1648,8 +1540,7 @@ namespace
             }
         }
 
-        if (EVO_SEQUENCE_DATA.state == 0 && EVO_SEQUENCE_DATA.timer > 55)
-        {
+        if (EVO_SEQUENCE_DATA.state == 0 && EVO_SEQUENCE_DATA.timer > 55) {
             EVO_SEQUENCE_DATA.state = 1;
             EVO_SEQUENCE_DATA.timer = 0;
             startAnimation(&PARTNER_ENTITY, 1);
@@ -1687,8 +1578,7 @@ namespace
 
     void tickEvolving()
     {
-        switch (PARTNER_SUB_STATE)
-        {
+        switch (PARTNER_SUB_STATE) {
             case 0:
             {
                 stopGameTime();
@@ -1706,8 +1596,7 @@ namespace
             {
                 entityLookAtLocation(&PARTNER_ENTITY, &TAMER_ENTITY.posData->location);
                 auto closeness = getPartnerTamerCloseness();
-                if (closeness > Closeness::SPRINT_DISTANCE)
-                {
+                if (closeness > Closeness::SPRINT_DISTANCE) {
                     getEvoSequenceState(EVOLUTION_TARGET, 0);
                     // vanilla sets 0x80134E34 to 0 here, but it seems to be unused
                     PARTNER_SUB_STATE = 2;
@@ -1730,9 +1619,10 @@ namespace
                 readMapTFS(CURRENT_SCREEN);
                 setFishingEnabled();
                 Partner_setState(1);
-                if (SOME_SCRIPT_SYNC_BIT == 0) { SOME_SCRIPT_SYNC_BIT = 1; }
-                else
-                {
+                if (SOME_SCRIPT_SYNC_BIT == 0) {
+                    SOME_SCRIPT_SYNC_BIT = 1;
+                }
+                else {
                     Tamer_setState(0);
                     setCameraFollowPlayer();
                 }
@@ -1743,8 +1633,7 @@ namespace
 
     void tickDying2()
     {
-        switch (PARTNER_SUB_STATE)
-        {
+        switch (PARTNER_SUB_STATE) {
             case 0:
             {
                 DoOA_getSequenceState(0, 0);
@@ -1774,14 +1663,12 @@ namespace
 
     void tickOverworld(int32_t instanceId)
     {
-        if (IS_IN_MENU == 1)
-        {
+        if (IS_IN_MENU == 1) {
             tickAnimation(&PARTNER_ENTITY);
             return;
         }
 
-        switch (PARTNER_STATE)
-        {
+        switch (PARTNER_STATE) {
             case 1: tickNormal(); break;
             case 3: tickSleep(); break;
             case 4: tickPraiseScold(true); break;
@@ -1811,8 +1698,7 @@ namespace
     {
         if ((GAME_STATE != 0 || PARTNER_STATE != 1) && hasButterfly()) removeButterfly();
 
-        switch (GAME_STATE)
-        {
+        switch (GAME_STATE) {
             case 0: tickOverworld(instanceId); break;
             case 1:
             case 2:
@@ -1839,8 +1725,7 @@ namespace
         auto raise   = getRaiseData(type);
         auto pattern = SLEEP_PATTERN[raise->sleepCycle];
 
-        if (level == Level::FRESH || level == Level::IN_TRAINING)
-        {
+        if (level == Level::FRESH || level == Level::IN_TRAINING) {
             auto awakeTime = random(1) + (level == Level::FRESH ? FRESH_AWAKE_TIME : IN_TRAINING_AWAKE_TIME);
 
             para->sleepyHour         = (HOUR + awakeTime) % 24;
@@ -1850,8 +1735,7 @@ namespace
             para->hoursAwakeDefault  = awakeTime;
             para->hoursAsleepDefault = pattern.sleepyHours;
         }
-        else
-        {
+        else {
             para->sleepyHour         = pattern.sleepyHour;
             para->sleepyMinute       = pattern.sleepyMinute;
             para->wakeupHour         = pattern.wakeupHour;
@@ -2025,20 +1909,17 @@ extern "C"
         PARTNER_PARA.timesBeingSick    = 0;
         PARTNER_ENTITY.lives           = 3;
 
-        if (type == DigimonType::AGUMON)
-        {
+        if (type == DigimonType::AGUMON) {
             PARTNER_ENTITY.stats.moves[0] = 0x2E;
             learnMove(2);
         }
-        if (type == DigimonType::GABUMON)
-        {
+        if (type == DigimonType::GABUMON) {
             PARTNER_ENTITY.stats.moves[0] = 0x30;
             learnMove(0x2B);
         }
 
         PARTNER_ENTITY.stats.moves[3] = 0xFF;
-        for (int32_t i = 0; i < 16; i++)
-        {
+        for (int32_t i = 0; i < 16; i++) {
             auto move = getDigimonData(type)->moves[i];
             if (move == 0xFF) continue;
             if (move < 58 || move > 112) continue;
@@ -2054,28 +1935,23 @@ extern "C"
     {
         auto level = getDigimonData(type)->level;
 
-        if (level == Level::FRESH)
-        {
+        if (level == Level::FRESH) {
             // every even hour
             PARTNER_PARA.nextHungerHour = ((HOUR & ~1) + 2) % 24;
         }
-        else if (level == Level::IN_TRAINING)
-        {
+        else if (level == Level::IN_TRAINING) {
             // every 3 hours
             PARTNER_PARA.nextHungerHour = (((HOUR / 3) * 3) + 3) % 24;
         }
-        else
-        {
+        else {
             auto raise   = getRaiseData(type);
             auto hour    = HOUR;
             auto minDiff = 24;
-            for (auto time : raise->hungerTimes)
-            {
+            for (auto time : raise->hungerTimes) {
                 // the vanilla game does this differently, but the vanilla game also has a bug here
                 if (time == -1) continue;
                 auto diff = getTimeDiff(hour, time);
-                if (diff > 0 & diff < minDiff)
-                {
+                if (diff > 0 & diff < minDiff) {
                     minDiff                     = diff;
                     PARTNER_PARA.nextHungerHour = time;
                 }
@@ -2092,8 +1968,7 @@ extern "C"
         libgte_SetRotMatrix(&libgs_REFERENCE_MATRIX);
         libgte_SetTransMatrix(&libgs_REFERENCE_MATRIX);
 
-        for (auto& poop : WORLD_POOP)
-        {
+        for (auto& poop : WORLD_POOP) {
             if (poop.size == 0) continue;
             if (poop.map != CURRENT_SCREEN) continue;
 
@@ -2182,21 +2057,20 @@ extern "C"
 
         updateTimeOfDay();
 
-        if ((HOUR + amount % 4) == 0 && PARTNER_PARA.happiness < 80)
-        {
+        if ((HOUR + amount % 4) == 0 && PARTNER_PARA.happiness < 80) {
             PARTNER_PARA.remainingLifetime -= getHappinessLifetimePenalty(PARTNER_PARA.happiness);
         }
 
         if (PARTNER_PARA.remainingLifetime < 0) PARTNER_PARA.remainingLifetime = 0;
 
-        if (PARTNER_PARA.condition.isSleepy)
-        {
+        if (PARTNER_PARA.condition.isSleepy) {
             PARTNER_PARA.sicknessCounter += amount;
             PARTNER_PARA.missedSleepHours += amount;
         }
-        if (!PARTNER_PARA.condition.isHungry) { PARTNER_PARA.foodLevel -= amount * 60; }
-        else
-        {
+        if (!PARTNER_PARA.condition.isHungry) {
+            PARTNER_PARA.foodLevel -= amount * 60;
+        }
+        else {
             PARTNER_PARA.starvationTimer -= amount * 120;
             // vanilla adds a care mistake here, but this causes the doubling of them
         }
@@ -2259,30 +2133,24 @@ extern "C"
         auto partnerTileX = getTileX(PARTNER_ENTITY.posData->location.x);
         auto partnerTileZ = getTileZ(PARTNER_ENTITY.posData->location.z);
 
-        if (tamerTileX != PARTNER_TAMER_PREVIOUS_TILE_X || tamerTileZ != PARTNER_TAMER_PREVIOUS_TILE_Y)
-        {
-            if (!isFiveTileWidePathBlocked(tamerTileX, tamerTileZ, partnerTileX, partnerTileZ))
-            {
+        if (tamerTileX != PARTNER_TAMER_PREVIOUS_TILE_X || tamerTileZ != PARTNER_TAMER_PREVIOUS_TILE_Y) {
+            if (!isFiveTileWidePathBlocked(tamerTileX, tamerTileZ, partnerTileX, partnerTileZ)) {
                 initializePartnerWaypoint();
             }
-            else
-            {
-                if (PARTNER_WAYPOINT_COUNT == 0)
-                {
+            else {
+                if (PARTNER_WAYPOINT_COUNT == 0) {
                     initializePartnerWaypoint();
                     setPartnerWaypoint(PARTNER_WAYPOINT_CURRENT,
                                        PARTNER_TAMER_PREVIOUS_TILE_X,
                                        PARTNER_TAMER_PREVIOUS_TILE_Y);
                 }
-                else
-                {
+                else {
                     auto lastPoint = PARTNER_WAYPOINT_CURRENT + PARTNER_WAYPOINT_COUNT - 1;
 
                     if (isFiveTileWidePathBlocked(tamerTileX,
                                                   tamerTileZ,
                                                   PARTNER_WAYPOINT_X[lastPoint],
-                                                  PARTNER_WAYPOINT_Y[lastPoint]))
-                    {
+                                                  PARTNER_WAYPOINT_Y[lastPoint])) {
                         setPartnerWaypoint((PARTNER_WAYPOINT_CURRENT + PARTNER_WAYPOINT_COUNT) % 30,
                                            PARTNER_TAMER_PREVIOUS_TILE_X,
                                            PARTNER_TAMER_PREVIOUS_TILE_Y);
@@ -2291,17 +2159,14 @@ extern "C"
             }
         }
 
-        if (PARTNER_WAYPOINT_COUNT > 1)
-        {
-            for (int32_t i = 0; i < 3; i++)
-            {
+        if (PARTNER_WAYPOINT_COUNT > 1) {
+            for (int32_t i = 0; i < 3; i++) {
                 auto pointId = (PARTNER_WAYPOINT_CURRENT + PARTNER_WAYPOINT_COUNT - 2 - i) % 30;
 
                 if (!isFiveTileWidePathBlocked(tamerTileX,
                                                tamerTileZ,
                                                PARTNER_WAYPOINT_X[pointId],
-                                               PARTNER_WAYPOINT_Y[pointId]))
-                {
+                                               PARTNER_WAYPOINT_Y[pointId])) {
                     PARTNER_WAYPOINT_COUNT -= (i + 1);
                     break;
                 }
@@ -2309,12 +2174,10 @@ extern "C"
             }
         }
 
-        if (PARTNER_WAYPOINT_COUNT != 0)
-        {
+        if (PARTNER_WAYPOINT_COUNT != 0) {
             auto tileX = PARTNER_WAYPOINT_X[PARTNER_WAYPOINT_CURRENT];
             auto tileY = PARTNER_WAYPOINT_Y[PARTNER_WAYPOINT_CURRENT];
-            if (isTileOffScreen(tileX, tileY) && PARTNER_ENTITY.isOnScreen == 0)
-            {
+            if (isTileOffScreen(tileX, tileY) && PARTNER_ENTITY.isOnScreen == 0) {
                 auto x = convertTileToPosX(tileX);
                 auto z = convertTileToPosZ(tileY);
 
@@ -2327,12 +2190,10 @@ extern "C"
         }
 
         auto prevRotY = PARTNER_ENTITY.posData->rotation.y;
-        if (GAME_STATE == 0 || GAME_STATE == 3)
-        {
+        if (GAME_STATE == 0 || GAME_STATE == 3) {
             if (PARTNER_WAYPOINT_COUNT == 0)
                 entityLookAtLocation(&PARTNER_ENTITY, &TAMER_ENTITY.posData->location);
-            else
-            {
+            else {
                 auto tileX = PARTNER_WAYPOINT_X[PARTNER_WAYPOINT_CURRENT];
                 auto tileY = PARTNER_WAYPOINT_Y[PARTNER_WAYPOINT_CURRENT];
 
@@ -2343,17 +2204,14 @@ extern "C"
 
         auto collision = entityCheckCollision(nullptr, &PARTNER_ENTITY, 0, 0);
 
-        if (collision < CollisionCode::TAMER || collision > CollisionCode::NPC8)
-        {
+        if (collision < CollisionCode::TAMER || collision > CollisionCode::NPC8) {
             if (GAME_STATE == 3 && entityIsInEntity(&TAMER_ENTITY, &PARTNER_ENTITY))
                 handleBattleIdle(&PARTNER_ENTITY, &PARTNER_ENTITY.stats, {});
         }
-        else if (GAME_STATE == 3)
-        {
+        else if (GAME_STATE == 3) {
             if (collision == CollisionCode::TAMER) startBattleIdleAnimation(&PARTNER_ENTITY, &PARTNER_ENTITY.stats, {});
         }
-        else
-        {
+        else {
             PARTNER_ENTITY.posData->rotation.y = prevRotY;
             collisionGrace(&TAMER_ENTITY, &PARTNER_ENTITY, 0, 0);
         }
@@ -2367,11 +2225,9 @@ extern "C"
         if (PARTNER_ENTITY.isOnScreen == 1) return;
 
         auto id = 0;
-        for (int32_t i = PARTNER_WAYPOINT_COUNT; i > 0; i--)
-        {
+        for (int32_t i = PARTNER_WAYPOINT_COUNT; i > 0; i--) {
             id = (PARTNER_WAYPOINT_CURRENT + i - 1) % 30;
-            if (isTileOffScreen(PARTNER_WAYPOINT_X[id], PARTNER_WAYPOINT_Y[id]))
-            {
+            if (isTileOffScreen(PARTNER_WAYPOINT_X[id], PARTNER_WAYPOINT_Y[id])) {
                 while (PARTNER_WAYPOINT_CURRENT != id)
                     popPartnerWaypoint();
                 popPartnerWaypoint();
@@ -2385,8 +2241,7 @@ extern "C"
         auto partnerTileZ = getTileZ(PARTNER_ENTITY.posData->location.z);
 
         auto tile = getClosestTileOffScreen(tamerTileX, tamerTileZ, partnerTileX, partnerTileZ);
-        if (tile.tileX != -1)
-        {
+        if (tile.tileX != -1) {
             PARTNER_ENTITY.posData[0].location.x = convertTileToPosX(tile.tileX);
             PARTNER_ENTITY.posData[0].location.z = convertTileToPosZ(tile.tileY);
             PARTNER_ENTITY.locX                  = convertTileToPosX(tile.tileX) << 15;
@@ -2428,8 +2283,7 @@ extern "C"
 
     void callDigimonRoutine(int32_t routine)
     {
-        switch (routine)
-        {
+        switch (routine) {
             case 0: Partner_setState(6); break;
             case 1:
                 KAR_start();
@@ -2489,8 +2343,7 @@ extern "C"
             PARTNER_ENTITY.learnedMoves[1] |= 0x11000;
         else if (move == 55 || move == 57) // Horizontal Kick
             PARTNER_ENTITY.learnedMoves[1] |= 0x2800000;
-        else
-        {
+        else {
             auto byte = move / 32;
             auto bit  = move % 32;
 

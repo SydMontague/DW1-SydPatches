@@ -14,14 +14,12 @@ namespace
         auto count = model->objects[node].n_primitive;
         auto* ptr  = model->objects[node].primitive_top;
 
-        for (int32_t i = 0; i < count; i++)
-        {
+        for (int32_t i = 0; i < count; i++) {
             auto val = *ptr >> 0x18;
             if ((val & 4) == 0) continue;
 
             reinterpret_cast<int16_t*>(ptr)[3] = value;
-            if ((val & 8) == 0)
-            {
+            if ((val & 8) == 0) {
                 if ((val & 0x10) == 0)
                     ptr += 7;
                 else

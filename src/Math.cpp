@@ -95,8 +95,7 @@ extern "C"
         dx = abs(dx);
         dy = abs(dy);
 
-        if (dy < dx)
-        {
+        if (dy < dx) {
             if (dx < 1)
                 offset = 0;
             else
@@ -104,8 +103,7 @@ extern "C"
             if (offset > 0x1FF) offset = 0x1FF;
             tmpVal = 0x3FF - ATAN_LOOKUP_TABLE[offset];
         }
-        else
-        {
+        else {
             if (dy < 1)
                 offset = 0;
             else
@@ -129,13 +127,11 @@ extern "C"
         if (tDiff == 0) return 0;
 
         auto val = (diff * progress) / tDiff;
-        if (diff < 0)
-        {
+        if (diff < 0) {
             val %= (diff - 1);
             if (val > 0) val += diff;
         }
-        else
-        {
+        else {
             val %= (diff + 1);
             if (val < 0) val += diff;
         }
@@ -194,8 +190,7 @@ extern "C"
 
     int32_t findAABBHitEntity(AABB* aabb, Entity* ignoreEntity, int32_t startId)
     {
-        for (int32_t i = startId; i < 10; i++)
-        {
+        for (int32_t i = startId; i < 10; i++) {
             auto* entity = ENTITY_TABLE.getEntityById(i);
             if (entity == ignoreEntity || entity == nullptr) continue;
 
@@ -222,13 +217,11 @@ extern "C"
         auto currentAngle = pos->rotation.y;
 
         *outAngle = targetAngle;
-        if (currentAngle < targetAngle)
-        {
+        if (currentAngle < targetAngle) {
             *cwDiff = targetAngle - currentAngle;
             *ccDiff = currentAngle + (4096 - targetAngle);
         }
-        else
-        {
+        else {
             *cwDiff = targetAngle + (4096 - currentAngle);
             *ccDiff = currentAngle - targetAngle;
         }
@@ -239,49 +232,38 @@ extern "C"
         // vanilla doesn't handle the case ccDiff == cwDiff, resulting in it never returning true and thus softlocking
         auto currentAngle = rotVector->y;
 
-        if (currentAngle == targetAngle)
-        {
+        if (currentAngle == targetAngle) {
             rotVector->y = targetAngle;
             return true;
         }
 
-        if (currentAngle < targetAngle)
-        {
-            if (ccDiff < cwDiff)
-            {
+        if (currentAngle < targetAngle) {
+            if (ccDiff < cwDiff) {
                 rotVector->y -= speed;
-                if (rotVector->y < (targetAngle - 4096))
-                {
+                if (rotVector->y < (targetAngle - 4096)) {
                     rotVector->y = targetAngle;
                     return true;
                 }
             }
-            else
-            {
+            else {
                 rotVector->y += speed;
-                if (rotVector->y > targetAngle)
-                {
+                if (rotVector->y > targetAngle) {
                     rotVector->y = targetAngle;
                     return true;
                 }
             }
         }
-        else if (currentAngle > targetAngle)
-        {
-            if (ccDiff < cwDiff)
-            {
+        else if (currentAngle > targetAngle) {
+            if (ccDiff < cwDiff) {
                 rotVector->y -= speed;
-                if (rotVector->y < targetAngle)
-                {
+                if (rotVector->y < targetAngle) {
                     rotVector->y = targetAngle;
                     return true;
                 }
             }
-            else
-            {
+            else {
                 rotVector->y += speed;
-                if (rotVector->y > (targetAngle + 4096))
-                {
+                if (rotVector->y > (targetAngle + 4096)) {
                     rotVector->y = targetAngle;
                     return true;
                 }
@@ -302,8 +284,7 @@ extern "C"
      */
     void setInt16WithStride(int16_t* ptr, int16_t value, int32_t count, int32_t step)
     {
-        for (int32_t i = 0; i < count; i++)
-        {
+        for (int32_t i = 0; i < count; i++) {
             *ptr = value;
             ptr  = reinterpret_cast<int16_t*>(reinterpret_cast<uint8_t*>(ptr) + step);
         }

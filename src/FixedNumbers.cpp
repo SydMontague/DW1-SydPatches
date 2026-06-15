@@ -42,8 +42,7 @@ namespace
 
     FixedGlyph* getFixedGlyph(uint16_t codepoint)
     {
-        for (int32_t i = 0; i < myFont.mappingCount; i++)
-        {
+        for (int32_t i = 0; i < myFont.mappingCount; i++) {
             if (myMapping[i].codepoint == codepoint) return &myGlyphs[myMapping[i].index];
         }
 
@@ -72,8 +71,7 @@ namespace
 
     int32_t getGlyphIndex(uint16_t codepoint)
     {
-        for (const auto& mapping : myMapping)
-        {
+        for (const auto& mapping : myMapping) {
             if (mapping.codepoint == codepoint) return mapping.index;
         }
 

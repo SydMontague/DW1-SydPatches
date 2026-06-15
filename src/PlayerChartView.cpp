@@ -30,14 +30,12 @@ namespace
 
         void render(DigimonType selectedDigimon) const
         {
-            for (int32_t i = 0; i < 9; i++)
-            {
+            for (int32_t i = 0; i < 9; i++) {
                 auto posY        = CHART_ENTRY_BASE_Y + CHART_ENTRY_OFFSET_Y * i;
                 DigimonType type = digimon[i];
                 if (type == DigimonType::INVALID) continue;
 
-                if (hasValidSprite(type) && hasDigimonRaised(type))
-                {
+                if (hasValidSprite(type) && hasDigimonRaised(type)) {
                     auto frame = 0;
                     if (selectedDigimon == type && PLAYTIME_FRAMES % 10 < 5) frame = 1;
                     getDigimonSprite(type).render(posX, posY, 5, 0, frame);
@@ -52,9 +50,8 @@ namespace
         int16_t posX;
         int16_t posY;
 
-        // NOLINTNEXTLINE
-        __attribute__((optimize("Os"))) void
-        render(uint8_t texX, uint8_t texY, uint16_t clut, uint16_t tpage, int32_t layer, bool spriteVisible) const
+        [[gnu::optimize("Os")]]
+        void render(uint8_t texX, uint8_t texY, uint16_t clut, uint16_t tpage, int32_t layer, bool spriteVisible) const
         {
             if (spriteVisible) renderRectPolyFT4(posX, posY, 16, 16, texX, texY, tpage, clut, layer, 0);
             // vanilla is 18x18, resulting in a 19x19 box
@@ -373,11 +370,10 @@ namespace
     constexpr ChartSprite toOdd[]      = {{66, -69}, {84, -45}, {102, -21}, {84, 3}, {66, 27}};
     constexpr ChartSprite toEven[]     = {{66, -81}, {84, -57}, {102, -33}, {102, -9}, {84, 15}, {66, 39}};
 
-    // NOLINTNEXTLINE
-    __attribute__((optimize("Os"))) constexpr char const* getLevelName(Level level)
+    [[gnu::optimize("Os")]]
+    constexpr char const* getLevelName(Level level)
     {
-        switch (level)
-        {
+        switch (level) {
             case Level::FRESH: return "Fresh";
             case Level::IN_TRAINING: return "In-Training";
             case Level::ROOKIE: return "Rookie";
@@ -425,8 +421,8 @@ namespace
 struct ChartView::Private
 {
 public:
-    // NOLINTNEXTLINE
-    __attribute__((optimize("Os"))) void tick();
+    [[gnu::optimize("Os")]]
+    void tick();
     void render(int32_t depth);
     bool canBeClosed();
 
@@ -479,12 +475,10 @@ void ChartView::Private::renderDetail(int32_t depth)
     uint32_t fromCount = 0;
     auto& paths        = EVO_PATHS_DATA[static_cast<int32_t>(selectedDigimon)];
 
-    for (auto val : paths.from)
-    {
+    for (auto val : paths.from) {
         if (val != 0xFF) fromCount++;
     }
-    for (auto val : paths.to)
-    {
+    for (auto val : paths.to) {
         if (val != 0xFF) toCount++;
     }
 
@@ -499,8 +493,7 @@ void ChartView::Private::renderDetail(int32_t depth)
     auto* fromSprite     = (fromCount & 1) == 0 ? fromEven : fromOdd;
     auto fromSpriteCount = (fromCount & 1) == 0 ? 4 : 5;
 
-    for (int32_t i = 0; i < toSpriteCount; i++)
-    {
+    for (int32_t i = 0; i < toSpriteCount; i++) {
         auto digi = paths.to[i];
         if (digi == 0xFF) continue;
         auto type  = static_cast<DigimonType>(digi);
@@ -511,8 +504,7 @@ void ChartView::Private::renderDetail(int32_t depth)
         toLines[i].render(TO_COLORS[i][1].asUint32(), TO_COLORS[i][0].asUint32(), depth);
     }
 
-    for (int32_t i = 0; i < fromSpriteCount; i++)
-    {
+    for (int32_t i = 0; i < fromSpriteCount; i++) {
         auto digi = paths.from[i];
         if (digi == 0xFF) continue;
         auto type  = static_cast<DigimonType>(digi);
@@ -533,20 +525,16 @@ void ChartView::Private::renderDetail(int32_t depth)
 
 void ChartView::Private::tick()
 {
-    if (state == 2)
-    {
-        if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
-        {
+    if (state == 2) {
+        if (isKeyDown(InputButtons::BUTTON_TRIANGLE)) {
             detailView.close();
             playSound(0, 3);
             state = 1;
         }
     }
 
-    else if (state == 1)
-    {
-        if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
-        {
+    else if (state == 1) {
+        if (isKeyDown(InputButtons::BUTTON_TRIANGLE)) {
             playSound(0, 4);
             state           = 0;
             selectedDigimon = DigimonType::INVALID;
@@ -564,11 +552,9 @@ void ChartView::Private::tick()
         if (cols[selectedCol].digimon[selectedRow] == DigimonType::INVALID) rowAmount = -1;
 
         auto tmpRow = selectedRow;
-        while (rowAmount != 0 && tmpRow + rowAmount >= 0 && tmpRow + rowAmount < 9)
-        {
+        while (rowAmount != 0 && tmpRow + rowAmount >= 0 && tmpRow + rowAmount < 9) {
             tmpRow += rowAmount;
-            if (cols[selectedCol].digimon[tmpRow] != DigimonType::INVALID)
-            {
+            if (cols[selectedCol].digimon[tmpRow] != DigimonType::INVALID) {
                 selectedRow = tmpRow;
                 break;
             }
@@ -578,16 +564,15 @@ void ChartView::Private::tick()
 
         selectedDigimon = cols[selectedCol].digimon[selectedRow];
 
-        if (isKeyDown(InputButtons::BUTTON_CROSS) && hasDigimonRaised(selectedDigimon))
-        {
+        if (isKeyDown(InputButtons::BUTTON_CROSS) && hasDigimonRaised(selectedDigimon)) {
             constexpr RECT final = {.x = -150, .y = -89, .width = 300, .height = 190};
             int16_t posX         = cols[selectedCol].posX;
             int16_t posY         = CHART_ENTRY_BASE_Y + CHART_ENTRY_OFFSET_Y * selectedRow;
             RECT start           = {
-                          .x      = static_cast<int16_t>(posX),
-                          .y      = static_cast<int16_t>(posY),
-                          .width  = 10,
-                          .height = 10,
+                .x      = static_cast<int16_t>(posX),
+                .y      = static_cast<int16_t>(posY),
+                .width  = 10,
+                .height = 10,
             };
 
             auto* para  = getDigimonData(selectedDigimon);
@@ -597,10 +582,8 @@ void ChartView::Private::tick()
             state       = 2;
         }
     }
-    else if (state == 0)
-    {
-        if (isKeyDown(InputButtons::BUTTON_CROSS))
-        {
+    else if (state == 0) {
+        if (isKeyDown(InputButtons::BUTTON_CROSS)) {
             state = 1;
             playSound(0, 3);
         }

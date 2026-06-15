@@ -26,8 +26,7 @@ namespace dtl
 
         constexpr optional(const optional& other)
         {
-            if (other.has_value())
-            {
+            if (other.has_value()) {
                 value_     = *other;
                 has_value_ = true;
             }

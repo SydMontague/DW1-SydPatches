@@ -56,14 +56,12 @@ extern "C"
         // vanilla checks if the sprite would be fully off screen but we do that because
         // HOLY FUCK THIS FUNCTION PISSES ME OFF AND I WANT TO MOVE ON
         // TODO make nicer
-        for (int32_t i = 0; i <= loopCount; i++)
-        {
+        for (int32_t i = 0; i <= loopCount; i++) {
             auto yPos = (data->screenPos.y + finalScaledY) + (heightStep * i);
 
             // if (yPos > (-DRAWING_OFFSET_Y + 240) || (yPos + heightStep) < -DRAWING_OFFSET_Y) continue;
 
-            for (int32_t j = 0; j <= innerLoopCount; j++)
-            {
+            for (int32_t j = 0; j <= innerLoopCount; j++) {
                 auto xPos = (data->screenPos.x + finalScaledX) + (widthStep * j);
                 // if (xPos > (-DRAWING_OFFSET_X + 320) || (xPos + widthStep) < -DRAWING_OFFSET_X) continue;
 
@@ -79,13 +77,11 @@ extern "C"
                 prim->y2    = yPos + heightStep;
                 prim->x3    = xPos + widthStep;
                 prim->y3    = yPos + heightStep;
-                if (j == innerLoopCount)
-                {
+                if (j == innerLoopCount) {
                     prim->x1 = data->screenPos.x;
                     prim->x3 = data->screenPos.x;
                 }
-                if (i == loopCount)
-                {
+                if (i == loopCount) {
                     prim->y2 = data->screenPos.y;
                     prim->y3 = data->screenPos.y;
                 }

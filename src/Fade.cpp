@@ -40,14 +40,12 @@ namespace
 
     void renderFadeIn(int32_t instanceId)
     {
-        if (FADE_DATA.fadeInCurrent >= FADE_DATA.fadeInTarget)
-        {
+        if (FADE_DATA.fadeInCurrent >= FADE_DATA.fadeInTarget) {
             FADE_DATA.fadeInCurrent  = 0;
             FADE_DATA.fadeProtection = 0;
             removeObject(ObjectID::FADE, instanceId);
         }
-        else
-        {
+        else {
             auto progress = FADE_DATA.fadeInCurrent * (160 / FADE_DATA.fadeInTarget);
             if (progress < 1) progress = FADE_DATA.fadeInCurrent;
 

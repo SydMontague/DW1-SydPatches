@@ -1,0 +1,5 @@
+{
+  "C_Cpp.default.cppStandard": "c++23",
+  "editor.formatOnSave": true,
+  "files.insertFinalNewline": true
+}

@@ -21,8 +21,7 @@ Pair<Entity*, uint8_t> getEntityFromScriptId(uint8_t entityId)
     if (entityId == 0xFD) return {&TAMER_ENTITY, 0};
     if (entityId == 0xFC) return {&PARTNER_ENTITY, 1};
 
-    for (int32_t i = 2; i < 10; i++)
-    {
+    for (int32_t i = 2; i < 10; i++) {
         auto* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i));
         if (entity == nullptr) continue;
         if (entity->scriptId == entityId) return {entity, static_cast<uint8_t>(i)};
@@ -58,14 +57,12 @@ extern "C"
         else
             axisValue = &entity.first->posData->location.z;
 
-        if (!previousCameraPosInitialized)
-        {
+        if (!previousCameraPosInitialized) {
             moveToDeltaX                 = (target - *axisValue) / speed;
             previousCameraPosInitialized = true;
             previousCameraPos            = entity.first->posData->location;
         }
-        else
-        {
+        else {
             *axisValue += moveToDeltaX;
             setEntityPosition(entity.second,
                               entity.first->posData->location.x,
@@ -82,16 +79,14 @@ extern "C"
             else if (moveToDeltaX > 0)
                 reachedTarget = *axisValue >= target;
 
-            if (reachedTarget)
-            {
+            if (reachedTarget) {
                 *axisValue                   = target;
                 previousCameraPosInitialized = false;
                 return true;
             }
         }
 
-        if (withCamera)
-        {
+        if (withCamera) {
             moveCameraByDiff(&previousCameraPos, &entity.first->posData->location);
             previousCameraPos = entity.first->posData->location;
         }
@@ -111,15 +106,12 @@ extern "C"
         // vanilla doesn't do a nullptr check here, but you can't move an entity that doesn't exist
         if (entity1.first == nullptr) return true;
 
-        if (!previousCameraPosInitialized)
-        {
-            if (scriptId2 == 0xFF)
-            {
+        if (!previousCameraPosInitialized) {
+            if (scriptId2 == 0xFF) {
                 moveToDeltaX = (targetX - entity1.first->posData->location.x) / speed;
                 moveToDeltaZ = (targetZ - entity1.first->posData->location.z) / speed;
             }
-            else
-            {
+            else {
                 auto entity2 = getEntityFromScriptId(scriptId2);
                 // vanilla doesn't do a nullptr check here, but you can't move to an entity that doesn't exist
                 if (entity2.first == nullptr) return true;
@@ -130,8 +122,7 @@ extern "C"
             previousCameraPosInitialized = true;
             previousCameraPos            = entity1.first->posData->location;
         }
-        else
-        {
+        else {
             setEntityPosition(entity1.second,
                               entity1.first->posData->location.x + moveToDeltaX,
                               entity1.first->posData->location.y,
@@ -142,24 +133,30 @@ extern "C"
             // the target location. If the game waits for the movement to complete, this will cause a softlock.
             // We solve this by treating DELTA speeds of 0 as always completed
             bool finishedX = moveToDeltaX == 0;
-            if (moveToDeltaX < 0) { finishedX = entity1.first->posData->location.x <= targetX; }
-            else if (moveToDeltaX > 0) { finishedX = entity1.first->posData->location.x >= targetX; }
+            if (moveToDeltaX < 0) {
+                finishedX = entity1.first->posData->location.x <= targetX;
+            }
+            else if (moveToDeltaX > 0) {
+                finishedX = entity1.first->posData->location.x >= targetX;
+            }
 
             bool finishedZ = moveToDeltaZ == 0;
-            if (moveToDeltaZ < 0) { finishedZ = entity1.first->posData->location.z <= targetZ; }
-            else if (moveToDeltaZ > 0) { finishedZ = entity1.first->posData->location.z >= targetZ; }
+            if (moveToDeltaZ < 0) {
+                finishedZ = entity1.first->posData->location.z <= targetZ;
+            }
+            else if (moveToDeltaZ > 0) {
+                finishedZ = entity1.first->posData->location.z >= targetZ;
+            }
 
             if (finishedX) entity1.first->posData->location.x = targetX;
             if (finishedZ) entity1.first->posData->location.z = targetZ;
-            if (finishedX && finishedZ)
-            {
+            if (finishedX && finishedZ) {
                 previousCameraPosInitialized = false;
                 return true;
             }
         }
 
-        if (withCamera)
-        {
+        if (withCamera) {
             moveCameraByDiff(&previousCameraPos, &entity1.first->posData->location);
             previousCameraPos = entity1.first->posData->location;
         }
@@ -182,13 +179,11 @@ extern "C"
         // vanilla doesn't do a nullptr check here, but unchecked access is iffy
         if (entity1.first == nullptr || entity2.first == nullptr) return true;
 
-        if (hasRotationData[entity1.second] == 0)
-        {
+        if (hasRotationData[entity1.second] == 0) {
             rotationData[entity1.second]    = entity2.first->posData->location;
             hasRotationData[entity1.second] = 1;
         }
-        else
-        {
+        else {
             int16_t targetAngle;
             int16_t cwDiff;
             int16_t ccDiff;
@@ -198,8 +193,7 @@ extern "C"
                                   &ccDiff,
                                   &cwDiff);
 
-            if (rotateEntity(&entity1.first->posData->rotation, targetAngle, ccDiff, cwDiff, 0x200))
-            {
+            if (rotateEntity(&entity1.first->posData->rotation, targetAngle, ccDiff, cwDiff, 0x200)) {
                 hasRotationData[entity1.second] = 0;
                 return true;
             }
@@ -223,22 +217,22 @@ extern "C"
 
         if (entity1.second >= 2) NPC_IS_WALKING_TOWARDS[entity1.second - 2] = 1;
 
-        if (!previousCameraPosInitialized && withCamera)
-        {
+        if (!previousCameraPosInitialized && withCamera) {
             previousCameraPos            = currentPos;
             previousCameraPosInitialized = true;
         }
 
         entityLookAtLocation(entity1.first, &targetPos);
 
-        if (withCamera)
-        {
+        if (withCamera) {
             moveCameraByDiff(&previousCameraPos, &currentPos);
             previousCameraPos = currentPos;
         }
 
         CollisionCode collision = CollisionCode::NONE;
-        if (entity2.first != nullptr) { collision = entityCheckCollision(nullptr, entity1.first, 0, 0); }
+        if (entity2.first != nullptr) {
+            collision = entityCheckCollision(nullptr, entity1.first, 0, 0);
+        }
 
         // In vanilla a movement is complete once the entity location is on the same tile as the target location.
         // However, in some constellations this might never happen and cause softlocks.
@@ -248,8 +242,7 @@ extern "C"
         auto distance = getDistanceSquared(&currentPos, &targetPos);
         auto radius   = getDigimonData(entity1.first->type)->radius;
 
-        if (distance < radius * radius || (collision != CollisionCode::NONE && collision < CollisionCode::MAP))
-        {
+        if (distance < radius * radius || (collision != CollisionCode::NONE && collision < CollisionCode::MAP)) {
             previousCameraPosInitialized = false;
             if (entity1.second >= 2) NPC_IS_WALKING_TOWARDS[entity1.second - 2] = 0;
             return true;
@@ -306,8 +299,11 @@ extern "C"
         return false;
     }
 
-    static bool
-    entityCheckCombatArea(Entity* entity, const Vector& newPos, const Vector& oldPos, int16_t width, int16_t height)
+    static bool entityCheckCombatArea(Entity* entity,
+                                      const Vector& newPos,
+                                      const Vector& oldPos,
+                                      int16_t width,
+                                      int16_t height)
     {
         if (width == 0 || height == 0) return false;
         if (GAME_STATE == 4) return false;
@@ -333,8 +329,7 @@ extern "C"
             {.height = -200, .modX = 1, .modY = -1},
         };
 
-        for (auto point : points)
-        {
+        for (auto point : points) {
             auto screenNew = getScreenPosition(newPos.x + radius * point.modX,
                                                newPos.y + point.height,
                                                newPos.z + radius * point.modY);
@@ -432,8 +427,11 @@ extern "C"
         return false;
     }
 
-    static bool
-    entityCheckEntityCollision(Entity* self, const Vector& selfLoc, Entity* other, int32_t diffX, int32_t diffZ)
+    static bool entityCheckEntityCollision(Entity* self,
+                                           const Vector& selfLoc,
+                                           Entity* other,
+                                           int32_t diffX,
+                                           int32_t diffZ)
     {
         // TODO refactor, this code is kinda ugly and entity collision sucks in vanilla
         auto selfRadius  = getDigimonData(self->type)->radius;
@@ -444,10 +442,8 @@ extern "C"
         BoundingBox2D selfBB(selfLoc.x, selfLoc.z, selfRadius);
         BoundingBox2D otherBB(otherLoc.x, otherLoc.z, otherRadius);
 
-        if (GAME_STATE == 0 && self == &TAMER_ENTITY)
-        {
-            if ((POLLED_INPUT & BUTTON_CROSS) != 0 && self->animId == 0)
-            {
+        if (GAME_STATE == 0 && self == &TAMER_ENTITY) {
+            if ((POLLED_INPUT & BUTTON_CROSS) != 0 && self->animId == 0) {
                 auto rot = self->posData[0].rotation.y;
                 if (rot > 0 && rot < 0x800) selfBB.minX -= 50;
                 if (rot > 0x800 && rot < 0x1000) selfBB.maxX += 50;
@@ -462,8 +458,7 @@ extern "C"
 
             return selfBB.overlaps(otherBB);
         }
-        else
-        {
+        else {
             if (diffX < 0 && otherBB.overlaps(selfBB.minX, selfBB.maxY, selfBB.minX, selfBB.minY)) return true;
             if (diffX > 0 && otherBB.overlaps(selfBB.maxX, selfBB.maxY, selfBB.maxX, selfBB.minY)) return true;
             if (diffZ < 0 && otherBB.overlaps(selfBB.minX, selfBB.minY, selfBB.maxX, selfBB.minY)) return true;
@@ -497,8 +492,7 @@ extern "C"
         if (entityCheckCombatArea(self, newLoc, oldLoc, width, height)) return CollisionCode::SCREEN;
         if (checkMapCollision(self, newLoc, diffX, diffZ)) return CollisionCode::MAP;
 
-        for (int32_t i = 0; i < 10; i++)
-        {
+        for (int32_t i = 0; i < 10; i++) {
             auto* other = ENTITY_TABLE.getEntityById(i);
 
             if (isInvisible(other)) continue;
@@ -534,13 +528,11 @@ extern "C"
         auto baseRotation = posmod(self->posData->rotation.y, 4096);
         uint8_t flag      = 0;
 
-        for (int32_t i = 0; i < 4; i++)
-        {
+        for (int32_t i = 0; i < 4; i++) {
             auto graceRotation        = COLLISION_GRACE_ROTATION[baseRotation >> 9][i];
             self->posData->rotation.y = graceRotation;
 
-            if (entityCheckCollision(ignore, self, dx, dy) == CollisionCode::NONE)
-            {
+            if (entityCheckCollision(ignore, self, dx, dy) == CollisionCode::NONE) {
                 auto diffLeft  = posmod((baseRotation - graceRotation), 4096);
                 auto diffRight = posmod((graceRotation - baseRotation), 4096);
 
@@ -565,10 +557,8 @@ extern "C"
 
     void initializeEntityText()
     {
-        for (auto& val : entityTextData)
-        {
-            for (int32_t i = 0; i < 8; i++)
-            {
+        for (auto& val : entityTextData) {
+            for (int32_t i = 0; i < 8; i++) {
                 val.activeList[i]      = 0xFF;
                 val.entries[i].frameId = -1;
             }
@@ -584,8 +574,7 @@ extern "C"
 
         removeObject(ObjectID::ENTITY_TEXT, entityId);
         entry.activeElements = 0;
-        for (int32_t i = 0; i < 8; i++)
-        {
+        for (int32_t i = 0; i < 8; i++) {
             entry.activeList[i]      = 0xFF;
             entry.entries[i].frameId = -1;
         }
@@ -614,14 +603,12 @@ extern "C"
 
         auto& textEntry = entityTextData[id];
 
-        for (int32_t i = 0; i < textEntry.entries.size(); i++)
-        {
+        for (int32_t i = 0; i < textEntry.entries.size(); i++) {
             if (textEntry.activeList[i] == 0xFF) continue;
 
             auto& entry = textEntry.entries[i];
             if (entry.frameId == -1) continue;
-            if (i != 0)
-            {
+            if (i != 0) {
                 auto val = textEntry.entries[textEntry.activeList[i] - 1].frameId;
                 if (val != -1 && val < 11) continue; // delay
             }
@@ -630,8 +617,7 @@ extern "C"
             auto posX = entry.x;
             auto posY = entry.y;
 
-            if (GAME_STATE == 4)
-            {
+            if (GAME_STATE == 4) {
                 auto entity = ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[id]);
                 auto pos    = getScreenPosition(*entity, 0); // vanilla uses getEntityScreenPos
 
@@ -644,8 +630,7 @@ extern "C"
                 drawEntityTextIcon(posX - 8, posY, iconOffsets[entry.icon], 14 - i);
 
             entry.frameId += 1;
-            if (entry.frameId > 30)
-            {
+            if (entry.frameId > 30) {
                 entry.frameId           = -1;
                 textEntry.activeList[i] = 0xFF;
             }
@@ -664,8 +649,7 @@ extern "C"
 
         if (textData.activeElements >= 8) return;
 
-        for (int32_t i = 0; i < textData.entries.size(); i++)
-        {
+        for (int32_t i = 0; i < textData.entries.size(); i++) {
             auto& entry = textData.entries[i];
             if (entry.frameId != -1) continue;
 
@@ -677,16 +661,14 @@ extern "C"
 
             entry.x = textData.activeElements * 4;
             entry.y = textData.activeElements * 4;
-            if (GAME_STATE != 4)
-            {
+            if (GAME_STATE != 4) {
                 auto pos = getScreenPosition(*entity, 0); // vanilla uses getEntityScreenPos
                 entry.x += pos.screenX;
                 entry.y += pos.screenY - 8;
             }
 
             for (auto& activeEntry : textData.activeList)
-                if (activeEntry == 0xFF)
-                {
+                if (activeEntry == 0xFF) {
                     activeEntry = i;
                     break;
                 }
@@ -718,8 +700,7 @@ extern "C"
 
 bool hasAttackEquipped(DigimonEntity* entity)
 {
-    for (int32_t i = 0; i < 3; i++)
-    {
+    for (int32_t i = 0; i < 3; i++) {
         auto move = entity->stats.moves[i];
         auto tech = entityGetTechFromAnim(entity, move);
         if (move != 0xFF && tech != 0xFF && MOVE_DATA[tech].power != 0) return true;
@@ -773,8 +754,7 @@ void renderDigiviceEntity(Entity* entity, int32_t entityId, int32_t refX)
     Matrix lw = libgs_REFERENCE_MATRIX;
     Matrix ls = libgs_REFERENCE_MATRIX;
 
-    for (int32_t i = 0; i < digiData->boneCount; i++)
-    {
+    for (int32_t i = 0; i < digiData->boneCount; i++) {
         auto posData = entity->posData[i];
         if (posData.obj.tmd == nullptr) continue;
 

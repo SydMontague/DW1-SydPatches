@@ -41,7 +41,7 @@ namespace
 
     uint16_t getRowVanilla(uint16_t codepoint, uint8_t row)
     {
-        if(row > 10) return 0xFFFF;
+        if (row > 10) return 0xFFFF;
         return getGlyphVanilla(codepoint)->pixelData[row];
     }
 
@@ -49,8 +49,7 @@ namespace
     {
         const uint8_t* ptr = jis_at_index(string, index);
         uint8_t firstByte  = *ptr;
-        if (firstByte >= 0x80)
-        {
+        if (firstByte >= 0x80) {
             uint16_t bla = firstByte << 8 | ptr[1];
             return bla;
         }
@@ -67,7 +66,7 @@ namespace
 
     uint16_t getGlyphRow(int32_t glyph, int32_t row)
     {
-        if(row > 10) return 0xFFFF;
+        if (row > 10) return 0xFFFF;
         return GLYPH_DATA[glyph].pixelData[row];
     }
 
@@ -89,8 +88,7 @@ namespace
         GetWidthFn getWidth         = font->getWidth;
         uint32_t index              = 0;
         uint32_t width              = 0;
-        while (true)
-        {
+        while (true) {
             uint16_t codepoint = getCodePoint(string, index++);
             if (codepoint == 0) break;
 
@@ -106,14 +104,12 @@ namespace
         uint8_t font_height   = font->height;
         uint8_t glyph_width   = font->getWidth(codepoint);
 
-        for (int i = 0; i < font->height; i++)
-        {
+        for (int i = 0; i < font->height; i++) {
             uint16_t row_data = font->getRow(codepoint, i);
             uint8_t* draw_row = render_start + (((string_width + 3) / 4) * 4 * i) / 2;
             uint8_t width     = glyph_width;
 
-            if (offset_x % 2 == 1)
-            {
+            if (offset_x % 2 == 1) {
                 uint8_t tmp = *draw_row;
                 if ((row_data & 0x8000) == 0) tmp = tmp | COLORCODE_HIGHBITS;
                 *draw_row = tmp;
@@ -122,8 +118,7 @@ namespace
                 row_data = row_data << 1;
             }
 
-            for (int j = 0; j < width; j += 2)
-            {
+            for (int j = 0; j < width; j += 2) {
                 uint8_t tmp = 0;
                 if ((row_data & 0x8000) == 0) tmp = COLORCODE_LOWBITS;
                 if ((row_data & 0x4000) == 0) tmp = tmp | COLORCODE_HIGHBITS;
@@ -171,8 +166,7 @@ extern "C"
 
         uint32_t index = 0;
         uint32_t width = 0;
-        while (true)
-        {
+        while (true) {
             uint16_t codepoint = font->getCodePoint(string, index++);
             if (codepoint == 0) break;
 
@@ -197,14 +191,12 @@ extern "C"
         libgpu_SetPolyFT4(base);
         base->tpage = (uvX / 64) + (uvY >= 256 ? 0x10 : 0);
         base->clut  = libgpu_GetClut(0xd0, 0x1e8);
-        if (colorId != -1)
-        {
+        if (colorId != -1) {
             base->r0 = TEXT_COLORS[colorId].red;
             base->g0 = TEXT_COLORS[colorId].green;
             base->b0 = TEXT_COLORS[colorId].blue;
         }
-        else
-        {
+        else {
             base->r0 = 0;
             base->g0 = 0;
             base->b0 = 0;

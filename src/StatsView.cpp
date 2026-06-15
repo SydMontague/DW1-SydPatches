@@ -714,8 +714,7 @@ void DigimonStatsView::render(int32_t depth)
     for (const auto& entry : labels)
         entry.render(depth);
 
-    for (auto& entry : sprites)
-    {
+    for (auto& entry : sprites) {
         int16_t offsetX = 0;
         if ((entry.flag & 1) == 1 && PLAYTIME_FRAMES % 10 < 5) offsetX = entry.width;
 

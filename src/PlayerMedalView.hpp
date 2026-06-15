@@ -8,7 +8,7 @@ struct MedalView
 
     MedalView();
     ~MedalView();
-    
+
     void tick();
     void render(int32_t depth);
     bool canBeClosed();

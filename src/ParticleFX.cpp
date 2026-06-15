@@ -44,10 +44,8 @@ namespace
     ParticleFXData* getFreeParticleFXData(int32_t* id)
     {
         int32_t i = 0;
-        for (auto& data : particleFXData)
-        {
-            if (data.tickCount == -1)
-            {
+        for (auto& data : particleFXData) {
+            if (data.tickCount == -1) {
                 if (id != nullptr) *id = i;
                 return &data;
             }
@@ -65,10 +63,8 @@ namespace
         auto tickTarget    = data.tickTarget;
         auto tickCount     = data.tickCount;
 
-        if (data.tickCount == 2)
-        {
-            for (int32_t i = 0; i < flashCount; i++)
-            {
+        if (data.tickCount == 2) {
+            for (int32_t i = 0; i < flashCount; i++) {
                 ParticleFlashData flashData;
                 auto mapPos = getMapPosition(data.pos.x + data.flashX[i],
                                              data.pos.y + data.flashY[i],
@@ -92,16 +88,14 @@ namespace
             }
         }
 
-        if (tickCount < tickTarget)
-        {
+        if (tickCount < tickTarget) {
             RGB8 color;
             color.red   = lerp(data.r, 0, 0, tickTarget, tickCount);
             color.green = lerp(data.g, 0, 0, tickTarget, tickCount);
             color.blue  = lerp(data.b, 0, 0, tickTarget, tickCount);
             auto scale  = sin(lerp(0, 110, 0, tickTarget, tickCount)) / 128;
 
-            for (int32_t i = 0; i < particleCount; i++)
-            {
+            for (int32_t i = 0; i < particleCount; i++) {
                 SVector pos;
                 pos.x = data.pos.x + (fxParticleData[i].x * scale) / 512;
                 pos.y = data.pos.y + (fxParticleData[i].y * scale) / 512;
@@ -118,46 +112,37 @@ namespace
         data.tickCount++;
         data.cloudDelay--;
 
-        if (data.tickCount == 10)
-        {
-            if (data.mode == 1)
-            {
+        if (data.tickCount == 10) {
+            if (data.mode == 1) {
                 addEntityParticleFX(entity, 22);
                 addEntityParticleFX(entity, 22);
                 addEntityParticleFX(entity, 22);
             }
-            if (data.mode == 0 && entity != nullptr)
-            {
+            if (data.mode == 0 && entity != nullptr) {
                 addEntityParticleFX(entity, 14);
                 addEntityParticleFX(entity, 14);
                 addEntityParticleFX(entity, 14);
             }
         }
-        else if (data.tickCount == 13)
-        {
-            if (data.mode == 1)
-            {
+        else if (data.tickCount == 13) {
+            if (data.mode == 1) {
                 addEntityParticleFX(entity, 22);
                 addEntityParticleFX(entity, 14);
             }
-            if (data.mode == 0 && entity != nullptr)
-            {
+            if (data.mode == 0 && entity != nullptr) {
                 addEntityParticleFX(entity, 14);
                 addEntityParticleFX(entity, 14);
             }
         }
-        else
-        {
+        else {
             auto delay = data.cloudDelay;
-            if (delay < 4 && delay >= 0 && data.mode == 1)
-            {
+            if (delay < 4 && delay >= 0 && data.mode == 1) {
                 auto pos    = entity->posData;
                 auto baseX  = pos->posMatrix.work.t[0];
                 auto baseZ  = pos->posMatrix.work.t[2];
                 auto radius = getDigimonData(entity->type)->radius;
 
-                for (int32_t i = 0; i < data.cloudDelay + 2; i++)
-                {
+                for (int32_t i = 0; i < data.cloudDelay + 2; i++) {
                     auto roll   = rand();
                     auto offset = radius + random2(radius / 2);
 
@@ -168,8 +153,7 @@ namespace
                     createCloudFX(&vec);
                 }
             }
-            else if (data.tickTarget <= data.tickCount && delay < 0)
-            {
+            else if (data.tickTarget <= data.tickCount && delay < 0) {
                 data.tickCount = -1;
                 removeObject(ObjectID::PARTICLE_FX, instanceId);
             }
@@ -193,8 +177,7 @@ extern "C"
         data->flashY[1]     = random2(200) - 100;
         data->flashZ[1]     = random2(200) - 100;
         data->flashScale[1] = random2(170) + 250;
-        if (mode == 1)
-        {
+        if (mode == 1) {
             data->flashX[2]     = random2(200) - 100;
             data->flashY[2]     = random2(200) - 100;
             data->flashZ[2]     = random2(200) - 100;
@@ -229,8 +212,7 @@ void initializeParticleFX()
     for (ParticleFXData& data : particleFXData)
         data.tickCount = -1;
 
-    for (SPosition3D& data : fxParticleData)
-    {
+    for (SPosition3D& data : fxParticleData) {
         Matrix matrix;
         SVector rotation;
         rotation.x = ((random2(128) - 64) << 6);

@@ -1,5 +1,6 @@
 #include "Battle.h"
 
+#include "BuffModel.hpp"
 #include "Camera.hpp"
 #include "Entity.hpp"
 #include "Files.hpp"
@@ -14,7 +15,6 @@
 #include "Partner.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
-#include "BuffModel.hpp"
 #include "extern/BTL.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libetc.hpp"
@@ -66,10 +66,8 @@ namespace
 
     template<typename T> static void waitUntil(T fn)
     {
-        while (!fn())
-        {
-            if (!IS_PREDEFINED_BATTLE)
-            {
+        while (!fn()) {
+            if (!IS_PREDEFINED_BATTLE) {
                 for (int32_t i = 1; i <= ENEMY_COUNT; i++)
                     entityLookAtLocation(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i]),
                                          &PARTNER_ENTITY.posData->location);
@@ -115,8 +113,7 @@ namespace
         COMBAT_DATA_PTR->player.currentCommand[0] = BattleCommand::YOUR_CALL;
         startAnimation(&TAMER_ENTITY, 1);
 
-        for (int32_t i = 2; i < 10; i++)
-        {
+        for (int32_t i = 2; i < 10; i++) {
             auto* entity = ENTITY_TABLE.getEntityById(i);
             if (!isInvisible(entity)) startAnimation(entity, 33);
         }
@@ -130,8 +127,7 @@ namespace
         // start sound loading
         loadSB();
         auto lastId = 4;
-        for (int32_t i = 1; i <= ENEMY_COUNT; i++)
-        {
+        for (int32_t i = 1; i <= ENEMY_COUNT; i++) {
             auto* entity =
                 reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i]));
             entity->stats.vabId = 4 + i;
@@ -175,19 +171,16 @@ namespace
         dtl::array<int16_t, 18> effectIds{};
         int32_t moveCount = 0;
 
-        for (int32_t i = 0; i <= ENEMY_COUNT; i++)
-        {
+        for (int32_t i = 0; i <= ENEMY_COUNT; i++) {
             auto* entity =
                 reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i]));
             entity->stats.unk1   = -1;
             entity->stats.unk2_1 = 0xFF;
 
-            for (auto& move : entity->stats.moves)
-            {
+            for (auto& move : entity->stats.moves) {
                 if (move == 0xFF) continue;
                 auto tech = entityGetTechFromAnim(entity, move);
-                if (tech == 0xFF)
-                {
+                if (tech == 0xFF) {
                     move = 0xFF;
                     continue;
                 }
@@ -202,13 +195,11 @@ namespace
         waitUntil([] { return LOAD_EFE_STATE <= 0; });
 
         auto effectSlot = 0;
-        for (int32_t i = 0; i <= ENEMY_COUNT; i++)
-        {
+        for (int32_t i = 0; i <= ENEMY_COUNT; i++) {
             auto* entity =
                 reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i]));
 
-            for (int32_t j = 0; j < 4; j++)
-            {
+            for (int32_t j = 0; j < 4; j++) {
                 if (entity->stats.moves[j] == 0xFF)
                     COMBAT_DATA_PTR->fighter[i].effectSlot[j] = -1;
                 else
@@ -316,8 +307,7 @@ namespace
     {
         auto enemySlot = 1;
         dtl::array<uint8_t, 4> val;
-        for (int32_t i = 0; i < 3; i++)
-        {
+        for (int32_t i = 0; i < 3; i++) {
             val[i] = readPStat(251 + i);
             if (val[i] == 0xFF) continue;
 
@@ -325,8 +315,7 @@ namespace
             COMBAT_DATA_PTR->player.entityIds[enemySlot++] = val[i];
         }
 
-        for (int32_t i = 2; i < 10; i++)
-        {
+        for (int32_t i = 2; i < 10; i++) {
             if (val.contains(i)) continue;
 
             auto* entity = ENTITY_TABLE.getEntityById(i);
@@ -364,31 +353,26 @@ namespace
         auto isConcave                       = isScreenConcave();
         auto enemyCount                      = 2;
 
-        for (int32_t i = 2; i < 10; i++)
-        {
+        for (int32_t i = 2; i < 10; i++) {
             auto* entity = ENTITY_TABLE.getEntityById(i);
 
             if (entity == nullptr || !entity->isOnMap) continue;
 
-            if (i == talkedToEntity)
-            {
+            if (i == talkedToEntity) {
                 setFleeBubble(i, 0);
                 continue;
             }
 
-            if (!entity->isOnScreen)
-            {
+            if (!entity->isOnScreen) {
                 entity->isOnMap = false;
                 continue;
             }
-            if (enemyCount > 3)
-            {
+            if (enemyCount > 3) {
                 setFleeBubble(i, 1);
                 continue;
             }
 
-            if (isConcave)
-            {
+            if (isConcave) {
                 auto tamerTileX   = getTileX(TAMER_ENTITY.posData[0].location.x);
                 auto tamerTileY   = getTileZ(TAMER_ENTITY.posData[0].location.z);
                 auto enemyTileX   = getTileX(entity->posData[0].location.x);
@@ -399,8 +383,7 @@ namespace
                 auto tamerEnemyBlocked   = isLinearPathBlocked(tamerTileX, tamerTileY, enemyTileX, enemyTileY);
                 auto partnerEnemyBlocked = isLinearPathBlocked(partnerTileX, partnerTileY, enemyTileX, enemyTileY);
 
-                if (tamerEnemyBlocked || partnerEnemyBlocked)
-                {
+                if (tamerEnemyBlocked || partnerEnemyBlocked) {
                     setFleeBubble(i, 1);
                     continue;
                 }
@@ -415,8 +398,7 @@ namespace
             else if (hasRepel)
                 roll += 20;
 
-            if (roll < getFleeChance(PARTNER_ENTITY.type, entity->type))
-            {
+            if (roll < getFleeChance(PARTNER_ENTITY.type, entity->type)) {
                 COMBAT_DATA_PTR->player.entityIds[enemyCount++] = i;
                 setFleeBubble(i, 0);
             }
@@ -441,8 +423,7 @@ namespace
 
     int32_t getStatGainChance(Stat stat)
     {
-        switch (stat)
-        {
+        switch (stat) {
             case Stat::HP:
                 return ((COMBAT_DATA_PTR->player.startingHP - PARTNER_ENTITY.stats.currentHP) * 100) /
                        PARTNER_ENTITY.stats.hp;
@@ -481,8 +462,7 @@ extern "C"
         MINUTE += 20;
 
         // TODO add more missing time mechanics from tickGameClock/unify the code
-        if (MINUTE >= 60)
-        {
+        if (MINUTE >= 60) {
             // TODO this is missing a lot of hourly mechanics
             HOUR += 1;
             MINUTE = MINUTE % 60;
@@ -496,20 +476,17 @@ extern "C"
 
             if (PARTNER_PARA.remainingLifetime < 0) PARTNER_PARA.remainingLifetime = 0;
 
-            if (PARTNER_PARA.condition.isSleepy)
-            {
+            if (PARTNER_PARA.condition.isSleepy) {
                 PARTNER_PARA.sicknessCounter += 1;
                 PARTNER_PARA.missedSleepHours += 1;
             }
-            if (PARTNER_PARA.condition.isSick)
-            {
+            if (PARTNER_PARA.condition.isSick) {
                 PARTNER_PARA.sicknessTries += 1;
                 PARTNER_PARA.sicknessTimer += 1;
             }
             if (PARTNER_PARA.condition.isInjured) PARTNER_PARA.injuryTimer += 1;
 
-            if (HOUR >= 24)
-            {
+            if (HOUR >= 24) {
                 DAY += 1;
                 CURRENT_FRAME = MINUTE * 20;
                 HOUR          = HOUR % 24;
@@ -517,8 +494,7 @@ extern "C"
                 PARTNER_PARA.age += 1;
                 dailyPStatTrigger();
 
-                if (DAY >= 30)
-                {
+                if (DAY >= 30) {
                     YEAR += 1;
                     DAY = 0;
                     if (YEAR > 99) YEAR = 0;
@@ -561,23 +537,20 @@ extern "C"
         BattleResult result = BTL_battleMain();
 
         GAME_STATE = 0;
-        if (result == BattleResult::LOST)
-        {
+        if (result == BattleResult::LOST) {
             PARTNER_PARA.happiness -= 30;
             PARTNER_PARA.discipline -= 20;
             Partner_setState(0xFF);
             SKIP_DAYTIME_TRANSITION = 1;
         }
-        else if (result == BattleResult::FLED)
-        {
+        else if (result == BattleResult::FLED) {
             PARTNER_PARA.happiness -= 10;
             PARTNER_PARA.discipline -= 6;
             PARTNER_PARA.tiredness += 2;
             handlePostBattleTiredness();
             SKIP_DAYTIME_TRANSITION = 1;
         }
-        else if (result == BattleResult::WON)
-        {
+        else if (result == BattleResult::WON) {
             playBGM(ACTIVE_BGM_FONT);
             readMapTFS(CURRENT_SCREEN);
             STORED_TAMER_POS = TAMER_ENTITY.posData->location;
@@ -601,29 +574,24 @@ extern "C"
     void damageTick(FighterData* fighter, Stats* stats)
     {
         // TODO shouldn't this be if/else instead?
-        if (fighter->hpDamageBuffer > 999)
-        {
+        if (fighter->hpDamageBuffer > 999) {
             stats->currentHP -= 900;
             fighter->hpDamageBuffer -= 900;
         }
-        if (fighter->hpDamageBuffer > 99)
-        {
+        if (fighter->hpDamageBuffer > 99) {
             stats->currentHP -= 80;
             fighter->hpDamageBuffer -= 80;
         }
-        if (fighter->hpDamageBuffer > 9)
-        {
+        if (fighter->hpDamageBuffer > 9) {
             stats->currentHP -= 6;
             fighter->hpDamageBuffer -= 6;
         }
-        if (fighter->hpDamageBuffer > 0)
-        {
+        if (fighter->hpDamageBuffer > 0) {
             stats->currentHP -= 1;
             fighter->hpDamageBuffer -= 1;
         }
 
-        if (stats->currentHP <= 0)
-        {
+        if (stats->currentHP <= 0) {
             stats->currentHP        = 0;
             fighter->hpDamageBuffer = 0;
         }
@@ -656,14 +624,13 @@ extern "C"
     }
 
     // this function blows up in size otherwise
-    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-    __attribute__((optimize("Os"))) void battleStatsGainsAndDrops(ItemType* droppedItems)
+    [[gnu::optimize("Os")]]
+    void battleStatsGainsAndDrops(ItemType* droppedItems)
     {
         constexpr dtl::array<uint8_t, 4> enemyCountFactor{0, 10, 12, 16};
         StatsGains gains{};
 
-        for (int32_t i = 0; i < 6; i++)
-        {
+        for (int32_t i = 0; i < 6; i++) {
             auto stat        = static_cast<Stat>(i);
             auto partnerStat = max(1, INITIAL_COMBAT_STATS[0].get(stat));
             auto enemyStat   = 1;
@@ -671,8 +638,7 @@ extern "C"
             for (int32_t i = 0; i < ENEMY_COUNT; i++)
                 enemyStat = max(enemyStat, INITIAL_COMBAT_STATS[1 + i].get(stat));
 
-            if (enemyStat < partnerStat)
-            {
+            if (enemyStat < partnerStat) {
                 auto chance = (enemyStat * enemyCountFactor[ENEMY_COUNT] * 100) / (partnerStat * 10);
                 STATS_GAINS.set(stat, random(100) < chance ? 1 : 0);
             }
@@ -681,16 +647,14 @@ extern "C"
                                 (partnerStat + enemyStat * enemyCountFactor[ENEMY_COUNT] - 1) / (partnerStat * 10));
         }
 
-        for (int32_t i = 0; i < 6; i++)
-        {
+        for (int32_t i = 0; i < 6; i++) {
             auto stat = static_cast<Stat>(i);
             if (STATS_GAINS.get(stat) != 0) continue;
 
             STATS_GAINS.set(stat, random(100) < getStatGainChance(stat) ? 1 : 0);
         }
 
-        for (int32_t i = 0; i < 3; i++)
-        {
+        for (int32_t i = 0; i < 3; i++) {
             droppedItems[i] = ItemType::NONE;
             if (CURRENT_SCREEN == 143 || ENEMY_COUNT <= i) continue;
 
@@ -715,8 +679,7 @@ extern "C"
         dtl::array<uint8_t, 12> learnableMoves;
         uint32_t count = 0;
 
-        for (auto move : COMBAT_DATA_PTR->player.usedMoves)
-        {
+        for (auto move : COMBAT_DATA_PTR->player.usedMoves) {
             if (move == 0xFF) break;
             if (hasMove(move)) continue;
 
