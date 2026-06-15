@@ -10,6 +10,19 @@
 
 namespace
 {
+    enum class DefeatedState
+    {
+        ALIVE,
+        DYING,
+        DEAD,
+    };
+
+    DigimonEntity* getFighterEntity(int32_t fighterId)
+    {
+        return reinterpret_cast<DigimonEntity*>(
+            ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[fighterId]));
+    }
+
     void prepareCommandList(DigimonEntity* entity, int32_t playerId)
     {
         auto brains                                            = entity->stats.brain;
@@ -108,9 +121,7 @@ namespace
         int8_t isBusy;
         int32_t moveCount = 0;
         for (int32_t i = 0; i < 2; i++) {
-
-            auto entityId        = i + 1;
-            auto entity          = reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(entityId));
+            auto entity          = getFighterEntity(i);
             entity->stats.unk1   = -1;
             entity->stats.unk2_1 = 0xFF;
             for (auto& move : entity->stats.moves) {
@@ -126,8 +137,7 @@ namespace
 
         int32_t slot = 0;
         for (int32_t i = 0; i < 2; i++) {
-            auto entityId = i + 1;
-            auto entity   = reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(entityId));
+            auto entity = getFighterEntity(i);
             for (int32_t j = 0; j < 4; j++) {
                 auto move                                 = entity->stats.moves[j];
                 COMBAT_DATA_PTR->fighter[i].effectSlot[j] = move == 0xFF ? -1 : outMoves[slot++];
@@ -135,6 +145,18 @@ namespace
         }
     }
 
+    DefeatedState isDigimonDeafeated(int32_t fighterId)
+    {
+        auto entity = getFighterEntity(fighterId);
+
+        // HP is above 0, so can't be dead
+        if (entity->stats.currentHP > COMBAT_DATA_PTR->fighter[fighterId].hpDamageBuffer) return DefeatedState::ALIVE;
+
+        // knockdown anim not done yet
+        if (entity->animId != 0x2B || (entity->animFlag & 1) != 0) return DefeatedState::DYING;
+
+        return DefeatedState::DEAD;
+    }
 } // namespace
 
 extern "C"
@@ -157,9 +179,8 @@ extern "C"
         VS__DISABLE_HITTING         = 0;
 
         for (int32_t i = 0; i < 2; i++) {
-            auto entityId = i + 1;
-            auto entity   = reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(entityId));
-            COMBAT_DATA_PTR->player.entityIds[i]             = entityId;
+            COMBAT_DATA_PTR->player.entityIds[i]             = i + 1;
+            auto entity                                      = getFighterEntity(i);
             COMBAT_DATA_PTR->player.remainingChargeupTime[i] = -1;
             VS__DAMAGE[i]                                    = 0;
             VS__AOE_TIMER[i]                                 = 0;
@@ -209,5 +230,45 @@ extern "C"
         VS__TIMER_ACTIVE             = 1;
         VS__CAMERA_STATE             = 1;
         GAME_STATE                   = 4;
+    }
+
+    // -1 -> P1 lost
+    // 0 -> ongoing
+    // 1 -> P2 lost
+    // 2 -> draw
+    int32_t VS__checkEndCondition()
+    {
+        if (COMBAT_DATA_PTR->fighter[0].hpDamageBuffer != 0) return 0;
+        if (COMBAT_DATA_PTR->fighter[1].hpDamageBuffer != 0) return 0;
+
+        auto defeatedP1 = isDigimonDeafeated(0);
+        auto defeatedP2 = isDigimonDeafeated(1);
+
+        if (defeatedP1 == DefeatedState::DYING || defeatedP2 == DefeatedState::DYING) return 0;
+        if (defeatedP1 == DefeatedState::DEAD && defeatedP2 == DefeatedState::ALIVE) return -1;
+        if (defeatedP1 == DefeatedState::ALIVE && defeatedP2 == DefeatedState::DEAD) return 1;
+        if (defeatedP1 == DefeatedState::DEAD && defeatedP2 == DefeatedState::DEAD) return 2;
+
+        if (VS__TIMER == 0) {
+            VS__DAMAGE[0]                              = VS__STARTING_HP[0] - getFighterEntity(0)->stats.currentHP;
+            VS__DAMAGE[1]                              = VS__STARTING_HP[1] - getFighterEntity(1)->stats.currentHP;
+            COMBAT_DATA_PTR->fighter[0].hpDamageBuffer = 0;
+            COMBAT_DATA_PTR->fighter[1].hpDamageBuffer = 0;
+
+            if (VS__DAMAGE[0] < VS__DAMAGE[1]) {
+                VS__tickBattleResultScreen(0, 1);
+                return 1;
+            }
+            if (VS__DAMAGE[0] > VS__DAMAGE[1]) {
+                VS__tickBattleResultScreen(1, 0);
+                return -1;
+            }
+            if (VS__DAMAGE[0] == VS__DAMAGE[1]) {
+                VS__tickBattleResultScreen(1, 1);
+                return 2;
+            }
+        }
+
+        return 0;
     }
 }

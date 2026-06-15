@@ -1751,6 +1751,7 @@ extern "C"
     extern int32_t VS__DISABLE_HITTING;
     extern int16_t VS__DEFAULT_CAM_MIN_DISTANCE;
     extern int32_t VS__CAMERA_STATE;
+    extern int8_t VS__TIMER;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;

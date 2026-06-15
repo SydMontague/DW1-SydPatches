@@ -21,5 +21,8 @@
   nop ; jal VS__renderIntroStatNumber
 .org 0x800f74c4
   nop ; jal VS__renderIntroStatNumber
+  
+.org 0x800f71bc
+  jal VS__checkEndCondition
 
 .close

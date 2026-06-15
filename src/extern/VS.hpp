@@ -19,4 +19,5 @@ extern "C"
     void VS__removeBattleTextIn();
     void VS__removeBattleTextOut();
     int32_t VS__isBattleTextFinished();
+    void VS__tickBattleResultScreen(int32_t hasLostP1, int32_t hasLostP2);
 }

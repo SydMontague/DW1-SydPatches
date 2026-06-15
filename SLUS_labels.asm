@@ -38,7 +38,10 @@
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
 .definelabel VS__initializePlayerMarker,0x800f6d98
+.definelabel VS__tickBattleResultScreen,0x800f4cb4
 
+
+.definelabel VS__TIMER, 0x80135288
 .definelabel VS__DEFAULT_CAM_MIN_DISTANCE, 0x80135294
 .definelabel VS__CAMERA_STATE, 0x80135268
 .definelabel VS__DAMAGE, 0x80135280
