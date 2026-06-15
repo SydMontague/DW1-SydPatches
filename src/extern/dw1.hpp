@@ -1746,7 +1746,7 @@ extern "C"
     extern dtl::array<uint8_t, 4> VS__CHARGE_MODES;
     extern int16_t BATTLE_FRAME_COUNT;
     extern dtl::array<int16_t, 2> VS__STARTING_HP;
-    extern dtl::array<int32_t,2> VS__AOE_TIMER;
+    extern dtl::array<int32_t, 2> VS__AOE_TIMER;
     extern int32_t VS__P2_AOE_TIMER;
     extern int32_t VS__TIMER_ACTIVE;
     extern int32_t VS__DISABLE_HITTING;

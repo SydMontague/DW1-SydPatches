@@ -79,8 +79,7 @@ extern "C"
 
         if ((flag & 2) != 0)
             setPosDataPolyFT4(prim, posX, posY, width * 2, height * 2);
-        else if ((flag & 4) != 0)
-        {
+        else if ((flag & 4) != 0) {
             setPosDataPolyFT4(prim, posX, posY, width * 2, height * 2);
             prim->x0 += width;
             prim->x1 -= width;
@@ -90,14 +89,12 @@ extern "C"
         else
             setPosDataPolyFT4(prim, posX, posY, width, height);
 
-        if ((flag & 1) != 0)
-        {
+        if ((flag & 1) != 0) {
             prim->r0 = 50;
             prim->g0 = 50;
             prim->b0 = 50;
         }
-        else
-        {
+        else {
             prim->r0 = 128;
             prim->g0 = 128;
             prim->b0 = 128;
@@ -108,8 +105,7 @@ extern "C"
         libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + zIndex, prim);
         libgs_GsSetWorkBase(prim + 1);
 
-        if ((flag & 0x80) != 0)
-        {
+        if ((flag & 0x80) != 0) {
             drawLine3P(0x20202, posX - 1, posY - 1, posX + 13, posY - 1, posX + 13, posY + 12, 2, 0);
             drawLine3P(0x20202, posX - 1, posY - 1, posX - 1, posY + 12, posX + 13, posY + 12, 2, 0);
         }
@@ -123,8 +119,7 @@ extern "C"
 
     void renderSeperatorLines(const Line* linePtr, int32_t count, int32_t layer)
     {
-        for (int32_t i = 0; i < count; i++)
-        {
+        for (int32_t i = 0; i < count; i++) {
             auto& line = linePtr[i];
             drawLine2P(UILINE_COLORS[line.clut].asUint32(), line.x1, line.y1, line.x2, line.y2, layer, 0);
         }
@@ -132,15 +127,13 @@ extern "C"
 
     void renderTextSprite2(TextSprite& entry, int32_t offsetX, int32_t offsetY)
     {
-        switch (entry.alignmentX)
-        {
+        switch (entry.alignmentX) {
             case AlignmentX::LEFT: offsetX += 0; break;
             case AlignmentX::CENTER: offsetX += (entry.boxWidth - entry.uvWidth) / 2; break;
             case AlignmentX::RIGHT: offsetX += (entry.boxWidth - entry.uvWidth); break;
         }
 
-        switch (entry.alignmentY)
-        {
+        switch (entry.alignmentY) {
             case AlignmentY::TOP: offsetY += 0; break;
             case AlignmentY::CENTER: offsetY += (entry.boxHeight - entry.uvHeight) / 2; break;
             case AlignmentY::BOTTOM: offsetY += (entry.boxHeight - entry.uvHeight); break;
@@ -156,8 +149,7 @@ extern "C"
                         entry.layer,
                         entry.hasShadow & 1);
 
-        if ((entry.hasShadow & 2) != 0)
-        {
+        if ((entry.hasShadow & 2) != 0) {
             renderStringNew(0,
                             entry.posX + offsetX + 1,
                             entry.posY + offsetY + 1,
@@ -181,8 +173,7 @@ extern "C"
         sprite.uvX     = 36 + static_cast<uint8_t>(special) * 24;
         sprite.height  = 12;
 
-        switch (special)
-        {
+        switch (special) {
             case Special::FIRE:
             case Special::COMBAT:
             case Special::FILTH: sprite.clut = getClut(0x60, 0x1e8 + 0); break;
@@ -208,15 +199,14 @@ extern "C"
     {
         if (UI_BOX_DATA[instanceId].state == 1) return true;
 
-        if (UI_BOX_DATA[instanceId].frame == 0)
-        {
+        if (UI_BOX_DATA[instanceId].frame == 0) {
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT final    = {.x = posX, .y = posY, .width = width, .height = height};
             RECT start    = {
-                   .x      = static_cast<int16_t>(pos.screenX - 5),
-                   .y      = static_cast<int16_t>(pos.screenY - 5),
-                   .width  = 10,
-                   .height = 10,
+                .x      = static_cast<int16_t>(pos.screenX - 5),
+                .y      = static_cast<int16_t>(pos.screenY - 5),
+                .width  = 10,
+                .height = 10,
             };
 
             createAnimatedUIBox(instanceId, 1, features, &final, &start, tickFunc, renderFunc);
@@ -400,8 +390,7 @@ extern "C"
 
         // horizontal line
         // TODO deprecate, this line should be drawn by the render func
-        if ((data.features & 1) != 0)
-        {
+        if ((data.features & 1) != 0) {
             auto minX  = data.finalPos.x + 3;
             auto maxX  = data.finalPos.x + data.finalPos.width - 3;
             auto baseY = data.finalPos.y + 13;
@@ -412,8 +401,7 @@ extern "C"
         }
 
         // scroll bar
-        if ((data.features & 4) != 0)
-        {
+        if ((data.features & 4) != 0) {
             auto minX = data.finalPos.x;
             auto minY = data.finalPos.y;
             auto maxX = data.finalPos.x + data.finalPos.width;
@@ -521,8 +509,7 @@ extern "C"
     {
         auto& data = UI_BOX_DATA[instanceId];
 
-        if (data.state == 2 || data.state == 3)
-        {
+        if (data.state == 2 || data.state == 3) {
             auto currentFrame = 0;
             if (data.state == 2)
                 currentFrame = data.frame++;
@@ -533,7 +520,9 @@ extern "C"
             if (data.frame > 4) data.state = 1;
             if (data.frame == 0) removeStaticUIBox(instanceId);
         }
-        else { renderUIBoxStatic(instanceId); }
+        else {
+            renderUIBoxStatic(instanceId);
+        }
     }
 
     void createStaticUIBox(int32_t id,
@@ -587,8 +576,7 @@ extern "C"
 
     void initializeUIBoxData()
     {
-        for (auto& data : UI_BOX_DATA)
-        {
+        for (auto& data : UI_BOX_DATA) {
             data.frame = 0;
             data.state = 0;
         }

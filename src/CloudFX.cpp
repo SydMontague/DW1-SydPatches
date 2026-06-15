@@ -84,8 +84,7 @@ namespace
         auto& data = cloudFXData[instanceId];
         data.frame++;
 
-        if (data.frame > 13)
-        {
+        if (data.frame > 13) {
             data.frame = -1;
             removeObject(ObjectID::CLOUD_FX, instanceId);
         }
@@ -103,8 +102,7 @@ extern "C"
     void removeAllCloudFX()
     {
         int32_t instanceId = 0;
-        for (auto& data : cloudFXData)
-        {
+        for (auto& data : cloudFXData) {
             if (data.frame != -1) removeObject(ObjectID::CLOUD_FX, instanceId);
             instanceId++;
         }
@@ -113,10 +111,8 @@ extern "C"
     void createCloudFX(SVector* position)
     {
         int32_t instanceId = 0;
-        for (auto& data : cloudFXData)
-        {
-            if (data.frame == -1)
-            {
+        for (auto& data : cloudFXData) {
+            if (data.frame == -1) {
                 data.frame = 0;
                 data.posX  = position->x;
                 data.posZ  = position->z;

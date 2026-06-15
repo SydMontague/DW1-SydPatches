@@ -38,18 +38,14 @@ namespace
 
         // TODO refactor this shit, maybe get the data from the script
         // fill viable Digimon array
-        if (*entryPtr >= 0xFE)
-        {
-            for (int32_t i = 0; i < 0x70; i++)
-            {
+        if (*entryPtr >= 0xFE) {
+            for (int32_t i = 0; i < 0x70; i++) {
                 if (isTriggerSet(200 + i)) continue;
                 array[count++] = i;
             }
         }
-        else
-        {
-            while (*entryPtr < 0xFE)
-            {
+        else {
+            while (*entryPtr < 0xFE) {
                 auto type = *entryPtr;
                 entryPtr++;
                 if (tournamentId != 22 && !isTriggerSet(200 + type)) continue;
@@ -58,23 +54,19 @@ namespace
         }
 
         // pick participants
-        if (count <= 7)
-        {
+        if (count <= 7) {
             for (int32_t i = 0; i < count; i++)
                 config.participants[i] = array[i];
 
             for (int32_t i = count; i < 7; i++)
                 config.participants[i] = array[random(count)];
         }
-        else
-        {
+        else {
             // vanilla messes with the 'count' value here, creating stupid results
-            for (int32_t i = 0; i < 7; i++)
-            {
+            for (int32_t i = 0; i < 7; i++) {
                 auto choice = random(count);
                 auto type   = array[choice];
-                if (type == 0xFF || type == static_cast<uint8_t>(PARTNER_ENTITY.type))
-                {
+                if (type == 0xFF || type == static_cast<uint8_t>(PARTNER_ENTITY.type)) {
                     i--;
                     continue;
                 }
@@ -137,8 +129,7 @@ extern "C"
         auto registeredType = readPStat(4);
         auto minutes        = minutesOfDay();
 
-        if (static_cast<uint8_t>(PARTNER_ENTITY.type) != registeredType)
-        {
+        if (static_cast<uint8_t>(PARTNER_ENTITY.type) != registeredType) {
             unsetTrigger(0x25);
             return;
         }
@@ -153,19 +144,16 @@ extern "C"
         for (const auto& val : UI_BOX_DATA)
             if (val.state != 0) return;
 
-        if (minutes > 1380 || DAY != tournamentDay)
-        {
+        if (minutes > 1380 || DAY != tournamentDay) {
             callScriptSection(0, 1242, true);
             unsetTrigger(0x25);
             return;
         }
-        if (minutes < 1200)
-        {
+        if (minutes < 1200) {
             if (!isTriggerSet(0x26)) return;
             unsetTrigger(0x26);
         }
-        else
-        {
+        else {
             if (!isTriggerSet(0x27)) return;
             unsetTrigger(0x27);
         }

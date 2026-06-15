@@ -96,8 +96,8 @@ namespace
 
         void renderBitBox(int32_t depth);
         void renderFinalBalance(int32_t depth);
-        // NOLINTNEXTLINE
-        __attribute__((optimize("Os"))) void renderPostBattleStatsBox(int32_t depth);
+        [[gnu::optimize("Os")]]
+        void renderPostBattleStatsBox(int32_t depth);
 
         dtl::array<AtlasString, 6> statLabels{};
         AtlasString bitString1{getAtlasVanilla().render(bitsString, BITS_SETTING1)};
@@ -112,8 +112,7 @@ namespace
     {
         if (finalBitsBox.getState() != UIBox::State::OPENED) return;
 
-        if (bitsToGain == 0)
-        {
+        if (bitsToGain == 0) {
             BTL_tickBattleEndText();
             return;
         }
@@ -121,13 +120,11 @@ namespace
         if (isKeyDownPolled(InputButtons::BUTTON_CROSS) || isKeyDownPolled(InputButtons::BUTTON_TRIANGLE))
             skipBitCounting = true;
 
-        if (skipBitCounting)
-        {
+        if (skipBitCounting) {
             MONEY += bitsToGain;
             bitsToGain = 0;
         }
-        else
-        {
+        else {
             playSound(0, 22);
             bitsToGain -= 1;
             MONEY += 1;
@@ -144,8 +141,7 @@ namespace
         getAtlasVanilla().renderSlow(format("%d", bitsToGain).data(), depth, {.x = -18, .y = 28});
         data->bitString1.render(depth);
 
-        if (BTL_END_BOX_TEXTBUFFER[0] != 0)
-        {
+        if (BTL_END_BOX_TEXTBUFFER[0] != 0) {
             drawLine2P(0x8e8e8e, -86, 50, 84, 50, depth, 0);
             drawLine2P(0x121212, -85, 51, 85, 51, depth, 0);
             BTL_renderBattleEndText(1);
@@ -175,23 +171,20 @@ namespace
         auto previous_color = COLORCODE_LOWBITS;
         setTextColor(1);
         bool first = true;
-        for (int32_t i = 0; i < 6; i++)
-        {
+        for (int32_t i = 0; i < 6; i++) {
             auto stat      = static_cast<Stat>(i);
             auto remaining = STATS_GAINS.get(stat);
 
             if (remaining == 0) continue;
 
-            if (statsTimer == 0 && first)
-            {
+            if (statsTimer == 0 && first) {
                 playSound(0, 22);
                 INITIAL_COMBAT_STATS[0].set(stat, min(INITIAL_COMBAT_STATS[0].get(stat) + 1, getStatLimit(stat)));
                 STATS_GAINS.set(stat, STATS_GAINS.get(stat) - 1);
                 first = false;
             }
 
-            if (STATS_GAINS.get(stat) != 0)
-            {
+            if (STATS_GAINS.get(stat) != 0) {
                 auto* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
                 setEntityTextDigit(prim, 256, 491);
                 prim->r0 = 0x80;
@@ -210,8 +203,7 @@ namespace
             getAtlasVanilla().renderSlow(format("%d", STATS_GAINS.get(stat)).data(), depth, settings);
         }
 
-        for (int32_t i = 0; i < 6; i++)
-        {
+        for (int32_t i = 0; i < 6; i++) {
             const RenderSettings settings{
                 .x = static_cast<int16_t>(BOX_X + 0x44),
                 .y = static_cast<int16_t>(STATS_BOX_Y + 9 + (i * 13)),
@@ -233,15 +225,13 @@ namespace
             .height    = 2,
         };
 
-        for (int32_t i = 0; i < 6; i++)
-        {
+        for (int32_t i = 0; i < 6; i++) {
             auto yOffset = STATS_BOX_Y + 20 + i * 13;
             auto stat    = static_cast<Stat>(i);
             rect.width   = INITIAL_COMBAT_STATS[0].get(stat) * 50 / getStatLimit(stat);
             rect.y       = yOffset - 2;
 
-            if (hasStatGain[i])
-            {
+            if (hasStatGain[i]) {
                 rect.r = 0x69;
                 rect.g = 0xc2;
                 rect.b = 0xff;
@@ -250,8 +240,7 @@ namespace
                 rect.g = 0x5a;
                 rect.b = 0x96;
             }
-            else
-            {
+            else {
                 rect.r = 0x78;
                 rect.g = 0x78;
                 rect.b = 0x78;
@@ -295,14 +284,12 @@ namespace
         finalBitsBox.close();
 
         statsTimer = 100;
-        for (int32_t i = 0; i < 6; i++)
-        {
+        for (int32_t i = 0; i < 6; i++) {
             auto stat      = static_cast<Stat>(i);
             hasStatGain[i] = STATS_GAINS.get(stat) != 0;
         }
 
-        for (int32_t i = 0; i < STATS_LABELS.size(); i++)
-        {
+        for (int32_t i = 0; i < STATS_LABELS.size(); i++) {
             const RenderSettings settings{
                 .x     = static_cast<int16_t>(finalPos.x + 10),
                 .y     = static_cast<int16_t>(finalPos.y + 9 + (i * 13)),
@@ -350,8 +337,7 @@ namespace
     void tick(int32_t)
     {
         data->tick();
-        if (data->isClosed())
-        {
+        if (data->isClosed()) {
             removeObject(ObjectID::BATTLE_END_BOX, 0);
             data.reset();
         }
@@ -398,14 +384,12 @@ extern "C"
         };
         BTL_initializeBattleEndText(96, 2, &boxPosition);
 
-        for (int32_t i = 0; i < droppedItems.size(); i++)
-        {
+        for (int32_t i = 0; i < droppedItems.size(); i++) {
             if (droppedItems[i] == ItemType::NONE) continue;
             BTL_appendItemDroppedText(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i + 1]));
         }
 
-        if (!PARTNER_PARA.condition.isInjured)
-        {
+        if (!PARTNER_PARA.condition.isInjured) {
             if (HAS_TAKEN_DAMAGE == 1) handleBattleInjury();
             if (PARTNER_PARA.condition.isInjured) BTL_appendInjuredText(getDigimonData(PARTNER_ENTITY.type)->name);
         }
@@ -418,10 +402,8 @@ extern "C"
         while (data->statsBox.getState() != UIBox::State::OPENED || data->bitsBox.getState() != UIBox::State::OPENED)
             BTL_battleTickFrame();
 
-        if (BTL_END_BOX_TEXTBUFFER[0] != 0)
-        {
-            for (int32_t i = 0; i < 2; i++)
-            {
+        if (BTL_END_BOX_TEXTBUFFER[0] != 0) {
+            for (int32_t i = 0; i < 2; i++) {
                 BTL_drawBattleEndText(1);
                 BTL_battleTickFrame();
             }
@@ -440,8 +422,7 @@ extern "C"
         while (!BTL_isEndBoxTextFinished())
             BTL_battleTickFrame();
 
-        for (int32_t i = 0; i < droppedItems.size(); i++)
-        {
+        for (int32_t i = 0; i < droppedItems.size(); i++) {
             if (droppedItems[i] == ItemType::NONE) continue;
 
             spawnDroppedItem(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i + 1]), droppedItems[i]);

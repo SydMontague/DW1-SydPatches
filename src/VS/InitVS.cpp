@@ -14,29 +14,25 @@ namespace
 
         if (brains < 100)
             COMBAT_DATA_PTR->player.availableCommands[playerId][1] = BattleCommand::YOUR_CALL;
-        else if (brains < 200)
-        {
+        else if (brains < 200) {
             COMBAT_DATA_PTR->player.availableCommands[playerId][1] = BattleCommand::ATTACK;
             COMBAT_DATA_PTR->player.availableCommands[playerId][2] = BattleCommand::YOUR_CALL;
             COMBAT_DATA_PTR->player.numCommands[playerId]          = 3;
         }
-        else if (brains < 300)
-        {
+        else if (brains < 300) {
             COMBAT_DATA_PTR->player.availableCommands[playerId][1] = BattleCommand::MODERATOR;
             COMBAT_DATA_PTR->player.availableCommands[playerId][2] = BattleCommand::ATTACK;
             COMBAT_DATA_PTR->player.availableCommands[playerId][3] = BattleCommand::YOUR_CALL;
             COMBAT_DATA_PTR->player.numCommands[playerId]          = 4;
         }
-        else if (brains < 400)
-        {
+        else if (brains < 400) {
             COMBAT_DATA_PTR->player.availableCommands[playerId][1] = BattleCommand::DISTANCE;
             COMBAT_DATA_PTR->player.availableCommands[playerId][2] = BattleCommand::MODERATOR;
             COMBAT_DATA_PTR->player.availableCommands[playerId][3] = BattleCommand::ATTACK;
             COMBAT_DATA_PTR->player.availableCommands[playerId][4] = BattleCommand::YOUR_CALL;
             COMBAT_DATA_PTR->player.numCommands[playerId]          = 5;
         }
-        else if (brains < 500)
-        {
+        else if (brains < 500) {
             COMBAT_DATA_PTR->player.availableCommands[playerId][1] = BattleCommand::DEFEND;
             COMBAT_DATA_PTR->player.availableCommands[playerId][2] = BattleCommand::DISTANCE;
             COMBAT_DATA_PTR->player.availableCommands[playerId][3] = BattleCommand::MODERATOR;
@@ -44,8 +40,7 @@ namespace
             COMBAT_DATA_PTR->player.availableCommands[playerId][5] = BattleCommand::YOUR_CALL;
             COMBAT_DATA_PTR->player.numCommands[playerId]          = 6;
         }
-        else
-        {
+        else {
             COMBAT_DATA_PTR->player.availableCommands[playerId][1] = BattleCommand::DEFEND;
             COMBAT_DATA_PTR->player.availableCommands[playerId][2] = BattleCommand::DISTANCE;
             auto slotId                                            = 3;
@@ -113,17 +108,16 @@ extern "C"
 
         if (PARTNER_ENTITY.type == NPC_ENTITIES[0].type) VS__initializePlayerMarker();
 
-        VS__IS_DRAW = 0;
+        VS__IS_DRAW                 = 0;
         VS__ACTIVE_FINISHER_AURA_ID = -1;
-        BATTLE_FRAME_COUNT  = 1;
-        ENEMY_COUNT         = 1;
-        FLEE_DISABLED       = 1;
-        NO_AI_FLAG          = 0;
-        VS__TIMER_ACTIVE    = 0;
-        VS__DISABLE_HITTING = 0;
+        BATTLE_FRAME_COUNT          = 1;
+        ENEMY_COUNT                 = 1;
+        FLEE_DISABLED               = 1;
+        NO_AI_FLAG                  = 0;
+        VS__TIMER_ACTIVE            = 0;
+        VS__DISABLE_HITTING         = 0;
 
-        for (int32_t i = 0; i < 2; i++)
-        {
+        for (int32_t i = 0; i < 2; i++) {
             auto entityId = i + 1;
             auto entity   = reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(entityId));
             COMBAT_DATA_PTR->player.entityIds[i]             = entityId;

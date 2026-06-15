@@ -101,8 +101,7 @@ extern "C"
         auto count   = value < 0 ? 1 : 0;
         auto current = abs(value);
 
-        do
-        {
+        do {
             count++;
             current /= 10;
         } while (current != 0);
@@ -126,8 +125,10 @@ extern "C"
     void getRotationDifference(PositionData* pos, Vector* target, int16_t* outAngle, int16_t* ccDiff, int16_t* cwDiff);
     bool rotateEntity(SVector* rotVector, int16_t targetAngle, int16_t ccDiff, int16_t cwDiff, int16_t speed);
     void addWithLimit(int16_t* valuePtr, int16_t value, int32_t limit);
-    [[deprecated("getMapPosition")]] int32_t worldPosToScreenPos(SVector* worldPos, Position* screenPos);
-    [[deprecated("getScreenPosition")]] void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos);
+    [[deprecated("getMapPosition")]]
+    int32_t worldPosToScreenPos(SVector* worldPos, Position* screenPos);
+    [[deprecated("getScreenPosition")]]
+    void getEntityScreenPos(Entity* entity, int32_t objId, Position* outPos);
 }
 
 /*

@@ -463,8 +463,7 @@ namespace
 
     constexpr char const* getRangeString(Range range)
     {
-        switch (range)
-        {
+        switch (range) {
             default:
             case Range::UNDEFINED: return "?";
             case Range::SHORT: return "S";
@@ -476,8 +475,7 @@ namespace
 
     constexpr char const* getRangeStringLong(Range range)
     {
-        switch (range)
-        {
+        switch (range) {
             default:
             case Range::UNDEFINED: return "?";
             case Range::SHORT: return "short";
@@ -489,8 +487,7 @@ namespace
 
     constexpr char const* getStatusString(Status range)
     {
-        switch (range)
-        {
+        switch (range) {
             default:
             case Status::NONE: return "";
             case Status::POISON: return "Poison";
@@ -503,8 +500,7 @@ namespace
     int32_t getMoveIndex(int32_t selectedMove)
     {
         auto* para = getDigimonData(PARTNER_ENTITY.type);
-        for (int32_t i = 0; i < 16; i++)
-        {
+        for (int32_t i = 0; i < 16; i++) {
             auto move = para->moves[i];
             if (selectedMove == move) return i;
             if (selectedMove == 44 && move == 48) return i;
@@ -515,8 +511,7 @@ namespace
 
     int32_t getFirstFreeSlot()
     {
-        for (int32_t i = 0; i < 3; i++)
-        {
+        for (int32_t i = 0; i < 3; i++) {
             if (PARTNER_ENTITY.stats.moves[i] == 0xFF) return i;
         }
 
@@ -525,8 +520,7 @@ namespace
 
     int32_t getEquippedSlot(uint8_t move)
     {
-        for (int32_t i = 0; i < 3; i++)
-        {
+        for (int32_t i = 0; i < 3; i++) {
             auto equipped = entityGetTechFromAnim(&PARTNER_ENTITY, PARTNER_ENTITY.stats.moves[i]);
             if (move == equipped) return i;
             if (move == 44 && equipped == 48) return i;
@@ -536,8 +530,9 @@ namespace
         return -1;
     }
 
-    constexpr RenderSettings
-    getSettings(const Inset& inset, AlignmentX alignX = AlignmentX::LEFT, AlignmentY alignY = AlignmentY::CENTER)
+    constexpr RenderSettings getSettings(const Inset& inset,
+                                         AlignmentX alignX = AlignmentX::LEFT,
+                                         AlignmentY alignY = AlignmentY::CENTER)
     {
         return {
             .x        = static_cast<int16_t>(inset.posX + 3),
@@ -571,12 +566,11 @@ namespace
         dtl::array<AtlasString, 5> strings{};
         bool isValid;
 
-        // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-        __attribute__((optimize("Os"))) void setMove(int32_t moveId)
+        [[gnu::optimize("Os")]]
+        void setMove(int32_t moveId)
         {
             isValid = moveId != 0xFF && hasMove(moveId);
-            if (isValid)
-            {
+            if (isValid) {
                 const auto* move = getMove(moveId);
                 const auto& font = getAtlas7px();
                 strings[0]       = font.render(MOVE_NAMES[moveId], nameSetting);
@@ -668,12 +662,11 @@ namespace
             };
         }
 
-        // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-        __attribute__((optimize("Os"))) void setMove(uint8_t moveId)
+        [[gnu::optimize("Os")]]
+        void setMove(uint8_t moveId)
         {
             isValid = moveId != 0xFF;
-            if (isValid)
-            {
+            if (isValid) {
                 const auto* move = getMove(moveId);
                 const auto& font = getAtlasVanilla();
                 status           = move->status;
@@ -689,8 +682,7 @@ namespace
 
         void render(int32_t order)
         {
-            if (isValid)
-            {
+            if (isValid) {
                 if (!isFinisher) costString.render(order);
                 rangeString.render(order);
                 powerString.render(order);
@@ -740,12 +732,12 @@ struct Private
     MoveEntry move2{toRelativeX(19), toRelativeY(82)};
     MoveEntry moveFinish{toRelativeX(19), toRelativeY(119), true};
     MoveDetail detail{};
-    int8_t moveSelectedRow = 0;
+    int8_t moveSelectedRow    = 0;
     int8_t moveSelectedColumn = 0;
 
     uint8_t state = 0;
-    // NOLINTNEXTLINE
-    __attribute__((optimize("Os"))) Private();
+    [[gnu::optimize("Os")]]
+    Private();
 
     void render(int32_t depth);
     void tick();
@@ -782,29 +774,25 @@ Private::Private()
 
 void Private::equipMove(uint8_t selectedMove)
 {
-    if (!hasMove(selectedMove))
-    {
+    if (!hasMove(selectedMove)) {
         playSound(0, 4);
         return;
     }
 
     auto moveIndex = getMoveIndex(selectedMove);
-    if (moveIndex == -1)
-    {
+    if (moveIndex == -1) {
         playSound(0, 4);
         return;
     }
 
     auto slot = getFirstFreeSlot();
-    if (slot == -1)
-    {
+    if (slot == -1) {
         playSound(0, 4);
         return;
     }
 
     PARTNER_ENTITY.stats.moves[slot] = moveIndex + 0x2E;
-    switch (slot)
-    {
+    switch (slot) {
         case 0: move0.setMove(selectedMove); break;
         case 1: move1.setMove(selectedMove); break;
         case 2: move2.setMove(selectedMove); break;
@@ -814,15 +802,13 @@ void Private::equipMove(uint8_t selectedMove)
 
 void Private::render(int32_t depth)
 {
-    if (state == 0)
-    {
+    if (state == 0) {
         for (const auto& entry : middle)
             entry.render(depth);
         moveFinish.render(depth);
         renderSeperatorLines(lines2, 3, depth);
     }
-    if (state == 3)
-    {
+    if (state == 3) {
         for (const auto& entry : bottom)
             entry.render(depth);
         detail.render();
@@ -845,39 +831,31 @@ void Private::render(int32_t depth)
 
 void Private::tick()
 {
-    if (state == 0 && isKeyDown(InputButtons::BUTTON_CROSS))
-    {
+    if (state == 0 && isKeyDown(InputButtons::BUTTON_CROSS)) {
         state = 1;
         playSound(0, 3);
     }
 
-    if (state == 5)
-    {
+    if (state == 5) {
         UI_BOX_DATA[1].finalPos.height += 39;
         if (UI_BOX_DATA[1].finalPos.height > 189) state = 0;
     }
-    if (state == 2)
-    {
+    if (state == 2) {
         UI_BOX_DATA[1].finalPos.height += 39;
         if (UI_BOX_DATA[1].finalPos.height > 189) state = 3;
     }
-    if (state == 1 || state == 4)
-    {
+    if (state == 1 || state == 4) {
         UI_BOX_DATA[1].finalPos.height -= 39;
         if (UI_BOX_DATA[1].finalPos.height < 74) state++;
     }
 
-    if (state == 3)
-    {
-        if (isKeyDown(InputButtons::BUTTON_CROSS))
-        {
+    if (state == 3) {
+        if (isKeyDown(InputButtons::BUTTON_CROSS)) {
             auto slot = getEquippedSlot(MOVE_MATRIX[moveSelectedRow][moveSelectedColumn]);
             if (slot == -1)
                 equipMove(MOVE_MATRIX[moveSelectedRow][moveSelectedColumn]);
-            else
-            {
-                switch (slot)
-                {
+            else {
+                switch (slot) {
                     case 0: move0.setMove(0xFF); break;
                     case 1: move1.setMove(0xFF); break;
                     case 2: move2.setMove(0xFF); break;
@@ -887,8 +865,7 @@ void Private::tick()
             }
         }
 
-        if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
-        {
+        if (isKeyDown(InputButtons::BUTTON_TRIANGLE)) {
             if (hasAttackEquipped(&PARTNER_ENTITY)) state = 4;
             playSound(0, 4);
         }
@@ -903,8 +880,7 @@ void Private::tick()
         moveSelectedRow    = clamp(moveSelectedRow, 0, MOVE_ROW_COUNT - 1);
         moveSelectedColumn = clamp(moveSelectedColumn, 0, MOVE_COL_COUNT - 1);
 
-        if (moveSelectedRow != oldRow || moveSelectedColumn != oldCol)
-        {
+        if (moveSelectedRow != oldRow || moveSelectedColumn != oldCol) {
             playSound(0, 2);
             detail.setMove(MOVE_MATRIX[moveSelectedRow][moveSelectedColumn]);
         }

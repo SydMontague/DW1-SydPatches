@@ -162,8 +162,7 @@ namespace
 
         dtl::array<Entry, 30> arr;
 
-        for (int32_t i = 0; i < arr.size(); i++)
-        {
+        for (int32_t i = 0; i < arr.size(); i++) {
             auto type      = INVENTORY_ITEM_TYPES[i];
             auto sortValue = type == ItemType::NONE ? 255 : orderData[getItem(type)->sortingValue];
 
@@ -177,8 +176,7 @@ namespace
 
         dtl::sort(arr.begin(), arr.end());
 
-        for (int32_t i = 0; i < arr.size(); i++)
-        {
+        for (int32_t i = 0; i < arr.size(); i++) {
             INVENTORY_ITEM_TYPES[i]   = arr[i].type;
             INVENTORY_ITEM_AMOUNTS[i] = arr[i].amount;
             INVENTORY_ITEM_NAMES[i]   = arr[i].nameId;
@@ -189,8 +187,7 @@ namespace
     {
         clearTextArea();
 
-        for (int32_t i = 0; i < INVENTORY_SIZE; i++)
-        {
+        for (int32_t i = 0; i < INVENTORY_SIZE; i++) {
             auto type = INVENTORY_ITEM_TYPES[i];
             if (type == ItemType::NONE) continue;
 
@@ -218,8 +215,7 @@ namespace
 
         auto itemOffset = box.rowOffset * 2;
 
-        for (int32_t i = 0; i < box.visibleRows * 2; i++)
-        {
+        for (int32_t i = 0; i < box.visibleRows * 2; i++) {
             auto itemType = INVENTORY_ITEM_TYPES[itemOffset + i];
             auto itemName = INVENTORY_ITEM_NAMES[itemOffset + i];
             if (itemType == ItemType::NONE) continue;
@@ -245,8 +241,7 @@ namespace
             itemAmounts[itemName].render(amountPosX, amountPosY, 0, depth, true);
         }
 
-        if (moveSource != -1 && moveSource >= itemOffset && moveSource < itemOffset + (box.visibleRows) * 2)
-        {
+        if (moveSource != -1 && moveSource >= itemOffset && moveSource < itemOffset + (box.visibleRows) * 2) {
             const auto minX = getSlotPosX(moveSource);
             const auto minY = getSlotPosY(moveSource - box.rowOffset * 2);
             const auto maxX = minX + SLOT_WIDTH;
@@ -286,8 +281,7 @@ namespace
         auto useColor  = 10;
         auto dropColor = 10;
 
-        if (type != ItemType::NONE)
-        {
+        if (type != ItemType::NONE) {
             auto* item = getItem(INVENTORY_ITEM_TYPES[INVENTORY_POINTER]);
             useColor   = getUseColor(GAME_STATE, item);
             dropColor  = item->dropable ? 9 : 10;
@@ -307,20 +301,19 @@ namespace
     {
         if (focusedWindow != 3) return;
 
-        if (isInventoryKeyDownRepeat(InputButtons::BUTTON_UP) && sortSelected > 0)
-        {
+        if (isInventoryKeyDownRepeat(InputButtons::BUTTON_UP) && sortSelected > 0) {
             playSound(0, 2);
             sortSelected--;
         }
-        if (isInventoryKeyDownRepeat(InputButtons::BUTTON_DOWN) && sortSelected < 2)
-        {
+        if (isInventoryKeyDownRepeat(InputButtons::BUTTON_DOWN) && sortSelected < 2) {
             playSound(0, 2);
             sortSelected++;
         }
 
-        if (isInventoryKeyDown(InputButtons::BUTTON_TRIANGLE)) { removeAnimatedUIBox(3, nullptr); }
-        else if (isInventoryKeyDown(InputButtons::BUTTON_CROSS))
-        {
+        if (isInventoryKeyDown(InputButtons::BUTTON_TRIANGLE)) {
+            removeAnimatedUIBox(3, nullptr);
+        }
+        else if (isInventoryKeyDown(InputButtons::BUTTON_CROSS)) {
             removeAnimatedUIBox(3, nullptr);
             state         = 61;
             focusedWindow = -1;
@@ -367,29 +360,24 @@ namespace
     {
         if (focusedWindow != 2) return;
 
-        if (isInventoryKeyDownRepeat(InputButtons::BUTTON_UP) && menuSelected > 0)
-        {
+        if (isInventoryKeyDownRepeat(InputButtons::BUTTON_UP) && menuSelected > 0) {
             playSound(0, 2);
             menuSelected--;
         }
-        if (isInventoryKeyDownRepeat(InputButtons::BUTTON_DOWN) && menuSelected < 3)
-        {
+        if (isInventoryKeyDownRepeat(InputButtons::BUTTON_DOWN) && menuSelected < 3) {
             playSound(0, 2);
             menuSelected++;
         }
 
         if (isInventoryKeyDown(InputButtons::BUTTON_TRIANGLE))
             removeAnimatedUIBox(2, nullptr);
-        else if (isInventoryKeyDown(InputButtons::BUTTON_CROSS))
-        {
-            if (!isMenuEnabled(menuSelected, INVENTORY_ITEM_TYPES[INVENTORY_POINTER]))
-            {
+        else if (isInventoryKeyDown(InputButtons::BUTTON_CROSS)) {
+            if (!isMenuEnabled(menuSelected, INVENTORY_ITEM_TYPES[INVENTORY_POINTER])) {
                 playSound(0, 11);
                 return;
             }
 
-            switch (menuSelected)
-            {
+            switch (menuSelected) {
                 case 0:
                 {
                     state = 201;
@@ -415,8 +403,7 @@ namespace
                     spawnDroppedItem(&TAMER_ENTITY, type, amount);
                     setIsStandingOnDrop(true);
                     removeItem(type, amount);
-                    if (INVENTORY_ITEM_TYPES[INVENTORY_POINTER] != ItemType::NONE)
-                    {
+                    if (INVENTORY_ITEM_TYPES[INVENTORY_POINTER] != ItemType::NONE) {
                         uint8_t buf[8];
                         sprintf(buf, "%2d", INVENTORY_ITEM_AMOUNTS[INVENTORY_POINTER]);
                         itemAmounts[nameIdx].draw(&fixedNumbersFont, buf);
@@ -455,8 +442,7 @@ namespace
             INVENTORY_POINTER += 2;
         if (isInventoryKeyDown(InputButtons::BUTTON_LEFT) && (INVENTORY_POINTER % 2) != 0) INVENTORY_POINTER -= 1;
         if (isInventoryKeyDown(InputButtons::BUTTON_RIGHT) && (INVENTORY_POINTER % 2) == 0) INVENTORY_POINTER += 1;
-        if ((POLLED_INPUT & InputButtons::BUTTON_R1) != 0)
-        {
+        if ((POLLED_INPUT & InputButtons::BUTTON_R1) != 0) {
             if (isInventoryKeyDown(InputButtons::BUTTON_DOWN))
                 INVENTORY_POINTER = (box.totalRows - 1) * 2 + (INVENTORY_POINTER & 1);
             if (isInventoryKeyDown(InputButtons::BUTTON_UP)) INVENTORY_POINTER = INVENTORY_POINTER & 1;
@@ -466,8 +452,7 @@ namespace
         if ((box.rowOffset + box.visibleRows - 1) * 2 + 1 < INVENTORY_POINTER)
             box.rowOffset = INVENTORY_POINTER / 2 - box.visibleRows + 1;
 
-        if (isInventoryKeyDown(InputButtons::BUTTON_SELECT))
-        {
+        if (isInventoryKeyDown(InputButtons::BUTTON_SELECT)) {
             moveSource = INVENTORY_POINTER == moveSource ? -1 : INVENTORY_POINTER;
             if (moveSource == -1)
                 playSound(0, 4);
@@ -475,25 +460,20 @@ namespace
                 playSound(0, 3);
         }
 
-        if (isInventoryKeyDown(InputButtons::BUTTON_CROSS))
-        {
-            if (moveSource != -1)
-            {
+        if (isInventoryKeyDown(InputButtons::BUTTON_CROSS)) {
+            if (moveSource != -1) {
                 swapItem();
                 moveSource = -1;
                 playSound(0, 3);
             }
-            else
-            {
+            else {
                 createInventoryOptions();
                 state         = 51;
                 focusedWindow = 2;
             }
         }
-        else if (isInventoryKeyDown(InputButtons::BUTTON_TRIANGLE))
-        {
-            if (moveSource != -1)
-            {
+        else if (isInventoryKeyDown(InputButtons::BUTTON_TRIANGLE)) {
+            if (moveSource != -1) {
                 playSound(0, 4);
                 moveSource = -1;
             }
@@ -516,10 +496,10 @@ namespace
         auto& work     = TAMER_ENTITY.posData[1].posMatrix.work.t;
         auto entityPos = getScreenPosition(work[0], work[1], work[2]);
         RECT finalPos  = {
-             .x      = TOP_X,
-             .y      = TOP_Y,
-             .width  = 304,
-             .height = static_cast<int16_t>((box.visibleRows * 18) + 14),
+            .x      = TOP_X,
+            .y      = TOP_Y,
+            .width  = 304,
+            .height = static_cast<int16_t>((box.visibleRows * 18) + 14),
         };
         RECT startPos = {
             .x      = static_cast<int16_t>(entityPos.screenX),
@@ -553,10 +533,10 @@ namespace
         auto& work     = TAMER_ENTITY.posData[1].posMatrix.work.t;
         auto entityPos = getScreenPosition(work[0], work[1], work[2]);
         RECT target    = {
-               .x      = static_cast<int16_t>(entityPos.screenX - 5),
-               .y      = static_cast<int16_t>(entityPos.screenY - 5),
-               .width  = 10,
-               .height = 10,
+            .x      = static_cast<int16_t>(entityPos.screenX - 5),
+            .y      = static_cast<int16_t>(entityPos.screenY - 5),
+            .width  = 10,
+            .height = 10,
         };
 
         removeAnimatedUIBox(0, &target);
@@ -578,8 +558,7 @@ namespace
 
         if (COMBAT_DATA_PTR->player.currentCommand[0] == BattleCommand::RUN) return;
 
-        switch (state)
-        {
+        switch (state) {
             case 0:
             {
                 moveSource        = -1;
@@ -594,8 +573,7 @@ namespace
             }
             case 1:
             {
-                if (UI_BOX_DATA[0].state == 1)
-                {
+                if (UI_BOX_DATA[0].state == 1) {
                     createInventoryBottom();
                     state = 2;
                 }
@@ -626,8 +604,7 @@ namespace
 
                 closeInventoryBoxes();
 
-                if (GAME_STATE == 0)
-                {
+                if (GAME_STATE == 0) {
                     closeTriangleMenu();
                     addGameMenu();
                     startAnimation(&TAMER_ENTITY, 0);

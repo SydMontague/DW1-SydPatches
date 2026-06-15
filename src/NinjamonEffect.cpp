@@ -15,15 +15,13 @@ namespace
 
     void renderNinjamonEffect(int32_t instanceId)
     {
-        for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++)
-        {
+        for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++) {
             auto& data = LOCAL_MAP_OBJECT_INSTANCE[i];
             data.x += effectXOffset[i];
             data.y += effectYOffset[i];
             data.orderValue = 10;
 
-            if (data.x > 160)
-            {
+            if (data.x > 160) {
                 data.x           = effectX[i];
                 data.y           = effectY[i];
                 effectXOffset[i] = random(10) + 12;
@@ -32,10 +30,8 @@ namespace
         }
 
         counter++;
-        if (counter >= 60)
-        {
-            for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++)
-            {
+        if (counter >= 60) {
+            for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++) {
                 LOCAL_MAP_OBJECT_INSTANCE[i].flag = 1;
             }
             removeObject(ObjectID::NINJAMON_EFFECT, 0);
@@ -50,8 +46,7 @@ extern "C"
         counter = 0;
         storeMapObjectPosition(effectX.data(), effectY.data(), 0, NINJAMON_EFFECT_COUNT);
 
-        for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++)
-        {
+        for (int32_t i = 0; i < NINJAMON_EFFECT_COUNT; i++) {
             effectXOffset[i] = random(10) + 12;
             effectYOffset[i] = random(10) + 3;
         }

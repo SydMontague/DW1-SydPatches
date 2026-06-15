@@ -70,8 +70,7 @@ namespace dtl
 
         constexpr size_t indexOf(const T& value) const
         {
-            for (size_t i = 0; i < elem_count; i++)
-            {
+            for (size_t i = 0; i < elem_count; i++) {
                 if (elements.get()[i] == value) return i;
             }
 

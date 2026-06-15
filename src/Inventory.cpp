@@ -17,8 +17,7 @@ extern "C"
 
     uint8_t getItemCount(ItemType item)
     {
-        for (int32_t i = 0; i < INVENTORY_SIZE; i++)
-        {
+        for (int32_t i = 0; i < INVENTORY_SIZE; i++) {
             if (INVENTORY_ITEM_TYPES[i] == item) return INVENTORY_ITEM_AMOUNTS[i];
         }
 
@@ -27,10 +26,8 @@ extern "C"
 
     bool giveItem(ItemType type, uint8_t amount)
     {
-        for (int32_t i = 0; i < INVENTORY_SIZE; i++)
-        {
-            if (INVENTORY_ITEM_TYPES[i] == type)
-            {
+        for (int32_t i = 0; i < INVENTORY_SIZE; i++) {
+            if (INVENTORY_ITEM_TYPES[i] == type) {
                 auto current = INVENTORY_ITEM_AMOUNTS[i];
                 if (current == 99) return false;
 
@@ -39,8 +36,7 @@ extern "C"
             }
         }
 
-        for (int32_t i = 0; i < INVENTORY_SIZE; i++)
-        {
+        for (int32_t i = 0; i < INVENTORY_SIZE; i++) {
             if (INVENTORY_ITEM_TYPES[i] != ItemType::NONE) continue;
 
             INVENTORY_ITEM_TYPES[i]   = type;
@@ -58,13 +54,11 @@ extern "C"
     {
         if (type == ItemType::NONE) return;
 
-        for (int32_t i = 0; i < INVENTORY_SIZE; i++)
-        {
+        for (int32_t i = 0; i < INVENTORY_SIZE; i++) {
             if (INVENTORY_ITEM_TYPES[i] != type) continue;
 
             INVENTORY_ITEM_AMOUNTS[i] = max(INVENTORY_ITEM_AMOUNTS[i] - amount, 0);
-            if (INVENTORY_ITEM_AMOUNTS[i] == 0)
-            {
+            if (INVENTORY_ITEM_AMOUNTS[i] == 0) {
                 INVENTORY_ITEM_TYPES[i] = ItemType::NONE;
                 INVENTORY_ITEM_NAMES[i] = 0xFF;
             }
@@ -73,8 +67,7 @@ extern "C"
 
     void initializeInventory()
     {
-        for (int32_t i = 0; i < 30; i++)
-        {
+        for (int32_t i = 0; i < 30; i++) {
             INVENTORY_ITEM_AMOUNTS[i] = 0;
             INVENTORY_ITEM_TYPES[i]   = ItemType::NONE;
             INVENTORY_ITEM_NAMES[i]   = 0xFF;

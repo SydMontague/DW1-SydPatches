@@ -152,8 +152,7 @@ namespace
 
     constexpr char const* getMedalName(Medal medal)
     {
-        switch (medal)
-        {
+        switch (medal) {
             case Medal::GRADE_CUP: return "Grade Cup";
             case Medal::VERSION_CUP: return "Version Cup";
             case Medal::TYPE_CUP: return "Type Cup";
@@ -180,8 +179,7 @@ namespace
 
     constexpr char const* getMedalDescription(Medal medal)
     {
-        switch (medal)
-        {
+        switch (medal) {
             case Medal::GRADE_CUP: return "Win all letter tournaments";
             case Medal::VERSION_CUP: return "Win all version tournaments";
             case Medal::TYPE_CUP: return "Win all nature tournaments";
@@ -291,11 +289,12 @@ bool MedalView::Private::canBeClosed()
 
 void MedalView::Private::render(int32_t depth)
 {
-    if (state == 1) { selector.render(selectedMedalCol * 0x26 - 0x7E, selectedMedalRow * 24 - 0x3D, 1, 0); }
+    if (state == 1) {
+        selector.render(selectedMedalCol * 0x26 - 0x7E, selectedMedalRow * 24 - 0x3D, 1, 0);
+    }
 
     for (int32_t i = 0; i < MEDAL_COL_COUNT; i++)
-        for (int32_t j = 0; j < MEDAL_ROW_COUNT; j++)
-        {
+        for (int32_t j = 0; j < MEDAL_ROW_COUNT; j++) {
             if (!hasMedal(static_cast<Medal>(j * MEDAL_COL_COUNT + i)))
                 medalEmpty.render(i * 0x26 - 0x7C, j * 24 - 0x3D, 5, 0);
 
@@ -324,10 +323,8 @@ void MedalView::Private::updateMedal(Medal medal)
 
 void MedalView::Private::tick()
 {
-    if (state == 1)
-    {
-        if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
-        {
+    if (state == 1) {
+        if (isKeyDown(InputButtons::BUTTON_TRIANGLE)) {
             playSound(0, 4);
             state = 0;
         }
@@ -343,17 +340,14 @@ void MedalView::Private::tick()
         selectedMedalRow = clamp(selectedMedalRow, 0, MEDAL_ROW_COUNT - 1);
 
         selectedMedal = static_cast<Medal>(selectedMedalRow * MEDAL_COL_COUNT + selectedMedalCol);
-        if (selectedMedal != oldMedal)
-        {
+        if (selectedMedal != oldMedal) {
             updateMedal(selectedMedal);
             if (hasMedal(selectedMedal)) activateMedalTexture(selectedMedal);
             playSound(0, 2);
         }
     }
-    else if (state == 0)
-    {
-        if (isKeyDown(InputButtons::BUTTON_CROSS))
-        {
+    else if (state == 0) {
+        if (isKeyDown(InputButtons::BUTTON_CROSS)) {
             updateMedal(selectedMedal);
             state = 1;
             playSound(0, 3);

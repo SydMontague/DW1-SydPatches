@@ -29,10 +29,8 @@ namespace dtl
         auto* i     = first;
         auto* j     = first;
 
-        while (j != pivot)
-        {
-            if (compare(*j, *pivot))
-            {
+        while (j != pivot) {
+            if (compare(*j, *pivot)) {
                 swap(*i, *j);
                 i++;
             }

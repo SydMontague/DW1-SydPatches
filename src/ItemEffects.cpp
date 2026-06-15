@@ -13,14 +13,12 @@ extern "C"
         // vanilla does one roll for each condition and also uses 3 and 10 respectively instead of 100
         // however, this change makes it compatible with poop eating healing
         auto roll = random(100);
-        if (PARTNER_PARA.condition.isInjured && roll < injuryHealChance)
-        {
+        if (PARTNER_PARA.condition.isInjured && roll < injuryHealChance) {
             PARTNER_PARA.condition.isInjured = false;
             PARTNER_PARA.injuryTimer         = 0;
         }
 
-        if (PARTNER_PARA.condition.isSick && roll < sicknessHealChance)
-        {
+        if (PARTNER_PARA.condition.isSick && roll < sicknessHealChance) {
             PARTNER_PARA.condition.isSick = false;
             PARTNER_PARA.areaEffectTimer  = 0;
             PARTNER_PARA.sicknessTimer    = 0;
@@ -116,8 +114,7 @@ extern "C"
 
         PARTNER_PARA.timesBeingSick++;
         PARTNER_PARA.sicknessTimer = 1;
-        if (PARTNER_PARA.condition.isInjured)
-        {
+        if (PARTNER_PARA.condition.isInjured) {
             PARTNER_PARA.condition.isInjured = false;
             PARTNER_PARA.injuryTimer         = 0;
         }

@@ -55,34 +55,28 @@ namespace
     void Data::tick()
     {
         bool handleInput = true;
-        if (state == 0)
-        {
+        if (state == 0) {
             // stats menu doesn't need special interaction
             statsView.tick();
         }
-        else if (state == 1)
-        {
+        else if (state == 1) {
             techView.tick();
             handleInput = techView.canBeClosed();
         }
 
-        if (handleInput)
-        {
-            if (isKeyDown(InputButtons::BUTTON_LEFT) && state >= 1)
-            {
+        if (handleInput) {
+            if (isKeyDown(InputButtons::BUTTON_LEFT) && state >= 1) {
                 state -= 1;
                 updateLabelColors();
                 playSound(0, 2);
             }
-            if (isKeyDown(InputButtons::BUTTON_RIGHT) && state < 1)
-            {
+            if (isKeyDown(InputButtons::BUTTON_RIGHT) && state < 1) {
                 state += 1;
                 updateLabelColors();
                 playSound(0, 2);
             }
 
-            if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
-            {
+            if (isKeyDown(InputButtons::BUTTON_TRIANGLE)) {
                 TRIANGLE_MENU_STATE = 4;
                 playSound(0, 4);
             }

@@ -117,17 +117,14 @@ namespace
         int16_t tileY;
         getModelTile(&TAMER_ENTITY.posData->location, &tileX, &tileY);
 
-        if (waypointCount < 0)
-        {
+        if (waypointCount < 0) {
             entityLookAtTile(&TAMER_ENTITY, TAMER_START_TILE_X, TAMER_START_TILE_Y);
-            if (tileX == TAMER_START_TILE_X && tileY == TAMER_START_TILE_Y)
-            {
+            if (tileX == TAMER_START_TILE_X && tileY == TAMER_START_TILE_Y) {
                 lookAtExit();
                 TAMER_ENTITY.animFlag |= 2;
             }
         }
-        else
-        {
+        else {
             entityLookAtTile(&TAMER_ENTITY, TAMER_WAYPOINT_X[waypointCount], TAMER_WAYPOINT_Y[waypointCount]);
             if (tileX == TAMER_WAYPOINT_X[waypointCount] && tileY == TAMER_WAYPOINT_Y[waypointCount])
                 TAMER_WAYPOINT_COUNT--;
@@ -141,10 +138,8 @@ namespace
 
         auto* data = &COMBAT_DATA_PTR->player;
 
-        if (data->currentCommand[0] == BattleCommand::RUN)
-        {
-            if (FLEE_TIMER == 20 && PARTNER_ENTITY.stats.currentHP - COMBAT_DATA_PTR->fighter[0].hpDamageBuffer > 0)
-            {
+        if (data->currentCommand[0] == BattleCommand::RUN) {
+            if (FLEE_TIMER == 20 && PARTNER_ENTITY.stats.currentHP - COMBAT_DATA_PTR->fighter[0].hpDamageBuffer > 0) {
                 fadeToBlack(20);
             }
             handleFleeing();
@@ -152,28 +147,22 @@ namespace
             return;
         }
 
-        if (isKeyDownPolled(InputButtons::BUTTON_LEFT))
-        {
+        if (isKeyDownPolled(InputButtons::BUTTON_LEFT)) {
             playSound(0, 2);
             data->hoveredCommand[0] += 1;
-            if (FLEE_DISABLED && data->hoveredCommand[0] == 1)
-                data->hoveredCommand[0] = 2;
+            if (FLEE_DISABLED && data->hoveredCommand[0] == 1) data->hoveredCommand[0] = 2;
             if (data->numCommands[0] - 1 < static_cast<int32_t>(data->hoveredCommand[0]))
                 data->hoveredCommand[0] = FLEE_DISABLED ? 2 : 1;
         }
 
-        if (isKeyDownPolled(InputButtons::BUTTON_RIGHT))
-        {
+        if (isKeyDownPolled(InputButtons::BUTTON_RIGHT)) {
             playSound(0, 2);
             data->hoveredCommand[0] -= 1;
-            if (FLEE_DISABLED && data->hoveredCommand[0] == 1)
-                data->hoveredCommand[0] = 0;
-            if (static_cast<int32_t>(data->hoveredCommand[0]) < 1)
-                data->hoveredCommand[0] = data->numCommands[0] - 1;
+            if (FLEE_DISABLED && data->hoveredCommand[0] == 1) data->hoveredCommand[0] = 0;
+            if (static_cast<int32_t>(data->hoveredCommand[0]) < 1) data->hoveredCommand[0] = data->numCommands[0] - 1;
         }
 
-        if (isKeyDownPolled(InputButtons::BUTTON_CROSS))
-        {
+        if (isKeyDownPolled(InputButtons::BUTTON_CROSS)) {
             playSound(0, 3);
             int16_t aliveCount;
             int16_t aliveArray[4];
@@ -185,8 +174,7 @@ namespace
             data->buffereCommand[0] = data->availableCommands[0][static_cast<int32_t>(data->hoveredCommand[0])];
             data->commandDelay[0]   = 0; // vanilla calculates a dfferent value first, but always sets it to 0
             if (data->buffereCommand[0] == BattleCommand::CHANGE) data->changeTarget = 1;
-            if (data->buffereCommand[0] == BattleCommand::RUN)
-            {
+            if (data->buffereCommand[0] == BattleCommand::RUN) {
                 int16_t tileX;
                 int16_t tileY;
                 data->currentCommand[0] = BattleCommand::RUN;
@@ -198,8 +186,7 @@ namespace
         }
 
         if (isKeyDownPolled(InputButtons::BUTTON_SQUARE) &&
-            COMBAT_DATA_PTR->fighter[0].finisherProgress >= COMBAT_DATA_PTR->fighter[0].finisherGoal)
-        {
+            COMBAT_DATA_PTR->fighter[0].finisherProgress >= COMBAT_DATA_PTR->fighter[0].finisherGoal) {
             playSound(0, 3);
             data->buffereCommand[0] = BattleCommand::FINISHER;
             data->commandDelay[0]   = 0;
@@ -217,8 +204,7 @@ namespace
         else
             combatIdleTimer = 0;
 
-        if (combatIdleTimer > 170)
-        {
+        if (combatIdleTimer > 170) {
             startAnimation(entity, 1);
             combatIdleTimer = 0;
         }
@@ -229,18 +215,16 @@ namespace
     {
         auto* entity = ENTITY_TABLE.getEntityById(instanceId);
 
-        if (COMBAT_DATA_PTR->player.currentCommand[0] != BattleCommand::RUN)
-        {
-            if (!IS_TAMERLESS_BATTLE && isKeyDownPolled(InputButtons::BUTTON_TRIANGLE)) { addInventoryUI(); }
+        if (COMBAT_DATA_PTR->player.currentCommand[0] != BattleCommand::RUN) {
+            if (!IS_TAMERLESS_BATTLE && isKeyDownPolled(InputButtons::BUTTON_TRIANGLE)) {
+                addInventoryUI();
+            }
             entityLookAtLocation(entity, &PARTNER_ENTITY.posData->location);
 
-            if (UI_BOX_DATA[0].state == 0)
-            {
+            if (UI_BOX_DATA[0].state == 0) {
                 auto animId = entity->animId;
-                if (!NO_AI_FLAG || FINISHING_ENTITY != &PARTNER_ENTITY)
-                {
-                    if (animId == 6 || animId == 14)
-                    {
+                if (!NO_AI_FLAG || FINISHING_ENTITY != &PARTNER_ENTITY) {
+                    if (animId == 6 || animId == 14) {
                         if ((entity->animFlag & 1) == 0) startAnimation(entity, 1);
                     }
                     else if (animId != 1)
@@ -263,15 +247,14 @@ namespace
     }
 
     // this function blows up in size otherwise
-    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-    __attribute__((optimize("Os"))) uint8_t checkChestCollision()
+    [[gnu::optimize("Os")]]
+    uint8_t checkChestCollision()
     {
         int16_t tileX;
         int16_t tileY;
         getModelTile(&TAMER_ENTITY.posData->location, &tileX, &tileY);
 
-        for (int32_t i = 0; i < sizeof(CHEST_ARRAY) / sizeof(CHEST_ARRAY[0]); i++)
-        {
+        for (int32_t i = 0; i < sizeof(CHEST_ARRAY) / sizeof(CHEST_ARRAY[0]); i++) {
             auto& chest = CHEST_ARRAY[i];
 
             if (chest.item == ItemType::NONE) continue;
@@ -304,8 +287,8 @@ namespace
     }
 
     // this function blows up in size otherwise
-    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-    __attribute__((optimize("Os"))) void checkItemPickup()
+    [[gnu::optimize("Os")]]
+    void checkItemPickup()
     {
         int16_t tileX;
         int16_t tileY;
@@ -313,8 +296,7 @@ namespace
         getModelTile(&TAMER_ENTITY.posData->location, &tileX, &tileY);
         pickedDropId = -1;
 
-        for (int32_t i = 0; i < sizeof(DROPPED_ITEMS) / sizeof(DROPPED_ITEMS[0]); i++)
-        {
+        for (int32_t i = 0; i < sizeof(DROPPED_ITEMS) / sizeof(DROPPED_ITEMS[0]); i++) {
             auto& item = DROPPED_ITEMS[i];
 
             if (item.type == ItemType::NONE) continue;
@@ -322,8 +304,7 @@ namespace
             if (abs(item.tileY - tileY) > 1) continue;
 
             pickedDropId = i;
-            if (!isStandingOnDrop)
-            {
+            if (!isStandingOnDrop) {
                 Tamer_setState(7);
                 isStandingOnDrop = true;
             }
@@ -343,18 +324,18 @@ namespace
 
     void Tamer_tickTraining()
     {
-        if (Tamer_getSubState() == 0)
-        {
+        if (Tamer_getSubState() == 0) {
             startAnimation(&TAMER_ENTITY, 10);
             Tamer_setSubState(1);
         }
-        else if (Tamer_getSubState() == 1) { entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location); }
+        else if (Tamer_getSubState() == 1) {
+            entityLookAtLocation(&TAMER_ENTITY, &PARTNER_ENTITY.posData->location);
+        }
     }
 
     void Tamer_tickPraise()
     {
-        if (Tamer_getSubState() == 0)
-        {
+        if (Tamer_getSubState() == 0) {
             auto animId = 39;
             auto type   = PARTNER_ENTITY.type;
             if (getDigimonData(type)->level < Level::CHAMPION) animId = 38;
@@ -366,8 +347,7 @@ namespace
             startAnimation(&PARTNER_ENTITY, 11); // TODO this shouldn't be in tamer code?
             Tamer_setSubState(1);
         }
-        else if (Tamer_getSubState() == 1)
-        {
+        else if (Tamer_getSubState() == 1) {
             if (TAMER_ENTITY.frameCount > TAMER_ENTITY.animFrame) return;
 
             Tamer_setState(6);
@@ -376,15 +356,13 @@ namespace
 
     void Tamer_tickScold()
     {
-        if (Tamer_getSubState() == 0)
-        {
+        if (Tamer_getSubState() == 0) {
             playSound(0, 13);
             startAnimation(&TAMER_ENTITY, 7);
             startAnimation(&PARTNER_ENTITY, ITEM_SCOLD_FLAG == 1 ? 25 : 12);
             Tamer_setSubState(1);
         }
-        else if (Tamer_getSubState() == 1)
-        {
+        else if (Tamer_getSubState() == 1) {
             if (TAMER_ENTITY.frameCount > TAMER_ENTITY.animFrame) return;
 
             Tamer_setState(6);
@@ -393,18 +371,17 @@ namespace
 
     void Tamer_tickChangeMap()
     {
-        if (Tamer_getSubState() == 0)
-        {
+        if (Tamer_getSubState() == 0) {
             fadeToBlack(20);
             startAnimation(&TAMER_ENTITY, 2);
             Tamer_setSubState(1);
         }
-        else if (Tamer_getSubState() == 1)
-        {
-            if (FADE_DATA.fadeOutCurrent == 10) { addMapNameObject(TARGET_MAP); }
+        else if (Tamer_getSubState() == 1) {
+            if (FADE_DATA.fadeOutCurrent == 10) {
+                addMapNameObject(TARGET_MAP);
+            }
 
-            if (FADE_DATA.fadeOutCurrent >= 20)
-            {
+            if (FADE_DATA.fadeOutCurrent >= 20) {
                 changeMap(TARGET_MAP, CURRENT_EXIT);
                 STORED_TAMER_POS = TAMER_ENTITY.posData->location;
                 fadeFromBlack(20);
@@ -412,10 +389,8 @@ namespace
                 Tamer_setSubState(2);
             }
         }
-        else if (Tamer_getSubState() == 2)
-        {
-            if (FADE_DATA.fadeInCurrent >= 20)
-            {
+        else if (Tamer_getSubState() == 2) {
+            if (FADE_DATA.fadeInCurrent >= 20) {
                 Tamer_setState(0);
                 Partner_setState(1);
                 checkMapInteraction();
@@ -432,8 +407,7 @@ namespace
         Chest& chest  = CHEST_ARRAY[interactedChest];
         auto itemType = chest.item;
 
-        if (Tamer_getSubState() == 0)
-        {
+        if (Tamer_getSubState() == 0) {
             startAnimation(&TAMER_ENTITY, 0);
             Partner_setState(11);
             unsetCameraFollowPlayer();
@@ -441,9 +415,10 @@ namespace
             clearTextSubArea(&textArea);
 
             drawStringNew(&vanillaFont, getDigimonData(DigimonType::TAMER)->name, 704 + 0, 256 + 12);
-            if (chest.isTaken) { drawStringNew(&vanillaFont, emptyChestStr, 704 + 0, 256 + 24); }
-            else
-            {
+            if (chest.isTaken) {
+                drawStringNew(&vanillaFont, emptyChestStr, 704 + 0, 256 + 24);
+            }
+            else {
                 auto offset = drawStringNew(&vanillaFont, findItemStr, 704 + 0, 256 + 24) / 4;
                 setTextColor(5);
                 drawStringNew(&vanillaFont, getItem(itemType)->name, 704 + offset + 1, 256 + 24);
@@ -451,26 +426,24 @@ namespace
             }
             Tamer_setSubState(1);
         }
-        else if (Tamer_getSubState() == 1)
-        {
+        else if (Tamer_getSubState() == 1) {
             if (!tickOpenChestTray(interactedChest)) return;
             if (!isUIBoxAvailable(1)) return;
 
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT target   = {.x = -130, .y = 42, .width = 262, .height = 59};
             RECT source   = {
-                  .x      = static_cast<int16_t>(pos.screenX - 5),
-                  .y      = static_cast<int16_t>(pos.screenY - 5),
-                  .width  = 10,
-                  .height = 10,
+                .x      = static_cast<int16_t>(pos.screenX - 5),
+                .y      = static_cast<int16_t>(pos.screenY - 5),
+                .width  = 10,
+                .height = 10,
             };
 
             createAnimatedUIBox(1, 0, 2, &target, &source, nullptr, renderItemPickupTextbox);
             Tamer_setSubState(chest.isTaken != 0 ? 2 : 4);
             takeItemFrameCount = 0;
         }
-        else if (Tamer_getSubState() == 2)
-        {
+        else if (Tamer_getSubState() == 2) {
             takeItemFrameCount++;
             // vanilla checks for polled inputs instead of consuming them, but for the sake of code unification this is
             // the same as the item pickup code. It also gives 5 frames delay instead of 4.
@@ -478,38 +451,33 @@ namespace
             if (!isKeyDown(BUTTON_CROSS)) return;
 
             takeItemFrameCount = 0;
-            if (!giveItem(itemType, 1))
-            {
+            if (!giveItem(itemType, 1)) {
                 drawStringNew(&vanillaFont, inventoryFullStr, 704 + 0, 256 + 24);
                 Tamer_setSubState(3);
             }
-            else
-            {
+            else {
                 setTrigger(chest.trigger);
                 Tamer_setSubState(5);
             }
         }
-        else if (Tamer_getSubState() == 3)
-        {
+        else if (Tamer_getSubState() == 3) {
             if (!tickCloseChestTray(interactedChest)) return;
             Tamer_setSubState(4);
         }
-        else if (Tamer_getSubState() == 4)
-        {
+        else if (Tamer_getSubState() == 4) {
             // added extra state to fix some paths requiring more confirmation inputs than necessary
             takeItemFrameCount++;
             if (takeItemFrameCount < 5) return;
             if (!isKeyDown(BUTTON_CROSS)) return;
             Tamer_setSubState(5);
         }
-        else if (Tamer_getSubState() == 5)
-        {
+        else if (Tamer_getSubState() == 5) {
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT target   = {
-                  .x      = static_cast<int16_t>(pos.screenX - 5),
-                  .y      = static_cast<int16_t>(pos.screenY - 5),
-                  .width  = 10,
-                  .height = 10,
+                .x      = static_cast<int16_t>(pos.screenX - 5),
+                .y      = static_cast<int16_t>(pos.screenY - 5),
+                .width  = 10,
+                .height = 10,
             };
 
             removeAnimatedUIBox(1, &target);
@@ -529,8 +497,7 @@ namespace
         RECT textArea = {.x = 0, .y = 12, .width = 256, .height = 200};
         auto itemType = DROPPED_ITEMS[pickedDropId].type;
 
-        if (Tamer_getSubState() == 0)
-        {
+        if (Tamer_getSubState() == 0) {
             startAnimation(&TAMER_ENTITY, 12);
             unsetCameraFollowPlayer();
             clearTextSubArea(&textArea);
@@ -539,8 +506,7 @@ namespace
             setTextColor(5);
             auto nameOffset = drawStringNew(&vanillaFont, getItem(itemType)->name, 704 + offset + 1, 256 + 24) / 4;
             const uint8_t pickupAmount = getDroppedItemAmount(pickedDropId);
-            if (pickupAmount > 1)
-            {
+            if (pickupAmount > 1) {
                 setTextColor(3);
                 uint8_t suffix[8];
                 sprintf(suffix, " x%d", pickupAmount);
@@ -551,25 +517,23 @@ namespace
             takeItemFrameCount = 0;
             Tamer_setSubState(1);
         }
-        else if (Tamer_getSubState() == 1)
-        {
+        else if (Tamer_getSubState() == 1) {
             if (!isUIBoxAvailable(1)) return;
 
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT target   = {.x = -130, .y = 42, .width = 262, .height = 59};
             RECT source   = {
-                  .x      = static_cast<int16_t>(pos.screenX - 5),
-                  .y      = static_cast<int16_t>(pos.screenY - 5),
-                  .width  = 10,
-                  .height = 10,
+                .x      = static_cast<int16_t>(pos.screenX - 5),
+                .y      = static_cast<int16_t>(pos.screenY - 5),
+                .width  = 10,
+                .height = 10,
             };
             // vanilla writes TAKE_CHEST_ITEM here, but it's never used so skip that
 
             createAnimatedUIBox(1, 0, 2, &target, &source, nullptr, renderItemPickupTextbox);
             Tamer_setSubState(2);
         }
-        else if (Tamer_getSubState() == 2)
-        {
+        else if (Tamer_getSubState() == 2) {
             takeItemFrameCount++;
             // vanilla does the isKeyDown check before the frame count check,
             // but changing the order allows to buffer inputs
@@ -578,22 +542,19 @@ namespace
 
             playSound(0, 3);
 
-            if (!giveItem(itemType, 0))
-            {
+            if (!giveItem(itemType, 0)) {
                 clearTextSubArea(&textArea);
                 drawStringNew(&vanillaFont, getDigimonData(DigimonType::TAMER)->name, 704 + 0, 256 + 12);
                 drawStringNew(&vanillaFont, inventoryFullStr, 704 + 0, 256 + 24);
                 takeItemFrameCount = 0;
                 Tamer_setSubState(3);
             }
-            else
-            {
+            else {
                 playSound(0, 7);
                 Tamer_setSubState(4);
             }
         }
-        else if (Tamer_getSubState() == 3)
-        {
+        else if (Tamer_getSubState() == 3) {
             takeItemFrameCount++;
             // vanilla does the isKeyDown check before the frame count check,
             // but changing the order allows to buffer inputs
@@ -603,14 +564,13 @@ namespace
             playSound(0, 3);
             Tamer_setSubState(4);
         }
-        else if (Tamer_getSubState() == 4)
-        {
+        else if (Tamer_getSubState() == 4) {
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT target   = {
-                  .x      = static_cast<int16_t>(pos.screenX - 5),
-                  .y      = static_cast<int16_t>(pos.screenY - 5),
-                  .width  = 10,
-                  .height = 10,
+                .x      = static_cast<int16_t>(pos.screenX - 5),
+                .y      = static_cast<int16_t>(pos.screenY - 5),
+                .width  = 10,
+                .height = 10,
             };
 
             removeAnimatedUIBox(1, &target);
@@ -627,15 +587,13 @@ namespace
 
     void Tamer_tickAwardSomething()
     {
-        if (Tamer_getSubState() == 0)
-        {
+        if (Tamer_getSubState() == 0) {
             stopGameTime();
             startAnimation(&TAMER_ENTITY, 0);
             Partner_setState(11);
             unsetCameraFollowPlayer();
 
-            if (hasMedalAwardPending)
-            {
+            if (hasMedalAwardPending) {
                 clearTextArea();
                 setTextColor(7);
                 // vanilla draws these strings in multiple frames/states
@@ -643,16 +601,13 @@ namespace
                 drawStringNew(&vanillaFont, medalLine2, 704, 256 + 132);
                 drawStringNew(&vanillaFont, medalLine3, 704, 256 + 144);
             }
-            else if (hasLevelsAwardPending)
-            {
+            else if (hasLevelsAwardPending) {
                 clearTextArea();
-                if (levelsAwarded > 0)
-                {
+                if (levelsAwarded > 0) {
                     setTextColor(7);
                     drawStringNew(&vanillaFont, tamerLevelUpStr, 704, 256 + 120);
                 }
-                else
-                {
+                else {
                     setTextColor(3);
                     drawStringNew(&vanillaFont, tamerLevelDownStr, 704, 256 + 120);
                 }
@@ -661,33 +616,31 @@ namespace
             setTextColor(1);
             Tamer_setSubState(1);
         }
-        else if (Tamer_getSubState() == 1)
-        {
+        else if (Tamer_getSubState() == 1) {
             if (!isUIBoxAvailable(1)) return;
 
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT target   = {.x = -130, .y = 42, .width = 262, .height = 59};
             RECT source   = {
-                  .x      = static_cast<int16_t>(pos.screenX - 5),
-                  .y      = static_cast<int16_t>(pos.screenY - 5),
-                  .width  = 10,
-                  .height = 10,
+                .x      = static_cast<int16_t>(pos.screenX - 5),
+                .y      = static_cast<int16_t>(pos.screenY - 5),
+                .width  = 10,
+                .height = 10,
             };
             // vanilla writes TAKE_CHEST_ITEM here, but it's never used so skip that
 
             createAnimatedUIBox(1, 0, 2, &target, &source, nullptr, renderAwardSomethingTextbox);
             Tamer_setSubState(2);
         }
-        else if (Tamer_getSubState() == 2)
-        {
+        else if (Tamer_getSubState() == 2) {
             if (!isKeyDown(BUTTON_CROSS)) return;
 
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT target   = {
-                  .x      = static_cast<int16_t>(pos.screenX - 5),
-                  .y      = static_cast<int16_t>(pos.screenY - 5),
-                  .width  = 10,
-                  .height = 10,
+                .x      = static_cast<int16_t>(pos.screenX - 5),
+                .y      = static_cast<int16_t>(pos.screenY - 5),
+                .width  = 10,
+                .height = 10,
             };
 
             removeAnimatedUIBox(1, &target);
@@ -734,45 +687,38 @@ namespace
     void checkMedalConditions()
     {
         // vanilla doesn't use getNumMasteredMoves, but it should boil down to the same
-        if (!hasMedal(Medal::ALL_TECHS) && getNumMasteredMoves() >= 57)
-        {
+        if (!hasMedal(Medal::ALL_TECHS) && getNumMasteredMoves() >= 57) {
             unlockMedal(Medal::ALL_TECHS);
             hasMedalAwardPending = true;
         }
 
-        if (!hasMedal(Medal::MAX_STATS) && hasMaxStats(PARTNER_ENTITY.stats))
-        {
+        if (!hasMedal(Medal::MAX_STATS) && hasMaxStats(PARTNER_ENTITY.stats)) {
             unlockMedal(Medal::MAX_STATS);
             hasMedalAwardPending = true;
         }
 
-        if (!hasMedal(Medal::MAX_MONEY) && MONEY == MAX_MONEY)
-        {
+        if (!hasMedal(Medal::MAX_MONEY) && MONEY == MAX_MONEY) {
             unlockMedal(Medal::MAX_MONEY);
             hasMedalAwardPending = true;
         }
 
-        if (!hasMedal(Medal::PLAYTIME) && YEAR >= 10)
-        {
+        if (!hasMedal(Medal::PLAYTIME) && YEAR >= 10) {
             unlockMedal(Medal::PLAYTIME);
             hasMedalAwardPending = true;
         }
 
-        if (!hasMedal(Medal::ALL_DIGIMON) && hasAllDigimonRaised())
-        {
+        if (!hasMedal(Medal::ALL_DIGIMON) && hasAllDigimonRaised()) {
             unlockMedal(Medal::ALL_DIGIMON);
             hasMedalAwardPending    = true;
             TAMER_ENTITY.tamerLevel = min(TAMER_ENTITY.tamerLevel + 1, MAX_TAMER_LEVEL);
         }
 
-        if (!hasMedal(Medal::CATCH_100_FISH) && PARTNER_PARA.fishCaught >= 100)
-        {
+        if (!hasMedal(Medal::CATCH_100_FISH) && PARTNER_PARA.fishCaught >= 100) {
             unlockMedal(Medal::CATCH_100_FISH);
             hasMedalAwardPending = true;
         }
 
-        if (!hasMedal(Medal::ALL_CARDS) && hasAllCards())
-        {
+        if (!hasMedal(Medal::ALL_CARDS) && hasAllCards()) {
             unlockMedal(Medal::ALL_CARDS);
             hasMedalAwardPending = true;
         }
@@ -780,8 +726,7 @@ namespace
 
     void checkPendingAwards()
     {
-        if (hasLevelsAwardPending || hasMedalAwardPending)
-        {
+        if (hasLevelsAwardPending || hasMedalAwardPending) {
             Tamer_setState(20);
             stopGameTime(); // is this necessary? The state already does that
         }
@@ -794,8 +739,7 @@ namespace
         bool isDirectionPressed = (POLLED_INPUT & (BUTTON_UP | BUTTON_RIGHT | BUTTON_DOWN | BUTTON_LEFT));
         int32_t animId          = 0;
 
-        if (isDirectionPressed)
-        {
+        if (isDirectionPressed) {
             animId          = isRunning ? 3 : 2;
             ITEM_SCOLD_FLAG = 0;
         }
@@ -848,12 +792,14 @@ namespace
         auto tileX = getTileX(TAMER_ENTITY.posData->location.x);
         auto tileZ = getTileZ(TAMER_ENTITY.posData->location.z);
 
-        if (tileX != TAMER_PREVIOUS_TILE_X || tileZ != TAMER_PREVIOUS_TILE_Y)
-        {
-            if (!isLinearPathBlocked(tileX, tileZ, TAMER_START_TILE_X, TAMER_START_TILE_Y)) { clearTamerWaypoints(); }
-            else if (TAMER_WAYPOINT_COUNT == 0) { addTamerWaypoint(0, TAMER_PREVIOUS_TILE_X, TAMER_PREVIOUS_TILE_Y); }
-            else
-            {
+        if (tileX != TAMER_PREVIOUS_TILE_X || tileZ != TAMER_PREVIOUS_TILE_Y) {
+            if (!isLinearPathBlocked(tileX, tileZ, TAMER_START_TILE_X, TAMER_START_TILE_Y)) {
+                clearTamerWaypoints();
+            }
+            else if (TAMER_WAYPOINT_COUNT == 0) {
+                addTamerWaypoint(0, TAMER_PREVIOUS_TILE_X, TAMER_PREVIOUS_TILE_Y);
+            }
+            else {
                 auto id = (TAMER_WAYPOINT_CURRENT + TAMER_WAYPOINT_COUNT - 1) % 30;
 
                 if (isLinearPathBlocked(tileX, tileZ, TAMER_WAYPOINT_X[id], TAMER_WAYPOINT_Y[id]))
@@ -863,18 +809,15 @@ namespace
             }
         }
 
-        if (TAMER_WAYPOINT_COUNT > 1)
-        {
+        if (TAMER_WAYPOINT_COUNT > 1) {
             if (isLinearPathBlocked(tileX,
                                     tileZ,
                                     TAMER_WAYPOINT_X[TAMER_WAYPOINT_ACTIVE],
-                                    TAMER_WAYPOINT_Y[TAMER_WAYPOINT_ACTIVE]))
-            {
+                                    TAMER_WAYPOINT_Y[TAMER_WAYPOINT_ACTIVE])) {
                 TAMER_WAYPOINT_ACTIVE--;
                 if (TAMER_WAYPOINT_ACTIVE < 0) TAMER_WAYPOINT_ACTIVE = TAMER_WAYPOINT_COUNT - 2;
             }
-            else
-            {
+            else {
                 TAMER_WAYPOINT_COUNT = TAMER_WAYPOINT_ACTIVE + 1;
                 if (TAMER_WAYPOINT_COUNT > 1) TAMER_WAYPOINT_ACTIVE--;
             }
@@ -904,9 +847,10 @@ namespace
         // potential useless/unused state, log to see if it gets used
         printf("Debug: tickOpening called.");
 
-        if (Tamer_getSubState() == 0) { Tamer_setSubState(1); }
-        else if (Tamer_getSubState() == 1)
-        {
+        if (Tamer_getSubState() == 0) {
+            Tamer_setSubState(1);
+        }
+        else if (Tamer_getSubState() == 1) {
             setMapLayerEnabled(1);
             SOME_SCRIPT_SYNC_BIT = 1;
         }
@@ -914,28 +858,24 @@ namespace
 
     void Tamer_tickEnding()
     {
-        if (Tamer_getSubState() == 0)
-        {
+        if (Tamer_getSubState() == 0) {
             isSoundLoaded(false, 8);
             ENDI_tickEnding(&TAMER_ENTITY, false);
             Tamer_setSubState(1);
         }
-        else if (Tamer_getSubState() == 1)
-        {
+        else if (Tamer_getSubState() == 1) {
             if (ENDI_tickEnding(&TAMER_ENTITY, true) < 0) SOME_SCRIPT_SYNC_BIT = 1;
         }
     }
 
     void Tamer_tickSicknessLostLife()
     {
-        if (Tamer_getSubState() == 0)
-        {
+        if (Tamer_getSubState() == 0) {
             loadDynamicLibrary(Overlay::MURD_REL, nullptr, false, nullptr, 0);
             MURD_tick(&PARTNER_ENTITY, false);
             Tamer_setSubState(1);
         }
-        else if (Tamer_getSubState() == 1)
-        {
+        else if (Tamer_getSubState() == 1) {
             if (MURD_tick(&PARTNER_ENTITY, true) >= 0) return;
             if (DoOA_tick(&PARTNER_ENTITY, DOOA_DATA_PTR, true) >= 0) return;
             SOME_SCRIPT_SYNC_BIT = 1;
@@ -944,27 +884,23 @@ namespace
 
     void Tamer_tickMachinedramonSpawn()
     {
-        if (Tamer_getSubState() == 0)
-        {
+        if (Tamer_getSubState() == 0) {
             EaB_tick(ENTITY_TABLE.npc1, false);
             Tamer_setSubState(1);
         }
-        else if (Tamer_getSubState() == 1)
-        {
+        else if (Tamer_getSubState() == 1) {
             if (EaB_tick(ENTITY_TABLE.npc1, true) < 0) SOME_SCRIPT_SYNC_BIT = 1;
         }
     }
 
     void Tamer_tickBattleLostLife()
     {
-        if (Tamer_getSubState() == 0)
-        {
+        if (Tamer_getSubState() == 0) {
             loadDynamicLibrary(Overlay::MURD_REL, nullptr, false, nullptr, 0);
             MURD_tick(&PARTNER_ENTITY, false);
             Tamer_setSubState(1);
         }
-        else if (Tamer_getSubState() == 1)
-        {
+        else if (Tamer_getSubState() == 1) {
             if (MURD_tick(&PARTNER_ENTITY, true) < 0) SOME_SCRIPT_SYNC_BIT = 1;
         }
     }
@@ -974,8 +910,7 @@ namespace
         if (FISHING_DATA_PTR == nullptr) return;
 
         auto val = FISH_tamerTick();
-        if (val != 0)
-        {
+        if (val != 0) {
             setFishingDisabled();
             triggerSeadramonCutscene();
         }
@@ -1004,8 +939,7 @@ namespace
      */
     void Tamer_tickOverworld(int32_t instanceId)
     {
-        switch (Tamer_getState())
-        {
+        switch (Tamer_getState()) {
             case 0: Tamer_tickWalkingState(); break;
             case 1: Tamer_setState(6); break;
             case 5: Tamer_tickChangeMap(); break;
@@ -1030,13 +964,11 @@ namespace
 
     void Tamer_tick(int32_t instanceId)
     {
-        if (GAME_STATE != 0 || Tamer_getState() != 0)
-        {
+        if (GAME_STATE != 0 || Tamer_getState() != 0) {
             if (hasButterfly()) removeButterfly();
         }
 
-        switch (GAME_STATE)
-        {
+        switch (GAME_STATE) {
             case 0: Tamer_tickOverworld(instanceId); break;
             case 1: Tamer_tickBattleOverworld(instanceId); break;
             case 2:
@@ -1079,8 +1011,7 @@ extern "C"
 
     bool isTrainingComplete()
     {
-        if (TRAINING_COMPLETE == 1)
-        {
+        if (TRAINING_COMPLETE == 1) {
             TRAINING_COMPLETE = 0;
             return true;
         }
@@ -1092,8 +1023,7 @@ extern "C"
         if (random(100) >= chance) return;
 
         TAMER_ENTITY.tamerLevel += amount;
-        if (TAMER_ENTITY.tamerLevel <= 10 && TAMER_ENTITY.tamerLevel >= 0)
-        {
+        if (TAMER_ENTITY.tamerLevel <= 10 && TAMER_ENTITY.tamerLevel >= 0) {
             levelsAwarded         = amount;
             hasLevelsAwardPending = true;
         }
@@ -1107,13 +1037,13 @@ extern "C"
         // vanilla checks for CHANGED_INPUT instead of isKeyDown, but this allows buffering input
         auto collision = entityCheckCollision(&PARTNER_ENTITY, &TAMER_ENTITY, 0, 0);
 
-        if (collision == CollisionCode::MAP) { collisionGrace(nullptr, &TAMER_ENTITY, 0, 0); }
-        else if (collision >= CollisionCode::NPC1 && collision <= CollisionCode::NPC8)
-        {
+        if (collision == CollisionCode::MAP) {
+            collisionGrace(nullptr, &TAMER_ENTITY, 0, 0);
+        }
+        else if (collision >= CollisionCode::NPC1 && collision <= CollisionCode::NPC8) {
             TAMER_ENTITY.animFlag |= 2;
             auto& npc = NPC_ENTITIES[static_cast<int32_t>(collision) - 2];
-            if (IS_SCRIPT_PAUSED && (npc.autotalk || isKeyDown(BUTTON_CROSS)))
-            {
+            if (IS_SCRIPT_PAUSED && (npc.autotalk || isKeyDown(BUTTON_CROSS))) {
                 removeTriangleMenu();
                 closeInventoryBoxes();
                 removeUIBox1();
@@ -1126,8 +1056,7 @@ extern "C"
 
         auto trigger = getTileTrigger(&TAMER_ENTITY.posData->location);
 
-        if (IS_SCRIPT_PAUSED == 1)
-        {
+        if (IS_SCRIPT_PAUSED == 1) {
             if (trigger == 120 && PARTNER_PARA.condition.isPoopy) callScriptSection(0, 1250, 0);
 
             if (trigger >= 80 && trigger < 110 && isKeyDown(BUTTON_CROSS))
@@ -1136,8 +1065,7 @@ extern "C"
             if (trigger >= 50 && trigger < 80) callScriptSection(CURRENT_SCRIPT_ID, trigger, 0);
         }
 
-        if (trigger >= 110 && trigger < 120)
-        {
+        if (trigger >= 110 && trigger < 120) {
             PREVIOUS_EXIT = trigger - 110;
             TARGET_MAP    = MAP_WARPS.targetMap[trigger - 110];
             CURRENT_EXIT  = MAP_WARPS.targetExit[trigger - 110];
@@ -1148,8 +1076,7 @@ extern "C"
         }
 
         auto chest = checkChestCollision();
-        if (chest != 0xFF && isKeyDown(BUTTON_CROSS))
-        {
+        if (chest != 0xFF && isKeyDown(BUTTON_CROSS)) {
             interactedChest = chest;
             Tamer_setState(14);
         }

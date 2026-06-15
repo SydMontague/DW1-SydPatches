@@ -84,8 +84,7 @@ extern "C"
         *outDigits = getDigitCount(value);
 
         auto current = value;
-        for (int32_t i = 0; i < maxDigits; i++)
-        {
+        for (int32_t i = 0; i < maxDigits; i++) {
             outBuffer[i] = current % 10;
             current /= 10;
         }
@@ -98,8 +97,7 @@ extern "C"
         convertValueToDigits(digits, value, &numDigits, buffer.data());
         const auto empty = digits - numDigits;
 
-        for (int32_t i = 0; i < numDigits; i++)
-        {
+        for (int32_t i = 0; i < numDigits; i++) {
             const auto finalX = posX + (empty + i) * 8;
             const auto finalU = buffer[numDigits - i - 1] * 8;
             renderPredrawnNumber(finalX, posY, colorId, 8, 12, finalU, 240, 27, getClut(208, 488), layer);
@@ -113,8 +111,7 @@ extern "C"
         convertValueToDigits(digits, value, &numDigits, buffer.data());
         const auto empty = digits - numDigits;
 
-        for (int32_t i = 0; i < numDigits; i++)
-        {
+        for (int32_t i = 0; i < numDigits; i++) {
             const auto finalX = posX + (empty + i) * 7;
             const auto finalU = buffer[numDigits - i - 1] * 8;
             renderPredrawnNumber(finalX, posY, colorId, 8, 9, finalU, 183, 30, getClut(256, 484), layer);
@@ -128,8 +125,7 @@ extern "C"
         convertValueToDigits(digits, value, &numDigits, buffer.data());
         const auto empty = digits - numDigits;
 
-        for (int32_t i = 0; i < numDigits; i++)
-        {
+        for (int32_t i = 0; i < numDigits; i++) {
             const auto finalX = posX + (empty + i) * 6;
             const auto finalU = 137 + buffer[numDigits - i - 1] * 6;
             renderPredrawnNumber(finalX, posY, colorId, 6, 10, finalU, 156, 30, getClut(256, 484), layer);
@@ -176,8 +172,7 @@ extern "C"
         else
             return 0;
 
-        if (specialOffset == 0)
-        {
+        if (specialOffset == 0) {
             auto& mapping = CHAR_MAPPING_NORMAL[charType];
             return input + mapping.shiftJis - mapping.ascii;
         }

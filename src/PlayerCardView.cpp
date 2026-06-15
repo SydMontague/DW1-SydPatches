@@ -113,7 +113,7 @@ namespace
     {
         dtl::array<AtlasString, 5> array;
         int32_t i = 0;
-        for(const auto& label : LABELS)
+        for (const auto& label : LABELS)
             array[i++] = getAtlasVanilla().render(LABELS[i].first, LABELS[i].second);
         return array;
     }
@@ -123,8 +123,8 @@ struct CardView::Private
 {
 public:
     void tick();
-    // NOLINTNEXTLINE
-    __attribute__((optimize("Os"))) void render(int32_t depth);
+    [[gnu::optimize("Os")]]
+    void render(int32_t depth);
     bool canBeClosed();
 
 private:
@@ -150,10 +150,8 @@ void CardView::Private::tick()
     cardCountBox.tick();
     cardImageBox.tick();
 
-    if (state == 2)
-    {
-        if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
-        {
+    if (state == 2) {
+        if (isKeyDown(InputButtons::BUTTON_TRIANGLE)) {
             playSound(0, 4);
             playSound(0, 1);
             state = 1;
@@ -161,10 +159,8 @@ void CardView::Private::tick()
             cardImageBox.close();
         }
     }
-    else if (state == 1)
-    {
-        if (isKeyDown(InputButtons::BUTTON_TRIANGLE))
-        {
+    else if (state == 1) {
+        if (isKeyDown(InputButtons::BUTTON_TRIANGLE)) {
             playSound(0, 4);
             state = 0;
         }
@@ -182,12 +178,11 @@ void CardView::Private::tick()
 
         // vanilla doesn't check for the boxes to be available, causing the card glitch
         // but since we don't use the vanilla boxes anymore we avoid this bug
-        if (isKeyDown(InputButtons::BUTTON_CROSS) && getCardAmount(newCard) != 0)
-        {
+        if (isKeyDown(InputButtons::BUTTON_CROSS) && getCardAmount(newCard) != 0) {
             playSound(0, 3);
             state = 2;
             loadCardImage(newCard);
-            cardCount = getAtlasVanilla().render(format("%d", getCardAmount(newCard)).data(), CARD_COUNT_SETTINGS);
+            cardCount  = getAtlasVanilla().render(format("%d", getCardAmount(newCard)).data(), CARD_COUNT_SETTINGS);
             RECT start = {
                 .x      = static_cast<int16_t>(selectedCardCol * 24 + CARD_BASE_X + 9),
                 .y      = static_cast<int16_t>(selectedCardRow * 24 + CARD_BASE_Y + 8),
@@ -200,10 +195,8 @@ void CardView::Private::tick()
             cardCountBox = UIBox(COUNT_BOX, UIBox::DEFAULT_COLOR, false, start);
         }
     }
-    else if (state == 0)
-    {
-        if (isKeyDown(InputButtons::BUTTON_CROSS))
-        {
+    else if (state == 0) {
+        if (isKeyDown(InputButtons::BUTTON_CROSS)) {
             state = 1;
             playSound(0, 3);
         }
@@ -236,14 +229,12 @@ void CardView::Private::render(int32_t depth)
                         0);
 
     for (int row = 0; row < CARD_ROW_COUNT; row++)
-        for (int col = 0; col < CARD_COL_COUNT; col++)
-        {
+        for (int col = 0; col < CARD_COL_COUNT; col++) {
             auto cardId = row * CARD_COL_COUNT + col;
             auto posX   = CARD_BASE_X + col * CARD_OFFSET_X;
             auto posY   = CARD_BASE_Y + row * CARD_OFFSET_Y;
 
-            if (getCardAmount(cardId) > 0)
-            {
+            if (getCardAmount(cardId) > 0) {
                 auto type = CARD_DATA[cardId].type;
                 if (type != 0xFF) getDigimonSprite(static_cast<DigimonType>(type)).render(posX, posY, depth, 0, 0);
             }

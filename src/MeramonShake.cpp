@@ -34,8 +34,7 @@ namespace
         else if (frameCount < 181)
             offsetX = 2;
 
-        if (frameCount % 2 == 0)
-        {
+        if (frameCount % 2 == 0) {
             meramonShakeData.posX   = max(meramonShakeData.posX - 32, -200);
             meramonShakeData.posY   = max(meramonShakeData.posY - 32, -200);
             meramonShakeData.width  = meramonShakeData.posX * -2;
@@ -63,8 +62,7 @@ namespace
         libgs_GsSetWorkBase(prim + 1);
 
         meramonShakeData.frameCount++;
-        if (meramonShakeData.frameCount > 209)
-        {
+        if (meramonShakeData.frameCount > 209) {
             DRAWING_OFFSET_X = meramonShakeData.backupOffsetX;
             DRAWING_OFFSET_Y = meramonShakeData.backupOffsetY;
             removeObject(ObjectID::MERAMON_SHAKE, instanceId);

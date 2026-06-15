@@ -13,8 +13,7 @@ TileIterator::TileIterator(int8_t startX, int8_t startY, int8_t endX, int8_t end
     absX         = abs(diffX);
     absY         = abs(diffY);
 
-    if (absX < absY)
-    {
+    if (absX < absY) {
         stepX     = diffX < 0 ? -1 : 1;
         stepY     = diffY < 1 ? -1 : 1;
         subStepX  = abs(diffX % absY);
@@ -25,8 +24,7 @@ TileIterator::TileIterator(int8_t startX, int8_t startY, int8_t endX, int8_t end
 
         if (subStepX == 0) stepX = diffX / absY;
     }
-    else
-    {
+    else {
         stepX     = diffX < 1 ? -1 : 1;
         stepY     = diffY < 0 ? -1 : 1;
         subStepX  = 0;
@@ -54,11 +52,9 @@ TileIterator& TileIterator::operator++()
     stepCount--;
     if (subStepX == 0)
         currentX += stepX;
-    else
-    {
+    else {
         progressX -= subStepX;
-        if (progressX < 1)
-        {
+        if (progressX < 1) {
             currentX += stepX;
             progressX += absY;
         }
@@ -66,11 +62,9 @@ TileIterator& TileIterator::operator++()
 
     if (subStepY == 0)
         currentY += stepY;
-    else
-    {
+    else {
         progressY -= subStepY;
-        if (progressY < 1)
-        {
+        if (progressY < 1) {
             currentY += stepY;
             progressY += absX;
         }

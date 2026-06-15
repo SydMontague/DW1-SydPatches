@@ -90,11 +90,9 @@ namespace
         removeObject(ObjectID::GAME_CLOCK, 0);
         removeObject(ObjectID::CHEST, 0);
 
-        for (int32_t i = 0; i < 10; i++)
-        {
+        for (int32_t i = 0; i < 10; i++) {
             auto* entity = ENTITY_TABLE.getEntityById(i);
-            if (entity != nullptr)
-            {
+            if (entity != nullptr) {
                 removeEntity(entity->type, i);
                 unloadModel(static_cast<int32_t>(entity->type), getEntityTypeById(i));
             }
@@ -151,8 +149,7 @@ namespace
         auto directionPressed = POLLED_INPUT & POLLED_INPUT_PREVIOUS & 0xf000f000;
         if (directionPressed == 0)
             inputRepeatTimer = 0;
-        else if (inputRepeatTimer + 1 < 15)
-        {
+        else if (inputRepeatTimer + 1 < 15) {
             directionPressed = 0;
             inputRepeatTimer++;
         }
@@ -169,8 +166,7 @@ namespace
         auto directionPressed = POLLED_INPUT & POLLED_INPUT_PREVIOUS & 0xf000f000;
         if (directionPressed == 0)
             gameInputRepeatTimer = 0;
-        else if (gameInputRepeatTimer + 1 < 5)
-        {
+        else if (gameInputRepeatTimer + 1 < 5) {
             directionPressed = 0;
             gameInputRepeatTimer++;
         }
@@ -205,8 +201,7 @@ namespace
         if (firstScreenPressedStart == 1) firstScreenFrameCount += 30;
         firstScreenFrameCount %= 60;
 
-        if (firstScreenFrameCount < 30)
-        {
+        if (firstScreenFrameCount < 30) {
             libgpu_SetPolyFT4(prim);
             prim->x0    = -54;
             prim->y0    = 50;
@@ -292,12 +287,10 @@ namespace
         FADE_DATA.fadeOutCurrent = 0;
         fadeFromBlack(40);
 
-        for (int32_t i = 0; i < 600; i++)
-        {
+        for (int32_t i = 0; i < 600; i++) {
             pollInputMenu();
             if (isKeyPressed(InputButtons::BUTTON_START) && FADE_DATA.fadeOutCurrent == 0 &&
-                FADE_DATA.fadeInCurrent == 0)
-            {
+                FADE_DATA.fadeInCurrent == 0) {
                 playSound(0, 3);
                 firstScreenPressedStart = true;
                 break;
@@ -322,8 +315,7 @@ namespace
         addObject(ObjectID::MAIN_MENU_SCREEN, 0, nullptr, renderMainMenuBackground);
         fadeFromBlack(40);
 
-        do
-        {
+        do {
             ACTIVE_FRAMEBUFFER    = libgs_GsGetActiveBuffer();
             ACTIVE_ORDERING_TABLE = GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER;
             libgs_GsSetWorkBase(GS_WORK_BASES + ACTIVE_FRAMEBUFFER);
@@ -339,8 +331,7 @@ namespace
             libgs_GsSortClear(0, 0, 0, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER);
             libgs_GsDrawOt(GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER);
 
-            if (CURRENT_MENU == -1 && FADE_DATA.fadeOutCurrent == 0)
-            {
+            if (CURRENT_MENU == -1 && FADE_DATA.fadeOutCurrent == 0) {
                 fadeToBlack(40);
                 removeObject(ObjectID::MAIN_MENU, 0);
             }
@@ -355,8 +346,7 @@ namespace
 
         if (newGameJijimonTickCount < 30000) newGameJijimonTickCount++;
 
-        if (newGameJijimonTickCount == 35)
-        {
+        if (newGameJijimonTickCount == 35) {
             setEntityRotation(2, 0, 0x71, 0);
             setupEntityMatrix(2);
             startAnimation(entity, 0);
@@ -441,8 +431,7 @@ namespace
         loadNewGameScene();
 
         auto result = false;
-        do
-        {
+        do {
             pollInputGame();
             ACTIVE_FRAMEBUFFER    = libgs_GsGetActiveBuffer();
             ACTIVE_ORDERING_TABLE = GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER;
@@ -519,8 +508,7 @@ namespace
         if (collisionResult <= CollisionCode::PARTNER || collisionResult > CollisionCode::NPC8) return;
 
         auto type = ENTITY_TABLE.getEntityById(static_cast<int32_t>(collisionResult))->type;
-        if (!isProtectedNPC(type, SAVED_CURRENT_SCREEN))
-        {
+        if (!isProtectedNPC(type, SAVED_CURRENT_SCREEN)) {
             ENTITY_TABLE.getEntityById(static_cast<int32_t>(collisionResult))->isOnMap = false;
             return;
         }
@@ -696,14 +684,12 @@ int32_t main()
     initializeStatusObjects();
     customInit();
 
-    while (true)
-    {
+    while (true) {
         loadTIMFile("\\ETCDAT\\FI_INFO.TIM", GENERAL_BUFFER.data());
         loadTIMFile("\\ETCNA\\TITLE256.TIM", GENERAL_BUFFER.data());
 
         bool confirmed = false;
-        do
-        {
+        do {
             playMovie(Movies::INTRO);
             initializeMusic();
             initFonts();
@@ -716,8 +702,7 @@ int32_t main()
         initializeMusic();
         runMainMenu();
 
-        switch (MAIN_STATE)
-        {
+        switch (MAIN_STATE) {
             case 0:
             {
                 newGameScene();
@@ -858,8 +843,7 @@ extern "C"
     void recalculatePPandArena()
     {
         auto prosperity = 0;
-        for (int32_t i = 3; i < 59; i++)
-        {
+        for (int32_t i = 3; i < 59; i++) {
             auto level = DIGIMON_DATA[i].level;
             if (level < Level::ROOKIE) continue;
             if (!isTriggerSet(200 + i)) continue;

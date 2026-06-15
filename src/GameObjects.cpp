@@ -11,8 +11,7 @@ extern "C"
 
     void initializeWorldObjects()
     {
-        for (auto& obj : WORLD_OBJECTS)
-        {
+        for (auto& obj : WORLD_OBJECTS) {
             obj.objectId   = ObjectID::NONE;
             obj.instanceId = 0xFFFF;
             obj.tick       = nullptr;
@@ -23,8 +22,7 @@ extern "C"
     bool addObject(ObjectID id, uint16_t instanceId, TickFunction tickFunc, RenderFunction renderFunc)
     {
         // vanilla fills object 129 as a terminator, but we can do without
-        for (auto& obj : WORLD_OBJECTS)
-        {
+        for (auto& obj : WORLD_OBJECTS) {
             if (obj.objectId != ObjectID::NONE) continue;
 
             obj.objectId   = id;
@@ -40,8 +38,7 @@ extern "C"
     bool removeObject(ObjectID id, uint16_t instance)
     {
         // vanilla fills object 129 as a terminator, but we can do without
-        for (auto& obj : WORLD_OBJECTS)
-        {
+        for (auto& obj : WORLD_OBJECTS) {
             if (obj.objectId != id || obj.instanceId != instance) continue;
 
             obj.objectId   = ObjectID::NONE;
@@ -65,7 +62,7 @@ extern "C"
         // sync all draw operations to make sure they're finished before the game tries to render them
         libgpu_DrawSync(0);
         uint32_t diff2 = getTimestamp() - start;
-        //printf("Tick  : %dµs | %dµs\n", diff2, diff2 - diff1);
+        // printf("Tick  : %dµs | %dµs\n", diff2, diff2 - diff1);
     }
 
     void renderObjects()
@@ -74,7 +71,7 @@ extern "C"
         for (auto& obj : WORLD_OBJECTS)
             if (obj.objectId != ObjectID::NONE && obj.render) obj.render(obj.instanceId);
         uint32_t diff = getTimestamp() - start;
-        //printf("Render: %dµs\n", diff);
+        // printf("Render: %dµs\n", diff);
     }
 
     void initializeAttackObjects()
@@ -87,10 +84,8 @@ extern "C"
     bool addAttackObject(int32_t victimId, int32_t unk1, SVector* pos, uint32_t unk2, uint32_t unk3, uint32_t casterId)
     {
         // vanilla fills object 17 as a terminator, but we can do without
-        for (auto& obj : ATTACK_OBJECTS)
-        {
-            if (obj.unk1 == -1)
-            {
+        for (auto& obj : ATTACK_OBJECTS) {
+            if (obj.unk1 == -1) {
                 obj.victimId = victimId;
                 obj.unk1     = unk1;
                 obj.position = *pos;
@@ -105,10 +100,8 @@ extern "C"
 
     bool popAttackObject(int32_t entityId, AttackObject* out)
     {
-        for (auto& obj : ATTACK_OBJECTS)
-        {
-            if (obj.victimId == entityId)
-            {
+        for (auto& obj : ATTACK_OBJECTS) {
+            if (obj.victimId == entityId) {
                 *out = obj;
                 obj  = {};
                 // vanilla copies all trailing non-empty objects, but why bother?

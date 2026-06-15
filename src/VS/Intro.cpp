@@ -90,8 +90,7 @@ namespace
     void VS__renderIntroStats(int32_t id)
     {
         auto entity = reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(id));
-        for (int32_t i = 0; i < 6; i++)
-        {
+        for (int32_t i = 0; i < 6; i++) {
             RenderSettings settings{
                 .x        = -100,
                 .y        = static_cast<int16_t>(-28 + i * 16),
@@ -111,10 +110,8 @@ namespace
             stats.get(Stat::SPEED) == entity->stats.speed && stats.get(Stat::BRAINS) == entity->stats.brain;
         if (!hasAllStats)
             playSound(0, 22);
-        else
-        {
-            for (int32_t i = 0; i < 6; i++)
-            {
+        else {
+            for (int32_t i = 0; i < 6; i++) {
                 RenderSettings settings{
                     .x        = 52,
                     .y        = static_cast<int16_t>(-28 + i * 16),
@@ -206,10 +203,8 @@ namespace
     void VS__tickIntroName(int32_t id)
     {
         introData.frameCount++;
-        if (introData.charCount == introData.renderedCharacters && introData.animFrame == 3)
-        {
-            if (VS_INTRO_CAMERA_FRAME_COUNT == 0)
-            {
+        if (introData.charCount == introData.renderedCharacters && introData.animFrame == 3) {
+            if (VS_INTRO_CAMERA_FRAME_COUNT == 0) {
                 startAnimation(ENTITY_TABLE.getEntityById(id), 0x23);
                 VS_INTRO_CAMERA_FRAME_COUNT = 20;
             }
@@ -223,8 +218,7 @@ namespace
 
     void VS__renderIntroName(int32_t id)
     {
-        if (introData.frameCount % 4 == 0 && introData.renderedCharacters < introData.charCount)
-        {
+        if (introData.frameCount % 4 == 0 && introData.renderedCharacters < introData.charCount) {
             introData.renderedCharacters++;
             introData.animFrame = 0;
         }
@@ -232,16 +226,14 @@ namespace
 
         auto type = ENTITY_TABLE.getEntityById(id)->type;
         auto name = getDigimonData(type)->name;
-        for (int32_t i = 0; i < introData.renderedCharacters; i++)
-        {
+        for (int32_t i = 0; i < introData.renderedCharacters; i++) {
             auto character = convertCharacter(name[i]);
 
             if (character == 0xFF) continue;
 
             auto size = NAME_GLYPH_SIZE;
             auto y    = introData.posY;
-            if (i == introData.renderedCharacters - 1)
-            {
+            if (i == introData.renderedCharacters - 1) {
                 size = ANIMATION_SIZES[introData.animFrame];
                 y -= ANIMATION_OFFSET[introData.animFrame];
             }
@@ -254,8 +246,7 @@ namespace
     {
         introData.frameCount         = 4;
         introData.renderedCharacters = 0;
-        switch (getDigimonData(entity->type)->special[0])
-        {
+        switch (getDigimonData(entity->type)->special[0]) {
             case Special::FIRE: introData.color = 3; break;
             case Special::COMBAT: introData.color = 1; break;
             case Special::AIR: introData.color = 6; break;
@@ -315,11 +306,9 @@ extern "C"
             for (int32_t i = 0; i < 6; i++)
                 VS__tickFrame();
 
-            do
-            {
+            do {
                 VS__tickFrame();
-                if (isKeyDownPolled(InputButtons::BUTTON_CROSS))
-                {
+                if (isKeyDownPolled(InputButtons::BUTTON_CROSS)) {
                     VS__setPostIntroPosition(&PARTNER_ENTITY);
                     break;
                 }
@@ -336,11 +325,9 @@ extern "C"
             stopSound();
             playMusic(VS_MUSIC, 1);
 
-            do
-            {
+            do {
                 VS__tickFrame();
-                if (isKeyDownPolledP2(InputButtons::BUTTON_CROSS))
-                {
+                if (isKeyDownPolledP2(InputButtons::BUTTON_CROSS)) {
                     VS__setPostIntroPosition(&NPC_ENTITIES[0]);
                     break;
                 }

@@ -3,8 +3,8 @@
 
 struct PlayerInfoView
 {
-    // NOLINTNEXTLINE
-    __attribute__((optimize("Os"))) PlayerInfoView();
+    [[gnu::optimize("Os")]]
+    PlayerInfoView();
 
     void tick();
     void render(int32_t);

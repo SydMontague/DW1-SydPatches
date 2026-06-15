@@ -25,15 +25,16 @@ constexpr dtl::array<RGB8, 17> TEXT_COLORS{{
 extern "C"
 {
     void drawEntityText(int32_t color, int32_t digitCount, int32_t x, int32_t y, int32_t value, int32_t layer);
-    [[deprecated("renderStringNew")]] void renderString(int32_t colorId,
-                                                        int16_t posX,
-                                                        int16_t posY,
-                                                        int16_t uvWidth,
-                                                        int16_t uvHeight,
-                                                        int16_t uvX,
-                                                        int16_t uvY,
-                                                        int32_t offset,
-                                                        int32_t hasShadow);
+    [[deprecated("renderStringNew")]]
+    void renderString(int32_t colorId,
+                      int16_t posX,
+                      int16_t posY,
+                      int16_t uvWidth,
+                      int16_t uvHeight,
+                      int16_t uvX,
+                      int16_t uvY,
+                      int32_t offset,
+                      int32_t hasShadow);
     void setEntityTextDigit(POLY_FT4* prim, int32_t dx, int32_t dy);
     uint16_t convertAsciiToJis(uint8_t input);
 }

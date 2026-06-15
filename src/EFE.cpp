@@ -32,8 +32,7 @@ namespace
     {
         auto& data = EFE_FLASH_DATA[instanceId];
         data.progress++;
-        if (data.progress >= data.tMax)
-        {
+        if (data.progress >= data.tMax) {
             data.progress = -1;
             removeObject(ObjectID::EFE_FLASH, instanceId);
         }
@@ -51,13 +50,11 @@ namespace
 
         flashData.screenPos.x = mapPos.screenX;
         flashData.screenPos.y = mapPos.screenY;
-        if (data.mode < 0)
-        {
+        if (data.mode < 0) {
             flashData.screenPos.x += data.offsetX;
             flashData.screenPos.y += data.offsetY;
         }
-        else
-        {
+        else {
             flashData.screenPos.x += (static_cast<int16_t>(data.offsetX * VIEWPORT_DISTANCE) / mapPos.depth);
             flashData.screenPos.y += (static_cast<int16_t>(data.offsetY * VIEWPORT_DISTANCE) / mapPos.depth);
         }
@@ -168,8 +165,7 @@ extern "C"
     {
         RGB5551* input = reinterpret_cast<RGB5551*>(SOME_IMAGE_DATA);
 
-        for (int32_t i = 0; i < 0x700; i++)
-        {
+        for (int32_t i = 0; i < 0x700; i++) {
             input[i].red *= scale / 255;
             input[i].blue *= scale / 255;
             input[i].green *= scale / 255;
@@ -200,14 +196,12 @@ extern "C"
         auto absMode    = abs(mode);
 
         FLASH_INSTANCE = -1;
-        for (int32_t i = 0; i < 12; i++)
-        {
+        for (int32_t i = 0; i < 12; i++) {
             auto& data = EFE_FLASH_DATA[i];
             if (data.progress >= 0) continue;
 
             FLASH_INSTANCE = i;
-            if (absMode == 0 || absMode == 1 || absMode == 0x20)
-            {
+            if (absMode == 0 || absMode == 1 || absMode == 0x20) {
                 addObject(ObjectID::EFE_FLASH, i, tickFlash, renderFlash);
 
                 data.progress   = 0;
@@ -226,19 +220,16 @@ extern "C"
                 data.greenMax   = colorMax->green;
                 data.blueMax    = colorMax->blue;
 
-                if (mode >= 0)
-                {
+                if (mode >= 0) {
                     data.offsetX = 0;
                     data.offsetY = 0;
                 }
-                else
-                {
+                else {
                     int32_t offsetX;
                     int32_t offsetY;
                     if (isTamerOnScreen())
                         getDrawingOffsetCopy(&offsetX, &offsetY);
-                    else
-                    {
+                    else {
                         offsetX = DRAWING_OFFSET_X;
                         offsetY = DRAWING_OFFSET_Y;
                     }

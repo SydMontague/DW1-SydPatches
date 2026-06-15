@@ -23,10 +23,8 @@ namespace
 
     void tickWaypointWalk(MapDigimonEntity* mapDigimon, Entity* entity, int32_t animation, int32_t instanceId)
     {
-        if (mapDigimon->hasWaypointTarget)
-        {
-            if (NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::NONE)
-            {
+        if (mapDigimon->hasWaypointTarget) {
+            if (NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::NONE) {
                 int16_t targetAngle;
                 int16_t ccDiff;
                 int16_t cwDiff;
@@ -41,17 +39,14 @@ namespace
             getModelTile(&mapDigimon->targetLocation, &targetTileX, &targetTileY);
             // TODO this is similar to the entityWalkTo softlock, does the bug exist here as well?
 
-            if (currentTileX == targetTileX && currentTileY == targetTileY)
-            {
+            if (currentTileX == targetTileX && currentTileY == targetTileY) {
                 mapDigimon->hasWaypointTarget = false;
                 mapDigimon->activeSecton++;
             }
         }
-        else
-        {
+        else {
             mapDigimon->targetLocation = mapDigimon->waypoints[mapDigimon->activeSecton];
-            if (mapDigimon->animation != animation)
-            {
+            if (mapDigimon->animation != animation) {
                 mapDigimon->animation = animation;
                 startAnimation(entity, mapDigimon->animation);
             }
@@ -61,20 +56,16 @@ namespace
 
     void tickWaypointWait(MapDigimonEntity* mapDigimon, Entity* entity)
     {
-        if (mapDigimon->hasWaypointTarget)
-        {
+        if (mapDigimon->hasWaypointTarget) {
             mapDigimon->waypointWaitTimer++;
-            if (mapDigimon->waypoints[mapDigimon->activeSecton].x <= mapDigimon->waypointWaitTimer)
-            {
+            if (mapDigimon->waypoints[mapDigimon->activeSecton].x <= mapDigimon->waypointWaitTimer) {
                 mapDigimon->hasWaypointTarget = false;
                 mapDigimon->waypointWaitTimer = 0;
                 mapDigimon->activeSecton++;
             }
         }
-        else
-        {
-            if (mapDigimon->animation != 0)
-            {
+        else {
+            if (mapDigimon->animation != 0) {
                 mapDigimon->animation = 0;
                 startAnimation(entity, mapDigimon->animation);
             }
@@ -103,40 +94,36 @@ namespace
                             int32_t instanceId,
                             int32_t animId)
     {
-        if (mapDigimon->lookAtTamerState == 0)
-        {
-            if (mapDigimon->animation != animId)
-            {
+        if (mapDigimon->lookAtTamerState == 0) {
+            if (mapDigimon->animation != animId) {
                 mapDigimon->animation = animId;
                 startAnimation(entity, animId);
             }
             mapDigimon->lookAtTamerState = 1;
         }
-        else if (mapDigimon->lookAtTamerState == 1)
-        {
-            if (isInTrackingRadius(entity, otherEntity, mapDigimon))
-            {
-                if (NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::NONE)
-                {
+        else if (mapDigimon->lookAtTamerState == 1) {
+            if (isInTrackingRadius(entity, otherEntity, mapDigimon)) {
+                if (NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::NONE) {
                     int16_t targetAngle;
                     int16_t ccDiff;
                     int16_t cwDiff;
-                    getRotationDifference(entity->posData, &otherEntity->posData->location, &targetAngle, &ccDiff, &cwDiff);
+                    getRotationDifference(entity->posData,
+                                          &otherEntity->posData->location,
+                                          &targetAngle,
+                                          &ccDiff,
+                                          &cwDiff);
                     rotateEntity(&entity->posData->rotation, targetAngle, ccDiff, cwDiff, ROTATION_SPEED);
                 }
             }
-            else
-            {
+            else {
                 mapDigimon->lookAtTamerState = 2;
                 mapDigimon->targetLocation.x = mapDigimon->posX;
                 mapDigimon->targetLocation.y = mapDigimon->posY;
                 mapDigimon->targetLocation.z = mapDigimon->posZ;
             }
         }
-        else if (mapDigimon->lookAtTamerState == 2)
-        {
-            if (NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::NONE)
-            {
+        else if (mapDigimon->lookAtTamerState == 2) {
+            if (NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::NONE) {
                 int16_t targetAngle;
                 int16_t ccDiff;
                 int16_t cwDiff;
@@ -151,19 +138,16 @@ namespace
             getModelTile(&mapDigimon->targetLocation, &targetTileX, &targetTileY);
             // TODO this is similar to the entityWalkTo softlock, does the bug exist here as well?
 
-            if (currentTileX == targetTileX && currentTileY == targetTileY)
-            {
+            if (currentTileX == targetTileX && currentTileY == targetTileY) {
                 mapDigimon->animation = 0;
                 startAnimation(entity, mapDigimon->animation);
                 mapDigimon->waypointWaitTimer = 0;
                 mapDigimon->lookAtTamerState  = 3;
             }
         }
-        else if (mapDigimon->lookAtTamerState == 3)
-        {
+        else if (mapDigimon->lookAtTamerState == 3) {
             mapDigimon->waypointWaitTimer++;
-            if (mapDigimon->waypointWaitTimer >= 80)
-            {
+            if (mapDigimon->waypointWaitTimer >= 80) {
                 mapDigimon->hasWaypointTarget = false;
                 mapDigimon->lookAtTamerState  = 0;
                 mapDigimon->waypointWaitTimer = 0;
@@ -173,23 +157,19 @@ namespace
 
     void tickTrackingTamer(MapDigimonEntity* mapDigimon, Entity* entity, Entity* otherEntity, int32_t instanceId)
     {
-        if (mapDigimon->lookAtTamerState == 0)
-        {
+        if (mapDigimon->lookAtTamerState == 0) {
             mapDigimon->targetLocation = otherEntity->posData->location;
             mapDigimon->animation      = 2;
             startAnimation(entity, mapDigimon->animation);
             mapDigimon->lookAtTamerState = 1;
         }
-        else if (mapDigimon->lookAtTamerState == 1)
-        {
+        else if (mapDigimon->lookAtTamerState == 1) {
             mapDigimon->animation = 4;
             startAnimation(entity, mapDigimon->animation);
             mapDigimon->lookAtTamerState = 2;
         }
-        else if (mapDigimon->lookAtTamerState == 2)
-        {
-            if (NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::NONE)
-            {
+        else if (mapDigimon->lookAtTamerState == 2) {
+            if (NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::NONE) {
                 int16_t targetAngle;
                 int16_t ccDiff;
                 int16_t cwDiff;
@@ -206,19 +186,16 @@ namespace
             // TODO this is similar to the entityWalkTo softlock, does the bug exist here as well?
 
             if ((currentTileX == targetTileX && currentTileY == targetTileY) ||
-                NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::TAMER)
-            {
+                NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::TAMER) {
                 mapDigimon->animation = 0;
                 startAnimation(entity, mapDigimon->animation);
                 mapDigimon->waypointWaitTimer = 0;
                 mapDigimon->lookAtTamerState  = 3;
             }
         }
-        else if (mapDigimon->lookAtTamerState == 3)
-        {
+        else if (mapDigimon->lookAtTamerState == 3) {
             mapDigimon->waypointWaitTimer++;
-            if (mapDigimon->waypointWaitTimer >= 40)
-            {
+            if (mapDigimon->waypointWaitTimer >= 40) {
                 mapDigimon->animation = 2;
                 startAnimation(entity, mapDigimon->animation);
                 mapDigimon->targetLocation.x  = mapDigimon->posX;
@@ -228,10 +205,8 @@ namespace
                 mapDigimon->lookAtTamerState  = 4;
             }
         }
-        else if (mapDigimon->lookAtTamerState == 4)
-        {
-            if (NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::NONE)
-            {
+        else if (mapDigimon->lookAtTamerState == 4) {
+            if (NPC_COLLISION_STATE[instanceId - 2] == CollisionCode::NONE) {
                 int16_t targetAngle;
                 int16_t ccDiff;
                 int16_t cwDiff;
@@ -246,8 +221,7 @@ namespace
             getModelTile(&mapDigimon->targetLocation, &targetTileX, &targetTileY);
             // TODO this is similar to the entityWalkTo softlock, does the bug exist here as well?
 
-            if (currentTileX == targetTileX && currentTileY == targetTileY)
-            {
+            if (currentTileX == targetTileX && currentTileY == targetTileY) {
                 mapDigimon->animation = 0;
                 startAnimation(entity, mapDigimon->animation);
                 mapDigimon->waypointWaitTimer = 0;
@@ -259,14 +233,12 @@ namespace
 
     void tickLookingAtTamer(MapDigimonEntity* mapDigimon, Entity* entity, Entity* otherEntity)
     {
-        if (mapDigimon->lookAtTamerState == 0)
-        {
+        if (mapDigimon->lookAtTamerState == 0) {
             mapDigimon->animation = 0;
             startAnimation(entity, mapDigimon->animation);
             mapDigimon->lookAtTamerState = 1;
         }
-        else
-        {
+        else {
             // vanilla uses the respective fields of the MapDigimonEntity, but since those are always overwritten before
             // used we can get rid of this state in favor of local variables
             int16_t targetAngle;
@@ -276,8 +248,7 @@ namespace
             getRotationDifference(entity->posData, &otherEntity->posData->location, &targetAngle, &ccDiff, &cwDiff);
             rotateEntity(&entity->posData->rotation, targetAngle, ccDiff, cwDiff, ROTATION_SPEED);
 
-            if (!isInTrackingRect(mapDigimon, &otherEntity->posData->location))
-            {
+            if (!isInTrackingRect(mapDigimon, &otherEntity->posData->location)) {
                 mapDigimon->lookAtTamerState  = 0;
                 mapDigimon->hasWaypointTarget = false;
             }
@@ -305,24 +276,21 @@ namespace
         if (entity == nullptr) return;
         if (IS_IN_MENU == 1) return;
 
-        if (NPC_ACTIVE_ANIM[instanceId - 2] != 0) {}
-        else if (mapDigimon->stopAnim)
-        {
-            if (mapDigimon->animation != 0)
-            {
+        if (NPC_ACTIVE_ANIM[instanceId - 2] != 0) {
+        }
+        else if (mapDigimon->stopAnim) {
+            if (mapDigimon->animation != 0) {
                 mapDigimon->animation = 0;
                 startAnimation(entity, mapDigimon->animation);
             }
         }
-        else
-        {
+        else {
             if (mapDigimon->lookAtTamerState == 0) tickWaypointAI(mapDigimon, entity, instanceId);
 
             auto inTrackingRange = isInTrackingRect(mapDigimon, &TAMER_ENTITY.posData->location);
             auto inSomeRange     = isInTrackingRadius(entity, &TAMER_ENTITY, mapDigimon);
 
-            switch (mapDigimon->followMode)
-            {
+            switch (mapDigimon->followMode) {
                 case 2:
                 case 11:
                     if (inTrackingRange || mapDigimon->lookAtTamerState != 0)
@@ -359,11 +327,9 @@ namespace
             auto collisionResult                = entityCheckCollision(nullptr, entity, 0, 0);
             NPC_COLLISION_STATE[instanceId - 2] = collisionResult;
             if (collisionResult == CollisionCode::TAMER && Tamer_getState() == 0 &&
-                NPC_ENTITIES[instanceId - 2].autotalk == 1)
-            {
+                NPC_ENTITIES[instanceId - 2].autotalk == 1) {
                 entity->animFlag |= 2;
-                if (IS_SCRIPT_PAUSED == 1)
-                {
+                if (IS_SCRIPT_PAUSED == 1) {
                     removeTriangleMenu();
                     closeInventoryBoxes();
                     removeUIBox1();
@@ -384,8 +350,7 @@ namespace
     {
         if (!ENTITY_TABLE.getEntityById(instanceId)->isOnMap) return;
 
-        switch (GAME_STATE)
-        {
+        switch (GAME_STATE) {
             case 0: NPCEntity_tickOverworld(instanceId, &MAP_DIGIMON_TABLE[instanceId - 2]); break;
             case 1:
             case 2:
@@ -397,16 +362,13 @@ namespace
 
     void clearMapAITable(int32_t entityId)
     {
-        if (entityId != -1)
-        {
+        if (entityId != -1) {
             MAP_DIGIMON_TABLE[entityId].hasWaypointTarget = false;
             MAP_DIGIMON_TABLE[entityId].lookAtTamerState  = 0;
             MAP_DIGIMON_TABLE[entityId].activeSecton      = 0;
         }
-        else
-        {
-            for (int32_t i = 0; i < 8; i++)
-            {
+        else {
+            for (int32_t i = 0; i < 8; i++) {
                 MAP_DIGIMON_TABLE[i].hasWaypointTarget = false;
                 MAP_DIGIMON_TABLE[i].lookAtTamerState  = 0;
                 MAP_DIGIMON_TABLE[i].activeSecton      = 0;
@@ -420,8 +382,7 @@ namespace
             Tamer_setState(mode == 0 ? 0 : 6);
         else if (entityId == 1)
             Partner_setState(mode == 0 ? 1 : 11);
-        else
-        {
+        else {
             MAP_DIGIMON_TABLE[entityId - 2].stopAnim = mode;
             if (mode == 1) clearMapAITable(entityId - 2);
         }
@@ -438,11 +399,9 @@ extern "C"
     void setActiveAnim(uint32_t scriptId, uint8_t animId)
     {
         // TODO figure out if this function is even useful. All callers are hardcoded to use scriptId 12
-        for (int32_t i = 0; i < 8; i++)
-        {
+        for (int32_t i = 0; i < 8; i++) {
             NPCEntity* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i + 2));
-            if (entity != nullptr && entity->scriptId == scriptId)
-            {
+            if (entity != nullptr && entity->scriptId == scriptId) {
                 NPC_ACTIVE_ANIM[i] = animId;
                 return;
             }
@@ -451,11 +410,9 @@ extern "C"
 
     void startNPCAnimation(uint32_t scriptId, uint8_t animId)
     {
-        for (int32_t i = 0; i < 8; i++)
-        {
+        for (int32_t i = 0; i < 8; i++) {
             NPCEntity* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i + 2));
-            if (entity != nullptr && entity->scriptId == scriptId)
-            {
+            if (entity != nullptr && entity->scriptId == scriptId) {
                 startAnimation(entity, animId);
                 return;
             }
@@ -479,11 +436,9 @@ extern "C"
 
     void resetEntityOrigin(uint32_t scriptId)
     {
-        for (int32_t i = 0; i < 8; i++)
-        {
+        for (int32_t i = 0; i < 8; i++) {
             NPCEntity* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i + 2));
-            if (entity != nullptr && entity->scriptId == scriptId)
-            {
+            if (entity != nullptr && entity->scriptId == scriptId) {
                 auto& mapDigimon = MAP_DIGIMON_TABLE[i + 2];
                 auto& posData    = entity->posData->location;
                 auto currentX    = posData.x;
@@ -493,10 +448,8 @@ extern "C"
                 mapDigimon.posX  = currentX;
                 mapDigimon.posZ  = currentZ;
 
-                for (int32_t i = 0; i < 8; i++)
-                {
-                    if (mapDigimon.aiSections[i] != 0)
-                    {
+                for (int32_t i = 0; i < 8; i++) {
+                    if (mapDigimon.aiSections[i] != 0) {
                         mapDigimon.waypoints[i].x += diffX;
                         mapDigimon.waypoints[i].z += diffZ;
                     }
@@ -507,8 +460,7 @@ extern "C"
 
     void setMovementEnabled(int32_t entityId, uint32_t mode)
     {
-        if (entityId == -1)
-        {
+        if (entityId == -1) {
             for (int32_t i = 0; i < 10; i++)
                 _setMovementEnabled(i, mode);
         }
@@ -520,8 +472,7 @@ extern "C"
     {
         // vanilla writes a stack local int32_t[8] array here to -1, but it seems unused?
 
-        for (int32_t i = 2; i < 10; i++)
-        {
+        for (int32_t i = 2; i < 10; i++) {
             auto* entity = ENTITY_TABLE.getEntityById(i);
             if (entity == nullptr) continue;
 
@@ -529,8 +480,7 @@ extern "C"
             ENTITY_TABLE.setEntity(i, nullptr);
         }
 
-        for (int32_t i = 0; i < 8; i++)
-        {
+        for (int32_t i = 0; i < 8; i++) {
             if (LOADED_DIGIMON_MODELS[i] == -1) continue;
             unloadModel(LOADED_DIGIMON_MODELS[i], EntityType::NPC);
         }
@@ -546,10 +496,8 @@ extern "C"
 
     void clearMapDigimon()
     {
-        for (int32_t i = 0; i < 8; i++)
-        {
-            for (int32_t j = 0; j < 8; j++)
-            {
+        for (int32_t i = 0; i < 8; i++) {
+            for (int32_t j = 0; j < 8; j++) {
                 MAP_DIGIMON_TABLE[i].aiSections[j] = -1;
                 MAP_DIGIMON_TABLE[i].waypoints[j]  = {};
             }

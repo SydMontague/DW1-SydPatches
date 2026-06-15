@@ -2,8 +2,7 @@
 
 int16_t StatsGains::get(Stat stat)
 {
-    switch (stat)
-    {
+    switch (stat) {
         case Stat::HP: return hp;
         case Stat::MP: return mp;
         case Stat::OFFENSE: return offense;
@@ -16,8 +15,7 @@ int16_t StatsGains::get(Stat stat)
 
 void StatsGains::set(Stat stat, int16_t value)
 {
-    switch (stat)
-    {
+    switch (stat) {
         case Stat::HP: hp = value; break;
         case Stat::MP: mp = value; break;
         case Stat::OFFENSE: offense = value; break;

@@ -55,13 +55,11 @@ namespace
         auto vram_width       = ((glyph_width + 3) / 4) * 4;
         uint8_t* render_start = area.data();
 
-        for (int i = 0; i < font->height; i++)
-        {
+        for (int i = 0; i < font->height; i++) {
             uint16_t row_data = font->getGlyphRow(index, i);
             uint8_t* draw_row = render_start + (vram_width * i) / 2;
 
-            for (int j = 0; j < glyph_width; j += 2)
-            {
+            for (int j = 0; j < glyph_width; j += 2) {
                 uint8_t tmp = 0;
                 if ((row_data & 0x8000) == 0) tmp = 1;
                 if ((row_data & 0x4000) == 0) tmp = tmp | 0x10;
@@ -71,12 +69,10 @@ namespace
             }
         }
 
-        for (int32_t i = 1; i < font->height; i++)
-        {
+        for (int32_t i = 1; i < font->height; i++) {
             uint8_t* src_row = render_start + (vram_width * (i - 1)) / 2;
             uint8_t* dst_row = render_start + (vram_width * i) / 2;
-            for (int32_t j = 1; j < glyph_width; j++)
-            {
+            for (int32_t j = 1; j < glyph_width; j++) {
                 auto y_dst = i / 2;
                 auto x_dst = j / 2;
                 auto y_src = (i - 1) / 2;
@@ -176,12 +172,10 @@ void AtlasFont::init(Font* f, int32_t x, int32_t y, int32_t maxWidth)
     const auto end_x = min(((x / 64) + 1) * 64, x + maxWidth);
     auto current_x   = x;
 
-    for (int32_t i = 0; i < f->glyph_count; i++)
-    {
+    for (int32_t i = 0; i < f->glyph_count; i++) {
         auto width = f->getGlyphWidth(i);
 
-        if (current_x + ((width + 3) / 4) > end_x)
-        {
+        if (current_x + ((width + 3) / 4) > end_x) {
             current_x = x;
             y += f->height;
         }
@@ -197,8 +191,7 @@ int32_t AtlasFont::getWidth(const uint8_t* string) const
     JISIterator itr{string};
     auto width = 0;
 
-    for (int32_t i = 0; i < size; i++)
-    {
+    for (int32_t i = 0; i < size; i++) {
         auto index = font->getGlyphIndex(*itr++);
         width += glyphs[index].width;
     }
@@ -210,21 +203,17 @@ Position AtlasFont::getPosition(const uint8_t* string, const RenderSettings& set
 {
     int16_t x = settings.x;
     int16_t y = settings.y;
-    if (settings.width > 0 && settings.alignX != AlignmentX::LEFT)
-    {
+    if (settings.width > 0 && settings.alignX != AlignmentX::LEFT) {
         auto width = getWidth(string);
-        switch (settings.alignX)
-        {
+        switch (settings.alignX) {
             case AlignmentX::LEFT: x += 0; break;
             case AlignmentX::CENTER: x += (settings.width - width) / 2; break;
             case AlignmentX::RIGHT: x += (settings.width - width); break;
         }
     }
 
-    if (settings.height > 0)
-    {
-        switch (settings.alignY)
-        {
+    if (settings.height > 0) {
+        switch (settings.alignY) {
             case AlignmentY::TOP: y += 0; break;
             case AlignmentY::CENTER: y += (settings.height - font->height) / 2; break;
             case AlignmentY::BOTTOM: y += (settings.height - font->height); break;
@@ -246,8 +235,7 @@ void AtlasFont::renderSlow(const uint8_t* string, int32_t depth, const RenderSet
     JISIterator itr{string};
 
     auto* prim2 = reinterpret_cast<SPRT*>(libgs_GsGetWorkBase());
-    for (int32_t i = 0; i < size; i++)
-    {
+    for (int32_t i = 0; i < size; i++) {
         auto index = font->getGlyphIndex(*itr++);
         auto glyph = glyphs[index];
         prim2[i]   = getSPRT(glyph.rect, pos.x, pos.y, settings.color, settings.baseClut);
@@ -275,11 +263,10 @@ AtlasString AtlasFont::render(const uint8_t* string, const RenderSettings& setti
     dtl::runtime_array<SPRT> data(size);
     auto totalWidth = 0;
 
-    for (int32_t i = 0; i < size; i++)
-    {
-        auto index = font->getGlyphIndex(*itr++); 
+    for (int32_t i = 0; i < size; i++) {
+        auto index        = font->getGlyphIndex(*itr++);
         const auto& glyph = glyphs[index];
-        data[i]    = getSPRT(glyph.rect, pos.x + totalWidth, pos.y, settings.color, settings.baseClut);
+        data[i]           = getSPRT(glyph.rect, pos.x + totalWidth, pos.y, settings.color, settings.baseClut);
         totalWidth += glyph.width;
     }
     return AtlasString(dtl::move(data), tpage, totalWidth, font->height);
@@ -293,8 +280,7 @@ void AtlasString::enableShadow(bool enabled)
 
 void AtlasString::setColor(uint8_t r, uint8_t g, uint8_t b)
 {
-    for (auto& entry : data)
-    {
+    for (auto& entry : data) {
         entry.r = (r + 1) / 2;
         entry.g = (g + 1) / 2;
         entry.b = (b + 1) / 2;
@@ -311,15 +297,13 @@ void AtlasString::setAlignment(RECT rect, AlignmentX alignX, AlignmentY alignY)
     auto x = rect.x;
     auto y = rect.y;
 
-    switch (alignX)
-    {
+    switch (alignX) {
         case AlignmentX::LEFT: x += 0; break;
         case AlignmentX::CENTER: x += (rect.width - width) / 2; break;
         case AlignmentX::RIGHT: x += (rect.width - width); break;
     }
 
-    switch (alignY)
-    {
+    switch (alignY) {
         case AlignmentY::TOP: y += 0; break;
         case AlignmentY::CENTER: y += (rect.height - height) / 2; break;
         case AlignmentY::BOTTOM: y += (rect.height - height); break;
@@ -332,8 +316,7 @@ void AtlasString::setPosition(int32_t x, int32_t y)
 {
     const auto old_x = data[0].x;
 
-    for (auto& entry : data)
-    {
+    for (auto& entry : data) {
         entry.x = x + (entry.x - old_x);
         entry.y = y;
     }
@@ -341,7 +324,7 @@ void AtlasString::setPosition(int32_t x, int32_t y)
 
 void AtlasString::render(int32_t depth) const
 {
-    if(data.size() == 0) return;
+    if (data.size() == 0) return;
 
     auto* sprites = reinterpret_cast<SPRT*>(libgs_GsGetWorkBase());
     dtl::copy(data.begin(), data.end(), sprites);

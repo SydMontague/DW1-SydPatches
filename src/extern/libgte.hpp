@@ -27,8 +27,7 @@ extern "C"
 
         constexpr int16_t& operator[](int32_t index)
         {
-            switch (index)
-            {
+            switch (index) {
                 case 0: return x;
                 case 1: return y;
                 case 2: return z;
@@ -48,8 +47,7 @@ extern "C"
 
         constexpr int32_t& operator[](int32_t index)
         {
-            switch (index)
-            {
+            switch (index) {
                 case 0: return x;
                 case 1: return y;
                 case 2: return z;

@@ -350,13 +350,11 @@ namespace
         };
 
         FoodData data = foodData[35];
-        for (auto& ptr : foodData)
-        {
+        for (auto& ptr : foodData) {
             if (ptr.itemId == itemId) data = ptr;
         }
 
-        if (getRaiseData(PARTNER_ENTITY.type)->favoriteFood == itemId)
-        {
+        if (getRaiseData(PARTNER_ENTITY.type)->favoriteFood == itemId) {
             data.energy = data.energy * 14 / 10;
             data.happiness += 2;
         }
@@ -411,8 +409,7 @@ namespace
         addWithLimit(&PARTNER_ENTITY.stats.currentHP, 1500, PARTNER_ENTITY.stats.hp);
         addWithLimit(&PARTNER_ENTITY.stats.currentMP, 1500, PARTNER_ENTITY.stats.mp);
         addHealingParticleEffect(&PARTNER_ENTITY, false);
-        if (GAME_STATE == 1)
-        {
+        if (GAME_STATE == 1) {
             addEntityText(&PARTNER_ENTITY, 0, 11, 1500, 1);
             addEntityText(&PARTNER_ENTITY, 0, 11, 1500, 2);
         }
@@ -438,8 +435,7 @@ namespace
         addWithLimit(&PARTNER_ENTITY.stats.currentHP, healAmount, PARTNER_ENTITY.stats.hp);
         addHealingParticleEffect(&PARTNER_ENTITY, true);
 
-        if (GAME_STATE == 1)
-        {
+        if (GAME_STATE == 1) {
             BTL_removeDeathCountdown();
             addEntityText(&PARTNER_ENTITY, 0, 11, healAmount, 1);
             if (removeStatus) BTL_healStatusEffect(false);
@@ -513,8 +509,12 @@ namespace
 
     void handleNothing(ItemType item) {}
 
-    void
-    buffStats(DigimonEntity* entity, int32_t entityId, int32_t amount, int16_t* valuePtr, uint8_t color, uint8_t icon)
+    void buffStats(DigimonEntity* entity,
+                   int32_t entityId,
+                   int32_t amount,
+                   int16_t* valuePtr,
+                   uint8_t color,
+                   uint8_t icon)
     {
         addWithLimit(valuePtr, amount, 999);
         addEntityText(entity, entityId, color, amount, icon);
@@ -528,8 +528,7 @@ namespace
         const auto defLimit   = min((INITIAL_COMBAT_STATS[0].defense * 13) / 10, 999);
         const auto speedLimit = min((INITIAL_COMBAT_STATS[0].speed * 13) / 10, 999);
 
-        switch (item)
-        {
+        switch (item) {
             case ItemType::OFFENSE_DISK:
             {
                 auto gain = min(20, offLimit - PARTNER_ENTITY.stats.off);
@@ -584,8 +583,7 @@ extern "C"
 {
     DigimonType getEvoItemTarget(ItemType item)
     {
-        switch (item)
-        {
+        switch (item) {
             case ItemType::GREY_CLAWS: return DigimonType::GREYMON;
             case ItemType::FIREBALL: return DigimonType::MERAMON;
             case ItemType::FLAMEWING: return DigimonType::BIRDRAMON;
@@ -681,8 +679,7 @@ extern "C"
 
         for (uint32_t type = static_cast<uint32_t>(ItemType::MEAT);
              type <= static_cast<uint32_t>(ItemType::CHAIN_MELON);
-             type++)
-        {
+             type++) {
             ITEM_FUNCTIONS[type] = handleFood;
         }
 

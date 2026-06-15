@@ -1,3 +1,4 @@
+#pragma once
 #include "extern/dw1.hpp"
 #include "extern/libgs.hpp"
 

@@ -66,8 +66,7 @@ namespace
         prim->clut  = model->clutPage + 0x3C0;
         prim->tpage = model->pixelPage;
 
-        if (entity->flatSprite < 2)
-        {
+        if (entity->flatSprite < 2) {
             if (entity->flatTimer++ % 10 == 0) entity->flatSprite ^= 1;
         }
 
@@ -112,8 +111,7 @@ namespace
         libgte_RotMatrix(&posData->rotation, &matrix);
         libgte_ScaleMatrix(&matrix, &posData->scale);
 
-        for (int32_t i = 0; i < 4; i++)
-        {
+        for (int32_t i = 0; i < 4; i++) {
             libgte_ApplyMatrixSV(&matrix, &inVecs[i], &outVecs[i]);
 
             outVecs[i].x += posData->location.x;
@@ -125,11 +123,11 @@ namespace
     }
 
     void* _renderWireframedTriangle(void* primPtr,
-                                           uint8_t* currentPrim,
-                                           SVector* vertTop,
-                                           SVector* normalTop,
-                                           bool isPoly,
-                                           uint8_t color)
+                                    uint8_t* currentPrim,
+                                    SVector* vertTop,
+                                    SVector* normalTop,
+                                    bool isPoly,
+                                    uint8_t color)
     {
         ScreenCoord sXY0;
         ScreenCoord sXY1;
@@ -145,8 +143,7 @@ namespace
         // invalid primitive, not visible?
         if (depth <= 0) return primPtr;
 
-        if (isPoly)
-        {
+        if (isPoly) {
             // draw normal
             POLY_GT3* prim = reinterpret_cast<POLY_GT3*>(primPtr);
 
@@ -181,8 +178,7 @@ namespace
             libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + otz / 4, prim);
             primPtr = prim + 1; // advance WorkBase
         }
-        else
-        {
+        else {
             LINE_F4* prim = reinterpret_cast<LINE_F4*>(primPtr);
             libgpu_SetLineF4(prim);
 
@@ -206,11 +202,11 @@ namespace
     }
 
     void* _renderWiredframedQuad(void* primPtr,
-                                        uint8_t* currentPrim,
-                                        SVector* vertTop,
-                                        SVector* normalTop,
-                                        bool isPoly,
-                                        uint8_t color)
+                                 uint8_t* currentPrim,
+                                 SVector* vertTop,
+                                 SVector* normalTop,
+                                 bool isPoly,
+                                 uint8_t color)
     {
         ScreenCoord sXY0;
         ScreenCoord sXY1;
@@ -228,8 +224,7 @@ namespace
         // invalid primitive, not visible?
         if (depth <= 0) return primPtr;
 
-        if (isPoly)
-        {
+        if (isPoly) {
             // draw normal
             POLY_GT4* prim = reinterpret_cast<POLY_GT4*>(primPtr);
 
@@ -271,8 +266,7 @@ namespace
             libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + otz / 4, prim);
             primPtr = prim + 1; // advance WorkBase
         }
-        else
-        {
+        else {
             LINE_F4* prim = reinterpret_cast<LINE_F4*>(primPtr);
             libgpu_SetLineF4(prim);
 
@@ -324,8 +318,7 @@ namespace
         };
         libgpu_LoadImage(&pixelRect, imageData.pixelPtr);
         // if has CLUT
-        if ((imageData.pixelMode >> 3 & 1) != 0)
-        {
+        if ((imageData.pixelMode >> 3 & 1) != 0) {
             RECT clutRect = {
                 .x      = imageData.clutX,
                 .y      = imageData.clutY,
@@ -346,8 +339,7 @@ namespace
 
     ModelComponent* getNPCComponent(DigimonType type)
     {
-        for (auto& component : NPC_MODEL)
-        {
+        for (auto& component : NPC_MODEL) {
             if (component.useCount == 0) return &component;
             if (component.digiType == type) return &component;
         }
@@ -356,16 +348,14 @@ namespace
     }
 
     // this function blows up in size otherwise
-    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-    __attribute__((optimize("Os"))) void unloadNPCModel(DigimonType type)
+    [[gnu::optimize("Os")]]
+    void unloadNPCModel(DigimonType type)
     {
-        for (auto& model : NPC_MODEL)
-        {
+        for (auto& model : NPC_MODEL) {
             if (model.digiType != type) continue;
 
             model.useCount--;
-            if (model.useCount <= 0)
-            {
+            if (model.useCount <= 0) {
                 model.digiType = DigimonType::INVALID; // NOLINT
                 if (model.mmdPtr != nullptr) libapi_free3(model.mmdPtr);
                 model.modelPtr     = nullptr;
@@ -378,11 +368,10 @@ namespace
     }
 
     // this function blows up in size otherwise
-    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-    __attribute__((optimize("Os"))) void unloadUnknowModel(int32_t id)
+    [[gnu::optimize("Os")]]
+    void unloadUnknowModel(int32_t id)
     {
-        for (auto& model : UNKNOWN_MODEL)
-        {
+        for (auto& model : UNKNOWN_MODEL) {
             if (model.useCount != id) continue;
 
             model.useCount = 0;
@@ -408,8 +397,7 @@ namespace
 
     constexpr int32_t getAnimatedTextureHeight(DigimonType type)
     {
-        switch (type)
-        {
+        switch (type) {
             case DigimonType::DEMIMERAMON: return 44;
             case DigimonType::FLAREIZAMON: [[fallthrough]];
             case DigimonType::DARKRIZAMON: return 16;
@@ -445,11 +433,10 @@ namespace
     }
 
     // this function blows up in size otherwise
-    // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-    __attribute__((optimize("Os"))) void handleKeyFrameInstruction(MomentumData* momentum, int16_t*& instructionPtrPtr)
+    [[gnu::optimize("Os")]]
+    void handleKeyFrameInstruction(MomentumData* momentum, int16_t*& instructionPtrPtr)
     {
-        while ((instructionPtrPtr[0] & 0x8000) != 0)
-        {
+        while ((instructionPtrPtr[0] & 0x8000) != 0) {
             auto nodeId   = instructionPtrPtr[0] & 0x3F;
             auto axisMask = (instructionPtrPtr[0] >> 6) & 0x1FF;
             auto scale    = instructionPtrPtr[1];
@@ -457,15 +444,12 @@ namespace
 
             instructionPtrPtr += 2;
 
-            for (int32_t i = 0; i < 9; i++)
-            {
-                if ((axisMask & (0x100 >> i)) != 0)
-                {
+            for (int32_t i = 0; i < 9; i++) {
+                if ((axisMask & (0x100 >> i)) != 0) {
                     auto value       = instructionPtrPtr[0];
                     data.delta[i]    = value / scale;
                     int16_t subDelta = value % scale;
-                    if (subDelta != 0)
-                    {
+                    if (subDelta != 0) {
                         data.subValue[i] = subDelta < 1 ? -1 : 1;
                         data.scale1[i]   = scale;
                         data.subScale[i] = scale;
@@ -477,17 +461,18 @@ namespace
         }
     }
 
-    constexpr Pair<int32_t, int32_t>
-    calculateMomentum(int16_t delta, int16_t scale, int16_t subDelta, int16_t scale2, int8_t subValue)
+    constexpr Pair<int32_t, int32_t> calculateMomentum(int16_t delta,
+                                                       int16_t scale,
+                                                       int16_t subDelta,
+                                                       int16_t scale2,
+                                                       int8_t subValue)
     {
         auto newValue  = delta;
         auto newScale2 = scale2;
 
-        if (subDelta != 0)
-        {
+        if (subDelta != 0) {
             newScale2 -= subDelta;
-            if (newScale2 < 1)
-            {
+            if (newScale2 < 1) {
                 newScale2 += scale;
                 newValue += subValue;
             }
@@ -501,17 +486,14 @@ namespace
         auto& momentum = entity->momentum[0];
 
         Vector vel;
-        for (int32_t i = 0; i < 3; i++)
-        {
-            if (i == 0 && (entity->animId == 0x23 || entity->animId == 0x24))
-            {
+        for (int32_t i = 0; i < 3; i++) {
+            if (i == 0 && (entity->animId == 0x23 || entity->animId == 0x24)) {
                 vel.x = 0;
                 continue;
             }
 
             momentum.subScale[6 + i] -= momentum.subDelta[6 + i];
-            if (momentum.subDelta[6 + i] == 0 || momentum.subScale[6 + i] > 0)
-            {
+            if (momentum.subDelta[6 + i] == 0 || momentum.subScale[6 + i] > 0) {
                 vel[i] = momentum.delta[6 + i] << 0x0F;
                 continue;
             }
@@ -520,8 +502,7 @@ namespace
             momentum.subScale[6 + i] += momentum.scale1[6 + i];
         }
 
-        if ((entity->animFlag & 2) == 0)
-        {
+        if ((entity->animFlag & 2) == 0) {
             Vector result;
             auto& posData = entity->posData[0];
             libgte_ApplyMatrixLV(&posData.posMatrix.coord, &vel, &result);
@@ -544,16 +525,14 @@ namespace
     {
         auto boneCount = getDigimonData(entity->type)->boneCount;
 
-        for (int32_t i = 0; i < boneCount; i++)
-        {
+        for (int32_t i = 0; i < boneCount; i++) {
             auto& node          = entity->momentum[i];
             auto& posData       = entity->posData[i];
             auto hasScale       = false;
             auto hasRotation    = false;
             auto hasTranslation = false;
 
-            for (int32_t j = 0; j < 9; j++)
-            {
+            for (int32_t j = 0; j < 9; j++) {
                 auto delta    = node.delta[j];
                 auto subDelta = node.subDelta[j];
                 auto scale    = node.scale1[j];
@@ -565,25 +544,21 @@ namespace
                 auto newVals     = calculateMomentum(delta, scale, subDelta, subScale, subValue);
                 node.subScale[j] = newVals.second;
 
-                if (j < 3)
-                {
+                if (j < 3) {
                     posData.scale[j] += newVals.first;
                     hasScale = true;
                 }
-                else if (j < 6)
-                {
+                else if (j < 6) {
                     posData.rotation[j - 3] += newVals.first;
                     hasRotation = true;
                 }
-                else if (j < 9 && i != 0)
-                {
+                else if (j < 9 && i != 0) {
                     posData.location[j - 6] += newVals.first;
                     hasTranslation = true;
                 }
             }
 
-            if (i == 0)
-            {
+            if (i == 0) {
                 calculatePosMatrix(&posData, false);
                 applyRootMomentum(entity);
                 setupModelMatrix(&posData);
@@ -689,17 +664,14 @@ extern "C"
     {
         auto objCount = model->objectCount;
 
-        for (int32_t i = 0; i < objCount; i++)
-        {
+        for (int32_t i = 0; i < objCount; i++) {
             auto& obj      = model->objects[i];
             auto primCount = obj.n_primitive;
 
             auto* currentPrim = obj.primitive_top;
-            for (int32_t j = 0; j < primCount; j++)
-            {
+            for (int32_t j = 0; j < primCount; j++) {
                 auto* header = reinterpret_cast<PrimHeader*>(currentPrim);
-                if ((header->mode & 4) != 0)
-                {
+                if ((header->mode & 4) != 0) {
                     auto* uv1 = reinterpret_cast<UV1Packet*>(currentPrim + 1);
                     uv1->clut += clutPage;
                     uv1->u += pixelX;
@@ -711,8 +683,7 @@ extern "C"
                     auto* uv3 = reinterpret_cast<UVPacket*>(currentPrim + 3);
                     uv3->u += pixelX;
                     uv3->v += pixelY;
-                    if ((header->mode & 8) != 0)
-                    {
+                    if ((header->mode & 8) != 0) {
                         auto* uv4 = reinterpret_cast<UVPacket*>(currentPrim + 4);
                         uv4->u += pixelX;
                         uv4->v += pixelY;
@@ -733,8 +704,7 @@ extern "C"
         if (entity->isOnMap != 2 && (entity->isOnMap == 0 || entity->isOnScreen == 0)) return;
 
         auto boneCount = getDigimonData(entity->type)->boneCount;
-        for (int i = 0; i < boneCount; i++)
-        {
+        for (int i = 0; i < boneCount; i++) {
             auto* posData = &entity->posData[i];
             if (posData->obj.tmd == nullptr) continue;
 
@@ -749,8 +719,7 @@ extern "C"
 
             auto wireFrameVal = 0x10;
 
-            if (instanceId == 1)
-            {
+            if (instanceId == 1) {
                 if (PARTNER_WIREFRAME_TOTAL == 0x10)
                     wireFrameVal = PARTNER_WIREFRAME_SUB[i];
                 else
@@ -781,18 +750,15 @@ extern "C"
         auto boneCount  = getDigimonData(type)->boneCount;
         auto entityType = getEntityType(entity);
         entity->type    = type;
-        if (entityType == EntityType::NPC)
-        {
+        if (entityType == EntityType::NPC) {
             entity->posData  = reinterpret_cast<PositionData*>(libapi_malloc3(boneCount * sizeof(PositionData)));
             entity->momentum = reinterpret_cast<MomentumData*>(libapi_malloc3(boneCount * sizeof(MomentumData)));
         }
-        else if (entityType == EntityType::PARTNER)
-        {
+        else if (entityType == EntityType::PARTNER) {
             entity->posData  = PARTNER_POSITION_DATA;
             entity->momentum = PARTNER_MOMENTUM_DATA;
         }
-        else if (entityType == EntityType::PLAYER)
-        {
+        else if (entityType == EntityType::PLAYER) {
             entity->posData  = TAMER_POSITION_DATA;
             entity->momentum = TAMER_MOMENTUM_DATA;
         }
@@ -801,8 +767,7 @@ extern "C"
         entity->animPtr        = model->animTablePtr;
         SkeletonNode* skeleton = DIGIMON_SKELETONS[static_cast<int32_t>(type)];
 
-        for (int32_t boneId = 0; boneId < boneCount; boneId++)
-        {
+        for (int32_t boneId = 0; boneId < boneCount; boneId++) {
             auto* node    = &skeleton[boneId];
             auto* posData = &entity->posData[boneId];
             auto* base    = &posData->posMatrix;
@@ -886,8 +851,7 @@ extern "C"
         uint8_t color = (WIREFRAME_COLOR_MIN + rand() % (WIREFRAME_COLOR_MAX - WIREFRAME_COLOR_MIN));
 
         auto* coord = obj->coord2;
-        if (coord->flag == 0)
-        {
+        if (coord->flag == 0) {
             coord->flag = 1;
             libgte_MulMatrix0(&coord->coord, &coord->super->work, &coord->work);
         }
@@ -898,8 +862,7 @@ extern "C"
 
         auto* primPtr = libgs_GsGetWorkBase();
 
-        for (int32_t i = 0; i < primCount; i++)
-        {
+        for (int32_t i = 0; i < primCount; i++) {
             auto currentPrim = primTop;
             // this should be a bug? It matches a whole lot of primitive types, but uses a lot of them wrong?
 
@@ -907,13 +870,11 @@ extern "C"
             bool isPoly   = WIREFRAME_RNG_TABLE[i & 15] < wireFrameShare;
 
             // triangle
-            if (primMode == 0x34)
-            {
+            if (primMode == 0x34) {
                 primTop += 0x1C;
                 primPtr = _renderWireframedTriangle(primPtr, currentPrim, vertTop, normalTop, isPoly, color);
             }
-            else if (primMode == 0x3C)
-            {
+            else if (primMode == 0x3C) {
                 primTop += 0x24;
                 primPtr = _renderWiredframedQuad(primPtr, currentPrim, vertTop, normalTop, isPoly, color);
             }
@@ -939,8 +900,7 @@ extern "C"
 
         PARTNER_ENTITY.flatSprite = 0xFF;
         PARTNER_ENTITY.flatTimer  = 0;
-        for (Entity& entity : NPC_ENTITIES)
-        {
+        for (Entity& entity : NPC_ENTITIES) {
             entity.flatSprite = 0xFF;
             entity.flatTimer  = 0;
         }
@@ -975,8 +935,7 @@ extern "C"
                 static_cast<uint32_t>(digimonType) / 30,
                 DIGIMON_FILE_NAMES[static_cast<uint32_t>(digimonType)].data());
 
-        if (entityType == EntityType::NPC)
-        {
+        if (entityType == EntityType::NPC) {
             comp = getNPCComponent(digimonType);
             if (comp == nullptr) return;
             if (comp->useCount > 0) return;
@@ -1002,8 +961,7 @@ extern "C"
             comp->mmdPtr  = reinterpret_cast<uint8_t*>(libapi_malloc3((fileSize + 0x7FF) & 0xFFFFF800));
         }
         // TODO this is static data?
-        if (entityType == EntityType::PLAYER)
-        {
+        if (entityType == EntityType::PLAYER) {
             comp               = &TAMER_MODEL;
             comp->pixelPage    = 0x15;
             comp->clutPage     = 0x7A00;
@@ -1012,8 +970,7 @@ extern "C"
             comp->modelId      = 0;
             comp->mmdPtr       = TAMER_MODEL_BUFFER;
         }
-        if (entityType == EntityType::PARTNER)
-        {
+        if (entityType == EntityType::PARTNER) {
             comp               = &PARTNER_MODEL;
             comp->pixelPage    = 0x15;
             comp->clutPage     = 0x7A01;
@@ -1026,7 +983,7 @@ extern "C"
         // load MMD file
         readFile(reinterpret_cast<char*>(pathBuffer), comp->mmdPtr);
         comp->modelPtr     = reinterpret_cast<TMDModel*>(reinterpret_cast<uint8_t*>(comp->mmdPtr) +
-                                                     reinterpret_cast<uint32_t*>(comp->mmdPtr)[0]);
+                                                         reinterpret_cast<uint32_t*>(comp->mmdPtr)[0]);
         comp->animTablePtr = reinterpret_cast<int32_t*>(reinterpret_cast<uint8_t*>(comp->mmdPtr) +
                                                         reinterpret_cast<uint32_t*>(comp->mmdPtr)[1]);
         libgs_GsMapModelingData(&comp->modelPtr->flags);
@@ -1053,8 +1010,7 @@ extern "C"
         if (type == EntityType::PLAYER) return &TAMER_MODEL;
         if (type == EntityType::PARTNER) return &PARTNER_MODEL;
 
-        if (type == EntityType::NPC)
-        {
+        if (type == EntityType::NPC) {
             auto digimonType = static_cast<DigimonType>(instance);
             if (!isValidDigimon(digimonType)) return nullptr;
 
@@ -1064,8 +1020,7 @@ extern "C"
             return nullptr;
         }
 
-        if (type == EntityType::UNKNOWN)
-        {
+        if (type == EntityType::UNKNOWN) {
             // TODO this should be a bug? UNKNOWN_MODEL has only 16 entries
             if (instance < 0 || instance > 149) return nullptr;
 
@@ -1086,8 +1041,7 @@ extern "C"
 
     EntityType getEntityType(Entity* entity)
     {
-        for (int32_t i = 0; i < ENTITY_TABLE.table.size(); i++)
-        {
+        for (int32_t i = 0; i < ENTITY_TABLE.table.size(); i++) {
             if (ENTITY_TABLE.table[i] != entity) continue;
 
             return getEntityTypeById(i);
@@ -1142,7 +1096,7 @@ extern "C"
         memcpy(PARTNER_MODEL.mmdPtr, modelData->modelPtr, modelData->modelSize);
 
         PARTNER_MODEL.modelPtr     = reinterpret_cast<TMDModel*>(reinterpret_cast<uint8_t*>(PARTNER_MODEL.mmdPtr) +
-                                                             reinterpret_cast<uint32_t*>(PARTNER_MODEL.mmdPtr)[0]);
+                                                                 reinterpret_cast<uint32_t*>(PARTNER_MODEL.mmdPtr)[0]);
         PARTNER_MODEL.animTablePtr = reinterpret_cast<int32_t*>(reinterpret_cast<uint8_t*>(PARTNER_MODEL.mmdPtr) +
                                                                 reinterpret_cast<uint32_t*>(PARTNER_MODEL.mmdPtr)[1]);
         libgs_GsMapModelingData(&PARTNER_MODEL.modelPtr->flags);
@@ -1191,18 +1145,15 @@ extern "C"
         resetMomentumData(momentumPtr);
         setupModelMatrix(nodePtr);
 
-        for (int32_t i = 1; i < boneCount; i++)
-        {
+        for (int32_t i = 1; i < boneCount; i++) {
             auto& node = nodePtr[i];
 
-            if (hasScale)
-            {
+            if (hasScale) {
                 node.scale.x = animDataPtr.read<int16_t>();
                 node.scale.y = animDataPtr.read<int16_t>();
                 node.scale.z = animDataPtr.read<int16_t>();
             }
-            else
-            {
+            else {
                 node.scale.x = 4096;
                 node.scale.y = 4096;
                 node.scale.z = 4096;
@@ -1232,8 +1183,7 @@ extern "C"
         tickMomentum(entity, momentum);
 
         // vanilla checks for "& 0x1000 == 0", but this would detect 0x3000 as start
-        if ((*instructionPtrPtr & 0xF000) == 0x1000)
-        {
+        if ((*instructionPtrPtr & 0xF000) == 0x1000) {
             entity->loopCount = instructionPtrPtr[0] & 0xFF;
 
             instructionPtrPtr += 1;
@@ -1241,12 +1191,10 @@ extern "C"
             entity->loopEndFrame = instructionPtrPtr[0] & 0xFFF;
         }
 
-        while (entity->animFrame == entity->loopEndFrame)
-        {
+        while (entity->animFrame == entity->loopEndFrame) {
             auto opCode = *instructionPtrPtr & 0xF000;
 
-            switch (opCode)
-            {
+            switch (opCode) {
                 case 0x4000: // play sound
                 {
                     auto soundId = instructionPtrPtr[1] & 0xFF;
@@ -1280,8 +1228,7 @@ extern "C"
 
                     if (entity->loopCount == 0)
                         instructionPtrPtr += 2;
-                    else
-                    {
+                    else {
                         entity->animFrame = instructionPtrPtr[1];
                         instructionPtrPtr = reinterpret_cast<int16_t*>(entity->loopStart);
                     }

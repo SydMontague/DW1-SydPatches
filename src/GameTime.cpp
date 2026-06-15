@@ -1,8 +1,8 @@
 
+#include "Fishing.hpp"
 #include "GameObjects.hpp"
 #include "Helper.hpp"
 #include "Map.hpp"
-#include "Fishing.hpp"
 #include "Math.hpp"
 #include "Tamer.hpp"
 #include "UIElements.hpp"
@@ -51,20 +51,17 @@ namespace
     void tickPlaytime(int32_t instanceId)
     {
         PLAYTIME_FRAMES += 1;
-        if (PLAYTIME_FRAMES % 1200 == 0)
-        {
+        if (PLAYTIME_FRAMES % 1200 == 0) {
             PLAYTIME_MINUTES += 1;
             PLAYTIME_FRAMES = 0;
         }
 
-        if (PLAYTIME_MINUTES >= 60)
-        {
+        if (PLAYTIME_MINUTES >= 60) {
             PLAYTIME_HOURS += 1;
             PLAYTIME_MINUTES = 0;
         }
 
-        if (PLAYTIME_HOURS >= 999)
-        {
+        if (PLAYTIME_HOURS >= 999) {
             PLAYTIME_HOURS   = 999;
             PLAYTIME_MINUTES = 59;
         }
@@ -87,8 +84,7 @@ extern "C"
 
         auto happyX = PARTNER_PARA.happiness < HAPPINESS_MID ? 97 : 64;
         auto discX  = PARTNER_PARA.discipline < DISCIPLINE_MID ? 33 : 22;
-        if (PLAYTIME_FRAMES % 10 < 5)
-        {
+        if (PLAYTIME_FRAMES % 10 < 5) {
             if (PARTNER_AREA_RESPONSE == 2) happyX += 11;
             if (PARTNER_AREA_RESPONSE == 1) happyX -= 11;
         }
@@ -105,16 +101,14 @@ extern "C"
         barValues[3] = clamp((PARTNER_PARA.discipline - DISCIPLINE_MID) * 100 / (DISCIPLINE_MAX - DISCIPLINE_MID), 0, 100);
         // clang-format on
 
-        for (int32_t i = 0; i < 4; i++)
-        {
+        for (int32_t i = 0; i < 4; i++) {
             auto clut      = getClut(0x60, 0x1f7);
             int32_t width  = (barValues[i] * 50) / 100;
             int32_t x      = STATUS_UI_OFFSET_X + 18;
             int32_t y      = 88 + 12 * ((i & 2) / 2);
             int32_t v      = 151 + 2 * (i & 1);
             int32_t offset = 0;
-            while (width > 0)
-            {
+            while (width > 0) {
                 renderRectPolyFT4(x + offset, y, min(width, 20), 2, 232, v, 5, clut, 14 - (i & 1), 0);
                 width -= 20;
                 offset += 20;
@@ -179,12 +173,10 @@ extern "C"
 
         CURRENT_FRAME += frameDiff;
 
-        if (frameDiff != 0 && (CURRENT_FRAME % 20) == 0)
-        {
+        if (frameDiff != 0 && (CURRENT_FRAME % 20) == 0) {
             MINUTE += 1;
 
-            if (MINUTE >= 60)
-            {
+            if (MINUTE >= 60) {
                 MINUTE = 0;
                 HOUR += 1;
                 PARTNER_PARA.evoTimer += 1;
@@ -192,8 +184,7 @@ extern "C"
                 subframeCount = 0;
             }
 
-            if (HOUR >= 24)
-            {
+            if (HOUR >= 24) {
                 HOUR = 0;
                 PARTNER_PARA.age += 1;
                 CURRENT_FRAME = 0;
@@ -201,8 +192,7 @@ extern "C"
                 dailyPStatTrigger();
             }
 
-            if (DAY >= 30)
-            {
+            if (DAY >= 30) {
                 YEAR += 1;
                 DAY = 0;
 
@@ -287,13 +277,11 @@ extern "C"
 
     void advanceToTime(uint32_t hour, uint32_t minute)
     {
-        if (hour < HOUR || hour == HOUR && minute < MINUTE)
-        {
+        if (hour < HOUR || hour == HOUR && minute < MINUTE) {
             DAY++;
             PARTNER_PARA.age += 1;
             dailyPStatTrigger();
-            if (DAY >= 30)
-            {
+            if (DAY >= 30) {
                 DAY = 0;
                 YEAR++;
             }

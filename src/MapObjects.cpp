@@ -74,8 +74,7 @@ namespace
 
     Chest* getFreeChest()
     {
-        for (auto& chest : CHEST_ARRAY)
-        {
+        for (auto& chest : CHEST_ARRAY) {
             if (chest.item == ItemType::NONE) return &chest;
         }
 
@@ -84,8 +83,7 @@ namespace
 
     void clearChests()
     {
-        for (auto& chest : CHEST_ARRAY)
-        {
+        for (auto& chest : CHEST_ARRAY) {
             chest.item    = ItemType::NONE;
             chest.isTaken = false;
         }
@@ -97,8 +95,7 @@ namespace
 
         Vector scale = {4096, 4096, 4096, 0};
 
-        for (auto& chest : CHEST_ARRAY)
-        {
+        for (auto& chest : CHEST_ARRAY) {
             if (chest.item == ItemType::NONE) continue;
             if (!isBoxOnScreen(&chest.location, 100, 100)) continue;
 
@@ -111,8 +108,7 @@ namespace
 
     WarpCrystalData* getFreeWarpCrystal()
     {
-        for (auto& crystal : WARP_CRYSTAL_DATA)
-        {
+        for (auto& crystal : WARP_CRYSTAL_DATA) {
             if (!crystal.isSet) return &crystal;
         }
 
@@ -123,8 +119,7 @@ namespace
     {
         Vector scale = {4096, 4096, 4096, 0};
 
-        for (auto& crystal : WARP_CRYSTAL_DATA)
-        {
+        for (auto& crystal : WARP_CRYSTAL_DATA) {
             if (!crystal.isSet) continue;
             if (!isBoxOnScreen(&crystal.pos1, 100, 100)) continue;
 
@@ -158,8 +153,7 @@ namespace
     {
         if (!MAP_LAYER_ENABLED) return;
 
-        if (toyTownSelectedBox == 1)
-        {
+        if (toyTownSelectedBox == 1) {
             bigBoxLidProgress -= 100;
             bigBoxLidProgress = max(-1024, bigBoxLidProgress);
 
@@ -167,8 +161,7 @@ namespace
             libgte_RotMatrix(&rot, &WARP_CRYSTAL_COORD2.coord);
             WARP_CRYSTAL_COORD2.flag = 0;
         }
-        if (toyTownSelectedBox == 2)
-        {
+        if (toyTownSelectedBox == 2) {
             smallBoxLidProgress -= 100;
             smallBoxLidProgress = max(-1024, smallBoxLidProgress);
             SVector rot         = {smallBoxLidProgress, 0, 0, 0};
@@ -210,8 +203,7 @@ namespace
 
         Vector scale = {4096, 4096, 4096, 0};
 
-        for (auto& obj : MAP_3D_OBJECTS)
-        {
+        for (auto& obj : MAP_3D_OBJECTS) {
             if (obj.modelId == 0xFF) continue;
 
             if (!isBoxOnScreen(&obj.translation, 700, 800)) continue;
@@ -223,8 +215,7 @@ namespace
             projectPosition(&doorObjects[instanceId].coords, &obj.translation, &obj.rotation, &scale);
             drawObject(&doorObjects[instanceId].obj, GS_ORDERING_TABLE + ACTIVE_FRAMEBUFFER, 2);
 
-            if (obj.modelId == 10)
-            {
+            if (obj.modelId == 10) {
                 auto copy = obj;
                 copy.translation.z += (obj.rotation.y < 0 ? 680 : -680);
                 copy.rotation.y = -obj.rotation.y;
@@ -294,8 +285,7 @@ extern "C"
         for (auto& crystal : WARP_CRYSTAL_DATA)
             crystal.isSet = false;
 
-        switch (mapId)
-        {
+        switch (mapId) {
             case 0x65:
                 addWarpCrystal(2237, -1667);
                 addWarpCrystal(-2237, -1667);
@@ -402,13 +392,11 @@ extern "C"
         auto* chest = getFreeChest();
         if (!chest) return;
 
-        if (isTriggerSet(trigger))
-        {
+        if (isTriggerSet(trigger)) {
             chest->isTaken      = true;
             chest->trayLocation = {0, 0, -160, 0};
         }
-        else
-        {
+        else {
             chest->isTaken      = false;
             chest->trayLocation = {0, 0, 0, 0};
         }
@@ -439,12 +427,10 @@ extern "C"
     bool tickRotateDoor(int32_t instance, int32_t target)
     {
         doorRotationTimer++;
-        switch (MAP_3D_OBJECTS[instance].modelId)
-        {
+        switch (MAP_3D_OBJECTS[instance].modelId) {
             case 0:
             {
-                if (doorRotationTimer > 32)
-                {
+                if (doorRotationTimer > 32) {
                     doorRotationTimer = 0;
                     return 1;
                 }
@@ -455,8 +441,7 @@ extern "C"
             case 5:
             case 31:
             case 32:
-                if (doorRotationTimer > 9)
-                {
+                if (doorRotationTimer > 9) {
                     doorRotationTimer = 0;
                     return 1;
                 }
@@ -472,8 +457,7 @@ extern "C"
             case 18:
             case 19:
             {
-                if (doorRotationTimer > 32)
-                {
+                if (doorRotationTimer > 32) {
                     MAP_3D_OBJECTS[instance].rotation.y = MAP_3D_OBJECTS[instance].direction;
                     doorRotationTimer                   = 0;
                     return 1;
@@ -485,8 +469,7 @@ extern "C"
             case 14:
             case 15:
             {
-                if (doorRotationTimer > 32)
-                {
+                if (doorRotationTimer > 32) {
                     doorRotationTimer = 0;
                     return 1;
                 }
@@ -500,8 +483,7 @@ extern "C"
             case 28:
             case 30:
             {
-                if (doorRotationTimer > 9)
-                {
+                if (doorRotationTimer > 9) {
                     doorRotationTimer = 0;
                     return 1;
                 }
@@ -517,8 +499,7 @@ extern "C"
             case 27:
             case 29:
             {
-                if (doorRotationTimer > 9)
-                {
+                if (doorRotationTimer > 9) {
                     doorRotationTimer = 0;
                     return 1;
                 }
@@ -532,8 +513,7 @@ extern "C"
             {
                 MAP_3D_OBJECTS[instance].rotation.x -= target * 110;
                 MAP_3D_OBJECTS[instance].rotation.x = clamp(MAP_3D_OBJECTS[instance].rotation.x, -1024, 0);
-                if (doorRotationTimer > 19)
-                {
+                if (doorRotationTimer > 19) {
                     doorRotationTimer = 0;
                     return 1;
                 }
@@ -551,12 +531,9 @@ extern "C"
 
         const auto& data = DOOR_MAPDATA[doorEntryId];
 
-        for (auto entry : data.modelId)
-        {
-            for (auto& slot : doorObjects)
-            {
-                if (slot.modelId == 0xFF)
-                {
+        for (auto entry : data.modelId) {
+            for (auto& slot : doorObjects) {
+                if (slot.modelId == 0xFF) {
                     slot.modelId = entry;
                     break;
                 }
@@ -564,8 +541,7 @@ extern "C"
             }
         }
 
-        for (int32_t i = 0; i < doorObjects.size(); i++)
-        {
+        for (int32_t i = 0; i < doorObjects.size(); i++) {
             auto model = doorObjects[i].modelId;
             if (model == 0xFF) continue;
 
@@ -577,8 +553,7 @@ extern "C"
                           &doorObjects[i].coords);
         }
 
-        for (int32_t i = 0; i < MAP_3D_OBJECTS.size(); i++)
-        {
+        for (int32_t i = 0; i < MAP_3D_OBJECTS.size(); i++) {
             auto& entry = MAP_3D_OBJECTS[i];
 
             entry.modelId     = data.modelId[i];
@@ -597,8 +572,7 @@ extern "C"
 
         chest.trayLocation.z -= 20;
 
-        if (chest.trayLocation.z <= -160)
-        {
+        if (chest.trayLocation.z <= -160) {
             chest.trayLocation.z = -160;
             chest.isTaken        = true;
             return true;
@@ -612,8 +586,7 @@ extern "C"
 
         chest.trayLocation.z += 20;
 
-        if (chest.trayLocation.z >= 0)
-        {
+        if (chest.trayLocation.z >= 0) {
             chest.trayLocation.z = 0;
             chest.isTaken        = true;
             return true;

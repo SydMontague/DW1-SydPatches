@@ -129,8 +129,7 @@ namespace
 
     int32_t getGlyphIndex(uint16_t codepoint)
     {
-        for (const auto& mapping : myMapping)
-        {
+        for (const auto& mapping : myMapping) {
             if (mapping.codepoint == codepoint) return mapping.index;
         }
 
