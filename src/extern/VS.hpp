@@ -12,4 +12,11 @@ extern "C"
     void VS__addTimer(int32_t seconds);
     void VS__addHPMPBar(int32_t player);
     void VS__addCommandBar(int32_t player);
+    void VS__initializeEFEEngine(void*);
+    void VS__loadMoveEFE(int16_t* moves, int16_t* effectIds, int8_t* isLoaded);
+    void VS__addBattleTextIn();
+    void VS__addBattleTextOut();
+    void VS__removeBattleTextIn();
+    void VS__removeBattleTextOut();
+    int32_t VS__isBattleTextFinished();
 }

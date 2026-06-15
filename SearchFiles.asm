@@ -165,8 +165,8 @@
 ;  jal tickFileReadQueue
 ;.org 0x800e9260
 ;  jal tickFileReadQueue
-.org 0x800f366c
-  jal tickFileReadQueue
+;.org 0x800f366c
+;  jal tickFileReadQueue
 
 ;.org 0x800e8c10
 ;  j setFileReadCallback2

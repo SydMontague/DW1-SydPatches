@@ -13,4 +13,7 @@
 .org 0x800f71ac
   jal VS__combatInit
 
+.org 0x800f71b4
+  jal VS__combatSetup
+
 .close

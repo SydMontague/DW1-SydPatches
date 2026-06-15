@@ -1,7 +1,10 @@
 #include "../extern/VS.hpp"
 
+#include "../Entity.hpp"
+#include "../Files.hpp"
 #include "../GameObjects.hpp"
 #include "../Model.hpp"
+#include "../Sound.hpp"
 #include "../extern/dtl/types.hpp"
 #include "../extern/dw1.hpp"
 
@@ -96,6 +99,42 @@ namespace
         for (auto& val : fighter.table2)
             val = 0xFF;
     }
+
+    [[gnu::optimize("Os")]]
+    void loadMoves()
+    {
+        dtl::array<int16_t, 16> moves;
+        dtl::array<int16_t, 16> outMoves;
+        int8_t isBusy;
+        int32_t moveCount = 0;
+        for (int32_t i = 0; i < 2; i++) {
+
+            auto entityId        = i + 1;
+            auto entity          = reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(entityId));
+            entity->stats.unk1   = -1;
+            entity->stats.unk2_1 = 0xFF;
+            for (auto& move : entity->stats.moves) {
+                if (move == 0xFF) continue;
+
+                moves[moveCount++] = getDigimonData(entity->type)->moves[move - 0x2e] + 256;
+            }
+        }
+        moves[moveCount] = -1;
+        VS__loadMoveEFE(moves.data(), outMoves.data(), &isBusy);
+        while (isBusy > 0)
+            tickFileReadQueue();
+
+        int32_t slot = 0;
+        for (int32_t i = 0; i < 2; i++) {
+            auto entityId = i + 1;
+            auto entity   = reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(entityId));
+            for (int32_t j = 0; j < 4; j++) {
+                auto move                                 = entity->stats.moves[j];
+                COMBAT_DATA_PTR->fighter[i].effectSlot[j] = move == 0xFF ? -1 : outMoves[slot++];
+            }
+        }
+    }
+
 } // namespace
 
 extern "C"
@@ -130,5 +169,45 @@ extern "C"
             VS__addHPMPBar(i);
             VS__addCommandBar(i);
         }
+    }
+
+    void VS__combatSetup()
+    {
+        GAME_STATE = 5;
+        startAnimation(&PARTNER_ENTITY, 33);
+        entityLookAtLocation(&PARTNER_ENTITY, &NPC_ENTITIES[0].posData->location);
+        startAnimation(&NPC_ENTITIES[0], 33);
+        entityLookAtLocation(&NPC_ENTITIES[0], &PARTNER_ENTITY.posData->location);
+        VS__initializeEFEEngine(GENERAL_BUFFER.data());
+
+        loadMoves();
+
+        VS__DEFAULT_CAM_MIN_DISTANCE = 200;
+        VS__addBattleTextIn();
+        playSound(0, 16);
+
+        int32_t frameCount = 0;
+        uint8_t result     = true;
+        do {
+            if (VS__DEFAULT_CAM_MIN_DISTANCE < 4200) VS__DEFAULT_CAM_MIN_DISTANCE += 400;
+
+            result = VS__isBattleTextFinished();
+            VS__tickFrame();
+        } while (++frameCount < 60 || result == 0);
+
+        VS__removeBattleTextIn();
+        VS__addBattleTextOut();
+        playSound(0, 17);
+
+        while (VS__isBattleTextFinished() == 0) {
+            if (VS__DEFAULT_CAM_MIN_DISTANCE > 1000) VS__DEFAULT_CAM_MIN_DISTANCE -= 400;
+            VS__tickFrame();
+        }
+        VS__removeBattleTextOut();
+
+        VS__DEFAULT_CAM_MIN_DISTANCE = 1000;
+        VS__TIMER_ACTIVE             = 1;
+        VS__CAMERA_STATE             = 1;
+        GAME_STATE                   = 4;
     }
 }

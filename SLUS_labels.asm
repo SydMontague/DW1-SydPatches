@@ -39,6 +39,8 @@
 .definelabel tickScript,                0x80105bd8
 .definelabel VS__initializePlayerMarker,0x800f6d98
 
+.definelabel VS__DEFAULT_CAM_MIN_DISTANCE, 0x80135294
+.definelabel VS__CAMERA_STATE, 0x80135268
 .definelabel VS__DAMAGE, 0x80135280
 .definelabel VS__IS_DRAW, 0x80134f40
 .definelabel VS__ACTIVE_FINISHER_AURA_ID, 0x80134f4c
@@ -404,6 +406,13 @@
 .definelabel VS__addTimer, 0x8005b2fc
 .definelabel VS__addHPMPBar, 0x8006206c
 .definelabel VS__addCommandBar, 0x8005fb5c
+.definelabel VS__initializeEFEEngine, 0x80064814
+.definelabel VS__loadMoveEFE, 0x80064950
+.definelabel VS__addBattleTextIn, 0x80060a6c
+.definelabel VS__addBattleTextOut, 0x8006136c
+.definelabel VS__removeBattleTextIn, 0x80061360
+.definelabel VS__removeBattleTextOut, 0x80061868
+.definelabel VS__isBattleTextFinished, 0x80061874
 
 .definelabel INTRO_TARGET_POS, 0x80071744
 .definelabel VS__INTRO_DIGIMON_NAMES, 0x8006ff20

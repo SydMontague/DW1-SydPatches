@@ -137,10 +137,10 @@
 ;  jal playSound
 ;.org 0x800f28c4
 ;  jal playSound
-.org 0x800f36a0
-  jal playSound
-.org 0x800f3704
-  jal playSound
+;.org 0x800f36a0
+;  jal playSound
+;.org 0x800f3704
+;  jal playSound
 .org 0x800f77e8
   jal playSound
 .org 0x800f7864

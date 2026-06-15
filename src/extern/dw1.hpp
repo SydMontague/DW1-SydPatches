@@ -1747,9 +1747,10 @@ extern "C"
     extern int16_t BATTLE_FRAME_COUNT;
     extern dtl::array<int16_t, 2> VS__STARTING_HP;
     extern dtl::array<int32_t, 2> VS__AOE_TIMER;
-    extern int32_t VS__P2_AOE_TIMER;
     extern int32_t VS__TIMER_ACTIVE;
     extern int32_t VS__DISABLE_HITTING;
+    extern int16_t VS__DEFAULT_CAM_MIN_DISTANCE;
+    extern int32_t VS__CAMERA_STATE;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
