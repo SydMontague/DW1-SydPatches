@@ -1256,24 +1256,28 @@ extern "C"
         uint16_t meritValue;
     };
 
-    struct BattleFlags
+    union BattleFlags
     {
-        bool isPoisoned     : 1;
-        bool isConfused     : 1;
-        bool isStunned      : 1;
-        bool isFlattened    : 1;
-        bool isKnockedBack  : 1;
-        bool isAttacking    : 1;
-        bool isTransforming : 1;
-        bool isBlocking     : 1;
-        bool isProtected    : 1;
-        bool unkFlag1       : 1;
-        bool unkFlag2       : 1;
-        bool isOnChargeup   : 1;
-        bool isOnCooldown   : 1;
-        bool isSenile       : 1;
-        bool unkFlag3       : 1;
-        bool isDead         : 1;
+        struct
+        {
+            bool isPoisoned     : 1;
+            bool isConfused     : 1;
+            bool isStunned      : 1;
+            bool isFlattened    : 1;
+            bool isKnockedBack  : 1;
+            bool isAttacking    : 1;
+            bool isTransforming : 1;
+            bool isBlocking     : 1;
+            bool isProtected    : 1;
+            bool unkFlag1       : 1;
+            bool unkFlag2       : 1;
+            bool isOnChargeup   : 1;
+            bool isOnCooldown   : 1;
+            bool isSenile       : 1;
+            bool unkFlag3       : 1;
+            bool isDead         : 1;
+        };
+        uint16_t raw;
     };
 
     struct FighterData
@@ -1752,6 +1756,7 @@ extern "C"
     extern int16_t VS__DEFAULT_CAM_MIN_DISTANCE;
     extern int32_t VS__CAMERA_STATE;
     extern int8_t VS__TIMER;
+    extern dtl::array<uint16_t, 2> VS_DISCIPLINE;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -1771,6 +1776,10 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void VS__increaseSpeedBuffer(FighterData* fighter, Stats* stats);
+    void VS__faintDigimon(DigimonEntity* entity, FighterData* fighter, int32_t playerId);
+    bool VS__hasAffordableMoves2(uint16_t* array, int32_t fighterId);
+    void VS__resetFlatten(int32_t playerId);
     void VS__initializePlayerMarker();
     void tickScript();
     void setDigimonRaised(DigimonType type);

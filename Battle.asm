@@ -4,8 +4,8 @@
 .org 0x80104618
   jal startBattle
 
-.org 0x800f3e2c
-  jal handleBattleIdle
+;.org 0x800f3e2c
+;  jal handleBattleIdle
 .org 0x800f4d48
   jal handleBattleIdle
 .org 0x800f4d5c

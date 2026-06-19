@@ -25,4 +25,9 @@
 .org 0x800f71bc
   jal VS__checkEndCondition
 
+.org 0x800f71d4
+  jal VS__tickDigimonAi
+.org 0x800f71dc
+  jal VS__tickDigimonAi
+
 .close
