@@ -53,6 +53,7 @@
 .definelabel VS__tickDigimonOnCooldown, 0x800f5914
 .definelabel VS__tickDigimonOther,      0x800f59e8
 
+.definelabel VS__PAUSING_PLAYER, 0x80134f30
 .definelabel VS__CAMERA_TIMER, 0x8013529c
 .definelabel VS_DISCIPLINE, 0x80135278
 .definelabel VS__TIMER, 0x80135288

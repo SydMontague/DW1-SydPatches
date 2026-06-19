@@ -4,9 +4,11 @@
 #include "../Files.hpp"
 #include "../GameObjects.hpp"
 #include "../Model.hpp"
+#include "../Pause.hpp"
 #include "../Sound.hpp"
 #include "../extern/dtl/types.hpp"
 #include "../extern/dw1.hpp"
+#include "../extern/libetc.hpp"
 
 namespace
 {
@@ -16,6 +18,9 @@ namespace
         DYING,
         DEAD,
     };
+
+    uint32_t inputCurrent  = 0;
+    uint32_t inputPrevious = 0;
 
     DigimonEntity* getFighterEntity(int32_t fighterId)
     {
@@ -157,6 +162,18 @@ namespace
 
         return DefeatedState::DEAD;
     }
+
+    int8_t isPausePressed()
+    {
+        constexpr uint32_t MASK_P1 = 0x800;
+        constexpr uint32_t MASK_P2 = MASK_P1 << 0x10;
+
+        inputPrevious = inputCurrent;
+        inputCurrent  = libetc_PadRead(1);
+        if ((inputCurrent & MASK_P1) != 0 && (inputPrevious & MASK_P1) == 0) return 1;
+        if ((inputCurrent & MASK_P2) != 0 && (inputPrevious & MASK_P2) == 0) return 2;
+        return 0;
+    }
 } // namespace
 
 extern "C"
@@ -270,5 +287,18 @@ extern "C"
         }
 
         return 0;
+    }
+
+    void VS__handlePause()
+    {
+        while (VS__PAUSING_PLAYER != isPausePressed())
+            ;
+
+        removePauseBox();
+
+        VS__PAUSING_PLAYER = isPausePressed();
+        if (VS__PAUSING_PLAYER != 0) {
+            createPauseBox();
+        }
     }
 }

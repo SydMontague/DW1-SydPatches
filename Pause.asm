@@ -1,13 +1,10 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800f4648
-  jal removePauseBox
+;.org 0x800f4648
+;  jal removePauseBox
 .org 0x800f7204
   jal removePauseBox
-
-.org 0x800f462c
-  jal createPauseBox
 
 .close
 

@@ -1758,6 +1758,7 @@ extern "C"
     extern int8_t VS__TIMER;
     extern dtl::array<uint16_t, 2> VS_DISCIPLINE;
     extern uint8_t VS__CAMERA_TIMER;
+    extern uint8_t VS__PAUSING_PLAYER;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
