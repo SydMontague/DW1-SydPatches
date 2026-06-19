@@ -33,4 +33,7 @@
 .org 0x800f71e4
   jal VS__tickBattle
 
+.org 0x800f71f4
+  jal VS__handlePause
+
 .close

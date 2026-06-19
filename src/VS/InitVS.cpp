@@ -21,6 +21,7 @@ namespace
 
     uint32_t inputCurrent  = 0;
     uint32_t inputPrevious = 0;
+    bool pauseFrame        = false;
 
     DigimonEntity* getFighterEntity(int32_t fighterId)
     {
@@ -291,7 +292,12 @@ extern "C"
 
     void VS__handlePause()
     {
-        while (VS__PAUSING_PLAYER != isPausePressed())
+        if (pauseFrame) {
+            pauseFrame = false;
+            return;
+        }
+
+        while (VS__PAUSING_PLAYER != 0 && VS__PAUSING_PLAYER != isPausePressed())
             ;
 
         removePauseBox();
@@ -299,6 +305,7 @@ extern "C"
         VS__PAUSING_PLAYER = isPausePressed();
         if (VS__PAUSING_PLAYER != 0) {
             createPauseBox();
+            pauseFrame = true;
         }
     }
 }
