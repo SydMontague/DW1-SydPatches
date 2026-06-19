@@ -200,9 +200,6 @@
 .org 0x80104860
   jal addEntityText
 
-.org 0x800f46c0
-  jal removeEntityText
-
 ;.org 0x800e670c
 ;  jal entityGetTechFromAnim
 ;.org 0x800e79b0

@@ -1778,6 +1778,7 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void VS__deinitializeStatusEffects();
     void VS__tickDigimonAttacking(DigimonEntity* self, Entity* other, int32_t id);
     void VS__tickDigimonHitByAttack(DigimonEntity* entity, FighterData* data, int32_t id);
     void VS__tickDigimonFlat(DigimonEntity* entity, DigimonEntity* target, FighterData* param_3);

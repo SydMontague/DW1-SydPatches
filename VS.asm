@@ -35,5 +35,12 @@
 
 .org 0x800f71f4
   jal VS__handlePause
+  
+.org 0x800f721c
+  jal VS__deinitializeCombat
+.org 0x800f723c
+  jal VS__deinitializeCombat
+.org 0x800f7250
+  jal VS__deinitializeCombat
 
 .close

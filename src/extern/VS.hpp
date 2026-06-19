@@ -32,4 +32,11 @@ extern "C"
     void VS__tickGettingHit();
     void VS__tickStatusEffects();
     void VS__trySetVictimCamera(DigimonEntity* entity, int cameraPosition);
+    void VS__initializeDrawModel();
+    void VS__addWinLossDrawWindow();
+    int32_t VS__checkWinLossDrawTimer();
+    void VS__removeWinLossDrawWindow();
+    void VS__removeHPMPBar(int32_t playerId);
+    void VS__removeCommandBar(int32_t playerId);
+    void VS__removeVSTimer();
 }

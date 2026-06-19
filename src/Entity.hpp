@@ -21,4 +21,5 @@ extern "C"
     bool isInvisible(Entity* entity);
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
     void initializeEntityText();
+    void removeEntityText(int32_t entityId);
 }

@@ -308,4 +308,74 @@ extern "C"
             pauseFrame = true;
         }
     }
+
+    int32_t VS__deinitializeCombat(int32_t lostP1, int32_t lostP2)
+    {
+        PARTNER_ENTITY.stats.chargeMode  = VS__CHARGE_MODES[0];
+        NPC_ENTITIES[0].stats.chargeMode = VS__CHARGE_MODES[1];
+        GAME_STATE                       = 5;
+        VS__deinitializeStatusEffects();
+
+        for (int32_t i = 0; i <= ENEMY_COUNT; i++) {
+            auto* fighter = &COMBAT_DATA_PTR->fighter[i];
+            auto* entity =
+                reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i]));
+            removeEntityText(i);
+            VS__resetFlatten(i);
+            VS__removeAllStatusFX(entity, fighter);
+            fighter->flags                       = {};
+            fighter->moveRange                   = 0;
+            fighter->targetId                    = 0;
+            fighter->queuedAnim                  = 0;
+            fighter->buffsRemaining              = 0;
+            fighter->buffPrioTimer               = 0;
+            fighter->hasCollidedWhileDistanceCmd = 0;
+
+            entity->stats.off   = INITIAL_COMBAT_STATS[i].offense;
+            entity->stats.def   = INITIAL_COMBAT_STATS[i].defense;
+            entity->stats.speed = INITIAL_COMBAT_STATS[i].speed;
+        }
+
+        if (lostP1 == lostP2) {
+            if (VS__TIMER != 0) {
+                stopBGM();
+                stopSound();
+                VS__initializeDrawModel();
+                VS__addWinLossDrawWindow();
+                while (VS__checkWinLossDrawTimer())
+                    VS__tickFrame();
+                VS__removeWinLossDrawWindow();
+            }
+        }
+        else {
+            auto winningEntity =
+                reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[lostP1]));
+            startAnimation(winningEntity, 0x2A);
+            winningEntity->animFlag |= 2;
+            stopBGM();
+            stopSound();
+            playMusic(VS_MUSIC, 3);
+            for (int32_t i = 0; i < 140; i++) {
+                VS__tickFrame();
+                if ((winningEntity->animFlag & 1) == 0) {
+                    startAnimation(winningEntity, 0x2A);
+                    winningEntity->animFlag |= 2;
+                }
+            }
+        }
+
+        for (int32_t i = 0; i < 20; i++)
+            VS__tickFrame();
+
+        VS__removeHPMPBar(0);
+        VS__removeHPMPBar(1);
+        VS__removeCommandBar(0);
+        VS__removeCommandBar(1);
+        VS__removeVSTimer();
+        stopBGM();
+        stopSound();
+
+        GAME_STATE = 0;
+        return lostP1 == lostP2 ? 2 : lostP1;
+    }
 }

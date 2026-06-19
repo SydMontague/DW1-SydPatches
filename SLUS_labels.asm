@@ -52,6 +52,7 @@
 .definelabel VS__tickDigimonOnChargeup, 0x800f56d4
 .definelabel VS__tickDigimonOnCooldown, 0x800f5914
 .definelabel VS__tickDigimonOther,      0x800f59e8
+.definelabel VS__deinitializeStatusEffects,0x800f4aa8
 
 .definelabel VS__PAUSING_PLAYER, 0x80134f30
 .definelabel VS__CAMERA_TIMER, 0x8013529c
@@ -443,6 +444,13 @@
 .definelabel VS__tickGettingHit, 0x5005c3dc
 .definelabel VS__tickStatusEffects, 0x8005ddd0
 .definelabel VS__trySetVictimCamera, 0x80059a08
+.definelabel VS__initializeDrawModel, 0x8006257c
+.definelabel VS__addWinLossDrawWindow, 0x80062724
+.definelabel VS__checkWinLossDrawTimer, 0x80062990
+.definelabel VS__removeWinLossDrawWindow, 0x80062984
+.definelabel VS__removeHPMPBar, 0x80062570
+.definelabel VS__removeCommandBar, 0x800605c0
+.definelabel VS__removeVSTimer, 0x8005b430
 
 .definelabel INTRO_TARGET_POS, 0x80071744
 .definelabel VS__INTRO_DIGIMON_NAMES, 0x8006ff20
