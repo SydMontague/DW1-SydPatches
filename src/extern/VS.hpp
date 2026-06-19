@@ -29,4 +29,7 @@ extern "C"
     int32_t VS__getMoveCommandYourCall(DigimonEntity* entity, FighterData* fighter, int32_t playerId);
     void VS__handleConfusion(DigimonEntity* entity, FighterData* fighter, int32_t playerId);
     void VS__removeAllStatusFX(DigimonEntity* entity, FighterData* fighter);
+    void VS__tickGettingHit();
+    void VS__tickStatusEffects();
+    void VS__trySetVictimCamera(DigimonEntity* entity, int cameraPosition);
 }

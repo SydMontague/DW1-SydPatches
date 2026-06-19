@@ -43,8 +43,17 @@
 .definelabel VS__faintDigimon,          0x800f5120
 .definelabel VS__hasAffordableMoves2,   0x800f6c5c
 .definelabel VS__resetFlatten,          0x800f4bb4
+.definelabel VS__tickDigimonAttacking,  0x800f51fc
+.definelabel VS__tickDigimonHitByAttack,0x800f52fc
+.definelabel VS__tickDigimonFlat,       0x800f5374
+.definelabel VS__tickDigimonStun,       0x800f5408
+.definelabel VS__tickDigimonConfusion,  0x800f5450
+.definelabel VS__tickDigimonSenile,     0x800f567c
+.definelabel VS__tickDigimonOnChargeup, 0x800f56d4
+.definelabel VS__tickDigimonOnCooldown, 0x800f5914
+.definelabel VS__tickDigimonOther,      0x800f59e8
 
-
+.definelabel VS__CAMERA_TIMER, 0x8013529c
 .definelabel VS_DISCIPLINE, 0x80135278
 .definelabel VS__TIMER, 0x80135288
 .definelabel VS__DEFAULT_CAM_MIN_DISTANCE, 0x80135294
@@ -430,6 +439,9 @@
 .definelabel VS__getMoveCommandYourCall, 0x8005ef90
 .definelabel VS__handleConfusion, 0x8005edd8
 .definelabel VS__removeAllStatusFX, 0x8005e3a8
+.definelabel VS__tickGettingHit, 0x5005c3dc
+.definelabel VS__tickStatusEffects, 0x8005ddd0
+.definelabel VS__trySetVictimCamera, 0x80059a08
 
 .definelabel INTRO_TARGET_POS, 0x80071744
 .definelabel VS__INTRO_DIGIMON_NAMES, 0x8006ff20

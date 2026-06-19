@@ -1757,6 +1757,7 @@ extern "C"
     extern int32_t VS__CAMERA_STATE;
     extern int8_t VS__TIMER;
     extern dtl::array<uint16_t, 2> VS_DISCIPLINE;
+    extern uint8_t VS__CAMERA_TIMER;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -1776,6 +1777,15 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void VS__tickDigimonAttacking(DigimonEntity* self, Entity* other, int32_t id);
+    void VS__tickDigimonHitByAttack(DigimonEntity* entity, FighterData* data, int32_t id);
+    void VS__tickDigimonFlat(DigimonEntity* entity, DigimonEntity* target, FighterData* param_3);
+    void VS__tickDigimonStun(DigimonEntity* entity);
+    void VS__tickDigimonConfusion(DigimonEntity* entity, DigimonEntity* other, FighterData* data, int32_t id);
+    void VS__tickDigimonSenile(DigimonEntity* entity, FighterData* data);
+    void VS__tickDigimonOnChargeup(DigimonEntity* entity, DigimonEntity* other, FighterData* data);
+    void VS__tickDigimonOnCooldown(DigimonEntity* entity, DigimonEntity* other, FighterData* data);
+    void VS__tickDigimonOther(DigimonEntity* entity, DigimonEntity* other, FighterData* data, int32_t fighterId);
     void VS__increaseSpeedBuffer(FighterData* fighter, Stats* stats);
     void VS__faintDigimon(DigimonEntity* entity, FighterData* fighter, int32_t playerId);
     bool VS__hasAffordableMoves2(uint16_t* array, int32_t fighterId);

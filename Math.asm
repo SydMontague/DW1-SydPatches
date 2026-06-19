@@ -83,10 +83,10 @@
 ;  jal random
 ;.org 0x800f3cd4
 ;  jal random
-.org 0x800f44a4
-  jal random
-.org 0x800f44d0
-  jal random
+;.org 0x800f44a4
+;  jal random
+;.org 0x800f44d0
+;  jal random
 .org 0x800f5570
   jal random
 .org 0x800f6958
