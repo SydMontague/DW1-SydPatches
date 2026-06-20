@@ -42,7 +42,6 @@
 .definelabel VS__increaseSpeedBuffer,   0x800f6bc8
 .definelabel VS__faintDigimon,          0x800f5120
 .definelabel VS__hasAffordableMoves2,   0x800f6c5c
-.definelabel VS__resetFlatten,          0x800f4bb4
 .definelabel VS__tickDigimonAttacking,  0x800f51fc
 .definelabel VS__tickDigimonHitByAttack,0x800f52fc
 .definelabel VS__tickDigimonFlat,       0x800f5374

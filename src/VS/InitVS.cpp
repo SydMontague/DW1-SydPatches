@@ -332,6 +332,18 @@ extern "C"
         }
     }
 
+    void VS__resetFlatten(int combatId)
+    {
+        auto* entity =
+            reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[combatId]));
+        entity->flatSprite                                   = 0xff;
+        COMBAT_DATA_PTR->fighter[combatId].flags.isFlattened = false;
+        COMBAT_DATA_PTR->fighter[combatId].flatTimer         = 0;
+        entity->posData->scale.x                             = 4096;
+        entity->posData->scale.y                             = 4096;
+        entity->posData->scale.z                             = 4096;
+    }
+
     int32_t VS__deinitializeCombat(int32_t lostP1, int32_t lostP2)
     {
         PARTNER_ENTITY.stats.chargeMode  = VS__CHARGE_MODES[0];

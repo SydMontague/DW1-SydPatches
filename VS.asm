@@ -43,4 +43,7 @@
 .org 0x800f7250
   jal VS__deinitializeCombat
 
+.org 0x800f515c
+  jal VS__resetFlatten
+
 .close

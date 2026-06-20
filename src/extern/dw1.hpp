@@ -1790,7 +1790,6 @@ extern "C"
     void VS__increaseSpeedBuffer(FighterData* fighter, Stats* stats);
     void VS__faintDigimon(DigimonEntity* entity, FighterData* fighter, int32_t playerId);
     bool VS__hasAffordableMoves2(uint16_t* array, int32_t fighterId);
-    void VS__resetFlatten(int32_t playerId);
     void VS__initializePlayerMarker();
     void tickScript();
     void setDigimonRaised(DigimonType type);
