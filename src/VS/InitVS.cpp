@@ -106,7 +106,7 @@ namespace
         fighter.cooldown                    = 0;
         fighter.finisherProgress            = 0;
         fighter.statusFxId                  = -1;
-        fighter.unk11                       = -1;
+        fighter.activeEffectSlot            = -1;
         fighter.speedBuffer                 = 100;
         fighter.unk15                       = 0;
         fighter.hasCollidedWhileDistanceCmd = 0;
@@ -174,6 +174,29 @@ namespace
         if ((inputCurrent & MASK_P1) != 0 && (inputPrevious & MASK_P1) == 0) return 1;
         if ((inputCurrent & MASK_P2) != 0 && (inputPrevious & MASK_P2) == 0) return 2;
         return 0;
+    }
+
+    void VS__removePlayerMarker()
+    {
+        removeObject(ObjectID::PLAYER_MARKER, 0);
+        removeObject(ObjectID::PLAYER_MARKER, 1);
+    }
+
+    void VS__deinitializeStatusEffects()
+    {
+        if (PARTNER_ENTITY.type == NPC_ENTITIES[0].type) VS__removePlayerMarker();
+        VS__deinitializeStun();
+        VS__deinitializeFinisherAura();
+        VS__deinitializePoison();
+        VS__deinitializeFlatBullets();
+        for (int32_t i = 0; i <= ENEMY_COUNT; i++) {
+            auto* fighter = &COMBAT_DATA_PTR->fighter[i];
+            auto* entity =
+                reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i]));
+            VS__cancelActiveEffect(entity, fighter);
+        }
+        VS__unloadMoveData();
+        VS__deinitializeEFEEngine();
     }
 } // namespace
 

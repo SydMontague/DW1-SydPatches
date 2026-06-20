@@ -39,4 +39,11 @@ extern "C"
     void VS__removeHPMPBar(int32_t playerId);
     void VS__removeCommandBar(int32_t playerId);
     void VS__removeVSTimer();
+    void VS__deinitializeStun();
+    void VS__deinitializeFinisherAura();
+    void VS__deinitializePoison();
+    void VS__deinitializeFlatBullets();
+    void VS__cancelActiveEffect(DigimonEntity* entity, FighterData* fighter);
+    void VS__unloadMoveData();
+    void VS__deinitializeEFEEngine();
 }

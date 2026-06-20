@@ -1284,7 +1284,7 @@ extern "C"
     {
         int32_t statusFxId;
         int32_t effectSlot[4];
-        int32_t unk11;
+        int32_t activeEffectSlot;
         int16_t finisherGoal;
         int16_t finisherProgress;
         int16_t poisonTimer;
@@ -1778,7 +1778,6 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
-    void VS__deinitializeStatusEffects();
     void VS__tickDigimonAttacking(DigimonEntity* self, Entity* other, int32_t id);
     void VS__tickDigimonHitByAttack(DigimonEntity* entity, FighterData* data, int32_t id);
     void VS__tickDigimonFlat(DigimonEntity* entity, DigimonEntity* target, FighterData* param_3);
