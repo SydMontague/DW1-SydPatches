@@ -14,8 +14,8 @@
 ;  jal handleBattleIdle
 ;.org 0x800f4f64
 ;  jal handleBattleIdle
-.org 0x800f53a0
-  jal handleBattleIdle
+;.org 0x800f53a0
+;  jal handleBattleIdle
 .org 0x800f5484
   jal handleBattleIdle
 .org 0x800f558c

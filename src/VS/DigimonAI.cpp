@@ -39,6 +39,51 @@ namespace
             VS__CAMERA_STATE = 1;
     }
 
+    [[gnu::optimize("Os")]]
+    void VS__tickDigimonAttacking(DigimonEntity* entity, int32_t playerId)
+    {
+        if ((entity->animFlag & 1) == 0 && entity->frameCount != entity->animFrame) {
+            for (int32_t i = 0; i <= ENEMY_COUNT; i++) {
+                if (i == playerId) continue;
+                auto entity =
+                    reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i]));
+
+                if (getDigimonData(entity->type)->moves[entity->animId] != 45) continue;
+                if (COMBAT_DATA_PTR->fighter[i].targetId != playerId) continue;
+
+                return;
+            }
+
+            entity->animFlag |= 1;
+        }
+        VS__tickDigimonAttackingLogic(playerId);
+    }
+
+    void VS__tickDigimonHitByAttack(DigimonEntity* entity, FighterData* fighter, int32_t playerId)
+    {
+        VS__tickDigimonAttackingLogic(playerId);
+        if ((entity->animFlag & 1) == 0 && --fighter->invulnerableTimer == 0) entity->animFlag |= 1;
+    }
+
+    void VS__tickDigimonFlat(DigimonEntity* entity, DigimonEntity* target, FighterData* fighter)
+    {
+        if (NO_AI_FLAG != 0) {
+            handleBattleIdle(entity, &entity->stats, fighter->flags);
+            return;
+        }
+
+        if (VS__tickDigimonHoldDistance(entity, target, fighter) == 0) {
+            VS__tickDigimonAttackRanged(entity, target, fighter, 0x79);
+            if (fighter->flags.isAttacking != 0) entity->flatSprite = 2;
+        }
+    }
+
+    void VS__tickDigimonStun(Entity* entity)
+    {
+        if (entity->animFlag != 0x22) startAnimation(entity, 0x22);
+        entity->animFlag &= 0xfe;
+    }
+
 } // namespace
 
 void VS__faintDigimon(DigimonEntity* entity, FighterData* fighter, int32_t playerId)
@@ -101,7 +146,7 @@ extern "C"
             return;
         }
 
-        if (NO_AI_FLAG == 1) return;
+        if (NO_AI_FLAG != 0) return;
 
         if ((fighter.flags.raw & 0x800e) == 0 && fighter.flatTimer == 0) {
             auto currentCommand = COMBAT_DATA_PTR->player.currentCommand[playerId];
@@ -191,7 +236,7 @@ extern "C"
                     ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[fighter->targetId]));
 
             if (fighter->flags.isAttacking)
-                VS__tickDigimonAttacking(entity, targetEntity, i);
+                VS__tickDigimonAttacking(entity, i);
             else if (fighter->flags.isKnockedBack || fighter->flags.isBlocking)
                 VS__tickDigimonHitByAttack(entity, fighter, i);
             else if (fighter->moveRange == 0xFF)

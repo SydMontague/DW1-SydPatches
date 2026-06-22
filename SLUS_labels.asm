@@ -40,16 +40,15 @@
 .definelabel VS__initializePlayerMarker,0x800f6d98
 .definelabel VS__increaseSpeedBuffer,   0x800f6bc8
 .definelabel VS__hasAffordableMoves2,   0x800f6c5c
-.definelabel VS__tickDigimonAttacking,  0x800f51fc
-.definelabel VS__tickDigimonHitByAttack,0x800f52fc
-.definelabel VS__tickDigimonFlat,       0x800f5374
-.definelabel VS__tickDigimonStun,       0x800f5408
 .definelabel VS__tickDigimonConfusion,  0x800f5450
 .definelabel VS__tickDigimonSenile,     0x800f567c
 .definelabel VS__tickDigimonOnChargeup, 0x800f56d4
 .definelabel VS__tickDigimonOnCooldown, 0x800f5914
 .definelabel VS__tickDigimonOther,      0x800f59e8
 .definelabel VS__renderTimeoutText,     0x800f7284
+.definelabel VS__tickDigimonHoldDistance,0x800f5b4c
+.definelabel VS__tickDigimonAttackRanged,0x800f5ff8
+.definelabel VS__tickDigimonAttackingLogic,0x800f66ac
 
 .definelabel VS_DIGIMON_P1_PTR, 0x8013526c
 .definelabel VS_DIGIMON_P2_PTR, 0x80135270
