@@ -56,10 +56,10 @@
 ;  jal removeAnimatedUIBox
 ;.org 0x800ee7e8
 ;  jal removeAnimatedUIBox
-.org 0x800f4dd8
-  jal removeAnimatedUIBox
-.org 0x800f4f70
-  jal removeAnimatedUIBox
+;.org 0x800f4dd8
+;  jal removeAnimatedUIBox
+;.org 0x800f4f70
+;  jal removeAnimatedUIBox
 .org 0x8010062c
   jal removeAnimatedUIBox
 

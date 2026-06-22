@@ -17,8 +17,8 @@
 ;  jal stopBGM
 ;.org 0x800f4924
 ;  jal stopBGM
-.org 0x800f4cf8
-  jal stopBGM
+;.org 0x800f4cf8
+;  jal stopBGM
 .org 0x800f7198
   jal stopBGM
 .org 0x800f7260

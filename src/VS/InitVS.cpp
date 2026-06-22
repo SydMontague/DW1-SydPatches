@@ -1,11 +1,14 @@
 #include "../extern/VS.hpp"
 
+#include "../Battle.h"
 #include "../Entity.hpp"
 #include "../Files.hpp"
 #include "../GameObjects.hpp"
+#include "../Input.hpp"
 #include "../Model.hpp"
 #include "../Pause.hpp"
 #include "../Sound.hpp"
+#include "../UIElements.hpp"
 #include "../extern/dtl/types.hpp"
 #include "../extern/dw1.hpp"
 #include "../extern/libetc.hpp"
@@ -197,6 +200,59 @@ namespace
         }
         VS__unloadMoveData();
         VS__deinitializeEFEEngine();
+    }
+
+    void VS__tickBattleResultScreen(bool hasLostP1, bool hasLostP2)
+    {
+        auto timer = 0;
+        addObject(ObjectID::VS_TIME_OUT_TEXT, 0, nullptr, VS__renderTimeoutText);
+        stopBGM();
+        auto entityP1 =
+            reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[0]));
+        auto entityP2 =
+            reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[1]));
+        auto fighterP1 = &COMBAT_DATA_PTR->fighter[0];
+        auto fighterP2 = &COMBAT_DATA_PTR->fighter[1];
+
+        if (hasLostP1 == hasLostP2) {
+            VS__IS_DRAW = 1;
+            handleBattleIdle(entityP1, &entityP1->stats, fighterP1->flags);
+            handleBattleIdle(entityP2, &entityP2->stats, fighterP2->flags);
+            VS__tickFrame();
+            VS__tickFrame();
+            VS__initializeDrawModel();
+            VS__addTimeoutWindow();
+
+            for (int32_t i = 0; i < 60; i++) {
+                if (isKeyDownPolled(InputButtons::BUTTON_CROSS)) break;
+                VS__tickFrame();
+            }
+
+            removeAnimatedUIBox(0, nullptr);
+            VS__addWinLossDrawWindow();
+            while (!VS__checkWinLossDrawTimer())
+                VS__tickFrame();
+            VS__removeWinLossDrawWindow();
+        }
+        else {
+            auto winner        = hasLostP1 ? entityP2 : entityP1;
+            auto loser         = hasLostP1 ? entityP1 : entityP2;
+            auto winnerFighter = hasLostP1 ? fighterP2 : fighterP1;
+            auto loserFighter  = hasLostP1 ? fighterP1 : fighterP2;
+
+            entityLookAtLocation(winner, &loser->posData->location);
+            handleBattleIdle(winner, &winner->stats, winnerFighter->flags);
+            VS__faintDigimon(loser, loserFighter, hasLostP1 ? 0 : 1);
+            for (int32_t i = 0; i < 121; i++) {
+                if (i > 60 && isKeyDownPolled(InputButtons::BUTTON_CROSS)) break;
+                if (i == 60) VS__addTimeoutWindow();
+                VS__tickFrame();
+            }
+            VS__trySetAttackerCamera(loser, 5, 0);
+            entityLookAtLocation(winner, &loser->posData->location);
+            handleBattleIdle(winner, &winner->stats, winnerFighter->flags);
+            removeAnimatedUIBox(0, nullptr);
+        }
     }
 } // namespace
 

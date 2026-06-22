@@ -14,6 +14,7 @@ extern "C"
         FINISHER_BAR         = 410,
         VS_HPMP_BAR          = 412,
         VS_WIN_LOSS_WINDOW   = 413,
+        VS_TIME_OUT_TEXT     = 418,
         PLAYER_MARKER        = 419,
         UI_BOX               = 420,
         INVENTORY            = 421,

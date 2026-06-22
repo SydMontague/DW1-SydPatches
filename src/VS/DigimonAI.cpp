@@ -3,6 +3,7 @@
 #include "../Math.hpp"
 #include "../extern/VS.hpp"
 #include "../extern/dtl/types.hpp"
+#include "InitVS.hpp"
 
 namespace
 {

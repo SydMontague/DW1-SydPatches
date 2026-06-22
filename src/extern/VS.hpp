@@ -19,7 +19,6 @@ extern "C"
     void VS__removeBattleTextIn();
     void VS__removeBattleTextOut();
     int32_t VS__isBattleTextFinished();
-    void VS__tickBattleResultScreen(int32_t hasLostP1, int32_t hasLostP2);
     void VS__trySetAttackerCamera(DigimonEntity* entity, int32_t random, int32_t range);
     void VS__setMoveAnim(DigimonEntity* entity, FighterData* fighter, int32_t playerId, uint8_t moveSlot);
     void VS__setChargeupFlag(DigimonEntity* entity, FighterData* fighter, uint8_t move);

@@ -38,7 +38,6 @@
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
 .definelabel VS__initializePlayerMarker,0x800f6d98
-.definelabel VS__tickBattleResultScreen,0x800f4cb4
 .definelabel VS__increaseSpeedBuffer,   0x800f6bc8
 .definelabel VS__faintDigimon,          0x800f5120
 .definelabel VS__hasAffordableMoves2,   0x800f6c5c
@@ -51,6 +50,8 @@
 .definelabel VS__tickDigimonOnChargeup, 0x800f56d4
 .definelabel VS__tickDigimonOnCooldown, 0x800f5914
 .definelabel VS__tickDigimonOther,      0x800f59e8
+.definelabel VS__addTimeoutWindow,      0x800f4f9c
+.definelabel VS__renderTimeoutText,     0x800f7338
 
 .definelabel VS__PAUSING_PLAYER, 0x80134f30
 .definelabel VS__CAMERA_TIMER, 0x8013529c
