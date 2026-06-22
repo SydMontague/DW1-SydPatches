@@ -1,6 +1,7 @@
 #include "../Battle.h"
 #include "../Entity.hpp"
 #include "../Math.hpp"
+#include "../Model.hpp"
 #include "../extern/VS.hpp"
 #include "../extern/dtl/types.hpp"
 #include "InitVS.hpp"
@@ -39,6 +40,19 @@ namespace
     }
 
 } // namespace
+
+void VS__faintDigimon(DigimonEntity* entity, FighterData* fighter, int32_t playerId)
+{
+    entity->stats.unk2_2 = 1;
+    startAnimation(entity, 0x2B);
+    VS__resetFlatten(playerId);
+    VS__removeAllStatusFX(entity, fighter);
+    fighter->flags.raw         = fighter->flags.raw & 0xFF40;
+    fighter->flags.isDead      = 1;
+    fighter->flags.isAttacking = 1;
+    fighter->moveRange         = -1;
+    VS__resetDumbCooldownTimers(fighter);
+}
 
 extern "C"
 {

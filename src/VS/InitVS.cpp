@@ -12,6 +12,7 @@
 #include "../extern/dtl/types.hpp"
 #include "../extern/dw1.hpp"
 #include "../extern/libetc.hpp"
+#include "DigimonAI.hpp"
 #include "TimeoutWindow.hpp"
 
 namespace

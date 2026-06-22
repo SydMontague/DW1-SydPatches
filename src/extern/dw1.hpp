@@ -1806,7 +1806,6 @@ extern "C"
     void VS__tickDigimonOnCooldown(DigimonEntity* entity, DigimonEntity* other, FighterData* data);
     void VS__tickDigimonOther(DigimonEntity* entity, DigimonEntity* other, FighterData* data, int32_t fighterId);
     void VS__increaseSpeedBuffer(FighterData* fighter, Stats* stats);
-    void VS__faintDigimon(DigimonEntity* entity, FighterData* fighter, int32_t playerId);
     bool VS__hasAffordableMoves2(uint16_t* array, int32_t fighterId);
     void VS__initializePlayerMarker();
     void tickScript();
