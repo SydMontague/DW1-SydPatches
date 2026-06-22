@@ -84,6 +84,70 @@ namespace
         entity->animFlag &= 0xfe;
     }
 
+    void VS__confusedRotate(DigimonEntity* entity)
+    {
+        if (random(10) < 8) return;
+
+        auto rotation               = entity->posData->rotation.y + random(0x400) - 0x200;
+        entity->posData->rotation.y = ring(rotation, 0, 4096);
+    }
+
+    void VS__tickDigimonConfusion(DigimonEntity* entity, DigimonEntity* other, FighterData* data, int32_t id)
+    {
+        if (NO_AI_FLAG != 0) {
+            handleBattleIdle(entity, &entity->stats, data->flags);
+            return;
+        }
+
+        if (data->flags.isOnCooldown) {
+            VS__confusedRotate(entity);
+            VS__setWalking(entity, &entity->stats, data->flags);
+            collisionGrace(nullptr, entity, 280, 200);
+            if (data->cooldown < 2) {
+                data->flags.isOnCooldown = false;
+                data->cooldown           = 0;
+            }
+            return;
+        }
+
+        if (other == nullptr) {
+            VS__confusedRotate(entity);
+            if (VS__tickDigimonAttackClose(entity, 0, data, id)) collisionGrace(nullptr, entity, 280, 200);
+            if (!data->flags.isAttacking && random(100) < 5) {
+                handleBattleIdle(entity, &entity->stats, data->flags);
+                VS__tickDigimonAttackSelf(entity, 0, data);
+            }
+            return;
+        }
+
+        switch (data->moveRange) {
+            case 4:
+            {
+                handleBattleIdle(entity, &entity->stats, data->flags);
+                VS__tickDigimonAttackSelf(entity, other, data);
+                break;
+            }
+            case 3:
+            case 2:
+            {
+                auto move = entityGetTechFromAnim(entity, data->queuedAnim);
+                VS__tickDigimonAttackRanged(entity, other, data, move);
+                break;
+            }
+            case 1:
+                if (VS__tickDigimonAttackClose(entity, other, data, id)) collisionGrace(other, entity, 280, 200);
+                break;
+        }
+    }
+
+    void VS__tickDigimonSenile(DigimonEntity* entity, FighterData* data)
+    {
+        data->senileTimer--;
+        if (data->senileTimer == 0)
+            data->flags.raw &= 0xdfbf;
+        else
+            handleBattleIdle(entity, &entity->stats, data->flags);
+    }
 } // namespace
 
 void VS__faintDigimon(DigimonEntity* entity, FighterData* fighter, int32_t playerId)

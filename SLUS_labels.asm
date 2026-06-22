@@ -40,8 +40,6 @@
 .definelabel VS__initializePlayerMarker,0x800f6d98
 .definelabel VS__increaseSpeedBuffer,   0x800f6bc8
 .definelabel VS__hasAffordableMoves2,   0x800f6c5c
-.definelabel VS__tickDigimonConfusion,  0x800f5450
-.definelabel VS__tickDigimonSenile,     0x800f567c
 .definelabel VS__tickDigimonOnChargeup, 0x800f56d4
 .definelabel VS__tickDigimonOnCooldown, 0x800f5914
 .definelabel VS__tickDigimonOther,      0x800f59e8
@@ -49,6 +47,8 @@
 .definelabel VS__tickDigimonHoldDistance,0x800f5b4c
 .definelabel VS__tickDigimonAttackRanged,0x800f5ff8
 .definelabel VS__tickDigimonAttackingLogic,0x800f66ac
+.definelabel VS__setWalking,            0x800f6300
+.definelabel VS__tickDigimonAttackClose,0x800f5cf0
 
 .definelabel VS_DIGIMON_P1_PTR, 0x8013526c
 .definelabel VS_DIGIMON_P2_PTR, 0x80135270
@@ -457,6 +457,7 @@
 .definelabel VS__unloadMoveData, 0x800649cc
 .definelabel VS__deinitializeEFEEngine, 0x8006491c
 .definelabel VS__resetDumbCooldownTimers, 0x8005e238
+.definelabel VS__tickDigimonAttackSelf, 0x8005cef8
 
 .definelabel INTRO_TARGET_POS, 0x80071744
 .definelabel VS__INTRO_DIGIMON_NAMES, 0x8006ff20

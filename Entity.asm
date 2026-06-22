@@ -180,12 +180,12 @@
 ;  jal collisionGrace
 ;.org 0x800d44b0
 ;  jal collisionGrace
-.org 0x800f54e4
-  jal collisionGrace
-.org 0x800f5554
-  jal collisionGrace
-.org 0x800f560c
-  jal collisionGrace
+;.org 0x800f54e4
+;  jal collisionGrace
+;.org 0x800f5554
+;  jal collisionGrace
+;.org 0x800f560c
+;  jal collisionGrace
 .org 0x800f5ab4
   jal collisionGrace
 .org 0x800f6680
@@ -204,8 +204,8 @@
 ;  jal entityGetTechFromAnim
 ;.org 0x800e79b0
 ;  jal entityGetTechFromAnim
-.org 0x800f5620
-  jal entityGetTechFromAnim
+;.org 0x800f5620
+;  jal entityGetTechFromAnim
 .org 0x800f5864
   jal entityGetTechFromAnim
 .org 0x800f5e18

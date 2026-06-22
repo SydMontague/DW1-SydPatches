@@ -46,4 +46,5 @@ extern "C"
     void VS__unloadMoveData();
     void VS__deinitializeEFEEngine();
     void VS__resetDumbCooldownTimers(FighterData* fighter);
+    void VS__tickDigimonAttackSelf(DigimonEntity* self, DigimonEntity* other, FighterData* fighter);
 }

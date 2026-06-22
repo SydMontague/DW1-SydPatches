@@ -1260,22 +1260,22 @@ extern "C"
     {
         struct
         {
-            bool isPoisoned     : 1;
-            bool isConfused     : 1;
-            bool isStunned      : 1;
-            bool isFlattened    : 1;
-            bool isKnockedBack  : 1;
-            bool isAttacking    : 1;
-            bool isTransforming : 1;
-            bool isBlocking     : 1;
-            bool isProtected    : 1;
-            bool unkFlag1       : 1;
-            bool unkFlag2       : 1;
-            bool isOnChargeup   : 1;
-            bool isOnCooldown   : 1;
-            bool isSenile       : 1;
-            bool unkFlag3       : 1;
-            bool isDead         : 1;
+            bool isPoisoned     : 1; // 0x0001
+            bool isConfused     : 1; // 0x0002
+            bool isStunned      : 1; // 0x0004
+            bool isFlattened    : 1; // 0x0008
+            bool isKnockedBack  : 1; // 0x0010
+            bool isAttacking    : 1; // 0x0020
+            bool isTransforming : 1; // 0x0040
+            bool isBlocking     : 1; // 0x0080
+            bool isProtected    : 1; // 0x0100
+            bool unkFlag1       : 1; // 0x0200
+            bool unkFlag2       : 1; // 0x0400
+            bool isOnChargeup   : 1; // 0x0800
+            bool isOnCooldown   : 1; // 0x1000
+            bool isSenile       : 1; // 0x2000
+            bool unkFlag3       : 1; // 0x4000
+            bool isDead         : 1; // 0x8000
         };
         uint16_t raw;
     };
@@ -1795,6 +1795,8 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void VS__setWalking(DigimonEntity* entity, Stats* stats, BattleFlags flags);
+    bool VS__tickDigimonAttackClose(DigimonEntity* self, DigimonEntity* other, FighterData* data, int id);
     void VS__tickDigimonAttackingLogic(int32_t id);
     int32_t VS__tickDigimonHoldDistance(DigimonEntity* self, DigimonEntity* other, FighterData* data);
     void VS__tickDigimonAttackRanged(DigimonEntity* entity,
@@ -1802,8 +1804,6 @@ extern "C"
                                      FighterData* fighterData,
                                      int moveId);
     void VS__renderTimeoutText(int32_t instanceId);
-    void VS__tickDigimonConfusion(DigimonEntity* entity, DigimonEntity* other, FighterData* data, int32_t id);
-    void VS__tickDigimonSenile(DigimonEntity* entity, FighterData* data);
     void VS__tickDigimonOnChargeup(DigimonEntity* entity, DigimonEntity* other, FighterData* data);
     void VS__tickDigimonOnCooldown(DigimonEntity* entity, DigimonEntity* other, FighterData* data);
     void VS__tickDigimonOther(DigimonEntity* entity, DigimonEntity* other, FighterData* data, int32_t fighterId);
