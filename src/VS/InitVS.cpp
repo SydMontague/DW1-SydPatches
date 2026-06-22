@@ -12,6 +12,7 @@
 #include "../extern/dtl/types.hpp"
 #include "../extern/dw1.hpp"
 #include "../extern/libetc.hpp"
+#include "TimeoutWindow.hpp"
 
 namespace
 {
@@ -221,14 +222,15 @@ namespace
             VS__tickFrame();
             VS__tickFrame();
             VS__initializeDrawModel();
-            VS__addTimeoutWindow();
 
+            removeObject(ObjectID::VS_TIME_OUT_TEXT, 0);
+            VS__addTimeoutWindow();
             for (int32_t i = 0; i < 60; i++) {
                 if (isKeyDownPolled(InputButtons::BUTTON_CROSS)) break;
                 VS__tickFrame();
             }
+            VS__removeTimeoutWindow();
 
-            removeAnimatedUIBox(0, nullptr);
             VS__addWinLossDrawWindow();
             while (!VS__checkWinLossDrawTimer())
                 VS__tickFrame();
@@ -245,13 +247,16 @@ namespace
             VS__faintDigimon(loser, loserFighter, hasLostP1 ? 0 : 1);
             for (int32_t i = 0; i < 121; i++) {
                 if (i > 60 && isKeyDownPolled(InputButtons::BUTTON_CROSS)) break;
-                if (i == 60) VS__addTimeoutWindow();
+                if (i == 60) {
+                    removeObject(ObjectID::VS_TIME_OUT_TEXT, 0);
+                    VS__addTimeoutWindow();
+                }
                 VS__tickFrame();
             }
             VS__trySetAttackerCamera(loser, 5, 0);
             entityLookAtLocation(winner, &loser->posData->location);
             handleBattleIdle(winner, &winner->stats, winnerFighter->flags);
-            removeAnimatedUIBox(0, nullptr);
+            VS__removeTimeoutWindow();
         }
     }
 } // namespace

@@ -50,9 +50,10 @@
 .definelabel VS__tickDigimonOnChargeup, 0x800f56d4
 .definelabel VS__tickDigimonOnCooldown, 0x800f5914
 .definelabel VS__tickDigimonOther,      0x800f59e8
-.definelabel VS__addTimeoutWindow,      0x800f4f9c
-.definelabel VS__renderTimeoutText,     0x800f7338
+.definelabel VS__renderTimeoutText,     0x800f7284
 
+.definelabel VS_DIGIMON_P1_PTR, 0x8013526c
+.definelabel VS_DIGIMON_P2_PTR, 0x80135270
 .definelabel VS__PAUSING_PLAYER, 0x80134f30
 .definelabel VS__CAMERA_TIMER, 0x8013529c
 .definelabel VS_DISCIPLINE, 0x80135278

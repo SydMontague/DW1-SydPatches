@@ -93,8 +93,8 @@
 ;  jal createAnimatedUIBox
 ;.org 0x800ee068
 ;  jal createAnimatedUIBox
-.org 0x800f5104
-  jal createAnimatedUIBox
+;.org 0x800f5104
+;  jal createAnimatedUIBox
 .org 0x80100460
   jal createAnimatedUIBox
 

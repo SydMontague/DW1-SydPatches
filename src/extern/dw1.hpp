@@ -1491,6 +1491,21 @@ extern "C"
         bool isAllZero();
     };
 
+    struct RegisteredDigimon
+    {
+        int16_t hp;
+        int16_t mp;
+        int16_t offense;
+        int16_t defense;
+        int16_t speed;
+        int16_t brains;
+        int16_t discipline;
+        dtl::array<char, 14> name;
+        uint8_t digimonId;
+        dtl::array<uint8_t, 3> moves;
+        dtl::array<uint8_t, 32> unk;
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1759,6 +1774,8 @@ extern "C"
     extern dtl::array<uint16_t, 2> VS_DISCIPLINE;
     extern uint8_t VS__CAMERA_TIMER;
     extern uint8_t VS__PAUSING_PLAYER;
+    extern RegisteredDigimon* VS_DIGIMON_P1_PTR;
+    extern RegisteredDigimon* VS_DIGIMON_P2_PTR;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -1778,7 +1795,6 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
-    void VS__addTimeoutWindow();
     void VS__renderTimeoutText(int32_t instanceId);
     void VS__tickDigimonAttacking(DigimonEntity* self, Entity* other, int32_t id);
     void VS__tickDigimonHitByAttack(DigimonEntity* entity, FighterData* data, int32_t id);
@@ -1875,3 +1891,4 @@ static_assert(sizeof(MapLight) == 24);
 static_assert(sizeof(MapSetup) == 0x98);
 static_assert(sizeof(EntityTextDataEntry) == 0x10);
 static_assert(sizeof(EntityTextData) == 0x8C);
+static_assert(sizeof(RegisteredDigimon) == 0x40);
