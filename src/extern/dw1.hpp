@@ -1795,6 +1795,8 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void VS__tickDigimonRotateKeepDistance(DigimonEntity* entity, DigimonEntity* other, FighterData* data);
+    void VS__tickDigimonWaitingDistance(DigimonEntity* entity, DigimonEntity* other, FighterData* data);
     void VS__setWalking(DigimonEntity* entity, Stats* stats, BattleFlags flags);
     bool VS__tickDigimonAttackClose(DigimonEntity* self, DigimonEntity* other, FighterData* data, int id);
     void VS__tickDigimonAttackingLogic(int32_t id);
@@ -1804,9 +1806,6 @@ extern "C"
                                      FighterData* fighterData,
                                      int moveId);
     void VS__renderTimeoutText(int32_t instanceId);
-    void VS__tickDigimonOnChargeup(DigimonEntity* entity, DigimonEntity* other, FighterData* data);
-    void VS__tickDigimonOnCooldown(DigimonEntity* entity, DigimonEntity* other, FighterData* data);
-    void VS__tickDigimonOther(DigimonEntity* entity, DigimonEntity* other, FighterData* data, int32_t fighterId);
     void VS__increaseSpeedBuffer(FighterData* fighter, Stats* stats);
     bool VS__hasAffordableMoves2(uint16_t* array, int32_t fighterId);
     void VS__initializePlayerMarker();

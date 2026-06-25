@@ -48,7 +48,7 @@ namespace
                 auto entity =
                     reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i]));
 
-                if (getDigimonData(entity->type)->moves[entity->animId] != 45) continue;
+                if (getDigimonData(entity->type)->moves[entity->animId - 46] != 45) continue;
                 if (COMBAT_DATA_PTR->fighter[i].targetId != playerId) continue;
 
                 return;
@@ -148,6 +148,137 @@ namespace
         else
             handleBattleIdle(entity, &entity->stats, data->flags);
     }
+
+    void VS__tickDigimonOther(DigimonEntity* entity, DigimonEntity* other, FighterData* data, int32_t fighterId)
+    {
+        if (NO_AI_FLAG != 0 && FINISHING_ENTITY != entity) {
+            handleBattleIdle(entity, &entity->stats, data->flags);
+            return;
+        }
+
+        auto result = VS__tickDigimonHoldDistance(entity, other, data);
+        if (result != 0) return;
+
+        switch (data->moveRange) {
+            case 4:
+            {
+                handleBattleIdle(entity, &entity->stats, data->flags);
+                VS__tickDigimonAttackSelf(entity, other, data);
+                return;
+            }
+            case 3:
+            case 2:
+            {
+                auto move = getDigimonData(entity->type)->moves[data->queuedAnim - 46];
+                VS__tickDigimonAttackRanged(entity, other, data, move);
+                return;
+            }
+            case 1:
+            {
+                if (VS__tickDigimonAttackClose(entity, other, data, fighterId)) collisionGrace(other, entity, 280, 200);
+                return;
+            }
+        }
+    }
+
+    void VS__tickDigimonOnCooldown(DigimonEntity* entity, DigimonEntity* other, FighterData* data)
+    {
+        if (NO_AI_FLAG != 0) {
+            handleBattleIdle(entity, &entity->stats, data->flags);
+            return;
+        }
+
+        switch (entity->stats.chargeMode) {
+
+            case 2:
+            {
+                VS__setWalking(entity, &entity->stats, data->flags);
+                VS__tickDigimonRotateKeepDistance(entity, other, data);
+                break;
+            }
+            case 1:
+            case 0:
+            {
+                VS__tickDigimonWaitingDistance(entity, other, data);
+                break;
+            }
+        }
+
+        if (data->cooldown < 2) {
+            data->flags.isOnCooldown   = false;
+            data->flags.isTransforming = false;
+            data->cooldown             = 0;
+        }
+    }
+
+    void VS__tickDigimonOnChargeup(DigimonEntity* entity, DigimonEntity* other, FighterData* data)
+    {
+        if (NO_AI_FLAG != 0) {
+            handleBattleIdle(entity, &entity->stats, data->flags);
+            return;
+        }
+
+        auto result = VS__tickDigimonHoldDistance(entity, other, data);
+        if (data->cooldown == 0) {
+            if (result != 0) return;
+
+            switch (entity->stats.chargeMode) {
+                case 0:
+                {
+                    handleBattleIdle(entity, &entity->stats, data->flags);
+                    entityLookAtLocation(entity, &other->posData->location);
+                    data->hasCollidedWhileDistanceCmd = 0;
+                    if (data->speedBuffer > 0) data->flags.isOnChargeup = false;
+                    return;
+                }
+                case 1:
+                {
+                    VS__tickDigimonWaitingDistance(entity, other, data);
+                    auto move = entityGetTechFromAnim(entity, data->queuedAnim);
+                    if (data->speedBuffer == 100 || data->speedBuffer >= getMove(move)->power)
+                        data->flags.isOnChargeup = false;
+                    return;
+                }
+                case 2:
+                {
+                    VS__setWalking(entity, &entity->stats, data->flags);
+                    VS__tickDigimonRotateKeepDistance(entity, other, data);
+                    if (data->speedBuffer == 100) data->flags.isOnChargeup = false;
+                    return;
+                }
+                default: return;
+            }
+        }
+
+        if (result == 0) {
+            switch (entity->stats.chargeMode) {
+                case 0:
+                {
+                    VS__tickDigimonWaitingDistance(entity, other, data);
+                    break;
+                }
+                case 1:
+                {
+                    handleBattleIdle(entity, &entity->stats, data->flags);
+                    entityLookAtLocation(entity, &other->posData->location);
+                    data->hasCollidedWhileDistanceCmd = 0;
+                    break;
+                }
+                case 2:
+                {
+                    VS__setWalking(entity, &entity->stats, data->flags);
+                    VS__tickDigimonRotateKeepDistance(entity, other, data);
+                    break;
+                }
+            }
+
+            if (data->cooldown < 2) {
+                data->flags.isOnChargeup   = false;
+                data->flags.isTransforming = false;
+                data->cooldown             = 0;
+            }
+        }
+    }
 } // namespace
 
 void VS__faintDigimon(DigimonEntity* entity, FighterData* fighter, int32_t playerId)
@@ -218,7 +349,7 @@ extern "C"
                 fighter.targetId = targetId;
                 if (entity->stats.moves[3] != fighter.queuedAnim || fighter.moveRange < 1)
                     VS__setMoveAnim(entity, &fighter, playerId, 3);
-                VS__setChargeupFlag(entity, &fighter, getDigimonData(entity->type)->moves[fighter.queuedAnim]);
+                VS__setChargeupFlag(entity, &fighter, getDigimonData(entity->type)->moves[fighter.queuedAnim - 46]);
                 return;
             }
 
@@ -229,7 +360,7 @@ extern "C"
                 fighter.targetId = targetId;
                 if (entity->stats.moves[slotId] != fighter.queuedAnim || fighter.moveRange < 1)
                     VS__setMoveAnim(entity, &fighter, playerId, slotId);
-                VS__setChargeupFlag(entity, &fighter, getDigimonData(entity->type)->moves[fighter.queuedAnim]);
+                VS__setChargeupFlag(entity, &fighter, getDigimonData(entity->type)->moves[fighter.queuedAnim - 46]);
                 return;
             }
 

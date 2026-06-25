@@ -24,18 +24,18 @@
 ;  jal handleBattleIdle
 ;.org 0x800f56bc
 ;  jal handleBattleIdle
-.org 0x800f5700
-  jal handleBattleIdle
-.org 0x800f5774
-  jal handleBattleIdle
-.org 0x800f5814
-  jal handleBattleIdle
-.org 0x800f5940
-  jal handleBattleIdle
-.org 0x800f5a2c
-  jal handleBattleIdle
-.org 0x800f5b18
-  jal handleBattleIdle
+;.org 0x800f5700
+;  jal handleBattleIdle
+;.org 0x800f5774
+;  jal handleBattleIdle
+;.org 0x800f5814
+;  jal handleBattleIdle
+;.org 0x800f5940
+;  jal handleBattleIdle
+;.org 0x800f5a2c
+;  jal handleBattleIdle
+;.org 0x800f5b18
+;  jal handleBattleIdle
 .org 0x800f5bd8
   jal handleBattleIdle
 .org 0x800f5cb4
