@@ -2,6 +2,7 @@
 #include "../Entity.hpp"
 #include "../Math.hpp"
 #include "../Model.hpp"
+#include "../Utils.hpp"
 #include "../extern/VS.hpp"
 #include "../extern/dtl/types.hpp"
 #include "InitVS.hpp"
@@ -63,6 +64,50 @@ namespace
     {
         VS__tickDigimonAttackingLogic(playerId);
         if ((entity->animFlag & 1) == 0 && --fighter->invulnerableTimer == 0) entity->animFlag |= 1;
+    }
+
+    uint32_t VS__entityGetMoveWithHighestDistance(DigimonEntity* entity)
+    {
+        auto highest = 0;
+
+        for (auto& move : entity->stats.moves) {
+            if (move == 0xFF) continue;
+            highest = dtl::max(getMove(move)->distance, highest);
+        }
+
+        return highest;
+    }
+
+    int32_t VS__tickDigimonHoldDistance(DigimonEntity* entity, DigimonEntity* other, FighterData* data)
+    {
+        if (NO_AI_FLAG != 0) return 0;
+
+        auto command = COMBAT_DATA_PTR->player.currentCommand[entity != &PARTNER_ENTITY];
+
+        if (command == BattleCommand::DISTANCE) {
+            auto distance       = VS__entityGetMoveWithHighestDistance(other);
+            auto targetDistance = distance + 640000;
+            if (entity->animId > 34 && entity->animId < 37) targetDistance = distance + 800000;
+            auto distanceToEntity = getDistanceSquared(&entity->posData->location, &other->posData->location);
+
+            if (distanceToEntity < targetDistance) {
+                VS__setWalking(entity, &entity->stats, data->flags);
+                VS__tickDigimonRotateKeepDistance(entity, other, data);
+            }
+            else {
+                data->hasCollidedWhileDistanceCmd = 0;
+                handleBattleIdle(entity, &entity->stats, data->flags);
+                entityLookAtLocation(entity, &other->posData->location);
+            }
+            return 1;
+        }
+        else if (command == BattleCommand::DEFEND) {
+            handleBattleIdle(entity, &entity->stats, data->flags);
+            entityLookAtLocation(entity, &other->posData->location);
+            data->hasCollidedWhileDistanceCmd = 0;
+            return 1;
+        }
+        return 0;
     }
 
     void VS__tickDigimonFlat(DigimonEntity* entity, DigimonEntity* target, FighterData* fighter)

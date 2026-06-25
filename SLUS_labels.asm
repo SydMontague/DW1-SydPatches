@@ -41,7 +41,6 @@
 .definelabel VS__increaseSpeedBuffer,   0x800f6bc8
 .definelabel VS__hasAffordableMoves2,   0x800f6c5c
 .definelabel VS__renderTimeoutText,     0x800f7284
-.definelabel VS__tickDigimonHoldDistance,0x800f5b4c
 .definelabel VS__tickDigimonAttackRanged,0x800f5ff8
 .definelabel VS__tickDigimonAttackingLogic,0x800f66ac
 .definelabel VS__setWalking,            0x800f6300

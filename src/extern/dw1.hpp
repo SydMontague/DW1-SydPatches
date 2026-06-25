@@ -1800,7 +1800,6 @@ extern "C"
     void VS__setWalking(DigimonEntity* entity, Stats* stats, BattleFlags flags);
     bool VS__tickDigimonAttackClose(DigimonEntity* self, DigimonEntity* other, FighterData* data, int id);
     void VS__tickDigimonAttackingLogic(int32_t id);
-    int32_t VS__tickDigimonHoldDistance(DigimonEntity* self, DigimonEntity* other, FighterData* data);
     void VS__tickDigimonAttackRanged(DigimonEntity* entity,
                                      DigimonEntity* target,
                                      FighterData* fighterData,
