@@ -1776,6 +1776,7 @@ extern "C"
     extern uint8_t VS__PAUSING_PLAYER;
     extern RegisteredDigimon* VS_DIGIMON_P1_PTR;
     extern RegisteredDigimon* VS_DIGIMON_P2_PTR;
+    extern int32_t VS__FINISHER_TIMER;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -1795,15 +1796,11 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void VS__tickDigimonAttackLookAtTarget(DigimonEntity* entity, Vector* location, int dx, int dy);
     void VS__tickDigimonRotateKeepDistance(DigimonEntity* entity, DigimonEntity* other, FighterData* data);
     void VS__tickDigimonWaitingDistance(DigimonEntity* entity, DigimonEntity* other, FighterData* data);
     void VS__setWalking(DigimonEntity* entity, Stats* stats, BattleFlags flags);
-    bool VS__tickDigimonAttackClose(DigimonEntity* self, DigimonEntity* other, FighterData* data, int id);
     void VS__tickDigimonAttackingLogic(int32_t id);
-    void VS__tickDigimonAttackRanged(DigimonEntity* entity,
-                                     DigimonEntity* target,
-                                     FighterData* fighterData,
-                                     int moveId);
     void VS__renderTimeoutText(int32_t instanceId);
     void VS__increaseSpeedBuffer(FighterData* fighter, Stats* stats);
     bool VS__hasAffordableMoves2(uint16_t* array, int32_t fighterId);

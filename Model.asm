@@ -283,12 +283,12 @@
 ;  jal startAnimation
 ;.org 0x800f5428
 ;  jal startAnimation
-.org 0x800f5e68
-  jal startAnimation
-.org 0x800f5ebc
-  jal startAnimation
-.org 0x800f5f6c
-  jal startAnimation
+;.org 0x800f5e68
+;  jal startAnimation
+;.org 0x800f5ebc
+;  jal startAnimation
+;.org 0x800f5f6c
+;  jal startAnimation
 .org 0x800f6d90
   j startAnimation
 

@@ -47,4 +47,8 @@ extern "C"
     void VS__deinitializeEFEEngine();
     void VS__resetDumbCooldownTimers(FighterData* fighter);
     void VS__tickDigimonAttackSelf(DigimonEntity* self, DigimonEntity* other, FighterData* fighter);
+    void VS__addFinisherBar(int32_t fighterId);
+    int32_t VS__addFinisherAura(DigimonEntity* entity, uint16_t duration);
+    int32_t VS__canUseAOE(DigimonEntity* self, FighterData* data);
+    void VS__castAttackEffect(DigimonEntity* self, DigimonEntity* other, FighterData* data);
 }

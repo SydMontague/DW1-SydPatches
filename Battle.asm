@@ -40,12 +40,12 @@
 ;  jal handleBattleIdle
 ;.org 0x800f5cb4
 ;  jal handleBattleIdle
-.org 0x800f5db4
-  jal handleBattleIdle
-.org 0x800f6030
-  jal handleBattleIdle
-.org 0x800f61dc
-  jal handleBattleIdle
+;.org 0x800f5db4
+;  jal handleBattleIdle
+;.org 0x800f6030
+;  jal handleBattleIdle
+;.org 0x800f61dc
+;  jal handleBattleIdle
 .org 0x800f6b24
   jal handleBattleIdle
 

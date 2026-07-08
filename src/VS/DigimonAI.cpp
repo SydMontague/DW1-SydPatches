@@ -110,6 +110,118 @@ namespace
         return 0;
     }
 
+    bool VS__tickDigimonAttackClose(DigimonEntity* entity, DigimonEntity* other, FighterData* data, int32_t id)
+    {
+        auto rotation = entity->posData->rotation.y;
+
+        if (other == nullptr)
+            VS__setWalking(entity, &entity->stats, data->flags);
+        else {
+            auto distance       = getDistanceSquared(&entity->posData->location, &other->posData->location);
+            auto combinedRadius = getDigimonData(entity->type)->radius + getDigimonData(other->type)->radius;
+
+            if (distance <= combinedRadius * combinedRadius) {
+
+                handleBattleIdle(entity, &entity->stats, data->flags);
+                if (NO_AI_FLAG != 0) {
+                    if (FINISHING_ENTITY != entity) return false;
+                    if (VS__FINISHER_TIMER > 0) {
+                        VS__FINISHER_TIMER--;
+                        entityLookAtLocation(entity, &other->posData->location);
+                        return false;
+                    }
+                }
+                else {
+                    auto tech = entityGetTechFromAnim(entity, data->queuedAnim);
+                    if (tech > 57 && tech < 113) {
+                        NO_AI_FLAG       = 1;
+                        FINISHING_ENTITY = entity;
+                        VS__addFinisherBar(id);
+                        startAnimation(entity, data->queuedAnim);
+                        entity->animFlag &= 0xfe;
+                        VS__ACTIVE_FINISHER_AURA_ID = VS__addFinisherAura(entity, 80);
+                        VS__FINISHER_TIMER          = 80;
+                        return false;
+                    }
+                }
+
+                if (!VS__canUseAOE(entity, data)) {
+                    startAnimation(entity, data->queuedAnim);
+                    data->flags.isAttacking = true;
+                    VS__castAttackEffect(entity, other, data);
+                    return false;
+                }
+
+                return false;
+            }
+
+            if (NO_AI_FLAG != 0) {
+                if (FINISHING_ENTITY != entity) return false;
+                if (VS__FINISHER_TIMER > 0) {
+                    VS__FINISHER_TIMER--;
+                    entityLookAtLocation(entity, &other->posData->location);
+                    return false;
+                }
+
+                startAnimation(entity, data->queuedAnim);
+                data->flags.isAttacking = true;
+                VS__castAttackEffect(entity, other, data);
+                return false;
+            }
+
+            VS__setWalking(entity, &entity->stats, data->flags);
+            entityLookAtLocation(entity, &other->posData->location);
+        }
+
+        auto collision = entityCheckCollision(nullptr, entity, 280, 200);
+        if (collision != CollisionCode::NONE) entity->posData->rotation.y = rotation;
+        return collision != CollisionCode::NONE;
+    }
+
+    void VS__tickDigimonAttackRanged(DigimonEntity* entity, DigimonEntity* target, FighterData* fighterData, int moveId)
+    {
+        if (fighterData->unk15 > 100) {
+            handleBattleIdle(entity, &entity->stats, fighterData->flags);
+            fighterData->unk15++;
+            if (fighterData->unk15 > 160) {
+                fighterData->flags.isTransforming = false;
+                fighterData->unk15                = 0;
+            }
+            return;
+        }
+
+        if (NO_AI_FLAG != 0 && entity == FINISHING_ENTITY) {
+            VS__tickDigimonAttackSelf(entity, target, fighterData);
+            return;
+        }
+
+        auto distance       = getDistanceSquared(&entity->posData->location, &target->posData->location);
+        auto combiendRadius = getDigimonData(entity->type)->radius + getDigimonData(target->type)->radius;
+        auto maxDistance    = getMove(moveId)->distance + combiendRadius * combiendRadius;
+        auto minDistance    = (maxDistance * 3) / 10;
+
+        if (distance > maxDistance + minDistance) {
+            VS__setWalking(entity, &entity->stats, fighterData->flags);
+            VS__tickDigimonAttackLookAtTarget(entity, &target->posData->location, 280, 200);
+            fighterData->unk15++;
+        }
+        else if (distance < maxDistance - minDistance) {
+            VS__setWalking(entity, &entity->stats, fighterData->flags);
+            VS__tickDigimonRotateKeepDistance(entity, target, fighterData);
+            fighterData->unk15++;
+        }
+        else {
+            fighterData->unk15 = 0;
+            handleBattleIdle(entity, &entity->stats, fighterData->flags);
+            if (!fighterData->flags.isFlattened || BATTLE_FRAME_COUNT % 40 == 0) {
+                VS__tickDigimonAttackSelf(entity, target, fighterData);
+            }
+            else {
+                entityLookAtLocation(entity, &target->posData->location);
+            }
+        }
+    }
+
     void VS__tickDigimonFlat(DigimonEntity* entity, DigimonEntity* target, FighterData* fighter)
     {
         if (NO_AI_FLAG != 0) {
