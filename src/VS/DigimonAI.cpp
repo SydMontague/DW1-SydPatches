@@ -1,3 +1,4 @@
+#include "DigimonAI.hpp"
 #include "../Battle.h"
 #include "../Entity.hpp"
 #include "../Math.hpp"
@@ -453,6 +454,16 @@ void VS__faintDigimon(DigimonEntity* entity, FighterData* fighter, int32_t playe
 
 extern "C"
 {
+    void VS__setWalking(DigimonEntity* entity, Stats* stats, BattleFlags flags)
+    {
+        if (entity->animId == 0x23 || entity->animId == 0x24) return;
+
+        auto animId = 0x23;
+        if (!flags.isPoisoned && (stats->hp / 5 < stats->currentHP)) animId = 0x24;
+
+        startAnimation(entity, animId);
+    }
+
     void VS__tickDigimonAI(int32_t playerId)
     {
         auto* entity =

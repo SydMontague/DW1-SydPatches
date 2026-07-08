@@ -42,7 +42,6 @@
 .definelabel VS__hasAffordableMoves2,   0x800f6c5c
 .definelabel VS__renderTimeoutText,     0x800f7284
 .definelabel VS__tickDigimonAttackingLogic,0x800f66ac
-.definelabel VS__setWalking,            0x800f6300
 .definelabel VS__tickDigimonRotateKeepDistance,0x800f6340
 .definelabel VS__tickDigimonWaitingDistance,0x800f69d8
 .definelabel VS__tickDigimonAttackLookAtTarget,0x800f660c

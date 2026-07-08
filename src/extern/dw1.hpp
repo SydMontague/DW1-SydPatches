@@ -1799,7 +1799,6 @@ extern "C"
     void VS__tickDigimonAttackLookAtTarget(DigimonEntity* entity, Vector* location, int dx, int dy);
     void VS__tickDigimonRotateKeepDistance(DigimonEntity* entity, DigimonEntity* other, FighterData* data);
     void VS__tickDigimonWaitingDistance(DigimonEntity* entity, DigimonEntity* other, FighterData* data);
-    void VS__setWalking(DigimonEntity* entity, Stats* stats, BattleFlags flags);
     void VS__tickDigimonAttackingLogic(int32_t id);
     void VS__renderTimeoutText(int32_t instanceId);
     void VS__increaseSpeedBuffer(FighterData* fighter, Stats* stats);

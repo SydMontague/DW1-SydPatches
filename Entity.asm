@@ -200,19 +200,6 @@
 .org 0x80104860
   jal addEntityText
 
-;.org 0x800e670c
-;  jal entityGetTechFromAnim
-;.org 0x800e79b0
-;  jal entityGetTechFromAnim
-;.org 0x800f5620
-;  jal entityGetTechFromAnim
-;.org 0x800f5864
-;  jal entityGetTechFromAnim
-;.org 0x800f5e18
-;  jal entityGetTechFromAnim
-.org 0x800f62a0
-  jal entityGetTechFromAnim
-
 .close 
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

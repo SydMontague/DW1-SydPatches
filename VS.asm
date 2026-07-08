@@ -43,4 +43,9 @@
 .org 0x800f7250
   jal VS__deinitializeCombat
 
+.org 0x800f6ab8
+  jal VS__setWalking
+.org 0x800f6af0
+  jal VS__setWalking
+
 .close
