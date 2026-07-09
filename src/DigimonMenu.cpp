@@ -1,3 +1,5 @@
+#include "DigimonMenu.hpp"
+
 #include "AtlasFont.hpp"
 #include "Entity.hpp"
 #include "Font.hpp"
@@ -9,12 +11,24 @@
 #include "StatsView.hpp"
 #include "TechView.hpp"
 #include "Timestamp.hpp"
+#include "UIBox.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
+#include "extern/dtl/unique_ptr.hpp"
 #include "extern/dw1.hpp"
 
 namespace
 {
+    constexpr auto WINDOW_X      = -150;
+    constexpr auto WINDOW_Y      = -89;
+    constexpr auto WINDOW_WIDTH  = 300;
+    constexpr auto WINDOW_HEIGHT = 190;
+    constexpr auto TAB1_WIDTH    = 76;
+    constexpr auto TAB2_WIDTH    = 64;
+    constexpr auto TAB1_X        = WINDOW_X + 5;
+    constexpr auto TAB2_X        = TAB1_X + TAB1_WIDTH - 1;
+    constexpr auto TAB_Y         = WINDOW_Y - 15;
+
     struct Data
     {
     public:
@@ -22,6 +36,9 @@ namespace
 
         void tick();
         void render();
+
+        // Original Digimon menu used createMenuBox features=0 → opaque fill.
+        UIBox box;
 
     private:
         void updateLabelColors();
@@ -32,16 +49,6 @@ namespace
         TechView techView;
         uint8_t state;
     };
-
-    constexpr auto WINDOW_X      = -150;
-    constexpr auto WINDOW_Y      = -89;
-    constexpr auto WINDOW_WIDTH  = 300;
-    constexpr auto WINDOW_HEIGHT = 190;
-    constexpr auto TAB1_WIDTH    = 76;
-    constexpr auto TAB2_WIDTH    = 64;
-    constexpr auto TAB1_X        = WINDOW_X + 5;
-    constexpr auto TAB2_X        = TAB1_X + TAB1_WIDTH - 1;
-    constexpr auto TAB_Y         = WINDOW_Y - 15;
 
     dtl::unique_ptr<Data> data{};
 
@@ -100,14 +107,15 @@ namespace
         techTab.setState(state != 1);
     }
 
-    void renderDigimonMenu(int32_t instanceId)
+    RECT tamerStartRect()
     {
-        data->render();
-    }
-
-    void tickDigimonMenu(int32_t instanceId)
-    {
-        data->tick();
+        ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
+        return {
+            .x      = static_cast<int16_t>(pos.screenX - 5),
+            .y      = static_cast<int16_t>(pos.screenY - 5),
+            .width  = 10,
+            .height = 10,
+        };
     }
 } // namespace
 
@@ -116,13 +124,55 @@ void addDigimonMenu()
     TAMER_ENTITY.isOnScreen   = false;
     PARTNER_ENTITY.isOnScreen = false;
     data                      = dtl::make_unique<Data>();
-    createMenuBox(1, WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, tickDigimonMenu, renderDigimonMenu);
+    data->box =
+        UIBox({WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT}, {.fill = UIBox::Fill::OPAQUE}, tamerStartRect());
 }
 
 void removeDigimonMenu()
 {
-    TAMER_ENTITY.isOnScreen   = true;
-    PARTNER_ENTITY.isOnScreen = true;
-    closeUIBoxIfOpen(1);
-    data.reset();
+    if (!data) return;
+    data->box.closeIfOpen();
+}
+
+bool isDigimonMenuActive()
+{
+    return static_cast<bool>(data);
+}
+
+bool isDigimonMenuOpened()
+{
+    return data && data->box.isOpen();
+}
+
+void tickDigimonMenu()
+{
+    if (!data) return;
+    data->box.tick();
+    if (data->box.isClosed()) {
+        TAMER_ENTITY.isOnScreen   = true;
+        PARTNER_ENTITY.isOnScreen = true;
+        data.reset();
+        return;
+    }
+    if (data->box.isOpen()) data->tick();
+}
+
+void renderDigimonMenu(int32_t layer)
+{
+    if (!data) return;
+    if (data->box.isOpen()) data->render();
+    data->box.render(layer);
+}
+
+int16_t digimonMenuBoxHeight()
+{
+    return data ? data->box.finalPos().height : 0;
+}
+
+void setDigimonMenuBoxHeight(int16_t height)
+{
+    if (!data) return;
+    auto rect   = data->box.finalPos();
+    rect.height = height;
+    data->box.resize(rect);
 }

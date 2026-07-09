@@ -1,6 +1,7 @@
 #include "TechView.hpp"
 
 #include "AtlasFont.hpp"
+#include "DigimonMenu.hpp"
 #include "Entity.hpp"
 #include "Font.hpp"
 #include "Helper.hpp"
@@ -566,8 +567,8 @@ namespace
         dtl::array<AtlasString, 5> strings{};
         bool isValid;
 
-        [[gnu::optimize("Os")]]
-        void setMove(int32_t moveId)
+        // NOLINTNEXTLINE: dunno why it doesn't know optimize...
+        __attribute__((optimize("Os"))) void setMove(int32_t moveId)
         {
             isValid = moveId != 0xFF && hasMove(moveId);
             if (isValid) {
@@ -662,8 +663,8 @@ namespace
             };
         }
 
-        [[gnu::optimize("Os")]]
-        void setMove(uint8_t moveId)
+        // NOLINTNEXTLINE: dunno why it doesn't know optimize...
+        __attribute__((optimize("Os"))) void setMove(uint8_t moveId)
         {
             isValid = moveId != 0xFF;
             if (isValid) {
@@ -736,8 +737,8 @@ struct Private
     int8_t moveSelectedColumn = 0;
 
     uint8_t state = 0;
-    [[gnu::optimize("Os")]]
-    Private();
+    // NOLINTNEXTLINE
+    __attribute__((optimize("Os"))) Private();
 
     void render(int32_t depth);
     void tick();
@@ -837,16 +838,19 @@ void Private::tick()
     }
 
     if (state == 5) {
-        UI_BOX_DATA[1].finalPos.height += 39;
-        if (UI_BOX_DATA[1].finalPos.height > 189) state = 0;
+        auto h = digimonMenuBoxHeight() + 39;
+        setDigimonMenuBoxHeight(h);
+        if (h > 189) state = 0;
     }
     if (state == 2) {
-        UI_BOX_DATA[1].finalPos.height += 39;
-        if (UI_BOX_DATA[1].finalPos.height > 189) state = 3;
+        auto h = digimonMenuBoxHeight() + 39;
+        setDigimonMenuBoxHeight(h);
+        if (h > 189) state = 3;
     }
     if (state == 1 || state == 4) {
-        UI_BOX_DATA[1].finalPos.height -= 39;
-        if (UI_BOX_DATA[1].finalPos.height < 74) state++;
+        auto h = digimonMenuBoxHeight() - 39;
+        setDigimonMenuBoxHeight(h);
+        if (h < 74) state++;
     }
 
     if (state == 3) {

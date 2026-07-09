@@ -17,6 +17,7 @@
 #include "Sound.hpp"
 #include "StatsView.hpp"
 #include "Tamer.hpp"
+#include "UIBox.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
 #include "extern/dw1.hpp"
@@ -26,6 +27,8 @@
 
 namespace
 {
+    UIBox triangleBox;
+
     void renderDebugIcon(int16_t posX, int16_t posY, int16_t width, int16_t height)
     {
         uint8_t pulse = (PLAYTIME_FRAMES % 16 < 8) ? 220 : 150;
@@ -478,7 +481,7 @@ extern "C"
                 }
             }
 
-            if (isKeyDown(InputButtons::BUTTON_TRIANGLE) && (UI_BOX_DATA[0].state == 1 || UI_BOX_DATA[0].frame == 0)) {
+            if (isKeyDown(InputButtons::BUTTON_TRIANGLE) && !triangleBox.isAnimating()) {
                 playSound(0, 4);
                 closeTriangleMenu();
                 Tamer_setState(0);
@@ -491,9 +494,39 @@ extern "C"
 
     void closeTriangleMenu()
     {
-        closeUIBoxIfOpen(1);
-        closeUIBoxIfOpen(0);
+        // Hard-close everything: callers expect the menu hierarchy gone immediately.
+        removeDigimonMenu();
+        removePlayerMenu();
+        triangleBox = UIBox{};
         removeObject(ObjectID::GAME_MENU, 0);
+    }
+
+    RECT triangleBoxFinal()
+    {
+        auto height = GAME_MENU_HEIGHT;
+        if (isDebugEnabled() || !fishHidden) height += GAME_MENU_EXTRA_HEIGHT;
+        return {.x = GAME_MENU_X, .y = GAME_MENU_Y, .width = GAME_MENU_WIDTH, .height = static_cast<int16_t>(height)};
+    }
+
+    RECT triangleBoxStart()
+    {
+        ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
+        return {
+            .x      = static_cast<int16_t>(pos.screenX - 5),
+            .y      = static_cast<int16_t>(pos.screenY - 5),
+            .width  = 10,
+            .height = 10,
+        };
+    }
+
+    void renderTriangleObject(int32_t)
+    {
+        constexpr int32_t layer = 6;
+        if (triangleBox.isOpen()) renderGameMenu(0); // content first; LIFO at depth → content ends up in front
+        triangleBox.render(layer);
+
+        renderDigimonMenu(5);
+        renderPlayerMenu(5);
     }
 
     void tickTriangleMenu(int32_t instanceId)
@@ -501,23 +534,16 @@ extern "C"
         switch (TRIANGLE_MENU_STATE) {
             case 0:
             {
-                auto height = GAME_MENU_HEIGHT;
-                if (isDebugEnabled() || !fishHidden) height += GAME_MENU_EXTRA_HEIGHT;
-                createMenuBox(0, GAME_MENU_X, GAME_MENU_Y, GAME_MENU_WIDTH, height, 2, tickGameMenu, renderGameMenu);
+                triangleBox = UIBox(triangleBoxFinal(), UIBox::Style{}, triangleBoxStart());
+                playSound(0, 0);
                 MENU_STATE          = 0;
                 TRIANGLE_MENU_STATE = 0xFFFFFFFF;
                 break;
             }
-            case 1:
-            {
-                closeUIBoxIfOpen(0);
-                removeObject(ObjectID::GAME_MENU, 0);
-                break;
-            }
             case 2:
             {
-                closeUIBoxIfOpen(0);
-                if (UI_BOX_DATA[0].frame == 0) {
+                triangleBox.closeIfOpen();
+                if (triangleBox.isClosed()) {
                     addInventoryUI();
                     TRIANGLE_MENU_STATE = 0xFFFFFFFF;
                 }
@@ -525,8 +551,8 @@ extern "C"
             }
             case 3:
             {
-                closeUIBoxIfOpen(0);
-                if (UI_BOX_DATA[0].frame == 0) {
+                triangleBox.closeIfOpen();
+                if (triangleBox.isClosed()) {
                     TRIANGLE_MENU_STATE = 0xFFFFFFFF;
                     addDigimonMenu();
                 }
@@ -535,13 +561,13 @@ extern "C"
             case 4:
             {
                 removeDigimonMenu();
-                if (UI_BOX_DATA[1].frame == 0) TRIANGLE_MENU_STATE = 0;
+                if (!isDigimonMenuActive()) TRIANGLE_MENU_STATE = 0;
                 break;
             }
             case 5:
             {
-                closeUIBoxIfOpen(0);
-                if (UI_BOX_DATA[0].frame == 0) {
+                triangleBox.closeIfOpen();
+                if (triangleBox.isClosed()) {
                     TRIANGLE_MENU_STATE = 0xFFFFFFFF;
                     addPlayerMenu();
                 }
@@ -550,13 +576,13 @@ extern "C"
             case 6:
             {
                 removePlayerMenu();
-                if (UI_BOX_DATA[1].frame == 0) TRIANGLE_MENU_STATE = 0;
+                if (!isPlayerMenuActive()) TRIANGLE_MENU_STATE = 0;
                 break;
             }
             case 7:
             {
-                closeUIBoxIfOpen(0);
-                if (UI_BOX_DATA[0].frame == 0) {
+                triangleBox.closeIfOpen();
+                if (triangleBox.isClosed()) {
                     TRIANGLE_MENU_STATE = 0xFFFFFFFF;
                     addDebugMenu();
                 }
@@ -565,10 +591,19 @@ extern "C"
             case 8:
             {
                 removePlayerMenu();
-                if (UI_BOX_DATA[1].frame == 0) TRIANGLE_MENU_STATE = 0;
+                if (!isPlayerMenuActive()) TRIANGLE_MENU_STATE = 0;
                 break;
             }
         }
+
+        // Triangle-press input handling lives in tickGameMenu when state==1; that
+        // function used to be the registered UI_BOX tick callback. Now we call it
+        // directly here once the box is fully open.
+        if (triangleBox.isOpen()) tickGameMenu(instanceId);
+
+        triangleBox.tick();
+        tickDigimonMenu();
+        tickPlayerMenu();
     }
 
     void addGameMenu()
@@ -582,17 +617,29 @@ extern "C"
         selectedOption        = (fishingRodState == 2) ? 6 : 0;
         optionCount           = isDebugEnabled() ? 8 : (fishHidden ? 6 : 7);
         TRIANGLE_MENU_STATE   = 0;
-        addObject(ObjectID::GAME_MENU, 0, tickTriangleMenu, nullptr);
+        addObject(ObjectID::GAME_MENU, 0, tickTriangleMenu, renderTriangleObject);
     }
 
     void removeTriangleMenu()
     {
-        removeStaticUIBox(0);
+        triangleBox = UIBox{};
         removeObject(ObjectID::GAME_MENU, 0);
     }
 
     void removeUIBox1()
     {
-        removeStaticUIBox(1);
+        // Legacy name. Was "force-close slot 1"; that slot held Digimon/Player.
+        removeDigimonMenu();
+        removePlayerMenu();
+    }
+
+    bool isGameMenuActive()
+    {
+        return !triangleBox.isClosed() || isDigimonMenuActive() || isPlayerMenuActive();
+    }
+
+    bool isGameMenuOpened()
+    {
+        return triangleBox.isOpen() || isDigimonMenuOpened() || isPlayerMenuOpened();
     }
 }
