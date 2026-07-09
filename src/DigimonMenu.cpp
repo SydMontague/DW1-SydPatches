@@ -1,3 +1,5 @@
+#include "DigimonMenu.hpp"
+
 #include "AtlasFont.hpp"
 #include "Entity.hpp"
 #include "Font.hpp"
@@ -9,19 +11,33 @@
 #include "StatsView.hpp"
 #include "TechView.hpp"
 #include "Timestamp.hpp"
+#include "UIBox.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
+#include "extern/dtl/unique_ptr.hpp"
 #include "extern/dw1.hpp"
 
 namespace
 {
+    constexpr auto WINDOW_X      = -150;
+    constexpr auto WINDOW_Y      = -89;
+    constexpr auto WINDOW_WIDTH  = 300;
+    constexpr auto WINDOW_HEIGHT = 190;
+    constexpr auto TAB1_WIDTH    = 76;
+    constexpr auto TAB2_WIDTH    = 64;
+    constexpr auto TAB1_X        = WINDOW_X + 5;
+    constexpr auto TAB2_X        = TAB1_X + TAB1_WIDTH - 1;
+    constexpr auto TAB_Y         = WINDOW_Y - 15;
+
     struct Data
     {
     public:
         Data();
 
-        void tick();
+        bool tick();
         void render();
+
+        UIBox box{{WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT}, {.fill = UIBox::Fill::OPAQUE}, tamerStartRect()};
 
     private:
         void updateLabelColors();
@@ -33,16 +49,6 @@ namespace
         uint8_t state;
     };
 
-    constexpr auto WINDOW_X      = -150;
-    constexpr auto WINDOW_Y      = -89;
-    constexpr auto WINDOW_WIDTH  = 300;
-    constexpr auto WINDOW_HEIGHT = 190;
-    constexpr auto TAB1_WIDTH    = 76;
-    constexpr auto TAB2_WIDTH    = 64;
-    constexpr auto TAB1_X        = WINDOW_X + 5;
-    constexpr auto TAB2_X        = TAB1_X + TAB1_WIDTH - 1;
-    constexpr auto TAB_Y         = WINDOW_Y - 15;
-
     dtl::unique_ptr<Data> data{};
 
     Data::Data()
@@ -52,8 +58,12 @@ namespace
     {
     }
 
-    void Data::tick()
+    bool Data::tick()
     {
+        box.tick();
+
+        if (!box.isOpen()) return box.isClosed();
+
         bool handleInput = true;
         if (state == 0) {
             // stats menu doesn't need special interaction
@@ -81,33 +91,27 @@ namespace
                 playSound(0, 4);
             }
         }
+        return false;
     }
 
     void Data::render()
     {
-        if (state == 0)
-            statsView.render(5);
-        else if (state == 1)
-            techView.render(5);
+        if (box.isOpen()) {
+            if (state == 0)
+                statsView.render(5);
+            else if (state == 1)
+                techView.render(5);
 
-        statusTab.render(5);
-        techTab.render(5);
+            statusTab.render(5);
+            techTab.render(5);
+        }
+        box.render(5);
     }
 
     void Data::updateLabelColors()
     {
         statusTab.setState(state != 0);
         techTab.setState(state != 1);
-    }
-
-    void renderDigimonMenu(int32_t instanceId)
-    {
-        data->render();
-    }
-
-    void tickDigimonMenu(int32_t instanceId)
-    {
-        data->tick();
     }
 } // namespace
 
@@ -116,13 +120,48 @@ void addDigimonMenu()
     TAMER_ENTITY.isOnScreen   = false;
     PARTNER_ENTITY.isOnScreen = false;
     data                      = dtl::make_unique<Data>();
-    createMenuBox(1, WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, tickDigimonMenu, renderDigimonMenu);
 }
 
 void removeDigimonMenu()
 {
+    if (!data) return;
     TAMER_ENTITY.isOnScreen   = true;
     PARTNER_ENTITY.isOnScreen = true;
-    closeUIBoxIfOpen(1);
-    data.reset();
+    data->box.closeIfOpen();
+}
+
+bool isDigimonMenuActive()
+{
+    return static_cast<bool>(data);
+}
+
+bool isDigimonMenuOpened()
+{
+    return data && data->box.isOpen();
+}
+
+void tickDigimonMenu()
+{
+    if (!data) return;
+    auto isFinished = data->tick();
+    if (isFinished) data.reset();
+}
+
+void renderDigimonMenu(int32_t)
+{
+    if (!data) return;
+    data->render();
+}
+
+int16_t digimonMenuBoxHeight()
+{
+    return data ? data->box.finalPos().height : 0;
+}
+
+void setDigimonMenuBoxHeight(int16_t height)
+{
+    if (!data) return;
+    auto rect   = data->box.finalPos();
+    rect.height = height;
+    data->box.resize(rect);
 }

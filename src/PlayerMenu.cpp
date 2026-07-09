@@ -1,3 +1,4 @@
+#include "PlayerMenu.hpp"
 #include "Files.hpp"
 #include "Font.hpp"
 #include "Helper.hpp"
@@ -9,6 +10,7 @@
 #include "PlayerInfoView.hpp"
 #include "PlayerMedalView.hpp"
 #include "Sound.hpp"
+#include "UIBox.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
 #include "extern/dtl/unique_ptr.hpp"
@@ -31,8 +33,9 @@ namespace
     constexpr auto TAB4_X        = TAB3_X + TAB3_WIDTH - 1;
     constexpr auto TAB_Y         = WINDOW_Y - 15;
 
-    struct PlayerMenu
+    struct Data
     {
+        UIBox box{{WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT}, {.fill = UIBox::Fill::OPAQUE}, tamerStartRect()};
         MenuTab playerTab{TAB1_X, TAB_Y, TAB1_WIDTH, false, "Player"};
         MenuTab chartTab{TAB2_X, TAB_Y, TAB2_WIDTH, true, "Chart"};
         MenuTab medalTab{TAB3_X, TAB_Y, TAB3_WIDTH, true, "Medal"};
@@ -43,14 +46,14 @@ namespace
         MedalView medalView;
         uint8_t state{0};
 
-        void tick();
+        bool tick();
         void render();
         void updateLabelColors();
     };
 
-    dtl::unique_ptr<PlayerMenu> data;
+    dtl::unique_ptr<Data> data;
 
-    void PlayerMenu::updateLabelColors()
+    void Data::updateLabelColors()
     {
         playerTab.setState(state != 0);
         chartTab.setState(state != 1);
@@ -58,8 +61,13 @@ namespace
         cardTab.setState(state != 3);
     }
 
-    void PlayerMenu::tick()
+    [[gnu::optimize("Os")]]
+    bool Data::tick()
     {
+        box.tick();
+
+        if (!box.isOpen()) return box.isClosed();
+
         bool handleInput = true;
         if (state == 0) {
             infoView.tick();
@@ -94,33 +102,27 @@ namespace
                 playSound(0, 4);
             }
         }
+        return false;
     }
 
-    void PlayerMenu::render()
+    void Data::render()
     {
-        if (state == 0)
-            infoView.render(5);
-        else if (state == 1)
-            chartView.render(5);
-        else if (state == 2)
-            medalView.render(5);
-        else if (state == 3)
-            cardView.render(5);
+        if (box.isOpen()) {
+            if (state == 0)
+                infoView.render(5);
+            else if (state == 1)
+                chartView.render(5);
+            else if (state == 2)
+                medalView.render(5);
+            else if (state == 3)
+                cardView.render(5);
 
-        playerTab.render(5);
-        chartTab.render(5);
-        medalTab.render(5);
-        cardTab.render(5);
-    }
-
-    void tickPlayerMenu(int32_t instanceId)
-    {
-        data->tick();
-    }
-
-    void renderPlayerMenu(int32_t instanceId)
-    {
-        data->render();
+            playerTab.render(5);
+            chartTab.render(5);
+            medalTab.render(5);
+            cardTab.render(5);
+        }
+        box.render(5);
     }
 } // namespace
 
@@ -128,14 +130,36 @@ void addPlayerMenu()
 {
     TAMER_ENTITY.isOnScreen   = false;
     PARTNER_ENTITY.isOnScreen = false;
-    data                      = dtl::make_unique<PlayerMenu>();
-    createMenuBox(1, WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, tickPlayerMenu, renderPlayerMenu);
+    data                      = dtl::make_unique<Data>();
 }
 
 void removePlayerMenu()
 {
+    if (!data) return;
     TAMER_ENTITY.isOnScreen   = true;
     PARTNER_ENTITY.isOnScreen = true;
-    closeUIBoxIfOpen(1);
-    data.reset();
+    data->box.closeIfOpen();
+}
+
+bool isPlayerMenuActive()
+{
+    return static_cast<bool>(data);
+}
+
+bool isPlayerMenuOpened()
+{
+    return data && data->box.isOpen();
+}
+
+void tickPlayerMenu()
+{
+    if (!data) return;
+    auto isFinished = data->tick();
+    if (isFinished) data.reset();
+}
+
+void renderPlayerMenu(int32_t)
+{
+    if (!data) return;
+    data->render();
 }

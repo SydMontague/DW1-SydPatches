@@ -81,7 +81,8 @@ extern "C"
         DEBUG_OVERLAY     = 20000,
         STATUS_BAR        = 20001,
         BATTLE_END_BOX    = 20002,
-        VS_TIMEOUT_WINDOW = 20003,
+        TAMER_TEXTBOX     = 20003,
+        VS_TIMEOUT_WINDOW = 20004,
 
         NONE = 0xFFFF,
     };
