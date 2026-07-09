@@ -90,7 +90,7 @@ namespace
     struct TimeoutWindow
     {
         dtl::array<AtlasString, 6> strings = getStrings();
-        UIBox box{BOX_RECT, {}, true, BOX_START};
+        UIBox box{BOX_RECT, {.color = {}}, BOX_START};
 
         void render(int32_t depth);
         void tick();

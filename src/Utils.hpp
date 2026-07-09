@@ -13,3 +13,6 @@ extern "C"
     void clearTextSubArea2(int16_t x, int16_t y, int16_t width, int16_t height);
     size_t strnlen_s(const char* str, size_t size);
 }
+
+// Start rect for a menu box that animates open from the on-screen tamer.
+RECT tamerStartRect();

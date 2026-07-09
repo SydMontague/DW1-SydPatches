@@ -4,28 +4,6 @@
 #include "extern/dw1.hpp"
 #include "extern/stddef.hpp"
 
-class SimpleTextSprite
-{
-private:
-    uint16_t uvX      = 0;
-    uint16_t uvY      = 0;
-    uint16_t uvWidth  = 0;
-    uint16_t uvHeight = 0;
-
-public:
-    constexpr SimpleTextSprite() {};
-    constexpr SimpleTextSprite(uint16_t uvX, uint16_t uvY)
-        : uvX(uvX)
-        , uvY(uvY)
-    {
-    }
-
-    void draw(Font* font, const uint8_t* string);
-    void draw(Font* font, const char* string);
-    void render(int32_t posX, int32_t posY, int32_t color, int32_t offset, bool hasShadow);
-    void clear();
-};
-
 extern "C"
 {
     enum class AlignmentX : uint8_t

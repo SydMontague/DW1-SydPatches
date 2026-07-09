@@ -22,6 +22,7 @@
 #include "Model.hpp"
 #include "Partner.hpp"
 #include "Sound.hpp"
+#include "UIBox.hpp"
 #include "UIElements.hpp"
 #include "constants.hpp"
 #include "extern/BTL.hpp"
@@ -134,7 +135,7 @@ namespace
     void handleCommands()
     {
         if (IS_TAMERLESS_BATTLE) return;
-        if (UI_BOX_DATA[0].state != 0) return;
+        if (isGameMenuActive()) return;
 
         auto* data = &COMBAT_DATA_PTR->player;
 
@@ -221,7 +222,7 @@ namespace
             }
             entityLookAtLocation(entity, &PARTNER_ENTITY.posData->location);
 
-            if (UI_BOX_DATA[0].state == 0) {
+            if (!isGameMenuActive()) {
                 auto animId = entity->animId;
                 if (!NO_AI_FLAG || FINISHING_ENTITY != &PARTNER_ENTITY) {
                     if (animId == 6 || animId == 14) {
@@ -267,23 +268,46 @@ namespace
         return 0xFF;
     }
 
-    void renderAwardSomethingTextbox(int32_t instanceId)
-    {
-        // vanilla doesn't use shadows
-        renderStringNew(0, -125, 45, 255, 36, 704, 120 + 256, 5, 1);
-        renderUIBox(1);
-        TEXTBOX_OPEN_TIMER++;
-    }
+    UIBox tamerTextbox;
+    void (*tamerTextboxContent)() = nullptr;
 
-    void renderItemPickupTextbox(int32_t instanceId)
+    void renderItemPickupTextboxContent()
     {
-        // vanilla doesn't use shadows
-        // vanilla uses the take state to determine how many lines to render, but that's just redundant
         renderStringNew(15, -125, 45, 255, 12, 704, 12 + 256, 5, 1);
         renderStringNew(0, -125, 57, 255, 12, 704, 24 + 256, 5, 1);
         renderStringNew(0, -125, 69, 255, 12, 704, 36 + 256, 5, 1);
-        renderUIBox(1);
-        TEXTBOX_OPEN_TIMER++;
+    }
+
+    void renderAwardSomethingTextboxContent()
+    {
+        renderStringNew(0, -125, 45, 255, 36, 704, 120 + 256, 5, 1);
+    }
+
+    void tickTamerTextbox(int32_t)
+    {
+        tamerTextbox.tick();
+        if (tamerTextbox.isClosed()) {
+            removeObject(ObjectID::TAMER_TEXTBOX, 0);
+            tamerTextboxContent = nullptr;
+        }
+    }
+
+    void renderTamerTextbox(int32_t)
+    {
+        if (tamerTextbox.isOpen() && tamerTextboxContent != nullptr) {
+            tamerTextboxContent();
+            TEXTBOX_OPEN_TIMER++;
+        }
+        tamerTextbox.render(5);
+    }
+
+    void openTamerTextbox(RECT target, RECT source, void (*content)())
+    {
+        tamerTextboxContent = content;
+        // Original: createAnimatedUIBox(1, color=0, features=2) → black, semi-trans.
+        tamerTextbox = UIBox(target, UIBox::Style{.color = {0, 0, 0}}, source);
+        playSound(0, 0);
+        addObject(ObjectID::TAMER_TEXTBOX, 0, tickTamerTextbox, renderTamerTextbox);
     }
 
     // this function blows up in size otherwise
@@ -428,7 +452,7 @@ namespace
         }
         else if (Tamer_getSubState() == 1) {
             if (!tickOpenChestTray(interactedChest)) return;
-            if (!isUIBoxAvailable(1)) return;
+            if (!tamerTextbox.isClosed()) return;
 
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT target   = {.x = -130, .y = 42, .width = 262, .height = 59};
@@ -439,7 +463,7 @@ namespace
                 .height = 10,
             };
 
-            createAnimatedUIBox(1, 0, 2, &target, &source, nullptr, renderItemPickupTextbox);
+            openTamerTextbox(target, source, renderItemPickupTextboxContent);
             Tamer_setSubState(chest.isTaken != 0 ? 2 : 4);
             takeItemFrameCount = 0;
         }
@@ -480,7 +504,7 @@ namespace
                 .height = 10,
             };
 
-            removeAnimatedUIBox(1, &target);
+            tamerTextbox.close(target);
 
             Tamer_setState(0);
             Partner_setState(1);
@@ -518,7 +542,7 @@ namespace
             Tamer_setSubState(1);
         }
         else if (Tamer_getSubState() == 1) {
-            if (!isUIBoxAvailable(1)) return;
+            if (!tamerTextbox.isClosed()) return;
 
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT target   = {.x = -130, .y = 42, .width = 262, .height = 59};
@@ -530,7 +554,7 @@ namespace
             };
             // vanilla writes TAKE_CHEST_ITEM here, but it's never used so skip that
 
-            createAnimatedUIBox(1, 0, 2, &target, &source, nullptr, renderItemPickupTextbox);
+            openTamerTextbox(target, source, renderItemPickupTextboxContent);
             Tamer_setSubState(2);
         }
         else if (Tamer_getSubState() == 2) {
@@ -573,7 +597,7 @@ namespace
                 .height = 10,
             };
 
-            removeAnimatedUIBox(1, &target);
+            tamerTextbox.close(target);
 
             pickupItem(pickedDropId);
 
@@ -617,7 +641,7 @@ namespace
             Tamer_setSubState(1);
         }
         else if (Tamer_getSubState() == 1) {
-            if (!isUIBoxAvailable(1)) return;
+            if (!tamerTextbox.isClosed()) return;
 
             ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
             RECT target   = {.x = -130, .y = 42, .width = 262, .height = 59};
@@ -629,7 +653,7 @@ namespace
             };
             // vanilla writes TAKE_CHEST_ITEM here, but it's never used so skip that
 
-            createAnimatedUIBox(1, 0, 2, &target, &source, nullptr, renderAwardSomethingTextbox);
+            openTamerTextbox(target, source, renderAwardSomethingTextboxContent);
             Tamer_setSubState(2);
         }
         else if (Tamer_getSubState() == 2) {
@@ -643,7 +667,7 @@ namespace
                 .height = 10,
             };
 
-            removeAnimatedUIBox(1, &target);
+            tamerTextbox.close(target);
             Tamer_setState(0);
             Partner_setState(1);
             setCameraFollowPlayer();
@@ -833,8 +857,7 @@ namespace
 
         auto isTrianglePressed = isKeyDown(BUTTON_TRIANGLE); // menu open button
 
-        if (!isTrianglePressed || IS_SCRIPT_PAUSED != 1 || FADE_DATA.fadeProtection != 0 || UI_BOX_DATA[0].state == 1 ||
-            UI_BOX_DATA[0].frame != 0)
+        if (!isTrianglePressed || IS_SCRIPT_PAUSED != 1 || FADE_DATA.fadeProtection != 0 || isGameMenuActive())
             Tamer_tickWalking();
         else
             Tamer_tickOpenMenu();

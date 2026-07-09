@@ -578,8 +578,9 @@ void ChartView::Private::tick()
             auto* para  = getDigimonData(selectedDigimon);
             nameString  = getAtlasVanilla().render(getDigimonData(selectedDigimon)->name, NAME_LABEL);
             levelString = getAtlasVanilla().render(getLevelName(para->level), LEVEL_LABEL);
-            detailView  = UIBox(final, UIBox::DEFAULT_COLOR, false, start);
-            state       = 2;
+            detailView =
+                UIBox(final, {.fill = UIBox::Fill::OPAQUE, .playOpenSound = false, .playCloseSound = false}, start);
+            state = 2;
         }
     }
     else if (state == 0) {

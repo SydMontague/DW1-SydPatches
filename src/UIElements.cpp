@@ -89,7 +89,13 @@ extern "C"
         else
             setPosDataPolyFT4(prim, posX, posY, width, height);
 
-        if ((flag & 1) != 0) {
+        if ((flag & 0x20) != 0) {
+            // Extra-dim modulator for higher inactive/active contrast.
+            prim->r0 = 24;
+            prim->g0 = 24;
+            prim->b0 = 24;
+        }
+        else if ((flag & 1) != 0) {
             prim->r0 = 50;
             prim->g0 = 50;
             prim->b0 = 50;
@@ -668,26 +674,4 @@ extern "C"
 
         libgs_GsSortBoxFill(&box, ACTIVE_ORDERING_TABLE, depth);
     }
-}
-
-void SimpleTextSprite::draw(Font* font, const uint8_t* string)
-{
-    uvWidth  = drawStringNew(font, string, uvX, uvY);
-    uvWidth  = min(uvX | 0xFF, uvWidth);
-    uvHeight = font->height;
-}
-
-void SimpleTextSprite::draw(Font* font, const char* string)
-{
-    draw(font, reinterpret_cast<const uint8_t*>(string));
-}
-
-void SimpleTextSprite::render(int32_t posX, int32_t posY, int32_t color, int32_t offset, bool hasShadow)
-{
-    renderStringNew(color, posX, posY, uvWidth, uvHeight, uvX, uvY, offset, hasShadow);
-}
-
-void SimpleTextSprite::clear()
-{
-    clearTextSubArea2(uvX, uvY, uvWidth, uvHeight);
 }
