@@ -508,17 +508,6 @@ extern "C"
         return {.x = GAME_MENU_X, .y = GAME_MENU_Y, .width = GAME_MENU_WIDTH, .height = static_cast<int16_t>(height)};
     }
 
-    RECT triangleBoxStart()
-    {
-        ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
-        return {
-            .x      = static_cast<int16_t>(pos.screenX - 5),
-            .y      = static_cast<int16_t>(pos.screenY - 5),
-            .width  = 10,
-            .height = 10,
-        };
-    }
-
     void renderTriangleObject(int32_t)
     {
         constexpr int32_t layer = 6;
@@ -534,7 +523,7 @@ extern "C"
         switch (TRIANGLE_MENU_STATE) {
             case 0:
             {
-                triangleBox = UIBox(triangleBoxFinal(), UIBox::Style{}, triangleBoxStart());
+                triangleBox = UIBox(triangleBoxFinal(), UIBox::Style{}, tamerStartRect());
                 playSound(0, 0);
                 MENU_STATE          = 0;
                 TRIANGLE_MENU_STATE = 0xFFFFFFFF;

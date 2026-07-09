@@ -42,11 +42,10 @@ void UIBox::tick()
         case State::CLOSED: break;
         case State::CLOSING:
         {
-            if (!start.has_value() || frame-- <= 0) {
+            if (!start.has_value() || frame-- <= 0)
                 state = State::CLOSED;
-                break;
-            }
-            if (frame == 4 && style.playCloseSound) playSound(0, 1);
+            else if (frame == 4 && style.playCloseSound)
+                playSound(0, 1);
             break;
         }
         case State::OPENING:
@@ -101,13 +100,13 @@ void UIBox::renderOpened(int32_t depth)
         box.attribute = 0x40000000;
     else
         box.attribute = 0;
-    box.r         = style.color.red;
-    box.g         = style.color.green;
-    box.b         = style.color.blue;
-    box.x         = final.x + 4;
-    box.y         = final.y + 3;
-    box.width     = final.width - 8;
-    box.height    = final.height - 3;
+    box.r      = style.color.red;
+    box.g      = style.color.green;
+    box.b      = style.color.blue;
+    box.x      = final.x + 4;
+    box.y      = final.y + 3;
+    box.width  = final.width - 8;
+    box.height = final.height - 3;
     libgs_GsSortBoxFill(&box, ACTIVE_ORDERING_TABLE, depth);
     if (style.fill == Fill::DOUBLE) libgs_GsSortBoxFill(&box, ACTIVE_ORDERING_TABLE, depth);
 }

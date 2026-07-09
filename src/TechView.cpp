@@ -567,8 +567,8 @@ namespace
         dtl::array<AtlasString, 5> strings{};
         bool isValid;
 
-        // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-        __attribute__((optimize("Os"))) void setMove(int32_t moveId)
+        [[gnu::optimize("Os")]]
+        void setMove(int32_t moveId)
         {
             isValid = moveId != 0xFF && hasMove(moveId);
             if (isValid) {
@@ -663,8 +663,8 @@ namespace
             };
         }
 
-        // NOLINTNEXTLINE: dunno why it doesn't know optimize...
-        __attribute__((optimize("Os"))) void setMove(uint8_t moveId)
+        [[gnu::optimize("Os")]]
+        void setMove(uint8_t moveId)
         {
             isValid = moveId != 0xFF;
             if (isValid) {
@@ -737,8 +737,8 @@ struct Private
     int8_t moveSelectedColumn = 0;
 
     uint8_t state = 0;
-    // NOLINTNEXTLINE
-    __attribute__((optimize("Os"))) Private();
+    [[gnu::optimize("Os")]]
+    Private();
 
     void render(int32_t depth);
     void tick();

@@ -34,11 +34,10 @@ namespace
     public:
         Data();
 
-        void tick();
+        bool tick();
         void render();
 
-        // Original Digimon menu used createMenuBox features=0 → opaque fill.
-        UIBox box;
+        UIBox box{{WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT}, {.fill = UIBox::Fill::OPAQUE}, tamerStartRect()};
 
     private:
         void updateLabelColors();
@@ -59,8 +58,12 @@ namespace
     {
     }
 
-    void Data::tick()
+    bool Data::tick()
     {
+        box.tick();
+
+        if (!box.isOpen()) return box.isClosed();
+
         bool handleInput = true;
         if (state == 0) {
             // stats menu doesn't need special interaction
@@ -88,34 +91,27 @@ namespace
                 playSound(0, 4);
             }
         }
+        return false;
     }
 
     void Data::render()
     {
-        if (state == 0)
-            statsView.render(5);
-        else if (state == 1)
-            techView.render(5);
+        if (box.isOpen()) {
+            if (state == 0)
+                statsView.render(5);
+            else if (state == 1)
+                techView.render(5);
 
-        statusTab.render(5);
-        techTab.render(5);
+            statusTab.render(5);
+            techTab.render(5);
+        }
+        box.render(5);
     }
 
     void Data::updateLabelColors()
     {
         statusTab.setState(state != 0);
         techTab.setState(state != 1);
-    }
-
-    RECT tamerStartRect()
-    {
-        ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
-        return {
-            .x      = static_cast<int16_t>(pos.screenX - 5),
-            .y      = static_cast<int16_t>(pos.screenY - 5),
-            .width  = 10,
-            .height = 10,
-        };
     }
 } // namespace
 
@@ -124,13 +120,13 @@ void addDigimonMenu()
     TAMER_ENTITY.isOnScreen   = false;
     PARTNER_ENTITY.isOnScreen = false;
     data                      = dtl::make_unique<Data>();
-    data->box =
-        UIBox({WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT}, {.fill = UIBox::Fill::OPAQUE}, tamerStartRect());
 }
 
 void removeDigimonMenu()
 {
     if (!data) return;
+    TAMER_ENTITY.isOnScreen   = true;
+    PARTNER_ENTITY.isOnScreen = true;
     data->box.closeIfOpen();
 }
 
@@ -147,21 +143,14 @@ bool isDigimonMenuOpened()
 void tickDigimonMenu()
 {
     if (!data) return;
-    data->box.tick();
-    if (data->box.isClosed()) {
-        TAMER_ENTITY.isOnScreen   = true;
-        PARTNER_ENTITY.isOnScreen = true;
-        data.reset();
-        return;
-    }
-    if (data->box.isOpen()) data->tick();
+    auto isFinished = data->tick();
+    if (isFinished) data.reset();
 }
 
-void renderDigimonMenu(int32_t layer)
+void renderDigimonMenu(int32_t)
 {
     if (!data) return;
-    if (data->box.isOpen()) data->render();
-    data->box.render(layer);
+    data->render();
 }
 
 int16_t digimonMenuBoxHeight()

@@ -35,8 +35,7 @@ namespace
 
     struct Data
     {
-        // Original Player menu used createMenuBox features=0 → opaque fill.
-        UIBox box;
+        UIBox box{{WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT}, {.fill = UIBox::Fill::OPAQUE}, tamerStartRect()};
         MenuTab playerTab{TAB1_X, TAB_Y, TAB1_WIDTH, false, "Player"};
         MenuTab chartTab{TAB2_X, TAB_Y, TAB2_WIDTH, true, "Chart"};
         MenuTab medalTab{TAB3_X, TAB_Y, TAB3_WIDTH, true, "Medal"};
@@ -47,7 +46,7 @@ namespace
         MedalView medalView;
         uint8_t state{0};
 
-        void tick();
+        bool tick();
         void render();
         void updateLabelColors();
     };
@@ -63,8 +62,12 @@ namespace
     }
 
     [[gnu::optimize("Os")]]
-    void Data::tick()
+    bool Data::tick()
     {
+        box.tick();
+
+        if (!box.isOpen()) return box.isClosed();
+
         bool handleInput = true;
         if (state == 0) {
             infoView.tick();
@@ -99,50 +102,42 @@ namespace
                 playSound(0, 4);
             }
         }
+        return false;
     }
 
     void Data::render()
     {
-        if (state == 0)
-            infoView.render(5);
-        else if (state == 1)
-            chartView.render(5);
-        else if (state == 2)
-            medalView.render(5);
-        else if (state == 3)
-            cardView.render(5);
+        if (box.isOpen()) {
+            if (state == 0)
+                infoView.render(5);
+            else if (state == 1)
+                chartView.render(5);
+            else if (state == 2)
+                medalView.render(5);
+            else if (state == 3)
+                cardView.render(5);
 
-        playerTab.render(5);
-        chartTab.render(5);
-        medalTab.render(5);
-        cardTab.render(5);
-    }
-
-    RECT tamerStartRect()
-    {
-        ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
-        return {
-            .x      = static_cast<int16_t>(pos.screenX - 5),
-            .y      = static_cast<int16_t>(pos.screenY - 5),
-            .width  = 10,
-            .height = 10,
-        };
+            playerTab.render(5);
+            chartTab.render(5);
+            medalTab.render(5);
+            cardTab.render(5);
+        }
+        box.render(5);
     }
 } // namespace
 
-[[gnu::optimize("Os")]]
 void addPlayerMenu()
 {
     TAMER_ENTITY.isOnScreen   = false;
     PARTNER_ENTITY.isOnScreen = false;
     data                      = dtl::make_unique<Data>();
-    data->box =
-        UIBox({WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT}, {.fill = UIBox::Fill::OPAQUE}, tamerStartRect());
 }
 
 void removePlayerMenu()
 {
     if (!data) return;
+    TAMER_ENTITY.isOnScreen   = true;
+    PARTNER_ENTITY.isOnScreen = true;
     data->box.closeIfOpen();
 }
 
@@ -156,23 +151,15 @@ bool isPlayerMenuOpened()
     return data && data->box.isOpen();
 }
 
-[[gnu::optimize("Os")]]
 void tickPlayerMenu()
 {
     if (!data) return;
-    data->box.tick();
-    if (data->box.isClosed()) {
-        TAMER_ENTITY.isOnScreen   = true;
-        PARTNER_ENTITY.isOnScreen = true;
-        data.reset();
-        return;
-    }
-    if (data->box.isOpen()) data->tick();
+    auto isFinished = data->tick();
+    if (isFinished) data.reset();
 }
 
-void renderPlayerMenu(int32_t layer)
+void renderPlayerMenu(int32_t)
 {
     if (!data) return;
-    if (data->box.isOpen()) data->render();
-    data->box.render(layer);
+    data->render();
 }
