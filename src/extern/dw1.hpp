@@ -1796,8 +1796,10 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
-    void VS__tickDigimonAttackLookAtTarget(DigimonEntity* entity, Vector* location, int dx, int dy);
-    void VS__tickDigimonRotateKeepDistance(DigimonEntity* entity, DigimonEntity* other, FighterData* data);
+    void VS__tickDigimonRotationKeepDistanceCollision(Entity* self,
+                                                      int16_t* rotationY,
+                                                      CollisionCode collisionCode,
+                                                      int16_t initialRotation);
     void VS__tickDigimonWaitingDistance(DigimonEntity* entity, DigimonEntity* other, FighterData* data);
     void VS__tickDigimonAttackingLogic(int32_t id);
     void VS__renderTimeoutText(int32_t instanceId);

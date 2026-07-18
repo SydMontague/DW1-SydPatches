@@ -454,6 +454,62 @@ void VS__faintDigimon(DigimonEntity* entity, FighterData* fighter, int32_t playe
 
 extern "C"
 {
+    void VS__tickDigimonAttackLookAtTarget(DigimonEntity* entity, Vector* location, int dx, int dy)
+    {
+        auto backup = entity->posData->rotation.y;
+        entityLookAtLocation(entity, location);
+        auto result = entityCheckCollision(nullptr, entity, dx, dy);
+        if (result != CollisionCode::NONE) {
+            entity->posData->rotation.y = backup;
+            collisionGrace(0, entity, dx, dy);
+        }
+    }
+
+    void VS__tickDigimonRotateKeepDistance(DigimonEntity* entity, DigimonEntity* other, FighterData* data)
+    {
+        auto initRotation = entity->posData->rotation.y;
+        entityLookAtLocation(entity, &other->posData->location);
+        auto reversedY = ring(entity->posData->rotation.y + 2048, 0, 4096);
+
+        if (data->hasCollidedWhileDistanceCmd == 0) {
+            entity->posData->rotation.y = reversedY;
+
+            auto result = entityCheckCollision(nullptr, entity, 280, 200);
+            if (result != CollisionCode::NONE) {
+                data->hasCollidedWhileDistanceCmd = 1;
+                VS__tickDigimonRotationKeepDistanceCollision(entity,
+                                                             &entity->posData->rotation.y,
+                                                             result,
+                                                             initRotation);
+            }
+            return;
+        }
+
+        if (initRotation == other->posData->rotation.y) {
+            entity->posData->rotation.y = ring(initRotation + 1024, 0, 4096);
+            if (entityCheckCollision(nullptr, entity, 280, 200) == CollisionCode::NONE) return;
+
+            entity->posData->rotation.y = ring(initRotation + 3072, 0, 4096);
+            if (entityCheckCollision(nullptr, entity, 280, 200) == CollisionCode::NONE) return;
+        }
+        else {
+            auto val1 = ring(initRotation - reversedY, 0, 4096);
+            auto val2 = ring(reversedY - initRotation, 0, 4096);
+
+            if (val1 < val2)
+                entity->posData->rotation.y = ring(initRotation - min(20, val1), 0, 4096);
+            else
+                entity->posData->rotation.y = ring(initRotation + min(20, val2), 0, 4096);
+
+            if (entityCheckCollision(nullptr, entity, 280, 200) == CollisionCode::NONE) return;
+        }
+
+        entity->posData->rotation.y = initRotation;
+        auto result                 = entityCheckCollision(nullptr, entity, 280, 200);
+        if (result != CollisionCode::NONE)
+            VS__tickDigimonRotationKeepDistanceCollision(entity, &entity->posData->rotation.y, result, initRotation);
+    }
+
     void VS__setWalking(DigimonEntity* entity, Stats* stats, BattleFlags flags)
     {
         if (entity->animId == 0x23 || entity->animId == 0x24) return;

@@ -120,10 +120,10 @@
 ;  jal entityLookAtLocation
 ;.org 0x800f6230
 ;  jal entityLookAtLocation
-.org 0x800f6378
-  jal entityLookAtLocation
-.org 0x800f663c
-  jal entityLookAtLocation
+;.org 0x800f6378
+;  jal entityLookAtLocation
+;.org 0x800f663c
+;  jal entityLookAtLocation
 .org 0x800f6b34
   jal entityLookAtLocation
 
@@ -145,20 +145,20 @@
 ;  jal entityCheckCollision
 ;.org 0x800f5fb0
 ;  jal entityCheckCollision
-.org 0x800f63b4
-  jal entityCheckCollision
-.org 0x800f6428
-  jal entityCheckCollision
-.org 0x800f645c
-  jal entityCheckCollision
-.org 0x800f6480
-  jal entityCheckCollision
-.org 0x800f659c
-  jal entityCheckCollision
-.org 0x800f65c0
-  jal entityCheckCollision
-.org 0x800f6658
-  jal entityCheckCollision
+;.org 0x800f63b4
+;  jal entityCheckCollision
+;.org 0x800f6428
+;  jal entityCheckCollision
+;.org 0x800f645c
+;  jal entityCheckCollision
+;.org 0x800f6480
+;  jal entityCheckCollision
+;.org 0x800f659c
+;  jal entityCheckCollision
+;.org 0x800f65c0
+;  jal entityCheckCollision
+;.org 0x800f6658
+;  jal entityCheckCollision
 .org 0x800f670c
   jal entityCheckCollision
 .org 0x800f6ef0
@@ -188,8 +188,8 @@
 ;  jal collisionGrace
 ;.org 0x800f5ab4
 ;  jal collisionGrace
-.org 0x800f6680
-  jal collisionGrace
+;.org 0x800f6680
+;  jal collisionGrace
 .org 0x800f70dc
   jal collisionGrace
 .org 0x800f7130
