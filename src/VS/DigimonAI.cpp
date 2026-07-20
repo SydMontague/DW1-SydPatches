@@ -10,6 +10,173 @@
 
 namespace
 {
+    void VS__setWalking(DigimonEntity* entity, Stats* stats, BattleFlags flags)
+    {
+        if (entity->animId == 0x23 || entity->animId == 0x24) return;
+
+        auto animId = 0x23;
+        if (!flags.isPoisoned && (stats->hp / 5 < stats->currentHP)) animId = 0x24;
+
+        startAnimation(entity, animId);
+    }
+
+    void VS__tickDigimonAttackLookAtTarget(DigimonEntity* entity, Vector* location, int dx, int dy)
+    {
+        auto backup = entity->posData->rotation.y;
+        entityLookAtLocation(entity, location);
+        auto result = entityCheckCollision(nullptr, entity, dx, dy);
+        if (result != CollisionCode::NONE) {
+            entity->posData->rotation.y = backup;
+            collisionGrace(0, entity, dx, dy);
+        }
+    }
+
+    void VS__tickDigimonRotateKeepDistance(DigimonEntity* entity, DigimonEntity* other, FighterData* data)
+    {
+        auto initRotation = entity->posData->rotation.y;
+        entityLookAtLocation(entity, &other->posData->location);
+        auto reversedY = ring(entity->posData->rotation.y + 2048, 0, 4096);
+
+        if (data->hasCollidedWhileDistanceCmd == 0) {
+            entity->posData->rotation.y = reversedY;
+
+            auto result = entityCheckCollision(nullptr, entity, 280, 200);
+            if (result != CollisionCode::NONE) {
+                data->hasCollidedWhileDistanceCmd = 1;
+                VS__tickDigimonRotationKeepDistanceCollision(entity,
+                                                             &entity->posData->rotation.y,
+                                                             result,
+                                                             initRotation);
+            }
+            return;
+        }
+
+        if (initRotation == other->posData->rotation.y) {
+            entity->posData->rotation.y = ring(initRotation + 1024, 0, 4096);
+            if (entityCheckCollision(nullptr, entity, 280, 200) == CollisionCode::NONE) return;
+
+            entity->posData->rotation.y = ring(initRotation + 3072, 0, 4096);
+            if (entityCheckCollision(nullptr, entity, 280, 200) == CollisionCode::NONE) return;
+        }
+        else {
+            auto val1 = ring(initRotation - reversedY, 0, 4096);
+            auto val2 = ring(reversedY - initRotation, 0, 4096);
+
+            if (val1 < val2)
+                entity->posData->rotation.y = ring(initRotation - min(20, val1), 0, 4096);
+            else
+                entity->posData->rotation.y = ring(initRotation + min(20, val2), 0, 4096);
+
+            if (entityCheckCollision(nullptr, entity, 280, 200) == CollisionCode::NONE) return;
+        }
+
+        entity->posData->rotation.y = initRotation;
+        auto result                 = entityCheckCollision(nullptr, entity, 280, 200);
+        if (result != CollisionCode::NONE)
+            VS__tickDigimonRotationKeepDistanceCollision(entity, &entity->posData->rotation.y, result, initRotation);
+    }
+
+    void VS__clearFighterDataTables(FighterData* data)
+    {
+        for (int32_t i = 0; i < 0x96 && (data->table1[i] != 0xff); i++) {
+            data->table1[i] = 0xff;
+            data->table2[i] = 0xff;
+        }
+    }
+
+    void VS__tickDigimonAttackingLogic(int32_t id)
+    {
+        auto entity =
+            reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[id]));
+        auto fighter = &COMBAT_DATA_PTR->fighter[id];
+
+        if (entityCheckCollision(nullptr, entity, 280, 200) == CollisionCode::NONE)
+            entity->animFlag &= 5;
+        else
+            entity->animFlag |= 2;
+
+        if (fighter->flags.isFlattened && fighter->flags.isAttacking) {
+            fighter->flatAttackTimer--;
+            if (fighter->flatAttackTimer == 0) entity->animFlag &= 0xFE;
+            if (fighter->flatAttackTimer == 10) entity->flatSprite = 0;
+            if (fighter->flatAttackTimer == 28) VS__addFlatBullet(entity);
+        }
+
+        if ((entity->animFlag & 1) != 0) return;
+
+        if (entity == FINISHING_ENTITY) {
+            NO_AI_FLAG       = 0;
+            FINISHING_ENTITY = nullptr;
+        }
+
+        fighter->hasCollidedWhileDistanceCmd = 0;
+
+        if (fighter->flags.isAttacking) {
+            if (id == 0) COMBAT_DATA_PTR->player.hitCount++;
+            fighter->flags.unkFlag2     = false;
+            fighter->flags.isOnCooldown = true;
+            fighter->cooldown           = 40;
+            VS__addFinisherValue(fighter, (fighter->finisherGoal * 2) / 50);
+        }
+
+        if (fighter->invulnerableTimer < 1) {
+            if (fighter->flags.isFlattened) entity->flatSprite = 0;
+            if (!fighter->flags.isAttacking) entity->stats.unk2_2 = 0;
+            if (fighter->flags.isBlocking) {
+                fighter->flags.isBlocking = false;
+                VS__clearFighterDataTables(fighter);
+            }
+            else
+                fighter->flags.raw &= 0xFF0F;
+        }
+
+        if (fighter->flags.isKnockedBack) {
+            fighter->senileTimer    = 0;
+            fighter->flags.isSenile = false;
+        }
+        else if (fighter->flatTimer == -1) {
+            fighter->flatTimer = 65;
+        }
+    }
+
+    int32_t getBaseDistance(DigimonEntity* entity, DigimonEntity* other)
+    {
+        auto val = getDigimonData(entity->type)->radius + getDigimonData(other->type)->radius + 200;
+        return val * val;
+    }
+
+    void VS__tickDigimonMaintainDistance(DigimonEntity* entity,
+                                         DigimonEntity* other,
+                                         FighterData* data,
+                                         int32_t min,
+                                         int32_t max)
+    {
+        auto actualDistance = getDistanceSquared(&entity->posData->location, &other->posData->location);
+        auto baseDistance   = getBaseDistance(entity, other);
+
+        if (actualDistance < baseDistance + min) {
+            VS__setWalking(entity, &entity->stats, data->flags);
+            VS__tickDigimonRotateKeepDistance(entity, other, data);
+        }
+        else if (actualDistance > baseDistance + max) {
+            VS__setWalking(entity, &entity->stats, data->flags);
+            VS__tickDigimonAttackLookAtTarget(entity, &other->posData->location, 280, 200);
+        }
+        else {
+            data->hasCollidedWhileDistanceCmd = 0;
+            handleBattleIdle(entity, &entity->stats, data->flags);
+            entityLookAtLocation(entity, &other->posData->location);
+        }
+    }
+
+    void VS__tickDigimonWaitingDistance(DigimonEntity* entity, DigimonEntity* other, FighterData* data)
+    {
+        if (entity->animId == 0x23 || entity->animId == 0x24)
+            VS__tickDigimonMaintainDistance(entity, other, data, 160000, 320000);
+        else
+            VS__tickDigimonMaintainDistance(entity, other, data, 0, 480000);
+    }
+
     void tickSenile(int32_t playerId, DigimonEntity* entity, FighterData& fighter)
     {
         if (fighter.hpDamageBuffer >= entity->stats.currentHP) return;
@@ -454,71 +621,6 @@ void VS__faintDigimon(DigimonEntity* entity, FighterData* fighter, int32_t playe
 
 extern "C"
 {
-    void VS__tickDigimonAttackLookAtTarget(DigimonEntity* entity, Vector* location, int dx, int dy)
-    {
-        auto backup = entity->posData->rotation.y;
-        entityLookAtLocation(entity, location);
-        auto result = entityCheckCollision(nullptr, entity, dx, dy);
-        if (result != CollisionCode::NONE) {
-            entity->posData->rotation.y = backup;
-            collisionGrace(0, entity, dx, dy);
-        }
-    }
-
-    void VS__tickDigimonRotateKeepDistance(DigimonEntity* entity, DigimonEntity* other, FighterData* data)
-    {
-        auto initRotation = entity->posData->rotation.y;
-        entityLookAtLocation(entity, &other->posData->location);
-        auto reversedY = ring(entity->posData->rotation.y + 2048, 0, 4096);
-
-        if (data->hasCollidedWhileDistanceCmd == 0) {
-            entity->posData->rotation.y = reversedY;
-
-            auto result = entityCheckCollision(nullptr, entity, 280, 200);
-            if (result != CollisionCode::NONE) {
-                data->hasCollidedWhileDistanceCmd = 1;
-                VS__tickDigimonRotationKeepDistanceCollision(entity,
-                                                             &entity->posData->rotation.y,
-                                                             result,
-                                                             initRotation);
-            }
-            return;
-        }
-
-        if (initRotation == other->posData->rotation.y) {
-            entity->posData->rotation.y = ring(initRotation + 1024, 0, 4096);
-            if (entityCheckCollision(nullptr, entity, 280, 200) == CollisionCode::NONE) return;
-
-            entity->posData->rotation.y = ring(initRotation + 3072, 0, 4096);
-            if (entityCheckCollision(nullptr, entity, 280, 200) == CollisionCode::NONE) return;
-        }
-        else {
-            auto val1 = ring(initRotation - reversedY, 0, 4096);
-            auto val2 = ring(reversedY - initRotation, 0, 4096);
-
-            if (val1 < val2)
-                entity->posData->rotation.y = ring(initRotation - min(20, val1), 0, 4096);
-            else
-                entity->posData->rotation.y = ring(initRotation + min(20, val2), 0, 4096);
-
-            if (entityCheckCollision(nullptr, entity, 280, 200) == CollisionCode::NONE) return;
-        }
-
-        entity->posData->rotation.y = initRotation;
-        auto result                 = entityCheckCollision(nullptr, entity, 280, 200);
-        if (result != CollisionCode::NONE)
-            VS__tickDigimonRotationKeepDistanceCollision(entity, &entity->posData->rotation.y, result, initRotation);
-    }
-
-    void VS__setWalking(DigimonEntity* entity, Stats* stats, BattleFlags flags)
-    {
-        if (entity->animId == 0x23 || entity->animId == 0x24) return;
-
-        auto animId = 0x23;
-        if (!flags.isPoisoned && (stats->hp / 5 < stats->currentHP)) animId = 0x24;
-
-        startAnimation(entity, animId);
-    }
 
     void VS__tickDigimonAI(int32_t playerId)
     {
@@ -648,6 +750,7 @@ extern "C"
             auto* fighter = &COMBAT_DATA_PTR->fighter[i];
             auto* entity =
                 reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i]));
+            VS__addFinisherValue(fighter, 1);
 
             DigimonEntity* targetEntity = nullptr;
             if (fighter->targetId != 0xFF)

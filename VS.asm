@@ -43,15 +43,4 @@
 .org 0x800f7250
   jal VS__deinitializeCombat
 
-.org 0x800f6ab8
-  jal VS__setWalking
-.org 0x800f6af0
-  jal VS__setWalking
-
-.org 0x800f6ac8
-  jal VS__tickDigimonRotateKeepDistance
-
-.org 0x800f6b08
-  jal VS__tickDigimonAttackLookAtTarget
-
 .close

@@ -124,8 +124,8 @@
 ;  jal entityLookAtLocation
 ;.org 0x800f663c
 ;  jal entityLookAtLocation
-.org 0x800f6b34
-  jal entityLookAtLocation
+;.org 0x800f6b34
+;  jal entityLookAtLocation
 
 ;.org 0x800ab394
 ;  jal entityCheckCollision
@@ -159,8 +159,8 @@
 ;  jal entityCheckCollision
 ;.org 0x800f6658
 ;  jal entityCheckCollision
-.org 0x800f670c
-  jal entityCheckCollision
+;.org 0x800f670c
+;  jal entityCheckCollision
 .org 0x800f6ef0
   jal entityCheckCollision
 .org 0x800f6f70

@@ -46,8 +46,8 @@
 ;  jal handleBattleIdle
 ;.org 0x800f61dc
 ;  jal handleBattleIdle
-.org 0x800f6b24
-  jal handleBattleIdle
+;.org 0x800f6b24
+;  jal handleBattleIdle
 
 .close
 

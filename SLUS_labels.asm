@@ -41,8 +41,6 @@
 .definelabel VS__increaseSpeedBuffer,   0x800f6bc8
 .definelabel VS__hasAffordableMoves2,   0x800f6c5c
 .definelabel VS__renderTimeoutText,     0x800f7284
-.definelabel VS__tickDigimonAttackingLogic,0x800f66ac
-.definelabel VS__tickDigimonWaitingDistance,0x800f69d8
 .definelabel VS__tickDigimonRotationKeepDistanceCollision,0x800f6e24
 
 .definelabel VS__FINISHER_TIMER, 0x80134f48
@@ -458,6 +456,8 @@
 .definelabel VS__addFinisherAura, 0x8006f1c4
 .definelabel VS__canUseAOE, 0x8005d120
 .definelabel VS__castAttackEffect, 0x8005d280
+.definelabel VS__addFinisherValue, 0x8005d7e0
+.definelabel VS__addFlatBullet, 0x8006f708
 
 .definelabel INTRO_TARGET_POS, 0x80071744
 .definelabel VS__INTRO_DIGIMON_NAMES, 0x8006ff20

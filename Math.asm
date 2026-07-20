@@ -89,10 +89,10 @@
 ;  jal random
 ;.org 0x800f5570
 ;  jal random
-.org 0x800f6958
-  jal random
-.org 0x800f6974
-  jal random
+;.org 0x800f6958
+;  jal random
+;.org 0x800f6974
+;  jal random
 .org 0x800f70ec
   jal random
 .org 0x800fc1ec

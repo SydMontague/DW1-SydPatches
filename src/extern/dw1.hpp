@@ -1800,8 +1800,6 @@ extern "C"
                                                       int16_t* rotationY,
                                                       CollisionCode collisionCode,
                                                       int16_t initialRotation);
-    void VS__tickDigimonWaitingDistance(DigimonEntity* entity, DigimonEntity* other, FighterData* data);
-    void VS__tickDigimonAttackingLogic(int32_t id);
     void VS__renderTimeoutText(int32_t instanceId);
     void VS__increaseSpeedBuffer(FighterData* fighter, Stats* stats);
     bool VS__hasAffordableMoves2(uint16_t* array, int32_t fighterId);

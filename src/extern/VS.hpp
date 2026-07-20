@@ -51,4 +51,6 @@ extern "C"
     int32_t VS__addFinisherAura(DigimonEntity* entity, uint16_t duration);
     int32_t VS__canUseAOE(DigimonEntity* self, FighterData* data);
     void VS__castAttackEffect(DigimonEntity* self, DigimonEntity* other, FighterData* data);
+    void VS__addFinisherValue(FighterData* fighter, int32_t value);
+    void VS__addFlatBullet(DigimonEntity* entity);
 }
