@@ -604,6 +604,27 @@ namespace
             }
         }
     }
+
+    void increaseSpeedBuffer(FighterData* fighter, Stats* stats)
+    {
+        if (fighter->speedBuffer >= 100) return;
+        if (BATTLE_FRAME_COUNT % 2 != 0) return;
+
+        fighter->speedBuffer = dtl::min(fighter->speedBuffer + (stats->speed / 100 + 1), 100);
+    }
+
+    bool hasAffordableMoves(DigimonEntity* entity, FighterData* fighter, dtl::array<uint16_t, 4>& array)
+    {
+        bool hasAMove = false;
+
+        for (int32_t i = 0; i < 4; i++) {
+            auto result = VS__canAffordMove(entity, fighter, i);
+            array[i]    = result;
+            hasAMove |= result;
+        }
+
+        return hasAMove;
+    }
 } // namespace
 
 void VS__faintDigimon(DigimonEntity* entity, FighterData* fighter, int32_t playerId)
@@ -639,7 +660,7 @@ extern "C"
             tickSenile(playerId, entity, fighter);
 
             if (fighter.cooldown > 1) fighter.cooldown--;
-            if (!fighter.flags.isSenile) VS__increaseSpeedBuffer(&fighter, &entity->stats);
+            if (!fighter.flags.isSenile) increaseSpeedBuffer(&fighter, &entity->stats);
         }
 
         if ((fighter.flags.raw & 0x80B0) != 0) return;
@@ -717,7 +738,7 @@ extern "C"
         int32_t selectedMove = -1;
         if (currentCommand == BattleCommand::MODERATOR) {
             dtl::array<uint16_t, 4> dummy;
-            if (!VS__hasAffordableMoves2(dummy.data(), playerId)) {
+            if (!hasAffordableMoves(entity, &fighter, dummy)) {
                 fighter.cooldown           = 80;
                 fighter.flags.isOnChargeup = true;
                 return;
@@ -727,7 +748,7 @@ extern "C"
         }
         else if (currentCommand == BattleCommand::ATTACK) {
             dtl::array<uint16_t, 4> dummy;
-            if (!VS__hasAffordableMoves2(dummy.data(), playerId)) {
+            if (!hasAffordableMoves(entity, &fighter, dummy)) {
                 fighter.cooldown           = 80;
                 fighter.flags.isOnChargeup = true;
                 return;

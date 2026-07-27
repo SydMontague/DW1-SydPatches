@@ -270,7 +270,10 @@ extern "C"
         initializeAttackObjects();
         VS__addTimer(99);
 
-        if (PARTNER_ENTITY.type == NPC_ENTITIES[0].type) VS__initializePlayerMarker();
+        if (PARTNER_ENTITY.type == NPC_ENTITIES[0].type) {
+            addObject(ObjectID::PLAYER_MARKER, 0, nullptr, VS__renderPlayerMarker);
+            addObject(ObjectID::PLAYER_MARKER, 1, nullptr, VS__renderPlayerMarker);
+        }
 
         VS__IS_DRAW                 = 0;
         VS__ACTIVE_FINISHER_AURA_ID = -1;

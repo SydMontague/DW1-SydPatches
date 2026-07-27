@@ -1801,9 +1801,7 @@ extern "C"
                                                       CollisionCode collisionCode,
                                                       int16_t initialRotation);
     void VS__renderTimeoutText(int32_t instanceId);
-    void VS__increaseSpeedBuffer(FighterData* fighter, Stats* stats);
-    bool VS__hasAffordableMoves2(uint16_t* array, int32_t fighterId);
-    void VS__initializePlayerMarker();
+    void VS__renderPlayerMarker(int32_t instanceId);
     void tickScript();
     void setDigimonRaised(DigimonType type);
     uint8_t* getScript(uint32_t scriptId);

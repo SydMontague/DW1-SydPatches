@@ -289,8 +289,8 @@
 ;  jal startAnimation
 ;.org 0x800f5f6c
 ;  jal startAnimation
-.org 0x800f6d90
-  j startAnimation
+;.org 0x800f6d90
+;  j startAnimation
 
 ;.org 0x800a9de0
 ;  jal tickAnimation

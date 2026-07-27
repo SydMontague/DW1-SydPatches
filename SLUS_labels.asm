@@ -37,9 +37,7 @@
 .definelabel initializeTextbox,         0x8010020c
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
-.definelabel VS__initializePlayerMarker,0x800f6d98
-.definelabel VS__increaseSpeedBuffer,   0x800f6bc8
-.definelabel VS__hasAffordableMoves2,   0x800f6c5c
+.definelabel VS__renderPlayerMarker,    0x800f74e8
 .definelabel VS__renderTimeoutText,     0x800f7284
 .definelabel VS__tickDigimonRotationKeepDistanceCollision,0x800f6e24
 
