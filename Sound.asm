@@ -19,10 +19,10 @@
 ;  jal stopBGM
 ;.org 0x800f4cf8
 ;  jal stopBGM
-.org 0x800f7198
-  jal stopBGM
-.org 0x800f7260
-  jal stopBGM
+;.org 0x800f7198
+;  jal stopBGM
+;.org 0x800f7260
+;  jal stopBGM
 .org 0x8010460c
   jal stopBGM
 .org 0x801064f8
@@ -56,8 +56,8 @@
 ;  jal playMusic
 ;.org 0x800f4838
 ;  jal playMusic
-.org 0x800f71a4
-  jal playMusic
+;.org 0x800f71a4
+;  jal playMusic
 .org 0x80106ad8
   jal playMusic
 .org 0x80106b78

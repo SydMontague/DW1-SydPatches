@@ -1,3 +1,5 @@
+#include "InitVS.hpp"
+
 #include "../extern/VS.hpp"
 
 #include "../Battle.h"
@@ -260,10 +262,7 @@ namespace
             VS__removeTimeoutWindow();
         }
     }
-} // namespace
 
-extern "C"
-{
     void VS__combatInit()
     {
         resetFlattenGlobal();
@@ -397,18 +396,6 @@ extern "C"
         }
     }
 
-    void VS__resetFlatten(int combatId)
-    {
-        auto* entity =
-            reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[combatId]));
-        entity->flatSprite                                   = 0xff;
-        COMBAT_DATA_PTR->fighter[combatId].flags.isFlattened = false;
-        COMBAT_DATA_PTR->fighter[combatId].flatTimer         = 0;
-        entity->posData->scale.x                             = 4096;
-        entity->posData->scale.y                             = 4096;
-        entity->posData->scale.z                             = 4096;
-    }
-
     int32_t VS__deinitializeCombat(int32_t lostP1, int32_t lostP2)
     {
         PARTNER_ENTITY.stats.chargeMode  = VS__CHARGE_MODES[0];
@@ -477,5 +464,55 @@ extern "C"
 
         GAME_STATE = 0;
         return lostP1 == lostP2 ? 2 : lostP1;
+    }
+} // namespace
+
+void VS__resetFlatten(int combatId)
+{
+    auto* entity =
+        reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[combatId]));
+    entity->flatSprite                                   = 0xff;
+    COMBAT_DATA_PTR->fighter[combatId].flags.isFlattened = false;
+    COMBAT_DATA_PTR->fighter[combatId].flatTimer         = 0;
+    entity->posData->scale.x                             = 4096;
+    entity->posData->scale.y                             = 4096;
+    entity->posData->scale.z                             = 4096;
+}
+
+extern "C"
+{
+    void VS__combatMain()
+    {
+        VS__PAUSING_PLAYER = 0;
+        COMBAT_AREA_X      = 0;
+        COMBAT_AREA_Y      = 0;
+        stopBGM();
+        playMusic(VS_MUSIC, 2);
+        VS__combatInit();
+        VS__combatSetup();
+
+        auto result = 0;
+        while (true) {
+            auto result = VS__checkEndCondition();
+            if (result != 0) break;
+
+            VS__tickDigimonAI(0);
+            VS__tickDigimonAI(1);
+            VS__tickBattle();
+            VS__tickFrame();
+            VS__handlePause();
+        }
+
+        removePauseBox();
+
+        if (result == -1)
+            VS__deinitializeCombat(1, 0);
+        else if (result == 1)
+            VS__deinitializeCombat(0, 1);
+        else
+            VS__deinitializeCombat(1, 1);
+
+        stopBGM();
+        VS__removeWinLossWindow();
     }
 }

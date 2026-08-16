@@ -53,4 +53,5 @@ extern "C"
     void VS__castAttackEffect(DigimonEntity* self, DigimonEntity* other, FighterData* data);
     void VS__addFinisherValue(FighterData* fighter, int32_t value);
     void VS__addFlatBullet(DigimonEntity* entity);
+    void VS__removeWinLossWindow();
 }

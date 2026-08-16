@@ -40,6 +40,8 @@
 .definelabel VS__renderPlayerMarker,    0x800f74e8
 .definelabel VS__renderTimeoutText,     0x800f7284
 
+.definelabel COMBAT_AREA_X, 0x80134d8c
+.definelabel COMBAT_AREA_Y, 0x80134d88
 .definelabel VS__FINISHER_TIMER, 0x80134f48
 .definelabel VS_DIGIMON_P1_PTR, 0x8013526c
 .definelabel VS_DIGIMON_P2_PTR, 0x80135270
@@ -455,6 +457,7 @@
 .definelabel VS__castAttackEffect, 0x8005d280
 .definelabel VS__addFinisherValue, 0x8005d7e0
 .definelabel VS__addFlatBullet, 0x8006f708
+.definelabel VS__removeWinLossWindow, 0x80063224
 
 .definelabel INTRO_TARGET_POS, 0x80071744
 .definelabel VS__INTRO_DIGIMON_NAMES, 0x8006ff20

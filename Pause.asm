@@ -1,14 +1,3 @@
-.open "work/DIGIMON/SLUS_010.32",0x80090000
-.psx
-
-;.org 0x800f4648
-;  jal removePauseBox
-.org 0x800f7204
-  jal removePauseBox
-
-.close
-
-
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
 

@@ -1,5 +1,3 @@
+#pragma once
 
-extern "C"
-{
-    void VS__resetFlatten(int combatId);
-}
+void VS__resetFlatten(int combatId);

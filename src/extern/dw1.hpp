@@ -1777,6 +1777,8 @@ extern "C"
     extern RegisteredDigimon* VS_DIGIMON_P1_PTR;
     extern RegisteredDigimon* VS_DIGIMON_P2_PTR;
     extern int32_t VS__FINISHER_TIMER;
+    extern int32_t COMBAT_AREA_X;
+    extern int32_t COMBAT_AREA_Y;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
