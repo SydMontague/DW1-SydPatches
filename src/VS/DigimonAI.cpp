@@ -10,6 +10,90 @@
 
 namespace
 {
+    bool check(Entity* self, int16_t* rotationY, int16_t angle)
+    {
+        *rotationY = angle;
+
+        return entityCheckCollision(nullptr, self, 280, 200) == CollisionCode::NONE;
+    }
+
+    // TODO very ugly, need refactor
+    void VS__tickDigimonRotationKeepDistanceCollision(Entity* self,
+                                                      int16_t* rotationY,
+                                                      CollisionCode collisionCode,
+                                                      int16_t initialRotation)
+    {
+        if (GAME_STATE == 4 && collisionCode == CollisionCode::MAP) collisionCode = CollisionCode::SCREEN;
+
+        if (collisionCode != CollisionCode::SCREEN) {
+            *rotationY = initialRotation;
+            collisionGrace(nullptr, self, 280, 200);
+            return;
+        }
+
+        auto direction = abs(*rotationY / 1024);
+        constexpr dtl::array<uint16_t, 4> directions{0, 1024, 2048, 3072};
+
+        if (check(self, rotationY, directions[direction])) {
+            auto baseRot = directions[direction] + 0xc00 & 0xFFF;
+
+            for (auto i = 0; i < 3; i++) {
+                auto newRot = (baseRot + i * 0x200) & 0xFFF;
+                if (!check(self, rotationY, newRot)) {
+                    *rotationY = initialRotation;
+                    collisionGrace(nullptr, self, 280, 200);
+                    return;
+                }
+            }
+
+            if (!check(self, rotationY, (baseRot + random(0x400)) & 0xFFF)) {
+                *rotationY = initialRotation;
+                collisionGrace(nullptr, self, 280, 200);
+                return;
+            }
+        }
+        else if (check(self, rotationY, (directions[direction] + 0x400) & 0xFFF)) {
+            auto baseRot = directions[direction] + 0x400 & 0xFFF;
+            for (auto i = 0; i < 3; i++) {
+                auto newRot = (baseRot + i * 0x200) & 0xFFF;
+
+                if (!check(self, rotationY, newRot)) {
+                    *rotationY = initialRotation;
+                    collisionGrace(nullptr, self, 280, 200);
+                    return;
+                }
+            }
+
+            if (!check(self, rotationY, (baseRot + random(0x400)) & 0xFFF)) {
+                *rotationY = initialRotation;
+                collisionGrace(nullptr, self, 280, 200);
+                return;
+            }
+        }
+        else {
+            auto baseRot = directions[direction] + 0x800 & 0xFFF;
+            for (auto i = 0; i < 3; i++) {
+                auto newRot = (baseRot + i * 0x200) & 0xFFF;
+
+                if (!check(self, rotationY, newRot)) {
+                    *rotationY = initialRotation;
+                    collisionGrace(nullptr, self, 280, 200);
+                    return;
+                }
+            }
+
+            if (check(self, rotationY, initialRotation + 0x800)) return;
+            if (!check(self, rotationY, baseRot + random(0x400))) {
+                *rotationY = initialRotation;
+                collisionGrace(nullptr, self, 280, 200);
+                return;
+            }
+        }
+    }
+
+    /**
+     *
+     */
     void VS__setWalking(DigimonEntity* entity, Stats* stats, BattleFlags flags)
     {
         if (entity->animId == 0x23 || entity->animId == 0x24) return;

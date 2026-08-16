@@ -1796,10 +1796,6 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
-    void VS__tickDigimonRotationKeepDistanceCollision(Entity* self,
-                                                      int16_t* rotationY,
-                                                      CollisionCode collisionCode,
-                                                      int16_t initialRotation);
     void VS__renderTimeoutText(int32_t instanceId);
     void VS__renderPlayerMarker(int32_t instanceId);
     void tickScript();

@@ -39,7 +39,6 @@
 .definelabel tickScript,                0x80105bd8
 .definelabel VS__renderPlayerMarker,    0x800f74e8
 .definelabel VS__renderTimeoutText,     0x800f7284
-.definelabel VS__tickDigimonRotationKeepDistanceCollision,0x800f6e24
 
 .definelabel VS__FINISHER_TIMER, 0x80134f48
 .definelabel VS_DIGIMON_P1_PTR, 0x8013526c
