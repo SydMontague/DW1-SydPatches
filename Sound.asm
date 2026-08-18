@@ -141,14 +141,14 @@
 ;  jal playSound
 ;.org 0x800f3704
 ;  jal playSound
-.org 0x800f77e8
-  jal playSound
-.org 0x800f7864
-  jal playSound
-.org 0x800f78d8
-  jal playSound
-.org 0x800f7a10
-  jal playSound
+;.org 0x800f77e8
+;  jal playSound
+;.org 0x800f7864
+;  jal playSound
+;.org 0x800f78d8
+;  jal playSound
+;.org 0x800f7a10
+;  jal playSound
 .org 0x800f7e14
   jal playSound
 .org 0x800f7e5c

@@ -566,4 +566,45 @@ extern "C"
         stopBGM();
         VS__removeWinLossWindow();
     }
+
+    void VS__tickVSInput(int32_t playerId)
+    {
+        if (GAME_STATE != 4) return;
+
+        auto isKeyPolledFn = playerId == 1 ? isKeyDownPolledP2 : isKeyDownPolled;
+        auto* data         = &COMBAT_DATA_PTR->player;
+        auto* fighter      = &COMBAT_DATA_PTR->fighter[playerId];
+
+        if (isKeyPolledFn(InputButtons::BUTTON_LEFT)) {
+            playSound(0, 2);
+            data->hoveredCommand[playerId] += 1;
+            if (data->numCommands[playerId] - 1 < static_cast<int32_t>(data->hoveredCommand[playerId]))
+                data->hoveredCommand[playerId] = 1;
+        }
+
+        if (isKeyPolledFn(InputButtons::BUTTON_RIGHT)) {
+            playSound(0, 2);
+            data->hoveredCommand[playerId] -= 1;
+            if (static_cast<int32_t>(data->hoveredCommand[playerId]) < 1)
+                data->hoveredCommand[playerId] = data->numCommands[playerId] - 1;
+        }
+
+        if (isKeyPolledFn(InputButtons::BUTTON_CROSS)) {
+            playSound(0, 3);
+            data->buffereCommand[playerId] = data->availableCommands[playerId][data->hoveredCommand[playerId]];
+            data->commandDelay[playerId]   = 0; // vanilla calculates the value before always settings it to 0
+        }
+
+        if (isKeyPolledFn(InputButtons::BUTTON_SQUARE) && fighter->finisherProgress == fighter->finisherGoal) {
+            playSound(0, 3);
+            data->buffereCommand[playerId] = BattleCommand::FINISHER;
+            data->commandDelay[playerId]   = 0;
+            data->currentCommand[playerId] = BattleCommand::FINISHER;
+        }
+    }
+
+    void VS__tickDigimon(int32_t entityId)
+    {
+        tickAnimation(ENTITY_TABLE.getEntityById(entityId));
+    }
 }

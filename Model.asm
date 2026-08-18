@@ -314,10 +314,10 @@
 ;  jal tickAnimation
 ;.org 0x800f1510
 ;  jal tickAnimation
-.org 0x800f7a9c
-  j tickAnimation
-.org 0x800f7ab8
-  j tickAnimation
+;.org 0x800f7a9c
+;  j tickAnimation
+;.org 0x800f7ab8
+;  j tickAnimation
 
 .close
 
