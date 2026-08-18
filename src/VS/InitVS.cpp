@@ -7,6 +7,7 @@
 #include "../Files.hpp"
 #include "../GameObjects.hpp"
 #include "../Input.hpp"
+#include "../Math.hpp"
 #include "../Model.hpp"
 #include "../Pause.hpp"
 #include "../Sound.hpp"
@@ -204,6 +205,56 @@ namespace
         }
         VS__unloadMoveData();
         VS__deinitializeEFEEngine();
+    }
+
+    void VS__renderTimeoutText(int32_t)
+    {
+        auto* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+        libgpu_SetPolyFT4(prim);
+        prim->tpage = 0xd;
+        prim->clut  = getClut(0x10, 0x1e0);
+        prim->r0    = 0x80;
+        prim->g0    = 0x80;
+        prim->b0    = 0x80;
+        setUVDataPolyFT4(prim, 0, 8, 0x90, 24);
+        setPosDataPolyFT4(prim, -72, -12, 144, 24);
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 5, prim);
+        libgs_GsSetWorkBase(prim + 1);
+    }
+
+    void VS__renderPlayerMarker(int32_t instanceId)
+    {
+        const auto* entity = ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[instanceId]);
+        const auto mapPos  = getScreenPosition(*entity, 1);
+        const auto radius  = getDigimonData(entity->type)->radius;
+        const auto offsetX = (VIEWPORT_DISTANCE * (radius / 2)) / (mapPos.depth & ~3);
+        auto* prim         = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+        libgpu_SetPolyFT4(prim);
+
+        prim->tpage = 6;
+        prim->clut  = getClut(0, 0x1F2);
+        prim->r0    = 0x80;
+        prim->g0    = 0x80;
+        prim->b0    = 0x80;
+        prim->u0    = instanceId * 48 + 0x88;
+        prim->u1    = instanceId * 48 + 0xb8;
+        prim->u2    = instanceId * 48 + 0x88;
+        prim->u3    = instanceId * 48 + 0xb8;
+        prim->v0    = 0xd8;
+        prim->v1    = 0xd8;
+        prim->v2    = 0xf8;
+        prim->v3    = 0xf8;
+        prim->x0    = mapPos.screenX + offsetX;
+        prim->x1    = mapPos.screenX + offsetX + 48;
+        prim->x2    = mapPos.screenX + offsetX;
+        prim->x3    = mapPos.screenX + offsetX + 48;
+        prim->y0    = mapPos.screenY - 32;
+        prim->y1    = mapPos.screenY - 32;
+        prim->y2    = mapPos.screenY;
+        prim->y3    = mapPos.screenY;
+
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + mapPos.depth / 4, prim);
+        libgs_GsSetWorkBase(prim + 1);
     }
 
     void VS__tickBattleResultScreen(bool hasLostP1, bool hasLostP2)

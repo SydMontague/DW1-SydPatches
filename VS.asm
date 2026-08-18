@@ -13,10 +13,4 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-; since things are implemented at the moment, we just omit the numbers for now, so that we can skip this useless code
-.org 0x800f7478
-  nop ; jal VS__renderIntroStatNumber
-.org 0x800f74c4
-  nop ; jal VS__renderIntroStatNumber
-  
 .close

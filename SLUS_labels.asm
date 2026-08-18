@@ -37,8 +37,6 @@
 .definelabel initializeTextbox,         0x8010020c
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
-.definelabel VS__renderPlayerMarker,    0x800f74e8
-.definelabel VS__renderTimeoutText,     0x800f7284
 
 .definelabel COMBAT_AREA_X, 0x80134d8c
 .definelabel COMBAT_AREA_Y, 0x80134d88
