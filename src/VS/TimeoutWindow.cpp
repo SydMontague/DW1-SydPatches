@@ -80,8 +80,8 @@ namespace
         return {{
             getAtlasVanilla().render("Damage", LABEL1_SETTING),
             getAtlasVanilla().render("Done", LABEL2_SETTING),
-            getAtlasVanilla().render(VS_DIGIMON_P1_PTR->name.data(), NAME1_SETTING),
-            getAtlasVanilla().render(VS_DIGIMON_P2_PTR->name.data(), NAME2_SETTING),
+            getAtlasVanilla().render((*VS_DIGIMON_P1_PTR)[0].name.data(), NAME1_SETTING),
+            getAtlasVanilla().render((*VS_DIGIMON_P2_PTR)[0].name.data(), NAME2_SETTING),
             getAtlasVanilla().render(format("%d", VS__DAMAGE[0]).data(), DAMAGE1_SETTING),
             getAtlasVanilla().render(format("%d", VS__DAMAGE[1]).data(), DAMAGE2_SETTING),
         }}; // namespace

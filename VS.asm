@@ -33,4 +33,7 @@ li.l a2, VS__tickDigimon
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
+.org 0x800f8070
+  jal VS__loadTextures
+
 .close

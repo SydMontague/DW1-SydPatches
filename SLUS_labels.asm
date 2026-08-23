@@ -38,6 +38,7 @@
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
 
+.definelabel SELECT_DIGIMON_DATA, 0x801b1c7c
 .definelabel COMBAT_AREA_X, 0x80134d8c
 .definelabel COMBAT_AREA_Y, 0x80134d88
 .definelabel VS__FINISHER_TIMER, 0x80134f48
@@ -456,6 +457,8 @@
 .definelabel VS__addFinisherValue, 0x8005d7e0
 .definelabel VS__addFlatBullet, 0x8006f708
 .definelabel VS__removeWinLossWindow, 0x80063224
+.definelabel VS__SELECTED_P1, 0x800716a8
+.definelabel VS__SELECTED_P2, 0x800716ad
 
 .definelabel INTRO_TARGET_POS, 0x80071744
 .definelabel VS__INTRO_DIGIMON_NAMES, 0x8006ff20

@@ -1506,6 +1506,38 @@ extern "C"
         dtl::array<uint8_t, 32> unk;
     };
 
+    struct SelectDigimonData
+    {
+        dtl::array<uint8_t, 40> slotId{};
+        uint8_t selectionState{};
+        uint8_t listPage{};
+        uint8_t listPageCount{};
+        uint8_t slotCount{};
+        uint8_t detailPage{};
+        uint8_t unk1{};
+        uint8_t unk2{};
+        uint8_t unk3{};
+        uint8_t unk4{};
+        uint8_t unk5{};
+        uint8_t unk6{};
+        uint8_t unk7{};
+        uint8_t selectedSlot{};
+        uint8_t unk8{};
+        uint8_t unk9{};
+        dtl::array<uint8_t, 24> unk10{};
+        uint8_t unused;
+
+        SelectDigimonData() = default;
+        SelectDigimonData(const dtl::array<RegisteredDigimon, 40>& registered)
+        {
+            for (auto i = 0; i < registered.size(); i++) {
+                if (registered[i].digimonId != 0) slotId[slotCount++] = i;
+            }
+
+            listPageCount = ((slotCount + 3) / 4);
+        }
+    };
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1513,6 +1545,9 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern dtl::array<int8_t, 5> VS__SELECTED_P1;
+    extern dtl::array<int8_t, 5> VS__SELECTED_P2;
+    extern dtl::array<SelectDigimonData, 2> SELECT_DIGIMON_DATA;
     extern int32_t HAS_TAKEN_DAMAGE;
     extern POLY_FT4 UNUSED_BIT_TEXT;
     extern dtl::array<StatsGains, 4> INITIAL_COMBAT_STATS;
@@ -1774,8 +1809,8 @@ extern "C"
     extern dtl::array<uint16_t, 2> VS_DISCIPLINE;
     extern uint8_t VS__CAMERA_TIMER;
     extern uint8_t VS__PAUSING_PLAYER;
-    extern RegisteredDigimon* VS_DIGIMON_P1_PTR;
-    extern RegisteredDigimon* VS_DIGIMON_P2_PTR;
+    extern dtl::array<RegisteredDigimon, 40>* VS_DIGIMON_P1_PTR;
+    extern dtl::array<RegisteredDigimon, 40>* VS_DIGIMON_P2_PTR;
     extern int32_t VS__FINISHER_TIMER;
     extern int32_t COMBAT_AREA_X;
     extern int32_t COMBAT_AREA_Y;

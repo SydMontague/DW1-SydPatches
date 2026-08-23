@@ -52,18 +52,18 @@
 ;  jal loadTIMFile
 ;.org 0x800ef008
 ;  jal loadTIMFile
-.org 0x800f7adc
-  jal loadTIMFile
-.org 0x800f7aec
-  jal loadTIMFile
-.org 0x800f7afc
-  jal loadTIMFile
-.org 0x800f7b0c
-  jal loadTIMFile
-.org 0x800f7b1c
-  jal loadTIMFile
-.org 0x800f7b2c
-  jal loadTIMFile
+;.org 0x800f7adc
+;  jal loadTIMFile
+;.org 0x800f7aec
+;  jal loadTIMFile
+;.org 0x800f7afc
+;  jal loadTIMFile
+;.org 0x800f7b0c
+;  jal loadTIMFile
+;.org 0x800f7b1c
+;  jal loadTIMFile
+;.org 0x800f7b2c
+;  jal loadTIMFile
 .org 0x800f8130
   jal loadTIMFile
 
