@@ -76,11 +76,23 @@ namespace
         .y = static_cast<int16_t>(BALANCE_BOX_Y + 10),
     };
 
+    constexpr UIBoxStyle BOX_STYLE1{
+        .color          = {},
+        .fill           = UIBox::Fill::SEMI,
+        .playOpenSound  = false,
+        .playCloseSound = false,
+    };
+    constexpr UIBoxStyle BOX_STYLE2{
+        .fill           = UIBox::Fill::OPAQUE,
+        .playOpenSound  = false,
+        .playCloseSound = false,
+    };
+
     struct Data
     {
-        UIBox statsBox{finalPos, {}, true, getStartPos()};
-        UIBox bitsBox{getBitBoxRect(), {}, true, getStartPos()};
-        UIBox finalBitsBox{balanceFinalPos, {0x2D, 0x38, 0x40}, false, getStartPos()};
+        UIBox statsBox{finalPos, BOX_STYLE1, getStartPos()};
+        UIBox bitsBox{getBitBoxRect(), BOX_STYLE1, getStartPos()};
+        UIBox finalBitsBox{balanceFinalPos, BOX_STYLE2, getStartPos()};
         int32_t bitsToGain{};
         int16_t statsTimer{};
 

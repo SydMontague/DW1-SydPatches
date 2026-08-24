@@ -1,6 +1,7 @@
 #include "Utils.hpp"
 
 #include "Helper.hpp"
+#include "Math.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libapi.hpp"
 #include "extern/libgte.hpp"
@@ -116,4 +117,15 @@ void operator delete[](void* p) noexcept
 void operator delete[](void* p, size_t size) noexcept
 {
     libapi_free3(p);
+}
+
+RECT tamerStartRect()
+{
+    ScreenPos pos = getScreenPosition(TAMER_ENTITY, 1);
+    return {
+        .x      = static_cast<int16_t>(pos.screenX - 5),
+        .y      = static_cast<int16_t>(pos.screenY - 5),
+        .width  = 10,
+        .height = 10,
+    };
 }

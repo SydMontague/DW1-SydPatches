@@ -191,8 +191,12 @@ void CardView::Private::tick()
             };
 
             playSound(0, 0);
-            cardImageBox = UIBox(CARD_BOX, {}, false, start);
-            cardCountBox = UIBox(COUNT_BOX, UIBox::DEFAULT_COLOR, false, start);
+            cardImageBox =
+                UIBox(CARD_BOX,
+                      {.color = {}, .fill = UIBox::Fill::OPAQUE, .playOpenSound = false, .playCloseSound = false},
+                      start);
+            cardCountBox =
+                UIBox(COUNT_BOX, {.fill = UIBox::Fill::OPAQUE, .playOpenSound = false, .playCloseSound = false}, start);
         }
     }
     else if (state == 0) {
