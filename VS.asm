@@ -36,4 +36,25 @@ li.l a2, VS__tickDigimon
 .org 0x800f8070
   jal VS__loadTextures
 
+.org 0x800f80ec
+  jal VS__tickSelectDigimon
+
+.org 0x800f8324
+  jal VS__isAlreadySelected
+.org 0x800f837c
+  jal VS__isAlreadySelected
+.org 0x800f83e0
+  jal VS__isAlreadySelected
+.org 0x800f8444
+  jal VS__isAlreadySelected
+
+.org 0x800f834c
+  jal VS__handleDigimonSelected
+.org 0x800f83b0
+  jal VS__handleDigimonSelected
+.org 0x800f8414
+  jal VS__handleDigimonSelected
+.org 0x800f8478
+  jal VS__handleDigimonSelected
+
 .close

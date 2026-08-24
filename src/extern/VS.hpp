@@ -6,6 +6,9 @@ extern "C"
 {
     extern Vector INTRO_TARGET_POS;
     extern dtl::array<dtl::array<uint8_t, 14>, 116> VS__INTRO_DIGIMON_NAMES;
+    extern dtl::array<int8_t, 5> VS__SELECTED_P1;
+    extern dtl::array<int8_t, 5> VS__SELECTED_P2;
+    extern uint8_t VS_NUM_BATTLES;
 
     void VS__setupIntroCamera(Entity* entity, int32_t distance, int32_t spot);
     void VS__tickFrame();

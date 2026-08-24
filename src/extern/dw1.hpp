@@ -1522,10 +1522,10 @@ extern "C"
         uint8_t unk6{};
         uint8_t unk7{};
         uint8_t selectedSlot{};
-        uint8_t unk8{};
+        uint8_t selectedMask{};
         uint8_t unk9{};
         dtl::array<uint8_t, 24> unk10{};
-        uint8_t unused;
+        uint8_t lastSlot;
 
         SelectDigimonData() = default;
         SelectDigimonData(const dtl::array<RegisteredDigimon, 40>& registered)
@@ -1545,8 +1545,8 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
-    extern dtl::array<int8_t, 5> VS__SELECTED_P1;
-    extern dtl::array<int8_t, 5> VS__SELECTED_P2;
+    extern dtl::array<int8_t, 2> VS_PRESS_START_BOX_CREATED;
+    extern uint32_t VS_BOTH_SELECTED;
     extern dtl::array<SelectDigimonData, 2> SELECT_DIGIMON_DATA;
     extern int32_t HAS_TAKEN_DAMAGE;
     extern POLY_FT4 UNUSED_BIT_TEXT;
@@ -1833,6 +1833,8 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void VS__tickSelectDigimonPlayer(int32_t instance);
+    void VS__renderSelectDigimonPlayer(int32_t instance);
     void tickScript();
     void setDigimonRaised(DigimonType type);
     uint8_t* getScript(uint32_t scriptId);

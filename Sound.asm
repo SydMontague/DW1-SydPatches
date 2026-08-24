@@ -149,10 +149,10 @@
 ;  jal playSound
 ;.org 0x800f7a10
 ;  jal playSound
-.org 0x800f7e14
-  jal playSound
-.org 0x800f7e5c
-  jal playSound
+;.org 0x800f7e14
+;  jal playSound
+;.org 0x800f7e5c
+;  jal playSound
 .org 0x800f84a0
   jal playSound
 .org 0x800f84f4
