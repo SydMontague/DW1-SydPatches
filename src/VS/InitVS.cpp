@@ -2,6 +2,7 @@
 
 #include "../extern/VS.hpp"
 
+#include "../AtlasFont.hpp"
 #include "../Battle.h"
 #include "../Entity.hpp"
 #include "../Files.hpp"
@@ -16,6 +17,7 @@
 #include "../extern/dw1.hpp"
 #include "../extern/libetc.hpp"
 #include "DigimonAI.hpp"
+#include "SelectDigimon.hpp"
 #include "TimeoutWindow.hpp"
 
 namespace
@@ -516,6 +518,23 @@ namespace
         GAME_STATE = 0;
         return lostP1 == lostP2 ? 2 : lostP1;
     }
+
+    void VS__loadTextures()
+    {
+        TAMER_ENTITY.isOnScreen = false;
+        loadTIMFile("\\ETCDAT\\SYSTEM_W.TIM", GENERAL_BUFFER.data());
+        loadTIMFile("\\STDDAT\\TAISEN1.TIM", GENERAL_BUFFER.data());
+        loadTIMFile("\\STDDAT\\TAISEN2.TIM", GENERAL_BUFFER.data());
+        loadTIMFile("\\STDDAT\\16TAISEN.TIM", GENERAL_BUFFER.data());
+        loadTIMFile("\\STDDAT\\TAISEN_F.TIM", GENERAL_BUFFER.data());
+        loadTIMFile("\\STDDAT\\TIME.TIM", GENERAL_BUFFER.data());
+
+        VS__SELECTED_P1 = {-1, -1, -1, -1, -1};
+        VS__SELECTED_P2 = {-1, -1, -1, -1, -1};
+
+        SELECT_DIGIMON_DATA[0] = SelectDigimonData(*VS_DIGIMON_P1_PTR);
+        SELECT_DIGIMON_DATA[1] = SelectDigimonData(*VS_DIGIMON_P2_PTR);
+    }
 } // namespace
 
 void VS__resetFlatten(int combatId)
@@ -608,20 +627,19 @@ extern "C"
         tickAnimation(ENTITY_TABLE.getEntityById(entityId));
     }
 
-    void VS__loadTextures()
+    void VS__initialize(dtl::array<RegisteredDigimon, 40>* player1, dtl::array<RegisteredDigimon, 40>* player2)
     {
-        TAMER_ENTITY.isOnScreen = false;
-        loadTIMFile("\\ETCDAT\\SYSTEM_W.TIM", GENERAL_BUFFER.data());
-        loadTIMFile("\\STDDAT\\TAISEN1.TIM", GENERAL_BUFFER.data());
-        loadTIMFile("\\STDDAT\\TAISEN2.TIM", GENERAL_BUFFER.data());
-        loadTIMFile("\\STDDAT\\16TAISEN.TIM", GENERAL_BUFFER.data());
-        loadTIMFile("\\STDDAT\\TAISEN_F.TIM", GENERAL_BUFFER.data());
-        loadTIMFile("\\STDDAT\\TIME.TIM", GENERAL_BUFFER.data());
+        VS_DIGIMON_P1_PTR = player1;
+        VS_DIGIMON_P2_PTR = player2;
+        VS__loadTextures();
 
-        VS__SELECTED_P1 = {-1, -1, -1, -1, -1};
-        VS__SELECTED_P2 = {-1, -1, -1, -1, -1};
+        VS__tickSelectMode();
+        VS__tickSelectMap();
+        VS__tickSelectDigimon();
+        VS__startBattle();
 
-        SELECT_DIGIMON_DATA[0] = SelectDigimonData(*VS_DIGIMON_P1_PTR);
-        SELECT_DIGIMON_DATA[1] = SelectDigimonData(*VS_DIGIMON_P2_PTR);
+        loadStackedTIMFile("\\ETCDAT\\ETCTIM.BIN");
+        loadTIMFile("\\ETCNA\\TITLE2.TIM", GENERAL_BUFFER.data());
+        initFonts();
     }
 }

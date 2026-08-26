@@ -57,4 +57,5 @@ extern "C"
     void VS__addFinisherValue(FighterData* fighter, int32_t value);
     void VS__addFlatBullet(DigimonEntity* entity);
     void VS__removeWinLossWindow();
+    void VS__startBattle();
 }

@@ -33,12 +33,6 @@ li.l a2, VS__tickDigimon
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800f8070
-  jal VS__loadTextures
-
-.org 0x800f80ec
-  jal VS__tickSelectDigimon
-
 .org 0x800f8324
   jal VS__isAlreadySelected
 .org 0x800f837c
@@ -59,10 +53,13 @@ li.l a2, VS__tickDigimon
   
 .org 0x800f864c
   jal VS__createPressStartToBeginBox
-  
+
 .org 0x800f86ac
   jal VS__removePressStartToBeginBox
 .org 0x800f8738
   jal VS__removePressStartToBeginBox
 
+.org 0x80111b9c
+  jal VS__initialize
+  
 .close
