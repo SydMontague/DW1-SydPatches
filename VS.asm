@@ -56,5 +56,13 @@ li.l a2, VS__tickDigimon
   jal VS__handleDigimonSelected
 .org 0x800f8478
   jal VS__handleDigimonSelected
+  
+.org 0x800f864c
+  jal VS__createPressStartToBeginBox
+  
+.org 0x800f86ac
+  jal VS__removePressStartToBeginBox
+.org 0x800f8738
+  jal VS__removePressStartToBeginBox
 
 .close
