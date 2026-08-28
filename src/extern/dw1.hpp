@@ -1510,14 +1510,14 @@ extern "C"
     {
         dtl::array<uint8_t, 40> slotId{};
         uint8_t selectionState{};
-        uint8_t listPage{};
+        int8_t listPage{};
         uint8_t listPageCount{};
         uint8_t slotCount{};
         uint8_t detailPage{};
         uint8_t unk1{};
         uint8_t unk2{};
-        uint8_t unk3{};
-        uint8_t unk4{};
+        int8_t detailScollDir{};
+        bool unk4{};
         uint8_t unk5{};
         uint8_t unk6{};
         uint8_t unk7{};
@@ -1538,6 +1538,8 @@ extern "C"
         }
     };
 
+    static_assert(sizeof(SelectDigimonData) == 0x50);
+
     extern PartnerPara PARTNER_PARA;
     // dummy size, used for unbound memory access
     extern DigimonData DIGIMON_DATA[];
@@ -1545,8 +1547,6 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
-    extern dtl::array<int8_t, 2> VS_PRESS_START_BOX_CREATED;
-    extern uint32_t VS_BOTH_SELECTED;
     extern dtl::array<SelectDigimonData, 2> SELECT_DIGIMON_DATA;
     extern int32_t HAS_TAKEN_DAMAGE;
     extern POLY_FT4 UNUSED_BIT_TEXT;
@@ -1835,7 +1835,6 @@ extern "C"
 
     void VS__tickSelectMode();
     void VS__tickSelectMap();
-    void VS__tickSelectDigimonPlayer(int32_t instance);
     void VS__renderSelectDigimonPlayer(int32_t instance);
     void tickScript();
     void setDigimonRaised(DigimonType type);

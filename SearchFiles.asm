@@ -64,8 +64,8 @@
 ;  jal loadTIMFile
 ;.org 0x800f7b2c
 ;  jal loadTIMFile
-.org 0x800f8130
-  jal loadTIMFile
+;.org 0x800f8130
+;  jal loadTIMFile
 
 ;.org 0x800bb51c
 ;  j loadStackedTIMEntry
@@ -216,8 +216,8 @@
 ;  jal loadStackedTIMFile
 ;.org 0x800eeaf4
 ;  jal loadStackedTIMFile
-.org 0x800f8120
-  jal loadStackedTIMFile
+;.org 0x800f8120
+;  jal loadStackedTIMFile
 
 .close
 

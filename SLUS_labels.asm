@@ -37,13 +37,10 @@
 .definelabel initializeTextbox,         0x8010020c
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
-.definelabel VS__tickSelectDigimonPlayer,0x800f8148
 .definelabel VS__renderSelectDigimonPlayer,0x800f87e0
 .definelabel VS__tickSelectMode,        0x800f9ebc
 .definelabel VS__tickSelectMap,         0x800fa4b8
 
-.definelabel VS_PRESS_START_BOX_CREATED, 0x80134f52
-.definelabel VS_BOTH_SELECTED, 0x80134f54
 .definelabel SELECT_DIGIMON_DATA, 0x801b1c7c
 .definelabel COMBAT_AREA_X, 0x80134d8c
 .definelabel COMBAT_AREA_Y, 0x80134d88
