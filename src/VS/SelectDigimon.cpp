@@ -148,7 +148,7 @@ namespace
                 playSound(0, 2);
                 if (data.selectedSlot != 0) {
                     data.unk7 = 0;
-                    data.selectionState--;
+                    data.selectedSlot--;
                 }
             }
             if (isKeyPolledFn(InputButtons::BUTTON_DOWN)) {
