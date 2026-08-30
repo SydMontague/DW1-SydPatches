@@ -161,16 +161,16 @@
 ;  jal playSound
 ;.org 0x800f8720
 ;  jal playSound
-.org 0x800fa0b8
-  jal playSound
-.org 0x800fa154
-  jal playSound
-.org 0x800fa194
-  jal playSound
-.org 0x800fa1dc
-  jal playSound
-.org 0x800fa218
-  jal playSound
+;.org 0x800fa0b8
+;  jal playSound
+;.org 0x800fa154
+;  jal playSound
+;.org 0x800fa194
+;  jal playSound
+;.org 0x800fa1dc
+;  jal playSound
+;.org 0x800fa218
+;  jal playSound
 .org 0x800facbc
   jal playSound
 .org 0x800fadc8

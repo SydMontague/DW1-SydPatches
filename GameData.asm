@@ -46,11 +46,11 @@
 .endarea
 
 .org 0x800ec520
-.area 0x800f9dc8-.
+.area 0x800fa834-.
   .importobj "compiled/Cave5.lib"
 
-  .notice "Cave5 Empty space left: " + (0x800f9dc8-.) + " bytes"
-  .fill 0x800f9dc8-.
+  .notice "Cave5 Empty space left: " + (0x800fa834-.) + " bytes"
+  .fill 0x800fa834-.
 .endarea
 
 .org 0x800fbf84
@@ -125,10 +125,10 @@ NAMING_DATA:
 .endarea
 
 .org 0x8012f36c
-.area 0x8012f650
+.area 0x8012f6d0
 
-  .notice "Empty space left: " + (0x8012f650-.) + " bytes"
-  .fill 0x8012f650-.
+  .notice "Empty space left: " + (0x8012f6d0-.) + " bytes"
+  .fill 0x8012f6d0-.
 .endarea
 
 ;;; Not caves, uninitialized memory

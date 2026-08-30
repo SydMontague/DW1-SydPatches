@@ -9,6 +9,7 @@ extern "C"
     extern dtl::array<int8_t, 5> VS__SELECTED_P1;
     extern dtl::array<int8_t, 5> VS__SELECTED_P2;
     extern uint8_t VS_NUM_BATTLES;
+    extern int8_t VS_SELECTED_STAGE;
 
     void VS__setupIntroCamera(Entity* entity, int32_t distance, int32_t spot);
     void VS__tickFrame();

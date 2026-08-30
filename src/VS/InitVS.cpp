@@ -18,6 +18,7 @@
 #include "../extern/libetc.hpp"
 #include "DigimonAI.hpp"
 #include "SelectDigimon.hpp"
+#include "SelectMapMode.hpp"
 #include "TimeoutWindow.hpp"
 
 namespace

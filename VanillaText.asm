@@ -20,8 +20,8 @@
 ;  jal renderString
 ;.org 0x800f7428
 ;  jal renderString
-.org 0x800f9e20
-  jal renderString
+;.org 0x800f9e20
+;  jal renderString
 .org 0x800fb13c
   jal renderString
 .org 0x800fb6b0

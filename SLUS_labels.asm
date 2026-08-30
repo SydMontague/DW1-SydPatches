@@ -37,8 +37,6 @@
 .definelabel initializeTextbox,         0x8010020c
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
-.definelabel VS__tickSelectMode,        0x800f9ebc
-.definelabel VS__tickSelectMap,         0x800fa4b8
 
 .definelabel SELECT_DIGIMON_DATA, 0x801b1c7c
 .definelabel COMBAT_AREA_X, 0x80134d8c
@@ -461,6 +459,7 @@
 .definelabel VS__removeWinLossWindow, 0x80063224
 .definelabel VS__startBattle, 0x80058148
 
+.definelabel VS_SELECTED_STAGE, 0x800716b2
 .definelabel VS_NUM_BATTLES, 0x800716b3
 .definelabel VS__SELECTED_P1, 0x800716a8
 .definelabel VS__SELECTED_P2, 0x800716ad

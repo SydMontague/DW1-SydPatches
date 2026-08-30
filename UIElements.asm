@@ -5,10 +5,10 @@
 ;  jal createStaticUIBox
 ;.org 0x800f7fa8
 ;  jal createStaticUIBox
-.org 0x800f9fc8
-  jal createStaticUIBox
-.org 0x800fa518
-  jal createStaticUIBox
+;.org 0x800f9fc8
+;  jal createStaticUIBox
+;.org 0x800fa518
+;  jal createStaticUIBox
 .org 0x80100434
   jal createStaticUIBox
 
@@ -24,10 +24,10 @@
 ;  jal removeStaticUIBox
 ;.org 0x800f7ffc
 ;  jal removeStaticUIBox
-.org 0x800fa058
-  jal removeStaticUIBox
-.org 0x800fa59c
-  jal removeStaticUIBox
+;.org 0x800fa058
+;  jal removeStaticUIBox
+;.org 0x800fa59c
+;  jal removeStaticUIBox
 .org 0x8010061c
   jal removeStaticUIBox
 
@@ -197,18 +197,18 @@
 ;  jal setUVDataPolyFT4
 ;.org 0x800f9d24
 ;  jal setUVDataPolyFT4
-.org 0x800fa3b4
-  jal setUVDataPolyFT4
-.org 0x800fa404
-  jal setUVDataPolyFT4
-.org 0x800fa660
-  jal setUVDataPolyFT4
-.org 0x800fa69c
-  jal setUVDataPolyFT4
-.org 0x800fa6e8
-  jal setUVDataPolyFT4
-.org 0x800fa734
-  jal setUVDataPolyFT4
+;.org 0x800fa3b4
+;  jal setUVDataPolyFT4
+;.org 0x800fa404
+;  jal setUVDataPolyFT4
+;.org 0x800fa660
+;  jal setUVDataPolyFT4
+;.org 0x800fa69c
+;  jal setUVDataPolyFT4
+;.org 0x800fa6e8
+;  jal setUVDataPolyFT4
+;.org 0x800fa734
+;  jal setUVDataPolyFT4
 .org 0x800fd87c
   jal setUVDataPolyFT4
 .org 0x800fe2dc
@@ -250,10 +250,10 @@
 ;  jal setPosDataPolyFT4
 ;.org 0x800f9d50
 ;  jal setPosDataPolyFT4
-.org 0x800fa454
-  jal setPosDataPolyFT4
-.org 0x800fa7d0
-  jal setPosDataPolyFT4
+;.org 0x800fa454
+;  jal setPosDataPolyFT4
+;.org 0x800fa7d0
+;  jal setPosDataPolyFT4
 .org 0x800fd898
   jal setPosDataPolyFT4
 .org 0x800fe2f4
