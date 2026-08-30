@@ -7,6 +7,7 @@
 #include "extern/libgpu.hpp"
 
 constexpr RGB8 TEXT_COLOR_WHITE        = {.red = 0xd6, .green = 0xd6, .blue = 0xd6};
+constexpr RGB8 TEXT_COLOR_PURE_WHITE   = {.red = 0xff, .green = 0xff, .blue = 0xff};
 constexpr RGB8 TEXT_COLOR_BLUE         = {.red = 0x29, .green = 0x8e, .blue = 0xd6};
 constexpr RGB8 TEXT_COLOR_YELLOW       = {.red = 0xFF, .green = 0xFF, .blue = 0x53};
 constexpr RGB8 TEXT_COLOR_LIGHT_YELLOW = {.red = 0xFF, .green = 0xFA, .blue = 0x75};
@@ -83,5 +84,5 @@ private:
 const AtlasFont& getAtlas5px();
 const AtlasFont& getAtlas7px();
 const AtlasFont& getAtlasVanilla();
-const AtlasFont& getAtlasNumber();
+const AtlasFont& getAtlasNumbers();
 void initFonts();

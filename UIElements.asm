@@ -163,40 +163,40 @@
 ;  jal setUVDataPolyFT4
 ;.org 0x800f72e4
 ;  jal setUVDataPolyFT4
-.org 0x800f8be0
-  jal setUVDataPolyFT4
-.org 0x800f8cac
-  jal setUVDataPolyFT4
-.org 0x800f8dd0
-  jal setUVDataPolyFT4
-.org 0x800f8e4c
-  jal setUVDataPolyFT4
-.org 0x800f8ed4
-  jal setUVDataPolyFT4
-.org 0x800f8f58
-  jal setUVDataPolyFT4
-.org 0x800f9014
-  jal setUVDataPolyFT4
-.org 0x800f91f4
-  jal setUVDataPolyFT4
-.org 0x800f93b4
-  jal setUVDataPolyFT4
-.org 0x800f96d0
-  jal setUVDataPolyFT4
-.org 0x800f9770
-  jal setUVDataPolyFT4
-.org 0x800f980c
-  jal setUVDataPolyFT4
-.org 0x800f9a1c
-  jal setUVDataPolyFT4
-.org 0x800f9a90
-  jal setUVDataPolyFT4
-.org 0x800f9afc
-  jal setUVDataPolyFT4
-.org 0x800f9c18
-  jal setUVDataPolyFT4
-.org 0x800f9d24
-  jal setUVDataPolyFT4
+;.org 0x800f8be0
+;  jal setUVDataPolyFT4
+;.org 0x800f8cac
+;  jal setUVDataPolyFT4
+;.org 0x800f8dd0
+;  jal setUVDataPolyFT4
+;.org 0x800f8e4c
+;  jal setUVDataPolyFT4
+;.org 0x800f8ed4
+;  jal setUVDataPolyFT4
+;.org 0x800f8f58
+;  jal setUVDataPolyFT4
+;.org 0x800f9014
+;  jal setUVDataPolyFT4
+;.org 0x800f91f4
+;  jal setUVDataPolyFT4
+;.org 0x800f93b4
+;  jal setUVDataPolyFT4
+;.org 0x800f96d0
+;  jal setUVDataPolyFT4
+;.org 0x800f9770
+;  jal setUVDataPolyFT4
+;.org 0x800f980c
+;  jal setUVDataPolyFT4
+;.org 0x800f9a1c
+;  jal setUVDataPolyFT4
+;.org 0x800f9a90
+;  jal setUVDataPolyFT4
+;.org 0x800f9afc
+;  jal setUVDataPolyFT4
+;.org 0x800f9c18
+;  jal setUVDataPolyFT4
+;.org 0x800f9d24
+;  jal setUVDataPolyFT4
 .org 0x800fa3b4
   jal setUVDataPolyFT4
 .org 0x800fa404
@@ -226,30 +226,30 @@
 ;  jal setPosDataPolyFT4
 ;.org 0x800f7300
 ;  jal setPosDataPolyFT4
-.org 0x800f8bfc
-  jal setPosDataPolyFT4
-.org 0x800f8cc8
-  jal setPosDataPolyFT4
-.org 0x800f8e64
-  jal setPosDataPolyFT4
-.org 0x800f8eec
-  jal setPosDataPolyFT4
-.org 0x800f8f70
-  jal setPosDataPolyFT4
-.org 0x800f9030
-  jal setPosDataPolyFT4
-.org 0x800f9234
-  jal setPosDataPolyFT4
-.org 0x800f93ec
-  jal setPosDataPolyFT4
-.org 0x800f9894
-  jal setPosDataPolyFT4
-.org 0x800f9b60
-  jal setPosDataPolyFT4
-.org 0x800f9c48
-  jal setPosDataPolyFT4
-.org 0x800f9d50
-  jal setPosDataPolyFT4
+;.org 0x800f8bfc
+;  jal setPosDataPolyFT4
+;.org 0x800f8cc8
+;  jal setPosDataPolyFT4
+;.org 0x800f8e64
+;  jal setPosDataPolyFT4
+;.org 0x800f8eec
+;  jal setPosDataPolyFT4
+;.org 0x800f8f70
+;  jal setPosDataPolyFT4
+;.org 0x800f9030
+;  jal setPosDataPolyFT4
+;.org 0x800f9234
+;  jal setPosDataPolyFT4
+;.org 0x800f93ec
+;  jal setPosDataPolyFT4
+;.org 0x800f9894
+;  jal setPosDataPolyFT4
+;.org 0x800f9b60
+;  jal setPosDataPolyFT4
+;.org 0x800f9c48
+;  jal setPosDataPolyFT4
+;.org 0x800f9d50
+;  jal setPosDataPolyFT4
 .org 0x800fa454
   jal setPosDataPolyFT4
 .org 0x800fa7d0

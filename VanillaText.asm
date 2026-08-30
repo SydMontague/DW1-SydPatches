@@ -3,8 +3,8 @@
 
 ;.org 0x800f299c
 ;  jal convertValueToDigits
-.org 0x800f997c
-  jal convertValueToDigits
+;.org 0x800f997c
+;  jal convertValueToDigits
 
 ;.org 0x800edcb0
 ;  jal renderString

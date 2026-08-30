@@ -37,7 +37,6 @@
 .definelabel initializeTextbox,         0x8010020c
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
-.definelabel VS__renderSelectDigimonPlayer,0x800f87e0
 .definelabel VS__tickSelectMode,        0x800f9ebc
 .definelabel VS__tickSelectMap,         0x800fa4b8
 

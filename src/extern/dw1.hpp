@@ -1835,7 +1835,6 @@ extern "C"
 
     void VS__tickSelectMode();
     void VS__tickSelectMap();
-    void VS__renderSelectDigimonPlayer(int32_t instance);
     void tickScript();
     void setDigimonRaised(DigimonType type);
     uint8_t* getScript(uint32_t scriptId);
