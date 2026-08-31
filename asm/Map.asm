@@ -4,12 +4,6 @@
 .org 0x8010435c
   jal createNinjamonEffect
 
-;.org 0x800b5bc4
-;  jal loadMapObjectPosition
-
-;.org 0x800b5a98
-;  jal getDrawPosition
-
 ;.org 0x800e68a4
 ;  jal setMapObjectsFlag
 ;.org 0x800e68bc
@@ -39,25 +33,8 @@
 .org 0x80104edc
   jal setImpassableRect
 
-;.org 0x800d9044
-;  jal clearDroppedItems
-
 .org 0x80104d40
   jal spawnItem
-
-;.org 0x800d40a8
-;  jal isFiveTileWidePathBlocked
-;.org 0x800d4114
-;  jal isFiveTileWidePathBlocked
-;.org 0x800d41f8
-;  jal isFiveTileWidePathBlocked
-
-;.org 0x800d5da8
-;  jal getMapSoundId
-;.org 0x800deb90
-;  jal getMapSoundId
-;.org 0x800dec60
-;  jal getMapSoundId
 
 .org 0x801028f4
   jal loadMap
@@ -79,36 +56,6 @@
 
 .org 0x80104fe4
   jal setupMap
-
-;.org 0x800d6620
-;  jal initializeDrawingOffsets
-;.org 0x800ef438
-;  jal initializeDrawingOffsets
-;.org 0x800ef8ec
-;  jal initializeDrawingOffsets
-
-;.org 0x800d672c
-;  jal uploadMapTileImages
-;.org 0x800d7f48
-;  jal uploadMapTileImages
-;.org 0x800d875c
-;  jal uploadMapTileImages
-;.org 0x800ef9f0
-;  jal uploadMapTileImages
-
-;.org 0x800d9034
-;  jal unloadMap
-
-;.org 0x800d70ec
-;  jal handleTileUpdate
-;.org 0x800d8678
-;  jal handleTileUpdate
-;.org 0x800d86cc
-;  jal handleTileUpdate
-;.org 0x800d8aa8
-;  jal handleTileUpdate
-;.org 0x800d8b24
-;  jal handleTileUpdate
 
 .org 0x80105c2c
   jal scriptTickChangeMap

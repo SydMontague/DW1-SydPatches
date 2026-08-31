@@ -67,28 +67,6 @@
 .org 0x8010927c
   jal playMusic
 
-;.org 0x800d5db0
-;  jal loadMapSounds
-;.org 0x800deb98
-;  jal loadMapSounds
-;.org 0x800dec68
-;  jal loadMapSounds
-
-;.org 0x800e7400
-;  jal stopSound
-;.org 0x800f2440
-;  jal stopSound
-;.org 0x800f252c
-;  jal stopSound
-;.org 0x800f25d8
-;  jal stopSound
-;.org 0x800f475c
-;  jal stopSound
-;.org 0x800f482c
-;  jal stopSound
-;.org 0x800f492c
-;  jal stopSound
-
 ;.org 0x800daf8c
 ;  jal playSound
 ;.org 0x800db524

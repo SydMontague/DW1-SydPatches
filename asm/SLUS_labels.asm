@@ -1,8 +1,8 @@
-.definelabel global_pointer, 0x8013bb2c
-.definelabel padWithSpaces, 0x800ff51c
-.definelabel updateNamingPreview, 0x8010aa60
-.definelabel clearTextSubArea, 0x8010cbc4
-.definelabel drawString, 0x8010cf24
+.definelabel global_pointer,            0x8013bb2c
+.definelabel padWithSpaces,             0x800ff51c
+.definelabel updateNamingPreview,       0x8010aa60
+.definelabel clearTextSubArea,          0x8010cbc4
+.definelabel drawString,                0x8010cf24
 .definelabel clearTextArea,             0x8010cb90
 .definelabel setTextColor,              0x8010cc0c
 .definelabel callScriptSection,         0x80105b14

@@ -4,51 +4,6 @@
 .org 0x80104618
   jal startBattle
 
-;.org 0x800f3e2c
-;  jal handleBattleIdle
-;.org 0x800f4d48
-;  jal handleBattleIdle
-;.org 0x800f4d5c
-;  jal handleBattleIdle
-;.org 0x800f4e94
-;  jal handleBattleIdle
-;.org 0x800f4f64
-;  jal handleBattleIdle
-;.org 0x800f53a0
-;  jal handleBattleIdle
-;.org 0x800f5484
-;  jal handleBattleIdle
-;.org 0x800f558c
-;  jal handleBattleIdle
-;.org 0x800f5648
-;  jal handleBattleIdle
-;.org 0x800f56bc
-;  jal handleBattleIdle
-;.org 0x800f5700
-;  jal handleBattleIdle
-;.org 0x800f5774
-;  jal handleBattleIdle
-;.org 0x800f5814
-;  jal handleBattleIdle
-;.org 0x800f5940
-;  jal handleBattleIdle
-;.org 0x800f5a2c
-;  jal handleBattleIdle
-;.org 0x800f5b18
-;  jal handleBattleIdle
-;.org 0x800f5bd8
-;  jal handleBattleIdle
-;.org 0x800f5cb4
-;  jal handleBattleIdle
-;.org 0x800f5db4
-;  jal handleBattleIdle
-;.org 0x800f6030
-;  jal handleBattleIdle
-;.org 0x800f61dc
-;  jal handleBattleIdle
-;.org 0x800f6b24
-;  jal handleBattleIdle
-
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

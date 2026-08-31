@@ -72,15 +72,15 @@
 ; This is to allow the data in here to be shuffled at will to suite whatever need.
 ;;;
 RAISE_DATA:
-  .include "RaiseData.asm"
+  .include "asm/RaiseData.asm"
 EVO_REQ_DATA:
-  .include "EvoReqs.asm"
+  .include "asm/EvoReqs.asm"
 EVO_GAINS_DATA:
-  .include "EvoGains.asm"
+  .include "asm/EvoGains.asm"
 EVO_PATHS_DATA:
-  .include "EvoPaths.asm"
+  .include "asm/EvoPaths.asm"
 NAMING_DATA:
-  .include "NamingData.asm"
+  .include "asm/NamingData.asm"
 
 .align 4
   .importobj "compiled/utils.lib"

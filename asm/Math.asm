@@ -4,9 +4,6 @@
 .org 0x801010b4
   jal worldPosToScreenPos2
   
-;.org 0x800a40ac
-;  jal setRotTransMatrix
-
 ;.org 0x800a47cc
 ;  jal random
 ;.org 0x800a5f10
@@ -108,76 +105,6 @@
 .org 0x80106ee0
   jal random
 
-;.org 0x800adae8
-;  jal sin
-;.org 0x800addd8
-;  jal sin
-;.org 0x800aebbc
-;  jal sin
-;.org 0x800aec6c
-;  jal sin
-;.org 0x800c12d8
-;  jal sin
-;.org 0x800e9e58
-;  jal sin
-;.org 0x800e9ef8
-;  jal sin
-;.org 0x800ecd80
-;  jal sin
-
-;.org 0x800adb04
-;  jal cos
-;.org 0x800c1320
-;  jal cos
-;.org 0x800e9e98
-;  jal cos
-
-;.org 0x800ab228
-;  jal atan
-;.org 0x800b6f28
-;  jal atan
-;.org 0x800d45d0
-;  jal atan
-;.org 0x800e81f8
-;  jal atan
-
-;.org 0x800add78
-;  jal lerp
-;.org 0x800add94
-;  jal lerp
-;.org 0x800addb0
-;  jal lerp
-;.org 0x800addcc
-;  jal lerp
-;.org 0x800aeb54
-;  jal lerp
-;.org 0x800aeb74
-;  jal lerp
-;.org 0x800aeb94
-;  jal lerp
-;.org 0x800aebb4
-;  jal lerp
-;.org 0x800aec20
-;  jal lerp
-;.org 0x800aec64
-;  jal lerp
-;.org 0x800c11bc
-;  jal lerp
-;.org 0x800c1284
-;  jal lerp
-;.org 0x800c1378
-;  jal lerp
-;.org 0x800e9e4c
-;  jal lerp
-;.org 0x800e9eec
-;  jal lerp
-;.org 0x800ecd04
-;  jal lerp
-;.org 0x800ecd30
-;  jal lerp
-;.org 0x800ecd78
-;  jal lerp
-
 ;.org 0x800adc6c
 ;  jal worldPosToScreenPos
 ;.org 0x800ae164
@@ -196,9 +123,6 @@
 ;  jal worldPosToScreenPos
 .org 0x800fbee8
   jal worldPosToScreenPos
-
-;.org 0x800ec530
-;  j setInt16WithStride
 
 ;.org 0x800ed5fc
 ;  jal getEntityScreenPos

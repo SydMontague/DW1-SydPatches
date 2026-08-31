@@ -4,18 +4,6 @@
 .org 0x80105dc4
   jal isTrainingComplete
 
-;.org 0x800de6a8
-;  jal addTamerLevel
-;.org 0x800dd254
-;  jal addTamerLevel
-;.org 0x800dd238
-;  jal addTamerLevel
-;.org 0x800c46f4
-;  jal addTamerLevel
-;.org 0x800a5db0
-;  jal addTamerLevel
-
-
 ;.org 0x800a8924	
 ;  jal Tamer_setState
 ;.org 0x800a9348	
@@ -121,37 +109,6 @@
 .org 0x80105504	
   jal Tamer_setState
 
-;.org 0x800a7d70
-;  jal Tamer_getState
-;.org 0x800a8898
-;  jal Tamer_getState
-;.org 0x800a89bc
-;  jal Tamer_getState
-;.org 0x800a8a88
-;  jal Tamer_getState
-;.org 0x800a9160
-;  jal Tamer_getState
-;.org 0x800b69fc
-;  jal Tamer_getState
-;.org 0x800d6f88
-;  jal Tamer_getState
-;.org 0x800d7130
-;  jal Tamer_getState
-;.org 0x800d7144
-;  jal Tamer_getState
-;.org 0x800d7268
-;  jal Tamer_getState
-;.org 0x800d727c
-;  jal Tamer_getState
-;.org 0x800e3264
-;  jal Tamer_getState
-;.org 0x800e6dcc
-;  jal Tamer_getState
-;.org 0x800eeab4
-;  jal Tamer_getState
-;.org 0x800eeb70
-;  jal Tamer_getState
-
 ;.org 0x800aa1c4
 ;  jal Tamer_startAnimation
 ;.org 0x800de058
@@ -166,9 +123,6 @@
   jal Tamer_startAnimation
 .org 0x80105968
   jal Tamer_startAnimation
-
-;.org 0x800d4bf4
-;  jal clearTamerWaypoints
 
 .close
 

@@ -13,9 +13,6 @@
 .org 0x80103644
   jal scriptUnloadEntity
   
-;.org 0x800d903c
-;  jal removeMapEntities
-
 .org 0x80104478
   jal setLoopCountToOne
 

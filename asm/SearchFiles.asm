@@ -46,144 +46,10 @@
 .org 0x801043cc
   jal loadTextureFile
 
-;.org 0x800ee8e4
-;  jal loadTIMFile
-;.org 0x800ee8f4
-;  jal loadTIMFile
-;.org 0x800ef008
-;  jal loadTIMFile
-;.org 0x800f7adc
-;  jal loadTIMFile
-;.org 0x800f7aec
-;  jal loadTIMFile
-;.org 0x800f7afc
-;  jal loadTIMFile
-;.org 0x800f7b0c
-;  jal loadTIMFile
-;.org 0x800f7b1c
-;  jal loadTIMFile
-;.org 0x800f7b2c
-;  jal loadTIMFile
-;.org 0x800f8130
-;  jal loadTIMFile
-
-;.org 0x800bb51c
-;  j loadStackedTIMEntry
-
-;.org 0x800c5cd4
-;  jal readFileSectors
-
-;; redirect SB string to new address
-;.org 0x800c65ec
-;  li.u a1,SB_address
-;.org 0x800c65fc
-;  li.l a1,SB_address
-;.org 0x800e8f88
-;  li.u a1,SB_address
-;.org 0x800e8f98
-;  li.l a1,SB_address
-
-;; redirect SS string to new address
-;.org 0x800c6004
-;  li.u a1,SS_address
-;.org 0x800c600c
-;  li.l a1,SS_address
-
-;; recired SL string to new address
-;.org 0x800c602c
-;  li.u a1,SL_address
-;.org 0x800c6034
-;  li.l a1,SL_address
-
-;; write *ALL strings to new locations
-;.org 0x8013443c
-;.area 32h
-;ESALL_address:
-;.ascii "SOUND\\VHB\\ESALL",0 ; 0x800e9034
-;.endarea
-;
-;.org 0x8013436c
-;.area 32h
-;VBALL_address:
-;.ascii "SOUND\\VHB\\VBALL",0 ; 0x800e8fb4
-;VLALL_address:
-;.ascii "SOUND\\VHB\\VLALL",0 ; 0x800e9154
-;.endarea
-
-;; redirect ESALL string to new address
-;.org 0x800c66a0
-;  addiu a1,gp,ESALL_address-global_pointer
-;.org 0x800e90a8
-;  addiu a1,gp,ESALL_address-global_pointer
-
-;; redirect VBALL string to new address
-;.org 0x800c65ac
-;  addiu a1,gp,VBALL_address-global_pointer
-;.org 0x800e9014
-;  addiu a1,gp,VBALL_address-global_pointer
-
-;; redirect VLALL string to new address
-;.org 0x800c6534
-;  addiu a1,gp,VLALL_address-global_pointer
-;.org 0x800e91b0
-;  addiu a1,gp,VLALL_address-global_pointer
-;.org 0x800e91bc
-;  b 0x800e91dc
-;  nop
-
-;; only use one ".VHB" instance
-;.org 0x800e8b5c
-;  addiu a2,gp,-0x77a0
-;.org 0x800e8c84
-;  addiu a2,gp,-0x77a0
-;.org 0x800e91e4
-;  addiu a2,gp,-0x77a0
-
-;; jump over strrchr calls
-; battles?
-;.org 0x800e8b34
-;  b 0x800e8b54
-;  nop
-
-; quite a few _REL.BIN
-;.org 0x800e8c5c
-;  b 0x800e8c7c
-;  nop
-
-; something evo+death sounds?
-;.org 0x800e91bc
-;  b 0x800e91dc
-;  nop
-
-;.org 0x800d9210
-;  jal tickFileReadQueue
-;.org 0x800e3704
-;  j tickFileReadQueue
-;.org 0x800e39fc
-;  jal tickFileReadQueue
-;.org 0x800e90f4
-;  jal tickFileReadQueue
-;.org 0x800e9260
-;  jal tickFileReadQueue
-;.org 0x800f366c
-;  jal tickFileReadQueue
-
-;.org 0x800e8c10
-;  j setFileReadCallback2
-
 ;.org 0x800e625c
 ;  jal addFileReadRequestPath
 .org 0x80104384
   jal addFileReadRequestPath
-
-
-;.org 0x800e8cb0
-;  jal addFileReadRequestSection
-;.org 0x800e9210
-;  jal addFileReadRequestSection
-
-;.org 0x800e8b78
-;  jal addFileReadRequestLookup
 
 ;.org 0x800e62a8
 ;  jal loadDynamicLibrary
@@ -207,17 +73,6 @@
   jal loadDynamicLibrary
 .org 0x80111b88
   jal loadDynamicLibrary
-
-;.org 0x800ee938
-;  jal loadStackedTIMFile
-;.org 0x800ee99c
-;  jal loadStackedTIMFile
-;.org 0x800eea38
-;  jal loadStackedTIMFile
-;.org 0x800eeaf4
-;  jal loadStackedTIMFile
-;.org 0x800f8120
-;  jal loadStackedTIMFile
 
 .close
 
