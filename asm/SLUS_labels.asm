@@ -38,6 +38,8 @@
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
 
+.definelabel ITEM_MENU_LEFT, 0x80134f68
+.definelabel ITEM_MENU_RIGHT, 0x80134f6c
 .definelabel SELECT_DIGIMON_DATA, 0x801b1c7c
 .definelabel COMBAT_AREA_X, 0x80134d8c
 .definelabel COMBAT_AREA_Y, 0x80134d88

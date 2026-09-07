@@ -1537,7 +1537,38 @@ extern "C"
             listPageCount = ((slotCount + 3) / 4);
         }
     };
+    struct ItemMenuBox
+    {
+        uint8_t* itemList;
+        int32_t isInitialized;
+        int8_t itemCount;
+        int8_t scrollOffset;
+        int8_t cursorOffset;
+        int8_t numSlots;
+        int8_t textboxId;
+        int8_t unk2;
+        int8_t unk3;
+        int16_t xOffset;
+        int16_t yOffset;
+        int16_t scrollWidth;
+        int16_t scrollHeight;
+        dtl::array<uint8_t, 8> stringOffset;
+    };
 
+    struct ItemMenuBuyEntry
+    {
+        uint8_t itemType;
+        bool buyable;
+    };
+    struct ItemMenuSellEntry
+    {
+        uint8_t itemType;
+        uint8_t amount;
+    };
+
+    static_assert(sizeof(ItemMenuBuyEntry) == 2);
+    static_assert(sizeof(ItemMenuSellEntry) == 2);
+    static_assert(sizeof(ItemMenuBox) == 32);
     static_assert(sizeof(SelectDigimonData) == 0x50);
 
     extern PartnerPara PARTNER_PARA;
@@ -1547,6 +1578,8 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern ItemMenuBox* ITEM_MENU_LEFT;
+    extern ItemMenuBox* ITEM_MENU_RIGHT;
     extern dtl::array<SelectDigimonData, 2> SELECT_DIGIMON_DATA;
     extern int32_t HAS_TAKEN_DAMAGE;
     extern POLY_FT4 UNUSED_BIT_TEXT;

@@ -45,3 +45,4 @@
 .include "asm/Pause.asm"
 .include "asm/Input.asm"
 .include "asm/VS.asm"
+.include "asm/ItemMenu.asm"
