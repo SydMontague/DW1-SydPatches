@@ -1847,6 +1847,9 @@ extern "C"
     extern int32_t VS__FINISHER_TIMER;
     extern int32_t COMBAT_AREA_X;
     extern int32_t COMBAT_AREA_Y;
+    extern int32_t SHOP_VARIABLE;
+    extern dtl::array<RECT, 8> ITEM_MENU_DESCRIPTION_RECTS;
+    extern uint8_t ITEM_MENU_TYPE;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -1866,6 +1869,17 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    ItemMenuBox* getItemMenuFromType();
+    bool isItemMenuBoxBusy(ItemMenuBox*);
+    bool isXPressedAfterDialogue();
+    void readSelectedItemMerit();
+    void createSingleCardShopMenu(RECT* rect);
+    void createItemMenuAmountBox(RECT* rect);
+    void createItemMenuDescriptionBox(ItemMenuBox* menu, RECT* rect, int32_t boxId);
+    void itemMenuCursorTop(ItemMenuBox* menu, int32_t count, int32_t mode);
+    void itemMenuCursorBottom(ItemMenuBox* menu, int32_t count, int32_t mode);
+    void itemMenuCursorUp(ItemMenuBox* menu, int32_t mode);
+    void itemMenuCursorDown(ItemMenuBox* menu, int32_t mode);
     void tickScript();
     void setDigimonRaised(DigimonType type);
     uint8_t* getScript(uint32_t scriptId);

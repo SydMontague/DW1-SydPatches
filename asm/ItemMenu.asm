@@ -9,4 +9,8 @@
 .org 0x800fcba0
   jal shopFillSellItemList
 
+.org 0x800fcad0
+  li.u v0, tickItemMenu
+  li.l v0, tickItemMenu
+
 .close

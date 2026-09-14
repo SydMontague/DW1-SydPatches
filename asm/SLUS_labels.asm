@@ -37,7 +37,21 @@
 .definelabel initializeTextbox,         0x8010020c
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
+.definelabel getItemMenuFromType,       0x800fcc40
+.definelabel isItemMenuBoxBusy,         0x800fcf88
+.definelabel isXPressedAfterDialogue,   0x800fc098
+.definelabel readSelectedItemMerit,     0x800fafb0
+.definelabel createSingleCardShopMenu,  0x800fd244
+.definelabel createItemMenuAmountBox,   0x800fcfb8
+.definelabel createItemMenuDescriptionBox,0x800fd61c
+.definelabel itemMenuCursorTop,         0x800fd3dc
+.definelabel itemMenuCursorBottom,      0x800fd4e8
+.definelabel itemMenuCursorUp,          0x800fd428
+.definelabel itemMenuCursorDown,        0x800fd534
 
+.definelabel SHOP_VARIABLE, 0x8013500c
+.definelabel ITEM_MENU_DESCRIPTION_RECTS, 0x801302bc
+.definelabel ITEM_MENU_TYPE, 0x80135011
 .definelabel ITEM_MENU_LEFT, 0x80134f68
 .definelabel ITEM_MENU_RIGHT, 0x80134f6c
 .definelabel SELECT_DIGIMON_DATA, 0x801b1c7c

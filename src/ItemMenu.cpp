@@ -1,5 +1,7 @@
 #include "Helper.hpp"
+#include "Input.hpp"
 #include "Inventory.hpp"
+#include "Sound.hpp"
 #include "extern/dw1.hpp"
 
 namespace
@@ -66,5 +68,58 @@ extern "C"
         }
 
         return canSellAnything;
+    }
+
+    void tickItemMenu()
+    {
+        auto menu = getItemMenuFromType();
+
+        if (isItemMenuBoxBusy(menu)) return;
+        if (UI_BOX_DATA[3].state != 0) return;
+        if (UI_BOX_DATA[1].state != 1) return;
+        if (!isXPressedAfterDialogue()) return;
+        if (SHOP_VARIABLE != 0) return;
+        if (SCRIPT_STATE_2 != 1) return;
+
+        if (isKeyDown(InputButtons::BUTTON_CROSS)) {
+            RECT rect = ITEM_MENU_DESCRIPTION_RECTS[ITEM_MENU_TYPE];
+            if (ITEM_MENU_TYPE == 5)
+                createSingleCardShopMenu(&rect);
+            else if (ITEM_MENU_TYPE == 7)
+                readSelectedItemMerit();
+            else
+                createItemMenuAmountBox(&rect);
+        }
+        else if (isKeyDown(InputButtons::BUTTON_TRIANGLE)) {
+            if (ITEM_MENU_TYPE == 7)
+                SCRIPT_STATE_2 = 10;
+            else if (ITEM_MENU_TYPE == 5) {
+                if (isTriggerSet(3)) {
+                    writePStat(254, 255);
+                    unsetTrigger(3);
+                    SCRIPT_STATE_2 = 4;
+                }
+            }
+            else
+                SCRIPT_STATE_2 = 8;
+            playSound(0, 4);
+        }
+        else if (isKeyDown(InputButtons::BUTTON_UP)) {
+            if (isKeyPressed(InputButtons::BUTTON_R1))
+                itemMenuCursorTop(menu, 9, 0);
+            else
+                itemMenuCursorUp(menu, 0);
+        }
+        else if (isKeyDown(InputButtons::BUTTON_DOWN)) {
+            if (isKeyPressed(InputButtons::BUTTON_R1))
+                itemMenuCursorBottom(menu, 9, 0);
+            else
+                itemMenuCursorDown(menu, 0);
+        }
+        else if (isKeyDown(InputButtons::BUTTON_START)) {
+            RECT rect = ITEM_MENU_DESCRIPTION_RECTS[ITEM_MENU_TYPE];
+            createItemMenuDescriptionBox(menu, &rect, 1);
+            playSound(0, 3);
+        }
     }
 }

@@ -3,16 +3,16 @@
 
 .org 0x80105a80
   jal inputInit
-.org 0x800fabb0
-  jal isKeyDown
-.org 0x800fac48
-  jal isKeyDown
-.org 0x800faccc
-  jal isKeyDown
-.org 0x800fad18
-  jal isKeyDown
-.org 0x800fad64
-  jal isKeyDown
+;.org 0x800fabb0
+;  jal isKeyDown
+;.org 0x800fac48
+;  jal isKeyDown
+;.org 0x800faccc
+;  jal isKeyDown
+;.org 0x800fad18
+;  jal isKeyDown
+;.org 0x800fad64
+;  jal isKeyDown
 .org 0x800fb098
   jal isKeyDown
 .org 0x800fb190
