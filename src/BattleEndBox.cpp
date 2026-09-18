@@ -369,12 +369,8 @@ extern "C"
 
     void handleBattleEndBox()
     {
-        dtl::array<ItemType, 3> droppedItems{};
-        createBattleEndBox();
         // vanilla initializes the unused bit text, we don't need to
-        data->bitsToGain = 0;
-        for (int32_t i = 1; i <= ENEMY_COUNT; i++)
-            data->bitsToGain += NPC_ENTITIES[COMBAT_DATA_PTR->player.entityIds[i] - 2].bits;
+        dtl::array<ItemType, 3> droppedItems{};
         battleStatsGainsAndDrops(droppedItems.data());
         RECT boxPosition{
             .x      = -78,
@@ -398,6 +394,12 @@ extern "C"
         BTL_appendMPBonusText();
         battleMoveLearning();
         GAME_STATE = 2;
+
+        // moved here, so that we can use the battle end text buffer result
+        createBattleEndBox();
+        data->bitsToGain = 0;
+        for (int32_t i = 1; i <= ENEMY_COUNT; i++)
+            data->bitsToGain += NPC_ENTITIES[COMBAT_DATA_PTR->player.entityIds[i] - 2].bits;
 
         while (data->statsBox.getState() != UIBox::State::OPENED || data->bitsBox.getState() != UIBox::State::OPENED)
             BTL_battleTickFrame();
