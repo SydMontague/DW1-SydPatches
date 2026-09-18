@@ -265,8 +265,8 @@
 .org 0x8010b348
   jal setPosDataPolyFT4
 
-.org 0x800faf50
-  jal renderSelectionCursor
+;.org 0x800faf50
+;  jal renderSelectionCursor
 .org 0x800fbbd0
   jal renderSelectionCursor
 .org 0x800fffd8

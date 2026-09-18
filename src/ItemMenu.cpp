@@ -2,12 +2,32 @@
 #include "Input.hpp"
 #include "Inventory.hpp"
 #include "Sound.hpp"
+#include "UIElements.hpp"
 #include "extern/dw1.hpp"
 
 namespace
 {
     constexpr auto BUYABLE_TRIGGER_START = 0x180;
-}
+
+    bool readSelectedItemMerit()
+    {
+        auto menu      = getItemMenuFromType();
+        auto item      = menu->scrollOffset + menu->cursorOffset;
+        auto entry     = reinterpret_cast<ItemMenuSellEntry*>(menu->itemList[item]);
+        SHOP_ITEM_TYPE = static_cast<ItemType>(entry->itemType);
+
+        if (SHOP_ITEM_TYPE == ItemType::NONE || entry->amount == 0) {
+            playSound(0, 11);
+            return false;
+        }
+
+        SHOP_VARIABLE       = getItem(SHOP_ITEM_TYPE)->meritValue;
+        SCRIPT_STATE_2      = 11;
+        SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::NONE;
+        playSound(0, 3);
+        return true;
+    }
+} // namespace
 
 extern "C"
 {
@@ -121,5 +141,29 @@ extern "C"
             createItemMenuDescriptionBox(menu, &rect, 1);
             playSound(0, 3);
         }
+    }
+
+    void renderItemMenu()
+    {
+        constexpr dtl::array<int16_t, 8> selectionCursorWidths{170, 202, 202, 170, 202, 146, 146, 170};
+        const auto x        = UI_BOX_DATA[1].finalPos.x;
+        const auto y        = UI_BOX_DATA[1].finalPos.y;
+        const auto itemPosY = y + 5;
+
+        renderItemMenuSprite(1, 0, x + 8, itemPosY);
+        if (ITEM_MENU_TYPE == 5) {
+            renderItemMenuSprite(1, 3, x + 128, itemPosY);
+        }
+        else if (ITEM_MENU_TYPE == 7)
+            renderItemMenuSprite(1, 2, x + 128, itemPosY);
+        else {
+            renderItemMenuSprite(1, 1, x + 128, itemPosY);
+            if (ITEM_MENU_TYPE != 0) renderItemMenuSprite(1, 3, x + 182, itemPosY);
+        }
+
+        auto menu = getItemMenuFromType();
+        renderItemMenuScrollBar(menu);
+        renderSelectionCursor(x + 5, y + menu->cursorOffset * 18 + 17, selectionCursorWidths[ITEM_MENU_TYPE], 18, 5);
+        renderItemMenuItemList(menu, x + 26, y + 19, x + 8, y + 18, 0);
     }
 }

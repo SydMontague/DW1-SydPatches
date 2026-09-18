@@ -153,10 +153,10 @@
 ;  jal playSound
 ;.org 0x800fadc8
 ;  jal playSound
-.org 0x800fb040
-  jal playSound
-.org 0x800fb054
-  jal playSound
+;.org 0x800fb040
+;  jal playSound
+;.org 0x800fb054
+;  jal playSound
 .org 0x800fb0b4
   jal playSound
 .org 0x800fb1fc

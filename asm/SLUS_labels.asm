@@ -40,7 +40,6 @@
 .definelabel getItemMenuFromType,       0x800fcc40
 .definelabel isItemMenuBoxBusy,         0x800fcf88
 .definelabel isXPressedAfterDialogue,   0x800fc098
-.definelabel readSelectedItemMerit,     0x800fafb0
 .definelabel createSingleCardShopMenu,  0x800fd244
 .definelabel createItemMenuAmountBox,   0x800fcfb8
 .definelabel createItemMenuDescriptionBox,0x800fd61c
@@ -48,7 +47,12 @@
 .definelabel itemMenuCursorBottom,      0x800fd4e8
 .definelabel itemMenuCursorUp,          0x800fd428
 .definelabel itemMenuCursorDown,        0x800fd534
+.definelabel renderItemMenuSprite,      0x800fd7d8
+.definelabel renderItemMenuScrollBar,   0x800fd8d4
+.definelabel renderItemMenuItemList,    0x800fdc5c
 
+.definelabel SHOP_ITEM_TYPE, 0x80134f78
+.definelabel SCRIPT_TEXTBOX_MODE, 0x80135008
 .definelabel SHOP_VARIABLE, 0x8013500c
 .definelabel ITEM_MENU_DESCRIPTION_RECTS, 0x801302bc
 .definelabel ITEM_MENU_TYPE, 0x80135011

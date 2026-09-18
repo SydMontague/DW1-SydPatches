@@ -1566,6 +1566,14 @@ extern "C"
         uint8_t amount;
     };
 
+    enum class ScriptTextboxMode : uint8_t
+    {
+        NONE,
+        CONFIRM,
+        SELECTION,
+        UNKNOWN,
+    };
+
     static_assert(sizeof(ItemMenuBuyEntry) == 2);
     static_assert(sizeof(ItemMenuSellEntry) == 2);
     static_assert(sizeof(ItemMenuBox) == 32);
@@ -1578,6 +1586,8 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern ItemType SHOP_ITEM_TYPE;
+    extern ScriptTextboxMode SCRIPT_TEXTBOX_MODE;
     extern ItemMenuBox* ITEM_MENU_LEFT;
     extern ItemMenuBox* ITEM_MENU_RIGHT;
     extern dtl::array<SelectDigimonData, 2> SELECT_DIGIMON_DATA;
@@ -1869,10 +1879,17 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void renderItemMenuSprite(int16_t depth, int32_t id, int16_t posX, int16_t posY);
+    void renderItemMenuScrollBar(ItemMenuBox* menu);
+    void renderItemMenuItemList(ItemMenuBox* menu,
+                                int16_t stringX,
+                                int16_t stringY,
+                                int16_t spriteX,
+                                int16_t spriteY,
+                                int32_t spriteType);
     ItemMenuBox* getItemMenuFromType();
     bool isItemMenuBoxBusy(ItemMenuBox*);
     bool isXPressedAfterDialogue();
-    void readSelectedItemMerit();
     void createSingleCardShopMenu(RECT* rect);
     void createItemMenuAmountBox(RECT* rect);
     void createItemMenuDescriptionBox(ItemMenuBox* menu, RECT* rect, int32_t boxId);
