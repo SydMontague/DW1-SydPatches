@@ -51,7 +51,6 @@
 .definelabel renderItemMenuScrollBar,   0x800fd8d4
 .definelabel renderItemMenuItemList,    0x800fdc5c
 .definelabel triggerBoxCloseFlag,       0x801007e8
-.definelabel updateItemMenuAmountBoxString,0x800fb700
 .definelabel isPartnerBaby,             0x800fc494
 .definelabel getRecycleId,              0x800fc328
 .definelabel setupBoxOrigin,            0x80101078
@@ -61,7 +60,10 @@
 .definelabel renderHorizontalLine,      0x800fe030
 .definelabel renderInsetWithoutBox,     0x800fe150
 .definelabel renderCardSprite,          0x800fe258
+.definelabel intToStringSJIS,           0x80102064
 
+.definelabel TEXTBOX_LINES_PTR, 0x80134fbc
+.definelabel ITEM_MENU_SUB_TEXTBOX_LINE, 0x80135018
 .definelabel SHOP_AMOUNT, 0x80134f81
 .definelabel MAX_SHOP_AMOUNT, 0x80134f80
 .definelabel SHOP_ITEM_PRICE, 0x80134f7c

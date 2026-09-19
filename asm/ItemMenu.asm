@@ -26,5 +26,8 @@
   
 .org 0x800fd1d4
   li v0, renderItemMenuAmountBox
-  
+
+.org 0x800fd204
+  jal updateItemMenuAmountBoxString
+
 .close

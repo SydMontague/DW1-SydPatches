@@ -315,4 +315,41 @@ extern "C"
             uvOffsetX += data.width;
         }
     }
+
+    void updateItemMenuAmountBoxString()
+    {
+        auto* dst = TEXTBOX_LINES_PTR + ITEM_MENU_SUB_TEXTBOX_LINE * 0x40;
+        uint8_t* name;
+
+        if (ITEM_MENU_TYPE < 3) {
+            name = getItem(SHOP_ITEM_TYPE)->name;
+        }
+        else {
+            auto type = static_cast<DigimonType>(CARD_DATA[static_cast<uint8_t>(SHOP_ITEM_TYPE)].type);
+            name      = getDigimonData(type)->name;
+        }
+
+        strcpy(dst, name);
+        auto length = strlen(dst);
+
+        auto end = dst + length;
+        end[0]   = 0x18;
+        end[1]   = 0;
+
+        end    = intToStringSJIS(end + 2, SHOP_ITEM_PRICE, 5, 0);
+        end[0] = 0x19;
+        end[1] = 0;
+
+        end    = intToStringSJIS(end + 2, SHOP_AMOUNT, 2, 0);
+        end[0] = 0x1a;
+        end[1] = 0;
+
+        auto value = dtl::min(SHOP_ITEM_PRICE * SHOP_AMOUNT, 999999U);
+        end        = intToStringSJIS(end + 2, value, 6, 0);
+        end[0]     = 0;
+        end[1]     = 0;
+
+        TEXTBOX_DATA[3].pageReady = 1;
+        TEXTBOX_DATA[3].writeCount++;
+    }
 }
