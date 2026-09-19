@@ -166,4 +166,23 @@ extern "C"
         renderSelectionCursor(x + 5, y + menu->cursorOffset * 18 + 17, selectionCursorWidths[ITEM_MENU_TYPE], 18, 5);
         renderItemMenuItemList(menu, x + 26, y + 19, x + 8, y + 18, 0);
     }
+
+    void tickItemMenuDescriptionBox()
+    {
+        constexpr auto mask = InputButtons::BUTTON_START | InputButtons::BUTTON_CROSS | InputButtons::BUTTON_TRIANGLE;
+
+        if (UI_BOX_DATA[3].state != 1) return;
+        if (!isXPressedAfterDialogue()) return;
+        if (!isKeyDown(mask)) return;
+
+        triggerBoxCloseFlag(3);
+        playSound(0, 3);
+    }
+
+    void renderItemMenuDescriptionBox()
+    {
+        const auto& pos   = UI_BOX_DATA[3].finalPos;
+        const auto offset = TEXTBOX_DATA[3].lineOffset * 12;
+        renderStringNew(0, pos.x + 6, pos.y + 5, 252, 12, 704, offset + 256, 3, 1);
+    }
 }

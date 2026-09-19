@@ -10,7 +10,15 @@
   jal shopFillSellItemList
 
 .org 0x800fcad0
-  li.u v0, tickItemMenu
-  li.l v0, tickItemMenu
+  li v0, tickItemMenu
+
+.org 0x800fcadc
+  li v0, renderItemMenu
+
+.org 0x800fd700
+  li v0, tickItemMenuDescriptionBox
+
+.org 0x800fd70c
+  li v0, renderItemMenuDescriptionBox
 
 .close

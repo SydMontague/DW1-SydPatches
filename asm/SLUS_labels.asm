@@ -50,7 +50,9 @@
 .definelabel renderItemMenuSprite,      0x800fd7d8
 .definelabel renderItemMenuScrollBar,   0x800fd8d4
 .definelabel renderItemMenuItemList,    0x800fdc5c
+.definelabel triggerBoxCloseFlag,       0x801007e8
 
+.definelabel TEXTBOX_DATA, 0x801be810
 .definelabel SHOP_ITEM_TYPE, 0x80134f78
 .definelabel SCRIPT_TEXTBOX_MODE, 0x80135008
 .definelabel SHOP_VARIABLE, 0x8013500c

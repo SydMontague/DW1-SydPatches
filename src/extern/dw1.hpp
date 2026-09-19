@@ -1574,6 +1574,27 @@ extern "C"
         UNKNOWN,
     };
 
+    struct TextboxData
+    {
+        RECT textboxOrigin;
+        RECT textboxPos;
+        uint8_t flags;
+        uint8_t writeCount;
+        uint8_t renderCount;
+        uint8_t flipCount;
+        uint8_t registered;
+        uint8_t pageReady;
+        uint8_t idle;
+        bool isDoubleBuffered;
+        uint32_t activeBufferId;
+        uint32_t vramMode;
+        uint32_t lineOffset;
+        uint32_t lineCount;
+        uint32_t writeRow;
+        TickFunction tickFunction;
+        RenderFunction renderFunction;
+    };
+
     static_assert(sizeof(ItemMenuBuyEntry) == 2);
     static_assert(sizeof(ItemMenuSellEntry) == 2);
     static_assert(sizeof(ItemMenuBox) == 32);
@@ -1586,6 +1607,7 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern dtl::array<TextboxData, 6> TEXTBOX_DATA;
     extern ItemType SHOP_ITEM_TYPE;
     extern ScriptTextboxMode SCRIPT_TEXTBOX_MODE;
     extern ItemMenuBox* ITEM_MENU_LEFT;
@@ -1879,6 +1901,7 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void triggerBoxCloseFlag(int32_t id);
     void renderItemMenuSprite(int16_t depth, int32_t id, int16_t posX, int16_t posY);
     void renderItemMenuScrollBar(ItemMenuBox* menu);
     void renderItemMenuItemList(ItemMenuBox* menu,
