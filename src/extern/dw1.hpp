@@ -1595,6 +1595,26 @@ extern "C"
         RenderFunction renderFunction;
     };
 
+    struct ScriptStackEntry
+    {
+        uint8_t* scriptPointer;
+        uint16_t activeMapScript;
+        uint8_t type;
+        uint8_t trigger;
+    };
+
+    struct GameState
+    {
+        dtl::array<uint8_t, 6> dailySingleCards;
+        dtl::array<uint8_t, 78> recycleItems;
+        dtl::array<ItemType, 128> bank;
+        dtl::array<uint8_t, 33> cards;
+        dtl::array<uint8_t, 100> triggers; // bitset
+        dtl::array<uint8_t, 256> pstats;
+        dtl::array<ScriptStackEntry, 8> scriptStack;
+    };
+
+    static_assert(sizeof(GameState) == 0x29C);
     static_assert(sizeof(ItemMenuBuyEntry) == 2);
     static_assert(sizeof(ItemMenuSellEntry) == 2);
     static_assert(sizeof(ItemMenuBox) == 32);
@@ -1607,6 +1627,11 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern uint8_t SHOP_AMOUNT;
+    extern uint8_t MAX_SHOP_AMOUNT;
+    extern uint32_t SHOP_ITEM_PRICE;
+    extern bool UPDATE_SHOP_BIT_BOX;
+    extern GameState* GAME_STATE_PTR;
     extern dtl::array<TextboxData, 6> TEXTBOX_DATA;
     extern ItemType SHOP_ITEM_TYPE;
     extern ScriptTextboxMode SCRIPT_TEXTBOX_MODE;
@@ -1901,6 +1926,16 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void renderHorizontalLine(int32_t boxId, int32_t posX, int32_t posY, int32_t length);
+    void renderInsetWithoutBox(int32_t boxId, int16_t posX, int16_t posY, int16_t width, int16_t height);
+    void renderCardSprite(uint8_t cardId, int16_t posX, int16_t posY, int32_t depth);
+    void updateItemMenuAmountBoxString();
+    bool isPartnerBaby();
+    int32_t getRecycleId(ItemType type);
+    void setupBoxOrigin(int32_t speaker, RECT* result);
+    void closeTextbox(int32_t id, RECT* final);
+    void playShopSoundOnlyInSavannah();
+    void setCardAmount(int32_t cardType, int32_t amount);
     void triggerBoxCloseFlag(int32_t id);
     void renderItemMenuSprite(int16_t depth, int32_t id, int16_t posX, int16_t posY);
     void renderItemMenuScrollBar(ItemMenuBox* menu);

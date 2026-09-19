@@ -51,7 +51,22 @@
 .definelabel renderItemMenuScrollBar,   0x800fd8d4
 .definelabel renderItemMenuItemList,    0x800fdc5c
 .definelabel triggerBoxCloseFlag,       0x801007e8
+.definelabel updateItemMenuAmountBoxString,0x800fb700
+.definelabel isPartnerBaby,             0x800fc494
+.definelabel getRecycleId,              0x800fc328
+.definelabel setupBoxOrigin,            0x80101078
+.definelabel closeTextbox,              0x801005a4
+.definelabel playShopSoundOnlyInSavannah,0x800fdfb4
+.definelabel setCardAmount,             0x80106848
+.definelabel renderHorizontalLine,      0x800fe030
+.definelabel renderInsetWithoutBox,     0x800fe150
+.definelabel renderCardSprite,          0x800fe258
 
+.definelabel SHOP_AMOUNT, 0x80134f81
+.definelabel MAX_SHOP_AMOUNT, 0x80134f80
+.definelabel SHOP_ITEM_PRICE, 0x80134f7c
+.definelabel UPDATE_SHOP_BIT_BOX, 0x80134f84
+.definelabel GAME_STATE_PTR, 0x80134fb8
 .definelabel TEXTBOX_DATA, 0x801be810
 .definelabel SHOP_ITEM_TYPE, 0x80134f78
 .definelabel SCRIPT_TEXTBOX_MODE, 0x80135008

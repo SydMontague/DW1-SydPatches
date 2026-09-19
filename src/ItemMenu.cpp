@@ -1,13 +1,50 @@
 #include "Helper.hpp"
 #include "Input.hpp"
 #include "Inventory.hpp"
+#include "InventoryUI.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
+#include "extern/dtl/algorithm.hpp"
 #include "extern/dw1.hpp"
 
 namespace
 {
+    struct ShopLineData
+    {
+        int16_t posX;
+        int16_t posY;
+        uint16_t width;
+    };
+
     constexpr auto BUYABLE_TRIGGER_START = 0x180;
+
+    constexpr dtl::array<ShopLineData, 5> AMOUNT_BOX_LINE_DATA{{
+        {
+            .posX  = 26,
+            .posY  = 7,
+            .width = 8,
+        },
+        {
+            .posX  = 74,
+            .posY  = 27,
+            .width = 5,
+        },
+        {
+            .posX  = 89,
+            .posY  = 43,
+            .width = 2,
+        },
+        {
+            .posX  = 64,
+            .posY  = 65,
+            .width = 6,
+        },
+        {
+            .posX  = 22,
+            .posY  = 43,
+            .width = 1,
+        },
+    }};
 
     bool readSelectedItemMerit()
     {
@@ -184,5 +221,98 @@ extern "C"
         const auto& pos   = UI_BOX_DATA[3].finalPos;
         const auto offset = TEXTBOX_DATA[3].lineOffset * 12;
         renderStringNew(0, pos.x + 6, pos.y + 5, 252, 12, 704, offset + 256, 3, 1);
+    }
+
+    void tickItemMenuAmountBox()
+    {
+        if (UI_BOX_DATA[3].state != 1) return;
+        if (!isXPressedAfterDialogue()) return;
+
+        if (SHOP_AMOUNT != MAX_SHOP_AMOUNT && isKeyDown(InputButtons::BUTTON_UP)) {
+            const auto amount = isKeyPressed(InputButtons::BUTTON_CIRCLE) ? 10 : 1;
+            SHOP_AMOUNT       = dtl::min(static_cast<uint8_t>(SHOP_AMOUNT + amount), MAX_SHOP_AMOUNT);
+            playSound(0, 2);
+        }
+        else if (SHOP_AMOUNT > 1 && isKeyDown(InputButtons::BUTTON_DOWN)) {
+            const auto amount = isKeyPressed(InputButtons::BUTTON_CIRCLE) ? 10 : 1;
+            SHOP_AMOUNT       = dtl::max(SHOP_AMOUNT - amount, 1);
+            playSound(0, 2);
+        }
+        else if (isKeyDown(InputButtons::BUTTON_TRIANGLE)) {
+            triggerBoxCloseFlag(3);
+            playSound(0, 4);
+        }
+        else if (isKeyDown(InputButtons::BUTTON_SQUARE)) {
+            SHOP_AMOUNT = MAX_SHOP_AMOUNT;
+            playSound(0, 4);
+        }
+        else if (isKeyDown(InputButtons::BUTTON_CROSS)) {
+            auto speaker = 0;
+
+            if (ITEM_MENU_TYPE >= 3) {
+                auto cardType = static_cast<int32_t>(SHOP_ITEM_TYPE);
+                MONEY         = dtl::min(MONEY + SHOP_AMOUNT * SHOP_ITEM_PRICE, 999999U);
+                setCardAmount(cardType, getCardAmount(cardType) - SHOP_AMOUNT);
+                speaker        = readPStat(254);
+                SCRIPT_STATE_2 = 4;
+            }
+            else if (ITEM_MENU_TYPE == 1) {
+                MONEY = dtl::min(MONEY + SHOP_AMOUNT * SHOP_ITEM_PRICE, 999999U);
+                removeItem(SHOP_ITEM_TYPE, SHOP_AMOUNT);
+                speaker        = readPStat(254);
+                SCRIPT_STATE_2 = 7;
+            }
+            else {
+                auto price = isPartnerBaby() ? (SHOP_ITEM_PRICE * 90) / 100 : SHOP_ITEM_PRICE;
+                MONEY      = dtl::max(MONEY - SHOP_AMOUNT * price, 0U);
+                giveItem(SHOP_ITEM_TYPE, SHOP_AMOUNT);
+                if (ITEM_MENU_TYPE == 2) {
+                    auto id = getRecycleId(SHOP_ITEM_TYPE);
+                    GAME_STATE_PTR->recycleItems[id] -= SHOP_AMOUNT;
+                }
+                speaker        = 0xfd;
+                SCRIPT_STATE_2 = 7;
+            }
+
+            RECT box;
+            setupBoxOrigin(speaker, &box);
+            triggerBoxCloseFlag(3);
+            closeTextbox(3, &box);
+            UPDATE_SHOP_BIT_BOX = true;
+            playShopSoundOnlyInSavannah();
+        }
+
+        updateItemMenuAmountBoxString();
+    }
+
+    void renderItemMenuAmountBox()
+    {
+        const auto posX       = UI_BOX_DATA[3].finalPos.x;
+        const auto posY       = UI_BOX_DATA[3].finalPos.y;
+        const auto lineOffset = TEXTBOX_DATA[3].lineOffset * 12;
+
+        renderHorizontalLine(3, 4, 23, 122);
+        renderHorizontalLine(3, 12, 60, 106);
+        renderInsetWithoutBox(3, 85, 42, 26, 14);
+
+        if (ITEM_MENU_TYPE < 3)
+            renderItemSprite(SHOP_ITEM_TYPE, posX + 8, posY + 5, 3);
+        else
+            renderCardSprite(CARD_DATA[static_cast<int32_t>(SHOP_ITEM_TYPE)].rarity, posX + 10, posY + 7, 3);
+
+        int32_t uvOffsetX = 0;
+        for (int32_t i = 0; i < 4; i++) {
+            const auto& data = AMOUNT_BOX_LINE_DATA[i];
+            renderStringNew(0,
+                            posX + data.posX,
+                            posY + data.posY,
+                            data.width * 12,
+                            12,
+                            uvOffsetX * 3 + 704,
+                            lineOffset + 256,
+                            3,
+                            1);
+            uvOffsetX += data.width;
+        }
     }
 }

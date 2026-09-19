@@ -21,4 +21,10 @@
 .org 0x800fd70c
   li v0, renderItemMenuDescriptionBox
 
+.org 0x800fd1c8
+  li v0, tickItemMenuAmountBox
+  
+.org 0x800fd1d4
+  li v0, renderItemMenuAmountBox
+  
 .close

@@ -8,8 +8,8 @@
 ;  jal removeItem
 ;.org 0x800f04d8
 ;  jal removeItem
-.org 0x800fb378
-  jal removeItem
+;.org 0x800fb378
+;  jal removeItem
 .org 0x800fc28c
   jal removeItem
 .org 0x80102eb0
@@ -27,8 +27,8 @@
 .org 0x8010c664
   jal removeItem
 
-.org 0x800fb410
-  jal giveItem
+;.org 0x800fb410
+;  jal giveItem
 .org 0x80102e6c
   jal giveItem
 .org 0x80108798

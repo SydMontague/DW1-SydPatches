@@ -13,18 +13,18 @@
 ;  jal isKeyDown
 ;.org 0x800fad64
 ;  jal isKeyDown
-.org 0x800fb098
-  jal isKeyDown
-.org 0x800fb190
-  jal isKeyDown
-.org 0x800fb224
-  jal isKeyDown
-.org 0x800fb2ac
-  jal isKeyDown
-.org 0x800fb2d8
-  jal isKeyDown
-.org 0x800fb304
-  jal isKeyDown
+;.org 0x800fb098
+;  jal isKeyDown
+;.org 0x800fb190
+;  jal isKeyDown
+;.org 0x800fb224
+;  jal isKeyDown
+;.org 0x800fb2ac
+;  jal isKeyDown
+;.org 0x800fb2d8
+;  jal isKeyDown
+;.org 0x800fb304
+;  jal isKeyDown
 .org 0x800fb900
   jal isKeyDown
 .org 0x800fb92c
