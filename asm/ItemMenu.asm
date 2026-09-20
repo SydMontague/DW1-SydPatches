@@ -36,4 +36,10 @@
 .org 0x800fd35c
   li v0, renderSingleCardShop
 
+.org 0x800fc9b8
+  li v0, tickShopBitsBox
+
+.org 0x800fc9c4
+  li v0, renderShopBitsBox
+
 .close

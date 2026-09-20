@@ -1909,6 +1909,7 @@ extern "C"
     extern uint8_t ITEM_MENU_TYPE;
     extern uint8_t* TEXTBOX_LINES_PTR;
     extern uint32_t ITEM_MENU_SUB_TEXTBOX_LINE;
+    extern bool BIT_BOX_SHOW_BITS;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -1928,6 +1929,7 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void showShopkeeperTextbox(int32_t line, int32_t speaker, int32_t textboxId);
     uint8_t* intToStringSJIS(uint8_t* buffer, int32_t value, uint32_t digitCount, int32_t padNumber);
     void renderHorizontalLine(int32_t boxId, int32_t posX, int32_t posY, int32_t length);
     void renderInsetWithoutBox(int32_t boxId, int16_t posX, int16_t posY, int16_t width, int16_t height);

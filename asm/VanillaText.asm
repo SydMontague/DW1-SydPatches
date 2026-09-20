@@ -21,12 +21,12 @@
 ;  jal renderString
 ;.org 0x800fb6b0
 ;  jal renderString
-.org 0x800fbb88
-  jal renderString
-.org 0x800fbce4
-  jal renderString
-.org 0x800fbd1c
-  jal renderString
+;.org 0x800fbb88
+;  jal renderString
+;.org 0x800fbce4
+;  jal renderString
+;.org 0x800fbd1c
+;  jal renderString
 .org 0x800fdf30
   jal renderString
 .org 0x801001b4

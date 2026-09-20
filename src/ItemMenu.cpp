@@ -451,4 +451,27 @@ extern "C"
         }
         renderSelectionCursor(posX + 8 + SHOP_AMOUNT * 47, posY + 18, 40, 14, 3);
     }
+
+    void tickShopBitsBox()
+    {
+        if (!UPDATE_SHOP_BIT_BOX) return;
+
+        UPDATE_SHOP_BIT_BOX       = 0;
+        const auto tmpInstruction = ACTIVE_INSTRUCTION;
+        const auto line           = BIT_BOX_SHOW_BITS ? 6 : 7;
+
+        showShopkeeperTextbox(line, 255, 2);
+
+        ACTIVE_INSTRUCTION = tmpInstruction;
+    }
+
+    void renderShopBitsBox()
+    {
+        auto posX = UI_BOX_DATA[2].finalPos.x + 22;
+        auto posY = UI_BOX_DATA[2].finalPos.y;
+        auto uvY  = TEXTBOX_DATA[2].lineOffset * 12;
+
+        renderStringNew(0, posX, posY + 4, 48, 12, 704, uvY + 256, 4, 1);
+        renderStringNew(0, posX, posY + 17, 60, 12, 704 + 48 / 4, uvY + 256, 4, 1);
+    }
 }

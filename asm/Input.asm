@@ -25,14 +25,14 @@
 ;  jal isKeyDown
 ;.org 0x800fb304
 ;  jal isKeyDown
-.org 0x800fb900
-  jal isKeyDown
-.org 0x800fb92c
-  jal isKeyDown
-.org 0x800fb954
-  jal isKeyDown
-.org 0x800fb980
-  jal isKeyDown
+;.org 0x800fb900
+;  jal isKeyDown
+;.org 0x800fb92c
+;  jal isKeyDown
+;.org 0x800fb954
+;  jal isKeyDown
+;.org 0x800fb980
+;  jal isKeyDown
 .org 0x800ffc54
   jal isKeyDown
 .org 0x800ffc88

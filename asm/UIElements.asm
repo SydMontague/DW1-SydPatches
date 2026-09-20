@@ -267,8 +267,8 @@
 
 ;.org 0x800faf50
 ;  jal renderSelectionCursor
-.org 0x800fbbd0
-  jal renderSelectionCursor
+;.org 0x800fbbd0
+;  jal renderSelectionCursor
 .org 0x800fffd8
   jal renderSelectionCursor
 .org 0x801081cc

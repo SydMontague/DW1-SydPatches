@@ -61,7 +61,9 @@
 .definelabel renderInsetWithoutBox,     0x800fe150
 .definelabel renderCardSprite,          0x800fe258
 .definelabel intToStringSJIS,           0x80102064
+.definelabel showShopkeeperTextbox,     0x800fc91c
 
+.definelabel BIT_BOX_SHOW_BITS, 0x80134f88
 .definelabel TEXTBOX_LINES_PTR, 0x80134fbc
 .definelabel ITEM_MENU_SUB_TEXTBOX_LINE, 0x80135018
 .definelabel SHOP_AMOUNT, 0x80134f81
