@@ -30,4 +30,10 @@
 .org 0x800fd204
   jal updateItemMenuAmountBoxString
 
+.org 0x800fd350
+  li v0, tickSingleCardShop
+
+.org 0x800fd35c
+  li v0, renderSingleCardShop
+
 .close
