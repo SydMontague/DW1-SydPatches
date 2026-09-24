@@ -38,8 +38,22 @@
 
 .org 0x800fc9b8
   li v0, tickShopBitsBox
+.org 0x800fc9fc
+  jal tickShopBitsBox
 
 .org 0x800fc9c4
   li v0, renderShopBitsBox
+
+.org 0x800fe394
+  jal getShopkeeperLine
+.org 0x800ff728
+  jal getShopkeeperLine
+
+;.org 0x800fbe14
+;  jal resolveMapHeadEntry
+.org 0x800fe3a4
+  jal resolveMapHeadEntry
+.org 0x800ff738
+  jal resolveMapHeadEntry
 
 .close

@@ -8,8 +8,8 @@
 ;  jal translateConditionFXToEntity
 ;.org 0x800ec684
 ;  jal translateConditionFXToEntity
-.org 0x800fbedc
-  jal translateConditionFXToEntity
+;.org 0x800fbedc
+;  jal translateConditionFXToEntity
 
 .close
 

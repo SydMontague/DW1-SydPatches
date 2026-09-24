@@ -1929,6 +1929,7 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    uint8_t scriptIdToEntityId(uint8_t scriptId);
     void showShopkeeperTextbox(int32_t line, int32_t speaker, int32_t textboxId);
     uint8_t* intToStringSJIS(uint8_t* buffer, int32_t value, uint32_t digitCount, int32_t padNumber);
     void renderHorizontalLine(int32_t boxId, int32_t posX, int32_t posY, int32_t length);

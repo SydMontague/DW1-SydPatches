@@ -121,8 +121,8 @@
 ;  jal worldPosToScreenPos
 ;.org 0x800ec6ac
 ;  jal worldPosToScreenPos
-.org 0x800fbee8
-  jal worldPosToScreenPos
+;.org 0x800fbee8
+;  jal worldPosToScreenPos
 
 ;.org 0x800ed5fc
 ;  jal getEntityScreenPos

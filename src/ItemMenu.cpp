@@ -100,6 +100,36 @@ namespace
         playSound(0, 3);
         return true;
     }
+
+    int32_t getShopkeeperScriptID()
+    {
+        constexpr dtl::array<DigimonType, 12> SHOPKEEPER_TYPES{
+            DigimonType::NPC_PATAMON,
+            DigimonType::NPC_UNIMON,
+            DigimonType::NPC_BIYOMON,
+            DigimonType::NPC_MONOCHROMON,
+            DigimonType::NPC_DEVIMON,
+            DigimonType::NPC_MAMEMON,
+            DigimonType::NPC_NUMEMON,
+            DigimonType::NPC_MOJYAMON,
+            DigimonType::MARKET_MANAGER,
+            DigimonType::BETAMON,
+            DigimonType::INVALID,
+            DigimonType::TAMER,
+        };
+
+        const auto speaker = readPStat(0xFE);
+        if (speaker == 0xFF) return 0x4CE;
+
+        const auto entityId = scriptIdToEntityId(speaker);
+        if (entityId == 0xFF) return 0x4C4;
+
+        const auto type = ENTITY_TABLE.getEntityById(entityId)->type;
+        for (auto i = 0; i < SHOPKEEPER_TYPES.size(); i++)
+            if (type == SHOPKEEPER_TYPES[i]) return 0x4C4 + i;
+
+        return 0x4C4;
+    }
 } // namespace
 
 extern "C"
@@ -473,5 +503,18 @@ extern "C"
 
         renderStringNew(0, posX, posY + 4, 48, 12, 704, uvY + 256, 4, 1);
         renderStringNew(0, posX, posY + 17, 60, 12, 704 + 48 / 4, uvY + 256, 4, 1);
+    }
+
+    uint8_t* resolveMapHeadEntry(uint32_t sectionId, int32_t line)
+    {
+        auto script = getScript(0);
+        auto offset = getScriptSection(script, sectionId);
+        return script + *reinterpret_cast<uint16_t*>(offset + line * 4 + 2) + 2;
+    }
+
+    uint8_t* getShopkeeperLine(int32_t line)
+    {
+        auto scriptId = getShopkeeperScriptID();
+        return resolveMapHeadEntry(scriptId, line);
     }
 }
