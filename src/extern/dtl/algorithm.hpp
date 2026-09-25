@@ -58,6 +58,14 @@ namespace dtl
         return output;
     }
 
+    template<class InputItr, class OutputItr> constexpr OutputItr move(InputItr begin, InputItr end, OutputItr output)
+    {
+        for (; begin != end; begin++, output++)
+            *output = dtl::move(*begin);
+
+        return output;
+    }
+
     template<class T> constexpr const T& min(const T& a, const T& b)
     {
         return (b < a) ? b : a;
