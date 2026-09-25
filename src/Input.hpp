@@ -10,6 +10,7 @@ extern "C"
      */
     bool isKeyDown(uint16_t keyMask);
     uint32_t processInput();
+    bool isXPressedAfterDialogue();
 }
 
 bool isKeyDownPolled(InputButtons button);

@@ -39,7 +39,6 @@
 .definelabel tickScript,                0x80105bd8
 .definelabel getItemMenuFromType,       0x800fcc40
 .definelabel isItemMenuBoxBusy,         0x800fcf88
-.definelabel isXPressedAfterDialogue,   0x800fc098
 .definelabel createSingleCardShopMenu,  0x800fd244
 .definelabel createItemMenuAmountBox,   0x800fcfb8
 .definelabel createItemMenuDescriptionBox,0x800fd61c
@@ -270,10 +269,6 @@
 .definelabel UI_BOX_DATA, 0x8013d390
 .definelabel POLLED_INPUT, 0x80134ee4
 .definelabel POLLED_INPUT_PREVIOUS, 0x80134ee8
-.definelabel INPUT_REPEAT_COUNTER, 0x80135016
-.definelabel INPUT_REPEAT_MASK, 0x8013501c
-.definelabel INPUT_FRESH_MASK, 0x80135020
-.definelabel INPUT_PENDING_MASK, 0x80135024
 .definelabel TARGET_MAP, 0x80134de0
 .definelabel CURRENT_EXIT, 0x80134daa
 .definelabel BATTLE_TOGGLE_LIFEBAR, 0x80134d64
