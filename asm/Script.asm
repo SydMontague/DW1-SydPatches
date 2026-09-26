@@ -15,4 +15,7 @@
 .org 0x80105dfc
   jal scriptCheckTournamentMedal
 
+.org 0x80104640
+  jal handleItemLoss
+
 .close
