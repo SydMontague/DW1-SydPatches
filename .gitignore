@@ -11,3 +11,4 @@ compiled/
 *.o
 
 syms.txt
+.macos-toolchain
