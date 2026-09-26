@@ -1627,6 +1627,8 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern uint8_t* ARRAY_SECTION_START;
+    extern size_t ARRAY_SECTION_OFFSET;
     extern uint8_t SHOP_AMOUNT;
     extern uint8_t MAX_SHOP_AMOUNT;
     extern uint32_t SHOP_ITEM_PRICE;

@@ -63,6 +63,8 @@
 .definelabel showShopkeeperTextbox,     0x800fc91c
 .definelabel scriptIdToEntityId,        0x80102144
 
+.definelabel ARRAY_SECTION_START, 0x801345b0
+.definelabel ARRAY_SECTION_OFFSET, 0x80134f64
 .definelabel BIT_BOX_SHOW_BITS, 0x80134f88
 .definelabel TEXTBOX_LINES_PTR, 0x80134fbc
 .definelabel ITEM_MENU_SUB_TEXTBOX_LINE, 0x80135018

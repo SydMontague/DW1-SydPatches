@@ -47,3 +47,4 @@
 .include "asm/VS.asm"
 .include "asm/ItemMenu.asm"
 .include "asm/MonochromonMoodBubble.asm"
+.include "asm/Misc.asm"
