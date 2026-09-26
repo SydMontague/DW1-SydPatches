@@ -1,18 +1,27 @@
 #!/bin/bash
+set -euo pipefail
+source "$(dirname "$0")/tools/build-env.sh"
+cd "$DW1_ROOT"
+require_tool "$MIPS_CXX"
+require_tool "$ARMIPS"
+require_tool "$MKPSXISO"
+if [ ! -f ./extract/DIGIMON/SLUS_010.32 ]; then
+    echo 'Extract a US Digimon World disc with bash extract.sh <disc.bin> first.' >&2
+    exit 1
+fi
 
 # Setup work directory
-rm -r ./work/
-rm -r ./compiled/
+rm -rf ./work/ ./compiled/
 cp -r ./extract/ ./work/
 cp BUILD.XML ./work/BUILD.XML
 
 # Apply filesystem changes
 mv ./work/DIGIMON/ETCDAT/SYSTEM_W.TIM ./work/DIGIMON/STDDAT/SYSTEM_W.TIM
 
-sh ./src/compile.sh
+bash ./src/compile.sh
 
 # Apply patches
-./tools/linux/armips patches.asm -sym syms.txt
+"$ARMIPS" patches.asm -sym syms.txt
 
 # create ISO
-./tools/linux/mkpsxiso ./work/BUILD.XML -y -q
+"$MKPSXISO" ./work/BUILD.XML -y -q

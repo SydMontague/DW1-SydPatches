@@ -8,6 +8,8 @@ Special shoutout goes to Vice04, whose work directly and indirectly contributed 
 
 ## How to use
 
+For a native macOS build, follow [the macOS setup instructions](tools/macos/README.md).
+
 This project is not ready for public consumption, you'll have to build it from scratch yourself.
 
 The project comes with a [devcontainer](https://containers.dev/) that contains the necessary tools and compiler. 
