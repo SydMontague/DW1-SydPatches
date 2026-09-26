@@ -329,8 +329,12 @@ extern "C"
                 SCRIPT_STATE_2 = 7;
             }
             else {
-                auto price = isPartnerBaby() ? (SHOP_ITEM_PRICE * 90) / 100 : SHOP_ITEM_PRICE;
-                MONEY      = dtl::max(MONEY - SHOP_AMOUNT * price, 0U);
+                auto price = SHOP_ITEM_PRICE;
+                if (isPartnerBaby()) {
+                    price         = (SHOP_ITEM_PRICE * 90) / 100;
+                    SHOP_VARIABLE = SHOP_AMOUNT * (SHOP_ITEM_PRICE - price);
+                }
+                MONEY = dtl::max(MONEY - SHOP_AMOUNT * price, 0U);
                 giveItem(SHOP_ITEM_TYPE, SHOP_AMOUNT);
                 if (ITEM_MENU_TYPE == 2) {
                     auto id = getRecycleId(SHOP_ITEM_TYPE);
