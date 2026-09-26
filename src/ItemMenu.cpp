@@ -3,6 +3,7 @@
 #include "Input.hpp"
 #include "Inventory.hpp"
 #include "InventoryUI.hpp"
+#include "RecycleShop.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
 #include "extern/dtl/algorithm.hpp"

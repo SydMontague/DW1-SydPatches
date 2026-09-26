@@ -17,7 +17,6 @@
 .definelabel playBGM,                   0x80106a80
 .definelabel isTriggerSet,              0x8010643c
 .definelabel initializeLoadedNPCModels, 0x80105aa8
-.definelabel dailyPStatTrigger,         0x800fc374
 .definelabel checkArenaMap,             0x800ff9dc
 .definelabel runMapHeadScript,          0x80105ae4
 .definelabel updateBGM,                 0x80106af0
@@ -50,8 +49,6 @@
 .definelabel renderItemMenuScrollBar,   0x800fd8d4
 .definelabel renderItemMenuItemList,    0x800fdc5c
 .definelabel triggerBoxCloseFlag,       0x801007e8
-.definelabel isPartnerBaby,             0x800fc494
-.definelabel getRecycleId,              0x800fc328
 .definelabel setupBoxOrigin,            0x80101078
 .definelabel closeTextbox,              0x801005a4
 .definelabel playShopSoundOnlyInSavannah,0x800fdfb4

@@ -1,6 +1,8 @@
 
+#include "Helper.hpp"
 #include "Inventory.hpp"
 #include "Math.hpp"
+#include "RecycleShop.hpp"
 #include "Tournament.hpp"
 #include "extern/dtl/vector.hpp"
 #include "extern/dw1.hpp"
@@ -67,5 +69,31 @@ extern "C"
             }
             removeItem(type, 99);
         }
+    }
+
+    void dailyPStatTrigger()
+    {
+        for (auto i = 0; i < 6; i++) {
+            auto card = random(0x40) + 1;
+            while (GAME_STATE_PTR->dailySingleCards.contains(card) || card == 4)
+                card = random(0x40) + 1;
+
+            GAME_STATE_PTR->dailySingleCards[i] = card;
+        }
+
+        for (auto i = 0x1C; i < 0x20; i++) {
+            auto val = readPStat(i);
+            if (val != 0xFF) writePStat(i, val + 1);
+        }
+
+        auto val = readPStat(2);
+        if (val != 0xFF) writePStat(2, val & 0x7F);
+    }
+
+    bool isPartnerBaby()
+    {
+        // vanilla compares against a list of Digimon IDs, but why do that when we can just check the data?
+        auto level = getDigimonData(PARTNER_ENTITY.type)->level;
+        return level == Level::FRESH || level == Level::IN_TRAINING;
     }
 }

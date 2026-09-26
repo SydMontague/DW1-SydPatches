@@ -1935,7 +1935,6 @@ extern "C"
     void renderCardSprite(uint8_t cardId, int16_t posX, int16_t posY, int32_t depth);
     void updateItemMenuAmountBoxString();
     bool isPartnerBaby();
-    int32_t getRecycleId(ItemType type);
     void setupBoxOrigin(int32_t speaker, RECT* result);
     void closeTextbox(int32_t id, RECT* final);
     void playShopSoundOnlyInSavannah();
