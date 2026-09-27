@@ -5,10 +5,10 @@
 ;  jal allocateArray
 ;.org 0x800fc100
 ;  jal allocateArray
-.org 0x800fc88c
-  jal allocateArray
-.org 0x800fc898
-  jal allocateArray
+;.org 0x800fc88c
+;  jal allocateArray
+;.org 0x800fc898
+;  jal allocateArray
 .org 0x800fe53c
   jal allocateArray
 .org 0x80106e78
@@ -20,10 +20,10 @@
 ;  jal freeArray
 ;.org 0x800fc2a8
 ;  jal freeArray
-.org 0x800fc940
-  jal freeArray
-.org 0x800fc94c
-  jal freeArray
+;.org 0x800fc940
+;  jal freeArray
+;.org 0x800fc94c
+;  jal freeArray
 .org 0x800fe5c0
   jal freeArray
 .org 0x80106ef4

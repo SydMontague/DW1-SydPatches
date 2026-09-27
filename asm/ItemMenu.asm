@@ -1,11 +1,8 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800fc6ac
-  jal shopFillBuyItemList
-
-.org 0x800fc6f0
-  jal shopFillSellItemList
+;.org 0x800fc6f0
+;  jal shopFillSellItemList
 .org 0x800fcba0
   jal shopFillSellItemList
 
@@ -55,5 +52,105 @@
   jal resolveMapHeadEntry
 .org 0x800ff738
   jal resolveMapHeadEntry
+
+.org 0x80105d14
+  jal openShop
+
+;.org 0x800fc580
+;  jal allocateItemMenuBox
+;.org 0x800fc5b0
+;  jal allocateItemMenuBox
+.org 0x800fcb98
+  jal allocateItemMenuBox
+.org 0x8010b6b4
+  jal allocateItemMenuBox
+.org 0x8010ba44
+  jal allocateItemMenuBox
+.org 0x8010bb78
+  jal allocateItemMenuBox
+.org 0x8010bc80
+  jal allocateItemMenuBox
+.org 0x8010bca8
+  jal allocateItemMenuBox
+.org 0x8010bfdc
+  jal allocateItemMenuBox
+.org 0x8010c010
+  jal allocateItemMenuBox
+.org 0x8010c1a8
+  jal allocateItemMenuBox
+.org 0x8010c2fc
+  jal allocateItemMenuBox
+.org 0x8010c518
+  jal allocateItemMenuBox
+.org 0x8010c538
+  jal allocateItemMenuBox
+
+;.org 0x800fc650
+;  jal destroyItemMenuBox
+;.org 0x800fc658
+;  jal destroyItemMenuBox
+.org 0x800fcbe4
+  jal destroyItemMenuBox
+.org 0x8010b720
+  jal destroyItemMenuBox
+.org 0x8010ba94
+  jal destroyItemMenuBox
+.org 0x8010bb98
+  jal destroyItemMenuBox
+.org 0x8010bcdc
+  jal destroyItemMenuBox
+.org 0x8010bce4
+  jal destroyItemMenuBox
+.org 0x8010c044
+  jal destroyItemMenuBox
+.org 0x8010c04c
+  jal destroyItemMenuBox
+.org 0x8010c1e4
+  jal destroyItemMenuBox
+.org 0x8010c338
+  jal destroyItemMenuBox
+.org 0x8010c580
+  jal destroyItemMenuBox
+.org 0x8010c588
+  jal destroyItemMenuBox
+
+;.org 0x800fbc3c
+;  jal showShopkeeperTextbox
+;.org 0x800fc608
+;  jal showShopkeeperTextbox
+;.org 0x800fc630
+;  jal showShopkeeperTextbox
+;.org 0x800fc6c4
+;  jal showShopkeeperTextbox
+;.org 0x800fc708
+;  jal showShopkeeperTextbox
+;.org 0x800fc744
+;  jal showShopkeeperTextbox
+;.org 0x800fc758
+;  jal showShopkeeperTextbox
+;.org 0x800fc7b0
+;  jal showShopkeeperTextbox
+;.org 0x800fc7c8
+;  jal showShopkeeperTextbox
+;.org 0x800fc808
+;  jal showShopkeeperTextbox
+.org 0x8010b6d8
+  jal showShopkeeperTextbox
+.org 0x8010b700
+  jal showShopkeeperTextbox
+.org 0x8010b788
+  jal showShopkeeperTextbox
+.org 0x8010b7c4
+  jal showShopkeeperTextbox
+.org 0x8010b7d8
+  jal showShopkeeperTextbox
+.org 0x8010b820
+  jal showShopkeeperTextbox
+.org 0x8010b834
+  jal showShopkeeperTextbox
+.org 0x8010b890
+  jal showShopkeeperTextbox
+.org 0x8010b8c8
+  jal showShopkeeperTextbox
 
 .close

@@ -57,9 +57,17 @@
 .definelabel renderInsetWithoutBox,     0x800fe150
 .definelabel renderCardSprite,          0x800fe258
 .definelabel intToStringSJIS,           0x80102064
-.definelabel showShopkeeperTextbox,     0x800fc91c
 .definelabel scriptIdToEntityId,        0x80102144
+.definelabel setDialogueOwner,          0x800ff684
+.definelabel showTextboxReady,          0x80101ef8
+.definelabel createShopBitsBox,         0x800fc968
+.definelabel showShopkeepSelection,     0x800fca14
+.definelabel createItemMenu,            0x800fca3c
 
+.definelabel SHOP_ACTION_SELECTED, 0x80134f70
+.definelabel HAS_BOUGHT_ANYTHING, 0x80134f74
+.definelabel SCRIPT_NEXT_STATE_2, 0x80135014
+.definelabel SCRIPT_POINTER, 0x80134fdc
 .definelabel ARRAY_SECTION_START, 0x801345b0
 .definelabel ARRAY_SECTION_OFFSET, 0x80134f64
 .definelabel BIT_BOX_SHOW_BITS, 0x80134f88

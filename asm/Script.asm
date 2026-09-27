@@ -29,8 +29,8 @@
 
 ;.org 0x800fb394
 ;  jal isPartnerBaby
-.org 0x800fc798
-  jal isPartnerBaby
+;.org 0x800fc798
+;  jal isPartnerBaby
 .org 0x8010b808
   jal isPartnerBaby
 

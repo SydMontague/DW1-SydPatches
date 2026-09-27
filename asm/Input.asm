@@ -146,14 +146,14 @@
 .org 0x801007bc
   jal setFreshDialogue
 
-.org 0x800fc6a0
-  jal setInputRepeatMask
-.org 0x800fc6e0
-  jal setInputRepeatMask
-.org 0x800fc778
-  jal setInputRepeatMask
-.org 0x800fc7f0
-  jal setInputRepeatMask
+;.org 0x800fc6a0
+;  jal setInputRepeatMask
+;.org 0x800fc6e0
+;  jal setInputRepeatMask
+;.org 0x800fc778
+;  jal setInputRepeatMask
+;.org 0x800fc7f0
+;  jal setInputRepeatMask
 .org 0x800fcbf4
   jal setInputRepeatMask
 .org 0x800fcc18

@@ -131,10 +131,7 @@ namespace
 
         return 0x4C4;
     }
-} // namespace
 
-extern "C"
-{
     void shopFillBuyItemList()
     {
         auto size                 = INVENTORY_SIZE;
@@ -169,6 +166,19 @@ extern "C"
             itemList++;
         }
     }
+
+    bool hasAnythingToSell()
+    {
+        for (auto i = 0; i < 128; i++)
+            if (isTriggerSet(0x180 + i)) return true;
+
+        return false;
+    }
+
+} // namespace
+
+extern "C"
+{
 
     bool shopFillSellItemList()
     {
@@ -521,5 +531,153 @@ extern "C"
     {
         auto scriptId = getShopkeeperScriptID();
         return resolveMapHeadEntry(scriptId, line);
+    }
+
+    void allocateItemMenuBox(ItemMenuBox** data,
+                             uint32_t bufferSize,
+                             int32_t numSlots,
+                             int16_t xOffset,
+                             int16_t yOffset,
+                             int32_t width,
+                             int32_t height)
+    {
+        // TODO turn ItemMenuBox into a proper RAII object
+        *data                  = new ItemMenuBox();
+        (*data)->itemList      = new uint8_t[bufferSize];
+        (*data)->isInitialized = 0;
+        (*data)->numSlots      = numSlots;
+        (*data)->xOffset       = xOffset;
+        (*data)->yOffset       = yOffset;
+        (*data)->scrollWidth   = width;
+        (*data)->scrollHeight  = height;
+    }
+
+    void destroyItemMenuBox(ItemMenuBox** data)
+    {
+        delete[] (*data)->itemList;
+        delete *data;
+        *data = nullptr;
+    }
+
+    void showShopkeeperTextbox(int32_t line, int32_t speaker, int32_t textboxId)
+    {
+        if (textboxId == 0 && speaker != 0xFE) setDialogueOwner(speaker);
+
+        auto backup    = SCRIPT_POINTER;
+        SCRIPT_POINTER = getShopkeeperLine(line);
+        if (speaker == 0xFE) speaker = 0xFF;
+
+        showTextboxReady(textboxId, speaker);
+        ACTIVE_INSTRUCTION = 100;
+        SCRIPT_POINTER     = backup;
+    }
+
+    void openShop()
+    {
+        const auto speaker = readPStat(0xFE);
+
+        switch (SCRIPT_STATE_2) {
+            case 0:
+            {
+                allocateItemMenuBox(&ITEM_MENU_LEFT, 256, 6, 178, 24, 6, 90);
+                allocateItemMenuBox(&ITEM_MENU_RIGHT, INVENTORY_SIZE * 2, 6, 210, 24, 6, 90);
+                SHOP_ACTION_SELECTED = 0;
+                HAS_BOUGHT_ANYTHING  = 0;
+
+                if (hasAnythingToSell()) {
+                    showShopkeeperTextbox(0, speaker, 0);
+                    SCRIPT_STATE_2      = 1;
+                    SCRIPT_NEXT_STATE_2 = 3;
+                    SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::CONFIRM;
+                }
+                else {
+                    showShopkeeperTextbox(1, speaker, 0);
+                    SCRIPT_STATE_2      = 1;
+                    SCRIPT_NEXT_STATE_2 = 2;
+                    SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::CONFIRM;
+                }
+                break;
+            }
+            case 2:
+            {
+                destroyItemMenuBox(&ITEM_MENU_RIGHT);
+                destroyItemMenuBox(&ITEM_MENU_LEFT);
+                ACTIVE_INSTRUCTION = 0;
+                break;
+            }
+            case 3:
+            {
+                createShopBitsBox(1);
+                showShopkeepSelection(2, 0xFD, 3, &SHOP_ACTION_SELECTED);
+                SCRIPT_STATE_2      = 1;
+                SCRIPT_NEXT_STATE_2 = 4;
+                SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::SELECTION;
+                break;
+            }
+            case 4:
+            {
+                setInputRepeatMask(InputButtons::BUTTON_UP | InputButtons::BUTTON_DOWN);
+                ITEM_MENU_TYPE = 0;
+                shopFillBuyItemList();
+                createItemMenu();
+                showShopkeeperTextbox(8, speaker, 0);
+                SCRIPT_STATE_2      = 1;
+                SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::UNKNOWN;
+                break;
+            }
+            case 5:
+            {
+                setInputRepeatMask(InputButtons::BUTTON_UP | InputButtons::BUTTON_DOWN);
+                ITEM_MENU_TYPE = 1;
+                shopFillSellItemList();
+                createItemMenu();
+                showShopkeeperTextbox(9, speaker, 0);
+                SCRIPT_STATE_2      = 1;
+                SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::UNKNOWN;
+                break;
+            }
+            case 6:
+            {
+                triggerBoxCloseFlag(2);
+                if (HAS_BOUGHT_ANYTHING == 0)
+                    showShopkeeperTextbox(5, speaker, 0);
+                else
+                    showShopkeeperTextbox(4, speaker, 0);
+                SCRIPT_STATE_2      = 1;
+                SCRIPT_NEXT_STATE_2 = 2;
+                SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::CONFIRM;
+                break;
+            }
+            case 7:
+            {
+                setInputRepeatMask(0);
+                triggerBoxCloseFlag(1);
+                if (ITEM_MENU_TYPE == 0 && isPartnerBaby())
+                    showShopkeeperTextbox(13, speaker, 0);
+                else
+                    showShopkeeperTextbox(10, speaker, 0);
+
+                SCRIPT_STATE_2      = 1;
+                SCRIPT_NEXT_STATE_2 = 3;
+                SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::CONFIRM;
+                HAS_BOUGHT_ANYTHING = 1;
+                break;
+            }
+            case 8:
+            {
+                setInputRepeatMask(0);
+                triggerBoxCloseFlag(1);
+                showShopkeeperTextbox(11, speaker, 0);
+                SCRIPT_STATE_2 = 9;
+                break;
+            }
+            case 9:
+            {
+                SCRIPT_STATE_2      = 1;
+                SCRIPT_NEXT_STATE_2 = 3;
+                SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::CONFIRM;
+                break;
+            }
+        }
     }
 }

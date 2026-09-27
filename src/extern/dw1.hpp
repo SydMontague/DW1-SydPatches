@@ -1908,6 +1908,10 @@ extern "C"
     extern uint8_t* TEXTBOX_LINES_PTR;
     extern uint32_t ITEM_MENU_SUB_TEXTBOX_LINE;
     extern bool BIT_BOX_SHOW_BITS;
+    extern uint32_t SHOP_ACTION_SELECTED;
+    extern uint32_t HAS_BOUGHT_ANYTHING;
+    extern uint32_t SCRIPT_NEXT_STATE_2;
+    extern uint8_t* SCRIPT_POINTER;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -1927,6 +1931,11 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void setDialogueOwner(int32_t speaker);
+    void showTextboxReady(int32_t textboxId, int32_t speaker);
+    void createShopBitsBox(int32_t boxId);
+    void showShopkeepSelection(int32_t boxId, int32_t speaker, int32_t selectionCount, uint32_t* result);
+    void createItemMenu();
     uint8_t scriptIdToEntityId(uint8_t scriptId);
     void showShopkeeperTextbox(int32_t line, int32_t speaker, int32_t textboxId);
     uint8_t* intToStringSJIS(uint8_t* buffer, int32_t value, uint32_t digitCount, int32_t padNumber);
