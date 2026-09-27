@@ -60,9 +60,10 @@
 .definelabel scriptIdToEntityId,        0x80102144
 .definelabel setDialogueOwner,          0x800ff684
 .definelabel showTextboxReady,          0x80101ef8
-.definelabel createShopBitsBox,         0x800fc968
 .definelabel showShopkeepSelection,     0x800fca14
 .definelabel createItemMenu,            0x800fca3c
+.definelabel createTextbox,             0x80100700
+.definelabel registerTextbox,           0x80100838
 
 .definelabel SHOP_ACTION_SELECTED, 0x80134f70
 .definelabel HAS_BOUGHT_ANYTHING, 0x80134f74

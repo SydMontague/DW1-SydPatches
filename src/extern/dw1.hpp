@@ -1614,6 +1614,13 @@ extern "C"
         dtl::array<ScriptStackEntry, 8> scriptStack;
     };
 
+    enum class VRAMMode
+    {
+        FRONT_FULL,
+        FRONT_HALF,
+        END_HALF,
+    };
+
     static_assert(sizeof(GameState) == 0x29C);
     static_assert(sizeof(ItemMenuBuyEntry) == 2);
     static_assert(sizeof(ItemMenuSellEntry) == 2);
@@ -1931,9 +1938,15 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void createTextbox(int32_t id,
+                       uint8_t flags,
+                       const RECT* textboxPos,
+                       const RECT* textboxOrigin,
+                       TickFunction tickFunction,
+                       RenderFunction renderFunction);
+    void registerTextbox(int id, uint32_t lineOffset, uint32_t lineCount, bool isDoubleBuffered, VRAMMode vramMode);
     void setDialogueOwner(int32_t speaker);
     void showTextboxReady(int32_t textboxId, int32_t speaker);
-    void createShopBitsBox(int32_t boxId);
     void showShopkeepSelection(int32_t boxId, int32_t speaker, int32_t selectionCount, uint32_t* result);
     void createItemMenu();
     uint8_t scriptIdToEntityId(uint8_t scriptId);

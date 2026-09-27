@@ -33,14 +33,6 @@
 .org 0x800fd35c
   li v0, renderSingleCardShop
 
-.org 0x800fc9b8
-  li v0, tickShopBitsBox
-.org 0x800fc9fc
-  jal tickShopBitsBox
-
-.org 0x800fc9c4
-  li v0, renderShopBitsBox
-
 .org 0x800fe394
   jal getShopkeeperLine
 .org 0x800ff728
@@ -152,5 +144,16 @@
   jal showShopkeeperTextbox
 .org 0x8010b8c8
   jal showShopkeeperTextbox
+
+;.org 0x800fc668
+;  jal createShopBitsBox
+.org 0x801040b8
+  jal createShopBitsBox
+.org 0x8010b730
+  jal createShopBitsBox
+.org 0x8010bcfc
+  jal createShopBitsBox
+.org 0x8010c348
+  jal createShopBitsBox
 
 .close
