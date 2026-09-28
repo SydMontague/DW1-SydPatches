@@ -1950,8 +1950,6 @@ extern "C"
                               int32_t selectionCount,
                               uint32_t* result,
                               uint16_t sectionId);
-    void initItemMenuBox(ItemMenuBox* menu, int8_t param_2, uint8_t stringOffset);
-    void updateItemMenuStrings(ItemMenuBox* menu, int32_t lineStart, int32_t mode);
     void createTextbox(int32_t id,
                        uint8_t flags,
                        const RECT* textboxPos,
@@ -1961,16 +1959,11 @@ extern "C"
     void registerTextbox(int id, uint32_t lineOffset, uint32_t lineCount, bool isDoubleBuffered, VRAMMode vramMode);
     void setDialogueOwner(int32_t speaker);
     void showTextboxReady(int32_t textboxId, int32_t speaker);
-    void showShopkeepSelection(int32_t boxId, int32_t speaker, int32_t selectionCount, uint32_t* result);
-    void createItemMenu();
     uint8_t scriptIdToEntityId(uint8_t scriptId);
-    void showShopkeeperTextbox(int32_t line, int32_t speaker, int32_t textboxId);
     uint8_t* intToStringSJIS(uint8_t* buffer, int32_t value, uint32_t digitCount, int32_t padNumber);
     void renderHorizontalLine(int32_t boxId, int32_t posX, int32_t posY, int32_t length);
     void renderInsetWithoutBox(int32_t boxId, int16_t posX, int16_t posY, int16_t width, int16_t height);
     void renderCardSprite(uint8_t cardId, int16_t posX, int16_t posY, int32_t depth);
-    void updateItemMenuAmountBoxString();
-    bool isPartnerBaby();
     void setupBoxOrigin(int32_t speaker, RECT* result);
     void closeTextbox(int32_t id, RECT* final);
     void playShopSoundOnlyInSavannah();
@@ -1984,8 +1977,6 @@ extern "C"
                                 int16_t spriteX,
                                 int16_t spriteY,
                                 int32_t spriteType);
-    ItemMenuBox* getItemMenuFromType();
-    bool isItemMenuBoxBusy(ItemMenuBox*);
     void createSingleCardShopMenu(RECT* rect);
     void createItemMenuAmountBox(RECT* rect);
     void createItemMenuDescriptionBox(ItemMenuBox* menu, RECT* rect, int32_t boxId);
@@ -2005,7 +1996,6 @@ extern "C"
     void updateBGM();
     void runMapHeadScript(uint8_t mapId);
     void checkArenaMap(int32_t mapId);
-    void dailyPStatTrigger();
     void initializeLoadedNPCModels();
     bool isTriggerSet(int32_t trigger);
     void playBGM(uint8_t soundFont);
