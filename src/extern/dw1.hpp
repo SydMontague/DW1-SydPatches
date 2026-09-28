@@ -1574,6 +1574,13 @@ extern "C"
         BACKGROUND,
     };
 
+    enum class VRAMMode
+    {
+        FRONT_FULL,
+        FRONT_HALF,
+        END_HALF,
+    };
+
     struct TextboxData
     {
         RECT textboxOrigin;
@@ -1587,7 +1594,7 @@ extern "C"
         uint8_t idle;
         bool isDoubleBuffered;
         uint32_t activeBufferId;
-        uint32_t vramMode;
+        VRAMMode vramMode;
         uint32_t lineOffset;
         uint32_t lineCount;
         uint32_t writeRow;
@@ -1612,13 +1619,6 @@ extern "C"
         dtl::array<uint8_t, 100> triggers; // bitset
         dtl::array<uint8_t, 256> pstats;
         dtl::array<ScriptStackEntry, 8> scriptStack;
-    };
-
-    enum class VRAMMode
-    {
-        FRONT_FULL,
-        FRONT_HALF,
-        END_HALF,
     };
 
     static_assert(sizeof(GameState) == 0x29C);
@@ -1939,6 +1939,12 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    bool isTextboxBusy(int32_t id);
+    void calculateItemMenuStrings(ItemMenuBox* menu, int id, bool withNewLine);
+    void calculateCardMenuStrings(ItemMenuBox* menu, int id, bool withNewLine);
+    void calculateMusicMenuStrings(ItemMenuBox* menu, int id, bool withNewLine);
+    void calculateBirdramonMenuStrings(ItemMenuBox* menu, int id, bool withNewLine);
+    void calculateItemListStrings(ItemMenuBox* menu, int id, bool withNewLine);
     void showMapheadSelection(int32_t boxId,
                               int32_t speaker,
                               int32_t selectionCount,

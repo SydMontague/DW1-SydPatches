@@ -187,4 +187,55 @@
 .org 0x8010b744
   jal showShopkeepSelection
 
+;.org 0x800fab48
+;  jal isItemMenuBoxBusy
+.org 0x800fdcf4
+  jal isItemMenuBoxBusy
+.org 0x80107e84
+  jal isItemMenuBoxBusy
+.org 0x80108344
+  jal isItemMenuBoxBusy
+.org 0x80108350
+  jal isItemMenuBoxBusy
+.org 0x801091ec
+  jal isItemMenuBoxBusy
+.org 0x80109500
+  jal isItemMenuBoxBusy
+.org 0x80109800
+  jal isItemMenuBoxBusy
+
+;.org 0x800fcb20
+;  jal updateItemMenuStrings
+.org 0x800fd408
+  jal updateItemMenuStrings
+.org 0x800fd514
+  jal updateItemMenuStrings
+.org 0x801071e4
+  jal updateItemMenuStrings
+.org 0x80107aa0
+  jal updateItemMenuStrings
+.org 0x80107c30
+  jal updateItemMenuStrings
+.org 0x80108664
+  jal updateItemMenuStrings
+.org 0x801086bc
+  jal updateItemMenuStrings
+.org 0x801092f8
+  jal updateItemMenuStrings
+.org 0x80109c0c
+  jal updateItemMenuStrings
+
+;.org 0x800fcb10
+;  jal initItemMenuBox
+.org 0x801071d4
+  jal initItemMenuBox
+.org 0x801076e8
+  jal initItemMenuBox
+.org 0x80107764
+  jal initItemMenuBox
+.org 0x80107c20
+  jal initItemMenuBox
+.org 0x80107ddc
+  jal initItemMenuBox
+
 .close

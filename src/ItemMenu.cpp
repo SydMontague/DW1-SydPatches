@@ -552,6 +552,62 @@ extern "C"
         showMapheadSelection(boxId, speaker, selectionCount, result, 0xFF);
     }
 
+    void initItemMenuBox(ItemMenuBox* menu, int8_t textboxId, uint8_t stringOffset)
+    {
+        if (menu->isInitialized) return;
+
+        menu->isInitialized = true;
+        menu->textboxId     = textboxId;
+        menu->scrollOffset  = 0;
+        menu->cursorOffset  = 0;
+        menu->unk2          = 0;
+        menu->unk3          = 0;
+        for (auto i = 0; i < menu->numSlots; i++)
+            menu->stringOffset[i] = stringOffset + i;
+    }
+
+    [[gnu::optimize("Os")]]
+    void updateItemMenuStrings(ItemMenuBox* menu, int32_t lineStart, int32_t mode)
+    {
+        auto& textbox    = TEXTBOX_DATA[menu->textboxId];
+        auto stringCount = dtl::min(menu->itemCount - menu->scrollOffset, static_cast<int32_t>(menu->numSlots));
+
+        if (stringCount == 0) {
+            auto ptr = TEXTBOX_LINES_PTR + lineStart * 0x40;
+            if (textbox.vramMode == VRAMMode::END_HALF) {
+                ptr += 0x20;
+            }
+            if (textbox.isDoubleBuffered) {
+                ptr += ((textbox.activeBufferId ^ 1) * textbox.lineCount * 0x40);
+            }
+
+            ptr[0] = 0;
+            ptr[1] = 0;
+        }
+        else {
+            for (auto i = 0; i < stringCount; i++) {
+                auto withNewLine = menu->stringOffset[i] == (lineStart + stringCount - 1);
+                switch (mode) {
+                    case 0: calculateItemMenuStrings(menu, i, withNewLine); break;
+                    case 1: calculateCardMenuStrings(menu, i, withNewLine); break;
+                    case 2: calculateMusicMenuStrings(menu, i, withNewLine); break;
+                    case 3: calculateBirdramonMenuStrings(menu, i, withNewLine); break;
+                    default: calculateItemListStrings(menu, i, withNewLine); break;
+                }
+            }
+        }
+
+        textbox.pageReady = 1;
+        textbox.writeCount++;
+    }
+
+    bool isItemMenuBoxBusy(ItemMenuBox* box)
+    {
+        if (box == nullptr) return true;
+
+        return isTextboxBusy(box->textboxId);
+    }
+
     void createItemMenu()
     {
         auto speaker = (ITEM_MENU_TYPE == 1 || ITEM_MENU_TYPE == 5) ? 0xFD : readPStat(0xFE);

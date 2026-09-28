@@ -36,7 +36,6 @@
 .definelabel initializeTextbox,         0x8010020c
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
-.definelabel isItemMenuBoxBusy,         0x800fcf88
 .definelabel createSingleCardShopMenu,  0x800fd244
 .definelabel createItemMenuAmountBox,   0x800fcfb8
 .definelabel createItemMenuDescriptionBox,0x800fd61c
@@ -62,8 +61,12 @@
 .definelabel createTextbox,             0x80100700
 .definelabel registerTextbox,           0x80100838
 .definelabel showMapheadSelection,      0x800ff6c0
-.definelabel initItemMenuBox,           0x800fcc98
-.definelabel updateItemMenuStrings,     0x800fccfc
+.definelabel calculateItemMenuStrings,  0x800fe704
+.definelabel calculateCardMenuStrings,  0x800fe9f0
+.definelabel calculateMusicMenuStrings, 0x800fec30
+.definelabel calculateBirdramonMenuStrings,0x800fed64
+.definelabel calculateItemListStrings,  0x800feef0
+.definelabel isTextboxBusy,             0x800fe650
 
 .definelabel ITEM_MENU_POS, 0x8013027c
 .definelabel SHOP_ACTION_SELECTED, 0x80134f70
