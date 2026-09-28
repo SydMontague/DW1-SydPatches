@@ -176,11 +176,6 @@ namespace
         return false;
     }
 
-} // namespace
-
-extern "C"
-{
-
     bool shopFillSellItemList()
     {
         auto canSellAnything       = false;
@@ -204,8 +199,7 @@ extern "C"
 
         return canSellAnything;
     }
-
-    void tickItemMenu()
+    void tickItemMenu(int32_t)
     {
         auto menu = getItemMenuFromType();
 
@@ -258,7 +252,7 @@ extern "C"
         }
     }
 
-    void renderItemMenu()
+    void renderItemMenu(int32_t)
     {
         constexpr dtl::array<int16_t, 8> selectionCursorWidths{170, 202, 202, 170, 202, 146, 146, 170};
         const auto x        = UI_BOX_DATA[1].finalPos.x;
@@ -281,7 +275,10 @@ extern "C"
         renderSelectionCursor(x + 5, y + menu->cursorOffset * 18 + 17, selectionCursorWidths[ITEM_MENU_TYPE], 18, 5);
         renderItemMenuItemList(menu, x + 26, y + 19, x + 8, y + 18, 0);
     }
+} // namespace
 
+extern "C"
+{
     void tickItemMenuDescriptionBox()
     {
         constexpr auto mask = InputButtons::BUTTON_START | InputButtons::BUTTON_CROSS | InputButtons::BUTTON_TRIANGLE;
@@ -550,6 +547,82 @@ extern "C"
         SCRIPT_POINTER     = backup;
     }
 
+    void showShopkeepSelection(int32_t boxId, int32_t speaker, int32_t selectionCount, uint32_t* result)
+    {
+        showMapheadSelection(boxId, speaker, selectionCount, result, 0xFF);
+    }
+
+    void createItemMenu()
+    {
+        auto speaker = (ITEM_MENU_TYPE == 1 || ITEM_MENU_TYPE == 5) ? 0xFD : readPStat(0xFE);
+
+        RECT box;
+        setupBoxOrigin(speaker, &box);
+        auto* menu = getItemMenuFromType();
+        createTextbox(1, 0xF1, &ITEM_MENU_POS[ITEM_MENU_TYPE], &box, tickItemMenu, renderItemMenu);
+        registerTextbox(1, 9, 6, true, VRAMMode::FRONT_FULL);
+        initItemMenuBox(menu, 1, 9);
+        updateItemMenuStrings(menu, 9, 0);
+        SHOP_VARIABLE = 0;
+    }
+
+    void openDiscardItem()
+    {
+        switch (SCRIPT_STATE_2) {
+            case 0:
+            {
+                allocateItemMenuBox(&ITEM_MENU_RIGHT, INVENTORY_SIZE << 1, 6, 0x9a, 0x18, 6, 0x5a);
+                if (shopFillSellItemList() == 0) {
+                    setTrigger(3);
+                    writePStat(0xfe, 0xff);
+                    SCRIPT_STATE_2      = 2;
+                    SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::NONE;
+                }
+                else {
+                    SCRIPT_STATE_2      = 3;
+                    SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::NONE;
+                }
+                break;
+            }
+            case 2:
+            {
+                destroyItemMenuBox(&ITEM_MENU_RIGHT);
+                ACTIVE_INSTRUCTION = 0;
+                break;
+            }
+            case 3:
+            {
+                setInputRepeatMask(InputButtons::BUTTON_UP | InputButtons::BUTTON_DOWN);
+                ITEM_MENU_TYPE = 5;
+                createItemMenu();
+                SCRIPT_STATE_2 = 1;
+                break;
+            }
+            case 4:
+            {
+                setInputRepeatMask(0);
+                triggerBoxCloseFlag(1);
+                SCRIPT_STATE_2 = 2;
+                break;
+            }
+        }
+    }
+
+    ItemMenuBox* getItemMenuFromType(void)
+    {
+        switch (ITEM_MENU_TYPE) {
+            case 0:
+            case 2:
+            case 3:
+            case 4:
+            case 6: return ITEM_MENU_LEFT;
+            case 1:
+            case 5:
+            case 7: return ITEM_MENU_RIGHT;
+        }
+        return nullptr;
+    }
+
     void openShop()
     {
         const auto speaker = readPStat(0xFE);
@@ -600,7 +673,7 @@ extern "C"
                 createItemMenu();
                 showShopkeeperTextbox(8, speaker, 0);
                 SCRIPT_STATE_2      = 1;
-                SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::UNKNOWN;
+                SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::BACKGROUND;
                 break;
             }
             case 5:
@@ -611,7 +684,7 @@ extern "C"
                 createItemMenu();
                 showShopkeeperTextbox(9, speaker, 0);
                 SCRIPT_STATE_2      = 1;
-                SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::UNKNOWN;
+                SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::BACKGROUND;
                 break;
             }
             case 6:

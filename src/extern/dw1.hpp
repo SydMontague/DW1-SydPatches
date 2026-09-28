@@ -1571,7 +1571,7 @@ extern "C"
         NONE,
         CONFIRM,
         SELECTION,
-        UNKNOWN,
+        BACKGROUND,
     };
 
     struct TextboxData
@@ -1919,6 +1919,7 @@ extern "C"
     extern uint32_t HAS_BOUGHT_ANYTHING;
     extern uint32_t SCRIPT_NEXT_STATE_2;
     extern uint8_t* SCRIPT_POINTER;
+    extern dtl::array<RECT, 8> ITEM_MENU_POS;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -1938,6 +1939,13 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void showMapheadSelection(int32_t boxId,
+                              int32_t speaker,
+                              int32_t selectionCount,
+                              uint32_t* result,
+                              uint16_t sectionId);
+    void initItemMenuBox(ItemMenuBox* menu, int8_t param_2, uint8_t stringOffset);
+    void updateItemMenuStrings(ItemMenuBox* menu, int32_t lineStart, int32_t mode);
     void createTextbox(int32_t id,
                        uint8_t flags,
                        const RECT* textboxPos,

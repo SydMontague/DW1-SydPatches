@@ -154,10 +154,10 @@
 ;  jal setInputRepeatMask
 ;.org 0x800fc7f0
 ;  jal setInputRepeatMask
-.org 0x800fcbf4
-  jal setInputRepeatMask
-.org 0x800fcc18
-  jal setInputRepeatMask
+;.org 0x800fcbf4
+;  jal setInputRepeatMask
+;.org 0x800fcc18
+;  jal setInputRepeatMask
 .org 0x8010b768
   jal setInputRepeatMask
 .org 0x8010b7f8

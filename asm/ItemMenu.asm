@@ -1,17 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-;.org 0x800fc6f0
-;  jal shopFillSellItemList
-.org 0x800fcba0
-  jal shopFillSellItemList
-
-.org 0x800fcad0
-  li v0, tickItemMenu
-
-.org 0x800fcadc
-  li v0, renderItemMenu
-
 .org 0x800fd700
   li v0, tickItemMenuDescriptionBox
 
@@ -52,8 +41,8 @@
 ;  jal allocateItemMenuBox
 ;.org 0x800fc5b0
 ;  jal allocateItemMenuBox
-.org 0x800fcb98
-  jal allocateItemMenuBox
+;.org 0x800fcb98
+;  jal allocateItemMenuBox
 .org 0x8010b6b4
   jal allocateItemMenuBox
 .org 0x8010ba44
@@ -81,8 +70,8 @@
 ;  jal destroyItemMenuBox
 ;.org 0x800fc658
 ;  jal destroyItemMenuBox
-.org 0x800fcbe4
-  jal destroyItemMenuBox
+;.org 0x800fcbe4
+;  jal destroyItemMenuBox
 .org 0x8010b720
   jal destroyItemMenuBox
 .org 0x8010ba94
@@ -155,5 +144,47 @@
   jal createShopBitsBox
 .org 0x8010c348
   jal createShopBitsBox
+
+;.org 0x800fab3c
+;  jal getItemMenuFromType
+;.org 0x800faef8
+;  jal getItemMenuFromType
+;.org 0x800fafb8
+;  jal getItemMenuFromType
+;.org 0x800fb9b8
+;  jal getItemMenuFromType
+;.org 0x800fca80
+;  jal getItemMenuFromType
+.org 0x800fcfc8
+  jal getItemMenuFromType
+.org 0x800fd254
+  jal getItemMenuFromType
+.org 0x80107144
+  jal getItemMenuFromType
+.org 0x80107e78
+  jal getItemMenuFromType
+.org 0x80108174
+  jal getItemMenuFromType
+.org 0x8010823c
+  jal getItemMenuFromType
+
+.org 0x80105ce4
+  jal openDiscardItem
+
+;.org 0x800fc6b4
+;  jal createItemMenu
+;.org 0x800fc6f8
+;  jal createItemMenu
+;.org 0x800fcc04
+;  jal createItemMenu
+.org 0x8010b778
+  jal createItemMenu
+.org 0x8010bd9c
+  jal createItemMenu
+
+;.org 0x800fc67c
+;  jal showShopkeepSelection
+.org 0x8010b744
+  jal showShopkeepSelection
 
 .close

@@ -36,7 +36,6 @@
 .definelabel initializeTextbox,         0x8010020c
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
-.definelabel getItemMenuFromType,       0x800fcc40
 .definelabel isItemMenuBoxBusy,         0x800fcf88
 .definelabel createSingleCardShopMenu,  0x800fd244
 .definelabel createItemMenuAmountBox,   0x800fcfb8
@@ -60,11 +59,13 @@
 .definelabel scriptIdToEntityId,        0x80102144
 .definelabel setDialogueOwner,          0x800ff684
 .definelabel showTextboxReady,          0x80101ef8
-.definelabel showShopkeepSelection,     0x800fca14
-.definelabel createItemMenu,            0x800fca3c
 .definelabel createTextbox,             0x80100700
 .definelabel registerTextbox,           0x80100838
+.definelabel showMapheadSelection,      0x800ff6c0
+.definelabel initItemMenuBox,           0x800fcc98
+.definelabel updateItemMenuStrings,     0x800fccfc
 
+.definelabel ITEM_MENU_POS, 0x8013027c
 .definelabel SHOP_ACTION_SELECTED, 0x80134f70
 .definelabel HAS_BOUGHT_ANYTHING, 0x80134f74
 .definelabel SCRIPT_NEXT_STATE_2, 0x80135014
