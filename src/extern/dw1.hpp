@@ -1642,7 +1642,7 @@ extern "C"
     extern bool UPDATE_SHOP_BIT_BOX;
     extern GameState* GAME_STATE_PTR;
     extern dtl::array<TextboxData, 6> TEXTBOX_DATA;
-    extern ItemType SHOP_ITEM_TYPE;
+    extern uint8_t SHOP_ITEM_TYPE;
     extern ScriptTextboxMode SCRIPT_TEXTBOX_MODE;
     extern ItemMenuBox* ITEM_MENU_LEFT;
     extern ItemMenuBox* ITEM_MENU_RIGHT;
@@ -1978,7 +1978,6 @@ extern "C"
                                 int16_t spriteY,
                                 int32_t spriteType);
     void createSingleCardShopMenu(RECT* rect);
-    void createItemMenuAmountBox(RECT* rect);
     void createItemMenuDescriptionBox(ItemMenuBox* menu, RECT* rect, int32_t boxId);
     void itemMenuCursorTop(ItemMenuBox* menu, int32_t count, int32_t mode);
     void itemMenuCursorBottom(ItemMenuBox* menu, int32_t count, int32_t mode);

@@ -7,15 +7,6 @@
 .org 0x800fd70c
   li v0, renderItemMenuDescriptionBox
 
-.org 0x800fd1c8
-  li v0, tickItemMenuAmountBox
-  
-.org 0x800fd1d4
-  li v0, renderItemMenuAmountBox
-
-.org 0x800fd204
-  jal updateItemMenuAmountBoxString
-
 .org 0x800fd350
   li v0, tickSingleCardShop
 
@@ -155,8 +146,8 @@
 ;  jal getItemMenuFromType
 ;.org 0x800fca80
 ;  jal getItemMenuFromType
-.org 0x800fcfc8
-  jal getItemMenuFromType
+;.org 0x800fcfc8
+;  jal getItemMenuFromType
 .org 0x800fd254
   jal getItemMenuFromType
 .org 0x80107144
@@ -237,5 +228,10 @@
   jal initItemMenuBox
 .org 0x80107ddc
   jal initItemMenuBox
+
+;.org 0x800fac18
+;  jal createItemMenuAmountBox
+.org 0x80107f98
+  jal createItemMenuAmountBox
 
 .close

@@ -4,6 +4,7 @@
 #include "Helper.hpp"
 #include "Map.hpp"
 #include "Math.hpp"
+#include "Script.hpp"
 #include "Tamer.hpp"
 #include "UIElements.hpp"
 #include "constants.hpp"

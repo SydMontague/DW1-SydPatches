@@ -13,6 +13,7 @@
 #include "Math.hpp"
 #include "Model.hpp"
 #include "Partner.hpp"
+#include "Script.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
 #include "extern/BTL.hpp"

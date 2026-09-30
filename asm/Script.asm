@@ -18,10 +18,10 @@
 .org 0x80104640
   jal handleItemLoss
 
-.org 0x800dd1d8
-  jal dailyPStatTrigger
-.org 0x800dd6e0
-  jal dailyPStatTrigger
+;.org 0x800dd1d8
+;  jal dailyPStatTrigger
+;.org 0x800dd6e0
+;  jal dailyPStatTrigger
 .org 0x801033c0
   jal dailyPStatTrigger
 .org 0x80105a88

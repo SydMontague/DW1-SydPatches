@@ -177,10 +177,10 @@
 ;  jal playSound
 ;.org 0x800fba88
 ;  jal playSound
-.org 0x800fd210
-  jal playSound
-.org 0x800fd224
-  jal playSound
+;.org 0x800fd210
+;  jal playSound
+;.org 0x800fd224
+;  jal playSound
 .org 0x800fd3a8
   jal playSound
 .org 0x800fd3bc
