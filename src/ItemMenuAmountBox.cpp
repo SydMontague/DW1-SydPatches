@@ -193,7 +193,7 @@ extern "C"
     void createItemMenuAmountBox(RECT* rect)
     {
         auto menu      = getItemMenuFromType();
-        auto entry     = menu->scrollOffset + menu->cursorOffset * 2;
+        auto entry     = (menu->scrollOffset + menu->cursorOffset) * 2;
         SHOP_ITEM_TYPE = menu->itemList[entry];
         auto amount    = menu->itemList[entry + 1];
 
@@ -241,7 +241,7 @@ extern "C"
         ITEM_MENU_SUB_TEXTBOX_LINE = (TEXTBOX_DATA[0].activeBufferId ^ 1) * TEXTBOX_DATA[0].lineCount;
 
         rect->x += UI_BOX_DATA[1].finalPos.x;
-        rect->y += UI_BOX_DATA[1].finalPos.y;
+        rect->y += UI_BOX_DATA[1].finalPos.y + menu->cursorOffset * 18;
         createTextbox(3, 0xC1, &final, rect, tickItemMenuAmountBox, renderItemMenuAmountBox);
         registerTextbox(3, ITEM_MENU_SUB_TEXTBOX_LINE, 1, 0, VRAMMode::FRONT_FULL);
         updateItemMenuAmountBoxString();
