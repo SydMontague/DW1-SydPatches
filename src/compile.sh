@@ -43,5 +43,8 @@ FLAGS="-O3 -std=c++23 -T linker.ld -mabi=32 -march=r3000 -r -mel -nostdlib -mexp
 "$MIPS_CXX" UIBox.cpp AtlasFont.cpp BuffModel.cpp ThrownItem.cpp Main.cpp BattleEndBox.cpp VS/Intro.cpp VS/InitVS.cpp VS/DigimonAI.cpp VS/TimeoutWindow.cpp VS/SelectDigimon.cpp VS/SelectMapMode.cpp ItemMenu.cpp MonochromonMoodBubble.cpp Misc.cpp RecycleShop.cpp BitsBox.cpp ItemMenuAmountBox.cpp -o ../compiled/Cave5.lib $FLAGS
 "$MIPS_CXX" DebugMenu.cpp -o ../compiled/Cave6.lib $FLAGS
 "$MIPS_CXX" KAR/Curling.cpp -o ../compiled/KAR.lib $FLAGS
+"$MIPS_CXX" KAR/CurlingCollision.cpp -o ../compiled/KARCollision.lib $FLAGS
+"$MIPS_CXX" KAR/CurlingWalls.cpp -o ../compiled/KARWalls.lib $FLAGS
+"$MIPS_CXX" KAR/CurlingGeometry.cpp -o ../compiled/KARGeometry.lib $FLAGS
 
 cd -
