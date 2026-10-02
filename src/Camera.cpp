@@ -262,6 +262,7 @@ extern "C"
         DRAWING_OFFSET_X -= diffX;
         DRAWING_OFFSET_Y -= diffY;
 
+        cameraIsAtEdge();
         handleTileUpdate(0, true);
     }
 
