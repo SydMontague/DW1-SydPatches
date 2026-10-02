@@ -48,3 +48,4 @@
 .include "asm/ItemMenu.asm"
 .include "asm/MonochromonMoodBubble.asm"
 .include "asm/Misc.asm"
+.include "asm/Curling.asm"
