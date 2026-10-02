@@ -332,9 +332,9 @@ namespace
 
     void loadDigimonTexture(DigimonType type, ModelComponent* model)
     {
-        auto buffer = dtl::make_unique<dtl::array<uint8_t, 0x4800>>();
-        readFileSectors("CHDAT\\ALLTIM.TIM", buffer.get(), static_cast<uint32_t>(type) * 9, 9);
-        uploadModelTexture(reinterpret_cast<uint32_t*>(buffer.get()), model);
+        dtl::array<uint8_t, 0x4800> buffer;
+        readFileSectors("CHDAT\\ALLTIM.TIM", buffer.data(), static_cast<uint32_t>(type) * 9, 9);
+        uploadModelTexture(reinterpret_cast<uint32_t*>(buffer.data()), model);
     }
 
     ModelComponent* getNPCComponent(DigimonType type)
