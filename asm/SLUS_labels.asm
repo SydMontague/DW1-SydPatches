@@ -450,6 +450,11 @@
 // KAR_REL
 .definelabel KAR_tick, 0x800545c8
 .definelabel KAR_start, 0x80053c30
+.definelabel KAR_STONE_ROWS, 0x8005B5A0
+.definelabel KAR_MATCH_STATE, 0x80135244
+.definelabel KAR_collidePeggedStone, 0x8005757C
+.definelabel KAR_collideRestingStone, 0x800577BC
+.definelabel KAR_collideMovingStones, 0x80057C58
 
 // MOV_REL
 .definelabel MOV_startMovie, 0x80010620
