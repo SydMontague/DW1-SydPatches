@@ -357,7 +357,7 @@ namespace
             model.useCount--;
             if (model.useCount <= 0) {
                 model.digiType = DigimonType::INVALID; // NOLINT
-                if (model.mmdPtr != nullptr) libapi_free3(model.mmdPtr);
+                delete[] model.mmdPtr;
                 model.modelPtr     = nullptr;
                 model.animTablePtr = nullptr;
                 model.mmdPtr       = nullptr;
@@ -751,8 +751,8 @@ extern "C"
         auto entityType = getEntityType(entity);
         entity->type    = type;
         if (entityType == EntityType::NPC) {
-            entity->posData  = reinterpret_cast<PositionData*>(libapi_malloc3(boneCount * sizeof(PositionData)));
-            entity->momentum = reinterpret_cast<MomentumData*>(libapi_malloc3(boneCount * sizeof(MomentumData)));
+            entity->posData  = new PositionData[boneCount]; // TODO turn into RAII structure
+            entity->momentum = new MomentumData[boneCount]; // TODO turn into RAII structure
         }
         else if (entityType == EntityType::PARTNER) {
             entity->posData  = PARTNER_POSITION_DATA;
@@ -812,8 +812,8 @@ extern "C"
         auto* entity = ENTITY_TABLE.getEntityById(instanceId);
         if (entity == nullptr) return;
 
-        libapi_free3(entity->momentum);
-        libapi_free3(entity->posData);
+        delete[] entity->momentum;
+        delete[] entity->posData;
         ENTITY_TABLE.setEntity(instanceId, nullptr);
     }
 
@@ -958,7 +958,7 @@ extern "C"
             comp->digiType     = digimonType;
 
             auto fileSize = lookupFileSize(reinterpret_cast<char*>(pathBuffer));
-            comp->mmdPtr  = reinterpret_cast<uint8_t*>(libapi_malloc3((fileSize + 0x7FF) & 0xFFFFF800));
+            comp->mmdPtr  = new uint8_t[(fileSize + 0x7FF) & 0xFFFFF800]; // TODO turn into RAII structure
         }
         // TODO this is static data?
         if (entityType == EntityType::PLAYER) {

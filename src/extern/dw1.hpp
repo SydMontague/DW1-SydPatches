@@ -783,7 +783,7 @@ extern "C"
         int32_t useCount;
         TMDModel* modelPtr;
         int32_t* animTablePtr;
-        void* mmdPtr;
+        uint8_t* mmdPtr;
         int16_t pixelPage;
         int16_t clutPage;
         uint8_t pixelOffsetX;
