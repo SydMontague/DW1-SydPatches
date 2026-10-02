@@ -18,7 +18,6 @@ namespace
     {
         if (!IS_SCRIPT_PAUSED) return;
 
-        removeTamerItem();
         callScriptSection(0, 1245, 0);
     }
 
@@ -389,7 +388,6 @@ namespace
 
         EVOLUTION_TARGET = static_cast<int16_t>(target);
         HAS_USED_EVOITEM = true;
-        removeTamerItem();
         closeInventoryBoxes();
         Tamer_setState(6);
         Partner_setState(13);
