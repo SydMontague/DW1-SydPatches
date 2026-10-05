@@ -1980,7 +1980,6 @@ extern "C"
                                 int16_t spriteX,
                                 int16_t spriteY,
                                 int32_t spriteType);
-    void createItemMenuDescriptionBox(ItemMenuBox* menu, RECT* rect, int32_t boxId);
     void tickScript();
     void setDigimonRaised(DigimonType type);
     uint8_t* getScript(uint32_t scriptId);

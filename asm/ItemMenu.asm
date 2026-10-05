@@ -1,12 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800fd700
-  li v0, tickItemMenuDescriptionBox
-
-.org 0x800fd70c
-  li v0, renderItemMenuDescriptionBox
-
 .org 0x800fe394
   jal getShopkeeperLine
 .org 0x800ff728
@@ -142,8 +136,8 @@
 ;  jal getItemMenuFromType
 ;.org 0x800fcfc8
 ;  jal getItemMenuFromType
-.org 0x800fd254
-  jal getItemMenuFromType
+;.org 0x800fd254
+;  jal getItemMenuFromType
 .org 0x80107144
   jal getItemMenuFromType
 .org 0x80107e78
@@ -191,10 +185,10 @@
 
 ;.org 0x800fcb20
 ;  jal updateItemMenuStrings
-.org 0x800fd408
-  jal updateItemMenuStrings
-.org 0x800fd514
-  jal updateItemMenuStrings
+;.org 0x800fd408
+;  jal updateItemMenuStrings
+;.org 0x800fd514
+;  jal updateItemMenuStrings
 .org 0x801071e4
   jal updateItemMenuStrings
 .org 0x80107aa0
@@ -276,5 +270,10 @@
   jal itemMenuCursorDown
 .org 0x801099d0
   jal itemMenuCursorDown
+
+;.org 0x800fadbc
+;  jal createItemMenuDescriptionBox
+.org 0x801085e0
+  jal createItemMenuDescriptionBox
 
 .close

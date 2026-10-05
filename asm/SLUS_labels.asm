@@ -36,7 +36,6 @@
 .definelabel initializeTextbox,         0x8010020c
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
-.definelabel createItemMenuDescriptionBox,0x800fd61c
 .definelabel renderItemMenuSprite,      0x800fd7d8
 .definelabel renderItemMenuScrollBar,   0x800fd8d4
 .definelabel renderItemMenuItemList,    0x800fdc5c

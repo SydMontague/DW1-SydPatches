@@ -5,6 +5,7 @@
 #include "Input.hpp"
 #include "Inventory.hpp"
 #include "InventoryUI.hpp"
+#include "ItemDescriptionBox.hpp"
 #include "ItemMenuAmountBox.hpp"
 #include "RecycleShop.hpp"
 #include "Script.hpp"
@@ -183,25 +184,6 @@ namespace
 
 extern "C"
 {
-    void tickItemMenuDescriptionBox()
-    {
-        constexpr auto mask = InputButtons::BUTTON_START | InputButtons::BUTTON_CROSS | InputButtons::BUTTON_TRIANGLE;
-
-        if (UI_BOX_DATA[3].state != 1) return;
-        if (!isXPressedAfterDialogue()) return;
-        if (!isKeyDown(mask)) return;
-
-        triggerBoxCloseFlag(3);
-        playSound(0, 3);
-    }
-
-    void renderItemMenuDescriptionBox()
-    {
-        const auto& pos   = UI_BOX_DATA[3].finalPos;
-        const auto offset = TEXTBOX_DATA[3].lineOffset * 12;
-        renderStringNew(0, pos.x + 6, pos.y + 5, 252, 12, 704, offset + 256, 3, 1);
-    }
-
     void allocateItemMenuBox(ItemMenuBox** data,
                              uint32_t bufferSize,
                              int32_t numSlots,
