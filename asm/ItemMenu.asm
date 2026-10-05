@@ -233,4 +233,48 @@
 .org 0x80107f3c
   jal createSingleCardConfirmBox
 
+;.org 0x800facf8
+;  jal itemMenuCursorTop
+.org 0x8010801c
+  jal itemMenuCursorTop
+.org 0x80109368
+  jal itemMenuCursorTop
+.org 0x8010966c
+  jal itemMenuCursorTop
+
+;.org 0x800fad08
+;  jal itemMenuCursorUp
+.org 0x8010802c
+  jal itemMenuCursorUp
+.org 0x80108540
+  jal itemMenuCursorUp
+.org 0x8010937c
+  jal itemMenuCursorUp
+.org 0x80109680
+  jal itemMenuCursorUp
+.org 0x8010997c
+  jal itemMenuCursorUp
+
+;.org 0x800fad44
+;  jal itemMenuCursorBottom
+.org 0x80108068
+  jal itemMenuCursorBottom
+.org 0x801093b8
+  jal itemMenuCursorBottom
+.org 0x801096bc
+  jal itemMenuCursorBottom
+
+;.org 0x800fad54
+;  jal itemMenuCursorDown
+.org 0x80108078
+  jal itemMenuCursorDown
+.org 0x80108590
+  jal itemMenuCursorDown
+.org 0x801093cc
+  jal itemMenuCursorDown
+.org 0x801096d0
+  jal itemMenuCursorDown
+.org 0x801099d0
+  jal itemMenuCursorDown
+
 .close

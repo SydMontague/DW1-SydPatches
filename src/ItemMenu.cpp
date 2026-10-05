@@ -473,4 +473,63 @@ extern "C"
             }
         }
     }
+
+    void itemMenuCursorTop(ItemMenuBox* menu, int32_t count, int32_t mode)
+    {
+        itemMenuCursorMoveToTop(menu);
+        updateItemMenuStrings(menu, count, mode);
+    }
+
+    void itemMenuCursorUp(ItemMenuBox* menu, int32_t mode)
+    {
+        if (menu->scrollOffset + menu->cursorOffset == 0) {
+            playSound(0, 11);
+            return;
+        }
+
+        if (menu->cursorOffset != 0) {
+            menu->cursorOffset--;
+        }
+        else {
+            menu->scrollOffset--;
+
+            auto backup = menu->stringOffset[menu->numSlots - 1];
+            for (auto i = menu->numSlots - 1; i > 0; i--)
+                menu->stringOffset[i] = menu->stringOffset[i - 1];
+            menu->stringOffset[0] = backup;
+
+            updateItemMenuLine(menu, mode);
+        }
+
+        playSound(0, 2);
+    }
+
+    void itemMenuCursorBottom(ItemMenuBox* menu, int32_t count, int32_t mode)
+    {
+        itemMenuCursorMoveToBottom(menu);
+        updateItemMenuStrings(menu, count, mode);
+    }
+
+    void itemMenuCursorDown(ItemMenuBox* menu, int32_t mode)
+    {
+        if (menu->scrollOffset + menu->cursorOffset + 1 >= menu->itemCount) {
+            playSound(0, 11);
+            return;
+        }
+
+        if (menu->cursorOffset + 1 == menu->numSlots) {
+            menu->scrollOffset++;
+
+            auto backup = menu->stringOffset[0];
+            for (auto i = 1; i < menu->numSlots; i++)
+                menu->stringOffset[i - 1] = menu->stringOffset[i];
+            menu->stringOffset[menu->numSlots - 1] = backup;
+
+            updateItemMenuLine(menu, mode);
+        }
+        else
+            menu->cursorOffset++;
+
+        playSound(0, 2);
+    }
 }

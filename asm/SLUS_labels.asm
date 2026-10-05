@@ -37,10 +37,6 @@
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
 .definelabel createItemMenuDescriptionBox,0x800fd61c
-.definelabel itemMenuCursorTop,         0x800fd3dc
-.definelabel itemMenuCursorBottom,      0x800fd4e8
-.definelabel itemMenuCursorUp,          0x800fd428
-.definelabel itemMenuCursorDown,        0x800fd534
 .definelabel renderItemMenuSprite,      0x800fd7d8
 .definelabel renderItemMenuScrollBar,   0x800fd8d4
 .definelabel renderItemMenuItemList,    0x800fdc5c
@@ -65,6 +61,9 @@
 .definelabel calculateBirdramonMenuStrings,0x800fed64
 .definelabel calculateItemListStrings,  0x800feef0
 .definelabel isTextboxBusy,             0x800fe650
+.definelabel updateItemMenuLine,        0x800ff0fc
+.definelabel itemMenuCursorMoveToTop,   0x800ff310
+.definelabel itemMenuCursorMoveToBottom,0x800ff2a8
 
 .definelabel ITEM_MENU_POS, 0x8013027c
 .definelabel SHOP_ACTION_SELECTED, 0x80134f70
@@ -527,6 +526,7 @@
 .definelabel strlen,  0x8009121c
 .definelabel strrchr, 0x8009122c
 .definelabel memcpy,  0x8009124c
+.definelabel memmove, 0x80091b2c
 .definelabel memset,  0x8009125c
 .definelabel sprintf, 0x8009129c
 .definelabel printf,  0x8009128c

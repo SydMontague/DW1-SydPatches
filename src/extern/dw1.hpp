@@ -1939,6 +1939,9 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void updateItemMenuLine(ItemMenuBox* menu, int32_t mode);
+    void itemMenuCursorMoveToTop(ItemMenuBox* menu);
+    void itemMenuCursorMoveToBottom(ItemMenuBox* menu);
     bool isTextboxBusy(int32_t id);
     void calculateItemMenuStrings(ItemMenuBox* menu, int id, bool withNewLine);
     void calculateCardMenuStrings(ItemMenuBox* menu, int id, bool withNewLine);
@@ -1978,10 +1981,6 @@ extern "C"
                                 int16_t spriteY,
                                 int32_t spriteType);
     void createItemMenuDescriptionBox(ItemMenuBox* menu, RECT* rect, int32_t boxId);
-    void itemMenuCursorTop(ItemMenuBox* menu, int32_t count, int32_t mode);
-    void itemMenuCursorBottom(ItemMenuBox* menu, int32_t count, int32_t mode);
-    void itemMenuCursorUp(ItemMenuBox* menu, int32_t mode);
-    void itemMenuCursorDown(ItemMenuBox* menu, int32_t mode);
     void tickScript();
     void setDigimonRaised(DigimonType type);
     uint8_t* getScript(uint32_t scriptId);
