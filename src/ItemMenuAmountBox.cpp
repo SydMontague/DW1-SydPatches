@@ -8,6 +8,7 @@
 #include "RecycleShop.hpp"
 #include "Script.hpp"
 #include "Sound.hpp"
+#include "constants.hpp"
 #include "extern/dw1.hpp"
 
 // TODO: use AtlasStrings
@@ -19,8 +20,6 @@ namespace
         int16_t posY;
         uint16_t width;
     };
-
-    constexpr dtl::array<int32_t, 5> CARD_PRICES{5000, 1500, 500, 100, 50}; // TODO: duplicate with ItemMenu.cpp, unify
 
     constexpr dtl::array<ShopLineData, 5> AMOUNT_BOX_LINE_DATA{{
         {
@@ -80,7 +79,7 @@ namespace
         end[0] = 0x1a;
         end[1] = 0;
 
-        auto value = dtl::min(SHOP_ITEM_PRICE * SHOP_AMOUNT, 999999U);
+        auto value = dtl::min(SHOP_ITEM_PRICE * SHOP_AMOUNT, MAX_MONEY);
         end        = intToStringSJIS(end + 2, value, 6, 0);
         end[0]     = 0;
         end[1]     = 0;
@@ -117,13 +116,13 @@ namespace
 
             if (ITEM_MENU_TYPE >= 3) {
                 auto cardType = static_cast<int32_t>(SHOP_ITEM_TYPE);
-                MONEY         = dtl::min(MONEY + SHOP_AMOUNT * SHOP_ITEM_PRICE, 999999U);
+                MONEY         = dtl::min(MONEY + SHOP_AMOUNT * SHOP_ITEM_PRICE, MAX_MONEY);
                 setCardAmount(cardType, getCardAmount(cardType) - SHOP_AMOUNT);
                 speaker        = readPStat(254);
                 SCRIPT_STATE_2 = 4;
             }
             else if (ITEM_MENU_TYPE == 1) {
-                MONEY = dtl::min(MONEY + SHOP_AMOUNT * SHOP_ITEM_PRICE, 999999U);
+                MONEY = dtl::min(MONEY + SHOP_AMOUNT * SHOP_ITEM_PRICE, MAX_MONEY);
                 removeItem(static_cast<ItemType>(SHOP_ITEM_TYPE), SHOP_AMOUNT);
                 speaker        = readPStat(254);
                 SCRIPT_STATE_2 = 7;
@@ -134,7 +133,7 @@ namespace
                     price         = (SHOP_ITEM_PRICE * 90) / 100;
                     SHOP_VARIABLE = SHOP_AMOUNT * (SHOP_ITEM_PRICE - price);
                 }
-                MONEY = dtl::max(MONEY - SHOP_AMOUNT * price, 0U);
+                MONEY = dtl::max(MONEY - SHOP_AMOUNT * price, 0);
                 giveItem(static_cast<ItemType>(SHOP_ITEM_TYPE), SHOP_AMOUNT);
                 if (ITEM_MENU_TYPE == 2) {
                     auto id = getRecycleId(static_cast<ItemType>(SHOP_ITEM_TYPE));
@@ -233,7 +232,7 @@ extern "C"
             SHOP_ITEM_PRICE = getItem(static_cast<ItemType>(SHOP_ITEM_TYPE))->value;
             auto count      = getItemCount(static_cast<ItemType>(SHOP_ITEM_TYPE));
             MAX_SHOP_AMOUNT = dtl::min(99U - count, static_cast<uint32_t>(MAX_SHOP_AMOUNT));
-            MAX_SHOP_AMOUNT = dtl::min(MONEY / SHOP_ITEM_PRICE, static_cast<uint32_t>(MAX_SHOP_AMOUNT));
+            MAX_SHOP_AMOUNT = dtl::clamp(MONEY / SHOP_ITEM_PRICE, 0, static_cast<int32_t>(MAX_SHOP_AMOUNT));
         }
 
         SHOP_AMOUNT = 1;

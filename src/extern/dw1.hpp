@@ -1638,7 +1638,7 @@ extern "C"
     extern size_t ARRAY_SECTION_OFFSET;
     extern uint8_t SHOP_AMOUNT;
     extern uint8_t MAX_SHOP_AMOUNT;
-    extern uint32_t SHOP_ITEM_PRICE;
+    extern int32_t SHOP_ITEM_PRICE;
     extern bool UPDATE_SHOP_BIT_BOX;
     extern GameState* GAME_STATE_PTR;
     extern dtl::array<TextboxData, 6> TEXTBOX_DATA;
@@ -1798,7 +1798,7 @@ extern "C"
     extern uint8_t TALKED_TO_ENTITY;
     extern uint16_t CURRENT_SCRIPT_ID;
     extern uint8_t PREVIOUS_EXIT;
-    extern uint32_t MONEY;
+    extern int32_t MONEY;
     extern uint8_t TEXTBOX_OPEN_TIMER;
     extern uint8_t SKIP_DAYTIME_TRANSITION;
     extern uint8_t ACTIVE_BGM_FONT;
@@ -1977,7 +1977,6 @@ extern "C"
                                 int16_t spriteX,
                                 int16_t spriteY,
                                 int32_t spriteType);
-    void createSingleCardShopMenu(RECT* rect);
     void createItemMenuDescriptionBox(ItemMenuBox* menu, RECT* rect, int32_t boxId);
     void itemMenuCursorTop(ItemMenuBox* menu, int32_t count, int32_t mode);
     void itemMenuCursorBottom(ItemMenuBox* menu, int32_t count, int32_t mode);

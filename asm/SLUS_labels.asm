@@ -36,7 +36,6 @@
 .definelabel initializeTextbox,         0x8010020c
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
-.definelabel createSingleCardShopMenu,  0x800fd244
 .definelabel createItemMenuDescriptionBox,0x800fd61c
 .definelabel itemMenuCursorTop,         0x800fd3dc
 .definelabel itemMenuCursorBottom,      0x800fd4e8

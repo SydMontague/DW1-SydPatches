@@ -8,6 +8,7 @@
 #include "ItemMenuAmountBox.hpp"
 #include "RecycleShop.hpp"
 #include "Script.hpp"
+#include "SingleCardConfirmMenu.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
 #include "extern/dtl/algorithm.hpp"
@@ -15,43 +16,7 @@
 
 namespace
 {
-
-    struct CardShopLineData
-    {
-        int16_t uvX;
-        int16_t uvY;
-        int16_t posX;
-        int16_t posY;
-        int16_t width;
-    };
-
     constexpr auto BUYABLE_TRIGGER_START = 0x180;
-
-    constexpr dtl::array<CardShopLineData, 3> CARD_SHOP_LINE_DATA{{
-        {
-            .uvX   = 0,
-            .uvY   = 0,
-            .posX  = 4,
-            .posY  = 2,
-            .width = 96,
-        },
-        {
-            .uvX   = 0,
-            .uvY   = 12,
-            .posX  = 14,
-            .posY  = 18,
-            .width = 36,
-        },
-        {
-            .uvX   = 36,
-            .uvY   = 12,
-            .posX  = 68,
-            .posY  = 18,
-            .width = 36,
-        },
-    }};
-
-    constexpr dtl::array<int32_t, 5> CARD_PRICES{5000, 1500, 500, 100, 50};
 
     bool readSelectedItemMerit()
     {
@@ -70,36 +35,6 @@ namespace
         SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::NONE;
         playSound(0, 3);
         return true;
-    }
-
-    int32_t getShopkeeperScriptID()
-    {
-        constexpr dtl::array<DigimonType, 12> SHOPKEEPER_TYPES{
-            DigimonType::NPC_PATAMON,
-            DigimonType::NPC_UNIMON,
-            DigimonType::NPC_BIYOMON,
-            DigimonType::NPC_MONOCHROMON,
-            DigimonType::NPC_DEVIMON,
-            DigimonType::NPC_MAMEMON,
-            DigimonType::NPC_NUMEMON,
-            DigimonType::NPC_MOJYAMON,
-            DigimonType::MARKET_MANAGER,
-            DigimonType::BETAMON,
-            DigimonType::INVALID,
-            DigimonType::TAMER,
-        };
-
-        const auto speaker = readPStat(0xFE);
-        if (speaker == 0xFF) return 0x4CE;
-
-        const auto entityId = scriptIdToEntityId(speaker);
-        if (entityId == 0xFF) return 0x4C4;
-
-        const auto type = ENTITY_TABLE.getEntityById(entityId)->type;
-        for (auto i = 0; i < SHOPKEEPER_TYPES.size(); i++)
-            if (type == SHOPKEEPER_TYPES[i]) return 0x4C4 + i;
-
-        return 0x4C4;
     }
 
     void shopFillBuyItemList()
@@ -182,7 +117,7 @@ namespace
         if (isKeyDown(InputButtons::BUTTON_CROSS)) {
             RECT rect = ITEM_MENU_DESCRIPTION_RECTS[ITEM_MENU_TYPE];
             if (ITEM_MENU_TYPE == 5)
-                createSingleCardShopMenu(&rect);
+                createSingleCardConfirmBox(&rect);
             else if (ITEM_MENU_TYPE == 7)
                 readSelectedItemMerit();
             else
@@ -267,82 +202,6 @@ extern "C"
         renderStringNew(0, pos.x + 6, pos.y + 5, 252, 12, 704, offset + 256, 3, 1);
     }
 
-    void tickSingleCardShop()
-    {
-        if (UI_BOX_DATA[3].state != 1) return;
-        if (!isXPressedAfterDialogue()) return;
-
-        if (isKeyDown(InputButtons::BUTTON_TRIANGLE)) {
-            triggerBoxCloseFlag(3);
-            playSound(0, 4);
-        }
-        else if (isKeyDown(InputButtons::BUTTON_LEFT)) {
-            SHOP_AMOUNT = 0;
-            playSound(0, 2);
-        }
-        else if (isKeyDown(InputButtons::BUTTON_RIGHT)) {
-            SHOP_AMOUNT = 1;
-            playSound(0, 2);
-        }
-        else if (isKeyDown(InputButtons::BUTTON_CROSS)) {
-            triggerBoxCloseFlag(3);
-            if (SHOP_AMOUNT != 0)
-                playSound(0, 4);
-            else {
-                const auto cardType = static_cast<uint8_t>(SHOP_ITEM_TYPE);
-                if (ITEM_MENU_TYPE == 5) {
-                    writePStat(0xFE, cardType);
-                    unsetTrigger(3);
-                    SCRIPT_STATE_2 = 4;
-                    playSound(0, 3);
-                }
-                else {
-                    auto menu   = getItemMenuFromType();
-                    auto amount = getCardAmount(cardType);
-                    setCardAmount(cardType, amount + 1);
-                    MONEY -= CARD_PRICES[CARD_DATA[cardType].rarity];
-                    GAME_STATE_PTR->dailySingleCards[menu->cursorOffset] = 0xFF;
-                    UPDATE_SHOP_BIT_BOX                                  = 1;
-                    SCRIPT_STATE_2                                       = 4;
-                    playShopSoundOnlyInSavannah();
-                }
-            }
-        }
-    }
-
-    void renderSingleCardShop()
-    {
-        const auto posX       = UI_BOX_DATA[3].finalPos.x + 4;
-        const auto posY       = UI_BOX_DATA[3].finalPos.y + 3;
-        const auto lineOffset = TEXTBOX_DATA[3].lineOffset * 12;
-
-        for (const auto& entry : CARD_SHOP_LINE_DATA) {
-            renderStringNew(0,
-                            posX + entry.posX,
-                            posY + entry.posY,
-                            entry.width,
-                            12,
-                            (entry.uvX / 4) + 704,
-                            lineOffset + entry.uvY + 256,
-                            3,
-                            1);
-        }
-        renderSelectionCursor(posX + 8 + SHOP_AMOUNT * 47, posY + 18, 40, 14, 3);
-    }
-
-    uint8_t* resolveMapHeadEntry(uint32_t sectionId, int32_t line)
-    {
-        auto script = getScript(0);
-        auto offset = getScriptSection(script, sectionId);
-        return script + *reinterpret_cast<uint16_t*>(offset + line * 4 + 2) + 2;
-    }
-
-    uint8_t* getShopkeeperLine(int32_t line)
-    {
-        auto scriptId = getShopkeeperScriptID();
-        return resolveMapHeadEntry(scriptId, line);
-    }
-
     void allocateItemMenuBox(ItemMenuBox** data,
                              uint32_t bufferSize,
                              int32_t numSlots,
@@ -371,15 +230,7 @@ extern "C"
 
     void showShopkeeperTextbox(int32_t line, int32_t speaker, int32_t textboxId)
     {
-        if (textboxId == 0 && speaker != 0xFE) setDialogueOwner(speaker);
-
-        auto backup    = SCRIPT_POINTER;
-        SCRIPT_POINTER = getShopkeeperLine(line);
-        if (speaker == 0xFE) speaker = 0xFF;
-
-        showTextboxReady(textboxId, speaker);
-        ACTIVE_INSTRUCTION = 100;
-        SCRIPT_POINTER     = backup;
+        showMapheadTextbox(line, speaker, textboxId, 0xFF);
     }
 
     void showShopkeepSelection(int32_t boxId, int32_t speaker, int32_t selectionCount, uint32_t* result)

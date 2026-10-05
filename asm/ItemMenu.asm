@@ -7,12 +7,6 @@
 .org 0x800fd70c
   li v0, renderItemMenuDescriptionBox
 
-.org 0x800fd350
-  li v0, tickSingleCardShop
-
-.org 0x800fd35c
-  li v0, renderSingleCardShop
-
 .org 0x800fe394
   jal getShopkeeperLine
 .org 0x800ff728
@@ -233,5 +227,10 @@
 ;  jal createItemMenuAmountBox
 .org 0x80107f98
   jal createItemMenuAmountBox
+
+;.org 0x800fac38
+;  jal createSingleCardConfirmBox
+.org 0x80107f3c
+  jal createSingleCardConfirmBox
 
 .close

@@ -7,6 +7,40 @@
 #include "extern/dtl/vector.hpp"
 #include "extern/dw1.hpp"
 
+namespace
+{
+    int32_t getShopkeeperScriptID()
+    {
+        constexpr dtl::array<DigimonType, 12> SHOPKEEPER_TYPES{
+            DigimonType::NPC_PATAMON,
+            DigimonType::NPC_UNIMON,
+            DigimonType::NPC_BIYOMON,
+            DigimonType::NPC_MONOCHROMON,
+            DigimonType::NPC_DEVIMON,
+            DigimonType::NPC_MAMEMON,
+            DigimonType::NPC_NUMEMON,
+            DigimonType::NPC_MOJYAMON,
+            DigimonType::MARKET_MANAGER,
+            DigimonType::BETAMON,
+            DigimonType::INVALID,
+            DigimonType::TAMER,
+        };
+
+        const auto speaker = readPStat(0xFE);
+        if (speaker == 0xFF) return 0x4CE;
+
+        const auto entityId = scriptIdToEntityId(speaker);
+        if (entityId == 0xFF) return 0x4C4;
+
+        const auto type = ENTITY_TABLE.getEntityById(entityId)->type;
+        for (auto i = 0; i < SHOPKEEPER_TYPES.size(); i++)
+            if (type == SHOPKEEPER_TYPES[i]) return 0x4C4 + i;
+
+        return 0x4C4;
+    }
+
+} // namespace
+
 extern "C"
 {
     int32_t getScriptSyncBit()
@@ -95,5 +129,31 @@ extern "C"
         // vanilla compares against a list of Digimon IDs, but why do that when we can just check the data?
         auto level = getDigimonData(PARTNER_ENTITY.type)->level;
         return level == Level::FRESH || level == Level::IN_TRAINING;
+    }
+
+    uint8_t* resolveMapHeadEntry(uint32_t sectionId, int32_t line)
+    {
+        auto script = getScript(0);
+        auto offset = getScriptSection(script, sectionId);
+        return script + *reinterpret_cast<uint16_t*>(offset + line * 4 + 2) + 2;
+    }
+
+    uint8_t* getShopkeeperLine(int32_t line)
+    {
+        auto scriptId = getShopkeeperScriptID();
+        return resolveMapHeadEntry(scriptId, line);
+    }
+
+    void showMapheadTextbox(int32_t line, int32_t speaker, int32_t textboxId, int32_t sectionId)
+    {
+        if (textboxId == 0 && speaker != 0xFE) setDialogueOwner(speaker);
+
+        auto backup    = SCRIPT_POINTER;
+        SCRIPT_POINTER = sectionId == 0xFF ? getShopkeeperLine(line) : resolveMapHeadEntry(sectionId, line);
+        if (speaker == 0xFE) speaker = 0xFF;
+
+        showTextboxReady(textboxId, speaker);
+        ACTIVE_INSTRUCTION = 100;
+        SCRIPT_POINTER     = backup;
     }
 }

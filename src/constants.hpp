@@ -1,3 +1,5 @@
+#pragma once
+
 #include "extern/stddef.hpp"
 
 /*
@@ -32,6 +34,8 @@ constexpr auto MIN_MONEY       = 0;
 constexpr auto MAX_MONEY       = 999999;
 constexpr auto MIN_TAMER_LEVEL = 0;
 constexpr auto MAX_TAMER_LEVEL = 10;
+
+constexpr dtl::array<int32_t, 5> CARD_PRICES{5000, 1500, 500, 100, 50}; // TODO: duplicate with ItemMenu.cpp, unify
 
 /*
  * User facing strings go here.

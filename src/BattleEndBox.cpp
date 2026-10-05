@@ -10,6 +10,7 @@
 #include "UIBox.hpp"
 #include "UIElements.hpp"
 #include "VanillaText.hpp"
+#include "constants.hpp"
 #include "extern/BTL.hpp"
 #include "extern/dtl/unique_ptr.hpp"
 #include "extern/dw1.hpp"
@@ -130,7 +131,7 @@ namespace
             MONEY += 1;
         }
 
-        MONEY = min(MONEY, 999999);
+        MONEY = min(MONEY, MAX_MONEY);
         if (bitsToGain == 0) playSound(0, 23);
     }
 
