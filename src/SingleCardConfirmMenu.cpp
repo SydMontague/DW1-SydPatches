@@ -114,7 +114,7 @@ extern "C"
     int32_t createSingleCardConfirmBox(RECT* rect)
     {
         auto menu      = getItemMenuFromType();
-        auto entry     = menu->scrollOffset + menu->cursorOffset * 2;
+        auto entry     = (menu->scrollOffset + menu->cursorOffset) * 2;
         SHOP_ITEM_TYPE = menu->itemList[entry];
         auto amount    = menu->itemList[entry + 1];
 
