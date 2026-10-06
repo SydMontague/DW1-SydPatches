@@ -636,17 +636,6 @@
   jal startAnimation
 .org 0x800555e8
   jal startAnimation
-.org 0x80058780
-  jal startAnimation
-.org 0x800587b4
-  jal startAnimation
-.org 0x80058a90
-  jal startAnimation
-.org 0x80058ac4
-  jal startAnimation
-.org 0x80058ae8
-  jal startAnimation
-
 .close
 
 .open "work/DIGIMON/EAB_REL.BIN",0x80060000

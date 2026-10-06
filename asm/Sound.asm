@@ -677,12 +677,7 @@
   jal playSound2
 .org 0x80055958
   jal playSound2
-.org 0x80059628
-  jal playSound2
-.org 0x80059638
-  jal playSound2
-
-.close 
+.close
 
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

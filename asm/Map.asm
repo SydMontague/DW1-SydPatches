@@ -146,13 +146,6 @@
 .open "work/DIGIMON/KAR_REL.BIN",0x80053800
 .psx
 
-.org 0x80056890
-  jal setMapObjectsFlag
-.org 0x80056950
-  jal setMapObjectsFlag
-.org 0x800569a8
-  jal setMapObjectsFlag
-
 .org 0x80054e10
   jal uploadMapTileImages
 .org 0x80055520
@@ -161,9 +154,6 @@
   jal uploadMapTileImages
 .org 0x800558bc
   jal uploadMapTileImages
-.org 0x80059520
-  jal uploadMapTileImages
-
 .close
 
 .open "work/DIGIMON/TRN_REL.BIN",0x80088800

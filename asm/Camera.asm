@@ -97,14 +97,8 @@
   jal tickCameraMoveTo
 .org 0x80055860
   jal tickCameraMoveTo
-.org 0x800594c4
-  jal tickCameraMoveTo
-
 .org 0x80055378
   jal moveCameraByDiff
-
-.org 0x8005666c
-  jal moveCameraByOffset
 
 .close
 

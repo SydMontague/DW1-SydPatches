@@ -19,6 +19,8 @@ struct CurlingStone;
 struct Vector;
 struct SVector;
 
+const CurlingStone& KAR_getTallyStone();
+
 extern "C"
 {
     void KAR_tickStones(int32_t instanceId);
