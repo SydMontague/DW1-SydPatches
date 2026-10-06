@@ -18,9 +18,12 @@ struct CurlingStone
     uint8_t reserved12[0x02];
     Vector target;
     GsDOBJ2 object;
-    uint8_t reserved34[0x62];
+    GsCOORDINATE2 coordinate;
+    uint8_t reserved84[0x10];
+    int16_t rotationX;
     int16_t selectionPhase;
-    uint8_t reserved98[0x04];
+    int16_t rotationZ;
+    int16_t reserved9A;
     Vector position;
 };
 
@@ -28,7 +31,9 @@ struct CurlingStoneRow
 {
     int8_t score;
     int8_t thrown;
-    uint8_t reserved02[0x06];
+    int16_t shotPower;
+    uint16_t plannedStone;
+    uint8_t reserved06[0x02];
     dtl::array<CurlingStone, 5> stones;
 };
 
@@ -48,6 +53,9 @@ extern int8_t KAR_CURRENT_PLAYER;
 extern uint32_t* KAR_MODEL_DATA;
 extern int32_t KAR_MATCH_STATE;
 extern dtl::array<int8_t, 3> KAR_PEGGED_MODEL_IDS;
+extern uint8_t KAR_OPPONENT_ENTITY;
+extern int8_t KAR_HINT_STATE;
+extern CurlingStone KAR_PREVIOUS_PLAYER_STONE;
 
 // Vanilla passes Vector/KarPos by value across O32 argument registers and the stack.
 static_assert(sizeof(void*) == 4);
@@ -93,3 +101,9 @@ static_assert(__is_standard_layout(decltype(KAR_PEGGED_MODEL_IDS)) &&
               __is_trivially_copyable(decltype(KAR_PEGGED_MODEL_IDS)));
 static_assert(sizeof(KAR_PEGGED_MODEL_IDS) == 3 && alignof(decltype(KAR_PEGGED_MODEL_IDS)) == 1);
 static_assert(__builtin_offsetof(decltype(KAR_PEGGED_MODEL_IDS), elements) == 0);
+
+static_assert(__builtin_offsetof(CurlingStone, coordinate) == 0x34);
+static_assert(__builtin_offsetof(CurlingStone, rotationX) == 0x94 &&
+              __builtin_offsetof(CurlingStone, rotationZ) == 0x98);
+static_assert(__builtin_offsetof(CurlingStoneRow, shotPower) == 2 &&
+              __builtin_offsetof(CurlingStoneRow, plannedStone) == 4);

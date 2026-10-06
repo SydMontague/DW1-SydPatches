@@ -1,19 +1,28 @@
 .open "work/DIGIMON/KAR_REL.BIN",0x80053800
 .psx
 
-; Keep the stone tick in its original allocation and retarget its only callback below.
-.org 0x80053CD0
-.area 0x80054048-.
-  .importobj "compiled/KARMovement.lib"
+.org 0x80053840
+.area 0x80053878-.
+  .importobj "compiled/KAROrdering.lib"
 
-  .notice "KAR tick space left: " + (0x80054048-.) + " bytes"
-  .fill 0x80054048-.
+  .notice "KAR ordering space left: " + (0x80053878-.) + " bytes"
+  .fill 0x80053878-.
 .endarea
 
-; The replaced scroll/marker/physics/aiming region also holds the geometry helpers.
-; Every surviving caller below remains symbolic; no live gap exists between these allocations.
-.org 0x80056590
-.area 0x80058B00-.
+; The replaced stone tick and scene regions are contiguous; both callbacks remain symbolic.
+.org 0x80053CD0
+.area 0x80054490-.
+  .importobj "compiled/KARMovement.lib"
+  .importobj "compiled/KARRender.lib"
+
+  .notice "KAR stone tick/scene space left: " + (0x80054490-.) + " bytes"
+  .fill 0x80054490-.
+.endarea
+
+; All replaced gameplay/rendering allocations are contiguous, with every surviving caller retargeted below.
+.org 0x80055A94
+.area 0x8005AB10-.
+  .importobj "compiled/KARHud.lib"
   .importobj "compiled/KARGeometry.lib"
   .importobj "compiled/KARRingMarkers.lib"
   .importobj "compiled/KARCollisionFlow.lib"
@@ -22,34 +31,31 @@
   .importobj "compiled/KARCollision.lib"
   .importobj "compiled/KARWalls.lib"
   .importobj "compiled/KARAiming.lib"
-
-  .notice "KAR movement/aiming space left: " + (0x80058B00-.) + " bytes"
-  .fill 0x80058B00-.
-.endarea
-
-.org 0x80059040
-.area 0x80059760-.
+  .importobj "compiled/KARHints.lib"
   .importobj "compiled/KARScoring.lib"
-
-  .notice "KAR scoring space left: " + (0x80059760-.) + " bytes"
-  .fill 0x80059760-.
-.endarea
-
-; The replaced registration and geometry regions are contiguous, with all callers retargeted.
-.org 0x8005A7E8
-.area 0x8005A97C-.
+  .importobj "compiled/KAROpponent.lib"
+  .importobj "compiled/KARHintPages.lib"
+  .importobj "compiled/KAROpponentShot.lib"
   .importobj "compiled/KAR.lib"
   .importobj "compiled/KARAimScroll.lib"
+  .importobj "compiled/KARSprite.lib"
 
-  .notice "KAR classifier/scroll space left: " + (0x8005A97C-.) + " bytes"
-  .fill 0x8005A97C-.
+  .notice "KAR gameplay/rendering space left: " + (0x8005AB10-.) + " bytes"
+  .fill 0x8005AB10-.
 .endarea
 
-; C++ constants replace the scoring zones, ring objects and marker zones.
-.org 0x8005B438
-.area 0x8005B478-.
-  .notice "KAR ring table space left: " + (0x8005B478-.) + " bytes"
-  .fill 0x8005B478-.
+; The hint helper owns the shared immutable page offsets.
+.org 0x8005B04C
+.area 0x8005B058-.
+  .notice "KAR penguin hint offset space left: " + (0x8005B058-.) + " bytes"
+  .fill 0x8005B058-.
+.endarea
+
+; Private C++ data replaces the shot priorities, hint offsets, rings, sprites, glyphs and view templates.
+.org 0x8005B40C
+.area 0x8005B5A0-.
+  .notice "KAR constant data space left: " + (0x8005B5A0-.) + " bytes"
+  .fill 0x8005B5A0-.
 .endarea
 
 ; The scoring import owns the thrown-stone order for this overlay lifetime.
@@ -59,13 +65,43 @@
   .fill 0x800639EC-.
 .endarea
 
-; KAR_start registers this callback with addObject; preserve the intervening instructions.
+.org 0x80053C64
+  jal KAR_initializeOrderingTables
+
+; KAR_start callback: preserve intervening instructions and original delay slots.
+
 .org 0x80053C88
   lui a2, hi(KAR_tickStones)
 .org 0x80053C98
   addiu a2, a2, lo(KAR_tickStones)
 
+; KAR_start scene callback: the low half remains in the addObject delay slot.
+
+.org 0x80053C8C
+  lui a3, hi(KAR_renderScene)
+.org 0x80053CA0
+  addiu a3, a3, lo(KAR_renderScene)
+
 ; Retarget surviving vanilla callers; preserve the original delay slots.
+
+.org 0x800545D8
+  jal KAR_renderAimArrow
+
+.org 0x800545E0
+  jal KAR_renderStoneCursor
+
+.org 0x800545E8
+  jal KAR_renderScores
+
+.org 0x800545F0
+  jal KAR_renderPowerMeter
+
+.org 0x800545F8
+  jal KAR_renderReadyPrompt
+
+.org 0x80054600
+  jal KAR_renderNamePlates
+
 .org 0x80054608
   jal KAR_handleAimScroll
 
@@ -74,6 +110,20 @@
 
 .org 0x80054618
   jal KAR_checkStonesStopped
+
+.org 0x80054790
+  jal KAR_tickYesNoPrompt
+
+.org 0x800548E4
+  jal KAR_tickHintBox
+.org 0x80054AF8
+  jal KAR_tickHintBox
+.org 0x80054F48
+  jal KAR_tickHintBox
+.org 0x80055544
+  jal KAR_tickHintBox
+.org 0x80055A2C
+  jal KAR_tickHintBox
 
 .org 0x8005499C
   jal KAR_beginAiming
@@ -112,12 +162,7 @@
 .org 0x8005547C
   jal KAR_tickScoreTally
 
-.org 0x80055EE4
-  jal KAR_rotatePoint
-
-.org 0x8005A250
-  jal KAR_distance
-.org 0x8005A738
-  jal KAR_distance
+.org 0x80055994
+  jal KAR_chooseOpponentShot
 
 .close

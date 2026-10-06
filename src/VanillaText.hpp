@@ -1,4 +1,6 @@
 #pragma once
+
+#include "extern/dtl/array.hpp"
 #include "extern/dw1.hpp"
 #include "extern/stddef.hpp"
 
@@ -25,6 +27,8 @@ constexpr dtl::array<RGB8, 17> TEXT_COLORS{{
 
 extern "C"
 {
+    [[deprecated]]
+    void drawString(const char* string, int32_t x, int32_t y);
     void drawEntityText(int32_t color, int32_t digitCount, int32_t x, int32_t y, int32_t value, int32_t layer);
     [[deprecated("renderStringNew")]]
     void renderString(int32_t colorId,

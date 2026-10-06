@@ -489,24 +489,6 @@
 .org 0x8006a5fc
   jal setPosDataPolyFT4
 
-.close 
-
-.open "work/DIGIMON/KAR_REL.BIN",0x80053800
-.psx
-
-.org 0x80058c78
-  jal removeAnimatedUIBox
-.org 0x80058fa8
-  jal removeAnimatedUIBox
-
-.org 0x80058bf8
-  jal createAnimatedUIBox
-.org 0x80058eb0
-  jal createAnimatedUIBox
-
-.org 0x80058dcc
-  jal renderSelectionCursor
-
 .close
 
 .open "work/DIGIMON/DOO2_REL.BIN",0x80070000
