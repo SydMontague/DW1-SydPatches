@@ -54,5 +54,14 @@ FLAGS="-O3 -std=c++23 -T linker.ld -mabi=32 -march=r3000 -r -mel -nostdlib -mexp
 "$MIPS_CXX" KAR/CurlingAiming.cpp -o ../compiled/KARAiming.lib $FLAGS
 "$MIPS_CXX" KAR/CurlingRingMarkers.cpp -o ../compiled/KARRingMarkers.lib $FLAGS
 "$MIPS_CXX" KAR/CurlingScoring.cpp -o ../compiled/KARScoring.lib $FLAGS
+"$MIPS_CXX" KAR/CurlingOpponent.cpp -o ../compiled/KAROpponent.lib $FLAGS
+"$MIPS_CXX" KAR/CurlingOpponentShot.cpp -o ../compiled/KAROpponentShot.lib $FLAGS
+
+"$MIPS_CXX" KAR/CurlingOrdering.cpp -o ../compiled/KAROrdering.lib $FLAGS
+"$MIPS_CXX" KAR/CurlingRender.cpp -o ../compiled/KARRender.lib $FLAGS
+"$MIPS_CXX" KAR/CurlingHud.cpp -o ../compiled/KARHud.lib $FLAGS
+"$MIPS_CXX" KAR/CurlingHints.cpp -o ../compiled/KARHints.lib $FLAGS
+"$MIPS_CXX" KAR/CurlingHintPages.cpp -o ../compiled/KARHintPages.lib $FLAGS
+"$MIPS_CXX" KAR/CurlingSprite.cpp -o ../compiled/KARSprite.lib $FLAGS
 
 cd -

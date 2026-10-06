@@ -665,12 +665,6 @@
 
 .org 0x8005538c
   jal stopSoundMask
-.org 0x80058cc8
-  jal playSound
-.org 0x80058d18
-  jal playSound
-.org 0x80058f88
-  jal playSound
 .org 0x800551a4
   jal playSound2
 .org 0x80055940

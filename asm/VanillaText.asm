@@ -169,20 +169,6 @@
 
 .close
 
-
-.open "work/DIGIMON/KAR_REL.BIN",0x80053800
-.psx
-
-.org 0x80058d50
-  jal renderString
-.org 0x80058d8c
-  jal renderString
-.org 0x8005901c
-  jal renderString
-
-.close
-
-
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
 

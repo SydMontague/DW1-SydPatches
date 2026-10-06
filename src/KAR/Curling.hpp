@@ -16,10 +16,19 @@ enum class CurlingWallZone : int32_t
 static_assert(sizeof(CurlingWallZone) == sizeof(int32_t));
 
 struct CurlingStone;
+struct CurlingSprite;
 struct Vector;
 struct SVector;
 
 const CurlingStone& KAR_getTallyStone();
+
+int32_t KAR_findClearShotAngle(int32_t x, int32_t z);
+int32_t KAR_aimAtStoneInRing(int32_t player, int32_t ring, int16_t* outX, int16_t* outZ);
+void KAR_setOpponentShot(int32_t priority, int32_t angle, int32_t x, int32_t z);
+int32_t KAR_aimAtRandomStone();
+int32_t KAR_aimBankShot(const CurlingStone* stone, int32_t x, int32_t z);
+void KAR_renderSprite(const CurlingSprite* sprite);
+int32_t KAR_drawHintPage(int32_t page, int8_t line, bool penguinmon);
 
 extern "C"
 {
