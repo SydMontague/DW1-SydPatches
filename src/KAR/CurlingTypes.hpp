@@ -13,7 +13,9 @@ struct CurlingStone
     int16_t speed;
     uint8_t reserved0A[0x02];
     int32_t angle;
-    uint8_t reserved10[0x04];
+    int8_t ring;
+    int8_t previousRing;
+    uint8_t reserved12[0x02];
     Vector target;
     GsDOBJ2 object;
     uint8_t reserved34[0x62];
@@ -24,20 +26,28 @@ struct CurlingStone
 
 struct CurlingStoneRow
 {
-    uint8_t reserved00[0x08];
+    int8_t score;
+    int8_t thrown;
+    uint8_t reserved02[0x06];
     dtl::array<CurlingStone, 5> stones;
 };
 
-// Existing overlay rows and resident match storage; no new ownership or allocation.
-extern "C"
+struct CurlingRingZone
 {
-    extern dtl::array<CurlingStoneRow, 3> KAR_STONE_ROWS;
-    extern int16_t KAR_SELECTED_STONE;
-    extern int8_t KAR_CURRENT_PLAYER;
-    extern uint32_t* KAR_MODEL_DATA;
-    extern int32_t KAR_MATCH_STATE;
-    extern dtl::array<int8_t, 3> KAR_PEGGED_MODEL_IDS;
-}
+    int16_t dx;
+    int16_t dz;
+    int16_t radius;
+};
+
+extern const dtl::array<CurlingRingZone, 4> KAR_RING_ZONES;
+
+// Existing overlay rows and resident match storage; no new ownership or allocation.
+extern dtl::array<CurlingStoneRow, 3> KAR_STONE_ROWS;
+extern int16_t KAR_SELECTED_STONE;
+extern int8_t KAR_CURRENT_PLAYER;
+extern uint32_t* KAR_MODEL_DATA;
+extern int32_t KAR_MATCH_STATE;
+extern dtl::array<int8_t, 3> KAR_PEGGED_MODEL_IDS;
 
 // Vanilla passes Vector/KarPos by value across O32 argument registers and the stack.
 static_assert(sizeof(void*) == 4);
