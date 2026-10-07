@@ -21,19 +21,20 @@ struct SVector;
 
 extern "C"
 {
+    void KAR_tickStones(int32_t instanceId);
+    void KAR_checkStonesStopped();
+    void KAR_updateCollisions();
+    void KAR_bounceOffWall();
+    void KAR_resolveStoneCollision(CurlingStone* stoneA, Vector a, CurlingStone* stoneB, Vector b);
+    void KAR_collidePeggedStone(CurlingStone* pegged, Vector a, CurlingStone* mover, Vector b);
+    void KAR_collideRestingStone(CurlingStone* resting, Vector a, CurlingStone* mover, Vector b);
+    void KAR_collideMovingStones(CurlingStone* stoneA, Vector a, CurlingStone* stoneB, Vector b);
     CurlingWallZone KAR_getWallZone(int16_t x, int16_t z);
     int32_t KAR_distance(int32_t x, int32_t z);
     int32_t KAR_computeImpactShare(const CurlingStone* stone, Vector a, Vector b);
     void KAR_computeSeparation(Vector* out, const CurlingStone* stone, Vector a, Vector b);
     // Direction is zero for the negative-X diagonal and nonzero for the positive-X diagonal.
     bool KAR_findWallContact(Vector* out, const CurlingStone* stone, int32_t direction);
-    void KAR_bounceOffWall();
-    void KAR_checkStonesStopped();
-    void KAR_updateCollisions();
-    void KAR_resolveStoneCollision(CurlingStone* stoneA, Vector a, CurlingStone* stoneB, Vector b);
-    void KAR_collidePeggedStone(CurlingStone* pegged, Vector a, CurlingStone* mover, Vector b);
-    void KAR_collideRestingStone(CurlingStone* resting, Vector a, CurlingStone* mover, Vector b);
-    void KAR_collideMovingStones(CurlingStone* stoneA, Vector a, CurlingStone* stoneB, Vector b);
     void KAR_reflectOffDiagonal(CurlingStone* stone, int32_t direction);
     void KAR_placeAtContact(CurlingStone* stone, Vector contact);
     void KAR_rotatePoint(SVector* point, int32_t angle);

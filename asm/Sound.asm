@@ -671,21 +671,11 @@
   jal playSound
 .org 0x80058f88
   jal playSound
-.org 0x80053fe0
-  jal playSound2
 .org 0x800551a4
   jal playSound2
 .org 0x80055940
   jal playSound2
 .org 0x80055958
-  jal playSound2
-.org 0x8005707c
-  jal playSound2
-.org 0x80057214
-  jal playSound2
-.org 0x80057300
-  jal playSound2
-.org 0x80057310
   jal playSound2
 .org 0x80059628
   jal playSound2
