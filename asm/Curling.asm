@@ -10,44 +10,20 @@
   .fill 0x80054048-.
 .endarea
 
-; Keep scrolling separate from the live ring-marker code that follows it.
+; The replaced scroll/marker/physics/aiming region also holds the geometry helpers.
+; Every surviving caller below remains symbolic; no live gap exists between these allocations.
 .org 0x80056590
-.area 0x80056684-.
-  .importobj "compiled/KARAimScroll.lib"
-
-  .notice "KAR aim scroll space left: " + (0x80056684-.) + " bytes"
-  .fill 0x80056684-.
-.endarea
-
-; Ring markers occupy their own slot between aiming scroll and stone physics.
-.org 0x80056684
-.area 0x800569E4-.
+.area 0x80058B00-.
+  .importobj "compiled/KARGeometry.lib"
   .importobj "compiled/KARRingMarkers.lib"
-
-  .notice "KAR ring markers space left: " + (0x800569E4-.) + " bytes"
-  .fill 0x800569E4-.
-.endarea
-
-; Reclaim adjacent physics/helpers and both empty debug leaves with their callers replaced.
-.org 0x800569E4
-.area 0x8005873C-.
-  .importobj "compiled/KAR.lib"
   .importobj "compiled/KARCollisionFlow.lib"
   .importobj "compiled/KARBounce.lib"
   .importobj "compiled/KARPhysics.lib"
   .importobj "compiled/KARCollision.lib"
   .importobj "compiled/KARWalls.lib"
-
-  .notice "KAR physics space left: " + (0x8005873C-.) + " bytes"
-  .fill 0x8005873C-.
-.endarea
-
-; Aiming/selection/throwing form one contiguous allocation with all callers retargeted.
-.org 0x8005873C
-.area 0x80058B00-.
   .importobj "compiled/KARAiming.lib"
 
-  .notice "KAR aiming space left: " + (0x80058B00-.) + " bytes"
+  .notice "KAR movement/aiming space left: " + (0x80058B00-.) + " bytes"
   .fill 0x80058B00-.
 .endarea
 
@@ -59,18 +35,13 @@
   .fill 0x80059760-.
 .endarea
 
+; The replaced registration and geometry regions are contiguous, with all callers retargeted.
 .org 0x8005A7E8
-.area 0x8005A868-.
-  ; Registration now shares the scoring import above.
-  .notice "KAR registration space left: " + (0x8005A868-.) + " bytes"
-  .fill 0x8005A868-.
-.endarea
-
-.org 0x8005A868
 .area 0x8005A97C-.
-  .importobj "compiled/KARGeometry.lib"
+  .importobj "compiled/KAR.lib"
+  .importobj "compiled/KARAimScroll.lib"
 
-  .notice "KAR geometry space left: " + (0x8005A97C-.) + " bytes"
+  .notice "KAR classifier/scroll space left: " + (0x8005A97C-.) + " bytes"
   .fill 0x8005A97C-.
 .endarea
 

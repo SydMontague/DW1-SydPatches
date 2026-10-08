@@ -91,9 +91,28 @@ namespace
     }
 
     [[gnu::optimize("Os")]]
+    void considerRecoveryPosition(const StonePointers& stones,
+                                  CurlingStone& stone,
+                                  const Vector& origin,
+                                  const Vector& point,
+                                  int32_t& nearest)
+    {
+        const auto dx       = point.x - origin.x;
+        const auto dz       = point.z - origin.z;
+        const auto distance = dx * dx + dz * dz;
+        if (distance >= nearest || eligibilityBand(point.z) != eligibilityBand(origin.z) ||
+            KAR_getWallZone(point.x, point.z) != CurlingWallZone::NONE || !clearOfStones(stones, stone, point))
+            return;
+        nearest          = distance;
+        stone.position.x = point.x;
+        stone.position.z = point.z;
+    }
+
+    [[gnu::optimize("Os")]]
     void recoverPosition(const StonePointers& stones, CurlingStone& stone)
     {
-        const auto& origin = stone.position;
+        const Vector origin = {.x = dtl::clamp(stone.position.x, -724, 724),
+                               .z = dtl::clamp(stone.position.z, -2524, 1124)};
 
         const auto centerX = dtl::clamp(origin.x, -116, 116);
         const auto band    = eligibilityBand(origin.z);
@@ -103,22 +122,41 @@ namespace
             case 1: startZ = dtl::clamp(origin.z, -1076, -115) - 304; break;
             default: startZ = dtl::clamp(origin.z, 494, 820) - 304; break;
         }
-        const auto originX = dtl::clamp(origin.x, -724, 724);
-        const auto originZ = dtl::clamp(origin.z, -2524, 1124);
-        int32_t nearest    = 0x7FFFFFFF;
+        int32_t nearest = 0x7FFFFFFF;
         // Distance <150 implies true separation <151. At spacing 304, each of the other 14 centers
         // can exclude at most one of these 15 legal sites, so a free site always exists.
         for (int32_t row = 0; row < 3; row++) {
             for (int32_t column = 0; column < 5; column++) {
-                const Vector point  = {.x = centerX + column * 304 - 608, .z = startZ + row * 304};
-                const auto dx       = point.x - originX;
-                const auto dz       = point.z - originZ;
-                const auto distance = dx * dx + dz * dz;
-                if (distance < nearest && clearOfStones(stones, stone, point)) {
-                    nearest          = distance;
-                    stone.position.x = point.x;
-                    stone.position.z = point.z;
+                const Vector point = {.x = centerX + column * 304 - 608, .z = startZ + row * 304};
+                considerRecoveryPosition(stones, stone, origin, point, nearest);
+            }
+        }
+
+        // Sixteen directions; the Z coordinate is the same circle table a quarter-turn later.
+        static constexpr dtl::array<int16_t, 16>
+            offsets{151, 140, 107, 58, 0, -58, -107, -140, -151, -140, -107, -58, 0, 58, 107, 140};
+        // Compare a finite contact set with the guaranteed grid result. Every accepted point clears
+        // all active centers; projections that round into a stone or cross a wall/band are rejected.
+        for (const auto* other : stones) {
+            if (other == &stone || other->state <= 0 || !overlaps(origin, other->position)) continue;
+            const auto dx         = origin.x - other->position.x;
+            const auto dz         = origin.z - other->position.z;
+            const auto separation = KAR_distance(dx, dz);
+            for (int32_t candidate = 0; candidate < 18; candidate++) {
+                int32_t offsetX = 0;
+                int32_t offsetZ = 0;
+                if (candidate < 16) {
+                    offsetX = offsets[candidate];
+                    offsetZ = offsets[(candidate + 12) & 15];
                 }
+                else {
+                    if (separation == 0) continue;
+                    const auto radius = 151 + (candidate - 16) * 2;
+                    offsetX           = dx * radius / separation;
+                    offsetZ           = dz * radius / separation;
+                }
+                const Vector point = {.x = other->position.x + offsetX, .z = other->position.z + offsetZ};
+                considerRecoveryPosition(stones, stone, origin, point, nearest);
             }
         }
     }
