@@ -122,13 +122,15 @@ extern "C"
             stoneA->position.z -= dz;
             int32_t distance =
                 KAR_distance(stoneA->position.x - stoneB->position.x, stoneA->position.z - stoneB->position.z);
-            stoneA->speed = static_cast<int16_t>(stoneA->speed + static_cast<int16_t>(shareB - shareA));
-            stoneB->speed = static_cast<int16_t>(stoneB->speed + static_cast<int16_t>(shareA - shareB));
+            stoneA->speed         = static_cast<int16_t>(stoneA->speed + static_cast<int16_t>(shareB - shareA));
+            stoneB->speed         = static_cast<int16_t>(stoneB->speed + static_cast<int16_t>(shareA - shareB));
+            const bool moveSecond = stoneA->speed > stoneB->speed;
+            // The separation vector points toward B; A must continue in the opposite direction.
             separatePositions(stoneB->position,
                               stoneA->position,
-                              angle,
+                              (angle + (moveSecond ? 2048 : 0)) & 0xFFF,
                               distance,
-                              stoneA->speed > stoneB->speed ? Separation::SECOND : Separation::FIRST);
+                              moveSecond ? Separation::SECOND : Separation::FIRST);
             stoneA->target = a;
             stoneB->target = b;
             stoneA->angle  = libgte_ratan2(stoneA->position.z - a.z, stoneA->position.x - a.x);
