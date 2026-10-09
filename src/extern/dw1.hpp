@@ -1972,8 +1972,6 @@ extern "C"
     void playShopSoundOnlyInSavannah();
     void setCardAmount(int32_t cardType, int32_t amount);
     void triggerBoxCloseFlag(int32_t id);
-    void renderItemMenuSprite(int16_t depth, int32_t id, int16_t posX, int16_t posY);
-    void renderItemMenuScrollBar(ItemMenuBox* menu);
     void renderItemMenuItemList(ItemMenuBox* menu,
                                 int16_t stringX,
                                 int16_t stringY,

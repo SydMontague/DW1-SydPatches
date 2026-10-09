@@ -19,6 +19,65 @@ namespace
 {
     constexpr auto BUYABLE_TRIGGER_START = 0x180;
 
+    constexpr dtl::array<Sprite, 7> itemMenuSprites{{
+        {
+            .uvX          = 0x200,
+            .uvV          = 0x1A2,
+            .width        = 20,
+            .height       = 7,
+            .texture_page = 5,
+            .clut         = getClut(0x60, 0x1EC),
+        },
+        {
+            .uvX          = 0x214,
+            .uvV          = 0x1A2,
+            .width        = 20,
+            .height       = 7,
+            .texture_page = 5,
+            .clut         = getClut(0x60, 0x1EC),
+        },
+        {
+            .uvX          = 0x250,
+            .uvV          = 0x1B0,
+            .width        = 20,
+            .height       = 7,
+            .texture_page = 5,
+            .clut         = getClut(0x60, 0x1EC),
+        },
+        {
+            .uvX          = 0x264,
+            .uvV          = 0x1B0,
+            .width        = 22,
+            .height       = 7,
+            .texture_page = 5,
+            .clut         = getClut(0x60, 0x1EC),
+        },
+        {
+            .uvX          = 0x228,
+            .uvV          = 0x1A2,
+            .width        = 20,
+            .height       = 12,
+            .texture_page = 5,
+            .clut         = getClut(0x60, 0x1EC),
+        },
+        {
+            .uvX          = 0x234,
+            .uvV          = 0x1A2,
+            .width        = 20,
+            .height       = 7,
+            .texture_page = 5,
+            .clut         = getClut(0x60, 0x1EC),
+        },
+        {
+            .uvX          = 0x238,
+            .uvV          = 0x1B0,
+            .width        = 20,
+            .height       = 7,
+            .texture_page = 5,
+            .clut         = getClut(0x60, 0x1EC),
+        },
+    }};
+
     bool readSelectedItemMerit()
     {
         auto menu      = getItemMenuFromType();
@@ -513,5 +572,67 @@ extern "C"
             menu->cursorOffset++;
 
         playSound(0, 2);
+    }
+
+    void renderItemMenuSprite(int16_t depth, int32_t id, int16_t posX, int16_t posY)
+    {
+        if (id < 0 || id >= itemMenuSprites.size()) return;
+
+        itemMenuSprites[id].render(posX, posY, depth, 0);
+    }
+
+    void renderItemMenuScrollBar(ItemMenuBox* menu)
+    {
+        // the inner box might be 1px larger than vanilla
+        auto& box        = UI_BOX_DATA[menu->textboxId];
+        auto layer       = 6 - menu->textboxId;
+        auto itemCount   = dtl::max(menu->numSlots, menu->itemCount);
+        auto minX        = menu->xOffset + box.finalPos.x;
+        auto minY        = menu->yOffset + box.finalPos.y;
+        auto maxX        = minX + menu->scrollWidth + 1;
+        auto maxY        = minY + menu->scrollHeight + 1;
+        auto innerHeight = menu->scrollHeight - 1;
+        auto rowHeight   = (innerHeight * menu->numSlots) / itemCount;
+        auto rowOffset   = ((innerHeight - rowHeight) * menu->scrollOffset) / dtl::max(itemCount - menu->numSlots, 1);
+        auto barStart    = (minY + 1) + rowOffset;
+        auto barEnd      = barStart + rowHeight;
+        auto minX2       = minX + 1;
+        auto maxX2       = maxX - 1;
+
+        drawLine3P(0x020202, minX, maxY - 1, minX, minY, maxX, minY, layer, 0);
+        drawLine3P(0xa08769, minX, maxY, maxX, maxY, maxX, minY, layer, 0);
+
+        drawLine3P(0x020202, maxX2, barStart + 1, maxX2, barEnd, minX2, barEnd, layer, 0);
+        drawLine3P(0xa08769, minX2, barEnd, minX2, barStart, maxX2, barStart, layer, 0);
+
+        POLY_F4* prim = reinterpret_cast<POLY_F4*>(libgs_GsGetWorkBase());
+        libgpu_SetPolyF4(prim);
+        prim[0].r0 = 0x5b;
+        prim[0].g0 = 0x70;
+        prim[0].b0 = 0x80;
+        prim[0].x0 = minX + 1;
+        prim[0].x1 = maxX - 1;
+        prim[0].x2 = minX + 1;
+        prim[0].x3 = maxX - 1;
+        prim[0].y0 = barStart + 1;
+        prim[0].y1 = barStart + 1;
+        prim[0].y2 = barStart + rowHeight;
+        prim[0].y3 = barStart + rowHeight;
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + layer, prim);
+
+        libgpu_SetPolyF4(prim + 1);
+        prim[1].r0 = 0x35;
+        prim[1].g0 = 0x4b;
+        prim[1].b0 = 0x5c;
+        prim[1].x0 = minX;
+        prim[1].x1 = maxX;
+        prim[1].x2 = minX;
+        prim[1].x3 = maxX;
+        prim[1].y0 = minY;
+        prim[1].y1 = minY;
+        prim[1].y2 = maxY;
+        prim[1].y3 = maxY;
+        libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + layer, prim + 1);
+        libgs_GsSetWorkBase(prim + 2);
     }
 }

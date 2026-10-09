@@ -276,4 +276,46 @@
 .org 0x801085e0
   jal createItemMenuDescriptionBox
 
+;.org 0x800fae34
+;  jal renderItemMenuSprite
+;.org 0x800fae70
+;  jal renderItemMenuSprite
+;.org 0x800faea0
+;  jal renderItemMenuSprite
+;.org 0x800faec8
+;  jal renderItemMenuSprite
+;.org 0x800faef0
+;  jal renderItemMenuSprite
+.org 0x801080e4
+  jal renderItemMenuSprite
+.org 0x80108114
+  jal renderItemMenuSprite
+.org 0x80108144
+  jal renderItemMenuSprite
+.org 0x8010816c
+  jal renderItemMenuSprite
+.org 0x80108fb8
+  jal renderItemMenuSprite
+.org 0x80108ff4
+  jal renderItemMenuSprite
+.org 0x80109438
+  jal renderItemMenuSprite
+.org 0x80109458
+  jal renderItemMenuSprite
+.org 0x8010973c
+  jal renderItemMenuSprite
+.org 0x8010975c
+  jal renderItemMenuSprite
+
+;.org 0x800faf04
+;  jal renderItemMenuScrollBar
+.org 0x80108180
+  jal renderItemMenuScrollBar
+.org 0x80108ffc
+  jal renderItemMenuScrollBar
+.org 0x80109464
+  jal renderItemMenuScrollBar
+.org 0x80109768
+  jal renderItemMenuScrollBar
+
 .close
