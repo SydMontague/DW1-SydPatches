@@ -1,3 +1,4 @@
+#pragma once
 #include "algorithm.hpp"
 #include "types.hpp"
 #include "utility.hpp"

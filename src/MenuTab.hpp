@@ -1,3 +1,4 @@
+#pragma once
 #include "AtlasFont.hpp"
 #include "extern/dtl/types.hpp"
 

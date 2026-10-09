@@ -1,3 +1,4 @@
+#pragma once
 #include "extern/dtl/array.hpp"
 
 extern "C"

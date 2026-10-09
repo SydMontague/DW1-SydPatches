@@ -1,3 +1,4 @@
+#pragma once
 #include "extern/stddef.hpp"
 
 extern "C"

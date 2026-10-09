@@ -1,3 +1,4 @@
+#pragma once
 #include "Helper.hpp"
 #include "extern/dw1.hpp"
 #include "extern/stddef.hpp"

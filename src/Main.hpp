@@ -1,3 +1,4 @@
+#pragma once
 #include "extern/libgte.hpp"
 #include "extern/stddef.hpp"
 
