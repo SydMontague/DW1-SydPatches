@@ -78,6 +78,23 @@ namespace
         },
     }};
 
+    struct VRAMModeCoords
+    {
+        uint32_t posX;
+        uint32_t width;
+    };
+
+    VRAMModeCoords getVRAMModeCordsNew(VRAMMode mode)
+    {
+        switch (mode) {
+            case VRAMMode::FRONT_FULL: return {.posX = 0, .width = 255};
+            case VRAMMode::FRONT_HALF: return {.posX = 0, .width = 127};
+            case VRAMMode::END_HALF: return {.posX = 128, .width = 127};
+        }
+
+        return {0, 0};
+    }
+
     bool readSelectedItemMerit()
     {
         auto menu      = getItemMenuFromType();
@@ -239,6 +256,27 @@ namespace
         renderSelectionCursor(x + 5, y + menu->cursorOffset * 18 + 17, selectionCursorWidths[ITEM_MENU_TYPE], 18, 5);
         renderItemMenuItemList(menu, x + 26, y + 19, x + 8, y + 18, 0);
     }
+
+    void renderItemMenuItemListSprite(ItemMenuBox* menu,
+                                      int16_t spriteX,
+                                      int16_t spriteY,
+                                      int32_t spriteType,
+                                      int32_t layer)
+    {
+        if (spriteType == 2) return;
+
+        auto scrollOffset = isItemMenuBoxBusy(menu) ? menu->prevScroll : menu->scrollOffset;
+        auto count        = dtl::min(static_cast<int32_t>(menu->numSlots), menu->itemCount - scrollOffset);
+
+        for (auto i = 0; i < count; i++) {
+            auto type = menu->itemList[(i + scrollOffset) * 2];
+            if (type == 0xFF) continue;
+            if (spriteType == 0)
+                renderItemSprite(static_cast<ItemType>(type), spriteX, spriteY + i * 18, layer);
+            else if (spriteType == 1)
+                renderCardSprite(type, spriteX + 2, spriteY + i * 18, layer);
+        }
+    }
 } // namespace
 
 extern "C"
@@ -287,8 +325,8 @@ extern "C"
         menu->textboxId     = textboxId;
         menu->scrollOffset  = 0;
         menu->cursorOffset  = 0;
-        menu->unk2          = 0;
-        menu->unk3          = 0;
+        menu->prevScroll    = 0;
+        menu->prevCursor    = 0;
         for (auto i = 0; i < menu->numSlots; i++)
             menu->stringOffset[i] = stringOffset + i;
     }
@@ -634,5 +672,34 @@ extern "C"
         prim[1].y3 = maxY;
         libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + layer, prim + 1);
         libgs_GsSetWorkBase(prim + 2);
+    }
+
+    void renderItemMenuItemList(ItemMenuBox* menu,
+                                int16_t stringX,
+                                int16_t stringY,
+                                int16_t spriteX,
+                                int16_t spriteY,
+                                int32_t spriteType)
+    {
+        const auto layer = 6 - menu->textboxId;
+        auto& box        = TEXTBOX_DATA[menu->textboxId];
+
+        renderItemMenuItemListSprite(menu, spriteX, spriteY, spriteType, layer);
+
+        auto count     = dtl::min(static_cast<int32_t>(menu->numSlots), menu->itemCount - menu->scrollOffset);
+        auto coords    = getVRAMModeCordsNew(box.vramMode);
+        auto bufferId  = box.activeBufferId;
+        auto lineCount = box.lineCount;
+        for (auto i = 0; i < count; i++) {
+            if (menu->itemList[(menu->scrollOffset + i) * 2] == 0xFF) continue;
+
+            auto uvY = (bufferId * lineCount * 12) + menu->stringOffset[i] * 12;
+            renderStringNew(0, stringX, stringY + i * 18, coords.width, 12, coords.posX / 4 + 704, uvY + 256, layer, 1);
+        }
+    }
+
+    void playShopSoundOnlyInSavannah()
+    {
+        if (CURRENT_SCREEN == 131) playSound(0, 23);
     }
 }

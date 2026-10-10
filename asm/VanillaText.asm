@@ -27,8 +27,8 @@
 ;  jal renderString
 ;.org 0x800fbd1c
 ;  jal renderString
-.org 0x800fdf30
-  jal renderString
+;.org 0x800fdf30
+;  jal renderString
 .org 0x801001b4
   jal renderString
 .org 0x80101388

@@ -168,8 +168,8 @@
 
 ;.org 0x800fab48
 ;  jal isItemMenuBoxBusy
-.org 0x800fdcf4
-  jal isItemMenuBoxBusy
+;.org 0x800fdcf4
+;  jal isItemMenuBoxBusy
 .org 0x80107e84
   jal isItemMenuBoxBusy
 .org 0x80108344
@@ -317,5 +317,29 @@
   jal renderItemMenuScrollBar
 .org 0x80109768
   jal renderItemMenuScrollBar
+
+;.org 0x800faf8c
+;  jal renderItemMenuItemList
+.org 0x8010820c
+  jal renderItemMenuItemList
+.org 0x801091a4
+  jal renderItemMenuItemList
+.org 0x801094cc
+  jal renderItemMenuItemList
+.org 0x801097d0
+  jal renderItemMenuItemList
+.org 0x80109b98
+  jal renderItemMenuItemList
+
+;.org 0x800fb50c
+;  jal playShopSoundOnlyInSavannah
+;.org 0x800fba48
+;  jal playShopSoundOnlyInSavannah
+.org 0x8010bea0
+  jal playShopSoundOnlyInSavannah
+.org 0x8010bf50
+  jal playShopSoundOnlyInSavannah
+.org 0x8010c6b4
+  jal playShopSoundOnlyInSavannah
 
 .close

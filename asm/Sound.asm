@@ -193,8 +193,8 @@
 ;  jal playSound
 ;.org 0x800fd604
 ;  jal playSound
-.org 0x800fe000
-  jal playSound
+;.org 0x800fe000
+;  jal playSound
 .org 0x800ff308
   j playSound
 .org 0x800ff330

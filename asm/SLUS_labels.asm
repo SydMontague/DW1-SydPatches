@@ -36,11 +36,9 @@
 .definelabel initializeTextbox,         0x8010020c
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
-.definelabel renderItemMenuItemList,    0x800fdc5c
 .definelabel triggerBoxCloseFlag,       0x801007e8
 .definelabel setupBoxOrigin,            0x80101078
 .definelabel closeTextbox,              0x801005a4
-.definelabel playShopSoundOnlyInSavannah,0x800fdfb4
 .definelabel setCardAmount,             0x80106848
 .definelabel renderHorizontalLine,      0x800fe030
 .definelabel renderInsetWithoutBox,     0x800fe150

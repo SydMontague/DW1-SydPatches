@@ -1,11 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-;.org 0x800fb60c
-;  jal renderItemSprite
-.org 0x800fddbc
-  jal renderItemSprite
-
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

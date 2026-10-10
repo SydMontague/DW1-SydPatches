@@ -1546,8 +1546,8 @@ extern "C"
         int8_t cursorOffset;
         int8_t numSlots;
         int8_t textboxId;
-        int8_t unk2;
-        int8_t unk3;
+        int8_t prevScroll;
+        int8_t prevCursor;
         int16_t xOffset;
         int16_t yOffset;
         int16_t scrollWidth;
@@ -1969,15 +1969,8 @@ extern "C"
     void renderCardSprite(uint8_t cardId, int16_t posX, int16_t posY, int32_t depth);
     void setupBoxOrigin(int32_t speaker, RECT* result);
     void closeTextbox(int32_t id, RECT* final);
-    void playShopSoundOnlyInSavannah();
     void setCardAmount(int32_t cardType, int32_t amount);
     void triggerBoxCloseFlag(int32_t id);
-    void renderItemMenuItemList(ItemMenuBox* menu,
-                                int16_t stringX,
-                                int16_t stringY,
-                                int16_t spriteX,
-                                int16_t spriteY,
-                                int32_t spriteType);
     void tickScript();
     void setDigimonRaised(DigimonType type);
     uint8_t* getScript(uint32_t scriptId);
