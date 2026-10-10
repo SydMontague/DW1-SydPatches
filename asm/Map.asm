@@ -143,19 +143,6 @@
 
 .close
 
-.open "work/DIGIMON/KAR_REL.BIN",0x80053800
-.psx
-
-.org 0x80054e10
-  jal uploadMapTileImages
-.org 0x80055520
-  jal uploadMapTileImages
-.org 0x800556e0
-  jal uploadMapTileImages
-.org 0x800558bc
-  jal uploadMapTileImages
-.close
-
 .open "work/DIGIMON/TRN_REL.BIN",0x80088800
 .psx
 

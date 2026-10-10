@@ -21,6 +21,8 @@ struct Vector;
 struct SVector;
 
 const CurlingStone& KAR_getTallyStone();
+void KAR_resetScoring();
+void KAR_setupMatch(int32_t mode);
 
 int32_t KAR_findClearShotAngle(int32_t x, int32_t z);
 int32_t KAR_aimAtStoneInRing(int32_t player, int32_t ring, int16_t* outX, int16_t* outZ);
@@ -32,6 +34,26 @@ int32_t KAR_drawHintPage(int32_t page, int8_t line, bool penguinmon);
 
 extern "C"
 {
+    void KAR_initializeOrderingTables();
+    void KAR_renderScene(int32_t instanceId);
+    void KAR_renderAimArrow();
+    void KAR_renderStoneCursor();
+    void KAR_renderScores();
+    void KAR_renderPowerMeter();
+    void KAR_renderReadyPrompt();
+    void KAR_renderNamePlates();
+    int32_t KAR_tickYesNoPrompt();
+    int32_t KAR_tickHintBox(int32_t page);
+    void KAR_handleAimScroll();
+    void KAR_beginAiming();
+    void KAR_selectPreviousStone();
+    void KAR_selectNextStone();
+    void KAR_turnAim(int32_t delta);
+    void KAR_beginThrow();
+    void KAR_updateRingMarkers();
+    void KAR_classifyStoneRings();
+    int32_t KAR_tickScoreTally();
+    void KAR_chooseOpponentShot();
     void KAR_tickStones(int32_t instanceId);
     void KAR_checkStonesStopped();
     void KAR_updateCollisions();

@@ -609,35 +609,6 @@
 
 .close
 
-.open "work/DIGIMON/KAR_REL.BIN",0x80053800
-.psx
-
-.org 0x80054504
-  jal startAnimation
-.org 0x80054514
-  jal startAnimation
-.org 0x80054538
-  jal startAnimation
-.org 0x8005474c
-  jal startAnimation
-.org 0x80054770
-  jal startAnimation
-.org 0x80054efc
-  jal startAnimation
-.org 0x80054f20
-  jal startAnimation
-.org 0x800550f0
-  jal startAnimation
-.org 0x80055124
-  jal startAnimation
-.org 0x80055148
-  jal startAnimation
-.org 0x800555c4
-  jal startAnimation
-.org 0x800555e8
-  jal startAnimation
-.close
-
 .open "work/DIGIMON/EAB_REL.BIN",0x80060000
 .psx
 

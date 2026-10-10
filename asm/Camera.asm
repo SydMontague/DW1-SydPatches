@@ -86,22 +86,6 @@
 
 .close
 
-.open "work/DIGIMON/KAR_REL.BIN",0x80053800
-.psx
-
-.org 0x80054db4
-  jal tickCameraMoveTo
-.org 0x800554c4
-  jal tickCameraMoveTo
-.org 0x80055684
-  jal tickCameraMoveTo
-.org 0x80055860
-  jal tickCameraMoveTo
-.org 0x80055378
-  jal moveCameraByDiff
-
-.close
-
 .open "work/DIGIMON/TRN_REL.BIN",0x80088800
 .psx
 

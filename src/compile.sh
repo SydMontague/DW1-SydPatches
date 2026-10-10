@@ -63,5 +63,7 @@ FLAGS="-O3 -std=c++23 -T linker.ld -mabi=32 -march=r3000 -r -mel -nostdlib -mexp
 "$MIPS_CXX" KAR/CurlingHints.cpp -o ../compiled/KARHints.lib $FLAGS
 "$MIPS_CXX" KAR/CurlingHintPages.cpp -o ../compiled/KARHintPages.lib $FLAGS
 "$MIPS_CXX" KAR/CurlingSprite.cpp -o ../compiled/KARSprite.lib $FLAGS
+"$MIPS_CXX" KAR/CurlingMatch.cpp -o ../compiled/KARMatch.lib $FLAGS
+"$MIPS_CXX" KAR/CurlingMatchState.cpp -o ../compiled/KARMatchState.lib $FLAGS
 
 cd -
