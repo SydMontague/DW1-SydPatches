@@ -190,14 +190,6 @@
 .close
 
 
-.open "work/DIGIMON/KAR_REL.BIN",0x80053800
-.psx
-
-.org 0x80053c50
-  jal readFile
-
-.close
-
 
 .open "work/DIGIMON/DOOA_REL.BIN",0x80080000
 .psx

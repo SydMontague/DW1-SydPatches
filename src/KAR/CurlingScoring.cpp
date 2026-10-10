@@ -6,11 +6,6 @@
 #include "../Sound.hpp"
 #include "../extern/dw1.hpp"
 
-// These values survive leaving and re-entering KAR; overlay reload must not reset them.
-extern int8_t KAR_TALLY_SKIP_REQUEST;
-extern int8_t KAR_TALLY_PHASE;
-extern int32_t KAR_TALLY_BLINK_TIMER;
-
 constexpr dtl::array<CurlingRingZone, 4> KAR_RING_ZONES = {
     {{0, 1718, 145}, {0, 1718, 375}, {-400, 2318, 205}, {400, 2318, 205}}};
 
@@ -21,6 +16,9 @@ namespace
     int8_t previousStone   = -1;
     int8_t tallyStoneIndex = 0;
     int32_t blinkCount     = 0;
+    int8_t skipRequest     = 0;
+    int8_t tallyPhase      = 0;
+    int32_t blinkTimer     = 0;
 
     [[gnu::optimize("Os")]]
     void registerThrownStone()
@@ -31,6 +29,19 @@ namespace
     }
 
 } // namespace
+
+// A new match or demonstration must not inherit the preceding tally's blink/skip state.
+[[gnu::optimize("Os")]]
+void KAR_resetScoring()
+{
+    thrownStones    = {};
+    previousStone   = -1;
+    tallyStoneIndex = 0;
+    blinkCount      = 0;
+    skipRequest     = 0;
+    tallyPhase      = 0;
+    blinkTimer      = 0;
+}
 
 const CurlingStone& KAR_getTallyStone()
 {
@@ -65,9 +76,9 @@ extern "C"
     int32_t KAR_tickScoreTally()
     {
         if ((POLLED_INPUT & InputButtons::BUTTON_CROSS) && !(POLLED_INPUT_PREVIOUS & InputButtons::BUTTON_CROSS))
-            KAR_TALLY_SKIP_REQUEST = 1;
+            skipRequest = 1;
 
-        if (KAR_TALLY_SKIP_REQUEST == 1 && (KAR_TALLY_PHASE == 1 || KAR_TALLY_PHASE == 2)) {
+        if (skipRequest == 1 && (tallyPhase == 1 || tallyPhase == 2)) {
             tallyStoneIndex = static_cast<int8_t>(KAR_STONE_ROWS[0].thrown + KAR_STONE_ROWS[1].thrown);
             tallyStoneIndex--;
             KAR_STONE_ROWS[0].score = 0;
@@ -87,10 +98,10 @@ extern "C"
                     if (stone.state >= 100) stone.state -= 100;
                 }
             }
-            blinkCount             = 0;
-            KAR_TALLY_BLINK_TIMER  = 0;
-            KAR_TALLY_PHASE        = 0;
-            KAR_TALLY_SKIP_REQUEST = 0;
+            blinkCount  = 0;
+            blinkTimer  = 0;
+            tallyPhase  = 0;
+            skipRequest = 0;
             return 1;
         }
 
@@ -98,20 +109,20 @@ extern "C"
             while (tallyStoneIndex >= 0) {
                 const auto& stone = *thrownStones[tallyStoneIndex];
                 if ((stone.ring & 0x0F) != 0) {
-                    previousStone   = tallyStoneIndex;
-                    KAR_TALLY_PHASE = 0;
+                    previousStone = tallyStoneIndex;
+                    tallyPhase    = 0;
                     break;
                 }
                 tallyStoneIndex--;
             }
             if (tallyStoneIndex < 0) {
-                KAR_TALLY_SKIP_REQUEST = 0;
+                skipRequest = 0;
                 return 1;
             }
         }
 
         // Independent stages preserve vanilla's camera/score/blink fallthrough within one tick.
-        if (KAR_TALLY_PHASE == 0) {
+        if (tallyPhase == 0) {
             const auto& stone = *thrownStones[tallyStoneIndex];
             if (stone.ring != stone.previousRing) {
                 const bool done =
@@ -125,31 +136,31 @@ extern "C"
                 }
                 if (!done) return 0;
             }
-            KAR_TALLY_PHASE = 1;
+            tallyPhase = 1;
         }
 
-        if (KAR_TALLY_PHASE == 1) {
+        if (tallyPhase == 1) {
             const auto& stone    = *thrownStones[tallyStoneIndex];
             const int32_t player = (stone.ring & 0x10) != 0 ? 1 : 0;
             const int32_t ring   = stone.ring & 0x0F;
             auto& score          = KAR_STONE_ROWS[player].score;
             score                = static_cast<int8_t>(score + tallyValues[ring - 1]);
-            KAR_TALLY_PHASE      = 2;
+            tallyPhase           = 2;
             if (stone.ring != stone.previousRing && ring != 0) playSound2(8, ring == 3 ? 6 : 5);
         }
 
-        if (KAR_TALLY_PHASE == 2 && tallyStoneIndex >= 0) {
+        if (tallyPhase == 2 && tallyStoneIndex >= 0) {
             auto& stone = *thrownStones[tallyStoneIndex];
             if (stone.ring != stone.previousRing && (stone.ring & 0x0F) != 0) {
-                if (KAR_TALLY_BLINK_TIMER++ >= 11) {
+                if (blinkTimer++ >= 11) {
                     if (stone.state < 100)
                         stone.state += 100;
                     else
                         stone.state -= 100;
-                    KAR_TALLY_BLINK_TIMER -= 10;
+                    blinkTimer -= 10;
                     if (blinkCount++ >= 7) {
-                        KAR_TALLY_PHASE = 4;
-                        blinkCount      = 0;
+                        tallyPhase = 4;
+                        blinkCount = 0;
                         tallyStoneIndex--;
                     }
                 }

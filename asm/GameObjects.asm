@@ -501,17 +501,6 @@
 .close
 
 
-.open "work/DIGIMON/KAR_REL.BIN",0x80053800
-.psx
-
-.org 0x80053c9c
-  jal addObject
-
-.org 0x8005454c
-  jal removeObject
-
-.close
-
 
 .open "work/DIGIMON/MURD_REL.BIN",0x8007C000
 .psx

@@ -9,6 +9,14 @@
   .fill 0x80053878-.
 .endarea
 
+.org 0x80053878
+.area 0x80053CD0-.
+  .importobj "compiled/KARMatch.lib"
+
+  .notice "KAR match setup space left: " + (0x80053CD0-.) + " bytes"
+  .fill 0x80053CD0-.
+.endarea
+
 ; The replaced stone tick and scene regions are contiguous; both callbacks remain symbolic.
 .org 0x80053CD0
 .area 0x80054490-.
@@ -19,7 +27,15 @@
   .fill 0x80054490-.
 .endarea
 
-; All replaced gameplay/rendering allocations are contiguous, with every surviving caller retargeted below.
+.org 0x80054490
+.area 0x80055A94-.
+  .importobj "compiled/KARMatchState.lib"
+
+  .notice "KAR match state space left: " + (0x80055A94-.) + " bytes"
+  .fill 0x80055A94-.
+.endarea
+
+; All replaced gameplay/rendering allocations are contiguous; their callers use imported symbols.
 .org 0x80055A94
 .area 0x8005AB10-.
   .importobj "compiled/KARHud.lib"
@@ -44,6 +60,13 @@
   .fill 0x8005AB10-.
 .endarea
 
+; Match setup owns these immutable numeric tables; the following model-path asset stays live.
+.org 0x8005AB80
+.area 0x8005ABA4-.
+  .notice "KAR setup table space left: " + (0x8005ABA4-.) + " bytes"
+  .fill 0x8005ABA4-.
+.endarea
+
 ; The hint helper owns the shared immutable page offsets.
 .org 0x8005B04C
 .area 0x8005B058-.
@@ -58,111 +81,18 @@
   .fill 0x8005B5A0-.
 .endarea
 
+; Match state owns the current camera position and keeps its previous-position copy on the stack.
+.org 0x800638F4
+.area 0x80063914-.
+  .notice "KAR camera position space left: " + (0x80063914-.) + " bytes"
+  .fill 0x80063914-.
+.endarea
+
 ; The scoring import owns the thrown-stone order for this overlay lifetime.
 .org 0x800639C0
 .area 0x800639EC-.
   .notice "KAR thrown-stone table space left: " + (0x800639EC-.) + " bytes"
   .fill 0x800639EC-.
 .endarea
-
-.org 0x80053C64
-  jal KAR_initializeOrderingTables
-
-; KAR_start callback: preserve intervening instructions and original delay slots.
-
-.org 0x80053C88
-  lui a2, hi(KAR_tickStones)
-.org 0x80053C98
-  addiu a2, a2, lo(KAR_tickStones)
-
-; KAR_start scene callback: the low half remains in the addObject delay slot.
-
-.org 0x80053C8C
-  lui a3, hi(KAR_renderScene)
-.org 0x80053CA0
-  addiu a3, a3, lo(KAR_renderScene)
-
-; Retarget surviving vanilla callers; preserve the original delay slots.
-
-.org 0x800545D8
-  jal KAR_renderAimArrow
-
-.org 0x800545E0
-  jal KAR_renderStoneCursor
-
-.org 0x800545E8
-  jal KAR_renderScores
-
-.org 0x800545F0
-  jal KAR_renderPowerMeter
-
-.org 0x800545F8
-  jal KAR_renderReadyPrompt
-
-.org 0x80054600
-  jal KAR_renderNamePlates
-
-.org 0x80054608
-  jal KAR_handleAimScroll
-
-.org 0x80054610
-  jal KAR_updateRingMarkers
-
-.org 0x80054618
-  jal KAR_checkStonesStopped
-
-.org 0x80054790
-  jal KAR_tickYesNoPrompt
-
-.org 0x800548E4
-  jal KAR_tickHintBox
-.org 0x80054AF8
-  jal KAR_tickHintBox
-.org 0x80054F48
-  jal KAR_tickHintBox
-.org 0x80055544
-  jal KAR_tickHintBox
-.org 0x80055A2C
-  jal KAR_tickHintBox
-
-.org 0x8005499C
-  jal KAR_beginAiming
-.org 0x80054A38
-  jal KAR_beginAiming
-
-.org 0x800549FC
-  jal KAR_selectNextStone
-.org 0x80054A98
-  jal KAR_selectNextStone
-
-.org 0x80054A68
-  jal KAR_selectPreviousStone
-
-.org 0x80054B5C
-  jal KAR_turnAim
-.org 0x80054BB4
-  jal KAR_turnAim
-.org 0x80054C38
-  jal KAR_turnAim
-.org 0x80054C48
-  jal KAR_turnAim
-.org 0x80054CD8
-  jal KAR_turnAim
-.org 0x80054D30
-  jal KAR_turnAim
-
-.org 0x80054C08
-  jal KAR_beginThrow
-.org 0x80054C80
-  jal KAR_beginThrow
-
-.org 0x80055394
-  jal KAR_classifyStoneRings
-
-.org 0x8005547C
-  jal KAR_tickScoreTally
-
-.org 0x80055994
-  jal KAR_chooseOpponentShot
 
 .close

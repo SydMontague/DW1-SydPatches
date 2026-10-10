@@ -660,19 +660,6 @@
 
 .close
 
-.open "work/DIGIMON/KAR_REL.BIN",0x80053800
-.psx
-
-.org 0x8005538c
-  jal stopSoundMask
-.org 0x800551a4
-  jal playSound2
-.org 0x80055940
-  jal playSound2
-.org 0x80055958
-  jal playSound2
-.close
-
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
