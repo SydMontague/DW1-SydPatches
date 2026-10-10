@@ -1,15 +1,15 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x800fe394
-  jal getShopkeeperLine
+;.org 0x800fe394
+;  jal getShopkeeperLine
 .org 0x800ff728
   jal getShopkeeperLine
 
 ;.org 0x800fbe14
 ;  jal resolveMapHeadEntry
-.org 0x800fe3a4
-  jal resolveMapHeadEntry
+;.org 0x800fe3a4
+;  jal resolveMapHeadEntry
 .org 0x800ff738
   jal resolveMapHeadEntry
 
@@ -341,5 +341,21 @@
   jal playShopSoundOnlyInSavannah
 .org 0x8010c6b4
   jal playShopSoundOnlyInSavannah
+
+;.org 0x800fb5ac
+;  jal renderHorizontalLine
+;.org 0x800fb5c0
+;  jal renderHorizontalLine
+.org 0x80109a24
+  jal renderHorizontalLine
+
+.close
+
+
+.open "work/DIGIMON/DGET_REL.BIN",0x80080800
+.psx
+
+.org 0x80081684
+  jal renderHorizontalLine
 
 .close

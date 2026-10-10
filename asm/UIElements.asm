@@ -113,10 +113,10 @@
 ;  jal drawLine3P
 ;.org 0x800fdb3c
 ;  jal drawLine3P
-.org 0x800fe204
-  jal drawLine3P
-.org 0x800fe230
-  jal drawLine3P
+;.org 0x800fe204
+;  jal drawLine3P
+;.org 0x800fe230
+;  jal drawLine3P
 .org 0x800ff3f0
   jal drawLine3P
 .org 0x800ff41c
@@ -131,12 +131,12 @@
 ;  jal drawLine2P
 ;.org 0x800ee4f8
 ;  jal drawLine2P
-.org 0x800fe0cc
-  jal drawLine2P
-.org 0x800fe0fc
-  jal drawLine2P
-.org 0x800fe12c
-  jal drawLine2P
+;.org 0x800fe0cc
+;  jal drawLine2P
+;.org 0x800fe0fc
+;  jal drawLine2P
+;.org 0x800fe12c
+;  jal drawLine2P
 .org 0x800ff600
   jal drawLine2P
 .org 0x800ff630
@@ -211,8 +211,8 @@
 ;  jal setUVDataPolyFT4
 ;.org 0x800fd87c
 ;  jal setUVDataPolyFT4
-.org 0x800fe2dc
-  jal setUVDataPolyFT4
+;.org 0x800fe2dc
+;  jal setUVDataPolyFT4
 .org 0x80101538
   jal setUVDataPolyFT4
 
@@ -256,8 +256,8 @@
 ;  jal setPosDataPolyFT4
 ;.org 0x800fd898
 ;  jal setPosDataPolyFT4
-.org 0x800fe2f4
-  jal setPosDataPolyFT4
+;.org 0x800fe2f4
+;  jal setPosDataPolyFT4
 .org 0x80101554
   jal setPosDataPolyFT4
 .org 0x8010b310

@@ -53,12 +53,13 @@ namespace
 
 extern "C"
 {
-    constexpr RGB8 UILINE_COLORS[] = {
+    constexpr dtl::array<RGB8, 5> UILINE_COLORS = {{
         {.red = 8, .green = 8, .blue = 8},       // 2, 2, 2
         {.red = 132, .green = 239, .blue = 250}, // 144, 217, 250
         {.red = 74, .green = 159, .blue = 197},
         {.red = 180, .green = 150, .blue = 105},
-    };
+        {.red = 105, .green = 135, .blue = 160},
+    }};
 
     void renderRectPolyFT4(int16_t posX,
                            int16_t posY,
@@ -123,6 +124,17 @@ extern "C"
             auto& line = linePtr[i];
             drawLine2P(UILINE_COLORS[line.clut].asUint32(), line.x1, line.y1, line.x2, line.y2, layer, 0);
         }
+    }
+
+    void renderHorizontalLine(int32_t boxId, int32_t posX, int32_t posY, int32_t length)
+    {
+        const auto yBase = UI_BOX_DATA[boxId].finalPos.y + posY;
+        const auto xBase = UI_BOX_DATA[boxId].finalPos.x + posX;
+        const auto layer = 6 - boxId;
+
+        drawLine2P(UILINE_COLORS[0].asUint32(), xBase, yBase, xBase + length - 1, yBase, layer, 0);
+        drawLine2P(UILINE_COLORS[4].asUint32(), xBase, yBase + 1, xBase + length - 1, yBase + 1, layer, 0);
+        drawLine2P(UILINE_COLORS[0].asUint32(), xBase, yBase + 2, xBase + length - 1, yBase + 2, layer, 0);
     }
 
     void renderTextSprite2(TextSprite& entry, int32_t offsetX, int32_t offsetY)

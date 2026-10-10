@@ -1964,9 +1964,6 @@ extern "C"
     void showTextboxReady(int32_t textboxId, int32_t speaker);
     uint8_t scriptIdToEntityId(uint8_t scriptId);
     uint8_t* intToStringSJIS(uint8_t* buffer, int32_t value, uint32_t digitCount, int32_t padNumber);
-    void renderHorizontalLine(int32_t boxId, int32_t posX, int32_t posY, int32_t length);
-    void renderInsetWithoutBox(int32_t boxId, int16_t posX, int16_t posY, int16_t width, int16_t height);
-    void renderCardSprite(uint8_t cardId, int16_t posX, int16_t posY, int32_t depth);
     void setupBoxOrigin(int32_t speaker, RECT* result);
     void closeTextbox(int32_t id, RECT* final);
     void setCardAmount(int32_t cardType, int32_t amount);

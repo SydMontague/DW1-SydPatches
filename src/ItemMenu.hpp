@@ -20,3 +20,5 @@ extern "C"
                                 int32_t spriteType);
     void playShopSoundOnlyInSavannah();
 }
+
+void renderCardSprite(uint8_t cardId, int16_t posX, int16_t posY, int32_t depth);

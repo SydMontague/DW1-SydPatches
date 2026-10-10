@@ -8,6 +8,7 @@
 #include "RecycleShop.hpp"
 #include "Script.hpp"
 #include "Sound.hpp"
+#include "UIElements.hpp"
 #include "constants.hpp"
 #include "extern/dw1.hpp"
 
@@ -152,6 +153,18 @@ namespace
         }
 
         updateItemMenuAmountBoxString();
+    }
+
+    void renderInsetWithoutBox(int32_t boxId, int16_t posX, int16_t posY, int16_t width, int16_t height)
+    {
+        const auto layer = 6 - boxId;
+        const auto x1    = UI_BOX_DATA[boxId].finalPos.x + posX;
+        const auto x2    = x1 + width - 1;
+        const auto y1    = UI_BOX_DATA[boxId].finalPos.y + posY;
+        const auto y2    = y1 + height - 1;
+
+        drawLine3P(0xa08769, x1 + 1, y2, x2, y2, x2, y1, layer, 0);
+        drawLine3P(0x20202, x2, y1, x1, y1, x1, y2, layer, 0);
     }
 
     void renderItemMenuAmountBox(int32_t)

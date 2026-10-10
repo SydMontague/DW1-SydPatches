@@ -14,6 +14,8 @@
 #include "UIElements.hpp"
 #include "extern/dtl/algorithm.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libgpu.hpp"
+#include "extern/libgs.hpp"
 
 namespace
 {
@@ -274,7 +276,7 @@ namespace
             if (spriteType == 0)
                 renderItemSprite(static_cast<ItemType>(type), spriteX, spriteY + i * 18, layer);
             else if (spriteType == 1)
-                renderCardSprite(type, spriteX + 2, spriteY + i * 18, layer);
+                renderCardSprite(CARD_DATA[type].rarity, spriteX + 2, spriteY + i * 18, layer);
         }
     }
 } // namespace
@@ -702,4 +704,19 @@ extern "C"
     {
         if (CURRENT_SCREEN == 131) playSound(0, 23);
     }
+}
+
+void renderCardSprite(uint8_t cardId, int16_t posX, int16_t posY, int32_t depth)
+{
+    auto* prim = reinterpret_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+    libgpu_SetPolyFT4(prim);
+    prim->tpage = 5;
+    prim->clut  = getClut(0x60, 0x1ED);
+    prim->r0    = 128;
+    prim->b0    = 128;
+    prim->g0    = 128;
+    setUVDataPolyFT4(prim, cardId * 12, 192, 12, 12);
+    setPosDataPolyFT4(prim, posX, posY, 12, 12);
+    libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + depth, prim);
+    libgs_GsSetWorkBase(prim + 1);
 }

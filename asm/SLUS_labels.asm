@@ -40,9 +40,6 @@
 .definelabel setupBoxOrigin,            0x80101078
 .definelabel closeTextbox,              0x801005a4
 .definelabel setCardAmount,             0x80106848
-.definelabel renderHorizontalLine,      0x800fe030
-.definelabel renderInsetWithoutBox,     0x800fe150
-.definelabel renderCardSprite,          0x800fe258
 .definelabel intToStringSJIS,           0x80102064
 .definelabel scriptIdToEntityId,        0x80102144
 .definelabel setDialogueOwner,          0x800ff684

@@ -222,4 +222,5 @@ extern "C"
     void renderSelectionCursor(int16_t x, int16_t y, int16_t width, int16_t height, int32_t depth);
     void initializeUIBoxData();
     void renderUIBoxBorder(RECT* size, int32_t layer);
+    void renderHorizontalLine(int32_t boxId, int32_t posX, int32_t posY, int32_t length);
 }
