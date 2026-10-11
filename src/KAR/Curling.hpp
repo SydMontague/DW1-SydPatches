@@ -30,12 +30,14 @@ int32_t KAR_aimAtRandomStone();
 int32_t KAR_aimBankShot(const CurlingStone* stone, int32_t x, int32_t z);
 
 void KAR_renderScene(int32_t instanceId);
+void KAR_resetHud();
 void KAR_renderAimArrow();
 void KAR_renderStoneCursor();
 void KAR_renderScores();
 void KAR_renderPowerMeter();
 void KAR_renderReadyPrompt();
 void KAR_renderNamePlates();
+void KAR_resetHints();
 int32_t KAR_tickYesNoPrompt();
 int32_t KAR_tickHintBox(int32_t page);
 void KAR_handleAimScroll();

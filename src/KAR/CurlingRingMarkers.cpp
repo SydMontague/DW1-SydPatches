@@ -19,7 +19,7 @@ void KAR_updateRingMarkers()
 {
     uint8_t activeRings = 0;
 
-    if (KAR_MATCH_STATE == 11) {
+    if (KAR_MATCH_STATE == CurlingMatchState::STONES_MOVING) {
         for (int32_t player = 0; player < 2; player++) {
             for (const auto& stone : KAR_STONE_ROWS[player].stones) {
                 if (stone.state <= 0 || stone.speed <= 0) continue;
@@ -35,7 +35,7 @@ void KAR_updateRingMarkers()
             }
         }
     }
-    else if (KAR_MATCH_STATE == 13) {
+    else if (KAR_MATCH_STATE == CurlingMatchState::TALLY_SCORE) {
         const auto& stone  = KAR_getTallyStone();
         const int32_t ring = stone.ring & 0x0F;
         if (stone.ring != stone.previousRing && stone.state < 101 && ring != 0) activeRings |= 1 << (ring - 1);

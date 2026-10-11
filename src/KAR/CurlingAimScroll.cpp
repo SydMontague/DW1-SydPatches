@@ -8,7 +8,7 @@
 [[gnu::optimize("Os")]]
 void KAR_handleAimScroll()
 {
-    if (KAR_MATCH_STATE != 6 || KAR_CURRENT_PLAYER != 0) return;
+    if (KAR_MATCH_STATE != CurlingMatchState::AIM || KAR_CURRENT_PLAYER != 0) return;
 
     int32_t dx = 0;
     int32_t dy = 0;

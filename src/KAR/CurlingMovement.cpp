@@ -5,7 +5,10 @@
 #include "../extern/libgs.hpp"
 #include "../extern/libgte.hpp"
 
-extern const dtl::array<int8_t, 3> KAR_PEGGED_MODEL_IDS;
+namespace
+{
+    constexpr dtl::array<int8_t, 3> peggedModelIds = {11, 10, 9};
+} // namespace
 
 [[gnu::optimize("Os")]]
 void KAR_tickStones(int32_t instanceId)
@@ -15,11 +18,11 @@ void KAR_tickStones(int32_t instanceId)
             auto& stone = KAR_STONE_ROWS[player].stones[index];
             if (stone.state != 3 && stone.state != 2) stone.target = stone.position;
 
-            if (KAR_MATCH_STATE == 5) {
+            if (KAR_MATCH_STATE == CurlingMatchState::SELECT_STONE) {
                 if (index == KAR_SELECTED_STONE && player == KAR_CURRENT_PLAYER)
-                    stone.selectionPhase = static_cast<int16_t>(stone.selectionPhase + 20);
+                    stone.rotation.y = static_cast<int16_t>(stone.rotation.y + 20);
                 else
-                    stone.selectionPhase = 0;
+                    stone.rotation.y = 0;
             }
 
             if (stone.state <= 0 || stone.speed < 0) continue;
@@ -50,7 +53,7 @@ void KAR_tickStones(int32_t instanceId)
             }
             if (stone.state == 1 && travel <= 0 && stone.type == 3) {
                 stone.state = 2;
-                libgs_GsLinkObject4(KAR_MODEL_DATA + 3, &stone.object, KAR_PEGGED_MODEL_IDS[player]);
+                libgs_GsLinkObject4(KAR_MODEL_BUFFER.data() + 3, &stone.object, peggedModelIds[player]);
                 playSound2(8, 4);
             }
         }

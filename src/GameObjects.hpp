@@ -86,6 +86,7 @@ extern "C"
         VS_TIMEOUT_WINDOW  = 20003,
         VS_PRESS_START_BOX = 20004,
         VS_SELECT_BOX      = 20005,
+        KAR                = 20006,
 
         NONE = 0xFFFF,
     };
