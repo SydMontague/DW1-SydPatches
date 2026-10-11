@@ -10,7 +10,7 @@
 // The model file and its sector-sized buffer remain in the existing overlay asset allocation.
 extern const char KAR_MODEL_PATH[];
 extern uint32_t KAR_MODEL_BUFFER[];
-extern int16_t KAR_THROW_POWER;
+extern dtl::array<dtl::array<GsOT_TAG, 32>, 2> KAR_ORDERING_TAGS;
 
 namespace
 {
@@ -18,6 +18,14 @@ namespace
     constexpr dtl::array<int16_t, 4> stoneWeights     = {{30, 25, 35, 30}};
     constexpr dtl::array<int8_t, 10> randomStoneTypes = {{3, 2, 2, 1, 1, 1, 0, 0, 0, 0}};
     constexpr dtl::array<int32_t, 3> obstacleSpawnX   = {{705, 235, -235}};
+
+    void initializeOrderingTables()
+    {
+        KAR_ORDERING_TABLES[0].length = 5;
+        KAR_ORDERING_TABLES[0].origin = KAR_ORDERING_TAGS[0].data();
+        KAR_ORDERING_TABLES[1].length = 5;
+        KAR_ORDERING_TABLES[1].origin = KAR_ORDERING_TAGS[1].data();
+    }
 } // namespace
 
 [[gnu::optimize("Os")]]
@@ -90,13 +98,13 @@ void KAR_setupMatch(int32_t mode)
     }
 }
 
-extern "C" void KAR_start()
+void KAR_start()
 {
     KAR_MODEL_DATA       = KAR_MODEL_BUFFER;
     SOME_SCRIPT_SYNC_BIT = 0;
     readFile(KAR_MODEL_PATH, KAR_MODEL_DATA);
     libgs_GsMapModelingData(KAR_MODEL_DATA + 1);
-    KAR_initializeOrderingTables();
+    initializeOrderingTables();
     ENTITY_TABLE.getEntityById(0)->isOnMap = 1;
     KAR_MATCH_STATE                        = 0;
     KAR_setupMatch(0);

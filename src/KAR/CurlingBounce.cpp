@@ -45,7 +45,7 @@ namespace
     }
 } // namespace
 
-extern "C" [[gnu::optimize("Os")]]
+[[gnu::optimize("Os")]]
 void KAR_bounceOffWall()
 {
     for (auto& row : KAR_STONE_ROWS) {

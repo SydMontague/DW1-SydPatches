@@ -1,22 +1,31 @@
 #include "Curling.hpp"
-#include "CurlingTypes.hpp"
 
 #include "../Matrix.hpp"
 
-extern "C"
+int32_t KAR_distance(int32_t diffX, int32_t diffZ)
 {
-    void KAR_rotatePoint(SVector* point, int32_t angle)
-    {
-        const int32_t x = point->x;
-        const int32_t z = point->z;
+    return getDistance(diffX, 0, diffZ);
+}
 
-        // Each product truncates toward zero separately before the signed-16 narrowing.
-        point->x = static_cast<int16_t>(x * libgte_rcos(angle) / 4096 - z * libgte_rsin(angle) / 4096);
-        point->z = static_cast<int16_t>(x * libgte_rsin(angle) / 4096 + z * libgte_rcos(angle) / 4096);
+CurlingWallZone KAR_getWallZone(int16_t x, int16_t z)
+{
+    const int32_t posX = x;
+    const int32_t posZ = z;
+
+    if (posZ >= 1125) return CurlingWallZone::POSITIVE_Z_WALL;
+
+    if (posZ >= -2000) {
+        if (posX < -724) return CurlingWallZone::NEGATIVE_X_WALL;
+        if (posX >= 725) return CurlingWallZone::POSITIVE_X_WALL;
+    }
+    else {
+        const int32_t doubledX = posX * 2;
+
+        // Both X conditions include 425; vanilla tests the first diagonal before the second.
+        if (posZ + doubledX < -3524 && posX < 426) return CurlingWallZone::NEGATIVE_X_DIAGONAL;
+        if (posZ - doubledX < -3524 && posX >= 425) return CurlingWallZone::POSITIVE_X_DIAGONAL;
+        if (posZ < -2524) return CurlingWallZone::NEGATIVE_Z_WALL;
     }
 
-    int32_t KAR_distance(int32_t diffX, int32_t diffZ)
-    {
-        return getDistance(diffX, 0, diffZ);
-    }
+    return CurlingWallZone::NONE;
 }

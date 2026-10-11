@@ -1,62 +1,12 @@
 .open "work/DIGIMON/KAR_REL.BIN",0x80053800
 .psx
 
+; Preserve the overlay header and retained assets outside this allocation.
 .org 0x80053840
-.area 0x80053878-.
-  .importobj "compiled/KAROrdering.lib"
-
-  .notice "KAR ordering space left: " + (0x80053878-.) + " bytes"
-  .fill 0x80053878-.
-.endarea
-
-.org 0x80053878
-.area 0x80053CD0-.
-  .importobj "compiled/KARMatch.lib"
-
-  .notice "KAR match setup space left: " + (0x80053CD0-.) + " bytes"
-  .fill 0x80053CD0-.
-.endarea
-
-; The replaced stone tick and scene regions are contiguous; both callbacks remain symbolic.
-.org 0x80053CD0
-.area 0x80054490-.
-  .importobj "compiled/KARMovement.lib"
-  .importobj "compiled/KARRender.lib"
-
-  .notice "KAR stone tick/scene space left: " + (0x80054490-.) + " bytes"
-  .fill 0x80054490-.
-.endarea
-
-.org 0x80054490
-.area 0x80055A94-.
-  .importobj "compiled/KARMatchState.lib"
-
-  .notice "KAR match state space left: " + (0x80055A94-.) + " bytes"
-  .fill 0x80055A94-.
-.endarea
-
-; All replaced gameplay/rendering allocations are contiguous; their callers use imported symbols.
-.org 0x80055A94
 .area 0x8005AB10-.
-  .importobj "compiled/KARHud.lib"
-  .importobj "compiled/KARGeometry.lib"
-  .importobj "compiled/KARRingMarkers.lib"
-  .importobj "compiled/KARCollisionFlow.lib"
-  .importobj "compiled/KARBounce.lib"
-  .importobj "compiled/KARPhysics.lib"
-  .importobj "compiled/KARCollision.lib"
-  .importobj "compiled/KARWalls.lib"
-  .importobj "compiled/KARAiming.lib"
-  .importobj "compiled/KARHints.lib"
-  .importobj "compiled/KARScoring.lib"
-  .importobj "compiled/KAROpponent.lib"
-  .importobj "compiled/KARHintPages.lib"
-  .importobj "compiled/KAROpponentShot.lib"
   .importobj "compiled/KAR.lib"
-  .importobj "compiled/KARAimScroll.lib"
-  .importobj "compiled/KARSprite.lib"
 
-  .notice "KAR gameplay/rendering space left: " + (0x8005AB10-.) + " bytes"
+  .notice "KAR code/data space left: " + (0x8005AB10-.) + " bytes"
   .fill 0x8005AB10-.
 .endarea
 

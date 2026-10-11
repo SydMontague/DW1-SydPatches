@@ -42,28 +42,25 @@ FLAGS="-O3 -std=c++23 -T linker.ld -mabi=32 -march=r3000 -r -mel -nostdlib -mexp
 "$MIPS_CXX" Butterfly.cpp -o ../compiled/Cave4.lib $FLAGS
 "$MIPS_CXX" UIBox.cpp AtlasFont.cpp BuffModel.cpp ThrownItem.cpp Main.cpp BattleEndBox.cpp VS/Intro.cpp VS/InitVS.cpp VS/DigimonAI.cpp VS/TimeoutWindow.cpp VS/SelectDigimon.cpp VS/SelectMapMode.cpp ItemMenu.cpp MonochromonMoodBubble.cpp Misc.cpp RecycleShop.cpp BitsBox.cpp ItemMenuAmountBox.cpp SingleCardConfirmMenu.cpp ItemDescriptionBox.cpp -o ../compiled/Cave5.lib $FLAGS
 "$MIPS_CXX" DebugMenu.cpp -o ../compiled/Cave6.lib $FLAGS
-"$MIPS_CXX" KAR/Curling.cpp -o ../compiled/KAR.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingCollision.cpp -o ../compiled/KARCollision.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingCollisionFlow.cpp -o ../compiled/KARCollisionFlow.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingWalls.cpp -o ../compiled/KARWalls.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingBounce.cpp -o ../compiled/KARBounce.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingGeometry.cpp -o ../compiled/KARGeometry.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingMovement.cpp -o ../compiled/KARMovement.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingPhysics.cpp -o ../compiled/KARPhysics.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingAimScroll.cpp -o ../compiled/KARAimScroll.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingAiming.cpp -o ../compiled/KARAiming.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingRingMarkers.cpp -o ../compiled/KARRingMarkers.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingScoring.cpp -o ../compiled/KARScoring.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingOpponent.cpp -o ../compiled/KAROpponent.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingOpponentShot.cpp -o ../compiled/KAROpponentShot.lib $FLAGS
-
-"$MIPS_CXX" KAR/CurlingOrdering.cpp -o ../compiled/KAROrdering.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingRender.cpp -o ../compiled/KARRender.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingHud.cpp -o ../compiled/KARHud.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingHints.cpp -o ../compiled/KARHints.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingHintPages.cpp -o ../compiled/KARHintPages.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingSprite.cpp -o ../compiled/KARSprite.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingMatch.cpp -o ../compiled/KARMatch.lib $FLAGS
-"$MIPS_CXX" KAR/CurlingMatchState.cpp -o ../compiled/KARMatchState.lib $FLAGS
+"$MIPS_CXX" \
+    KAR/CurlingAimScroll.cpp \
+    KAR/CurlingAiming.cpp \
+    KAR/CurlingBounce.cpp \
+    KAR/CurlingCollision.cpp \
+    KAR/CurlingCollisionFlow.cpp \
+    KAR/CurlingGeometry.cpp \
+    KAR/CurlingHints.cpp \
+    KAR/CurlingHud.cpp \
+    KAR/CurlingMatch.cpp \
+    KAR/CurlingMatchState.cpp \
+    KAR/CurlingMovement.cpp \
+    KAR/CurlingOpponent.cpp \
+    KAR/CurlingOpponentShot.cpp \
+    KAR/CurlingPhysics.cpp \
+    KAR/CurlingRender.cpp \
+    KAR/CurlingRingMarkers.cpp \
+    KAR/CurlingScoring.cpp \
+    KAR/CurlingWalls.cpp \
+    -o ../compiled/KAR.lib $FLAGS
 
 cd -
