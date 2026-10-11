@@ -13,7 +13,8 @@ namespace
 
     bool isOpponentRowHidden()
     {
-        return KAR_MATCH_STATE != 3 && KAR_MATCH_STATE < 16 && (KAR_HINT_STATE != 0 || KAR_MATCH_STATE < 5);
+        return KAR_MATCH_STATE != CurlingMatchState::READY && KAR_MATCH_STATE < CurlingMatchState::RETURN_CAMERA &&
+               (KAR_HINT_STATE != 0 || KAR_MATCH_STATE < CurlingMatchState::SELECT_STONE);
     }
 } // namespace
 
@@ -24,7 +25,8 @@ void KAR_renderScene(int32_t instanceId)
     for (int32_t player = 0; player < 3; player++) {
         for (int32_t index = 0; index < 5; index++) {
             if (player == 1 && isOpponentRowHidden()) continue;
-            if (KAR_MATCH_STATE < 4 && KAR_ANIMATION_TIMER < (index + 1) * 60) continue;
+            if (KAR_MATCH_STATE < CurlingMatchState::SETUP_DEMO_SHOT && KAR_ANIMATION_TIMER < (index + 1) * 60)
+                continue;
 
             auto& stone = KAR_STONE_ROWS[player].stones[index];
             if (stone.state == 0) {
@@ -39,12 +41,12 @@ void KAR_renderScene(int32_t instanceId)
                     stone.position.x        = translation[0];
                     stone.position.y        = translation[1] + 120;
                     stone.position.z        = translation[2];
-                    stone.rotationZ         = 0;
-                    stone.selectionPhase    = 0;
-                    stone.rotationX         = 0;
+                    stone.rotation.z        = 0;
+                    stone.rotation.y        = 0;
+                    stone.rotation.x        = 0;
                 }
             }
-            libgte_RotMatrix(reinterpret_cast<SVector*>(&stone.rotationX), &stone.coordinate.coord);
+            libgte_RotMatrix(&stone.rotation, &stone.coordinate.coord);
             libgte_TransMatrix(&stone.coordinate.coord, &stone.position);
             stone.coordinate.flag = 0;
 

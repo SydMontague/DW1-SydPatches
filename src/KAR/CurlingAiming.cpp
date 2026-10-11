@@ -11,7 +11,7 @@ void KAR_beginAiming()
 {
     const int8_t entityId = KAR_CURRENT_PLAYER != 0 ? static_cast<int8_t>(KAR_OPPONENT_ENTITY) : 0;
 
-    KAR_MATCH_STATE = 6;
+    KAR_MATCH_STATE = CurlingMatchState::AIM;
     if (entityId == 0)
         startAnimation(ENTITY_TABLE.getEntityById(0), 0x23);
     else if (KAR_OPPONENT_ENTITY == 2)
@@ -19,7 +19,8 @@ void KAR_beginAiming()
 
     auto& stone = KAR_STONE_ROWS[KAR_CURRENT_PLAYER].stones[KAR_SELECTED_STONE];
     stone.state = 0;
-    if (stone.type == 3) libgs_GsLinkObject4(KAR_MODEL_DATA + 3, &stone.object, KAR_CURRENT_PLAYER != 0 ? 1 : 2);
+    if (stone.type == 3)
+        libgs_GsLinkObject4(KAR_MODEL_BUFFER.data() + 3, &stone.object, KAR_CURRENT_PLAYER != 0 ? 1 : 2);
 
     KAR_AIM_ANGLE                                             = -1024;
     ENTITY_TABLE.getEntityById(entityId)->posData->rotation.y = 0;
@@ -58,7 +59,7 @@ void KAR_turnAim(int32_t delta)
 
 void KAR_beginThrow()
 {
-    KAR_MATCH_STATE = 7;
+    KAR_MATCH_STATE = CurlingMatchState::FOCUS_THROW_CAMERA;
     if (KAR_CURRENT_PLAYER == 0)
         startAnimation(ENTITY_TABLE.getEntityById(0), 0x24);
     else if (KAR_OPPONENT_ENTITY == 2)

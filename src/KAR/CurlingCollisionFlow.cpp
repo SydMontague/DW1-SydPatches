@@ -212,7 +212,7 @@ namespace
 [[gnu::optimize("Os")]]
 void KAR_checkStonesStopped()
 {
-    if (KAR_MATCH_STATE != 11) return;
+    if (KAR_MATCH_STATE != CurlingMatchState::STONES_MOVING) return;
 
     bool moving = false;
     for (auto& row : KAR_STONE_ROWS) {
@@ -226,7 +226,7 @@ void KAR_checkStonesStopped()
             stone.speed = 0;
         }
     }
-    if (!moving) KAR_MATCH_STATE = 12;
+    if (!moving) KAR_MATCH_STATE = CurlingMatchState::CLASSIFY_RINGS;
 
     for (auto& row : KAR_STONE_ROWS) {
         for (auto& stone : row.stones) {
@@ -239,7 +239,7 @@ void KAR_checkStonesStopped()
 void KAR_updateCollisions()
 {
     KAR_bounceOffWall();
-    if (KAR_MATCH_STATE != 11) return;
+    if (KAR_MATCH_STATE != CurlingMatchState::STONES_MOVING) return;
 
     dtl::array<Vector, 15> current{};
     // Step zero uses current; every later step follows a complete copy below.

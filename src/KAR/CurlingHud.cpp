@@ -10,10 +10,9 @@
 #include "../extern/libgs.hpp"
 #include "../extern/libgte.hpp"
 
-extern uint16_t KAR_ARROW_GAP;
-
 namespace
 {
+    uint16_t arrowGap = 0;
     struct CurlingSprite
     {
         int16_t x;
@@ -32,14 +31,13 @@ namespace
 
     void renderSprite(const CurlingSprite* sprite)
     {
-        auto* primitive   = static_cast<POLY_FT4*>(libgs_GsGetWorkBase());
-        primitive->tag[3] = 9;
-        primitive->code   = 0x2C;
-        primitive->tpage  = getTPage(0, 0, 640, 0);
-        primitive->r0     = sprite->red;
-        primitive->g0     = sprite->green;
-        primitive->b0     = sprite->blue;
-        primitive->clut   = getClut(sprite->clutX, sprite->clutY);
+        auto* primitive = static_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+        libgpu_SetPolyFT4(primitive);
+        primitive->tpage = getTPage(0, 0, 640, 0);
+        primitive->r0    = sprite->red;
+        primitive->g0    = sprite->green;
+        primitive->b0    = sprite->blue;
+        primitive->clut  = getClut(sprite->clutX, sprite->clutY);
         setUVDataPolyFT4(primitive, sprite->u, sprite->v, sprite->width, sprite->height);
         setPosDataPolyFT4(primitive, sprite->x, sprite->y, sprite->width, sprite->height);
         libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + 10, primitive);
@@ -217,15 +215,21 @@ namespace
 
 } // namespace
 
+void KAR_resetHud()
+{
+    arrowGap          = 0;
+    KAR_READY_COUNTER = 0;
+}
+
 [[gnu::optimize("Os")]]
 void KAR_renderAimArrow()
 {
     const int8_t entity = KAR_CURRENT_PLAYER != 0 ? static_cast<int8_t>(KAR_OPPONENT_ENTITY) : 0;
-    if (KAR_MATCH_STATE < 6 || KAR_MATCH_STATE >= 8) return;
+    if (KAR_MATCH_STATE < CurlingMatchState::AIM || KAR_MATCH_STATE >= CurlingMatchState::SELECT_POWER) return;
 
     auto* orderingTable = ACTIVE_ORDERING_TABLE->origin;
     if (KAR_ANIMATION_TIMER-- != 0) KAR_ANIMATION_TIMER += 191;
-    if (KAR_ARROW_GAP++ >= 40) KAR_ARROW_GAP = 0;
+    if (arrowGap++ >= 40) arrowGap = 0;
 
     SVector previous{};
     for (int32_t index = 0; index < 15; index++) {
@@ -251,12 +255,11 @@ void KAR_renderAimArrow()
             }
         }
 
-        auto* primitive   = static_cast<POLY_FT4*>(libgs_GsGetWorkBase());
-        primitive->tag[3] = 9;
-        primitive->code   = 0x2C;
-        primitive->r0     = static_cast<uint8_t>(shade + 64);
-        primitive->g0     = static_cast<uint8_t>(shade + 64);
-        primitive->b0     = static_cast<uint8_t>(shade + 64);
+        auto* primitive = static_cast<POLY_FT4*>(libgs_GsGetWorkBase());
+        libgpu_SetPolyFT4(primitive);
+        primitive->r0 = static_cast<uint8_t>(shade + 64);
+        primitive->g0 = static_cast<uint8_t>(shade + 64);
+        primitive->b0 = static_cast<uint8_t>(shade + 64);
 
         const auto projected = getMapPosition(position);
         // getMapPosition sign-extends depth; vanilla uses unsigned GTE depth divided by four.
@@ -288,7 +291,7 @@ void KAR_renderAimArrow()
         }
         primitive->clut  = getClut(128, 486);
         primitive->tpage = getTPage(0, 0, 640, 0);
-        if (index != KAR_ARROW_GAP / 3) libgpu_AddPrim(orderingTable + depth, primitive);
+        if (index != arrowGap / 3) libgpu_AddPrim(orderingTable + depth, primitive);
         libgs_GsSetWorkBase(primitive + 1);
         previous = position;
     }
@@ -297,7 +300,7 @@ void KAR_renderAimArrow()
 [[gnu::optimize("Os")]]
 void KAR_renderStoneCursor()
 {
-    if (KAR_MATCH_STATE == 5) {
+    if (KAR_MATCH_STATE == CurlingMatchState::SELECT_STONE) {
         auto sprite = CURSOR_SPRITE;
         sprite.x    = KAR_CURRENT_PLAYER != 0 ? 100 : -120;
         sprite.y    = static_cast<int16_t>(KAR_SELECTED_STONE * 30 - 45);
@@ -331,7 +334,7 @@ void KAR_renderScores()
 [[gnu::optimize("Os")]]
 void KAR_renderPowerMeter()
 {
-    if (KAR_MATCH_STATE >= 8 && KAR_MATCH_STATE < 10) {
+    if (KAR_MATCH_STATE >= CurlingMatchState::SELECT_POWER && KAR_MATCH_STATE < CurlingMatchState::WAIT_FOR_RELEASE) {
         auto sprites     = POWER_SPRITES;
         sprites[1].x     = KAR_CURRENT_PLAYER != 0 ? 50 : -50;
         sprites[1].clutX = KAR_CURRENT_PLAYER != 0 ? 128 : 112;
@@ -349,7 +352,7 @@ void KAR_renderPowerMeter()
 [[gnu::optimize("Os")]]
 void KAR_renderReadyPrompt()
 {
-    if (KAR_MATCH_STATE == 3) {
+    if (KAR_MATCH_STATE == CurlingMatchState::READY) {
         if (KAR_READY_COUNTER++ >= 49) KAR_READY_COUNTER = 48;
         if (KAR_READY_COUNTER & 8) renderSprite(&READY_SPRITE);
     }

@@ -58,6 +58,10 @@ extern "C"
         }
     };
 
+    // Vector arguments use the PS1 GTE/O32 layout.
+    static_assert(sizeof(Vector) == 16 && alignof(Vector) == 4);
+    static_assert(sizeof(SVector) == 8 && alignof(SVector) == 2);
+
     struct CVector
     {
         uint8_t r;

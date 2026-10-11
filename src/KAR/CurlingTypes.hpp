@@ -3,41 +3,22 @@
 #include "../extern/dtl/array.hpp"
 #include "../extern/libgs.hpp"
 
-// Vector arguments and libgs data use the PS1 O32 layout.
-static_assert(sizeof(void*) == 4 && sizeof(Vector) == 16 && sizeof(SVector) == 8);
-
-// Non-owning view of a stone in the loaded KAR overlay. Unused vanilla fields stay opaque.
+// KAR owns stone storage; only the embedded libgs/libgte types have an external layout contract.
 struct CurlingStone
 {
     int32_t state;
     int8_t type;
-    uint8_t reserved05;
     int16_t weight;
     int16_t speed;
-    uint8_t reserved0A[0x02];
     int32_t angle;
     int8_t ring;
     int8_t previousRing;
-    uint8_t reserved12[0x02];
     Vector target;
     GsDOBJ2 object;
     GsCOORDINATE2 coordinate;
-    uint8_t reserved84[0x10];
-    int16_t rotationX;
-    int16_t selectionPhase;
-    int16_t rotationZ;
-    int16_t reserved9A;
+    SVector rotation;
     Vector position;
 };
-
-// The loaded row storage and libgs calls share these binary layouts.
-static_assert(__is_standard_layout(CurlingStone) && __is_trivially_copyable(CurlingStone));
-static_assert(sizeof(CurlingStone) == 0xAC && alignof(CurlingStone) == 4);
-static_assert(__builtin_offsetof(CurlingStone, target) == 0x14);
-static_assert(__builtin_offsetof(CurlingStone, object) == 0x24);
-static_assert(__builtin_offsetof(CurlingStone, coordinate) == 0x34);
-static_assert(__builtin_offsetof(CurlingStone, rotationX) == 0x94);
-static_assert(__builtin_offsetof(CurlingStone, position) == 0x9C);
 
 struct CurlingStoneRow
 {
@@ -45,12 +26,11 @@ struct CurlingStoneRow
     int8_t thrown;
     int16_t shotPower;
     uint16_t plannedStone;
-    uint8_t reserved06[0x02];
     dtl::array<CurlingStone, 5> stones;
 };
 
-static_assert(__is_standard_layout(CurlingStoneRow) && __is_trivially_copyable(CurlingStoneRow));
-static_assert(sizeof(CurlingStoneRow) == 0x364 && __builtin_offsetof(CurlingStoneRow, stones) == 8);
+// Whole-stone snapshots use ordinary assignment, including their GS binding.
+static_assert(__is_trivially_copyable(CurlingStone));
 
 struct CurlingRingZone
 {
@@ -61,12 +41,43 @@ struct CurlingRingZone
 
 extern const dtl::array<CurlingRingZone, 4> KAR_RING_ZONES;
 
-// Existing overlay rows and resident match storage preserve their entry/re-entry lifetime.
+enum class CurlingMatchState : int32_t
+{
+    INITIALIZE           = 0,
+    PROMPT               = 1,
+    REVEAL_DEMO_STONES   = 2,
+    READY                = 3,
+    SETUP_DEMO_SHOT      = 4,
+    SELECT_STONE         = 5,
+    AIM                  = 6,
+    FOCUS_THROW_CAMERA   = 7,
+    SELECT_POWER         = 8,
+    START_THROW          = 9,
+    WAIT_FOR_RELEASE     = 10,
+    STONES_MOVING        = 11,
+    CLASSIFY_RINGS       = 12,
+    TALLY_SCORE          = 13,
+    FOCUS_DEMO_RESULT    = 14,
+    RESET_TURN           = 15,
+    RETURN_CAMERA        = 16,
+    CHOOSE_OPPONENT_SHOT = 17,
+    WAIT_FOR_HINT_BOX    = 18,
+    SHOW_HINT            = 19,
+    FINISHED             = 20,
+};
+
+static_assert(sizeof(CurlingMatchState) == sizeof(int32_t));
+
+// One definition in the owning KAR source; these are not fixed-address imports.
+constexpr uint16_t KAR_OBJECT_INSTANCE = 15;
+// KARRING.TMD is 27,828 bytes; readFile transfers fourteen complete 2,048-byte sectors.
+constexpr uint32_t KAR_MODEL_BUFFER_WORDS = 14 * 2048 / sizeof(uint32_t);
+// TODO internalize access to these KAR-owned rows.
 extern dtl::array<CurlingStoneRow, 3> KAR_STONE_ROWS;
 extern int16_t KAR_SELECTED_STONE;
 extern int8_t KAR_CURRENT_PLAYER;
-extern uint32_t* KAR_MODEL_DATA;
-extern int32_t KAR_MATCH_STATE;
+extern dtl::array<uint32_t, KAR_MODEL_BUFFER_WORDS> KAR_MODEL_BUFFER;
+extern CurlingMatchState KAR_MATCH_STATE;
 extern uint8_t KAR_OPPONENT_ENTITY;
 extern int8_t KAR_HINT_STATE;
 extern CurlingStone KAR_PREVIOUS_PLAYER_STONE;
