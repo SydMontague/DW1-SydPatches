@@ -3,6 +3,7 @@
 
 #include "../Camera.hpp"
 #include "../GameObjects.hpp"
+#include "../Input.hpp"
 #include "../Map.hpp"
 #include "../Model.hpp"
 #include "../Sound.hpp"
@@ -11,29 +12,23 @@
 #include "../extern/libc.hpp"
 #include "../extern/libgte.hpp"
 
-extern uint16_t KAR_ANIMATION_TIMER;
-extern uint8_t KAR_READY_COUNTER;
-extern int16_t KAR_THROW_POWER;
-extern int32_t KAR_AIM_ANGLE;
-extern int16_t KAR_AIM_VELOCITY;
+bool KAR_moveMatchCamera(int32_t x, int32_t z, int32_t speed)
+{
+    const bool done               = tickCameraMoveTo(static_cast<int16_t>(x), static_cast<int16_t>(z), speed);
+    const int32_t cameraRemainder = CAMERA_Y % 128;
+    if (cameraRemainder == 0 || cameraRemainder >= 106) {
+        const int32_t mapWidth = static_cast<int8_t>(MAP_WIDTH);
+        const int32_t tileY    = static_cast<int8_t>(MAP_TILE_Y);
+        const int32_t tileX    = static_cast<int8_t>(MAP_TILE_X);
+        uploadMapTileImages(MAP_TILE_DATA.data(), tileX + tileY * mapWidth);
+    }
+    return done;
+}
 
 namespace
 {
     Vector cameraStonePosition{};
     uint32_t throwSoundMask = 0;
-
-    bool moveMatchCamera(int32_t x, int32_t z, int32_t speed)
-    {
-        const bool done               = tickCameraMoveTo(static_cast<int16_t>(x), static_cast<int16_t>(z), speed);
-        const int32_t cameraRemainder = CAMERA_Y % 128;
-        if (cameraRemainder == 0 || cameraRemainder >= 106) {
-            const int32_t mapWidth = static_cast<int8_t>(MAP_WIDTH);
-            const int32_t tileY    = static_cast<int8_t>(MAP_TILE_Y);
-            const int32_t tileX    = static_cast<int8_t>(MAP_TILE_X);
-            uploadMapTileImages(MAP_TILE_DATA.data(), tileX + tileY * mapWidth);
-        }
-        return done;
-    }
 
     void finishMatch()
     {
@@ -144,16 +139,13 @@ namespace
                     }
                 }
                 else {
-                    if ((POLLED_INPUT & InputButtons::BUTTON_CROSS) &&
-                        !(POLLED_INPUT_PREVIOUS & InputButtons::BUTTON_CROSS)) {
+                    if (isKeyDownPolled(InputButtons::BUTTON_CROSS)) {
                         KAR_beginAiming();
                     }
-                    else if ((POLLED_INPUT & InputButtons::BUTTON_UP) &&
-                             !(POLLED_INPUT_PREVIOUS & InputButtons::BUTTON_UP)) {
+                    else if (isKeyDownPolled(InputButtons::BUTTON_UP)) {
                         KAR_selectPreviousStone();
                     }
-                    else if ((POLLED_INPUT & InputButtons::BUTTON_DOWN) &&
-                             !(POLLED_INPUT_PREVIOUS & InputButtons::BUTTON_DOWN)) {
+                    else if (isKeyDownPolled(InputButtons::BUTTON_DOWN)) {
                         KAR_selectNextStone();
                     }
                 }
@@ -163,7 +155,7 @@ namespace
                 if ((KAR_CURRENT_PLAYER != 0) || (KAR_HINT_STATE != 0)) {
                     const int32_t targetAngle = KAR_STONE_ROWS[KAR_CURRENT_PLAYER].stones[KAR_SELECTED_STONE].angle;
                     if (KAR_tickHintBox(1) != 0) {
-                        if ((POLLED_INPUT & InputButtons::BUTTON_RIGHT) && (KAR_AIM_ANGLE < -0x18F)) {
+                        if (isKeyPressed(InputButtons::BUTTON_RIGHT) && (KAR_AIM_ANGLE < -0x18F)) {
                             if (KAR_AIM_VELOCITY > 0) {
                                 KAR_AIM_VELOCITY++;
                             }
@@ -172,7 +164,7 @@ namespace
                             }
                             KAR_turnAim(KAR_AIM_VELOCITY);
                         }
-                        else if ((POLLED_INPUT & InputButtons::BUTTON_LEFT) && (KAR_AIM_ANGLE >= -0x5B6)) {
+                        else if (isKeyPressed(InputButtons::BUTTON_LEFT) && (KAR_AIM_ANGLE >= -0x5B6)) {
                             if (KAR_AIM_VELOCITY < 0) {
                                 KAR_AIM_VELOCITY--;
                             }
@@ -181,8 +173,8 @@ namespace
                             }
                             KAR_turnAim(KAR_AIM_VELOCITY);
                         }
-                        else if (!(POLLED_INPUT & InputButtons::BUTTON_LEFT) &&
-                                 !(POLLED_INPUT & InputButtons::BUTTON_RIGHT)) {
+                        else if (!isKeyPressed(InputButtons::BUTTON_LEFT) &&
+                                 !isKeyPressed(InputButtons::BUTTON_RIGHT)) {
                             KAR_AIM_VELOCITY = 0;
                             break;
                         }
@@ -204,11 +196,10 @@ namespace
                     }
                 }
                 else {
-                    if ((POLLED_INPUT & InputButtons::BUTTON_CROSS) &&
-                        !(POLLED_INPUT_PREVIOUS & InputButtons::BUTTON_CROSS)) {
+                    if (isKeyDownPolled(InputButtons::BUTTON_CROSS)) {
                         KAR_beginThrow();
                     }
-                    if ((POLLED_INPUT & InputButtons::BUTTON_RIGHT) && (KAR_AIM_ANGLE < -0x18F)) {
+                    if (isKeyPressed(InputButtons::BUTTON_RIGHT) && (KAR_AIM_ANGLE < -0x18F)) {
                         if (KAR_AIM_VELOCITY > 0) {
                             KAR_AIM_VELOCITY++;
                         }
@@ -217,7 +208,7 @@ namespace
                         }
                         KAR_turnAim(KAR_AIM_VELOCITY);
                     }
-                    if ((POLLED_INPUT & InputButtons::BUTTON_LEFT) && (KAR_AIM_ANGLE >= -0x5B6)) {
+                    if (isKeyPressed(InputButtons::BUTTON_LEFT) && (KAR_AIM_ANGLE >= -0x5B6)) {
                         if (KAR_AIM_VELOCITY < 0) {
                             KAR_AIM_VELOCITY--;
                         }
@@ -226,15 +217,15 @@ namespace
                         }
                         KAR_turnAim(KAR_AIM_VELOCITY);
                     }
-                    if (!(POLLED_INPUT & InputButtons::BUTTON_LEFT) && !(POLLED_INPUT & InputButtons::BUTTON_RIGHT)) {
+                    if (!isKeyPressed(InputButtons::BUTTON_LEFT) && !isKeyPressed(InputButtons::BUTTON_RIGHT)) {
                         KAR_AIM_VELOCITY = 0;
                     }
                 }
                 break;
             case 7:
-                if (moveMatchCamera(KAR_STONE_ROWS[KAR_CURRENT_PLAYER].stones[KAR_SELECTED_STONE].position.x,
-                                    KAR_STONE_ROWS[KAR_CURRENT_PLAYER].stones[KAR_SELECTED_STONE].position.z,
-                                    0x14)) {
+                if (KAR_moveMatchCamera(KAR_STONE_ROWS[KAR_CURRENT_PLAYER].stones[KAR_SELECTED_STONE].position.x,
+                                        KAR_STONE_ROWS[KAR_CURRENT_PLAYER].stones[KAR_SELECTED_STONE].position.z,
+                                        0x14)) {
                     KAR_MATCH_STATE = 8;
                 }
                 KAR_AIM_VELOCITY = 0;
@@ -270,8 +261,7 @@ namespace
                         }
                     }
                 }
-                else if ((POLLED_INPUT & InputButtons::BUTTON_CROSS) &&
-                         !(POLLED_INPUT_PREVIOUS & InputButtons::BUTTON_CROSS)) {
+                else if (isKeyDownPolled(InputButtons::BUTTON_CROSS)) {
                     KAR_MATCH_STATE                                                     = 9;
                     KAR_STONE_ROWS[KAR_CURRENT_PLAYER].stones[KAR_SELECTED_STONE].angle = KAR_AIM_ANGLE;
                     KAR_STONE_ROWS[KAR_CURRENT_PLAYER].stones[KAR_SELECTED_STONE].selectionPhase =
@@ -333,7 +323,7 @@ namespace
                 }
                 break;
             case 14:
-                if (moveMatchCamera(0, -0x6A4, 0xA)) {
+                if (KAR_moveMatchCamera(0, -0x6A4, 0xA)) {
                     KAR_MATCH_STATE = 15;
                 }
                 break;
@@ -349,9 +339,9 @@ namespace
                         KAR_PREVIOUS_PLAYER_STONE = KAR_STONE_ROWS[0].stones[KAR_SELECTED_STONE];
                     }
                     if (KAR_HINT_STATE != 0) {
-                        if (moveMatchCamera(ENTITY_TABLE.getEntityById(player)->posData->location.x,
-                                            ENTITY_TABLE.getEntityById(player)->posData->location.z,
-                                            0x14)) {
+                        if (KAR_moveMatchCamera(ENTITY_TABLE.getEntityById(player)->posData->location.x,
+                                                ENTITY_TABLE.getEntityById(player)->posData->location.z,
+                                                0x14)) {
                             ENTITY_TABLE.getEntityById(player)->posData->rotation.y = 0;
                             KAR_HINT_STATE                                          = 0;
                             KAR_MATCH_STATE                                         = 3;
@@ -390,9 +380,9 @@ namespace
                 }
                 break;
             case 16:
-                if (moveMatchCamera(ENTITY_TABLE.getEntityById(player)->posData->location.x,
-                                    ENTITY_TABLE.getEntityById(player)->posData->location.z,
-                                    0x14)) {
+                if (KAR_moveMatchCamera(ENTITY_TABLE.getEntityById(player)->posData->location.x,
+                                        ENTITY_TABLE.getEntityById(player)->posData->location.z,
+                                        0x14)) {
                     if ((KAR_STONE_ROWS[0].thrown >= 5) && (KAR_STONE_ROWS[1].thrown >= 5)) {
                         KAR_HINT_STATE = 1;
                         clearTextArea();
@@ -458,7 +448,7 @@ namespace
 
 } // namespace
 
-extern "C" void KAR_tick()
+void KAR_tick()
 {
     // Vanilla continues this ordered tail even when the state update finishes the match.
     tickMatchState();

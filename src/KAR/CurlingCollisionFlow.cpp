@@ -187,100 +187,8 @@ namespace
             }
         }
     }
-} // namespace
-
-extern "C"
-{
     [[gnu::optimize("Os")]]
-    void KAR_checkStonesStopped()
-    {
-        if (KAR_MATCH_STATE != 11) return;
-
-        bool moving = false;
-        for (auto& row : KAR_STONE_ROWS) {
-            for (auto& stone : row.stones) {
-                if (stone.state <= 0) continue;
-                if (stone.speed > 0) {
-                    moving = true;
-                    // Vanilla stops this row's scan, leaving its later speeds untouched.
-                    break;
-                }
-                stone.speed = 0;
-            }
-        }
-        if (!moving) KAR_MATCH_STATE = 12;
-
-        for (auto& row : KAR_STONE_ROWS) {
-            for (auto& stone : row.stones) {
-                if (stone.state > 0 && stone.position.z >= 190 && stone.speed <= 0) stone.state = -101;
-            }
-        }
-    }
-
-    [[gnu::optimize("Os")]]
-    void KAR_updateCollisions()
-    {
-        KAR_bounceOffWall();
-        if (KAR_MATCH_STATE != 11) return;
-
-        dtl::array<Vector, 15> current{};
-        // Step zero uses current; every later step follows a complete copy below.
-        dtl::array<Vector, 15> previous;
-        CollisionCheckpoint checkpoint;
-        uint32_t power  = 1;
-        uint32_t length = 0;
-        StonePointers stones;
-        int32_t stoneIndex = 0;
-        for (auto& row : KAR_STONE_ROWS)
-            for (auto& stone : row.stones)
-                stones[stoneIndex++] = &stone;
-
-        for (int32_t step = 0; step <= 10; step++) {
-            for (int32_t index = 0; index < 15; index++) {
-                const auto& stone = *stones[index];
-                if (stone.state <= 0) continue;
-                auto& point = current[index];
-                point.x     = (stone.target.x * (10 - step) + stone.position.x * step) / 10;
-                point.z     = (stone.target.z * (10 - step) + stone.position.z * step) / 10;
-                point.y     = stone.target.y;
-            }
-
-            bool collided = false;
-            for (int32_t a = 0; a < 15; a++) {
-                auto& stoneA = *stones[a];
-                if (stoneA.state <= 0) continue;
-                for (int32_t b = a + 1; b < 15; b++) {
-                    auto& stoneB = *stones[b];
-                    if (stoneB.state <= 0) continue;
-                    if (KAR_distance(current[a].x - current[b].x, current[a].z - current[b].z) < 150) {
-                        collided           = true;
-                        const auto& points = step == 0 ? current : previous;
-                        KAR_resolveStoneCollision(&stoneB, points[b], &stoneA, points[a]);
-                    }
-                }
-            }
-            previous = current;
-            // Brent checkpoints retain ordinary retries; only recurrence or counter exhaustion requires recovery.
-            if (step == 9)
-                updateCollisionState(checkpoint, previous, stones);
-            else if (collided && step == 10) {
-                length++;
-                if (checkCollisionState(checkpoint, previous, stones) || (length == power && power == 0x80000000U)) {
-                    recoverCollisions(stones);
-                    return;
-                }
-                if (length == power) {
-                    updateCollisionState(checkpoint, previous, stones);
-                    power *= 2;
-                    length = 0;
-                }
-                step--;
-            }
-        }
-    }
-
-    [[gnu::optimize("Os")]]
-    void KAR_resolveStoneCollision(CurlingStone* stoneA, Vector a, CurlingStone* stoneB, Vector b)
+    void resolveStoneCollision(CurlingStone* stoneA, Vector a, CurlingStone* stoneB, Vector b)
     {
         playSound2(8, static_cast<int16_t>(stoneA->speed + stoneB->speed) >= 3000 ? 1 : 2);
         const auto priorityA = retentionPriority(*stoneA);
@@ -297,5 +205,94 @@ extern "C"
         const auto* firstPoint  = reverse ? &b : &a;
         const auto* secondPoint = reverse ? &a : &b;
         handler(reverse ? stoneB : stoneA, *firstPoint, reverse ? stoneA : stoneB, *secondPoint);
+    }
+
+} // namespace
+
+[[gnu::optimize("Os")]]
+void KAR_checkStonesStopped()
+{
+    if (KAR_MATCH_STATE != 11) return;
+
+    bool moving = false;
+    for (auto& row : KAR_STONE_ROWS) {
+        for (auto& stone : row.stones) {
+            if (stone.state <= 0) continue;
+            if (stone.speed > 0) {
+                moving = true;
+                // Vanilla stops this row's scan, leaving its later speeds untouched.
+                break;
+            }
+            stone.speed = 0;
+        }
+    }
+    if (!moving) KAR_MATCH_STATE = 12;
+
+    for (auto& row : KAR_STONE_ROWS) {
+        for (auto& stone : row.stones) {
+            if (stone.state > 0 && stone.position.z >= 190 && stone.speed <= 0) stone.state = -101;
+        }
+    }
+}
+
+[[gnu::optimize("Os")]]
+void KAR_updateCollisions()
+{
+    KAR_bounceOffWall();
+    if (KAR_MATCH_STATE != 11) return;
+
+    dtl::array<Vector, 15> current{};
+    // Step zero uses current; every later step follows a complete copy below.
+    dtl::array<Vector, 15> previous;
+    CollisionCheckpoint checkpoint;
+    uint32_t power  = 1;
+    uint32_t length = 0;
+    StonePointers stones;
+    int32_t stoneIndex = 0;
+    for (auto& row : KAR_STONE_ROWS)
+        for (auto& stone : row.stones)
+            stones[stoneIndex++] = &stone;
+
+    for (int32_t step = 0; step <= 10; step++) {
+        for (int32_t index = 0; index < 15; index++) {
+            const auto& stone = *stones[index];
+            if (stone.state <= 0) continue;
+            auto& point = current[index];
+            point.x     = (stone.target.x * (10 - step) + stone.position.x * step) / 10;
+            point.z     = (stone.target.z * (10 - step) + stone.position.z * step) / 10;
+            point.y     = stone.target.y;
+        }
+
+        bool collided = false;
+        for (int32_t a = 0; a < 15; a++) {
+            auto& stoneA = *stones[a];
+            if (stoneA.state <= 0) continue;
+            for (int32_t b = a + 1; b < 15; b++) {
+                auto& stoneB = *stones[b];
+                if (stoneB.state <= 0) continue;
+                if (KAR_distance(current[a].x - current[b].x, current[a].z - current[b].z) < 150) {
+                    collided           = true;
+                    const auto& points = step == 0 ? current : previous;
+                    resolveStoneCollision(&stoneB, points[b], &stoneA, points[a]);
+                }
+            }
+        }
+        previous = current;
+        // Brent checkpoints retain ordinary retries; only recurrence or counter exhaustion requires recovery.
+        if (step == 9)
+            updateCollisionState(checkpoint, previous, stones);
+        else if (collided && step == 10) {
+            length++;
+            if (checkCollisionState(checkpoint, previous, stones) || (length == power && power == 0x80000000U)) {
+                recoverCollisions(stones);
+                return;
+            }
+            if (length == power) {
+                updateCollisionState(checkpoint, previous, stones);
+                power *= 2;
+                length = 0;
+            }
+            step--;
+        }
     }
 }

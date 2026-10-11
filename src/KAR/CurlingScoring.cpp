@@ -1,8 +1,7 @@
 #include "Curling.hpp"
 #include "CurlingTypes.hpp"
 
-#include "../Camera.hpp"
-#include "../Map.hpp"
+#include "../Input.hpp"
 #include "../Sound.hpp"
 #include "../extern/dw1.hpp"
 
@@ -48,128 +47,115 @@ const CurlingStone& KAR_getTallyStone()
     return *thrownStones[tallyStoneIndex];
 }
 
-extern "C"
+void KAR_classifyStoneRings()
 {
-    void KAR_classifyStoneRings()
-    {
-        for (int32_t player = 0; player < 2; player++) {
-            KAR_STONE_ROWS[player].score = 0;
-            for (auto& stone : KAR_STONE_ROWS[player].stones) {
-                stone.previousRing = stone.ring;
-                stone.ring         = 0;
-                if (stone.state <= 0 || stone.position.z >= -1380) continue;
+    for (int32_t player = 0; player < 2; player++) {
+        KAR_STONE_ROWS[player].score = 0;
+        for (auto& stone : KAR_STONE_ROWS[player].stones) {
+            stone.previousRing = stone.ring;
+            stone.ring         = 0;
+            if (stone.state <= 0 || stone.position.z >= -1380) continue;
 
-                // The first ring query supersedes vanilla's discarded distance and its GTE scratch values.
-                for (int32_t ring = 0; ring < 4; ring++) {
-                    const auto& zone = KAR_RING_ZONES[ring];
-                    if (KAR_distance(stone.position.x + zone.dx, stone.position.z + zone.dz) <= zone.radius) {
-                        stone.ring = static_cast<int8_t>((ring + 1) | (player != 0 ? 0x10 : 0));
-                        break;
-                    }
-                }
-            }
-        }
-        registerThrownStone();
-    }
-
-    [[gnu::optimize("Os")]]
-    int32_t KAR_tickScoreTally()
-    {
-        if ((POLLED_INPUT & InputButtons::BUTTON_CROSS) && !(POLLED_INPUT_PREVIOUS & InputButtons::BUTTON_CROSS))
-            skipRequest = 1;
-
-        if (skipRequest == 1 && (tallyPhase == 1 || tallyPhase == 2)) {
-            tallyStoneIndex = static_cast<int8_t>(KAR_STONE_ROWS[0].thrown + KAR_STONE_ROWS[1].thrown);
-            tallyStoneIndex--;
-            KAR_STONE_ROWS[0].score = 0;
-            KAR_STONE_ROWS[1].score = 0;
-            while (tallyStoneIndex >= 0) {
-                const auto& stone    = *thrownStones[tallyStoneIndex];
-                const int32_t player = (stone.ring & 0x10) != 0 ? 1 : 0;
-                const int32_t ring   = stone.ring & 0x0F;
-                if (stone.state > 0 && ring != 0) {
-                    auto& score = KAR_STONE_ROWS[player].score;
-                    score       = static_cast<int8_t>(score + tallyValues[ring - 1]);
-                }
-                tallyStoneIndex--;
-            }
-            for (auto& row : KAR_STONE_ROWS) {
-                for (auto& stone : row.stones) {
-                    if (stone.state >= 100) stone.state -= 100;
-                }
-            }
-            blinkCount  = 0;
-            blinkTimer  = 0;
-            tallyPhase  = 0;
-            skipRequest = 0;
-            return 1;
-        }
-
-        if (previousStone != tallyStoneIndex) {
-            while (tallyStoneIndex >= 0) {
-                const auto& stone = *thrownStones[tallyStoneIndex];
-                if ((stone.ring & 0x0F) != 0) {
-                    previousStone = tallyStoneIndex;
-                    tallyPhase    = 0;
+            // The first ring query supersedes vanilla's discarded distance and its GTE scratch values.
+            for (int32_t ring = 0; ring < 4; ring++) {
+                const auto& zone = KAR_RING_ZONES[ring];
+                if (KAR_distance(stone.position.x + zone.dx, stone.position.z + zone.dz) <= zone.radius) {
+                    stone.ring = static_cast<int8_t>((ring + 1) | (player != 0 ? 0x10 : 0));
                     break;
                 }
-                tallyStoneIndex--;
-            }
-            if (tallyStoneIndex < 0) {
-                skipRequest = 0;
-                return 1;
             }
         }
+    }
+    registerThrownStone();
+}
 
-        // Independent stages preserve vanilla's camera/score/blink fallthrough within one tick.
-        if (tallyPhase == 0) {
-            const auto& stone = *thrownStones[tallyStoneIndex];
-            if (stone.ring != stone.previousRing) {
-                const bool done =
-                    tickCameraMoveTo(static_cast<int16_t>(stone.position.x), static_cast<int16_t>(stone.position.z), 5);
-                const int32_t cameraRemainder = CAMERA_Y % 128;
-                if (cameraRemainder == 0 || cameraRemainder >= 106) {
-                    // Vanilla loads signed bytes here; the shared map declarations are unsigned.
-                    const int32_t tileOffset = static_cast<int8_t>(MAP_TILE_X) +
-                                               static_cast<int8_t>(MAP_TILE_Y) * static_cast<int8_t>(MAP_WIDTH);
-                    uploadMapTileImages(MAP_TILE_DATA.data(), tileOffset);
-                }
-                if (!done) return 0;
-            }
-            tallyPhase = 1;
-        }
+[[gnu::optimize("Os")]]
+int32_t KAR_tickScoreTally()
+{
+    if (isKeyDownPolled(InputButtons::BUTTON_CROSS)) skipRequest = 1;
 
-        if (tallyPhase == 1) {
+    if (skipRequest == 1 && (tallyPhase == 1 || tallyPhase == 2)) {
+        tallyStoneIndex = static_cast<int8_t>(KAR_STONE_ROWS[0].thrown + KAR_STONE_ROWS[1].thrown);
+        tallyStoneIndex--;
+        KAR_STONE_ROWS[0].score = 0;
+        KAR_STONE_ROWS[1].score = 0;
+        while (tallyStoneIndex >= 0) {
             const auto& stone    = *thrownStones[tallyStoneIndex];
             const int32_t player = (stone.ring & 0x10) != 0 ? 1 : 0;
             const int32_t ring   = stone.ring & 0x0F;
-            auto& score          = KAR_STONE_ROWS[player].score;
-            score                = static_cast<int8_t>(score + tallyValues[ring - 1]);
-            tallyPhase           = 2;
-            if (stone.ring != stone.previousRing && ring != 0) playSound2(8, ring == 3 ? 6 : 5);
+            if (stone.state > 0 && ring != 0) {
+                auto& score = KAR_STONE_ROWS[player].score;
+                score       = static_cast<int8_t>(score + tallyValues[ring - 1]);
+            }
+            tallyStoneIndex--;
         }
+        for (auto& row : KAR_STONE_ROWS) {
+            for (auto& stone : row.stones) {
+                if (stone.state >= 100) stone.state -= 100;
+            }
+        }
+        blinkCount  = 0;
+        blinkTimer  = 0;
+        tallyPhase  = 0;
+        skipRequest = 0;
+        return 1;
+    }
 
-        if (tallyPhase == 2 && tallyStoneIndex >= 0) {
-            auto& stone = *thrownStones[tallyStoneIndex];
-            if (stone.ring != stone.previousRing && (stone.ring & 0x0F) != 0) {
-                if (blinkTimer++ >= 11) {
-                    if (stone.state < 100)
-                        stone.state += 100;
-                    else
-                        stone.state -= 100;
-                    blinkTimer -= 10;
-                    if (blinkCount++ >= 7) {
-                        tallyPhase = 4;
-                        blinkCount = 0;
-                        tallyStoneIndex--;
-                    }
+    if (previousStone != tallyStoneIndex) {
+        while (tallyStoneIndex >= 0) {
+            const auto& stone = *thrownStones[tallyStoneIndex];
+            if ((stone.ring & 0x0F) != 0) {
+                previousStone = tallyStoneIndex;
+                tallyPhase    = 0;
+                break;
+            }
+            tallyStoneIndex--;
+        }
+        if (tallyStoneIndex < 0) {
+            skipRequest = 0;
+            return 1;
+        }
+    }
+
+    // Independent stages preserve vanilla's camera/score/blink fallthrough within one tick.
+    if (tallyPhase == 0) {
+        const auto& stone = *thrownStones[tallyStoneIndex];
+        if (stone.ring != stone.previousRing) {
+            if (!KAR_moveMatchCamera(stone.position.x, stone.position.z, 5)) return 0;
+        }
+        tallyPhase = 1;
+    }
+
+    if (tallyPhase == 1) {
+        const auto& stone    = *thrownStones[tallyStoneIndex];
+        const int32_t player = (stone.ring & 0x10) != 0 ? 1 : 0;
+        const int32_t ring   = stone.ring & 0x0F;
+        auto& score          = KAR_STONE_ROWS[player].score;
+        score                = static_cast<int8_t>(score + tallyValues[ring - 1]);
+        tallyPhase           = 2;
+        if (stone.ring != stone.previousRing && ring != 0) playSound2(8, ring == 3 ? 6 : 5);
+    }
+
+    if (tallyPhase == 2 && tallyStoneIndex >= 0) {
+        auto& stone = *thrownStones[tallyStoneIndex];
+        if (stone.ring != stone.previousRing && (stone.ring & 0x0F) != 0) {
+            if (blinkTimer++ >= 11) {
+                if (stone.state < 100)
+                    stone.state += 100;
+                else
+                    stone.state -= 100;
+                blinkTimer -= 10;
+                if (blinkCount++ >= 7) {
+                    tallyPhase = 4;
+                    blinkCount = 0;
+                    tallyStoneIndex--;
                 }
             }
-            else {
-                tallyStoneIndex--;
-            }
-            if (tallyStoneIndex < 0) return 1;
         }
-        return 0;
+        else {
+            tallyStoneIndex--;
+        }
+        if (tallyStoneIndex < 0) return 1;
     }
+    return 0;
 }
