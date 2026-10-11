@@ -40,8 +40,8 @@
 ;  j showMapHeadTextbox
 ;.org 0x800fd398
 ;  jal showMapHeadTextbox
-.org 0x800fe5d4
-  jal showMapHeadTextbox
+;.org 0x800fe5d4
+;  jal showMapHeadTextbox
 .org 0x80106fe4
   jal showMapHeadTextbox
 .org 0x801082e4
@@ -98,6 +98,14 @@
   jal showMapHeadTextbox
 .org 0x8010c6e0
   jal showMapHeadTextbox
+
+.org 0x80105e7c
+  jal lostAllLives
+
+;.org 0x800fcfa0
+;  jal isTextboxBusy
+.org 0x8010a02c
+  jal isTextboxBusy
 
 .close
 

@@ -1,9 +1,12 @@
 
+#include "Evolution.hpp"
 #include "Helper.hpp"
 #include "Inventory.hpp"
 #include "Math.hpp"
+#include "Partner.hpp"
 #include "RecycleShop.hpp"
 #include "Tournament.hpp"
+#include "extern/dtl/array.hpp"
 #include "extern/dtl/vector.hpp"
 #include "extern/dw1.hpp"
 
@@ -155,5 +158,71 @@ extern "C"
         showTextboxReady(textboxId, speaker);
         ACTIVE_INSTRUCTION = 100;
         SCRIPT_POINTER     = backup;
+    }
+
+    void lostAllLives()
+    {
+        switch (SCRIPT_STATE_2) {
+            case 0:
+            {
+                auto masteredMoves = getNumMasteredMoves();
+                // lose (20 - TamerLevel * 2) percent of moves, rounded up
+                auto loseCount = ((10 - TAMER_ENTITY.tamerLevel) * 2 * masteredMoves + 50) / 100;
+                if (loseCount == 0)
+                    ACTIVE_INSTRUCTION = 0;
+                else {
+                    writePStat(0xF4, loseCount);
+                    SCRIPT_STATE_2 = 2;
+                }
+                break;
+            }
+            case 1: break;
+            case 2:
+            {
+                dtl::array<uint8_t, 58> moveArray;
+                auto moveCount = 0;
+
+                for (auto i = 0; i < moveArray.size(); i++) {
+                    if (!hasMove(i)) continue;
+                    moveArray[moveCount++] = i;
+                }
+
+                auto move = moveArray[random(moveCount)];
+                unlearnMove(move);
+                writePStat(0xF3, move);
+                showMapheadTextbox(7, 0xFF, 0, 1240);
+                SCRIPT_STATE_2      = 1;
+                SCRIPT_NEXT_STATE_2 = 3;
+                SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::CONFIRM;
+                break;
+            }
+            case 3:
+            {
+                auto remaining = readPStat(0xF4) - 1;
+                if (remaining <= 0) {
+                    ACTIVE_INSTRUCTION = 0;
+                }
+                else {
+                    writePStat(0xF4, remaining);
+                    SCRIPT_STATE_2 = 2;
+                }
+                break;
+            }
+        }
+    }
+
+    bool isTextboxBusy(int32_t id)
+    {
+        auto& box = TEXTBOX_DATA[id];
+
+        if (!box.isDoubleBuffered) return false;
+        if (!box.registered) return true;
+        if (box.writeCount != box.renderCount) return true;
+        if (!box.pageReady) return false;
+
+        box.activeBufferId ^= 1;
+        box.flipCount++;
+        box.pageReady = false;
+        return true; // vanilla lacks a return, causing UB
     }
 }

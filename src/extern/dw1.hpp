@@ -1942,7 +1942,6 @@ extern "C"
     void updateItemMenuLine(ItemMenuBox* menu, int32_t mode);
     void itemMenuCursorMoveToTop(ItemMenuBox* menu);
     void itemMenuCursorMoveToBottom(ItemMenuBox* menu);
-    bool isTextboxBusy(int32_t id);
     void calculateItemMenuStrings(ItemMenuBox* menu, int id, bool withNewLine);
     void calculateCardMenuStrings(ItemMenuBox* menu, int id, bool withNewLine);
     void calculateMusicMenuStrings(ItemMenuBox* menu, int id, bool withNewLine);

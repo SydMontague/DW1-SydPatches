@@ -52,7 +52,6 @@
 .definelabel calculateMusicMenuStrings, 0x800fec30
 .definelabel calculateBirdramonMenuStrings,0x800fed64
 .definelabel calculateItemListStrings,  0x800feef0
-.definelabel isTextboxBusy,             0x800fe650
 .definelabel updateItemMenuLine,        0x800ff0fc
 .definelabel itemMenuCursorMoveToTop,   0x800ff310
 .definelabel itemMenuCursorMoveToBottom,0x800ff2a8

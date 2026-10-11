@@ -30,4 +30,5 @@ extern "C"
                            int32_t rotY,
                            int32_t rotZ);
     void setImmortalHour();
+    void unlearnMove(uint32_t move);
 }

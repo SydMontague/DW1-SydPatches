@@ -46,10 +46,10 @@
 
 ;.org 0x800ed400
 ;  jal hasMove
-.org 0x800fe444
-  jal hasMove
-.org 0x800fe554
-  jal hasMove
+;.org 0x800fe444
+;  jal hasMove
+;.org 0x800fe554
+;  jal hasMove
 .org 0x80106d20
   j hasMove
 
@@ -57,9 +57,6 @@
 ;  jal learnMove
 .org 0x801067e4
   j learnMove
-
-.org 0x800fe5ac
-  jal unlearnMove
 
 .close 
 
