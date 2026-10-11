@@ -13,6 +13,37 @@ extern "C"
         int16_t height;
     };
 
+    struct DISPENV
+    {
+        RECT display;
+        RECT screen;
+        uint8_t interlace;
+        uint8_t rgb24;
+        uint8_t padding[2];
+    };
+
+    struct DRAWENV
+    {
+        RECT clip;
+        int16_t offset[2];
+        RECT textureWindow;
+        uint16_t texturePage;
+        uint8_t dither;
+        uint8_t drawOnDisplay;
+        uint8_t clearBackground;
+        uint8_t red;
+        uint8_t green;
+        uint8_t blue;
+        uint32_t commands[16];
+    };
+
+    static_assert(sizeof(RECT) == 8 && sizeof(DISPENV) == 20 && sizeof(DRAWENV) == 92);
+
+    DISPENV* libgpu_SetDefDispEnv(DISPENV* env, int32_t x, int32_t y, int32_t width, int32_t height);
+    DRAWENV* libgpu_SetDefDrawEnv(DRAWENV* env, int32_t x, int32_t y, int32_t width, int32_t height);
+    DISPENV* libgpu_PutDispEnv(DISPENV* env);
+    DRAWENV* libgpu_PutDrawEnv(DRAWENV* env);
+
     struct POLY_FT4
     {
         uint8_t tag[4];

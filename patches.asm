@@ -49,3 +49,4 @@
 .include "asm/MonochromonMoodBubble.asm"
 .include "asm/Misc.asm"
 .include "asm/Curling.asm"
+.include "asm/Movie.asm"

@@ -63,4 +63,6 @@ FLAGS="-O3 -std=c++23 -T linker.ld -mabi=32 -march=r3000 -r -mel -nostdlib -mexp
     KAR/CurlingWalls.cpp \
     -o ../compiled/KAR.lib $FLAGS
 
+"$MIPS_CXX" MOV/Movie.cpp -o ../compiled/MOV.lib $FLAGS
+
 cd -

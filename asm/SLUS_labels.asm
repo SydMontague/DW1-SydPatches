@@ -439,9 +439,6 @@
 .definelabel STD_Partner_tickTournament, 0x800696e4
 .definelabel STD_tournamentMain, 0x800579d8
 
-// MOV_REL
-.definelabel MOV_startMovie, 0x80010620
-
 // VS_REL
 .definelabel VS__setupIntroCamera, 0x8005a498
 .definelabel VS__tickFrame, 0x8005d6dc
@@ -528,6 +525,16 @@
 .definelabel libcd_CdPosToInt, 0x800b0554
 .definelabel libcd_CdIntToPos, 0x800b0450
 .definelabel libcd_CdInit, 0x800afe24
+.definelabel libcd_CdControlB, 0x800b0280
+.definelabel libcd_CdRead2, 0x800b2de0
+.definelabel libcd_StSetRing, 0x800afd78
+.definelabel libcd_StUnSetRing, 0x800b2ec4
+.definelabel libcd_StSetStream, 0x800b3034
+.definelabel libcd_StGetNext, 0x800b31b4
+.definelabel libcd_StFreeRing, 0x800b30c4
+.definelabel libcd_StGetBackloc, 0x800b2fd0
+.definelabel libcd_StCdInterrupt, 0x800b3468
+.definelabel libcd_STREAM_INTERRUPT_PENDING, 0x80139ba0
 
 // libetc
 .definelabel libetc_InterruptCallback, 0x8009237c
@@ -595,7 +602,19 @@
 .definelabel libgpu_ResetGraph, 0x80094538
 .definelabel libgpu_SetGraphDebug, 0x800946ac
 .definelabel libgpu_SetDispMask, 0x80094718
+.definelabel libgpu_SetDefDispEnv, 0x80092a44
+.definelabel libgpu_SetDefDrawEnv, 0x80092990
+.definelabel libgpu_PutDispEnv, 0x80094bfc
+.definelabel libgpu_PutDrawEnv, 0x80094b3c
 .definelabel libgpu_SetDrawOffset, 0x80095030
+
+// libpress
+.definelabel libpress_DecDCTReset, 0x800e9714
+.definelabel libpress_DecDCTin, 0x800e9748
+.definelabel libpress_DecDCTout, 0x800e97c4
+.definelabel libpress_DecDCToutCallback, 0x800e985c
+.definelabel libpress_DecDCTvlc2, 0x800e9884
+.definelabel libpress_DecDCTvlcBuild, 0x800e9bc0
 
 // libgte
 .definelabel libgte_setRotMatrix, 0x8009b200
