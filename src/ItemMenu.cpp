@@ -7,11 +7,13 @@
 #include "InventoryUI.hpp"
 #include "ItemDescriptionBox.hpp"
 #include "ItemMenuAmountBox.hpp"
+#include "MapData.hpp"
 #include "RecycleShop.hpp"
 #include "Script.hpp"
 #include "SingleCardConfirmMenu.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
+#include "constants.hpp"
 #include "extern/dtl/algorithm.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
@@ -57,8 +59,8 @@ namespace
         {
             .uvX          = 0x228,
             .uvV          = 0x1A2,
-            .width        = 20,
-            .height       = 12,
+            .width        = 12,
+            .height       = 7,
             .texture_page = 5,
             .clut         = getClut(0x60, 0x1EC),
         },
@@ -279,6 +281,211 @@ namespace
                 renderCardSprite(CARD_DATA[type].rarity, spriteX + 2, spriteY + i * 18, layer);
         }
     }
+
+    void terminateString(uint8_t* line, bool withNewLine)
+    {
+        line[0] = 1;
+        line[1] = 1;
+        line[2] = !withNewLine ? 0xD : 0;
+        line[3] = 0;
+    }
+
+    uint8_t* getTextboxLine(ItemMenuBox* menu, int32_t id)
+    {
+        auto& textbox = TEXTBOX_DATA[menu->textboxId];
+        auto* offset  = TEXTBOX_LINES_PTR + menu->stringOffset[id] * 0x40;
+        if (textbox.vramMode == VRAMMode::END_HALF) offset += 0x20;
+        if (textbox.isDoubleBuffered) offset += ((textbox.activeBufferId ^ 1) * textbox.lineCount * 0x40);
+
+        return offset;
+    }
+
+    void calculateItemMenuStrings(ItemMenuBox* menu, int id, bool withNewLine)
+    {
+        auto line   = getTextboxLine(menu, id);
+        auto offset = (menu->scrollOffset + id) * 2;
+        auto type   = menu->itemList[offset];
+        auto amount = menu->itemList[offset + 1];
+
+        if (type == 0xFFU) {
+            terminateString(line, withNewLine);
+            return;
+        }
+
+        // color
+        line[0] = 1;
+        switch (ITEM_MENU_TYPE) {
+            case 0:
+            case 7: line[1] = amount == 0 ? 3 : 1; break;
+            default: line[1] = ((amount & 0x80) == 0) ? 3 : 1; break;
+        }
+
+        // item name
+        auto* item = getItem(static_cast<ItemType>(type));
+        auto* name = item->name;
+        strcpy(line + 2, name);
+
+        line    = line + 2 + strlen(name);
+        line[0] = 0xF;
+        line[1] = 0;
+        line += 2;
+
+        // price
+        if (ITEM_MENU_TYPE != 5) {
+            line[0] = 0x16;
+            line[1] = 0;
+            line += 2;
+
+            auto value = item->value;
+            if (ITEM_MENU_TYPE == 7) value = item->meritValue;
+            if (ITEM_MENU_TYPE == 1) value /= 2;
+
+            if (ITEM_MENU_TYPE == 1 && (amount & 0x80) == 0) {
+                line[0] = 0x81;
+                line[1] = 0x7C;
+                line[2] = 0x81;
+                line[3] = 0x7C;
+                line[4] = 0x81;
+                line[5] = 0x7C;
+                line[6] = 0xF;
+                line[7] = 0;
+                line += 8;
+            }
+            else {
+                line    = intToStringSJIS(line, value, 4, 0);
+                line[0] = 0xF;
+                line[1] = 0;
+                line += 2;
+            }
+        }
+
+        // amount
+        switch (ITEM_MENU_TYPE) {
+            default:
+                line[0] = 0x1C;
+                line[1] = 0;
+                line += 2;
+                // deliberate fallthrough
+            case 1: line = intToStringSJIS(line, amount & 0x7F, 2, 0); break;
+            case 0:
+            case 7: break;
+        }
+
+        terminateString(line, withNewLine);
+    }
+
+    void calculateCardMenuStrings(ItemMenuBox* menu, int id, bool withNewLine)
+    {
+        auto line   = getTextboxLine(menu, id);
+        auto offset = (menu->scrollOffset + id) * 2;
+        auto type   = menu->itemList[offset];
+        auto amount = menu->itemList[offset + 1];
+
+        if (type == 0xFFU) {
+            terminateString(line, withNewLine);
+            return;
+        }
+
+        // color
+        line[0] = 1;
+        line[1] = 1;
+        if (ITEM_MENU_TYPE == 3) {
+            if (amount == 0)
+                line[1] = 3;
+            else if (getCardAmount(type) == 0)
+                line[1] = 7;
+        }
+
+        auto* item = &CARD_DATA[type];
+        auto* name = getDigimonData(static_cast<DigimonType>(item->type))->name;
+        strcpy(line + 2, name);
+        line = line + 2 + strlen(name);
+
+        line[0] = 0x17;
+        line[1] = 0x0;
+        line[2] = 0xf;
+        line[3] = 0x0;
+        line += 4;
+
+        switch (ITEM_MENU_TYPE) {
+            case 3: line = intToStringSJIS(line, CARD_PRICES[item->rarity], 4, 0); break;
+            default:
+                line    = intToStringSJIS(line, CARD_PRICES[item->rarity] / 2, 4, 0);
+                line[0] = 0xf;
+                line[1] = 0x0;
+                line += 2;
+                // deliberate fallthrough
+            case 6: line = intToStringSJIS(line, amount, 2, 0); break;
+        }
+
+        terminateString(line, withNewLine);
+    }
+
+    void calculateMusicMenuStrings(ItemMenuBox* menu, int id, bool withNewLine)
+    {
+        auto line   = getTextboxLine(menu, id);
+        auto offset = (menu->scrollOffset + id) * 2;
+        auto type   = menu->itemList[offset];
+        auto name   = MUSIC_NAME_LIST[type];
+        auto length = strlen(name);
+
+        line[0] = 1;
+        line[1] = readPStat(0xF9) == type ? 6 : 1;
+        line    = intToStringSJIS(line + 2, type + 1, 2, 0);
+        line[0] = 0xF;
+        line[1] = 0;
+        strcpy(line + 2, name);
+        line = padWithSpaces(line + 2 + length, 12, length);
+        terminateString(line, withNewLine);
+    }
+
+    void calculateBirdramonMenuStrings(ItemMenuBox* menu, int id, bool withNewLine)
+    {
+        auto line   = getTextboxLine(menu, id);
+        auto offset = (menu->scrollOffset + id) * 2;
+        auto type   = menu->itemList[offset];
+        auto* name  = reinterpret_cast<const uint8_t*>(
+            MAP_NAME_PTR[MAP_ENTRIES[BIRDRA_TRANSPORT_TARGETS[type & 0x7F].map].loadingName]);
+        auto length = strlen(name);
+
+        line[0] = 1;
+        line[1] = (type & 0x80) == 0 ? 3 : 1;
+        strcpy(line + 2, name);
+        line    = padWithSpaces(line + 2 + length, 12, length);
+        line[0] = 0xF;
+        line[1] = 0;
+        line[2] = 0x1b;
+        line[3] = 0;
+        line    = intToStringSJIS(line + 4, BIRDRA_TRANSPORT_TARGETS[type & 0x7F].price, 4, 0);
+        terminateString(line, withNewLine);
+    }
+
+    void calculateItemListStrings(ItemMenuBox* menu, int id, bool withNewLine)
+    {
+        auto line      = getTextboxLine(menu, id);
+        auto offset    = (menu->scrollOffset + id) * 2;
+        auto typeLeft  = menu->itemList[offset];
+        auto typeRight = ITEM_MENU_RIGHT->itemList[offset];
+        auto nameLeft  = getItem(static_cast<ItemType>(typeLeft))->name;
+        auto nameRight = getItem(static_cast<ItemType>(typeRight))->name;
+        auto triggerId = ITEM_MENU_TYPE + ITEM_MENU_LEFT->scrollOffset + 5 + id;
+        line[0]        = 1;
+        line[1]        = 7;
+        line[2]        = 0x81;
+        line[3]        = isTriggerSet(triggerId) ? 0x7C : 0x40;
+        line[4]        = 1;
+        line[5]        = (typeLeft & 0x80) == 0 ? 3 : 1;
+        strcpy(line + 6, nameLeft);
+        line += 6 + strlen(nameLeft);
+        line[0] = 0xF;
+        line[1] = 0x0;
+        line[2] = 0x1;
+        line[3] = 0x1;
+        strcpy(line + 4, nameRight);
+        line += 4 + strlen(nameRight);
+        terminateString(line, withNewLine);
+    }
+
 } // namespace
 
 extern "C"
@@ -553,6 +760,31 @@ extern "C"
                 break;
             }
         }
+    }
+
+    void updateItemMenuLine(ItemMenuBox* menu, int32_t mode)
+    {
+        auto& box  = TEXTBOX_DATA[menu->textboxId];
+        auto index = menu->cursorOffset;
+
+        box.activeBufferId ^= 1;
+        switch (mode) {
+            case 0: calculateItemMenuStrings(menu, index, true); break;
+            case 1: calculateCardMenuStrings(menu, index, true); break;
+            case 2: calculateMusicMenuStrings(menu, index, true); break;
+            case 3: calculateBirdramonMenuStrings(menu, index, true); break;
+            default: calculateItemListStrings(menu, index, true); break;
+        }
+        box.activeBufferId ^= 1;
+
+        auto stringOffset = menu->stringOffset[index];
+        if (box.isDoubleBuffered) stringOffset += (box.activeBufferId * box.lineCount);
+
+        auto coords  = getVRAMModeCordsNew(box.vramMode);
+        auto linePtr = TEXTBOX_LINES_PTR + stringOffset * 0x40;
+        if (coords.posX != 0) linePtr += 0x20;
+
+        drawString2(linePtr, coords.posX, stringOffset * 12, 1);
     }
 
     void itemMenuCursorTop(ItemMenuBox* menu, int32_t count, int32_t mode)

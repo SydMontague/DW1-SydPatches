@@ -5,7 +5,6 @@
 .include "asm/Jukebox.asm"
 .include "asm/RaiseDataReloc.asm"
 .include "asm/EvoDataReloc.asm"
-.include "asm/MapDataReloc.asm"
 .include "asm/Softlocks.asm"
 .include "asm/Naming.asm"
 .include "asm/Items.asm"

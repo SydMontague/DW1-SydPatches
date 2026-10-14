@@ -47,15 +47,12 @@
 .definelabel createTextbox,             0x80100700
 .definelabel registerTextbox,           0x80100838
 .definelabel showMapheadSelection,      0x800ff6c0
-.definelabel calculateItemMenuStrings,  0x800fe704
-.definelabel calculateCardMenuStrings,  0x800fe9f0
-.definelabel calculateMusicMenuStrings, 0x800fec30
-.definelabel calculateBirdramonMenuStrings,0x800fed64
-.definelabel calculateItemListStrings,  0x800feef0
-.definelabel updateItemMenuLine,        0x800ff0fc
 .definelabel itemMenuCursorMoveToTop,   0x800ff310
 .definelabel itemMenuCursorMoveToBottom,0x800ff2a8
+.definelabel drawString2,               0x80100948
 
+.definelabel BIRDRA_TRANSPORT_TARGETS, 0x8013024c
+.definelabel MUSIC_NAME_LIST, 0x8012fec8
 .definelabel ITEM_MENU_POS, 0x8013027c
 .definelabel SHOP_ACTION_SELECTED, 0x80134f70
 .definelabel HAS_BOUGHT_ANYTHING, 0x80134f74

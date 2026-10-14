@@ -1621,6 +1621,27 @@ extern "C"
         dtl::array<ScriptStackEntry, 8> scriptStack;
     };
 
+    enum class ItemMenuType : uint8_t
+    {
+        ITEM_BUY        = 0,
+        ITEM_SELL       = 1,
+        ITEM_RECYCLE    = 2,
+        CARD_BUY        = 3,
+        CARD_SELL       = 4,
+        KEEPER          = 5, // also discard item
+        MERIT_CARD_SELL = 6,
+        MERIT_ITEM_BUY  = 7,
+    };
+
+    struct BirdraTarget
+    {
+        uint8_t map;
+        uint8_t spot;
+        int16_t trigger;
+        int32_t price;
+    };
+
+    static_assert(sizeof(BirdraTarget) == 8);
     static_assert(sizeof(GameState) == 0x29C);
     static_assert(sizeof(ItemMenuBuyEntry) == 2);
     static_assert(sizeof(ItemMenuSellEntry) == 2);
@@ -1634,6 +1655,8 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
+    extern dtl::array<uint8_t*, 63> MUSIC_NAME_LIST;
+    extern dtl::array<BirdraTarget, 6> BIRDRA_TRANSPORT_TARGETS;
     extern uint8_t* ARRAY_SECTION_START;
     extern size_t ARRAY_SECTION_OFFSET;
     extern uint8_t SHOP_AMOUNT;
@@ -1911,7 +1934,7 @@ extern "C"
     extern int32_t COMBAT_AREA_Y;
     extern int32_t SHOP_VARIABLE;
     extern dtl::array<RECT, 8> ITEM_MENU_DESCRIPTION_RECTS;
-    extern uint8_t ITEM_MENU_TYPE;
+    extern uint8_t ITEM_MENU_TYPE; // TODO: turn type to ItemMenuType
     extern uint8_t* TEXTBOX_LINES_PTR;
     extern uint32_t ITEM_MENU_SUB_TEXTBOX_LINE;
     extern bool BIT_BOX_SHOW_BITS;
@@ -1939,14 +1962,10 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
-    void updateItemMenuLine(ItemMenuBox* menu, int32_t mode);
+    uint8_t* padWithSpaces(uint8_t* string, int targetLength, int currentLength);
+    int32_t drawString2(const uint8_t* str, int32_t x, int32_t y, int32_t unused);
     void itemMenuCursorMoveToTop(ItemMenuBox* menu);
     void itemMenuCursorMoveToBottom(ItemMenuBox* menu);
-    void calculateItemMenuStrings(ItemMenuBox* menu, int id, bool withNewLine);
-    void calculateCardMenuStrings(ItemMenuBox* menu, int id, bool withNewLine);
-    void calculateMusicMenuStrings(ItemMenuBox* menu, int id, bool withNewLine);
-    void calculateBirdramonMenuStrings(ItemMenuBox* menu, int id, bool withNewLine);
-    void calculateItemListStrings(ItemMenuBox* menu, int id, bool withNewLine);
     void showMapheadSelection(int32_t boxId,
                               int32_t speaker,
                               int32_t selectionCount,
