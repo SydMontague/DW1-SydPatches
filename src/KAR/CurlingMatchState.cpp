@@ -66,7 +66,7 @@ namespace
     }
 
     [[gnu::optimize("Os")]]
-    void tickMatchState()
+    void tickMatchState(bool confirmed)
     {
         const int8_t player = KAR_CURRENT_PLAYER != 0 ? static_cast<int8_t>(KAR_OPPONENT_ENTITY) : 0;
 
@@ -86,7 +86,7 @@ namespace
                 break;
             case CurlingMatchState::PROMPT:
             {
-                const auto prompt = KAR_tickYesNoPrompt();
+                const auto prompt = KAR_tickYesNoPrompt(confirmed);
                 if (prompt == 1) {
                     KAR_MATCH_STATE = CurlingMatchState::READY;
                     KAR_HINT_STATE  = 0;
@@ -121,7 +121,7 @@ namespace
                 break;
             case CurlingMatchState::SELECT_STONE:
                 if ((KAR_CURRENT_PLAYER != 0) || (KAR_HINT_STATE != 0)) {
-                    if (KAR_tickHintBox(0) != 0) {
+                    if (KAR_tickHintBox(0, confirmed) != 0) {
                         break;
                     }
                     if (KAR_ANIMATION_TIMER++ >= 0x10) {
@@ -156,7 +156,7 @@ namespace
             case CurlingMatchState::AIM:
                 if ((KAR_CURRENT_PLAYER != 0) || (KAR_HINT_STATE != 0)) {
                     const int32_t targetAngle = KAR_STONE_ROWS[KAR_CURRENT_PLAYER].stones[KAR_SELECTED_STONE].angle;
-                    if (KAR_tickHintBox(1) != 0) {
+                    if (KAR_tickHintBox(1, confirmed) != 0) {
                         if (isKeyPressed(InputButtons::BUTTON_RIGHT) && (KAR_AIM_ANGLE < -0x18F)) {
                             if (KAR_AIM_VELOCITY > 0) {
                                 KAR_AIM_VELOCITY++;
@@ -247,7 +247,7 @@ namespace
                     }
                 }
                 else if ((KAR_CURRENT_PLAYER != 0) || (KAR_HINT_STATE != 0)) {
-                    if (KAR_tickHintBox(2) != 0) {
+                    if (KAR_tickHintBox(2, confirmed) != 0) {
                         const int16_t plannedPower = KAR_STONE_ROWS[KAR_CURRENT_PLAYER].shotPower;
                         if (plannedPower <= KAR_THROW_POWER) KAR_THROW_POWER = plannedPower;
                     }
@@ -327,7 +327,7 @@ namespace
                 }
                 break;
             case CurlingMatchState::RESET_TURN:
-                if (KAR_tickHintBox(3) == 0) {
+                if (KAR_tickHintBox(3, confirmed) == 0) {
                     TAMER_ENTITY.posData->location.x                                     = -0x190;
                     TAMER_ENTITY.posData->location.z                                     = 0x578;
                     ENTITY_TABLE.getEntityById(KAR_OPPONENT_ENTITY)->posData->location.x = 0x190;
@@ -419,12 +419,12 @@ namespace
                 }
                 break;
             case CurlingMatchState::WAIT_FOR_HINT_BOX:
-                if (UI_BOX_DATA[0].state == 1) {
+                if (KAR_isHintBoxOpen()) {
                     KAR_MATCH_STATE = CurlingMatchState::SHOW_HINT;
                 }
                 break;
             case CurlingMatchState::SHOW_HINT:
-                if (KAR_tickHintBox(KAR_ANIMATION_TIMER) == 0) {
+                if (KAR_tickHintBox(KAR_ANIMATION_TIMER, confirmed) == 0) {
                     KAR_HINT_STATE = 0;
                     if (KAR_ANIMATION_TIMER >= 7) {
                         finishMatch();
@@ -449,7 +449,9 @@ namespace
 void KAR_tick()
 {
     // Vanilla continues this ordered tail even when the state update finishes the match.
-    tickMatchState();
+    const bool confirmed = KAR_tickHints();
+    tickMatchState(confirmed);
+    KAR_renderHints();
     KAR_renderAimArrow();
     KAR_renderStoneCursor();
     KAR_renderScores();
