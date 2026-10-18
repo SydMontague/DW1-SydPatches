@@ -16,6 +16,15 @@ void UIBox::close()
 {
     state = State::CLOSING;
 }
+void UIBox::closeTo(RECT target)
+{
+    if (state == State::CLOSED || state == State::CLOSING) return;
+    start = target;
+    // The last opening tick advances past the final drawn extent.
+    if (frame > 0) --frame;
+    close();
+}
+
 void UIBox::open()
 {
     state = State::OPENING;

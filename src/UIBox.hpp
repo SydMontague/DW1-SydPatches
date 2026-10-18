@@ -18,6 +18,7 @@ struct UIBox
     UIBox(RECT final, RGB8 color, bool isSemiTrans, dtl::optional<RECT> start = {});
 
     void close();
+    void closeTo(RECT target);
     void open();
     void tick();
     void render(int32_t depth);

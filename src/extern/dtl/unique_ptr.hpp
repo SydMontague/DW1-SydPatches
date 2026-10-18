@@ -2,6 +2,7 @@
 
 #include "algorithm.hpp"
 #include "type_traits.hpp"
+#include "utility.hpp"
 
 namespace dtl
 {
@@ -151,6 +152,6 @@ namespace dtl
 
     template<IsNotArray T, typename... Args> constexpr unique_ptr<T> make_unique(Args&&... args)
     {
-        return unique_ptr<T>(new T(args...));
+        return unique_ptr<T>(new T(dtl::forward<Args>(args)...));
     }
 } // namespace dtl
