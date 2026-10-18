@@ -43,6 +43,8 @@
 .include "asm/VanillaText.asm"
 .include "asm/Pause.asm"
 .include "asm/Input.asm"
+.include "asm/BTL.asm"
+.include "asm/STD.asm"
 .include "asm/VS.asm"
 .include "asm/ItemMenu.asm"
 .include "asm/MonochromonMoodBubble.asm"

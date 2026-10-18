@@ -3,6 +3,7 @@
 #include "GameObjects.hpp"
 #include "Math.hpp"
 #include "Tamer.hpp"
+#include "extern/dtl/algorithm.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libcd.hpp"
 #include "extern/libgpu.hpp"
@@ -103,6 +104,23 @@ namespace
 
 extern "C"
 {
+    void EFE_copyVector()
+    {
+        const auto* source = pop<uint32_t*>();
+        auto* destination  = pop<uint32_t*>();
+
+        dtl::copy(source, source + 3, destination);
+    }
+
+    void EFE_maskVectors()
+    {
+        const auto* source = pop<uint32_t*>();
+        auto* destination  = pop<uint32_t*>();
+
+        for (int32_t i = 0; i < 3; i++)
+            destination[i] &= source[i];
+    }
+
     void EFE_rotateVector()
     {
         Vector* vector    = pop<Vector*>();
