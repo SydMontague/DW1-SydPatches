@@ -282,14 +282,6 @@ namespace
         }
     }
 
-    void terminateString(uint8_t* line, bool withNewLine)
-    {
-        line[0] = 1;
-        line[1] = 1;
-        line[2] = !withNewLine ? 0xD : 0;
-        line[3] = 0;
-    }
-
     uint8_t* getTextboxLine(ItemMenuBox* menu, int32_t id)
     {
         auto& textbox = TEXTBOX_DATA[menu->textboxId];
@@ -787,6 +779,15 @@ extern "C"
         drawString2(linePtr, coords.posX, stringOffset * 12, 1);
     }
 
+    void itemMenuCursorMoveToTop(ItemMenuBox* menu)
+    {
+        menu->prevScroll   = menu->scrollOffset;
+        menu->prevCursor   = menu->cursorOffset;
+        menu->scrollOffset = 0;
+        menu->cursorOffset = 0;
+        playSound(0, 2);
+    }
+
     void itemMenuCursorTop(ItemMenuBox* menu, int32_t count, int32_t mode)
     {
         itemMenuCursorMoveToTop(menu);
@@ -814,6 +815,23 @@ extern "C"
             updateItemMenuLine(menu, mode);
         }
 
+        playSound(0, 2);
+    }
+
+    void itemMenuCursorMoveToBottom(ItemMenuBox* menu)
+    {
+        menu->prevScroll = menu->scrollOffset;
+        menu->prevCursor = menu->cursorOffset;
+
+        auto val = (menu->itemCount - menu->numSlots);
+        if (val < 1) {
+            menu->scrollOffset = 0;
+            menu->cursorOffset = menu->itemCount - 1;
+        }
+        else {
+            menu->scrollOffset = val;
+            menu->cursorOffset = menu->numSlots - 1;
+        }
         playSound(0, 2);
     }
 
@@ -935,6 +953,35 @@ extern "C"
     void playShopSoundOnlyInSavannah()
     {
         if (CURRENT_SCREEN == 131) playSound(0, 23);
+    }
+
+    void renderKeeperTableBox(int32_t boxId, int32_t posX, int32_t posY, int32_t width, int32_t height)
+    {
+        auto minX  = posX + UI_BOX_DATA[boxId].finalPos.x;
+        auto minY  = posY + UI_BOX_DATA[boxId].finalPos.y;
+        auto maxX  = minX + width - 1;
+        auto maxY  = minY + height - 1;
+        auto depth = 6 - boxId;
+
+        drawLine3P(0xA08769, maxX, minY, minX, minY, minX, maxY, depth, 0);
+        drawLine3P(0x020202, minX, maxY, maxX, maxY, maxX, minY, depth, 0);
+    }
+
+    void terminateString(uint8_t* line, bool withNewLine)
+    {
+        line[0] = 1;
+        line[1] = 1;
+        line[2] = !withNewLine ? 0xD : 0;
+        line[3] = 0;
+    }
+
+    uint8_t* padWithSpaces(uint8_t* string, int32_t targetLength, int32_t currentLength)
+    {
+        for (auto i = currentLength; i < targetLength * 2; i++) {
+            *string = ' ';
+            string++;
+        }
+        return string;
     }
 }
 

@@ -1,25 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-; patches padWithSpaces function to deal with the case of currentLength being larger than targetLength
-.org padWithSpaces
-.area 64
-  sll a1,a1,0x1     ; targetLength * 2
-  b @@loopCondition
-  li v1,0x20
-
-@@loopBody:
-  sb v1,0x00(a0)
-  addiu a0,a0,0x01
-
-@@loopCondition:
-  slt v0,a2,a1
-  bne v0,zero,@@loopBody
-  addiu a2,a2,0x01
-  jr r31
-  move v0,a0
-.endarea
-
 ; Changes the track names to be accurate and shorter
 .org 0x8012f6d0
 .area 1544

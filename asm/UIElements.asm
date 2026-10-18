@@ -117,10 +117,10 @@
 ;  jal drawLine3P
 ;.org 0x800fe230
 ;  jal drawLine3P
-.org 0x800ff3f0
-  jal drawLine3P
-.org 0x800ff41c
-  jal drawLine3P
+;.org 0x800ff3f0
+;  jal drawLine3P
+;.org 0x800ff41c
+;  jal drawLine3P
 
 
 ;.org 0x800edce8
@@ -137,12 +137,12 @@
 ;  jal drawLine2P
 ;.org 0x800fe12c
 ;  jal drawLine2P
-.org 0x800ff600
-  jal drawLine2P
-.org 0x800ff630
-  jal drawLine2P
-.org 0x800ff660
-  jal drawLine2P
+;.org 0x800ff600
+;  jal drawLine2P
+;.org 0x800ff630
+;  jal drawLine2P
+;.org 0x800ff660
+;  jal drawLine2P
 .org 0x8010b5c4
   jal drawLine2P
 .org 0x8010b5f4
@@ -290,6 +290,11 @@
 
 .org 0x800816e4
   jal renderSelectionCursor
+
+.org 0x80081640
+  jal renderVerticalLine
+.org 0x80081654
+  jal renderVerticalLine
 
 .close
 

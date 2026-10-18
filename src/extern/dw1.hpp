@@ -1962,10 +1962,7 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
-    uint8_t* padWithSpaces(uint8_t* string, int targetLength, int currentLength);
     int32_t drawString2(const uint8_t* str, int32_t x, int32_t y, int32_t unused);
-    void itemMenuCursorMoveToTop(ItemMenuBox* menu);
-    void itemMenuCursorMoveToBottom(ItemMenuBox* menu);
     void showMapheadSelection(int32_t boxId,
                               int32_t speaker,
                               int32_t selectionCount,

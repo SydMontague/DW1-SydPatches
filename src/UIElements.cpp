@@ -137,6 +137,17 @@ extern "C"
         drawLine2P(UILINE_COLORS[0].asUint32(), xBase, yBase + 2, xBase + length - 1, yBase + 2, layer, 0);
     }
 
+    void renderVerticalLine(int32_t boxId, int32_t posX, int32_t posY, int32_t length)
+    {
+        const auto yBase = UI_BOX_DATA[boxId].finalPos.y + posY;
+        const auto xBase = UI_BOX_DATA[boxId].finalPos.x + posX;
+        const auto layer = 6 - boxId;
+
+        drawLine2P(UILINE_COLORS[0].asUint32(), xBase + 0, yBase, xBase + 0, yBase + length - 1, layer, 0);
+        drawLine2P(UILINE_COLORS[4].asUint32(), xBase + 1, yBase, xBase + 1, yBase + length - 1, layer, 0);
+        drawLine2P(UILINE_COLORS[0].asUint32(), xBase + 2, yBase, xBase + 2, yBase + length - 1, layer, 0);
+    }
+
     void renderTextSprite2(TextSprite& entry, int32_t offsetX, int32_t offsetY)
     {
         switch (entry.alignmentX) {

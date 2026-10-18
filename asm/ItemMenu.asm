@@ -349,6 +349,47 @@
 .org 0x80109a24
   jal renderHorizontalLine
 
+;.org 0x800fd504
+;  jal itemMenuCursorMoveToBottom
+.org 0x80108574
+  jal itemMenuCursorMoveToBottom
+.org 0x801099b4
+  jal itemMenuCursorMoveToBottom
+
+;.org 0x800fd3f8
+;  jal itemMenuCursorMoveToTop
+.org 0x80108524
+  jal itemMenuCursorMoveToTop
+.org 0x80109960
+  jal itemMenuCursorMoveToTop
+
+.org 0x80108f84
+  jal renderKeeperTableBox
+.org 0x80108fd4
+  jal renderKeeperTableBox
+
+;.org 0x800fe9c8
+;  jal terminateString
+;.org 0x800fec08
+;  jal terminateString
+;.org 0x800fed40
+;  jal terminateString
+;.org 0x800feecc
+;  jal terminateString
+;.org 0x800ff0d4
+;  jal terminateString
+.org 0x8010ab08
+  jal terminateString
+
+;.org 0x800fed30
+;  jal padWithSpaces
+;.org 0x800fee60
+;  jal padWithSpaces
+;.org 0x800ff04c
+;  jal padWithSpaces
+.org 0x8010aaf8
+  jal padWithSpaces
+
 .close
 
 
@@ -357,5 +398,12 @@
 
 .org 0x80081684
   jal renderHorizontalLine
+
+.org 0x80080b28
+  jal terminateString
+.org 0x80080d5c
+  jal terminateString
+.org 0x80080d6c
+  jal terminateString
 
 .close

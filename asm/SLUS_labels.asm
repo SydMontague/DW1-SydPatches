@@ -1,5 +1,4 @@
 .definelabel global_pointer,            0x8013bb2c
-.definelabel padWithSpaces,             0x800ff51c
 .definelabel updateNamingPreview,       0x8010aa60
 .definelabel clearTextSubArea,          0x8010cbc4
 .definelabel drawString,                0x8010cf24
@@ -47,8 +46,6 @@
 .definelabel createTextbox,             0x80100700
 .definelabel registerTextbox,           0x80100838
 .definelabel showMapheadSelection,      0x800ff6c0
-.definelabel itemMenuCursorMoveToTop,   0x800ff310
-.definelabel itemMenuCursorMoveToBottom,0x800ff2a8
 .definelabel drawString2,               0x80100948
 
 .definelabel BIRDRA_TRANSPORT_TARGETS, 0x8013024c

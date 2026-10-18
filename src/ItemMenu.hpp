@@ -19,6 +19,8 @@ extern "C"
                                 int16_t spriteY,
                                 int32_t spriteType);
     void playShopSoundOnlyInSavannah();
+    void terminateString(uint8_t* line, bool withNewLine);
+    uint8_t* padWithSpaces(uint8_t* string, int targetLength, int currentLength);
 }
 
 void renderCardSprite(uint8_t cardId, int16_t posX, int16_t posY, int32_t depth);
