@@ -8,4 +8,9 @@ extern "C"
     void dailyPStatTrigger();
     void showMapheadTextbox(int32_t line, int32_t speaker, int32_t textboxId, int32_t sectionId);
     bool isTextboxBusy(int32_t id);
+    void showMapheadSelection(int32_t line,
+                              int32_t speaker,
+                              int32_t selectionCount,
+                              uint32_t* usePreviousSelection,
+                              uint16_t sectionId);
 }

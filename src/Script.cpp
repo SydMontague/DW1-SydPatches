@@ -42,6 +42,18 @@ namespace
         return 0x4C4;
     }
 
+    uint8_t* resolveMapHeadEntry(uint32_t sectionId, int32_t line)
+    {
+        auto script = getScript(0);
+        auto offset = getScriptSection(script, sectionId);
+        return script + *reinterpret_cast<uint16_t*>(offset + line * 4 + 2) + 2;
+    }
+
+    uint8_t* getShopkeeperLine(int32_t line)
+    {
+        auto scriptId = getShopkeeperScriptID();
+        return resolveMapHeadEntry(scriptId, line);
+    }
 } // namespace
 
 extern "C"
@@ -134,17 +146,43 @@ extern "C"
         return level == Level::FRESH || level == Level::IN_TRAINING;
     }
 
-    uint8_t* resolveMapHeadEntry(uint32_t sectionId, int32_t line)
+    void setDialogueOwner(int32_t speaker)
     {
-        auto script = getScript(0);
-        auto offset = getScriptSection(script, sectionId);
-        return script + *reinterpret_cast<uint16_t*>(offset + line * 4 + 2) + 2;
+        if (CURRENT_DIALOGUE_OWNER == speaker) return;
+
+        CURRENT_DIALOGUE_OWNER = speaker;
+        scriptPauseGame(speaker);
+        setupDialogueBox(speaker);
     }
 
-    uint8_t* getShopkeeperLine(int32_t line)
+    void showMapheadSelection(int32_t line,
+                              int32_t speaker,
+                              int32_t selectionCount,
+                              uint32_t* usePreviousSelection,
+                              uint16_t sectionId)
     {
-        auto scriptId = getShopkeeperScriptID();
-        return resolveMapHeadEntry(scriptId, line);
+        if (speaker == 0xFE) {
+            CURRENT_DIALOGUE_OWNER = 0xFF;
+            speaker                = 0xFD;
+        }
+        else
+            setDialogueOwner(speaker);
+
+        auto backup = SCRIPT_POINTER;
+        if (sectionId == 0xFF)
+            SCRIPT_POINTER = getShopkeeperLine(line);
+        else
+            SCRIPT_POINTER = resolveMapHeadEntry(sectionId, line);
+        SELECTION_COUNT = selectionCount;
+        if (*usePreviousSelection == 0) {
+            *usePreviousSelection = 1;
+            SELECTION_CURRENT     = 0;
+        }
+        auto glypthCount          = showTextboxReady(0, CURRENT_DIALOGUE_OWNER);
+        SELECTION_CURSOR_WIDTH    = glypthCount * 12 + 2;
+        SELECTION_CURSOR_OFFSET_Y = speaker == 0xFF ? 0 : 13;
+        ACTIVE_INSTRUCTION        = 100;
+        SCRIPT_POINTER            = backup;
     }
 
     void showMapheadTextbox(int32_t line, int32_t speaker, int32_t textboxId, int32_t sectionId)

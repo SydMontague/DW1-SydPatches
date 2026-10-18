@@ -1,18 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-;.org 0x800fe394
-;  jal getShopkeeperLine
-.org 0x800ff728
-  jal getShopkeeperLine
-
-;.org 0x800fbe14
-;  jal resolveMapHeadEntry
-;.org 0x800fe3a4
-;  jal resolveMapHeadEntry
-.org 0x800ff738
-  jal resolveMapHeadEntry
-
 .org 0x80105d14
   jal openShop
 

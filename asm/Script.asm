@@ -107,6 +107,30 @@
 .org 0x8010a02c
   jal isTextboxBusy
 
+;.org 0x800fe37c
+;  jal setDialogueOwner
+;.org 0x800ff6fc
+;  jal setDialogueOwner
+.org 0x80102bb4
+  jal setDialogueOwner
+
+;.org 0x800fca24
+;  jal showMapheadSelection
+.org 0x80109d80
+  jal showMapheadSelection
+.org 0x8010bd18
+  jal showMapheadSelection
+.org 0x8010be08
+  jal showMapheadSelection
+.org 0x8010beec
+  jal showMapheadSelection
+.org 0x8010c074
+  jal showMapheadSelection
+.org 0x8010c388
+  jal showMapheadSelection
+.org 0x8010c5ec
+  jal showMapheadSelection
+
 .close
 
 
@@ -137,5 +161,8 @@
   jal showMapHeadTextbox
 .org 0x80081bd8
   jal showMapHeadTextbox
+
+.org 0x80081c18
+  jal showMapheadSelection
 
 .close

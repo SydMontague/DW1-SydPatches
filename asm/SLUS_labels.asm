@@ -41,13 +41,18 @@
 .definelabel setCardAmount,             0x80106848
 .definelabel intToStringSJIS,           0x80102064
 .definelabel scriptIdToEntityId,        0x80102144
-.definelabel setDialogueOwner,          0x800ff684
 .definelabel showTextboxReady,          0x80101ef8
 .definelabel createTextbox,             0x80100700
 .definelabel registerTextbox,           0x80100838
-.definelabel showMapheadSelection,      0x800ff6c0
 .definelabel drawString2,               0x80100948
+.definelabel scriptPauseGame,           0x801062f8
+.definelabel setupDialogueBox,          0x80100fdc
 
+.definelabel CURRENT_DIALOGUE_OWNER, 0x80134fe6
+.definelabel SELECTION_COUNT, 0x801be950
+.definelabel SELECTION_CURRENT, 0x801be952
+.definelabel SELECTION_CURSOR_OFFSET_Y, 0x801be954
+.definelabel SELECTION_CURSOR_WIDTH, 0x801be956
 .definelabel BIRDRA_TRANSPORT_TARGETS, 0x8013024c
 .definelabel MUSIC_NAME_LIST, 0x8012fec8
 .definelabel ITEM_MENU_POS, 0x8013027c

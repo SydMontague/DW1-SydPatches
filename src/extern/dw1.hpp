@@ -1943,6 +1943,11 @@ extern "C"
     extern uint32_t SCRIPT_NEXT_STATE_2;
     extern uint8_t* SCRIPT_POINTER;
     extern dtl::array<RECT, 8> ITEM_MENU_POS;
+    extern uint8_t CURRENT_DIALOGUE_OWNER;
+    extern int16_t SELECTION_COUNT;
+    extern int16_t SELECTION_CURRENT;
+    extern int16_t SELECTION_CURSOR_OFFSET_Y;
+    extern int16_t SELECTION_CURSOR_WIDTH;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -1962,12 +1967,9 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void scriptPauseGame(int32_t speaker);
+    void setupDialogueBox(int32_t speaker);
     int32_t drawString2(const uint8_t* str, int32_t x, int32_t y, int32_t unused);
-    void showMapheadSelection(int32_t boxId,
-                              int32_t speaker,
-                              int32_t selectionCount,
-                              uint32_t* result,
-                              uint16_t sectionId);
     void createTextbox(int32_t id,
                        uint8_t flags,
                        const RECT* textboxPos,
@@ -1975,8 +1977,7 @@ extern "C"
                        TickFunction tickFunction,
                        RenderFunction renderFunction);
     void registerTextbox(int id, uint32_t lineOffset, uint32_t lineCount, bool isDoubleBuffered, VRAMMode vramMode);
-    void setDialogueOwner(int32_t speaker);
-    void showTextboxReady(int32_t textboxId, int32_t speaker);
+    uint32_t showTextboxReady(int32_t textboxId, int32_t speaker);
     uint8_t scriptIdToEntityId(uint8_t scriptId);
     uint8_t* intToStringSJIS(uint8_t* buffer, int32_t value, uint32_t digitCount, int32_t padNumber);
     void setupBoxOrigin(int32_t speaker, RECT* result);
