@@ -1,6 +1,19 @@
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
 
+; Shared EFE commands replace these complete vanilla functions.
+.org 0x80068dd0
+.area 0x80068e3c-.
+  .notice "VS EFE mask space left: " + (0x80068e3c-.) + " bytes"
+  .fill 0x80068e3c-.
+.endarea
+
+.org 0x80068ffc
+.area 0x80069048-.
+  .notice "VS EFE vector space left: " + (0x80069048-.) + " bytes"
+  .fill 0x80069048-.
+.endarea
+
 .org 0x80058228
   jal VS__runIntro
 

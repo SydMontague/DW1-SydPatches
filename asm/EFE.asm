@@ -18,6 +18,13 @@
 .org 0x80064f90
   jal getEFEDATEntry
 
+
+.org 0x80073480
+  .word EFE_copyVector
+
+.org 0x800734a8
+  .word EFE_maskVectors
+
 .close
 
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
@@ -41,6 +48,13 @@
 .org 0x8006eb94
   j EFE_modifySomeImage
 
+
+.org 0x8007ac9c
+  .word EFE_copyVector
+
+.org 0x8007acc4
+  .word EFE_maskVectors
+
 .close
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
@@ -63,6 +77,13 @@
 
 .org 0x80064c64
   j EFE_modifySomeImage
+
+
+.org 0x80070cc8
+  .word EFE_copyVector
+
+.org 0x80070cf0
+  .word EFE_maskVectors
 
 .close
 
