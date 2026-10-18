@@ -21,9 +21,9 @@ constexpr RGB8 TEXT_COLOR_X_BLUE       = {.red = 0x78, .green = 0x7c, .blue = 0x
 struct AtlasString
 {
     dtl::runtime_array<SPRT> data{};
-    uint8_t tpage;
-    uint8_t width;
-    uint8_t height;
+    uint8_t tpage{};
+    uint8_t width{};
+    uint8_t height{};
 
     AtlasString() {};
     AtlasString(dtl::runtime_array<SPRT> data, uint8_t tpage, uint8_t width, uint8_t height)
