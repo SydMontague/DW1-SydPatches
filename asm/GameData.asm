@@ -46,12 +46,12 @@
 .endarea
 
 .org 0x800ec520
-.area 0x800ff7f8-.
+.area 0x800ffa4c-.
   .importobj "compiled/CustomUI.lib"
   .importobj "compiled/Cave5.lib"
 
-  .notice "Cave5 Empty space left: " + (0x800ff7f8-.) + " bytes"
-  .fill 0x800ff7f8-.
+  .notice "Cave5 Empty space left: " + (0x800ffa4c-.) + " bytes"
+  .fill 0x800ffa4c-.
 .endarea
 
 ;;; Initialized memory, in vanilla only for data

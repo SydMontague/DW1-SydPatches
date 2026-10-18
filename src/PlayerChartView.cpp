@@ -3,6 +3,7 @@
 
 #include "AtlasFont.hpp"
 #include "DigimonData.hpp"
+#include "GameState.hpp"
 #include "Helper.hpp"
 #include "Input.hpp"
 #include "Math.hpp"

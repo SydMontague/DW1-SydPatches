@@ -14,3 +14,6 @@ extern "C"
                               uint32_t* usePreviousSelection,
                               uint16_t sectionId);
 }
+
+void triggerSeadramonCutscene();
+void checkArenaMap(int32_t mapId);

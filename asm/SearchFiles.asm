@@ -61,12 +61,12 @@
 ;  jal loadDynamicLibrary
 ;.org 0x800e89e8
 ;  jal loadDynamicLibrary
-.org 0x800ff978
-  jal loadDynamicLibrary
-.org 0x800ff9c4
-  jal loadDynamicLibrary
-.org 0x800ffa18
-  jal loadDynamicLibrary
+;.org 0x800ff978
+;  jal loadDynamicLibrary
+;.org 0x800ff9c4
+;  jal loadDynamicLibrary
+;.org 0x800ffa18
+;  jal loadDynamicLibrary
 .org 0x8010439c
   jal loadDynamicLibrary
 .org 0x801043e4

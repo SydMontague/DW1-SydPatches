@@ -1,5 +1,6 @@
 
 #include "Evolution.hpp"
+#include "Files.hpp"
 #include "Helper.hpp"
 #include "Inventory.hpp"
 #include "Math.hpp"
@@ -263,4 +264,23 @@ extern "C"
         box.pageReady = false;
         return true; // vanilla lacks a return, causing UB
     }
+
+    void loadShopLibrary()
+    {
+        // SHOP_REL is never actually used
+    }
+}
+
+void triggerSeadramonCutscene()
+{
+    callScriptSection(0, 1252, 0);
+}
+
+void checkArenaMap(int32_t mapId)
+{
+    constexpr dtl::array<uint16_t, 2> arenaMaps{0xD0, 0xDF};
+
+    if (!arenaMaps.contains(mapId)) return;
+
+    loadDynamicLibrary(Overlay::DGET_REL, nullptr, false, nullptr, nullptr);
 }

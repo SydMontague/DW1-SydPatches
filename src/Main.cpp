@@ -11,6 +11,7 @@
 #include "Fade.hpp"
 #include "Files.hpp"
 #include "GameObjects.hpp"
+#include "GameState.hpp"
 #include "GameTime.hpp"
 #include "HealingParticles.hpp"
 #include "Helper.hpp"

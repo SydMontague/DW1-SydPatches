@@ -2,6 +2,7 @@
 
 #include "AtlasFont.hpp"
 #include "Entity.hpp"
+#include "GameState.hpp"
 #include "Helper.hpp"
 #include "UIElements.hpp"
 #include "extern/dw1.hpp"

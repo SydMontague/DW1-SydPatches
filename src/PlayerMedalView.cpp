@@ -1,6 +1,7 @@
 #include "PlayerMedalView.hpp"
 
 #include "AtlasFont.hpp"
+#include "GameState.hpp"
 #include "Helper.hpp"
 #include "Input.hpp"
 #include "Math.hpp"

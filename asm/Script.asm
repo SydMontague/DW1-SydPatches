@@ -131,6 +131,9 @@
 .org 0x8010c5ec
   jal showMapheadSelection
 
+.org 0x801042dc
+  jal loadShopLibrary
+
 .close
 
 

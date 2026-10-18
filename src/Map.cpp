@@ -19,6 +19,7 @@
 #include "Model.hpp"
 #include "NPCEntity.hpp"
 #include "Partner.hpp"
+#include "Script.hpp"
 #include "Sound.hpp"
 #include "Tamer.hpp"
 #include "UIElements.hpp"

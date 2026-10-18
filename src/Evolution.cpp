@@ -1,5 +1,6 @@
 #include "Evolution.hpp"
 
+#include "GameState.hpp"
 #include "Helper.hpp"
 #include "Math.hpp"
 #include "Partner.hpp"
