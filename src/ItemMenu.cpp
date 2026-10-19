@@ -82,23 +82,6 @@ namespace
         },
     }};
 
-    struct VRAMModeCoords
-    {
-        uint32_t posX;
-        uint32_t width;
-    };
-
-    VRAMModeCoords getVRAMModeCordsNew(VRAMMode mode)
-    {
-        switch (mode) {
-            case VRAMMode::FRONT_FULL: return {.posX = 0, .width = 255};
-            case VRAMMode::FRONT_HALF: return {.posX = 0, .width = 127};
-            case VRAMMode::END_HALF: return {.posX = 128, .width = 127};
-        }
-
-        return {0, 0};
-    }
-
     bool readSelectedItemMerit()
     {
         auto menu      = getItemMenuFromType();

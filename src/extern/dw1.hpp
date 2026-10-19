@@ -1949,6 +1949,7 @@ extern "C"
     extern int16_t SELECTION_CURRENT;
     extern int16_t SELECTION_CURSOR_OFFSET_Y;
     extern int16_t SELECTION_CURSOR_WIDTH;
+    extern int32_t TEXTBOX_LINES_USED;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;

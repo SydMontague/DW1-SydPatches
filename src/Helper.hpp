@@ -54,6 +54,12 @@ public:
     TileIterator& operator++();
 };
 
+struct VRAMModeCoords
+{
+    uint32_t posX;
+    uint32_t width;
+};
+
 constexpr auto SCREEN_WIDTH  = 320;
 constexpr auto SCREEN_HEIGHT = 240;
 
@@ -263,6 +269,17 @@ constexpr void setPolyFT4UV(POLY_FT4* prim, int16_t uvX, int16_t uvY, int16_t uv
     prim->v2 = vMax;
     prim->u3 = uMax;
     prim->v3 = vMax;
+}
+
+constexpr VRAMModeCoords getVRAMModeCordsNew(VRAMMode mode)
+{
+    switch (mode) {
+        case VRAMMode::FRONT_FULL: return {.posX = 0, .width = 255};
+        case VRAMMode::FRONT_HALF: return {.posX = 0, .width = 127};
+        case VRAMMode::END_HALF: return {.posX = 128, .width = 127};
+    }
+
+    return {0, 0};
 }
 
 extern "C"

@@ -42,6 +42,7 @@
 .definelabel scriptPauseGame,           0x801062f8
 .definelabel setupDialogueBox,          0x80100fdc
 
+.definelabel TEXTBOX_LINES_USED, 0x801be80c
 .definelabel CURRENT_DIALOGUE_OWNER, 0x80134fe6
 .definelabel SELECTION_COUNT, 0x801be950
 .definelabel SELECTION_CURRENT, 0x801be952

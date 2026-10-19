@@ -52,4 +52,4 @@
 .include "asm/Curling.asm"
 .include "asm/Movie.asm"
 .include "asm/GameState.asm"
-
+.include "asm/VanillaTextbox.asm"
