@@ -6,5 +6,18 @@
 
 .org 0x80100634
   jal clearTextboxLineCount
+
+.org 0x80101178
+  jal tickSelectionDialogue
+.org 0x80101254
+  jal tickSelectionDialogue
+
+.org 0x801011d4
+  jal tickConfirmDialogue
+.org 0x80101228
+  jal tickConfirmDialogue
+
+.org 0x8010128c
+  jal tickBackgroundDialogue
   
 .close

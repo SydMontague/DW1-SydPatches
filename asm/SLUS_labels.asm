@@ -41,7 +41,13 @@
 .definelabel drawString2,               0x80100948
 .definelabel scriptPauseGame,           0x801062f8
 .definelabel setupDialogueBox,          0x80100fdc
+.definelabel advanceTextbox,            0x80100f20
+.definelabel flipIdleTextboxPage,       0x80100e40
 
+.definelabel SELECTION_END_POINTER, 0x801be94c
+.definelabel TEXTBOX_SHOULD_RENDER, 0x80134f94
+.definelabel TEXTBOX_CLOSE_MODE, 0x80134fe5
+.definelabel AUTOCLOSE_FRAMES, 0x80135010
 .definelabel TEXTBOX_LINES_USED, 0x801be80c
 .definelabel CURRENT_DIALOGUE_OWNER, 0x80134fe6
 .definelabel SELECTION_COUNT, 0x801be950

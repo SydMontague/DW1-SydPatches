@@ -199,22 +199,22 @@
 ;  j playSound
 ;.org 0x800ff330
 ;  j playSound
-.org 0x800ffc70
-  jal playSound
-.org 0x800ffcd0
-  jal playSound
-.org 0x800ffd00
-  jal playSound
-.org 0x800ffd18
-  jal playSound
-.org 0x800ffd78
-  jal playSound
-.org 0x800ffdd8
-  jal playSound
-.org 0x800ffeac
-  jal playSound
-.org 0x800ffebc
-  jal playSound
+;.org 0x800ffc70
+;  jal playSound
+;.org 0x800ffcd0
+;  jal playSound
+;.org 0x800ffd00
+;  jal playSound
+;.org 0x800ffd18
+;  jal playSound
+;.org 0x800ffd78
+;  jal playSound
+;.org 0x800ffdd8
+;  jal playSound
+;.org 0x800ffeac
+;  jal playSound
+;.org 0x800ffebc
+;  jal playSound
 .org 0x80100058
   jal playSound
 .org 0x801000cc

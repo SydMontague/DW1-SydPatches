@@ -103,9 +103,9 @@
   jal lostAllLives
 
 ;.org 0x800fcfa0
-;  jal isTextboxBusy
+;  jal flipTextboxPage
 .org 0x8010a02c
-  jal isTextboxBusy
+  jal flipTextboxPage
 
 ;.org 0x800fe37c
 ;  jal setDialogueOwner

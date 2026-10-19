@@ -554,7 +554,7 @@ extern "C"
     {
         if (box == nullptr) return true;
 
-        return isTextboxBusy(box->textboxId);
+        return flipTextboxPage(box->textboxId);
     }
 
     void createItemMenu()

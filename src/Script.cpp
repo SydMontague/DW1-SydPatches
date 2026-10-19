@@ -250,7 +250,7 @@ extern "C"
         }
     }
 
-    bool isTextboxBusy(int32_t id)
+    bool flipTextboxPage(int32_t id)
     {
         auto& box = TEXTBOX_DATA[id];
 

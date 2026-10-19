@@ -1950,6 +1950,10 @@ extern "C"
     extern int16_t SELECTION_CURSOR_OFFSET_Y;
     extern int16_t SELECTION_CURSOR_WIDTH;
     extern int32_t TEXTBOX_LINES_USED;
+    extern uint8_t* SELECTION_END_POINTER;
+    extern int32_t TEXTBOX_SHOULD_RENDER;
+    extern int8_t TEXTBOX_CLOSE_MODE;
+    extern int8_t AUTOCLOSE_FRAMES;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -1969,6 +1973,8 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    bool flipIdleTextboxPage(int32_t id);
+    bool advanceTextbox(int32_t id);
     void scriptPauseGame(int32_t speaker);
     void setupDialogueBox(int32_t speaker);
     int32_t drawString2(const uint8_t* str, int32_t x, int32_t y, int32_t unused);
