@@ -1841,6 +1841,10 @@ extern "C"
     extern int32_t FLASH_INSTANCE;
     extern uint8_t* EFE_DATA_STACK;
     extern int32_t EFE_SCRIPT_REGISTER;
+    extern uint8_t* EFE_INSTANCE_BASE;
+    extern int16_t* EFE_INSTRUCTION_POINTER;
+    extern int16_t EFE_CURRENT_OPCODE;
+    extern uint8_t* EFE_SCRIPT_BASE;
     extern uint8_t SOME_IMAGE_DATA[3584];
     extern int16_t EFE_LOADED_MOVE_DATA[16];
     extern int16_t EFE_LOAD_STATE;
