@@ -25,6 +25,38 @@
 .org 0x800734a8
   .word EFE_maskVectors
 
+; BTL_loadEFEImmediate
+.org 0x80073604
+  .word BTL_loadEFEImmediate
+
+; BTL_loadEFEVariable
+.org 0x80073608
+  .word BTL_loadEFEVariable
+
+; BTL_loadEFERandomValue
+.org 0x8007360c
+  .word BTL_loadEFERandomValue
+
+; BTL_loadEFEIndexedVariable
+.org 0x80073610
+  .word BTL_loadEFEIndexedVariable
+
+; BTL_pushEFEImmediate
+.org 0x8007362c
+  .word BTL_pushEFEImmediate
+
+; BTL_pushEFEVariable
+.org 0x80073630
+  .word BTL_pushEFEVariable
+
+; BTL_pushEFEVariableAddress
+.org 0x80073634
+  .word BTL_pushEFEVariableAddress
+
+; BTL_popEFEValueToVariable
+.org 0x80073644
+  .word BTL_popEFEValueToVariable
+
 .org 0x800736ec
   .word EFE_compareEqual
 .org 0x800736f0
@@ -68,6 +100,38 @@
 .org 0x8007acc4
   .word EFE_maskVectors
 
+; STD_loadEFEImmediate
+.org 0x8007ae20
+  .word STD_loadEFEImmediate
+
+; STD_loadEFEVariable
+.org 0x8007ae24
+  .word STD_loadEFEVariable
+
+; STD_loadEFERandomValue
+.org 0x8007ae28
+  .word STD_loadEFERandomValue
+
+; STD_loadEFEIndexedVariable
+.org 0x8007ae2c
+  .word STD_loadEFEIndexedVariable
+
+; STD_pushEFEImmediate
+.org 0x8007ae48
+  .word STD_pushEFEImmediate
+
+; STD_pushEFEVariable
+.org 0x8007ae4c
+  .word STD_pushEFEVariable
+
+; STD_pushEFEVariableAddress
+.org 0x8007ae50
+  .word STD_pushEFEVariableAddress
+
+; STD_popEFEValueToVariable
+.org 0x8007ae60
+  .word STD_popEFEValueToVariable
+
 .org 0x8007af08
   .word EFE_compareEqual
 .org 0x8007af0c
@@ -110,6 +174,38 @@
 
 .org 0x80070cf0
   .word EFE_maskVectors
+
+; VS_loadEFEImmediate
+.org 0x80070e4c
+  .word VS_loadEFEImmediate
+
+; VS_loadEFEVariable
+.org 0x80070e50
+  .word VS_loadEFEVariable
+
+; VS_loadEFERandomValue
+.org 0x80070e54
+  .word VS_loadEFERandomValue
+
+; VS_loadEFEIndexedVariable
+.org 0x80070e58
+  .word VS_loadEFEIndexedVariable
+
+; VS_pushEFEImmediate
+.org 0x80070e74
+  .word VS_pushEFEImmediate
+
+; VS_pushEFEVariable
+.org 0x80070e78
+  .word VS_pushEFEVariable
+
+; VS_pushEFEVariableAddress
+.org 0x80070e7c
+  .word VS_pushEFEVariableAddress
+
+; VS_popEFEValueToVariable
+.org 0x80070e8c
+  .word VS_popEFEValueToVariable
 
 .org 0x80070f34
   .word EFE_compareEqual

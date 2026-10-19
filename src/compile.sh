@@ -65,4 +65,15 @@ FLAGS="-O3 -std=c++23 -T linker.ld -mabi=32 -march=r3000 -r -mel -nostdlib -mexp
 
 "$MIPS_CXX" MOV/Movie.cpp -o ../compiled/MOV.lib $FLAGS
 
+# Native entries use the three disjoint operand regions in each owning overlay.
+"$MIPS_CXX" BTL/EFEOperands.cpp -o ../compiled/BTLEFEOperands.lib $FLAGS
+"$MIPS_CXX" BTL/EFEIndexedOperand.cpp -o ../compiled/BTLEFEIndexedOperand.lib $FLAGS
+"$MIPS_CXX" BTL/EFEAddressOperand.cpp -o ../compiled/BTLEFEAddressOperand.lib $FLAGS
+"$MIPS_CXX" STD/EFEOperands.cpp -o ../compiled/STDEFEOperands.lib $FLAGS
+"$MIPS_CXX" STD/EFEIndexedOperand.cpp -o ../compiled/STDEFEIndexedOperand.lib $FLAGS
+"$MIPS_CXX" STD/EFEAddressOperand.cpp -o ../compiled/STDEFEAddressOperand.lib $FLAGS
+"$MIPS_CXX" VS/EFEOperands.cpp -o ../compiled/VSEFEOperands.lib $FLAGS
+"$MIPS_CXX" VS/EFEIndexedOperand.cpp -o ../compiled/VSEFEIndexedOperand.lib $FLAGS
+"$MIPS_CXX" VS/EFEAddressOperand.cpp -o ../compiled/VSEFEAddressOperand.lib $FLAGS
+
 cd -

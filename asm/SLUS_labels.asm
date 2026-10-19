@@ -349,6 +349,10 @@
 .definelabel DRAWING_OFFSET_Y_COPY, 0x80134ee0
 .definelabel EFE_DATA_STACK, 0x80134cc8
 .definelabel EFE_SCRIPT_REGISTER, 0x80134cec
+.definelabel EFE_INSTANCE_BASE,        0x80134cf8
+.definelabel EFE_INSTRUCTION_POINTER,  0x80134d00
+.definelabel EFE_CURRENT_OPCODE,       0x80134d04
+.definelabel EFE_SCRIPT_BASE,          0x80134d08
 .definelabel EFE_FLASH_DATA, 0x80134cc0
 .definelabel FLASH_INSTANCE, 0x80134cc4
 .definelabel LOCAL_MAP_OBJECTS, 0x8013c060
