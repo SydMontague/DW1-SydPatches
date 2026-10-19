@@ -14,4 +14,10 @@
   .fill 0x8006a96c-.
 .endarea
 
+.org 0x8006e67c
+.area 0x8006e74c-.
+  .notice "BTL EFE comparison space left: " + (0x8006e74c-.) + " bytes"
+  .fill 0x8006e74c-.
+.endarea
+
 .close

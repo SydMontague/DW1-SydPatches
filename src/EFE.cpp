@@ -121,6 +121,38 @@ extern "C"
             destination[i] &= source[i];
     }
 
+    // TODO: Consider swapping the compareEqual/compareNotEqual names in a future refactor
+    // to make the 0/-1 results more intuitive.
+    int32_t EFE_compareEqual(int32_t value)
+    {
+        return value == EFE_SCRIPT_REGISTER ? 0 : -1;
+    }
+
+    int32_t EFE_compareNotEqual(int32_t value)
+    {
+        return value != EFE_SCRIPT_REGISTER ? 0 : -1;
+    }
+
+    int32_t EFE_compareLess(int32_t value)
+    {
+        return value < EFE_SCRIPT_REGISTER ? 0 : -1;
+    }
+
+    int32_t EFE_compareLessOrEqual(int32_t value)
+    {
+        return value <= EFE_SCRIPT_REGISTER ? 0 : -1;
+    }
+
+    int32_t EFE_compareGreater(int32_t value)
+    {
+        return value > EFE_SCRIPT_REGISTER ? 0 : -1;
+    }
+
+    int32_t EFE_compareGreaterOrEqual(int32_t value)
+    {
+        return value >= EFE_SCRIPT_REGISTER ? 0 : -1;
+    }
+
     void EFE_rotateVector()
     {
         Vector* vector    = pop<Vector*>();

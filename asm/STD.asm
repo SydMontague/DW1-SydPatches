@@ -14,4 +14,10 @@
   .fill 0x80072f78-.
 .endarea
 
+.org 0x80076c58
+.area 0x80076d28-.
+  .notice "STD EFE comparison space left: " + (0x80076d28-.) + " bytes"
+  .fill 0x80076d28-.
+.endarea
+
 .close
