@@ -9,8 +9,8 @@
 ;  jal createStaticUIBox
 ;.org 0x800fa518
 ;  jal createStaticUIBox
-.org 0x80100434
-  jal createStaticUIBox
+;.org 0x80100434
+;  jal createStaticUIBox
 
 ;.org 0x800c0518
 ;  jal removeStaticUIBox
@@ -95,8 +95,8 @@
 ;  jal createAnimatedUIBox
 ;.org 0x800f5104
 ;  jal createAnimatedUIBox
-.org 0x80100460
-  jal createAnimatedUIBox
+;.org 0x80100460
+;  jal createAnimatedUIBox
 
 .org 0x8010d300
   jal renderUIBoxBorder

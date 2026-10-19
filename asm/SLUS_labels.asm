@@ -24,9 +24,7 @@
 .definelabel getScript,                 0x80106218
 .definelabel initializeFontCLUT,        0x8010cb3c
 .definelabel initializeScripts,         0x801059c8
-.definelabel tickTextboxHandling,       0x80100258
 .definelabel initializeNamingBuffer,    0x8010c70c
-.definelabel initializeTextbox,         0x8010020c
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
 .definelabel triggerBoxCloseFlag,       0x801007e8
@@ -44,6 +42,7 @@
 .definelabel advanceTextbox,            0x80100f20
 .definelabel flipIdleTextboxPage,       0x80100e40
 
+.definelabel DELAY_FRAMES, 0x80134ffc
 .definelabel SELECTION_END_POINTER, 0x801be94c
 .definelabel TEXTBOX_SHOULD_RENDER, 0x80134f94
 .definelabel TEXTBOX_CLOSE_MODE, 0x80134fe5

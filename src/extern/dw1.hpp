@@ -1954,6 +1954,7 @@ extern "C"
     extern int32_t TEXTBOX_SHOULD_RENDER;
     extern int8_t TEXTBOX_CLOSE_MODE;
     extern int8_t AUTOCLOSE_FRAMES;
+    extern int16_t DELAY_FRAMES;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -2016,9 +2017,7 @@ extern "C"
     void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
     void initializeFontCLUT();
     void initializeScripts();
-    void tickTextboxHandling(int32_t mode);
     void initializeNamingBuffer(int32_t mode);
-    void initializeTextbox();
     int32_t newGameStateMachine();
 }
 

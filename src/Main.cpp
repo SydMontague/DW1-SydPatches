@@ -30,6 +30,7 @@
 #include "Tamer.hpp"
 #include "Timestamp.hpp"
 #include "Tournament.hpp"
+#include "VanillaTextbox.hpp"
 #include "extern/MOV.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libapi.hpp"

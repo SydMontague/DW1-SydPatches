@@ -5,10 +5,11 @@
 #include "Script.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
+#include "Utils.hpp"
 #include "extern/dw1.hpp"
 #include "extern/stddef.hpp"
 
-extern "C"
+namespace
 {
     bool drawTextboxStrings(int32_t boxId, int32_t unused)
     {
@@ -38,6 +39,10 @@ extern "C"
 
         return true;
     }
+} // namespace
+
+extern "C"
+{
 
     void clearTextboxLineCount(int32_t boxId)
     {
@@ -184,5 +189,99 @@ extern "C"
 
         for (auto i = 0; i < box.lineCount; i++)
             renderStringNew(0, posX, posY + i * 13, 252, 12, 704, uvY + i * 12, 6, 1);
+    }
+
+    void initializeTextbox()
+    {
+        for (auto& box : TEXTBOX_DATA) {
+            box.flags      = 0;
+            box.lineCount  = 0;
+            box.registered = 1;
+        }
+
+        TEXTBOX_LINES_USED = 0;
+        DELAY_FRAMES       = 0;
+        AUTOCLOSE_FRAMES   = 0;
+        TEXTBOX_OPEN_TIMER = 0;
+    }
+
+    void tickTextboxHandling(int32_t mode)
+    {
+        if (ACTIVE_INSTRUCTION == 0xFF) {
+            for (const auto& box : UI_BOX_DATA) {
+                if (box.state != 0) break;
+                setTextColor(1);
+                IS_SCRIPT_PAUSED = 1;
+            }
+            return;
+        }
+
+        bool alreadyDrawn = false;
+        for (auto i = 0; i < TEXTBOX_DATA.size(); i++) {
+            auto& box = TEXTBOX_DATA[i];
+
+            if (box.lineCount == 0) continue;
+            if (box.registered == 1 && box.writeCount != box.renderCount) {
+                if (box.isDoubleBuffered) {
+                    box.writeRow = (box.activeBufferId ^ 1) * box.lineCount;
+                    auto coords  = getVRAMModeCordsNew(box.vramMode);
+                    clearTextSubArea2(coords.posX,
+                                      (box.lineOffset + box.writeRow) * 12,
+                                      coords.width,
+                                      box.lineCount * 12);
+                    box.registered = 0;
+                }
+                else {
+                    box.writeRow   = 0;
+                    box.registered = 0;
+                }
+            }
+
+            if (!alreadyDrawn && box.registered == 0) alreadyDrawn = drawTextboxStrings(i, mode);
+
+            auto stateFlag = box.flags & 0xF;
+            auto state     = UI_BOX_DATA[i].state;
+            if (stateFlag == state) continue;
+
+            if (stateFlag != 1) {
+                if (state == 1)
+                    closeTextbox(i, 0);
+                else
+                    continue;
+            }
+
+            if (box.registered == 1 && state == 0) {
+                auto typeFlag = (box.flags >> 4) & 3;
+                if ((box.flags & 0x80) == 0) {
+                    createStaticUIBox(i,
+                                      typeFlag == 0,
+                                      typeFlag,
+                                      &box.textboxPos,
+                                      box.tickFunction,
+                                      box.renderFunction);
+                }
+                else {
+                    createAnimatedUIBox(i,
+                                        typeFlag == 0,
+                                        typeFlag,
+                                        &box.textboxPos,
+                                        &box.textboxOrigin,
+                                        box.tickFunction,
+                                        box.renderFunction);
+                }
+            }
+        }
+
+        if (DELAY_FRAMES != 0) DELAY_FRAMES--;
+        if (AUTOCLOSE_FRAMES != 0) AUTOCLOSE_FRAMES--;
+        TEXTBOX_SHOULD_RENDER = 0;
+        TEXTBOX_OPEN_TIMER++;
+    }
+
+    void getVRAMModeCoords(VRAMMode mode, uint32_t* posX, uint32_t* width)
+    {
+        auto coords = getVRAMModeCordsNew(mode);
+        *posX       = coords.posX;
+        *width      = coords.width;
     }
 }
