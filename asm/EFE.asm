@@ -25,6 +25,19 @@
 .org 0x800734a8
   .word EFE_maskVectors
 
+.org 0x800736ec
+  .word EFE_compareEqual
+.org 0x800736f0
+  .word EFE_compareNotEqual
+.org 0x800736f4
+  .word EFE_compareLess
+.org 0x800736f8
+  .word EFE_compareLessOrEqual
+.org 0x800736fc
+  .word EFE_compareGreater
+.org 0x80073700
+  .word EFE_compareGreaterOrEqual
+
 .close
 
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
@@ -55,6 +68,19 @@
 .org 0x8007acc4
   .word EFE_maskVectors
 
+.org 0x8007af08
+  .word EFE_compareEqual
+.org 0x8007af0c
+  .word EFE_compareNotEqual
+.org 0x8007af10
+  .word EFE_compareLess
+.org 0x8007af14
+  .word EFE_compareLessOrEqual
+.org 0x8007af18
+  .word EFE_compareGreater
+.org 0x8007af1c
+  .word EFE_compareGreaterOrEqual
+
 .close
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
@@ -84,6 +110,19 @@
 
 .org 0x80070cf0
   .word EFE_maskVectors
+
+.org 0x80070f34
+  .word EFE_compareEqual
+.org 0x80070f38
+  .word EFE_compareNotEqual
+.org 0x80070f3c
+  .word EFE_compareLess
+.org 0x80070f40
+  .word EFE_compareLessOrEqual
+.org 0x80070f44
+  .word EFE_compareGreater
+.org 0x80070f48
+  .word EFE_compareGreaterOrEqual
 
 .close
 

@@ -14,6 +14,12 @@
   .fill 0x80069048-.
 .endarea
 
+.org 0x8006cd28
+.area 0x8006cdf8-.
+  .notice "VS EFE comparison space left: " + (0x8006cdf8-.) + " bytes"
+  .fill 0x8006cdf8-.
+.endarea
+
 .org 0x80058228
   jal VS__runIntro
 
