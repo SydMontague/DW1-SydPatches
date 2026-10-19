@@ -43,10 +43,10 @@
 ;  jal isKeyDown
 ;.org 0x800ffe68
 ;  jal isKeyDown
-.org 0x80100018
-  jal isKeyDown
-.org 0x80100068
-  jal isKeyDown
+;.org 0x80100018
+;  jal isKeyDown
+;.org 0x80100068
+;  jal isKeyDown
 .org 0x80107edc
   jal isKeyDown
 .org 0x80107fa8
@@ -128,8 +128,8 @@
 ;  jal isXPressedAfterDialogue
 ;.org 0x800ffe2c
 ;  jal isXPressedAfterDialogue
-.org 0x80100008
-  jal isXPressedAfterDialogue
+;.org 0x80100008
+;  jal isXPressedAfterDialogue
 .org 0x80107ebc
   jal isXPressedAfterDialogue
 .org 0x801083ac

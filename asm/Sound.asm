@@ -215,8 +215,8 @@
 ;  jal playSound
 ;.org 0x800ffebc
 ;  jal playSound
-.org 0x80100058
-  jal playSound
+;.org 0x80100058
+;  jal playSound
 .org 0x801000cc
   jal playSound
 .org 0x80103db8

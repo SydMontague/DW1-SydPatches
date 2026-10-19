@@ -1,8 +1,10 @@
+#include "Font.hpp"
 #include "Helper.hpp"
 #include "Input.hpp"
 #include "Math.hpp"
 #include "Script.hpp"
 #include "Sound.hpp"
+#include "UIElements.hpp"
 #include "extern/dw1.hpp"
 #include "extern/stddef.hpp"
 
@@ -66,7 +68,7 @@ extern "C"
             }
             if (ACTIVE_INSTRUCTION == 0x64) {
                 advanceTextbox(0);
-                SELECTION_CURRENT -= 1;
+                SELECTION_CURRENT = SELECTION_COUNT - 1;
                 playSound(0, 4);
                 return SELECTION_CURRENT;
             }
@@ -139,5 +141,48 @@ extern "C"
         box.idle      = 1;
         box.pageReady = 0;
         return 1;
+    }
+
+    void renderDialogueSelectionCursor(int32_t x, int32_t y)
+    {
+        if (TEXTBOX_DATA[0].idle == 1) return;
+
+        renderSelectionCursor(x - 1,
+                              y + SELECTION_CURSOR_OFFSET_Y + SELECTION_CURRENT * 13 - 2,
+                              SELECTION_CURSOR_WIDTH,
+                              13,
+                              6);
+    }
+
+    void tickCustomSizedTextbox()
+    {
+        if (flipIdleTextboxPage(0)) return;
+        if (!isXPressedAfterDialogue()) return;
+        if (UI_BOX_DATA[0].state != 1) return;
+
+        if (isKeyDown(InputButtons::BUTTON_CROSS)) {
+            auto result = advanceTextbox(0);
+            if (result) triggerBoxCloseFlag(0);
+            playSound(0, 3);
+        }
+        else if (isKeyDown(InputButtons::BUTTON_TRIANGLE)) {
+            while (!TEXTBOX_DATA[0].pageReady)
+                showTextboxReady(0, 0xFF);
+            ACTIVE_INSTRUCTION   = 0;
+            TEXTBOX_DATA[0].idle = 1;
+            triggerBoxCloseFlag(0);
+            playSound(0, 4);
+        }
+    }
+
+    void renderCustomSizedTextbox()
+    {
+        const auto& box = TEXTBOX_DATA[0];
+        const auto uvY  = (box.lineOffset + box.activeBufferId) * box.lineCount * 12 + 256;
+        const auto posX = UI_BOX_DATA[0].finalPos.x + 5;
+        const auto posY = UI_BOX_DATA[0].finalPos.y + 4;
+
+        for (auto i = 0; i < box.lineCount; i++)
+            renderStringNew(0, posX, posY + i * 13, 252, 12, 704, uvY + i * 12, 6, 1);
     }
 }
