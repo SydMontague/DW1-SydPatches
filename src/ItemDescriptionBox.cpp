@@ -2,6 +2,7 @@
 #include "Font.hpp"
 #include "Input.hpp"
 #include "Sound.hpp"
+#include "VanillaTextbox.hpp"
 #include "extern/dw1.hpp"
 
 namespace

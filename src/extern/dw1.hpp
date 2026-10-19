@@ -1979,24 +1979,14 @@ extern "C"
     void scriptPauseGame(int32_t speaker);
     void setupDialogueBox(int32_t speaker);
     int32_t drawString2(const uint8_t* str, int32_t x, int32_t y, int32_t unused);
-    void createTextbox(int32_t id,
-                       uint8_t flags,
-                       const RECT* textboxPos,
-                       const RECT* textboxOrigin,
-                       TickFunction tickFunction,
-                       RenderFunction renderFunction);
-    void registerTextbox(int id, uint32_t lineOffset, uint32_t lineCount, bool isDoubleBuffered, VRAMMode vramMode);
     uint32_t showTextboxReady(int32_t textboxId, int32_t speaker);
     uint8_t scriptIdToEntityId(uint8_t scriptId);
     uint8_t* intToStringSJIS(uint8_t* buffer, int32_t value, uint32_t digitCount, int32_t padNumber);
     void setupBoxOrigin(int32_t speaker, RECT* result);
-    void closeTextbox(int32_t id, RECT* final);
     void setCardAmount(int32_t cardType, int32_t amount);
-    void triggerBoxCloseFlag(int32_t id);
     void tickScript();
     uint8_t* getScript(uint32_t scriptId);
     uint8_t* getScriptSection(uint8_t* ptr, int32_t section);
-    void closeBox(int32_t id);
     void unsetTrigger(int32_t id);
     int16_t enforceStatsLimits(ScriptStats type, uint32_t value);
     void tickMainMenu(int32_t instanceId);

@@ -19,7 +19,6 @@
 .definelabel renderMainMenu,            0x80113458
 .definelabel unsetTrigger,              0x801065fc
 .definelabel enforceStatsLimits,        0x80102678
-.definelabel closeBox,                  0x801006d4
 .definelabel getScriptSection,          0x8010629c
 .definelabel getScript,                 0x80106218
 .definelabel initializeFontCLUT,        0x8010cb3c
@@ -27,15 +26,11 @@
 .definelabel initializeNamingBuffer,    0x8010c70c
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
-.definelabel triggerBoxCloseFlag,       0x801007e8
 .definelabel setupBoxOrigin,            0x80101078
-.definelabel closeTextbox,              0x801005a4
 .definelabel setCardAmount,             0x80106848
 .definelabel intToStringSJIS,           0x80102064
 .definelabel scriptIdToEntityId,        0x80102144
 .definelabel showTextboxReady,          0x80101ef8
-.definelabel createTextbox,             0x80100700
-.definelabel registerTextbox,           0x80100838
 .definelabel drawString2,               0x80100948
 .definelabel scriptPauseGame,           0x801062f8
 .definelabel setupDialogueBox,          0x80100fdc

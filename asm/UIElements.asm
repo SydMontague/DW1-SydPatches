@@ -28,8 +28,8 @@
 ;  jal removeStaticUIBox
 ;.org 0x800fa59c
 ;  jal removeStaticUIBox
-.org 0x8010061c
-  jal removeStaticUIBox
+;.org 0x8010061c
+;  jal removeStaticUIBox
 
 
 ;.org 0x800aa5f4
@@ -60,8 +60,8 @@
 ;  jal removeAnimatedUIBox
 ;.org 0x800f4f70
 ;  jal removeAnimatedUIBox
-.org 0x8010062c
-  jal removeAnimatedUIBox
+;.org 0x8010062c
+;  jal removeAnimatedUIBox
 
 ;.org 0x800aa490
 ;  jal createAnimatedUIBox

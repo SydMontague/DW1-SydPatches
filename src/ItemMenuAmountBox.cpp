@@ -9,6 +9,7 @@
 #include "Script.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
+#include "VanillaTextbox.hpp"
 #include "constants.hpp"
 #include "extern/dw1.hpp"
 

@@ -4,6 +4,7 @@
 #include "Math.hpp"
 #include "UIBox.hpp"
 #include "UIElements.hpp"
+#include "VanillaTextbox.hpp"
 #include "extern/dtl/optional.hpp"
 #include "extern/dtl/unique_ptr.hpp"
 #include "extern/dw1.hpp"

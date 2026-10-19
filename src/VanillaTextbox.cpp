@@ -1,3 +1,4 @@
+#include "VanillaTextbox.hpp"
 #include "Font.hpp"
 #include "Helper.hpp"
 #include "Input.hpp"
@@ -39,10 +40,6 @@ namespace
 
         return true;
     }
-} // namespace
-
-extern "C"
-{
 
     void clearTextboxLineCount(int32_t boxId)
     {
@@ -54,6 +51,10 @@ extern "C"
         box.registered = 1;
         TEXTBOX_LINES_USED -= freedLines;
     }
+} // namespace
+
+extern "C"
+{
 
     uint16_t tickSelectionDialogue()
     {
@@ -157,6 +158,13 @@ extern "C"
                               SELECTION_CURSOR_WIDTH,
                               13,
                               6);
+    }
+
+    void triggerBoxCloseFlag(int32_t id)
+    {
+        auto& box = TEXTBOX_DATA[id];
+        if ((box.flags & 0xF) == 0) return;
+        box.flags &= 0xF0;
     }
 
     void tickCustomSizedTextbox()
@@ -284,4 +292,78 @@ extern "C"
         *posX       = coords.posX;
         *width      = coords.width;
     }
+
+    void closeBox(int32_t id)
+    {
+        triggerBoxCloseFlag(id);
+        closeTextbox(id, nullptr);
+    }
+
+    void closeAllTextboxes()
+    {
+        for (auto i = 0; i < TEXTBOX_DATA.size(); i++) {
+            const auto& box = TEXTBOX_DATA[i];
+            if ((box.flags & 0xF) == 0) continue;
+            if ((box.flags & 0x40) != 0) {
+                ACTIVE_INSTRUCTION = 0xFF;
+                IS_SCRIPT_PAUSED   = 0;
+            }
+            closeBox(i);
+        }
+    }
+
+    void registerTextbox(int id, uint32_t lineOffset, uint32_t lineCount, bool isDoubleBuffered, VRAMMode vramMode)
+    {
+        auto& box            = TEXTBOX_DATA[id];
+        box.lineOffset       = lineOffset;
+        box.lineCount        = lineCount;
+        box.writeRow         = 0;
+        box.vramMode         = vramMode;
+        box.activeBufferId   = 0;
+        box.isDoubleBuffered = isDoubleBuffered;
+        box.writeCount       = 0;
+        box.renderCount      = 0;
+        box.flipCount        = 0;
+        box.registered       = 1;
+        box.pageReady        = 0;
+        box.idle             = 1;
+
+        auto totalLines = lineCount;
+        if (isDoubleBuffered) totalLines *= 2;
+        TEXTBOX_LINES_USED += totalLines;
+        setTextColor(1);
+        auto coords = getVRAMModeCordsNew(vramMode);
+        clearTextSubArea2(coords.posX, lineOffset * 12, coords.width, totalLines * 12);
+    }
+
+    void createTextbox(int32_t id,
+                       uint8_t flags,
+                       const RECT* textboxPos,
+                       const RECT* textboxOrigin,
+                       TickFunction tickFunction,
+                       RenderFunction renderFunction)
+    {
+        auto& box = TEXTBOX_DATA[id];
+        if ((box.flags & 0xF) == 1) closeTextbox(id, nullptr);
+
+        box.flags          = flags;
+        box.textboxPos     = *textboxPos;
+        box.textboxOrigin  = *textboxOrigin;
+        box.tickFunction   = tickFunction;
+        box.renderFunction = renderFunction;
+        setFreshDialogue();
+    }
+}
+
+void closeTextbox(int32_t id, RECT* final)
+{
+    auto& box     = UI_BOX_DATA[id];
+    auto& textbox = TEXTBOX_DATA[id];
+
+    if (box.state == 0 || box.state == 3) return;
+    if ((textbox.flags & 0x40) == 0)
+        removeStaticUIBox(id);
+    else
+        removeAnimatedUIBox(id, final);
+    clearTextboxLineCount(id);
 }

@@ -51,6 +51,11 @@ bool isKeyPressed(InputButtons button)
     return (POLLED_INPUT & button) != 0;
 }
 
+void setFreshDialogue()
+{
+    isFreshDialogue = true;
+}
+
 extern "C"
 {
     void inputInit()
@@ -81,11 +86,6 @@ extern "C"
         const uint32_t result = fire | (polled & freshMask);
         pendingMask           = result;
         return result;
-    }
-
-    void setFreshDialogue()
-    {
-        isFreshDialogue = true;
     }
 
     bool isXPressedAfterDialogue()

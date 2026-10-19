@@ -143,9 +143,6 @@
 .org 0x8010a064
   jal isXPressedAfterDialogue
 
-.org 0x801007bc
-  jal setFreshDialogue
-
 ;.org 0x800fc6a0
 ;  jal setInputRepeatMask
 ;.org 0x800fc6e0
