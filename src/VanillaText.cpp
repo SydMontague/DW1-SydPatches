@@ -4,6 +4,7 @@
 #include "Helper.hpp"
 #include "Math.hpp"
 #include "UIElements.hpp"
+#include "Utils.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
@@ -58,6 +59,11 @@ namespace
         setPosDataPolyFT4(prim, posX, posY, width, height);
         libgpu_AddPrim(ACTIVE_ORDERING_TABLE->origin + layer, prim);
         libgs_GsSetWorkBase(prim + 1);
+    }
+
+    constexpr bool isAsciiEncoded(char value)
+    {
+        return value > -1;
     }
 } // namespace
 
@@ -145,11 +151,6 @@ extern "C"
         renderStringNew(colorId, posX, posY, uvWidth, uvHeight, (uvX / 4) + 704, uvY + 256, offset, hasShadow);
     }
 
-    bool isAsciiEncoded(const char* value)
-    {
-        return *value > -1;
-    }
-
     uint16_t convertAsciiToJis(uint8_t input)
     {
         auto specialOffset = 0;
@@ -193,5 +194,114 @@ extern "C"
             output[i] = swapShortBytes(convertAsciiToJis(input[i]));
 
         output[length] = 0;
+    }
+
+    int32_t drawString2(const uint8_t* str, int32_t x, int32_t y, int32_t unused)
+    {
+        auto posX = 0;
+
+        auto advanceTo = [&](int32_t width) {
+            str++;
+            clearTextSubArea2(x + posX, y, dtl::max(0, width - posX), 12);
+            posX = width;
+        };
+
+        while (true) {
+            auto entry = *str++;
+
+            switch (entry) {
+                case 0x00: return 1;
+                case 0x01: setTextColor(*str++); break;
+                case 0x02: str++; break;
+                case 0x03: str += 3; break;
+                case 0x0c:
+                {
+                    str++;
+                    auto val = (posX / 12) % 8;
+                    if (val != 0) {
+                        auto width = (8 - val) * 12;
+                        clearTextSubArea2(x + posX, y, width, 12);
+                        posX += width;
+                    }
+                    break;
+                }
+                case 0x0d: return 0;
+                case 0x0e:
+                {
+                    str++;
+                    auto val = (posX / 12) % 11;
+                    if (val != 0) {
+                        auto width = (11 - val) * 12;
+                        clearTextSubArea2(x + posX, y, width, 12);
+                        posX += width;
+                    }
+                    break;
+                }
+                case 0x0f:
+                {
+                    str++;
+                    clearTextSubArea2(x + posX, y, 6, 12);
+                    posX += 6;
+                    break;
+                }
+                case 0x16:
+                {
+                    advanceTo(0x69);
+                    break;
+                }
+                case 0x17:
+                {
+                    advanceTo(0x69);
+                    break;
+                }
+                case 0x18:
+                {
+                    advanceTo(0x60);
+                    break;
+                }
+                case 0x19:
+                {
+                    advanceTo(0x9c);
+                    break;
+                }
+                case 0x1a:
+                {
+                    advanceTo(0xb4);
+                    break;
+                }
+                case 0x1b:
+                {
+                    advanceTo(0xa0);
+                    break;
+                }
+                case 0x1c:
+                {
+                    advanceTo(0x64);
+                    break;
+                }
+                default:
+                {
+                    uint16_t glyph = 0;
+                    if (isAsciiEncoded(entry)) {
+                        glyph = convertAsciiToJis(entry);
+                        glyph = swapShortBytes(glyph);
+                    }
+                    else {
+                        glyph = entry + ((*str++) << 8);
+                    }
+
+                    if (glyph == 0x4081) {
+                        // ugly hack for spaces
+                        clearTextSubArea2(posX + x, y, 12, 12);
+                        posX += (DRAW_STRING2_IS_FIXED_WIDTH ? 12 : 8);
+                    }
+                    else {
+                        auto width = drawGlyph(glyph, x + posX, y);
+                        if (DRAW_STRING2_IS_FIXED_WIDTH) width = 12;
+                        posX += width;
+                    }
+                }
+            }
+        }
     }
 }

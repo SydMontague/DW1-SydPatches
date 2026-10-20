@@ -31,12 +31,13 @@
 .definelabel intToStringSJIS,           0x80102064
 .definelabel scriptIdToEntityId,        0x80102144
 .definelabel showTextboxReady,          0x80101ef8
-.definelabel drawString2,               0x80100948
 .definelabel scriptPauseGame,           0x801062f8
 .definelabel setupDialogueBox,          0x80100fdc
 .definelabel advanceTextbox,            0x80100f20
 .definelabel flipIdleTextboxPage,       0x80100e40
+.definelabel drawGlyph,                 0x8010cc28
 
+.definelabel DRAW_STRING2_IS_FIXED_WIDTH, 0x80134f98
 .definelabel DELAY_FRAMES, 0x80134ffc
 .definelabel SELECTION_END_POINTER, 0x801be94c
 .definelabel TEXTBOX_SHOULD_RENDER, 0x80134f94

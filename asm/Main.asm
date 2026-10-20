@@ -7,24 +7,6 @@
 .org 0x801130d8
   jal recalculatePPandArena
 
-; VERY DIRTY drawString2 patch, t2 *seems* unused, but there is literally no guarantee!!!
-;.org 0x800ff26c
-;  clear t2
-;.org 0x800ffb34
-;  clear t2
-.org 0x8010ab20
-  clear t2
-
-.org 0x80100dd8
-  sll v0,t2,0x10
-
-.org 0x80100de4
-  andi t2,v0,0xffff
-
-.org 0x80100df8
-  li t2,0xc
-  sll v0,t2,0x10
-
 .org 0x80111ba4
   li.u a3,renderMainMenuBackground
 .org 0x80111bb8

@@ -52,15 +52,11 @@
 .org 0x8010b4a8
   jal renderString
 
-.org 0x80100d60
-  jal isAsciiEncoded
-.org 0x8010cf48
-  jal isAsciiEncoded
 
-.org 0x80100d74
-  jal convertAsciiToJis
-.org 0x8010cf8c
-  jal convertAsciiToJis
+;.org 0x80100d74
+;  jal convertAsciiToJis
+;.org 0x8010cf8c
+;  jal convertAsciiToJis
 
 .org 0x80110878
   jal asciiToShiftJIS
@@ -69,12 +65,19 @@
 .org 0x80111fb8
   jal asciiToShiftJIS
 
-.org 0x80100d7c
-  jal swapShortBytes
-.org 0x8010cf98
-  jal swapShortBytes
-.org 0x8010cfe8
-  jal swapShortBytes
+;.org 0x80100d7c
+;  jal swapShortBytes
+;.org 0x8010cf98
+;  jal swapShortBytes
+;.org 0x8010cfe8
+;  jal swapShortBytes
+
+;.org 0x800ff288
+;  jal drawString2
+;.org 0x800ffb30
+;  jal drawString2
+.org 0x8010ab1c
+  jal drawString2
 
 .close 
 
@@ -109,6 +112,9 @@
   
 .org  0x80062edc
   jal swapShortBytes
+
+.org 0x80062eec
+  jal drawGlyph
 
 .close
 

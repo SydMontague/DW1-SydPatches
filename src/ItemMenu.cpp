@@ -323,9 +323,7 @@ namespace
                 line[3] = 0x7C;
                 line[4] = 0x81;
                 line[5] = 0x7C;
-                line[6] = 0xF;
-                line[7] = 0;
-                line += 8;
+                line += 6;
             }
             else {
                 line    = intToStringSJIS(line, value, 4, 0);
@@ -341,8 +339,15 @@ namespace
                 line[0] = 0x1C;
                 line[1] = 0;
                 line += 2;
-                // deliberate fallthrough
-            case 1: line = intToStringSJIS(line, amount & 0x7F, 2, 0); break;
+                line = intToStringSJIS(line, amount & 0x7F, 2, 0);
+                break;
+            case 1:
+            case 2: // vanilla doesn't handle the recycle shop, overlapping price and amount
+                line[0] = 0x19;
+                line[1] = 0;
+                line += 2;
+                line = intToStringSJIS(line, amount & 0x7F, 2, 0);
+                break;
             case 0:
             case 7: break;
         }

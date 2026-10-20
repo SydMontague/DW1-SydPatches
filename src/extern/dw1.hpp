@@ -1955,6 +1955,7 @@ extern "C"
     extern int8_t TEXTBOX_CLOSE_MODE;
     extern int8_t AUTOCLOSE_FRAMES;
     extern int16_t DELAY_FRAMES;
+    extern bool DRAW_STRING2_IS_FIXED_WIDTH;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -1974,6 +1975,7 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    int16_t drawGlyph(uint16_t codepoint, uint32_t posX, uint32_t posY);
     bool flipIdleTextboxPage(int32_t id);
     bool advanceTextbox(int32_t id);
     void scriptPauseGame(int32_t speaker);
