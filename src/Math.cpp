@@ -152,13 +152,6 @@ extern "C"
         return pos.depth;
     }
 
-    void worldPosToScreenPos2(int16_t* x, int16_t* y, int16_t* z)
-    {
-        auto pos = getScreenPosition(*x, *y, *z);
-        *x       = pos.screenX;
-        *y       = pos.screenY;
-    }
-
     bool hasAABBOverlap(AABB* aabb1, AABB* aabb2)
     {
         auto x1     = aabb1->center->x;

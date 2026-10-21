@@ -1,8 +1,5 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
-
-.org 0x801010b4
-  jal worldPosToScreenPos2
   
 ;.org 0x800a47cc
 ;  jal random
@@ -128,8 +125,8 @@
 ;  jal getEntityScreenPos
 ;.org 0x800ee010
 ;  jal getEntityScreenPos
-.org 0x80101120
-  jal getEntityScreenPos
+;.org 0x80101120
+;  jal getEntityScreenPos
 .org 0x80109c6c
   jal getEntityScreenPos
 .org 0x80109e14

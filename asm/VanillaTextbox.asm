@@ -66,8 +66,8 @@
 ;  jal registerTextbox
 ;.org 0x800fd734
 ;  jal registerTextbox
-.org 0x80101060
-  jal registerTextbox
+;.org 0x80101060
+;  jal registerTextbox
 .org 0x80101ee0
   jal registerTextbox
 .org 0x801071c4
@@ -172,8 +172,8 @@
 ;  jal createTextbox
 ;.org 0x800fd71c
 ;  jal createTextbox
-.org 0x80101048
-  jal createTextbox
+;.org 0x80101048
+;  jal createTextbox
 .org 0x80101ec8
   jal createTextbox
 .org 0x801071ac
@@ -216,6 +216,29 @@
 .org 0x801061c0
   jal closeAllTextboxes
 
+;.org 0x800fb4e8
+;  jal setupBoxOrigin
+;.org 0x800fc990
+;  jal setupBoxOrigin
+;.org 0x800fca78
+;  jal setupBoxOrigin
+;.org 0x80100fec
+;  jal setupBoxOrigin
+.org 0x80101e10
+  jal setupBoxOrigin
+.org 0x8010713c
+  jal setupBoxOrigin
+.org 0x80107674
+  jal setupBoxOrigin
+.org 0x801076fc
+  jal setupBoxOrigin
+.org 0x80107908
+  jal setupBoxOrigin
+.org 0x80107bac
+  jal setupBoxOrigin
+.org 0x80107d68
+  jal setupBoxOrigin
+
 .close
 
 .open "work/DIGIMON/DGET_REL.BIN",0x80080800
@@ -247,6 +270,13 @@
   jal createTextbox
 .org 0x80080ee4
   jal createTextbox
+
+.org 0x800809fc
+  jal setupBoxOrigin
+.org 0x80080b80
+  jal setupBoxOrigin
+.org 0x80080df8
+  jal setupBoxOrigin
 
 .close
 

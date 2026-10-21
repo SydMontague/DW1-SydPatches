@@ -51,10 +51,91 @@ namespace
         box.registered = 1;
         TEXTBOX_LINES_USED -= freedLines;
     }
+
+    bool flipIdleTextboxPage(int32_t id)
+    {
+        auto& box = TEXTBOX_DATA[id];
+
+        if (!box.isDoubleBuffered) return false;
+        if (!box.registered) return true;
+        if (box.writeCount != box.renderCount) return true;
+        if (!box.idle) return false;
+        if (box.renderCount == 0) return true;
+
+        box.idle = 0;
+        box.activeBufferId ^= 1;
+        box.flipCount++;
+        if (!box.pageReady) ACTIVE_INSTRUCTION = 0;
+        TEXTBOX_OPEN_TIMER = 0;
+
+        return true;
+    }
+
+    bool advanceTextbox(int32_t id)
+    {
+        auto& box = TEXTBOX_DATA[id];
+
+        if (!box.registered) return false;
+
+        if (box.pageReady) {
+            if (box.renderCount == box.flipCount) {
+                box.idle           = 1;
+                box.pageReady      = 0;
+                ACTIVE_INSTRUCTION = 0;
+                return true;
+            }
+            box.activeBufferId ^= 1;
+        }
+        else {
+            box.activeBufferId ^= 1;
+            ACTIVE_INSTRUCTION = 0;
+        }
+        box.flipCount++;
+        TEXTBOX_OPEN_TIMER = 0;
+        return false;
+    }
 } // namespace
 
 extern "C"
 {
+    bool setupBoxOrigin(int32_t speaker, RECT* result)
+    {
+        if (speaker == 0xFF) return false;
+
+        if (TEXTBOX_ORIGIN_X == -9999) {
+            auto id = scriptIdToEntityId(speaker);
+            if (id == 0xFF) return false;
+
+            auto pos  = getScreenPosition(*ENTITY_TABLE.getEntityById(id), 1);
+            result->x = pos.screenX;
+            result->y = pos.screenY;
+        }
+        else {
+            auto pos         = getScreenPosition(TEXTBOX_ORIGIN_X, TEXTBOX_ORIGIN_Y, TEXTBOX_ORIGIN_Z);
+            result->x        = pos.screenX - 5;
+            result->y        = pos.screenY - 5;
+            TEXTBOX_ORIGIN_X = -9999;
+        }
+
+        result->width  = 10;
+        result->height = 10;
+        return true;
+    }
+
+    void setupDialogueBox(int32_t speaker)
+    {
+        RECT origin;
+        auto hasSpeaker = setupBoxOrigin(speaker, &origin);
+        auto flags      = hasSpeaker ? 0xa1 : 0x21;
+        constexpr RECT final{
+            .x      = -130,
+            .y      = 42,
+            .width  = 262,
+            .height = 59,
+        };
+        createTextbox(0, flags, &final, &origin, tickScriptDialogueBox, renderScriptDialogueBox);
+        registerTextbox(0, 0, 4, 1, VRAMMode::FRONT_FULL);
+    }
 
     uint16_t tickSelectionDialogue()
     {

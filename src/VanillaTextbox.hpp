@@ -16,6 +16,8 @@ extern "C"
                        TickFunction tickFunction,
                        RenderFunction renderFunction);
     void registerTextbox(int id, uint32_t lineOffset, uint32_t lineCount, bool isDoubleBuffered, VRAMMode vramMode);
+    void setupDialogueBox(int32_t speaker);
+    bool setupBoxOrigin(int32_t speaker, RECT* result);
 }
 
 void closeTextbox(int32_t id, RECT* final);

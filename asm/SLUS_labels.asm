@@ -26,17 +26,18 @@
 .definelabel initializeNamingBuffer,    0x8010c70c
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
-.definelabel setupBoxOrigin,            0x80101078
 .definelabel setCardAmount,             0x80106848
 .definelabel intToStringSJIS,           0x80102064
 .definelabel scriptIdToEntityId,        0x80102144
 .definelabel showTextboxReady,          0x80101ef8
 .definelabel scriptPauseGame,           0x801062f8
-.definelabel setupDialogueBox,          0x80100fdc
-.definelabel advanceTextbox,            0x80100f20
-.definelabel flipIdleTextboxPage,       0x80100e40
 .definelabel drawGlyph,                 0x8010cc28
+.definelabel tickScriptDialogueBox,     0x80101160
+.definelabel renderScriptDialogueBox,   0x801012bc
 
+.definelabel TEXTBOX_ORIGIN_X, 0x80134fd2
+.definelabel TEXTBOX_ORIGIN_Y, 0x80134fd4
+.definelabel TEXTBOX_ORIGIN_Z, 0x80134fd6
 .definelabel DRAW_STRING2_IS_FIXED_WIDTH, 0x80134f98
 .definelabel DELAY_FRAMES, 0x80134ffc
 .definelabel SELECTION_END_POINTER, 0x801be94c

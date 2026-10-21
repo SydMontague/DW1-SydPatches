@@ -1956,6 +1956,9 @@ extern "C"
     extern int8_t AUTOCLOSE_FRAMES;
     extern int16_t DELAY_FRAMES;
     extern bool DRAW_STRING2_IS_FIXED_WIDTH;
+    extern int16_t TEXTBOX_ORIGIN_X;
+    extern int16_t TEXTBOX_ORIGIN_Y;
+    extern int16_t TEXTBOX_ORIGIN_Z;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -1975,16 +1978,14 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void tickScriptDialogueBox(int32_t id);
+    void renderScriptDialogueBox(int32_t id);
     int16_t drawGlyph(uint16_t codepoint, uint32_t posX, uint32_t posY);
-    bool flipIdleTextboxPage(int32_t id);
-    bool advanceTextbox(int32_t id);
     void scriptPauseGame(int32_t speaker);
-    void setupDialogueBox(int32_t speaker);
     int32_t drawString2(const uint8_t* str, int32_t x, int32_t y, int32_t unused);
     uint32_t showTextboxReady(int32_t textboxId, int32_t speaker);
     uint8_t scriptIdToEntityId(uint8_t scriptId);
     uint8_t* intToStringSJIS(uint8_t* buffer, int32_t value, uint32_t digitCount, int32_t padNumber);
-    void setupBoxOrigin(int32_t speaker, RECT* result);
     void setCardAmount(int32_t cardType, int32_t amount);
     void tickScript();
     uint8_t* getScript(uint32_t scriptId);
