@@ -1963,6 +1963,8 @@ extern "C"
     extern int16_t TEXTBOX_ORIGIN_X;
     extern int16_t TEXTBOX_ORIGIN_Y;
     extern int16_t TEXTBOX_ORIGIN_Z;
+    extern uint8_t* ACTIVE_SCRIPT;
+    extern uint16_t* SELECTION_POINTER;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -1982,8 +1984,6 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
-    void tickScriptDialogueBox(int32_t id);
-    void renderScriptDialogueBox(int32_t id);
     int16_t drawGlyph(uint16_t codepoint, uint32_t posX, uint32_t posY);
     void scriptPauseGame(int32_t speaker);
     int32_t drawString2(const uint8_t* str, int32_t x, int32_t y, int32_t unused);

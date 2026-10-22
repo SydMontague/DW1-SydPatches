@@ -94,48 +94,6 @@ namespace
         TEXTBOX_OPEN_TIMER = 0;
         return false;
     }
-} // namespace
-
-extern "C"
-{
-    bool setupBoxOrigin(int32_t speaker, RECT* result)
-    {
-        if (speaker == 0xFF) return false;
-
-        if (TEXTBOX_ORIGIN_X == -9999) {
-            auto id = scriptIdToEntityId(speaker);
-            if (id == 0xFF) return false;
-
-            auto pos  = getScreenPosition(*ENTITY_TABLE.getEntityById(id), 1);
-            result->x = pos.screenX;
-            result->y = pos.screenY;
-        }
-        else {
-            auto pos         = getScreenPosition(TEXTBOX_ORIGIN_X, TEXTBOX_ORIGIN_Y, TEXTBOX_ORIGIN_Z);
-            result->x        = pos.screenX - 5;
-            result->y        = pos.screenY - 5;
-            TEXTBOX_ORIGIN_X = -9999;
-        }
-
-        result->width  = 10;
-        result->height = 10;
-        return true;
-    }
-
-    void setupDialogueBox(int32_t speaker)
-    {
-        RECT origin;
-        auto hasSpeaker = setupBoxOrigin(speaker, &origin);
-        auto flags      = hasSpeaker ? 0xa1 : 0x21;
-        constexpr RECT final{
-            .x      = -130,
-            .y      = 42,
-            .width  = 262,
-            .height = 59,
-        };
-        createTextbox(0, flags, &final, &origin, tickScriptDialogueBox, renderScriptDialogueBox);
-        registerTextbox(0, 0, 4, 1, VRAMMode::FRONT_FULL);
-    }
 
     uint16_t tickSelectionDialogue()
     {
@@ -239,6 +197,115 @@ extern "C"
                               SELECTION_CURSOR_WIDTH,
                               13,
                               6);
+    }
+} // namespace
+
+extern "C"
+{
+    void tickScriptDialogueBox(int32_t id)
+    {
+        if (ACTIVE_INSTRUCTION == 0x10) {
+            auto selection = tickSelectionDialogue();
+            if (selection != 0xFFFF) SCRIPT_POINTER = ACTIVE_SCRIPT + SELECTION_POINTER[selection];
+            return;
+        }
+
+        if (ACTIVE_INSTRUCTION == 0x1A) {
+            tickConfirmDialogue();
+            return;
+        }
+
+        if (ACTIVE_INSTRUCTION == 0x64) {
+            switch (SCRIPT_TEXTBOX_MODE) {
+                case ScriptTextboxMode::BACKGROUND:
+                {
+                    if (tickBackgroundDialogue()) {
+                        ACTIVE_INSTRUCTION  = 0x64;
+                        SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::NONE;
+                    }
+                    break;
+                }
+                case ScriptTextboxMode::SELECTION:
+                {
+                    auto selection = tickSelectionDialogue();
+                    if (selection != 0xFFFF) {
+                        SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::NONE;
+                        ACTIVE_INSTRUCTION  = 0x64;
+                        SCRIPT_STATE_2      = SCRIPT_NEXT_STATE_2 + selection;
+                    }
+                    break;
+                }
+                case ScriptTextboxMode::CONFIRM:
+                {
+                    if (tickConfirmDialogue()) {
+                        SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::NONE;
+                        SCRIPT_STATE_2      = SCRIPT_NEXT_STATE_2;
+                        ACTIVE_INSTRUCTION  = 0x64;
+                    }
+                    break;
+                }
+                case ScriptTextboxMode::NONE: break;
+            }
+        }
+    }
+
+    void renderScriptDialogueBox(int32_t id)
+    {
+        const auto& box     = UI_BOX_DATA[0];
+        const auto& textbox = TEXTBOX_DATA[0];
+
+        auto offset = textbox.lineOffset * 12 + textbox.activeBufferId * 48;
+        auto posX   = box.finalPos.x + 5;
+        auto posY   = box.finalPos.y + 4;
+
+        for (int32_t i = 0; i < 4; i++)
+            renderStringNew(0, posX, posY + 13 * i, 252, 12, 704, offset + 12 * i + 256, 6, 1);
+
+        if (ACTIVE_INSTRUCTION == 0x10 ||
+            (ACTIVE_INSTRUCTION == 0x64 && SCRIPT_TEXTBOX_MODE == ScriptTextboxMode::SELECTION)) {
+            renderDialogueSelectionCursor(posX, posY);
+        }
+
+        if (TEXTBOX_SHOULD_RENDER) renderUIBox(0);
+    }
+
+    bool setupBoxOrigin(int32_t speaker, RECT* result)
+    {
+        if (speaker == 0xFF) return false;
+
+        if (TEXTBOX_ORIGIN_X == -9999) {
+            auto id = scriptIdToEntityId(speaker);
+            if (id == 0xFF) return false;
+
+            auto pos  = getScreenPosition(*ENTITY_TABLE.getEntityById(id), 1);
+            result->x = pos.screenX;
+            result->y = pos.screenY;
+        }
+        else {
+            auto pos         = getScreenPosition(TEXTBOX_ORIGIN_X, TEXTBOX_ORIGIN_Y, TEXTBOX_ORIGIN_Z);
+            result->x        = pos.screenX - 5;
+            result->y        = pos.screenY - 5;
+            TEXTBOX_ORIGIN_X = -9999;
+        }
+
+        result->width  = 10;
+        result->height = 10;
+        return true;
+    }
+
+    void setupDialogueBox(int32_t speaker)
+    {
+        RECT origin;
+        auto hasSpeaker = setupBoxOrigin(speaker, &origin);
+        auto flags      = hasSpeaker ? 0xa1 : 0x21;
+        constexpr RECT final{
+            .x      = -130,
+            .y      = 42,
+            .width  = 262,
+            .height = 59,
+        };
+        createTextbox(0, flags, &final, &origin, tickScriptDialogueBox, renderScriptDialogueBox);
+        registerTextbox(0, 0, 4, 1, VRAMMode::FRONT_FULL);
     }
 
     void triggerBoxCloseFlag(int32_t id)

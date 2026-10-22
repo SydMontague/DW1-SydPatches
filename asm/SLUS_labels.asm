@@ -32,9 +32,9 @@
 .definelabel showTextboxReady,          0x80101ef8
 .definelabel scriptPauseGame,           0x801062f8
 .definelabel drawGlyph,                 0x8010cc28
-.definelabel tickScriptDialogueBox,     0x80101160
-.definelabel renderScriptDialogueBox,   0x801012bc
 
+.definelabel ACTIVE_SCRIPT, 0x80134fd8
+.definelabel SELECTION_POINTER, 0x801be948
 .definelabel TEXTBOX_ORIGIN_X, 0x80134fd2
 .definelabel TEXTBOX_ORIGIN_Y, 0x80134fd4
 .definelabel TEXTBOX_ORIGIN_Z, 0x80134fd6
