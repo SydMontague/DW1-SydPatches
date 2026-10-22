@@ -369,15 +369,6 @@
 .org 0x8010ab08
   jal terminateString
 
-;.org 0x800fed30
-;  jal padWithSpaces
-;.org 0x800fee60
-;  jal padWithSpaces
-;.org 0x800ff04c
-;  jal padWithSpaces
-.org 0x8010aaf8
-  jal padWithSpaces
-
 .close
 
 

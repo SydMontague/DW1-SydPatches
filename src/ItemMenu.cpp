@@ -402,6 +402,15 @@ namespace
         terminateString(line, withNewLine);
     }
 
+    uint8_t* padWithSpaces(uint8_t* string, int32_t targetLength, int32_t currentLength)
+    {
+        for (auto i = currentLength; i < targetLength * 2; i++) {
+            *string = ' ';
+            string++;
+        }
+        return string;
+    }
+
     void calculateMusicMenuStrings(ItemMenuBox* menu, int id, bool withNewLine)
     {
         auto line   = getTextboxLine(menu, id);
@@ -445,25 +454,41 @@ namespace
     {
         auto line      = getTextboxLine(menu, id);
         auto offset    = (menu->scrollOffset + id) * 2;
-        auto typeLeft  = menu->itemList[offset];
+        auto typeLeft  = ITEM_MENU_LEFT->itemList[offset];
         auto typeRight = ITEM_MENU_RIGHT->itemList[offset];
-        auto nameLeft  = getItem(static_cast<ItemType>(typeLeft))->name;
-        auto nameRight = getItem(static_cast<ItemType>(typeRight))->name;
+        auto nameLeft  = getItem(static_cast<ItemType>(typeLeft & 0x7F))->name;
+        auto nameRight = getItem(static_cast<ItemType>(typeRight & 0x7F))->name;
         auto triggerId = ITEM_MENU_TYPE + ITEM_MENU_LEFT->scrollOffset + 5 + id;
         line[0]        = 1;
         line[1]        = 7;
-        line[2]        = 0x81;
-        line[3]        = isTriggerSet(triggerId) ? 0x7C : 0x40;
-        line[4]        = 1;
-        line[5]        = (typeLeft & 0x80) == 0 ? 3 : 1;
-        strcpy(line + 6, nameLeft);
-        line += 6 + strlen(nameLeft);
-        line[0] = 0xF;
+        line += 2;
+        if (isTriggerSet(triggerId)) {
+            line[0] = 0x81;
+            line[1] = 0x7C;
+            line += 2;
+        }
+        else {
+            line[0] = 0xF;
+            line[1] = 0x0;
+            line[2] = 0xF;
+            line[3] = 0x0;
+            line += 4;
+        }
+        line[0] = 1;
+        line[1] = (typeLeft & 0x80) == 0 ? 3 : 1;
+        line += 2;
+        strcpy(line, nameLeft);
+        line += strlen(nameLeft);
+        line[0] = 0x16;
         line[1] = 0x0;
-        line[2] = 0x1;
-        line[3] = 0x1;
-        strcpy(line + 4, nameRight);
-        line += 4 + strlen(nameRight);
+        line[2] = 0xF;
+        line[3] = 0x0;
+        line[4] = 0xF;
+        line[5] = 0x0;
+        line[6] = 0x1;
+        line[7] = 0x1;
+        strcpy(line + 8, nameRight);
+        line += 8 + strlen(nameRight);
         terminateString(line, withNewLine);
     }
 
@@ -962,15 +987,6 @@ extern "C"
         line[1] = 1;
         line[2] = !withNewLine ? 0xD : 0;
         line[3] = 0;
-    }
-
-    uint8_t* padWithSpaces(uint8_t* string, int32_t targetLength, int32_t currentLength)
-    {
-        for (auto i = currentLength; i < targetLength * 2; i++) {
-            *string = ' ';
-            string++;
-        }
-        return string;
     }
 }
 

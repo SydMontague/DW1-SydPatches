@@ -89,8 +89,8 @@ naming_buffer_length equ 20
 .endarea
 
 ; fix pad with spaces limit
-.org 0x8010aaf4
-  li a1,max_glyph_count
+;.org 0x8010aaf4
+;  li a1,max_glyph_count
 
 ; remove terminateNamingBuffer call
 .org 0x8010a2d8
