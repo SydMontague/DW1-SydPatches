@@ -14,19 +14,15 @@
   .fill 0x80069048-.
 .endarea
 
-; Shared operand semantics are emitted in this owning overlay.
+; Shared operand and control semantics are emitted in this owning overlay.
 .org 0x8006c1bc
-.area 0x8006c23c-.
+.area 0x8006c704-.
   .importobj "compiled/VSEFEAddressOperand.lib"
-  .notice "VS EFE address operand space left: " + (0x8006c23c-.) + " bytes"
-  .fill 0x8006c23c-.
-.endarea
-
-.org 0x8006c360
-.area 0x8006c4cc-.
+  .importobj "compiled/VSEFEDispatch.lib"
   .importobj "compiled/VSEFEIndexedOperand.lib"
-  .notice "VS EFE indexed operand space left: " + (0x8006c4cc-.) + " bytes"
-  .fill 0x8006c4cc-.
+  .importobj "compiled/VSEFEControl.lib"
+  .notice "VS EFE operands and control space left: " + (0x8006c704-.) + " bytes"
+  .fill 0x8006c704-.
 .endarea
 
 .org 0x8006c7d0
@@ -41,6 +37,35 @@
   .notice "VS EFE comparison space left: " + (0x8006cdf8-.) + " bytes"
   .fill 0x8006cdf8-.
 .endarea
+
+.org 0x8006d218
+.area 0x8006d394-.
+  .importobj "compiled/VSEFERun.lib"
+  .notice "VS EFERun space left: " + (0x8006d394-.) + " bytes"
+  .fill 0x8006d394-.
+.endarea
+
+; VS_dispatchEFEOpcode
+.org 0x80063eb4
+  jal VS_dispatchEFEOpcode
+
+; VS_initializeEFESubOpcodeTable
+.org 0x800648f0
+  jal VS_initializeEFESubOpcodeTable
+
+; VS_returnFromEFESubroutine
+.org 0x8006c0a4
+  jal VS_returnFromEFESubroutine
+.org 0x8006c118
+  jal VS_returnFromEFESubroutine
+
+; VS_runEFEScript
+.org 0x80063380
+  jal VS_runEFEScript
+.org 0x80063568
+  jal VS_runEFEScript
+.org 0x8006389c
+  j VS_runEFEScript
 
 .org 0x80058228
   jal VS__runIntro

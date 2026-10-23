@@ -70,6 +70,34 @@
 .org 0x80073700
   .word EFE_compareGreaterOrEqual
 
+; BTL_branchEFEOnComparison
+.org 0x80073620
+  .word BTL_branchEFEOnComparison
+
+; BTL_callEFESubroutine
+.org 0x80073638
+  .word BTL_callEFESubroutine
+
+; BTL_dispatchEFESubOpcode
+.org 0x8007363c
+  .word BTL_dispatchEFESubOpcode
+
+; BTL_jumpEFEScript
+.org 0x80073628
+  .word BTL_jumpEFEScript
+
+; BTL_returnFromEFESubroutine
+.org 0x80073640
+  .word BTL_returnFromEFESubroutine
+
+; BTL_stopEFEScript
+.org 0x80073618
+  .word BTL_stopEFEScript
+.org 0x8007361c
+  .word BTL_stopEFEScript
+.org 0x80073624
+  .word BTL_stopEFEScript
+
 .close
 
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
@@ -145,6 +173,34 @@
 .org 0x8007af1c
   .word EFE_compareGreaterOrEqual
 
+; STD_branchEFEOnComparison
+.org 0x8007ae3c
+  .word STD_branchEFEOnComparison
+
+; STD_callEFESubroutine
+.org 0x8007ae54
+  .word STD_callEFESubroutine
+
+; STD_dispatchEFESubOpcode
+.org 0x8007ae58
+  .word STD_dispatchEFESubOpcode
+
+; STD_jumpEFEScript
+.org 0x8007ae44
+  .word STD_jumpEFEScript
+
+; STD_returnFromEFESubroutine
+.org 0x8007ae5c
+  .word STD_returnFromEFESubroutine
+
+; STD_stopEFEScript
+.org 0x8007ae34
+  .word STD_stopEFEScript
+.org 0x8007ae38
+  .word STD_stopEFEScript
+.org 0x8007ae40
+  .word STD_stopEFEScript
+
 .close
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
@@ -219,6 +275,34 @@
   .word EFE_compareGreater
 .org 0x80070f48
   .word EFE_compareGreaterOrEqual
+
+; VS_branchEFEOnComparison
+.org 0x80070e68
+  .word VS_branchEFEOnComparison
+
+; VS_callEFESubroutine
+.org 0x80070e80
+  .word VS_callEFESubroutine
+
+; VS_dispatchEFESubOpcode
+.org 0x80070e84
+  .word VS_dispatchEFESubOpcode
+
+; VS_jumpEFEScript
+.org 0x80070e70
+  .word VS_jumpEFEScript
+
+; VS_returnFromEFESubroutine
+.org 0x80070e88
+  .word VS_returnFromEFESubroutine
+
+; VS_stopEFEScript
+.org 0x80070e60
+  .word VS_stopEFEScript
+.org 0x80070e64
+  .word VS_stopEFEScript
+.org 0x80070e6c
+  .word VS_stopEFEScript
 
 .close
 

@@ -351,6 +351,24 @@
 .definelabel EFE_INSTRUCTION_POINTER,  0x80134d00
 .definelabel EFE_CURRENT_OPCODE,       0x80134d04
 .definelabel EFE_SCRIPT_BASE,          0x80134d08
+.definelabel EFE_TARGET_INDEX,         0x80134ce0
+.definelabel EFE_SCRIPT_RESULT,        0x80134ce4
+.definelabel EFE_CURRENT_SUBEFFECT,    0x80134ce8
+.definelabel EFE_PARENT_INSTANCE,      0x80134cf4
+.definelabel EFE_RETURN_STACK,         0x80134cfc
+.definelabel EFE_RETURN_STACK_BASE,    0x80139b54
+.definelabel BTL_EFE_SUBOPCODE_ENTRIES, 0x800732fc
+.definelabel BTL_EFE_PRIMARY_OPCODES, 0x80073604
+.definelabel BTL_EFE_COMPARISONS, 0x800736ec
+.definelabel BTL_EFE_SUBOPCODES, 0x80074ebc
+.definelabel STD_EFE_SUBOPCODE_ENTRIES, 0x8007ab18
+.definelabel STD_EFE_PRIMARY_OPCODES, 0x8007ae20
+.definelabel STD_EFE_COMPARISONS, 0x8007af08
+.definelabel STD_EFE_SUBOPCODES, 0x8007fa7c
+.definelabel VS_EFE_SUBOPCODE_ENTRIES, 0x80070b44
+.definelabel VS_EFE_PRIMARY_OPCODES, 0x80070e4c
+.definelabel VS_EFE_COMPARISONS, 0x80070f34
+.definelabel VS_EFE_SUBOPCODES, 0x80072e1c
 .definelabel EFE_FLASH_DATA, 0x80134cc0
 .definelabel FLASH_INSTANCE, 0x80134cc4
 .definelabel LOCAL_MAP_OBJECTS, 0x8013c060
@@ -519,6 +537,7 @@
 .definelabel printf,  0x8009128c
 .definelabel rand,    0x8009127c
 .definelabel bzero,   0x8009123c
+.definelabel libc_exit, 0x80091174
 
 // libcd
 .definelabel libcd_CdSearchFile, 0x800b23c0

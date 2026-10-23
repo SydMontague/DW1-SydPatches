@@ -4,6 +4,11 @@
 
 extern "C"
 {
+    extern const dtl::array<EFEOpcodeHandler, 18> VS_EFE_PRIMARY_OPCODES;
+    extern const dtl::array<EFEOpcodeEntry, 97> VS_EFE_SUBOPCODE_ENTRIES;
+    extern dtl::array<EFEOpcodeHandler, 97> VS_EFE_SUBOPCODES;
+    extern const dtl::array<EFEComparison, 6> VS_EFE_COMPARISONS;
+
     extern Vector INTRO_TARGET_POS;
     extern dtl::array<dtl::array<uint8_t, 14>, 116> VS__INTRO_DIGIMON_NAMES;
     extern dtl::array<int8_t, 5> VS__SELECTED_P1;
