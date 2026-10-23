@@ -3,6 +3,11 @@
 
 extern "C"
 {
+    extern const dtl::array<EFEOpcodeHandler, 18> BTL_EFE_PRIMARY_OPCODES;
+    extern const dtl::array<EFEOpcodeEntry, 97> BTL_EFE_SUBOPCODE_ENTRIES;
+    extern dtl::array<EFEOpcodeHandler, 97> BTL_EFE_SUBOPCODES;
+    extern const dtl::array<EFEComparison, 6> BTL_EFE_COMPARISONS;
+
     extern uint8_t BTL_EMBEDDED_TEXTURE1;
     extern uint8_t BTL_FINISHER_MODEL;
     extern uint8_t BTL_CONFUSION_MODEL;

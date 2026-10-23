@@ -15,5 +15,6 @@ extern "C"
     extern uint8_t* sprintf(uint8_t* buffer, const char* format, ...);
     extern void printf(const char* string, ...);
     extern int32_t rand();
+    void libc_exit(int32_t code);
     void bzero(void* pointer, int32_t size);
 }
