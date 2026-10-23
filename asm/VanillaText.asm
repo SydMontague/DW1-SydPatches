@@ -79,6 +79,17 @@
 .org 0x8010ab1c
   jal drawString2
 
+;.org 0x80100094
+;  jal showTextbox
+;.org 0x801015d4
+;  jal showTextbox
+.org 0x80101f24
+  j showTextbox
+.org 0x80102b58
+  jal showTextbox
+.org 0x80102b6c
+  jal showTextbox
+
 .close 
 
 

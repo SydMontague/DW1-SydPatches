@@ -367,7 +367,7 @@ extern "C"
         }
         else if (isKeyDown(InputButtons::BUTTON_TRIANGLE)) {
             while (!TEXTBOX_DATA[0].pageReady)
-                showTextboxReady(0, 0xFF);
+                showTextbox(0, 0xFF);
             ACTIVE_INSTRUCTION   = 0;
             TEXTBOX_DATA[0].idle = 1;
             triggerBoxCloseFlag(0);

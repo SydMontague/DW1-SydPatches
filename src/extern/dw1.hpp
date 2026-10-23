@@ -1965,6 +1965,7 @@ extern "C"
     extern int16_t TEXTBOX_ORIGIN_Z;
     extern uint8_t* ACTIVE_SCRIPT;
     extern uint16_t* SELECTION_POINTER;
+    extern dtl::array<const uint8_t*, 23> TOURNAMENT_NAME_LIST;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -1984,7 +1985,7 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
-    uint32_t showTextbox(int32_t box, uint32_t speaker);
+    uint32_t getSpeakerName(uint32_t speaker, const uint8_t* str);
     int16_t drawGlyph(uint16_t codepoint, uint32_t posX, uint32_t posY);
     void scriptPauseGame(int32_t speaker);
     int32_t drawString2(const uint8_t* str, int32_t x, int32_t y, int32_t unused);

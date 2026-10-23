@@ -13,6 +13,7 @@ extern "C"
                               int32_t selectionCount,
                               uint32_t* usePreviousSelection,
                               uint16_t sectionId);
+    uint32_t showTextbox(int32_t id, uint32_t speaker);
 }
 
 void triggerSeadramonCutscene();

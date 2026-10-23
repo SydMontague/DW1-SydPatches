@@ -62,10 +62,206 @@ namespace
     {
         return *SCRIPT_POINTER++;
     }
+
+    constexpr uint8_t getColorFromSpeaker(uint32_t speaker)
+    {
+        if (speaker == 0xFD) return 6;
+        if (speaker == 0xFC) return 10;
+        if (speaker < 200) return 7;
+
+        return 5;
+    }
 } // namespace
 
 extern "C"
 {
+    uint32_t showTextbox(int32_t id, uint32_t speaker)
+    {
+        auto& textbox = TEXTBOX_DATA[id];
+        auto* linePtr = TEXTBOX_LINES_PTR + textbox.lineOffset * 0x40;
+        if (textbox.vramMode == VRAMMode::END_HALF) linePtr += 0x20;
+        if (textbox.isDoubleBuffered) linePtr += ((textbox.activeBufferId ^ 1) * textbox.lineCount * 0x40);
+
+        auto lineOffset = 0;
+        if (speaker != 0xFF) {
+            auto str = linePtr;
+            str[0]   = 1;
+            str[1]   = getColorFromSpeaker(speaker);
+            str += 2;
+            auto length = getSpeakerName(speaker, str);
+            str += length;
+            str[0] = 1;
+            str[1] = 1;
+            str[2] = 0xd;
+            str[3] = 0;
+            lineOffset += 0x40;
+        }
+
+        auto maxWidth     = 0;
+        auto currentWidth = 0;
+        auto str          = linePtr + lineOffset;
+        while (true) {
+            auto entry = SCRIPT_POINTER[0];
+            switch (entry) {
+                default:
+                    str[0] = SCRIPT_POINTER[0];
+                    str[1] = SCRIPT_POINTER[1];
+                    str += 2;
+                    SCRIPT_POINTER += 2;
+                    currentWidth++;
+                    break;
+                case 0x01:
+                case 0x02:
+                case 0x0C:
+                case 0x0E:
+                    str[0] = SCRIPT_POINTER[0];
+                    str[1] = SCRIPT_POINTER[1];
+                    str += 2;
+                    SCRIPT_POINTER += 2;
+                    break;
+                case 0x03:
+                    str[0] = SCRIPT_POINTER[0];
+                    str[1] = SCRIPT_POINTER[1];
+                    str[2] = SCRIPT_POINTER[2];
+                    str[3] = SCRIPT_POINTER[3];
+                    str += 4;
+                    SCRIPT_POINTER += 4;
+                    break;
+                case 0x04:
+                {
+                    auto value = readPStat(SCRIPT_POINTER[1]);
+                    str        = intToStringSJIS(str, value, 3, 1);
+                    SCRIPT_POINTER += 2;
+                    break;
+                }
+                case 0x05:
+                {
+                    SCRIPT_POINTER += 2;
+                    auto width = getSpeakerName(0xFD, str);
+                    str += width;
+                    currentWidth += (width / 2);
+                    break;
+                }
+                case 0x06:
+                {
+                    SCRIPT_POINTER += 2;
+                    auto width = getSpeakerName(0xFC, str);
+                    str += width;
+                    currentWidth += (width / 2);
+                    break;
+                }
+                case 0x07:
+                {
+                    auto name = getDigimonData(static_cast<DigimonType>(readPStat(SCRIPT_POINTER[1])))->name;
+                    strcpy(str, name);
+                    auto length = strlen(name);
+                    str += length;
+                    currentWidth += (length / 2);
+                    SCRIPT_POINTER += 2;
+                    break;
+                }
+                case 0x08:
+                {
+                    auto name = MOVE_NAMES[readPStat(SCRIPT_POINTER[1])];
+                    strcpy(str, name);
+                    auto length = strlen(name);
+                    str += length;
+                    currentWidth += (length / 2);
+                    SCRIPT_POINTER += 2;
+                    break;
+                }
+                case 0x09:
+                {
+                    auto name = getItem(static_cast<ItemType>(readPStat(SCRIPT_POINTER[1])))->name;
+                    strcpy(str, name);
+                    auto length = strlen(name);
+                    str += length;
+                    currentWidth += (length / 2);
+                    SCRIPT_POINTER += 2;
+                    break;
+                }
+                case 0x0A:
+                {
+                    SCRIPT_POINTER += 2;
+                    str = intToStringSJIS(str, MONEY, 6, 0);
+                    break;
+                }
+                case 0x0B:
+                {
+                    SCRIPT_POINTER += 2;
+                    str = intToStringSJIS(str, MERIT, 4, 0);
+                    break;
+                }
+                case 0x0D:
+                {
+                    str[0] = SCRIPT_POINTER[0];
+                    str[1] = SCRIPT_POINTER[1];
+                    SCRIPT_POINTER += 2;
+                    maxWidth     = dtl::max(maxWidth, currentWidth);
+                    currentWidth = 0;
+
+                    if (*SCRIPT_POINTER == 0) {
+                        str[0] = 0;
+                        str[1] = 0;
+                        SCRIPT_POINTER += 2;
+                        if (SCRIPT_POINTER[0] != 0x1A) textbox.pageReady = 1;
+                        textbox.writeCount++;
+                        ACTIVE_INSTRUCTION = 0x1A;
+                        return maxWidth;
+                    }
+
+                    lineOffset += 0x40;
+                    str = linePtr + lineOffset;
+                    break;
+                }
+                case 0x10:
+                {
+                    SCRIPT_POINTER += 2;
+                    str = intToStringSJIS(str, SHOP_VARIABLE, 5, 0);
+                    break;
+                }
+                case 0x11:
+                {
+                    auto name = MUSIC_NAME_LIST[readPStat(SCRIPT_POINTER[1])];
+                    strcpy(str, name);
+                    auto length = strlen(name);
+                    str += length;
+                    currentWidth += (length / 2);
+                    SCRIPT_POINTER += 2;
+                    break;
+                }
+                case 0x12:
+                {
+                    auto name = TOURNAMENT_NAME_LIST[readPStat(SCRIPT_POINTER[1])];
+                    strcpy(str, name);
+                    auto length = strlen(name);
+                    str += length;
+                    currentWidth += (length / 2);
+                    SCRIPT_POINTER += 2;
+                    break;
+                }
+                case 0x13:
+                {
+                    SCRIPT_POINTER += 2;
+                    str = intToStringSJIS(str, TOURNAMENTS_WON, 3, 0);
+                    break;
+                }
+                case 0x14:
+                {
+                    SCRIPT_POINTER += 2;
+                    str = intToStringSJIS(str, TOURNAMENT_WINS, 3, 0);
+                    break;
+                }
+                case 0x15:
+                {
+                    SCRIPT_POINTER += 2;
+                    str = intToStringSJIS(str, TOURNAMENTS_LOST, 3, 0);
+                    break;
+                }
+            }
+        }
+    }
+
     int32_t getScriptSyncBit()
     {
         return SOME_SCRIPT_SYNC_BIT;
