@@ -134,6 +134,9 @@
 .org 0x801042dc
   jal loadShopLibrary
 
+.org 0x80102958
+  jal scriptShowSelection
+
 .close
 
 

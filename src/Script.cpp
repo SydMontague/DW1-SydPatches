@@ -8,6 +8,7 @@
 #include "RecycleShop.hpp"
 #include "Tournament.hpp"
 #include "VanillaTextbox.hpp"
+#include "extern/dtl/algorithm.hpp"
 #include "extern/dtl/array.hpp"
 #include "extern/dtl/vector.hpp"
 #include "extern/dw1.hpp"
@@ -55,6 +56,11 @@ namespace
     {
         auto scriptId = getShopkeeperScriptID();
         return resolveMapHeadEntry(scriptId, line);
+    }
+
+    uint8_t readScriptUByte()
+    {
+        return *SCRIPT_POINTER++;
     }
 } // namespace
 
@@ -185,6 +191,21 @@ extern "C"
         SELECTION_CURSOR_OFFSET_Y = speaker == 0xFF ? 0 : 13;
         ACTIVE_INSTRUCTION        = 100;
         SCRIPT_POINTER            = backup;
+    }
+
+    void scriptShowSelection()
+    {
+        SELECTION_COUNT   = readScriptUByte();
+        SELECTION_CURRENT = 0;
+        SELECTION_POINTER = reinterpret_cast<uint16_t*>(SCRIPT_POINTER);
+        SCRIPT_POINTER += ((SELECTION_COUNT + 1) * 2);
+
+        auto width             = showTextbox(0, CURRENT_DIALOGUE_OWNER);
+        SELECTION_CURSOR_WIDTH = dtl::min(width * 12 + 2, 240U);
+        SCRIPT_POINTER += 2;
+        SELECTION_END_POINTER     = SCRIPT_POINTER;
+        SELECTION_CURSOR_OFFSET_Y = CURRENT_DIALOGUE_OWNER == 0xFF ? 0 : 13;
+        ACTIVE_INSTRUCTION        = 0x10;
     }
 
     void showMapheadTextbox(int32_t line, int32_t speaker, int32_t textboxId, int32_t sectionId)

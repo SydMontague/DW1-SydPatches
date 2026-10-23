@@ -31,6 +31,7 @@
 .definelabel showTextboxReady,          0x80101ef8
 .definelabel scriptPauseGame,           0x801062f8
 .definelabel drawGlyph,                 0x8010cc28
+.definelabel showTextbox,               0x80101688
 
 .definelabel ACTIVE_SCRIPT, 0x80134fd8
 .definelabel SELECTION_POINTER, 0x801be948
