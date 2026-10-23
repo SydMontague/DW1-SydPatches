@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../EFE/Types.hpp"
 #include "libc.hpp"
 #include "libgpu.hpp"
 #include "libgs.hpp"
@@ -1840,6 +1841,13 @@ extern "C"
     extern EFEFlashData* EFE_FLASH_DATA;
     extern int32_t FLASH_INSTANCE;
     extern uint8_t* EFE_DATA_STACK;
+    extern int32_t EFE_TARGET_INDEX;
+    extern int32_t EFE_SCRIPT_RESULT;
+    extern EFESubEffect* EFE_CURRENT_SUBEFFECT;
+    extern EFEInstance* EFE_PARENT_INSTANCE;
+    extern uint32_t* EFE_RETURN_STACK;
+    // Physical storage extent, not a bytecode nesting guarantee.
+    extern uint32_t EFE_RETURN_STACK_BASE[16];
     extern int32_t EFE_SCRIPT_REGISTER;
     extern uint8_t* EFE_INSTANCE_BASE;
     extern int16_t* EFE_INSTRUCTION_POINTER;
