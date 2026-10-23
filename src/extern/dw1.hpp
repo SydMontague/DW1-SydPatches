@@ -2003,7 +2003,6 @@ extern "C"
     void initializeLoadedNPCModels();
     bool isTriggerSet(int32_t trigger);
     void playBGM(uint8_t soundFont);
-    void renderUIBox(int32_t instanceId);
     uint8_t getCardAmount(uint8_t cardId);
     uint8_t readPStat(int32_t address);
     void writePStat(int32_t address, uint8_t value);

@@ -8,6 +8,8 @@
 #include "UIElements.hpp"
 #include "Utils.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libgpu.hpp"
+#include "extern/libgs.hpp"
 #include "extern/stddef.hpp"
 
 namespace
@@ -198,10 +200,47 @@ namespace
                               13,
                               6);
     }
+
+    constexpr dtl::array<Sprite, 3> INDICATOR_FRAMES = {{
+        {
+            .uvX          = 0x4c,
+            .uvV          = 0xb7,
+            .width        = 16,
+            .height       = 12,
+            .texture_page = getTPage(0, 1, 320, 128),
+            .clut         = getClut(96, 500),
+        },
+        {
+            .uvX          = 0x5c,
+            .uvV          = 0xb7,
+            .width        = 16,
+            .height       = 12,
+            .texture_page = getTPage(0, 1, 320, 128),
+            .clut         = getClut(96, 500),
+        },
+        {
+            .uvX          = 0x6c,
+            .uvV          = 0xb7,
+            .width        = 16,
+            .height       = 12,
+            .texture_page = getTPage(0, 1, 320, 128),
+            .clut         = getClut(96, 500),
+        },
+    }};
 } // namespace
 
 extern "C"
 {
+    void renderConfirmPrompt(int32_t instanceId)
+    {
+        const auto& box  = UI_BOX_DATA[instanceId];
+        const auto posX  = box.finalPos.x + 239;
+        const auto posY  = box.finalPos.y + 43;
+        const auto index = (TEXTBOX_OPEN_TIMER / 4) % 3;
+
+        INDICATOR_FRAMES[index].render(posX, posY, 6 - instanceId, 0x40);
+    }
+
     void tickScriptDialogueBox(int32_t id)
     {
         if (ACTIVE_INSTRUCTION == 0x10) {
@@ -266,7 +305,7 @@ extern "C"
             renderDialogueSelectionCursor(posX, posY);
         }
 
-        if (TEXTBOX_SHOULD_RENDER) renderUIBox(0);
+        if (TEXTBOX_SHOULD_RENDER) renderConfirmPrompt(0);
     }
 
     bool setupBoxOrigin(int32_t speaker, RECT* result)

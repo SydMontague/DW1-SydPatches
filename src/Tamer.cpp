@@ -25,6 +25,7 @@
 #include "Script.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
+#include "VanillaTextbox.hpp"
 #include "constants.hpp"
 #include "extern/BTL.hpp"
 #include "extern/DOOA.hpp"
@@ -273,7 +274,7 @@ namespace
     {
         // vanilla doesn't use shadows
         renderStringNew(0, -125, 45, 255, 36, 704, 120 + 256, 5, 1);
-        renderUIBox(1);
+        renderConfirmPrompt(1);
         TEXTBOX_OPEN_TIMER++;
     }
 
@@ -284,7 +285,7 @@ namespace
         renderStringNew(15, -125, 45, 255, 12, 704, 12 + 256, 5, 1);
         renderStringNew(0, -125, 57, 255, 12, 704, 24 + 256, 5, 1);
         renderStringNew(0, -125, 69, 255, 12, 704, 36 + 256, 5, 1);
-        renderUIBox(1);
+        renderConfirmPrompt(1);
         TEXTBOX_OPEN_TIMER++;
     }
 

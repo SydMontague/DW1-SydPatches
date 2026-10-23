@@ -9,7 +9,6 @@
 .definelabel readPStat,                 0x801062e0
 .definelabel writePStat,                0x80106474
 .definelabel getCardAmount,             0x801067ec
-.definelabel renderUIBox,               0x80101440
 .definelabel playBGM,                   0x80106a80
 .definelabel isTriggerSet,              0x8010643c
 .definelabel initializeLoadedNPCModels, 0x80105aa8
