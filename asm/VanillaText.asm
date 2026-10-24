@@ -184,6 +184,9 @@
 .org 0x80081a34
   jal renderString
 
+.org 0x80080ac8
+  jal intToStringSJIS
+
 .close
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0

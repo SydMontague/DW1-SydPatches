@@ -1989,7 +1989,6 @@ extern "C"
     void scriptPauseGame(int32_t speaker);
     int32_t drawString2(const uint8_t* str, int32_t x, int32_t y, int32_t unused);
     uint8_t scriptIdToEntityId(uint8_t scriptId);
-    uint8_t* intToStringSJIS(uint8_t* buffer, int32_t value, uint32_t digitCount, int32_t padNumber);
     void setCardAmount(int32_t cardType, int32_t amount);
     void tickScript();
     uint8_t* getScript(uint32_t scriptId);

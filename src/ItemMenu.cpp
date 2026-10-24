@@ -13,6 +13,7 @@
 #include "SingleCardConfirmMenu.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
+#include "VanillaText.hpp"
 #include "VanillaTextbox.hpp"
 #include "constants.hpp"
 #include "extern/dtl/algorithm.hpp"

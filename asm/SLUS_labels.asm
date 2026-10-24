@@ -26,7 +26,6 @@
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel tickScript,                0x80105bd8
 .definelabel setCardAmount,             0x80106848
-.definelabel intToStringSJIS,           0x80102064
 .definelabel scriptIdToEntityId,        0x80102144
 .definelabel scriptPauseGame,           0x801062f8
 .definelabel drawGlyph,                 0x8010cc28

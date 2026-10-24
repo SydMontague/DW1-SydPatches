@@ -8,6 +8,7 @@
 #include "Partner.hpp"
 #include "RecycleShop.hpp"
 #include "Tournament.hpp"
+#include "VanillaText.hpp"
 #include "VanillaTextbox.hpp"
 #include "extern/dtl/algorithm.hpp"
 #include "extern/dtl/array.hpp"

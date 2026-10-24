@@ -5,6 +5,7 @@
 #include "Math.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"
+#include "extern/dtl/array.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgpu.hpp"
 #include "extern/libgs.hpp"
@@ -194,6 +195,31 @@ extern "C"
             output[i] = swapShortBytes(convertAsciiToJis(input[i]));
 
         output[length] = 0;
+    }
+
+    uint8_t* intToStringSJIS(uint8_t* buffer, int32_t value, uint32_t digitCount, bool padNumber)
+    {
+        bool isEmpty = true;
+
+        for (auto start = pow(10, digitCount - 1); start > 0; start /= 10) {
+            auto digit = (value / start) % 10;
+
+            if (digit == 0 && isEmpty) {
+                if (!padNumber) {
+                    buffer[0] = 0x81;
+                    buffer[1] = 0x40;
+                    buffer += 2;
+                }
+            }
+            else {
+                buffer[0] = 0x82;
+                buffer[1] = 0x4F + digit;
+                buffer += 2;
+                isEmpty = false;
+            }
+        }
+
+        return buffer;
     }
 
     int32_t drawString2(const uint8_t* str, int32_t x, int32_t y, int32_t unused)

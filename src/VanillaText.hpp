@@ -42,4 +42,5 @@ extern "C"
                       int32_t hasShadow);
     void setEntityTextDigit(POLY_FT4* prim, int32_t dx, int32_t dy);
     uint16_t convertAsciiToJis(uint8_t input);
+    uint8_t* intToStringSJIS(uint8_t* buffer, int32_t value, uint32_t digitCount, bool padNumber);
 }
