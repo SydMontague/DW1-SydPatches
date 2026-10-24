@@ -29,6 +29,10 @@
 .definelabel scriptPauseGame,           0x801062f8
 .definelabel drawGlyph,                 0x8010cc28
 
+.definelabel TMP_TAMER_LEVEL, 0x80135002
+.definelabel TMP_LIVES, 0x80135004
+.definelabel BATTLES_STARTED, 0x80134fc8
+.definelabel BATTLES_FLED, 0x80134fca
 .definelabel TOURNAMENT_NAME_LIST, 0x801300e0
 .definelabel ACTIVE_SCRIPT, 0x80134fd8
 .definelabel SELECTION_POINTER, 0x801be948

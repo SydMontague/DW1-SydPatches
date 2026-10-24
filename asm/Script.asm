@@ -187,6 +187,23 @@
 .org 0x80106408
   jal scriptIdToEntityId
 
+.org 0x80102f38
+  jal scriptCompareDate
+
+.org 0x8010525c
+  jal scriptCompareStat
+
+;.org 0x80102324
+;  jal getStatsPointer
+;.org 0x80102354
+;  jal getStatsPointer
+.org 0x801030bc
+  jal getStatsPointer
+.org 0x8010313c
+  jal getStatsPointer
+.org 0x801031d0
+  jal getStatsPointer
+
 .close
 
 

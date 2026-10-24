@@ -96,10 +96,93 @@ namespace
         strcpy(str, name);
         return strlen(name);
     }
+
+    int32_t dateToSeconds(int32_t year, int32_t day, int32_t hour, int32_t minute)
+    {
+        return ((((year * 30) + day) * 24) + hour) * 60 + minute;
+    }
+
+    bool compareValue(uint32_t mode, int32_t val1, int32_t val2)
+    {
+        switch (mode) {
+            case 0: return val1 == val2;
+            case 1: return val1 != val2;
+            case 2: return val1 >= val2;
+            case 3: return val1 <= val2;
+            case 4: return val1 > val2;
+            case 5: return val1 < val2;
+        }
+        return false;
+    }
 } // namespace
 
 extern "C"
 {
+    int16_t* getStatsPointer(ScriptStats stat)
+    {
+        switch (stat) {
+            case ScriptStats::OFFSENSE: return &PARTNER_ENTITY.stats.off;
+            case ScriptStats::DEFENSE: return &PARTNER_ENTITY.stats.def;
+            case ScriptStats::SPEED: return &PARTNER_ENTITY.stats.speed;
+            case ScriptStats::BRAINS: return &PARTNER_ENTITY.stats.brain;
+            case ScriptStats::MAX_HP: return &PARTNER_ENTITY.stats.hp;
+            case ScriptStats::MAX_MP: return &PARTNER_ENTITY.stats.mp;
+            case ScriptStats::CURRENT_HP: return &PARTNER_ENTITY.stats.currentHP;
+            case ScriptStats::CURRENT_MP: return &PARTNER_ENTITY.stats.currentMP;
+            case ScriptStats::TIREDNESS: return &PARTNER_PARA.tiredness;
+            case ScriptStats::HAPPINESS: return &PARTNER_PARA.happiness;
+            case ScriptStats::DISCIPLINE: return &PARTNER_PARA.discipline;
+            case ScriptStats::ENERGY: return &PARTNER_PARA.energyLevel;
+            case ScriptStats::VIRUS: return &PARTNER_PARA.virusBar;
+            case ScriptStats::LIFETIME: return &PARTNER_PARA.remainingLifetime;
+            case ScriptStats::MERIT: return &MERIT;
+            case ScriptStats::STARTED_BATTLES: return &BATTLES_STARTED;
+            case ScriptStats::FLED_BATTLES: return &BATTLES_FLED;
+            case ScriptStats::TOURNAMENTS_WON: return &TOURNAMENTS_WON;
+            case ScriptStats::TOURNAMENT_WINS: return &TOURNAMENT_WINS;
+            case ScriptStats::TOURNAMENTS_LOST: return &TOURNAMENTS_LOST;
+            case ScriptStats::WEIGHT: return &PARTNER_PARA.weight;
+            case ScriptStats::TAMER_LEVEL: TMP_TAMER_LEVEL = TAMER_ENTITY.tamerLevel; return &TMP_TAMER_LEVEL;
+            case ScriptStats::LIVES: TMP_LIVES = PARTNER_ENTITY.lives; return &TMP_LIVES;
+        }
+
+        return nullptr;
+    }
+
+    uint32_t scriptCompareStat()
+    {
+        auto stat         = static_cast<ScriptStats>(readScriptUByte());
+        auto mode         = readScriptUByte();
+        int32_t statValue = *getStatsPointer(stat);
+        auto scriptValue  = readScriptShort();
+        return compareValue(mode, statValue, scriptValue);
+    }
+
+    void scriptCompareDate()
+    {
+        auto stat        = readScriptUByte();
+        auto trigger     = readScriptUShort();
+        auto compareMode = readScriptUByte();
+        auto inputYear   = readScriptUByte();
+        auto inputDay    = readScriptUByte();
+        auto inputHour   = readScriptUByte();
+        auto inputMinute = readScriptUByte();
+        readScriptUByte(); // unused;
+
+        auto storedYear   = readPStat(stat);
+        auto storedDay    = readPStat(stat);
+        auto storedHour   = readPStat(stat);
+        auto storedMinute = readPStat(stat);
+
+        auto storedDate = dateToSeconds(storedYear, storedDay, storedHour, storedMinute);
+        auto inputDate  = dateToSeconds(inputYear, inputDay, inputHour, inputMinute);
+
+        if (compareValue(compareMode, storedDate, inputDate))
+            setTrigger(trigger);
+        else
+            unsetTrigger(trigger);
+    }
+
     uint8_t scriptIdToEntityId(uint8_t scriptId)
     {
         if (scriptId == 253) return 0;
@@ -550,4 +633,18 @@ void checkArenaMap(int32_t mapId)
 uint8_t readScriptUByte()
 {
     return *SCRIPT_POINTER++;
+}
+
+uint16_t readScriptUShort()
+{
+    auto value = *reinterpret_cast<uint16_t*>(SCRIPT_POINTER);
+    SCRIPT_POINTER += 2;
+    return value;
+}
+
+int16_t readScriptShort()
+{
+    auto value = *reinterpret_cast<int16_t*>(SCRIPT_POINTER);
+    SCRIPT_POINTER += 2;
+    return value;
 }

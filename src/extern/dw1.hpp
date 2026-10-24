@@ -1679,9 +1679,9 @@ extern "C"
     extern int8_t LOAD_EFE_STATE;
     extern uint16_t SCRIPT_STATE_2;
     extern uint8_t ACTIVE_INSTRUCTION;
-    extern uint16_t TOURNAMENTS_WON;
-    extern uint16_t TOURNAMENTS_LOST;
-    extern uint16_t TOURNAMENT_WINS;
+    extern int16_t TOURNAMENTS_WON;
+    extern int16_t TOURNAMENTS_LOST;
+    extern int16_t TOURNAMENT_WINS;
     extern dtl::array<GsDOBJ2, 2> GENERAL_OBJECT;
     extern dtl::array<GsCOORDINATE2, 2> GENERAL_COORDS;
     extern GsDOBJ2 GENERAL_OBJECT3;
@@ -1966,6 +1966,10 @@ extern "C"
     extern uint8_t* ACTIVE_SCRIPT;
     extern uint16_t* SELECTION_POINTER;
     extern dtl::array<const uint8_t*, 23> TOURNAMENT_NAME_LIST;
+    extern int16_t TMP_TAMER_LEVEL;
+    extern int16_t TMP_LIVES;
+    extern int16_t BATTLES_STARTED;
+    extern int16_t BATTLES_FLED;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
