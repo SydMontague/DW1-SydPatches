@@ -1985,11 +1985,9 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
-    uint32_t getSpeakerName(uint32_t speaker, const uint8_t* str);
     int16_t drawGlyph(uint16_t codepoint, uint32_t posX, uint32_t posY);
     void scriptPauseGame(int32_t speaker);
     int32_t drawString2(const uint8_t* str, int32_t x, int32_t y, int32_t unused);
-    uint32_t showTextboxReady(int32_t textboxId, int32_t speaker);
     uint8_t scriptIdToEntityId(uint8_t scriptId);
     uint8_t* intToStringSJIS(uint8_t* buffer, int32_t value, uint32_t digitCount, int32_t padNumber);
     void setCardAmount(int32_t cardType, int32_t amount);

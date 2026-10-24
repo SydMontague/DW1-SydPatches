@@ -18,3 +18,4 @@ extern "C"
 
 void triggerSeadramonCutscene();
 void checkArenaMap(int32_t mapId);
+uint8_t readScriptUByte();

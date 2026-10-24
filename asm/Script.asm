@@ -137,6 +137,9 @@
 .org 0x80102958
   jal scriptShowSelection
 
+.org 0x80102dc4
+  jal scriptSetTextboxSize
+
 .close
 
 
@@ -157,7 +160,6 @@
 
 .close
 
-
 .open "work/DIGIMON/DGET_REL.BIN",0x80080800
 .psx
 
@@ -170,5 +172,8 @@
 
 .org 0x80081c18
   jal showMapheadSelection
+
+.org 0x80080f54
+  jal showTextboxReady
 
 .close

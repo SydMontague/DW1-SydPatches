@@ -1,14 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x80101ea0
-  li.u v0,tickCustomSizedTextbox
-.org 0x80101ea8
-  li.l v0,tickCustomSizedTextbox
-
-.org 0x80101eb0
-  li v0,renderCustomSizedTextbox
-
 ;.org 0x800ef200
 ;  jal initializeTextbox
 .org 0x80104728
@@ -50,8 +42,8 @@
 ;  jal registerTextbox
 ;.org 0x80101060
 ;  jal registerTextbox
-.org 0x80101ee0
-  jal registerTextbox
+;.org 0x80101ee0
+;  jal registerTextbox
 .org 0x801071c4
   jal registerTextbox
 .org 0x801076d8
@@ -156,8 +148,8 @@
 ;  jal createTextbox
 ;.org 0x80101048
 ;  jal createTextbox
-.org 0x80101ec8
-  jal createTextbox
+;.org 0x80101ec8
+;  jal createTextbox
 .org 0x801071ac
   jal createTextbox
 .org 0x801076c0
@@ -206,8 +198,8 @@
 ;  jal setupBoxOrigin
 ;.org 0x80100fec
 ;  jal setupBoxOrigin
-.org 0x80101e10
-  jal setupBoxOrigin
+;.org 0x80101e10
+;  jal setupBoxOrigin
 .org 0x8010713c
   jal setupBoxOrigin
 .org 0x80107674

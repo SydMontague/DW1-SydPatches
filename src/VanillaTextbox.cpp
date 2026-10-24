@@ -227,6 +227,38 @@ namespace
             .clut         = getClut(96, 500),
         },
     }};
+
+    void tickCustomSizedTextbox(int32_t id)
+    {
+        if (flipIdleTextboxPage(0)) return;
+        if (!isXPressedAfterDialogue()) return;
+        if (UI_BOX_DATA[0].state != 1) return;
+
+        if (isKeyDown(InputButtons::BUTTON_CROSS)) {
+            auto result = advanceTextbox(0);
+            if (result) triggerBoxCloseFlag(0);
+            playSound(0, 3);
+        }
+        else if (isKeyDown(InputButtons::BUTTON_TRIANGLE)) {
+            while (!TEXTBOX_DATA[0].pageReady)
+                showTextbox(0, 0xFF);
+            ACTIVE_INSTRUCTION   = 0;
+            TEXTBOX_DATA[0].idle = 1;
+            triggerBoxCloseFlag(0);
+            playSound(0, 4);
+        }
+    }
+
+    void renderCustomSizedTextbox(int32_t id)
+    {
+        const auto& box = TEXTBOX_DATA[0];
+        const auto uvY  = (box.lineOffset + box.activeBufferId) * box.lineCount * 12 + 256;
+        const auto posX = UI_BOX_DATA[0].finalPos.x + 5;
+        const auto posY = UI_BOX_DATA[0].finalPos.y + 4;
+
+        for (auto i = 0; i < box.lineCount; i++)
+            renderStringNew(0, posX, posY + i * 13, 252, 12, 704, uvY + i * 12, 6, 1);
+    }
 } // namespace
 
 extern "C"
@@ -354,36 +386,27 @@ extern "C"
         box.flags &= 0xF0;
     }
 
-    void tickCustomSizedTextbox()
+    void scriptSetTextboxSize()
     {
-        if (flipIdleTextboxPage(0)) return;
-        if (!isXPressedAfterDialogue()) return;
-        if (UI_BOX_DATA[0].state != 1) return;
+        auto speaker = readScriptUByte();
+        auto width   = readScriptUByte();
+        auto height  = readScriptUByte();
 
-        if (isKeyDown(InputButtons::BUTTON_CROSS)) {
-            auto result = advanceTextbox(0);
-            if (result) triggerBoxCloseFlag(0);
-            playSound(0, 3);
-        }
-        else if (isKeyDown(InputButtons::BUTTON_TRIANGLE)) {
-            while (!TEXTBOX_DATA[0].pageReady)
-                showTextbox(0, 0xFF);
-            ACTIVE_INSTRUCTION   = 0;
-            TEXTBOX_DATA[0].idle = 1;
-            triggerBoxCloseFlag(0);
-            playSound(0, 4);
-        }
-    }
+        RECT origin;
+        auto hasSpeaker  = setupBoxOrigin(speaker, &origin);
+        auto flags       = hasSpeaker ? 0xa1 : 0x21;
+        auto finalWidth  = width * 12 + 10;
+        auto finalHeight = height * 13 + 7;
 
-    void renderCustomSizedTextbox()
-    {
-        const auto& box = TEXTBOX_DATA[0];
-        const auto uvY  = (box.lineOffset + box.activeBufferId) * box.lineCount * 12 + 256;
-        const auto posX = UI_BOX_DATA[0].finalPos.x + 5;
-        const auto posY = UI_BOX_DATA[0].finalPos.y + 4;
+        RECT final{
+            .x      = static_cast<int16_t>(-finalWidth / 2),
+            .y      = static_cast<int16_t>(-finalHeight / 2),
+            .width  = static_cast<int16_t>(finalWidth),
+            .height = static_cast<int16_t>(finalHeight),
+        };
 
-        for (auto i = 0; i < box.lineCount; i++)
-            renderStringNew(0, posX, posY + i * 13, 252, 12, 704, uvY + i * 12, 6, 1);
+        createTextbox(0, flags, &final, &origin, tickCustomSizedTextbox, renderCustomSizedTextbox);
+        registerTextbox(0, 0, height, true, VRAMMode::FRONT_FULL);
     }
 
     void initializeTextbox()

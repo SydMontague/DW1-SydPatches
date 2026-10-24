@@ -1,4 +1,5 @@
 
+#include "Script.hpp"
 #include "Evolution.hpp"
 #include "Files.hpp"
 #include "Helper.hpp"
@@ -58,11 +59,6 @@ namespace
         return resolveMapHeadEntry(scriptId, line);
     }
 
-    uint8_t readScriptUByte()
-    {
-        return *SCRIPT_POINTER++;
-    }
-
     constexpr uint8_t getColorFromSpeaker(uint32_t speaker)
     {
         if (speaker == 0xFD) return 6;
@@ -70,6 +66,34 @@ namespace
         if (speaker < 200) return 7;
 
         return 5;
+    }
+
+    int32_t getSpeakerName(uint32_t speaker, uint8_t* str)
+    {
+        constexpr dtl::array<const char*, 6> SPECIAL_SPEAKERS{
+            "Sign",
+            "Box",
+            "Betamon",
+            "Coelamon",
+            "Tanemon",
+            "Palmon",
+        };
+
+        const uint8_t* name = nullptr;
+
+        if (speaker == 0xFF)
+            return 0;
+        else if (speaker == 0xFC)
+            name = PARTNER_ENTITY.name;
+        else if (speaker == 0xFD)
+            name = getDigimonData(DigimonType::TAMER)->name;
+        else if (speaker >= 200)
+            name = reinterpret_cast<const uint8_t*>(SPECIAL_SPEAKERS[speaker - 200]);
+        else
+            name = getDigimonData(ENTITY_TABLE.getEntityById(scriptIdToEntityId(speaker))->type)->name;
+
+        strcpy(str, name);
+        return strlen(name);
     }
 } // namespace
 
@@ -260,6 +284,12 @@ extern "C"
                 }
             }
         }
+    }
+
+    uint32_t showTextboxReady(int32_t textboxId, int32_t speaker)
+    {
+        TEXTBOX_DATA[textboxId].pageReady = 1;
+        return showTextbox(textboxId, speaker);
     }
 
     int32_t getScriptSyncBit()
@@ -501,4 +531,9 @@ void checkArenaMap(int32_t mapId)
     if (!arenaMaps.contains(mapId)) return;
 
     loadDynamicLibrary(Overlay::DGET_REL, nullptr, false, nullptr, nullptr);
+}
+
+uint8_t readScriptUByte()
+{
+    return *SCRIPT_POINTER++;
 }

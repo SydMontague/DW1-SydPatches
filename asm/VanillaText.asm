@@ -31,8 +31,8 @@
 ;  jal renderString
 ;.org 0x801001b4
 ;  jal renderString
-.org 0x80101388
-  jal renderString
+;.org 0x80101388
+;  jal renderString
 .org 0x8010911c
   jal renderString
 .org 0x80109aec
@@ -83,8 +83,8 @@
 ;  jal showTextbox
 ;.org 0x801015d4
 ;  jal showTextbox
-.org 0x80101f24
-  j showTextbox
+;.org 0x80101f24
+;  j showTextbox
 .org 0x80102b58
   jal showTextbox
 .org 0x80102b6c

@@ -28,10 +28,8 @@
 .definelabel setCardAmount,             0x80106848
 .definelabel intToStringSJIS,           0x80102064
 .definelabel scriptIdToEntityId,        0x80102144
-.definelabel showTextboxReady,          0x80101ef8
 .definelabel scriptPauseGame,           0x801062f8
 .definelabel drawGlyph,                 0x8010cc28
-.definelabel getSpeakerName,            0x80101f2c
 
 .definelabel TOURNAMENT_NAME_LIST, 0x801300e0
 .definelabel ACTIVE_SCRIPT, 0x80134fd8
