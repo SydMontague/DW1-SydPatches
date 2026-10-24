@@ -1988,7 +1988,6 @@ extern "C"
     int16_t drawGlyph(uint16_t codepoint, uint32_t posX, uint32_t posY);
     void scriptPauseGame(int32_t speaker);
     int32_t drawString2(const uint8_t* str, int32_t x, int32_t y, int32_t unused);
-    uint8_t scriptIdToEntityId(uint8_t scriptId);
     void setCardAmount(int32_t cardType, int32_t amount);
     void tickScript();
     uint8_t* getScript(uint32_t scriptId);

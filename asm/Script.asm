@@ -140,6 +140,53 @@
 .org 0x80102dc4
   jal scriptSetTextboxSize
 
+;.org 0x800fbd94
+;  jal scriptIdToEntityId
+;.org 0x800fbeb0
+;  jal scriptIdToEntityId
+;.org 0x800ff89c
+;  jal scriptIdToEntityId
+;.org 0x801010e8
+;  jal scriptIdToEntityId
+;.org 0x80101fa4
+;  jal scriptIdToEntityId
+.org 0x8010383c
+  jal scriptIdToEntityId
+.org 0x801038e0
+  jal scriptIdToEntityId
+.org 0x80103948
+  jal scriptIdToEntityId
+.org 0x801039d4
+  jal scriptIdToEntityId
+.org 0x80103aec
+  jal scriptIdToEntityId
+.org 0x80103b78
+  jal scriptIdToEntityId
+.org 0x80103c04
+  jal scriptIdToEntityId
+.org 0x80104408
+  jal scriptIdToEntityId
+.org 0x801045cc
+  jal scriptIdToEntityId
+.org 0x80104880
+  jal scriptIdToEntityId
+.org 0x80104908
+  jal scriptIdToEntityId
+.org 0x80104994
+  jal scriptIdToEntityId
+.org 0x80104a20
+  jal scriptIdToEntityId
+.org 0x80104aac
+  jal scriptIdToEntityId
+.org 0x80104c20
+  jal scriptIdToEntityId
+.org 0x80104cb4
+  jal scriptIdToEntityId
+.org 0x80106378
+  jal scriptIdToEntityId
+.org 0x80106408
+  jal scriptIdToEntityId
+
 .close
 
 

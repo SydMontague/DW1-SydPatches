@@ -100,6 +100,19 @@ namespace
 
 extern "C"
 {
+    uint8_t scriptIdToEntityId(uint8_t scriptId)
+    {
+        if (scriptId == 253) return 0;
+        if (scriptId == 252) return 1;
+
+        for (auto i = 2; i < 8; i++) {
+            const auto* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i));
+            if (entity && entity->scriptId == scriptId) return i;
+        }
+
+        return 0xFF;
+    }
+
     uint32_t showTextbox(int32_t id, uint32_t speaker)
     {
         auto& textbox = TEXTBOX_DATA[id];

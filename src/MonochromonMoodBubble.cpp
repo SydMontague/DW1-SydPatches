@@ -2,6 +2,7 @@
 #include "Effects.hpp"
 #include "GameObjects.hpp"
 #include "Math.hpp"
+#include "Script.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgs.hpp"
 #include "extern/libgte.hpp"
