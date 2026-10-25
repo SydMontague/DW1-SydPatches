@@ -48,8 +48,8 @@
 ;  jal getItemCount
 ;.org 0x800fd0ac
 ;  jal getItemCount
-.org 0x80102608
-  jal getItemCount
+;.org 0x80102608
+;  jal getItemCount
 .org 0x80107cbc
   jal getItemCount
 .org 0x80108760

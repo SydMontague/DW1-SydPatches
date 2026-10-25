@@ -118,6 +118,13 @@ namespace
 
 extern "C"
 {
+    void tickScriptedMovements()
+    {
+        for (auto i = 0; i < SCRIPT_MOVEMENT.size(); i++) {
+            if (SCRIPT_MOVEMENT[i].type != ScriptMovement::NONE) tickScriptedMovement(i);
+        }
+    }
+
     int32_t scriptCompareCard()
     {
         auto cardId      = readScriptUByte();

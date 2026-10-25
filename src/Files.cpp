@@ -390,4 +390,9 @@ extern "C"
             }
         }
     }
+
+    void readFileSection(const char* path, uint8_t* buffer, uint32_t offset, uint32_t size)
+    {
+        readFileSectors(path, buffer, offset / 2048, size / 2048);
+    }
 }

@@ -206,7 +206,7 @@
 
 .org 0x8010526c
   jal scriptCompareCard
-  
+
 .org 0x8010527c
   jal scriptCompareMove
 
@@ -229,6 +229,9 @@
   jal enforceStatsLimits
 .org 0x80103168
   jal enforceStatsLimits
+
+.org 0x80105bfc
+  jal tickScriptedMovements
 
 .close
 

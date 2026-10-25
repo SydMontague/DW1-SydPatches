@@ -74,6 +74,11 @@
 .org 0x80111b88
   jal loadDynamicLibrary
 
+.org 0x80105a2c
+  jal readFileSection
+.org 0x8010627c
+  jal readFileSection
+
 .close
 
 .open "work/DIGIMON/FISH_REL.BIN",0x80070000

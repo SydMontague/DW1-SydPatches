@@ -1641,6 +1641,39 @@ extern "C"
         int32_t price;
     };
 
+    enum class ScriptMovement : uint8_t
+    {
+        LOOK_AT_ENTITY,
+        SET_ROTATION,
+        WALK_TO_POS,
+        WALK_TO_ENTITY,
+        SPRINT_TO_POS,
+        SPRINT_TO_ENTITY,
+        MOVE_CAMERA_TO_POS,
+        MOVE_CAMERA_TO_ENTITY,
+        MOVE_TO_POS,
+        MOVE_TO_ENTITY,
+        MOVE_TO_POS2,
+        MOVE_TO_ENTITY2,
+        ROTATE_OBJECT,
+        MOVE_OBJECT_TO_POS,
+        MOVE_TO_AXIS,
+        MOVE_TO_AXIS2,
+        NONE = 0xFF,
+    };
+
+    struct ScriptEntityMovement
+    {
+        ScriptMovement type;
+        uint8_t selfEntity;
+        uint8_t targetId;
+        uint8_t speed;
+        int16_t posX;
+        int16_t posY;
+        int16_t unk1;
+        int16_t unk2;
+    };
+
     static_assert(sizeof(BirdraTarget) == 8);
     static_assert(sizeof(GameState) == 0x29C);
     static_assert(sizeof(ItemMenuBuyEntry) == 2);
@@ -1970,6 +2003,7 @@ extern "C"
     extern int16_t TMP_LIVES;
     extern int16_t BATTLES_STARTED;
     extern int16_t BATTLES_FLED;
+    extern dtl::array<ScriptEntityMovement, 22> SCRIPT_MOVEMENT;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -1989,6 +2023,7 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void tickScriptedMovement(int32_t actorId);
     int16_t drawGlyph(uint16_t codepoint, uint32_t posX, uint32_t posY);
     void scriptPauseGame(int32_t speaker);
     int32_t drawString2(const uint8_t* str, int32_t x, int32_t y, int32_t unused);

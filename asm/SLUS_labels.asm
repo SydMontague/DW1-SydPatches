@@ -27,7 +27,9 @@
 .definelabel setCardAmount,             0x80106848
 .definelabel scriptPauseGame,           0x801062f8
 .definelabel drawGlyph,                 0x8010cc28
+.definelabel tickScriptedMovement,      0x8010569c
 
+.definelabel SCRIPT_MOVEMENT, 0x801be6b4
 .definelabel TMP_TAMER_LEVEL, 0x80135002
 .definelabel TMP_LIVES, 0x80135004
 .definelabel BATTLES_STARTED, 0x80134fc8
