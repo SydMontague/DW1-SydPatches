@@ -1997,7 +1997,6 @@ extern "C"
     uint8_t* getScript(uint32_t scriptId);
     uint8_t* getScriptSection(uint8_t* ptr, int32_t section);
     void unsetTrigger(int32_t id);
-    int16_t enforceStatsLimits(ScriptStats type, uint32_t value);
     void tickMainMenu(int32_t instanceId);
     void renderMainMenu(int32_t instanceId);
     void updateBGM();

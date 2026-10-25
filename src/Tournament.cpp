@@ -7,6 +7,7 @@
 #include "Map.hpp"
 #include "Math.hpp"
 #include "Partner.hpp"
+#include "Script.hpp"
 #include "Sound.hpp"
 #include "Tamer.hpp"
 #include "extern/STD.hpp"

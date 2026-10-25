@@ -118,6 +118,61 @@ namespace
 
 extern "C"
 {
+    int32_t scriptCompareCard()
+    {
+        auto cardId      = readScriptUByte();
+        auto mode        = readScriptUByte();
+        auto scriptValue = readScriptShort();
+        auto amount      = getCardAmount(cardId);
+        return compareValue(mode, amount, scriptValue);
+    }
+
+    int32_t scriptCompareMove()
+    {
+        auto moveId = readScriptUByte();
+        auto mode   = readScriptUByte();
+        auto val    = hasMove(moveId);
+        return mode == 0 ? val : !val;
+    }
+
+    int32_t scriptCompareCondition()
+    {
+        auto value = readScriptUByte();
+        auto mode  = readScriptUByte();
+
+        return (((PARTNER_PARA.condition.raw & value) == 0) != mode);
+    }
+
+    int32_t scriptCompareItemCount()
+    {
+        auto itemId      = static_cast<ItemType>(readScriptUByte());
+        auto mode        = readScriptUByte();
+        auto scriptValue = readScriptShort();
+        auto amount      = getItemCount(itemId);
+        return compareValue(mode, amount, scriptValue);
+    }
+
+    int32_t scriptCompareMoney()
+    {
+        readScriptUByte(); // unused
+        auto mode   = readScriptUByte();
+        auto amount = readScriptInt();
+
+        return compareValue(mode, MONEY, amount);
+    }
+
+    int16_t enforceStatsLimits(ScriptStats type, int16_t value)
+    {
+        dtl::array<int16_t, 22> LIMITS{999, 999, 999, 999,  9999, 9999, 9999, 9999, 100, 100, 999,
+                                       999, 999, 999, 9999, 9999, 9999, 999,  999,  999, 99,  10};
+
+        auto limit = LIMITS[static_cast<int32_t>(type)];
+        if (type == ScriptStats::CURRENT_HP) limit = PARTNER_ENTITY.stats.hp;
+        if (type == ScriptStats::CURRENT_MP) limit = PARTNER_ENTITY.stats.mp;
+
+        return dtl::min(value, limit);
+    }
+
     int16_t* getStatsPointer(ScriptStats stat)
     {
         switch (stat) {
@@ -646,5 +701,12 @@ int16_t readScriptShort()
 {
     auto value = *reinterpret_cast<int16_t*>(SCRIPT_POINTER);
     SCRIPT_POINTER += 2;
+    return value;
+}
+
+int32_t readScriptInt()
+{
+    auto value = *reinterpret_cast<int32_t*>(SCRIPT_POINTER);
+    SCRIPT_POINTER += 4;
     return value;
 }

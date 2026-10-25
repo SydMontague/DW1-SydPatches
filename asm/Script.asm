@@ -204,6 +204,32 @@
 .org 0x801031d0
   jal getStatsPointer
 
+.org 0x8010526c
+  jal scriptCompareCard
+  
+.org 0x8010527c
+  jal scriptCompareMove
+
+.org 0x8010528c
+  jal scriptCompareCondition
+
+.org 0x8010529c
+  jal scriptCompareItemCount
+
+.org 0x801052ac
+  jal scriptCompareMoney
+
+;.org 0x800e6c80
+;  jal enforceStatsLimits
+;.org 0x800e6cc4
+;  jal enforceStatsLimits
+;.org 0x800e6cd4
+;  jal enforceStatsLimits
+.org 0x801030d4
+  jal enforceStatsLimits
+.org 0x80103168
+  jal enforceStatsLimits
+
 .close
 
 

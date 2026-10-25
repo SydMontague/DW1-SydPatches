@@ -17,7 +17,6 @@
 .definelabel tickMainMenu,              0x8010ff1c
 .definelabel renderMainMenu,            0x80113458
 .definelabel unsetTrigger,              0x801065fc
-.definelabel enforceStatsLimits,        0x80102678
 .definelabel getScriptSection,          0x8010629c
 .definelabel getScript,                 0x80106218
 .definelabel initializeFontCLUT,        0x8010cb3c
