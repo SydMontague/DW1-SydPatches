@@ -147,7 +147,10 @@ extern "C"
         auto value = readScriptUByte();
         auto mode  = readScriptUByte();
 
-        return (((PARTNER_PARA.condition.raw & value) == 0) != mode);
+        if (mode == 0)
+            return (PARTNER_PARA.condition.raw & value) != 0;
+        else
+            return (PARTNER_PARA.condition.raw & value) == 0;
     }
 
     int32_t scriptCompareItemCount()
@@ -250,7 +253,7 @@ extern "C"
         if (scriptId == 253) return 0;
         if (scriptId == 252) return 1;
 
-        for (auto i = 2; i < 8; i++) {
+        for (auto i = 2; i < 10; i++) {
             const auto* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i));
             if (entity && entity->scriptId == scriptId) return i;
         }
