@@ -204,7 +204,7 @@ extern "C"
         for (auto start = pow(10, digitCount - 1); start > 0; start /= 10) {
             auto digit = (value / start) % 10;
 
-            if (digit == 0 && isEmpty) {
+            if (digit == 0 && isEmpty && start > 1) {
                 if (!padNumber) {
                     buffer[0] = 0x81;
                     buffer[1] = 0x40;
