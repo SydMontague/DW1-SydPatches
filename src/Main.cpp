@@ -26,6 +26,7 @@
 #include "Partner.hpp"
 #include "Pause.hpp"
 #include "PlayerMedalView.hpp"
+#include "ScriptEngine.hpp"
 #include "Sound.hpp"
 #include "Tamer.hpp"
 #include "Timestamp.hpp"

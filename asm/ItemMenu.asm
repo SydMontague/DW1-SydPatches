@@ -1,9 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x80105d14
-  jal openShop
-
 ;.org 0x800fc580
 ;  jal allocateItemMenuBox
 ;.org 0x800fc5b0
@@ -134,9 +131,6 @@
   jal getItemMenuFromType
 .org 0x8010823c
   jal getItemMenuFromType
-
-.org 0x80105ce4
-  jal openDiscardItem
 
 ;.org 0x800fc6b4
 ;  jal createItemMenu

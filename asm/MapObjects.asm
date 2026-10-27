@@ -25,12 +25,6 @@
 .org 0x801058ac
   jal tickRotateDoor
 
-.org 0x80105e14
-  jal tickOpenChestTray
-
-.org 0x80105e34
-  jal tickCloseChestTray
-
 .org 0x80104108
   jal decreaseDirtPileSize
 
@@ -42,9 +36,6 @@
 
 .org 0x801044b4
   jal somethingToyTown
-
-.org 0x80105ebc
-  jal moveAngemonPedestal
 
 .org 0x801040f0
   jal setDirtCartModel

@@ -1,19 +1,8 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x80105f30
-  jal getScriptSyncBit
-.org 0x80105f78
-  jal getScriptSyncBit
-
-.org 0x80105dec
-  jal scriptStartTournament
-
 .org 0x80103eb8
   jal checkTournamentMedalConditions
-
-.org 0x80105dfc
-  jal scriptCheckTournamentMedal
 
 .org 0x80104640
   jal handleItemLoss
@@ -98,9 +87,6 @@
   jal showMapHeadTextbox
 .org 0x8010c6e0
   jal showMapHeadTextbox
-
-.org 0x80105e7c
-  jal lostAllLives
 
 ;.org 0x800fcfa0
 ;  jal flipTextboxPage
@@ -230,8 +216,10 @@
 .org 0x80103168
   jal enforceStatsLimits
 
-.org 0x80105bfc
-  jal tickScriptedMovements
+;.org 0x800efc14
+;  jal tickScript
+.org 0x80105afc
+  jal tickScript
 
 .close
 

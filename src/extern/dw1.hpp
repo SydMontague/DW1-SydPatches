@@ -2012,6 +2012,13 @@ extern "C"
     extern int16_t BATTLES_STARTED;
     extern int16_t BATTLES_FLED;
     extern dtl::array<ScriptEntityMovement, 22> SCRIPT_MOVEMENT;
+    extern jmpbuffer SCRIPT_SAVE_STATE;
+    extern uint8_t TIMESPEED;
+    extern uint8_t SCRIPT_MAP_CHANGE_ENABLED;
+    extern uint8_t WAIT_FOR_ENTITY_ID;
+    extern uint16_t SCRIPT_PARAM_1;
+    extern bool SCRIPT_MAP_CHANGE_SHOW_NAME;
+    extern uint32_t SCRIPT_PAUSED_GAME;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -2031,12 +2038,28 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void scriptInstructionFBtoFF(uint32_t instruction);
+    void scriptInstruction10to27(uint32_t instruction);
+    void scriptInstruction28to3F(uint32_t instruction);
+    void scriptInstruction46to58(uint32_t instruction);
+    void scriptInstruction5Ato5F(uint32_t instruction);
+    void scriptInstruction64to7E(uint32_t instruction);
+    void openMeritShop();
+    void openMojyamonShop();
+    void openRecycleShop();
+    void openJukebox();
+    void tickBirdraTransport();
+    void tickItemKeeper();
+    void openSellCardMenu();
+    void openBuyCardMenu();
+    void rollCardPack();
+    bool tickOpenSaveMachine();
+    bool scriptTickMainMenu();
     void tickScriptedMovement(int32_t actorId);
     int16_t drawGlyph(uint16_t codepoint, uint32_t posX, uint32_t posY);
     void scriptPauseGame(int32_t speaker);
     int32_t drawString2(const uint8_t* str, int32_t x, int32_t y, int32_t unused);
     void setCardAmount(int32_t cardType, int32_t amount);
-    void tickScript();
     uint8_t* getScript(uint32_t scriptId);
     uint8_t* getScriptSection(uint8_t* ptr, int32_t section);
     void unsetTrigger(int32_t id);

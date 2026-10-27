@@ -1,9 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x80105dc4
-  jal isTrainingComplete
-
 ;.org 0x800a8924	
 ;  jal Tamer_setState
 ;.org 0x800a9348	
