@@ -17,6 +17,9 @@ extern "C"
     uint32_t showTextbox(int32_t id, uint32_t speaker);
     uint8_t scriptIdToEntityId(uint8_t scriptId);
     int16_t enforceStatsLimits(ScriptStats type, int16_t value);
+    void scriptStartTournament();
+    void scriptCheckTournamentMedal();
+    void lostAllLives();
 }
 
 void triggerSeadramonCutscene();

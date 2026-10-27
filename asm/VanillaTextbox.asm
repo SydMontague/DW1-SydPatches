@@ -10,11 +10,6 @@
 .org 0x80105bbc
   jal initializeTextbox
 
-;.org 0x800ef294
-;  jal tickTextboxHandling
-.org 0x80105bf4
-  jal tickTextboxHandling
-
 ;.org 0x800fde44
 ;  jal getVRAMModeCoords
 ;.org 0x800ff240
@@ -184,11 +179,6 @@
   jal closeBox
 .org 0x8010cb10
   jal closeBox
-
-.org 0x80106188
-  jal closeAllTextboxes
-.org 0x801061c0
-  jal closeAllTextboxes
 
 ;.org 0x800fb4e8
 ;  jal setupBoxOrigin

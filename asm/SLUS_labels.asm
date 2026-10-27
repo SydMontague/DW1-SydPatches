@@ -23,12 +23,35 @@
 .definelabel initializeScripts,         0x801059c8
 .definelabel initializeNamingBuffer,    0x8010c70c
 .definelabel newGameStateMachine,       0x8010c7ac
-.definelabel tickScript,                0x80105bd8
 .definelabel setCardAmount,             0x80106848
 .definelabel scriptPauseGame,           0x801062f8
 .definelabel drawGlyph,                 0x8010cc28
 .definelabel tickScriptedMovement,      0x8010569c
+.definelabel openMeritShop,             0x8010bc10
+.definelabel openMojyamonShop,          0x8010c4b0
+.definelabel openRecycleShop,           0x8010b648
+.definelabel openJukebox,               0x8010c13c
+.definelabel tickBirdraTransport,       0x8010c28c
+.definelabel tickItemKeeper,            0x8010bf68
+.definelabel openSellCardMenu,          0x8010bb0c
+.definelabel openBuyCardMenu,           0x8010b9d8
+.definelabel rollCardPack,              0x8010b8f4
+.definelabel tickOpenSaveMachine,       0x801138b0
+.definelabel scriptTickMainMenu,        0x80113a20
+.definelabel scriptInstructionFBtoFF,   0x8010288c
+.definelabel scriptInstruction10to27,   0x8010291c
+.definelabel scriptInstruction28to3F,   0x80102e18
+.definelabel scriptInstruction46to58,   0x801035a8
+.definelabel scriptInstruction5Ato5F,   0x80103d70
+.definelabel scriptInstruction64to7E,   0x80103e44
 
+.definelabel SCRIPT_SAVE_STATE, 0x801be7bc
+.definelabel TIMESPEED, 0x80134fe7
+.definelabel SCRIPT_MAP_CHANGE_ENABLED, 0x80134fe9
+.definelabel WAIT_FOR_ENTITY_ID, 0x80134fa4
+.definelabel SCRIPT_PARAM_1, 0x80134ff8
+.definelabel SCRIPT_MAP_CHANGE_SHOW_NAME, 0x80134fa0
+.definelabel SCRIPT_PAUSED_GAME, 0x80134ff0
 .definelabel SCRIPT_MOVEMENT, 0x801be6b4
 .definelabel TMP_TAMER_LEVEL, 0x80135002
 .definelabel TMP_LIVES, 0x80135004
@@ -429,6 +452,12 @@
 .definelabel BTL_BUFF_MODEL, 0x80055328
 .definelabel BTL_END_BOX_TEXTBUFFER, 0x80073ea0
 
+// DGET_REL
+.definelabel DGET_initTournamentSchedule, 0x80081a80
+
+// DOO2_REL
+.definelabel DOO2_tickEggInput, 0x80071934
+
 // EVL_REL
 .definelabel EVL_initEvoSequence, 0x8006309c
 
@@ -538,6 +567,8 @@
 .definelabel rand,    0x8009127c
 .definelabel bzero,   0x8009123c
 .definelabel libc_exit, 0x80091174
+.definelabel libc_setjmp, 0x800911ac
+.definelabel libc_longjmp, 0x800911bc
 
 // libcd
 .definelabel libcd_CdSearchFile, 0x800b23c0

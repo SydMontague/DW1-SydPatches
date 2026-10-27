@@ -4,6 +4,22 @@
 
 extern "C"
 {
+    struct jmpbuffer
+    {
+        uint32_t pc;
+        uint32_t sp;
+        uint32_t fp;
+        uint32_t r16;
+        uint32_t r17;
+        uint32_t r18;
+        uint32_t r19;
+        uint32_t r20;
+        uint32_t r21;
+        uint32_t r22;
+        uint32_t r23;
+        uint32_t gp;
+    };
+
     extern uint32_t RNG_STATE;
 
     extern void* memcpy(void* dest, const void* src, uint32_t length);
@@ -17,4 +33,8 @@ extern "C"
     extern int32_t rand();
     void libc_exit(int32_t code);
     void bzero(void* pointer, int32_t size);
+    int32_t libc_setjmp(jmpbuffer* buffer);
+    void libc_longjmp(const jmpbuffer* buffer, int32_t retVal);
 }
+
+static_assert(sizeof(jmpbuffer) == 48);

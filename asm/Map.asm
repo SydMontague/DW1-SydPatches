@@ -27,9 +27,6 @@
 .org 0x80104140
   jal resetMapObjectAnimation
 
-.org 0x80105e64
-  jal tickRemoveMist
-
 .org 0x80104edc
   jal setImpassableRect
 
@@ -56,9 +53,6 @@
 
 .org 0x80104fe4
   jal setupMap
-
-.org 0x80105c2c
-  jal scriptTickChangeMap
 
 .org 0x801139d4
   jal getFileCityTopMap

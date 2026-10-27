@@ -20,6 +20,8 @@ extern "C"
                                 int32_t spriteType);
     void playShopSoundOnlyInSavannah();
     void terminateString(uint8_t* line, bool withNewLine);
+    void openShop();
+    void openDiscardItem();
 }
 
 void renderCardSprite(uint8_t cardId, int16_t posX, int16_t posY, int32_t depth);

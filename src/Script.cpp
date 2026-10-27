@@ -118,13 +118,6 @@ namespace
 
 extern "C"
 {
-    void tickScriptedMovements()
-    {
-        for (auto i = 0; i < SCRIPT_MOVEMENT.size(); i++) {
-            if (SCRIPT_MOVEMENT[i].type != ScriptMovement::NONE) tickScriptedMovement(i);
-        }
-    }
-
     int32_t scriptCompareCard()
     {
         auto cardId      = readScriptUByte();
@@ -452,11 +445,6 @@ extern "C"
     {
         TEXTBOX_DATA[textboxId].pageReady = 1;
         return showTextbox(textboxId, speaker);
-    }
-
-    int32_t getScriptSyncBit()
-    {
-        return SOME_SCRIPT_SYNC_BIT;
     }
 
     void scriptStartTournament()

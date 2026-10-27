@@ -33,8 +33,8 @@
 
 .org 0x80104720
   jal setMovementEnabled
-.org 0x801061e8
-  jal setMovementEnabled
+;.org 0x801061e8
+;  jal setMovementEnabled
 .org 0x8010631c
   jal setMovementEnabled
 .org 0x80106328

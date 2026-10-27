@@ -25,4 +25,5 @@ extern "C"
                          int32_t rotY,
                          int32_t rotZ);
     void clearTamerWaypoints();
+    bool isTrainingComplete();
 }
