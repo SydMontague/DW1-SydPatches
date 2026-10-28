@@ -87,4 +87,6 @@ FLAGS="-O3 -std=c++23 -T linker.ld -mabi=32 -march=r3000 -r -mel -nostdlib -mexp
 "$MIPS_CXX" VS/EFEControl.cpp -o ../compiled/VSEFEControl.lib $FLAGS
 "$MIPS_CXX" VS/EFERun.cpp -o ../compiled/VSEFERun.lib $FLAGS
 
+"$MIPS_CXX" FISH/Message.cpp -o ../compiled/FISHMessage.lib $FLAGS
+
 cd -

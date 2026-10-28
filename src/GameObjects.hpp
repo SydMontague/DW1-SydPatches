@@ -87,6 +87,7 @@ extern "C"
         VS_PRESS_START_BOX = 20004,
         VS_SELECT_BOX      = 20005,
         KAR                = 20006,
+        FISH_MESSAGE       = 20010,
 
         NONE = 0xFFFF,
     };

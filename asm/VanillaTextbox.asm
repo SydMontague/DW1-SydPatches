@@ -266,11 +266,3 @@
   jal closeBox
 
 .close
-
-.open "work/DIGIMON/FISH_REL.BIN",0x80070000
-.psx
-
-.org 0x8007162c
-  jal renderConfirmPrompt
-
-.close
