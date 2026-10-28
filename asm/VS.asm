@@ -1,6 +1,21 @@
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
 
+; Shared EFE particle source is emitted in this owning overlay.
+.org 0x80063238
+.area 0x80063270-.
+  .notice "VS reclaimed EFE particles space left: " + (0x80063270-.) + " bytes"
+  .fill 0x80063270-.
+.endarea
+
+; Shared EFE particle source is emitted in this owning overlay.
+.org 0x800640c8
+.area 0x80064628-.
+  .importobj "compiled/VSEFEParticles.lib"
+  .notice "VS reclaimed EFE particles space left: " + (0x80064628-.) + " bytes"
+  .fill 0x80064628-.
+.endarea
+
 ; Shared EFE commands replace these complete vanilla functions.
 .org 0x80068dd0
 .area 0x80068e3c-.
@@ -12,6 +27,13 @@
 .area 0x80069048-.
   .notice "VS EFE vector space left: " + (0x80069048-.) + " bytes"
   .fill 0x80069048-.
+.endarea
+
+; Shared EFE particle source is emitted in this owning overlay.
+.org 0x8006b1b4
+.area 0x8006b2fc-.
+  .notice "VS reclaimed EFE particles space left: " + (0x8006b2fc-.) + " bytes"
+  .fill 0x8006b2fc-.
 .endarea
 
 ; Shared operand and control semantics are emitted in this owning overlay.
@@ -92,6 +114,22 @@ li.l a2, VS__tickDigimon
 li.u a2, VS__tickDigimon
 .org 0x80057028
 li.l a2, VS__tickDigimon
+
+; VS_addParticleEmitter
+.org 0x80070bc8
+  .word VS_addParticleEmitter
+
+; VS_initializeParticleEmitters
+.org 0x80064888
+  jal VS_initializeParticleEmitters
+
+; VS_renderParticleEmitters
+.org 0x800635a0
+  jal VS_renderParticleEmitters
+
+; VS_tickParticleEmitters
+.org 0x8006340c
+  jal VS_tickParticleEmitters
 
 .close
 

@@ -1,6 +1,21 @@
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
 
+; Shared EFE particle source is emitted in this owning overlay.
+.org 0x80064a80
+.area 0x80064ab8-.
+  .notice "BTL reclaimed EFE particles space left: " + (0x80064ab8-.) + " bytes"
+  .fill 0x80064ab8-.
+.endarea
+
+; Shared EFE particle source is emitted in this owning overlay.
+.org 0x80065910
+.area 0x80065e70-.
+  .importobj "compiled/BTLEFEParticles.lib"
+  .notice "BTL reclaimed EFE particles space left: " + (0x80065e70-.) + " bytes"
+  .fill 0x80065e70-.
+.endarea
+
 ; Shared EFE commands replace these complete vanilla functions.
 .org 0x8006a6f4
 .area 0x8006a760-.
@@ -12,6 +27,13 @@
 .area 0x8006a96c-.
   .notice "BTL EFE vector space left: " + (0x8006a96c-.) + " bytes"
   .fill 0x8006a96c-.
+.endarea
+
+; Shared EFE particle source is emitted in this owning overlay.
+.org 0x8006cb08
+.area 0x8006cc50-.
+  .notice "BTL reclaimed EFE particles space left: " + (0x8006cc50-.) + " bytes"
+  .fill 0x8006cc50-.
 .endarea
 
 ; Shared operand and control semantics are emitted in this owning overlay.
@@ -66,5 +88,21 @@
   jal BTL_runEFEScript
 .org 0x800650e4
   j BTL_runEFEScript
+
+; BTL_addParticleEmitter
+.org 0x80073380
+  .word BTL_addParticleEmitter
+
+; BTL_initializeParticleEmitters
+.org 0x800660d0
+  jal BTL_initializeParticleEmitters
+
+; BTL_renderParticleEmitters
+.org 0x80064de8
+  jal BTL_renderParticleEmitters
+
+; BTL_tickParticleEmitters
+.org 0x80064c54
+  jal BTL_tickParticleEmitters
 
 .close

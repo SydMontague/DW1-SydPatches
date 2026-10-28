@@ -82,8 +82,6 @@
 .org 0x800726b0
   jal renderTMDModel
 
-.org 0x80065e0c
-  jal renderFXParticle
 .org 0x80071648
   jal renderFXParticle
 
@@ -132,8 +130,6 @@
 .org 0x800789f0
   jal renderTMDModel
 
-.org 0x8006e4f4
-  jal renderFXParticle
 
 .close
 
@@ -180,8 +176,6 @@
 .org 0x8006eac0
   jal renderTMDModel
 
-.org 0x800645c4
-  jal renderFXParticle
 
 .close
 

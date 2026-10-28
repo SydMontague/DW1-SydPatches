@@ -87,4 +87,13 @@ FLAGS="-O3 -std=c++23 -T linker.ld -mabi=32 -march=r3000 -r -mel -nostdlib -mexp
 "$MIPS_CXX" VS/EFEControl.cpp -o ../compiled/VSEFEControl.lib $FLAGS
 "$MIPS_CXX" VS/EFERun.cpp -o ../compiled/VSEFERun.lib $FLAGS
 
+# Shared EFE source; each overlay owns one emitted copy and its borrowed pointer.
+for mode in BTL STD VS; do
+    "$MIPS_CXX" EFE/Particles.cpp -o "../compiled/${mode}EFEParticles.lib" $FLAGS \
+        -DEFE_initializeParticleEmitters=${mode}_initializeParticleEmitters \
+        -DEFE_addParticleEmitter=${mode}_addParticleEmitter \
+        -DEFE_tickParticleEmitters=${mode}_tickParticleEmitters \
+        -DEFE_renderParticleEmitters=${mode}_renderParticleEmitters
+done
+
 cd -
