@@ -309,8 +309,6 @@
 
 .org 0x8005d1cc
   jal drawLine2P
-.org 0x80065de4
-  jal drawLine2P
 .org 0x8006a180
   jal drawLine2P
 .org 0x8006a1dc
@@ -333,8 +331,6 @@
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
 
-.org 0x8006459c
-  jal drawLine2P
 .org 0x8006885c
   jal drawLine2P
 .org 0x800688b8
@@ -417,8 +413,6 @@
 .org 0x80061074
   jal createAnimatedUIBox
 
-.org 0x8006e4cc
-  jal drawLine2P
 .org 0x8007278c
   jal drawLine2P
 .org 0x800727e8

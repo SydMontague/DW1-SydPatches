@@ -1,6 +1,21 @@
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
 .psx
 
+; Shared EFE particle source is emitted in this owning overlay.
+.org 0x8006d168
+.area 0x8006d1a0-.
+  .notice "STD reclaimed EFE particles space left: " + (0x8006d1a0-.) + " bytes"
+  .fill 0x8006d1a0-.
+.endarea
+
+; Shared EFE particle source is emitted in this owning overlay.
+.org 0x8006dff8
+.area 0x8006e558-.
+  .importobj "compiled/STDEFEParticles.lib"
+  .notice "STD reclaimed EFE particles space left: " + (0x8006e558-.) + " bytes"
+  .fill 0x8006e558-.
+.endarea
+
 ; Shared EFE commands replace these complete vanilla functions.
 .org 0x80072d00
 .area 0x80072d6c-.
@@ -12,6 +27,13 @@
 .area 0x80072f78-.
   .notice "STD EFE vector space left: " + (0x80072f78-.) + " bytes"
   .fill 0x80072f78-.
+.endarea
+
+; Shared EFE particle source is emitted in this owning overlay.
+.org 0x800750e4
+.area 0x8007522c-.
+  .notice "STD reclaimed EFE particles space left: " + (0x8007522c-.) + " bytes"
+  .fill 0x8007522c-.
 .endarea
 
 ; Shared operand and control semantics are emitted in this owning overlay.
@@ -66,5 +88,21 @@
   jal STD_runEFEScript
 .org 0x8006d7cc
   j STD_runEFEScript
+
+; STD_addParticleEmitter
+.org 0x8007ab9c
+  .word STD_addParticleEmitter
+
+; STD_initializeParticleEmitters
+.org 0x8006e7b8
+  jal STD_initializeParticleEmitters
+
+; STD_renderParticleEmitters
+.org 0x8006d4d0
+  jal STD_renderParticleEmitters
+
+; STD_tickParticleEmitters
+.org 0x8006d33c
+  jal STD_tickParticleEmitters
 
 .close

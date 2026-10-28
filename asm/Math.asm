@@ -323,8 +323,6 @@
 .org 0x800726f8
   jal lerp
 
-.org 0x80065d50
-  jal worldPosToScreenPos
 .org 0x8006715c
   jal worldPosToScreenPos
 .org 0x8006c6e0
@@ -590,8 +588,6 @@
 .org 0x80078760
   jal lerp
 
-.org 0x8006e438
-  jal worldPosToScreenPos
 .org 0x8006f754
   jal worldPosToScreenPos
 .org 0x80074cec
@@ -787,8 +783,6 @@
 .org 0x8006e830
   jal lerp
 
-.org 0x80064508
-  jal worldPosToScreenPos
 .org 0x80065824
   jal worldPosToScreenPos
 .org 0x8006adbc
