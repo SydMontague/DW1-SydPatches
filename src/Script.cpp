@@ -704,7 +704,5 @@ int16_t readScriptShort()
 
 int32_t readScriptInt()
 {
-    auto value = *reinterpret_cast<int32_t*>(SCRIPT_POINTER);
-    SCRIPT_POINTER += 4;
-    return value;
+    return readScriptUShort() + (readScriptShort() << 16);
 }
