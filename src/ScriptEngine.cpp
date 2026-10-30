@@ -1,15 +1,18 @@
 
 #include "Camera.hpp"
 #include "GameTime.hpp"
+#include "Helper.hpp"
 #include "Inventory.hpp"
 #include "ItemMenu.hpp"
 #include "Map.hpp"
 #include "MapObjects.hpp"
 #include "NPCEntity.hpp"
+#include "Partner.hpp"
 #include "Script.hpp"
 #include "Tamer.hpp"
 #include "VanillaText.hpp"
 #include "VanillaTextbox.hpp"
+#include "constants.hpp"
 #include "extern/DGET.hpp"
 #include "extern/DOO2.hpp"
 #include "extern/dtl/runtime_array.hpp"
@@ -18,6 +21,232 @@
 
 namespace
 {
+    int32_t dateToSeconds(int32_t year, int32_t day, int32_t hour, int32_t minute)
+    {
+        return ((((year * 30) + day) * 24) + hour) * 60 + minute;
+    }
+    void secondsToDate(int32_t seconds, uint8_t* year, uint8_t* day, uint8_t* hour, uint8_t* minute)
+    {
+        seconds = dtl::min(seconds, 11015999); // 255 years
+
+        *minute       = seconds % 60;
+        *hour         = (seconds / 60) % 24;
+        auto localDay = (seconds / (60 * 24));
+        *day          = localDay % 30;
+        *year         = localDay / 30;
+    }
+    void scriptUpdateEnergyBoundaries()
+    {
+        auto raise = getRaiseData(PARTNER_ENTITY.type);
+
+        PARTNER_PARA.energyLevel = dtl::min(PARTNER_PARA.energyLevel, static_cast<int16_t>(raise->energyCap));
+        if (PARTNER_PARA.condition.isHungry && PARTNER_PARA.energyLevel >= raise->energyThreshold) {
+            PARTNER_PARA.condition.isHungry = false;
+            setFoodTimer(PARTNER_ENTITY.type);
+            PARTNER_PARA.starvationTimer = 0;
+        }
+    }
+
+    int32_t scriptGiveItem(uint32_t)
+    {
+        readScriptUByte();
+        auto item   = static_cast<ItemType>(readScriptUByte());
+        auto amount = readScriptUByte();
+        auto result = giveItem(item, amount);
+        if (result)
+            unsetTrigger(0);
+        else
+            setTrigger(0);
+        return 1;
+    }
+    int32_t scriptRemoveItem(uint32_t)
+    {
+        readScriptUByte();
+        auto item   = static_cast<ItemType>(readScriptUByte());
+        auto amount = readScriptUByte();
+        removeItem(item, amount);
+        return 1;
+    }
+    int32_t scriptAddMoney(uint32_t)
+    {
+        readScriptUByte();
+        auto amount = readScriptInt();
+        MONEY       = dtl::min(MONEY + amount, MAX_MONEY);
+        return 1;
+    }
+    int32_t scriptRemoveMoney(uint32_t)
+    {
+        readScriptUByte();
+        auto amount = readScriptInt();
+        MONEY       = dtl::max(MONEY - amount, MIN_MONEY);
+        return 1;
+    }
+    int32_t compareDate(uint32_t)
+    {
+        scriptCompareDate();
+        return 1;
+    }
+    int32_t learnMove(uint32_t)
+    {
+        auto move = readScriptUByte();
+        learnMove(move);
+        return 1;
+    }
+    int32_t giveCard(uint32_t)
+    {
+        auto cardId = readScriptUByte();
+        auto amount = getCardAmount(cardId);
+        if (amount < 9) setCardAmount(cardId, amount + 1);
+        return 1;
+    }
+    int32_t takeCard(uint32_t)
+    {
+        auto cardId = readScriptUByte();
+        auto amount = getCardAmount(cardId);
+        if (amount > 0) setCardAmount(cardId, amount - 1);
+        return 1;
+    }
+    int32_t setMerit(uint32_t)
+    {
+        readScriptUByte();
+        auto value = readScriptShort();
+        MERIT      = dtl::min(static_cast<int32_t>(value), MAX_MERIT);
+        return 1;
+    }
+    int32_t addMerit(uint32_t)
+    {
+        readScriptUByte();
+        auto amount = readScriptInt();
+        MERIT       = dtl::min(MERIT + amount, MAX_MERIT);
+        return 1;
+    }
+    int32_t reduceMerit(uint32_t)
+    {
+        readScriptUByte();
+        auto amount = readScriptInt();
+        MERIT       = dtl::max(MERIT - amount, MIN_MERIT);
+        return 1;
+    }
+    int32_t setStat(uint32_t)
+    {
+        auto stat  = static_cast<ScriptStats>(readScriptUByte());
+        auto value = readScriptShort();
+        auto ptr   = getStatsPointer(stat);
+        *ptr       = enforceStatsLimits(stat, value);
+        scriptUpdateEnergyBoundaries();
+        if (stat == ScriptStats::TAMER_LEVEL)
+            TAMER_ENTITY.tamerLevel = TMP_TAMER_LEVEL;
+        else if (stat == ScriptStats::LIVES)
+            PARTNER_ENTITY.lives = TMP_LIVES;
+        return 1;
+    }
+    int32_t addStat(uint32_t)
+    {
+        auto stat  = static_cast<ScriptStats>(readScriptUByte());
+        auto value = readScriptShort();
+        auto ptr   = getStatsPointer(stat);
+        *ptr       = enforceStatsLimits(stat, *ptr + value);
+        scriptUpdateEnergyBoundaries();
+        if (stat == ScriptStats::TAMER_LEVEL)
+            TAMER_ENTITY.tamerLevel = TMP_TAMER_LEVEL;
+        else if (stat == ScriptStats::LIVES)
+            PARTNER_ENTITY.lives = TMP_LIVES;
+        return 1;
+    }
+    int32_t reduceStat(uint32_t)
+    {
+        auto stat  = static_cast<ScriptStats>(readScriptUByte());
+        auto value = readScriptShort();
+        auto ptr   = getStatsPointer(stat);
+        auto min   = stat == ScriptStats::HAPPINESS ? -100 : 0;
+        *ptr       = dtl::max(*ptr - value, min);
+        scriptUpdateEnergyBoundaries();
+        if (stat == ScriptStats::TAMER_LEVEL)
+            TAMER_ENTITY.tamerLevel = TMP_TAMER_LEVEL;
+        else if (stat == ScriptStats::LIVES)
+            PARTNER_ENTITY.lives = TMP_LIVES;
+        return 1;
+    }
+    int32_t advanceToDateAt(uint32_t)
+    {
+        auto stat   = readScriptUByte();
+        auto year   = readPStat((stat + 0) % 256);
+        auto day    = readPStat((stat + 1) % 256);
+        auto hour   = readPStat((stat + 2) % 256);
+        auto minute = readPStat((stat + 3) % 256);
+
+        auto input   = dateToSeconds(year, day, hour, minute);
+        auto current = dateToSeconds(YEAR, DAY, HOUR, MINUTE);
+        if (current < input) skipHours((input - current) / 60);
+
+        auto isAnotherDay = day != DAY;
+        YEAR              = year;
+        DAY               = day;
+        HOUR              = hour;
+        MINUTE            = minute;
+
+        if (isAnotherDay) dailyPStatTrigger();
+        return 1;
+    }
+    int32_t addMinutesToDateAt(uint32_t)
+    {
+        auto stat   = readScriptUByte();
+        auto amount = readScriptInt();
+        auto year   = readPStat((stat + 0) % 256);
+        auto day    = readPStat((stat + 1) % 256);
+        auto hour   = readPStat((stat + 2) % 256);
+        auto minute = readPStat((stat + 3) % 256);
+        auto input  = dateToSeconds(year, day, hour, minute);
+
+        amount += input;
+        secondsToDate(amount, &year, &day, &hour, &minute);
+        writePStat((stat + 0) % 256, year);
+        writePStat((stat + 1) % 256, day);
+        writePStat((stat + 2) % 256, hour);
+        writePStat((stat + 3) % 256, minute);
+        return 1;
+    }
+    int32_t subtractMinutesToDateAt(uint32_t)
+    {
+        auto stat   = readScriptUByte();
+        auto amount = readScriptInt();
+        auto year   = readPStat((stat + 0) % 256);
+        auto day    = readPStat((stat + 1) % 256);
+        auto hour   = readPStat((stat + 2) % 256);
+        auto minute = readPStat((stat + 3) % 256);
+        auto input  = dateToSeconds(year, day, hour, minute);
+
+        amount -= input;
+        secondsToDate(amount, &year, &day, &hour, &minute);
+        writePStat((stat + 0) % 256, year);
+        writePStat((stat + 1) % 256, day);
+        writePStat((stat + 2) % 256, hour);
+        writePStat((stat + 3) % 256, minute);
+        return 1;
+    }
+    int32_t unusedRead1Byte(uint32_t)
+    {
+        readScriptUByte();
+        return 1;
+    }
+    int32_t unusedRead3Byte(uint32_t)
+    {
+        readScriptUByte();
+        readScriptUByte();
+        readScriptUByte();
+        return 1;
+    }
+    int32_t storeDigimonNature(uint32_t)
+    {
+        readScriptUByte();
+        auto statSource = readScriptUByte();
+        auto statTarget = readScriptUByte();
+
+        auto type = getDigimonData(static_cast<DigimonType>(readPStat(statSource)))->type;
+        writePStat(statTarget, static_cast<uint8_t>(type));
+        return 1;
+    }
+
     int32_t setSelection(uint32_t)
     {
         SCRIPT_TEXTBOX_SPEAKER_MODE = 1;
@@ -422,30 +651,30 @@ namespace
         storeDate,
         setTextboxSize,
         fadeoutHud,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
-        wrapper<scriptInstruction28to3F>,
+        scriptGiveItem,
+        scriptRemoveItem,
+        scriptAddMoney,
+        scriptRemoveMoney,
+        compareDate,
+        learnMove,
+        unusedRead1Byte,
+        giveCard,
+        takeCard,
+        setMerit,
+        addMerit,
+        reduceMerit,
+        setStat,
+        addStat,
+        reduceStat,
+        advanceToDateAt,
+        addMinutesToDateAt,
+        subtractMinutesToDateAt,
+        unusedRead3Byte,
+        unusedRead3Byte,
+        unusedRead3Byte,
+        unusedRead1Byte,
+        unusedRead1Byte,
+        storeDigimonNature,
         invalidOpcode,
         invalidOpcode,
         invalidOpcode,
