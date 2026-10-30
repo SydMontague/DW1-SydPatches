@@ -31,4 +31,5 @@ extern "C"
                            int32_t rotZ);
     void setImmortalHour();
     void unlearnMove(uint32_t move);
+    void skipHours(uint32_t amount);
 }

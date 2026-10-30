@@ -1,9 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x8010334c
-  jal skipHours
-
 .org 0x801053cc
   jal setFoodTimer
 

@@ -38,7 +38,6 @@
 .definelabel rollCardPack,              0x8010b8f4
 .definelabel tickOpenSaveMachine,       0x801138b0
 .definelabel scriptTickMainMenu,        0x80113a20
-.definelabel scriptInstruction28to3F,   0x80102e18
 .definelabel scriptInstruction46to58,   0x801035a8
 .definelabel scriptInstruction5Ato5F,   0x80103d70
 .definelabel scriptInstruction64to7E,   0x80103e44
