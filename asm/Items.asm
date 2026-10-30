@@ -1,9 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x80102d04
-  jal setInventorySize
-
 ;.org 0x800db190
 ;  jal removeItem
 ;.org 0x800f04d8

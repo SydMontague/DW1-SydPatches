@@ -1,6 +1,7 @@
 
 #include "Camera.hpp"
 #include "GameTime.hpp"
+#include "Inventory.hpp"
 #include "ItemMenu.hpp"
 #include "Map.hpp"
 #include "MapObjects.hpp"
@@ -11,11 +12,264 @@
 #include "VanillaTextbox.hpp"
 #include "extern/DGET.hpp"
 #include "extern/DOO2.hpp"
+#include "extern/dtl/runtime_array.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libc.hpp"
 
 namespace
 {
+    int32_t setSelection(uint32_t)
+    {
+        SCRIPT_TEXTBOX_SPEAKER_MODE = 1;
+        scriptShowSelection();
+        return 2;
+    }
+
+    int32_t jumpAndLink(uint32_t)
+    {
+        readScriptUByte();
+        auto offset = readScriptUShort();
+
+        ScriptStackEntry entry{
+            .scriptPointer   = SCRIPT_POINTER,
+            .activeMapScript = ACTIVE_MAP_SCRIPT,
+            .type            = 1,
+            .trigger         = 0,
+        };
+        pushScriptStack(&entry);
+        SCRIPT_POINTER = ACTIVE_SCRIPT + offset;
+        return 1;
+    }
+
+    int32_t jumpToFileAndLink(uint32_t)
+    {
+        readScriptUByte();
+        auto script  = readScriptUShort();
+        auto section = readScriptUShort();
+
+        ScriptStackEntry entry{
+            .scriptPointer   = SCRIPT_POINTER,
+            .activeMapScript = ACTIVE_MAP_SCRIPT,
+            .type            = 1,
+            .trigger         = 0,
+        };
+        pushScriptStack(&entry);
+        ACTIVE_SCRIPT  = getScript(script);
+        SCRIPT_POINTER = getScriptSection(ACTIVE_SCRIPT, section);
+        return 1;
+    }
+
+    int32_t jumpReturn(uint32_t)
+    {
+        readScriptUByte();
+        ScriptStackEntry entry;
+        popScriptStack(&entry);
+        ACTIVE_SCRIPT  = getScript(entry.activeMapScript);
+        SCRIPT_POINTER = entry.scriptPointer;
+        return 1;
+    }
+
+    int32_t jumpTo(uint32_t)
+    {
+        readScriptUByte();
+        auto offset    = readScriptUShort();
+        SCRIPT_POINTER = ACTIVE_SCRIPT + offset;
+        return 1;
+    }
+
+    int32_t jumpToFile(uint32_t)
+    {
+        readScriptUByte();
+        auto script    = readScriptUShort();
+        auto section   = readScriptUShort();
+        ACTIVE_SCRIPT  = getScript(script);
+        SCRIPT_POINTER = getScriptSection(ACTIVE_SCRIPT, section);
+        return 1;
+    }
+
+    int32_t scriptSwitch(uint32_t)
+    {
+        auto stat  = readScriptUByte();
+        auto count = readScriptUShort();
+        auto value = dtl::min(static_cast<int32_t>(readPStat(stat)), count - 1);
+
+        SCRIPT_POINTER = ACTIVE_SCRIPT + reinterpret_cast<uint16_t*>(SCRIPT_POINTER)[value];
+        return 1;
+    }
+
+    void scriptIf(uint32_t)
+    {
+        readScriptUByte();
+        scriptIfInstruction();
+        libc_longjmp(&SCRIPT_SAVE_STATE, 1); // return 1;
+    }
+
+    int32_t scriptShowTextbox(uint32_t)
+    {
+        readScriptUByte();
+        if (SCRIPT_TEXTBOX_SPEAKER_MODE == 2)
+            showTextbox(0, 255);
+        else
+            showTextbox(0, CURRENT_DIALOGUE_OWNER);
+        return 2;
+    }
+
+    int32_t sciprtSetDialogOwner(uint32_t)
+    {
+        auto speaker                = readScriptUByte();
+        SCRIPT_TEXTBOX_SPEAKER_MODE = 0;
+        if (UI_BOX_DATA[0].state != 1) CURRENT_DIALOGUE_OWNER = speaker - 1;
+        setDialogueOwner(speaker);
+        return 1;
+    }
+
+    int32_t scriptSetTrigger(uint32_t)
+    {
+        readScriptUByte();
+        setTrigger(readScriptUShort());
+        return 1;
+    }
+
+    int32_t scriptUnsetTrigger(uint32_t)
+    {
+        readScriptUByte();
+        unsetTrigger(readScriptUShort());
+        return 1;
+    }
+
+    int32_t setPStat(uint32_t)
+    {
+        readScriptUByte();
+        auto stat  = readScriptUByte();
+        auto value = readScriptUByte();
+        writePStat(stat, value);
+        return 1;
+    }
+
+    int32_t addPStat(uint32_t)
+    {
+        readScriptUByte();
+        auto stat         = readScriptUByte();
+        auto value        = readScriptUByte();
+        int32_t baseValue = readPStat(stat);
+        writePStat(stat, dtl::min(255, baseValue + value));
+        return 1;
+    }
+
+    int32_t subtractPStat(uint32_t)
+    {
+        readScriptUByte();
+        auto stat         = readScriptUByte();
+        auto value        = readScriptUByte();
+        int32_t baseValue = readPStat(stat);
+        writePStat(stat, dtl::max(0, baseValue - value));
+        return 1;
+    }
+
+    int32_t storeMapID(uint32_t)
+    {
+        auto stat = readScriptUByte();
+        writePStat(stat, CURRENT_SCREEN_ID);
+        return 1;
+    }
+
+    int32_t storeDigmonType(uint32_t)
+    {
+        auto stat = readScriptUByte();
+        writePStat(stat, static_cast<uint8_t>(PARTNER_ENTITY.type));
+        return 1;
+    }
+
+    int32_t scriptSetInventorySize(uint32_t)
+    {
+        setInventorySize(readScriptUByte());
+        return 1;
+    }
+
+    int32_t storeRandom(uint32_t)
+    {
+        readScriptUByte();
+        auto stat  = readScriptUByte();
+        auto limit = readScriptUByte();
+        writePStat(stat, random(limit + 1));
+        return 1;
+    }
+
+    int32_t storeDate(uint32_t)
+    {
+        auto stat = readScriptUByte();
+        writePStat((stat + 0) % 256, YEAR);
+        writePStat((stat + 1) % 256, DAY);
+        writePStat((stat + 2) % 256, HOUR);
+        writePStat((stat + 3) % 256, MINUTE);
+        return 1;
+    }
+
+    int32_t setTextboxSize(uint32_t)
+    {
+        scriptPauseGame(0xFF);
+        SCRIPT_TEXTBOX_SPEAKER_MODE = 2;
+        scriptSetTextboxSize();
+        return 1;
+    }
+
+    int32_t fadeoutHud(uint32_t)
+    {
+        closeBox(readScriptUByte());
+        return 2;
+    }
+
+    int32_t setScript(uint32_t)
+    {
+        readScriptUByte(); // skipped
+        CURRENT_SCRIPT_ID = readScriptUShort();
+        CURRENT_SCREEN_ID = readScriptUShort();
+
+        ScriptStackEntry entry;
+        entry.type = 3;
+        pushScriptStack(&entry);
+        // vanilla sets 0x80134FEC to 1 here, but the value is never used
+        resetBGM();
+        loadMap(CURRENT_SCREEN_ID);
+        return 1;
+    }
+
+    int32_t returnFromScriptFile(uint32_t)
+    {
+        while (true) {
+            ScriptStackEntry entry;
+            popScriptStack(&entry);
+
+            if (entry.type == 0) {
+                IS_SCRIPT_PAUSED = 1;
+                return 2;
+            }
+            if (entry.type == 3) {
+                readMapTFS(CURRENT_SCREEN_ID);
+                setupMap();
+                // vanilla sets 0x80134FEC to 0 here, but the value is never used
+                auto script  = getScript(CURRENT_SCRIPT_ID);
+                auto section = getScriptSection(script, 0xFE);
+                if (section != nullptr) {
+                    ACTIVE_SCRIPT  = script;
+                    SCRIPT_POINTER = section;
+                    return 1;
+                }
+            }
+            else if (entry.type == 4) {
+                if (entry.trigger == 0xFF) {
+                    ACTIVE_SCRIPT  = MAPHEAD_SCRIPT_PTR;
+                    SCRIPT_POINTER = MAPHEAD_SCRIPT_PTR + (*reinterpret_cast<uint16_t*>(MAPHEAD_SCRIPT_PTR) - 2);
+                }
+                else {
+                    ACTIVE_SCRIPT  = getScript(CURRENT_SCRIPT_ID);
+                    SCRIPT_POINTER = getScriptSection(ACTIVE_SCRIPT, entry.trigger);
+                }
+                return 2;
+            }
+        }
+    }
+
     void tickScriptedMovements()
     {
         for (auto i = 0; i < SCRIPT_MOVEMENT.size(); i++) {
@@ -144,30 +398,30 @@ namespace
         invalidOpcode,
         invalidOpcode,
         invalidOpcode,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
-        wrapper<scriptInstruction10to27>,
+        setSelection,
+        invalidOpcode,
+        invalidOpcode,
+        jumpAndLink,
+        jumpToFileAndLink,
+        jumpReturn,
+        jumpTo,
+        jumpToFile,
+        scriptSwitch,
+        wrapper<scriptIf>,
+        scriptShowTextbox,
+        sciprtSetDialogOwner,
+        scriptSetTrigger,
+        scriptUnsetTrigger,
+        setPStat,
+        addPStat,
+        subtractPStat,
+        storeMapID,
+        storeDigmonType,
+        scriptSetInventorySize,
+        storeRandom,
+        storeDate,
+        setTextboxSize,
+        fadeoutHud,
         wrapper<scriptInstruction28to3F>,
         wrapper<scriptInstruction28to3F>,
         wrapper<scriptInstruction28to3F>,
@@ -379,11 +633,11 @@ namespace
         invalidOpcode,
         invalidOpcode,
         invalidOpcode,
-        wrapper<scriptInstructionFBtoFF>,
-        wrapper<scriptInstructionFBtoFF>,
-        wrapper<scriptInstructionFBtoFF>,
-        wrapper<scriptInstructionFBtoFF>,
-        wrapper<scriptInstructionFBtoFF>,
+        setScript,
+        invalidOpcode,
+        invalidOpcode,
+        returnFromScriptFile,
+        returnFromScriptFile,
     }};
 } // namespace
 

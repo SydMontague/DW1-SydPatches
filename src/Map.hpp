@@ -42,4 +42,6 @@ extern "C"
     void setMapObjectsFlag(int32_t start, int32_t count, int32_t flag);
     bool scriptTickChangeMap(uint32_t mapId, uint8_t exit, bool showMapName);
     bool tickRemoveMist();
+    void loadMap(uint32_t mapId);
+    void setupMap();
 }

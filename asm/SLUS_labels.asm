@@ -38,13 +38,18 @@
 .definelabel rollCardPack,              0x8010b8f4
 .definelabel tickOpenSaveMachine,       0x801138b0
 .definelabel scriptTickMainMenu,        0x80113a20
-.definelabel scriptInstructionFBtoFF,   0x8010288c
-.definelabel scriptInstruction10to27,   0x8010291c
 .definelabel scriptInstruction28to3F,   0x80102e18
 .definelabel scriptInstruction46to58,   0x801035a8
 .definelabel scriptInstruction5Ato5F,   0x80103d70
 .definelabel scriptInstruction64to7E,   0x80103e44
+.definelabel pushScriptStack,           0x801064bc
+.definelabel popScriptStack,            0x80106500
+.definelabel resetBGM,                  0x801064f0
+.definelabel scriptIfInstruction,       0x801050c0
 
+.definelabel SCRIPT_TEXTBOX_SPEAKER_MODE, 0x80135000
+.definelabel MAPHEAD_SCRIPT_PTR, 0x80134fac
+.definelabel CURRENT_SCREEN_ID, 0x80134ffe
 .definelabel SCRIPT_SAVE_STATE, 0x801be7bc
 .definelabel TIMESPEED, 0x80134fe7
 .definelabel SCRIPT_MAP_CHANGE_ENABLED, 0x80134fe9

@@ -2019,6 +2019,9 @@ extern "C"
     extern uint16_t SCRIPT_PARAM_1;
     extern bool SCRIPT_MAP_CHANGE_SHOW_NAME;
     extern uint32_t SCRIPT_PAUSED_GAME;
+    extern uint8_t* MAPHEAD_SCRIPT_PTR;
+    extern int16_t CURRENT_SCREEN_ID;
+    extern uint8_t SCRIPT_TEXTBOX_SPEAKER_MODE;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -2038,6 +2041,10 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void scriptIfInstruction();
+    void pushScriptStack(ScriptStackEntry* data);
+    void popScriptStack(ScriptStackEntry* data);
+    void resetBGM();
     void scriptInstructionFBtoFF(uint32_t instruction);
     void scriptInstruction10to27(uint32_t instruction);
     void scriptInstruction28to3F(uint32_t instruction);

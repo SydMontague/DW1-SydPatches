@@ -171,8 +171,8 @@
 ;  jal closeBox
 ;.org 0x801006a4
 ;  jal closeBox
-.org 0x80102de0
-  jal closeBox
+;.org 0x80102de0
+;  jal closeBox
 .org 0x8010c740
   jal closeBox
 .org 0x8010c90c

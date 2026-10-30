@@ -93,13 +93,6 @@
 .org 0x8010a02c
   jal flipTextboxPage
 
-;.org 0x800fe37c
-;  jal setDialogueOwner
-;.org 0x800ff6fc
-;  jal setDialogueOwner
-.org 0x80102bb4
-  jal setDialogueOwner
-
 ;.org 0x800fca24
 ;  jal showMapheadSelection
 .org 0x80109d80
@@ -119,12 +112,6 @@
 
 .org 0x801042dc
   jal loadShopLibrary
-
-.org 0x80102958
-  jal scriptShowSelection
-
-.org 0x80102dc4
-  jal scriptSetTextboxSize
 
 ;.org 0x800fbd94
 ;  jal scriptIdToEntityId

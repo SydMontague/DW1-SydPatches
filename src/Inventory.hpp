@@ -8,4 +8,5 @@ extern "C"
     bool giveItem(ItemType type, uint8_t amount);
     void removeItem(ItemType type, int32_t amount);
     void initializeInventory();
+    void setInventorySize(uint8_t newSize);
 }
