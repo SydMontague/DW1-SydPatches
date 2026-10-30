@@ -20,6 +20,9 @@ extern "C"
     void scriptStartTournament();
     void scriptCheckTournamentMedal();
     void lostAllLives();
+    void scriptSetTextboxSize();
+    void setDialogueOwner(int32_t speaker);
+    void scriptShowSelection();
 }
 
 void triggerSeadramonCutscene();

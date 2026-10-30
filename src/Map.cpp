@@ -1599,7 +1599,7 @@ extern "C"
     void updateMapLightState()
     {
         for (const auto data : mapLightUpdateData) {
-            if (CURRENT_SCRIPT_ID != data.mapId) continue;
+            if (CURRENT_SCREEN_ID != data.mapId) continue;
             if (data.trigger != 0xFFFF && isTriggerSet(data.trigger)) continue;
 
             auto isNight  = HOUR < 7 && HOUR > 18;

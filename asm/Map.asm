@@ -33,9 +33,6 @@
 .org 0x80104d40
   jal spawnItem
 
-.org 0x801028f4
-  jal loadMap
-
 ;.org 0x800abba4
 ;  jal readMapTFS
 ;.org 0x800debbc
