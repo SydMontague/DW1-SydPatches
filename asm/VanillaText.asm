@@ -271,7 +271,5 @@
 
 .org 0x80070dc0
   jal renderString
-.org 0x80071608
-  jal renderString
 
 .close

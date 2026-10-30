@@ -343,8 +343,6 @@
   jal playSound
 .org 0x80070aac
   jal playSound
-.org 0x80071504
-  jal playSound
 .org 0x80073cbc
   jal playSound
 .org 0x80073d58

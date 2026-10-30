@@ -1070,7 +1070,5 @@
 
 .org 0x800711c4
   jal getEntityScreenPos
-.org 0x80071754
-  jal getEntityScreenPos
 
 .close

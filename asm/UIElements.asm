@@ -524,12 +524,6 @@
 .open "work/DIGIMON/FISH_REL.BIN",0x80070000
 .psx
 
-.org 0x800717d0
-  jal createStaticUIBox
-
-.org 0x80071460
-  jal removeStaticUIBox
-
 .org 0x800707b8
   jal removeAnimatedUIBox
 

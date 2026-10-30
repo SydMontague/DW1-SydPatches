@@ -53,3 +53,5 @@
 .include "asm/Movie.asm"
 .include "asm/GameState.asm"
 .include "asm/VanillaTextbox.asm"
+
+.include "asm/FISH.asm"
