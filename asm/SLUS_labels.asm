@@ -415,8 +415,8 @@
 .definelabel FISHING_DATA_PTR, 0x80134e6c
 .definelabel DR_OFFSETS, 0x8015db90
 .definelabel TOURNAMENTS_WON, 0x80134fcc
-.definelabel TOURNAMENTS_LOST, 0x80134fce
-.definelabel TOURNAMENT_WINS, 0x80134fd0
+.definelabel TOURNAMENT_WINS, 0x80134fce
+.definelabel TOURNAMENTS_LOST, 0x80134fd0
 .definelabel HAS_TAKEN_DAMAGE, 0x800134d70
 .definelabel GSOT_TAGS_0, 0x80155b68
 .definelabel GSOT_TAGS_1, 0x80159b68

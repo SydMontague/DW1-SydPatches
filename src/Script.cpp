@@ -422,19 +422,19 @@ extern "C"
                 case 0x13:
                 {
                     SCRIPT_POINTER += 2;
-                    str = intToStringSJIS(str, TOURNAMENTS_WON, 3, 0);
+                    str = intToStringSJIS(str, TOURNAMENTS_WON, 3, true);
                     break;
                 }
                 case 0x14:
                 {
                     SCRIPT_POINTER += 2;
-                    str = intToStringSJIS(str, TOURNAMENT_WINS, 3, 0);
+                    str = intToStringSJIS(str, TOURNAMENT_WINS, 3, true);
                     break;
                 }
                 case 0x15:
                 {
                     SCRIPT_POINTER += 2;
-                    str = intToStringSJIS(str, TOURNAMENTS_LOST, 3, 0);
+                    str = intToStringSJIS(str, TOURNAMENTS_LOST, 3, true);
                     break;
                 }
             }
