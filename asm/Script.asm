@@ -11,8 +11,8 @@
 ;  jal dailyPStatTrigger
 ;.org 0x800dd6e0
 ;  jal dailyPStatTrigger
-.org 0x801033c0
-  jal dailyPStatTrigger
+;.org 0x801033c0
+;  jal dailyPStatTrigger
 .org 0x80105a88
   jal dailyPStatTrigger
 
@@ -160,22 +160,8 @@
 .org 0x80106408
   jal scriptIdToEntityId
 
-.org 0x80102f38
-  jal scriptCompareDate
-
 .org 0x8010525c
   jal scriptCompareStat
-
-;.org 0x80102324
-;  jal getStatsPointer
-;.org 0x80102354
-;  jal getStatsPointer
-.org 0x801030bc
-  jal getStatsPointer
-.org 0x8010313c
-  jal getStatsPointer
-.org 0x801031d0
-  jal getStatsPointer
 
 .org 0x8010526c
   jal scriptCompareCard
@@ -191,17 +177,6 @@
 
 .org 0x801052ac
   jal scriptCompareMoney
-
-;.org 0x800e6c80
-;  jal enforceStatsLimits
-;.org 0x800e6cc4
-;  jal enforceStatsLimits
-;.org 0x800e6cd4
-;  jal enforceStatsLimits
-.org 0x801030d4
-  jal enforceStatsLimits
-.org 0x80103168
-  jal enforceStatsLimits
 
 ;.org 0x800efc14
 ;  jal tickScript
