@@ -177,7 +177,10 @@ extern "C"
         auto entity2 = getEntityFromScriptId(scriptId2);
 
         // vanilla doesn't do a nullptr check here, but unchecked access is iffy
-        if (entity1.first == nullptr || entity2.first == nullptr) return true;
+        if (entity1.first == nullptr || entity2.first == nullptr) {
+            if (entity1.first != nullptr) hasRotationData[entity1.second] = 0;
+            return true;
+        }
 
         if (hasRotationData[entity1.second] == 0) {
             rotationData[entity1.second]    = entity2.first->posData->location;
