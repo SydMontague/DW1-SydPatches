@@ -32,6 +32,8 @@ constexpr auto BRAIN_MIN       = 1;
 constexpr auto BRAIN_MAX       = 999;
 constexpr auto MIN_MONEY       = 0;
 constexpr auto MAX_MONEY       = 999999;
+constexpr auto MIN_MERIT       = 0;
+constexpr auto MAX_MERIT       = 9999;
 constexpr auto MIN_TAMER_LEVEL = 0;
 constexpr auto MAX_TAMER_LEVEL = 10;
 
