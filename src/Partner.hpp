@@ -32,4 +32,5 @@ extern "C"
     void setImmortalHour();
     void unlearnMove(uint32_t move);
     void skipHours(uint32_t amount);
+    void callDigimonRoutine(int32_t routine);
 }
