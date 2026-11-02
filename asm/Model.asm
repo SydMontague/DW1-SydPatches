@@ -34,9 +34,6 @@
 .org 0x8005724c
   jal removeEntity
 
-.org 0x80063830
-  jal unloadModel
-
 .org 0x800626e8
   jal setupModelMatrix
 .org 0x800627f0
@@ -85,9 +82,6 @@
 
 .org 0x80056cb8
   jal resetFlattenGlobal
-
-.org 0x80065078
-  jal unloadModel
 
 .org 0x80057460
   jal startAnimation
@@ -171,12 +165,8 @@
 .org 0x80058568
   jal setEntityRotation
 
-
 .org 0x8005e8f0
   jal resetFlattenGlobal
-
-.org 0x8006d760
-  jal unloadModel
 
 .org 0x8006b42c
   jal setupModelMatrix
@@ -257,7 +247,6 @@
   jal startAnimation
 .org 0x8006c3cc
   jal startAnimation
-
 
 .org 0x800696f8
   j tickAnimation
@@ -490,7 +479,6 @@
 
 .close
 
-
 .open "work/DIGIMON/DOOA_REL.BIN",0x80080000
 .psx
 
@@ -566,13 +554,11 @@
 
 .close
 
-
 .open "work/DIGIMON/ENDI_REL.BIN",0x80060000
 .psx
 
 .org 0x800601ac
   jal getEntityModelComponent
-
 
 .org 0x80060800
   jal calculateBoneMatrix

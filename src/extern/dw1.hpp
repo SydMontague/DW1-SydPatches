@@ -713,7 +713,7 @@ extern "C"
     enum class EntityType
     {
         NPC     = 0,
-        UNKNOWN = 1,
+        EFE     = 1,
         PLAYER  = 2,
         PARTNER = 3,
 
@@ -1841,9 +1841,9 @@ extern "C"
     extern uint8_t TAMER_MODEL_BUFFER[56 * 1024];
     extern uint8_t PARTNER_MODEL_BUFFER[98 * 1024];
     extern ModelComponent NPC_MODEL[5];
-    extern ModelComponent UNKNOWN_MODEL[16];
+    extern ModelComponent EFE_MODEL[16];
     extern int32_t NPC_MODEL_TAKEN[5];
-    extern int32_t UNKNOWN_MODEL_TAKEN[16];
+    extern int32_t EFE_MODEL_TAKEN[16];
     extern uint8_t TEXTURE_BUFFER[];
     extern GsTMDFunction GS_TMD_MAP[64];
     extern Vector STORED_TAMER_POS;

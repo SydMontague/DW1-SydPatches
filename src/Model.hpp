@@ -1,4 +1,5 @@
 #pragma once
+#include "extern/dtl/optional.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgs.hpp"
 
@@ -25,3 +26,8 @@ extern "C"
     void initializeModelComponents();
     void resetFlattenGlobal();
 }
+
+// Uploads into the record's existing pixel/CLUT allocation and waits for the GPU.
+void uploadModelTexture(uint32_t* texture, ModelComponent* model);
+dtl::optional<ModelComponent*> findFreeEFEModel();
+void releaseEFEModel(ModelComponent& model);

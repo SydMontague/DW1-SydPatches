@@ -15,10 +15,6 @@
 .org 0x80073390
   .word EFE_createFlash
 
-.org 0x80064f90
-  jal getEFEDATEntry
-
-
 .org 0x80073480
   .word EFE_copyVector
 
@@ -112,15 +108,11 @@
 .org 0x8007abac
   .word EFE_createFlash
 
-.org 0x8006d678
-  jal getEFEDATEntry
-
 .org 0x8006e89c
   jal EFE_downloadSomeImage
 
 .org 0x8006eb94
   j EFE_modifySomeImage
-
 
 .org 0x8007ac9c
   .word EFE_copyVector
@@ -215,15 +207,11 @@
 .org 0x80070bd8
   .word EFE_createFlash
 
-.org 0x80063748
-  jal getEFEDATEntry
-
 .org 0x8006496c
   jal EFE_downloadSomeImage
 
 .org 0x80064c64
   j EFE_modifySomeImage
-
 
 .org 0x80070cc8
   .word EFE_copyVector
@@ -319,7 +307,6 @@
 
 .close
 
-
 .open "work/DIGIMON/EAB_REL.BIN",0x80060000
 .psx
 
@@ -330,7 +317,6 @@
   jal EFE_createFlash
 
 .close
-
 
 .open "work/DIGIMON/DOOA_REL.BIN",0x80080000
 .psx

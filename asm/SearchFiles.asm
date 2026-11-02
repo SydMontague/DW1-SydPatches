@@ -120,7 +120,6 @@
 .org 0x8006bd94
   jal readFile
 
-
 .org 0x80056db8
   jal loadTIMFile
 .org 0x80056dd4
@@ -128,18 +127,10 @@
 .org 0x80057700
   jal loadTIMFile
 
-
 .org 0x8005f174
   jal tickFileReadQueue
 
-.org 0x8006d6c4
-  jal addFileReadRequest
-
-.org 0x8006dee0
-  j setFileReadCallback2
-
 .close
-
 
 .open "work/DIGIMON/MURD_REL.BIN",0x8007C000
 .psx
@@ -155,15 +146,8 @@
 
 .close
 
-
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
-
-.org 0x80064fdc
-  jal addFileReadRequest
-
-.org 0x800657f8
-  j setFileReadCallback2
 
 .close 
 
@@ -186,15 +170,7 @@
 .org 0x80056e6c
   jal loadTIMFile
 
-.org 0x80063fb0
-  j setFileReadCallback2
-
-.org 0x80063794
-  jal addFileReadRequest
-
 .close
-
-
 
 .open "work/DIGIMON/DOOA_REL.BIN",0x80080000
 .psx

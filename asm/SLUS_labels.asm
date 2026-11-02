@@ -279,8 +279,8 @@
 .definelabel DIGIMON_SKELETONS, 0x8011ce60
 .definelabel PARTNER_MOMENTUM_DATA, 0x80185be8
 .definelabel PARTNER_POSITION_DATA, 0x801866cc
-.definelabel UNKNOWN_MODEL, 0x80137218
-.definelabel UNKNOWN_MODEL_TAKEN, 0x801373d8
+.definelabel EFE_MODEL, 0x80137218
+.definelabel EFE_MODEL_TAKEN, 0x801373d8
 .definelabel NPC_MODEL, 0x80137140
 .definelabel NPC_MODEL_TAKEN, 0x801371cc
 .definelabel TAMER_MODEL, 0x801371e0
@@ -397,6 +397,9 @@
 .definelabel VS_EFE_PRIMARY_OPCODES, 0x80070e4c
 .definelabel VS_EFE_COMPARISONS, 0x80070f34
 .definelabel VS_EFE_SUBOPCODES, 0x80072e1c
+.definelabel EFE_CURRENT_SLOT, 0x80134d0c
+.definelabel EFE_SLOT_BASE,    0x80134d10
+.definelabel EFE_FILE_CURSOR,  0x80134d14
 .definelabel EFE_FLASH_DATA, 0x80134cc0
 .definelabel FLASH_INSTANCE, 0x80134cc4
 .definelabel LOCAL_MAP_OBJECTS, 0x8013c060

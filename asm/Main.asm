@@ -17,10 +17,6 @@
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
 
-.org 0x800653d4
-  jal updateTMDTextureData
-
-
 .org 0x80056d60
   jal initializeAttackObjects
 
@@ -42,9 +38,6 @@
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
 
-.org 0x80063b8c
-  jal updateTMDTextureData
-
 .org 0x80064ddc
   jal addAttackObject
 .org 0x80065034
@@ -63,9 +56,6 @@
 
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
 .psx
-
-.org 0x8006dabc
-  jal updateTMDTextureData
 
 .org 0x8005e97c
   jal initializeAttackObjects
