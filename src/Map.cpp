@@ -720,7 +720,7 @@ namespace
                 newClut[i].red   = clut1[i].red - ((clut1[i].red - clut2[i].red) / frame);
                 newClut[i].green = clut1[i].green - ((clut1[i].green - clut2[i].green) / frame);
                 newClut[i].blue  = clut1[i].blue - ((clut1[i].blue - clut2[i].blue) / frame);
-                newClut[i].alpha = clut1->alpha;
+                newClut[i].alpha = clut1[i].alpha;
             }
 
             libgpu_LoadClut(&newClut, 0, 0x1E0);
