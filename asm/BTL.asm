@@ -8,6 +8,15 @@
   .fill 0x80064ab8-.
 .endarea
 
+; Shared EFE loading and slot source is emitted in this owning overlay.
+.org 0x80064eac
+.area 0x80065800-.
+  .importobj "compiled/BTLEFELoading.lib"
+  .importobj "compiled/BTLEFESlots.lib"
+  .notice "BTL EFE loading and slot space left: " + (0x80065800-.) + " bytes"
+  .fill 0x80065800-.
+.endarea
+
 ; Shared EFE particle source is emitted in this owning overlay.
 .org 0x80065910
 .area 0x80065e70-.
@@ -67,10 +76,6 @@
   .fill 0x8006ed24-.
 .endarea
 
-; BTL_dispatchEFEOpcode
-.org 0x800656fc
-  jal BTL_dispatchEFEOpcode
-
 ; BTL_initializeEFESubOpcodeTable
 .org 0x80066138
   jal BTL_initializeEFESubOpcodeTable
@@ -86,8 +91,6 @@
   jal BTL_runEFEScript
 .org 0x80064db0
   jal BTL_runEFEScript
-.org 0x800650e4
-  j BTL_runEFEScript
 
 ; BTL_addParticleEmitter
 .org 0x80073380
@@ -104,5 +107,17 @@
 ; BTL_tickParticleEmitters
 .org 0x80064c54
   jal BTL_tickParticleEmitters
+
+; BTL_loadNextEFEFile
+.org 0x800661d0
+  j BTL_loadNextEFEFile
+
+; BTL_unloadEFESlot
+.org 0x80066210
+  jal BTL_unloadEFESlot
+
+; BTL_runEFESlotScript
+.org 0x800662c0
+  jal BTL_runEFESlotScript
 
 .close

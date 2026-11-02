@@ -8,6 +8,15 @@
   .fill 0x80063270-.
 .endarea
 
+; Shared EFE loading and slot source is emitted in this owning overlay.
+.org 0x80063664
+.area 0x80063fb8-.
+  .importobj "compiled/VSEFELoading.lib"
+  .importobj "compiled/VSEFESlots.lib"
+  .notice "VS EFE loading and slot space left: " + (0x80063fb8-.) + " bytes"
+  .fill 0x80063fb8-.
+.endarea
+
 ; Shared EFE particle source is emitted in this owning overlay.
 .org 0x800640c8
 .area 0x80064628-.
@@ -67,10 +76,6 @@
   .fill 0x8006d394-.
 .endarea
 
-; VS_dispatchEFEOpcode
-.org 0x80063eb4
-  jal VS_dispatchEFEOpcode
-
 ; VS_initializeEFESubOpcodeTable
 .org 0x800648f0
   jal VS_initializeEFESubOpcodeTable
@@ -86,8 +91,6 @@
   jal VS_runEFEScript
 .org 0x80063568
   jal VS_runEFEScript
-.org 0x8006389c
-  j VS_runEFEScript
 
 .org 0x80058228
   jal VS__runIntro
@@ -131,8 +134,19 @@ li.l a2, VS__tickDigimon
 .org 0x8006340c
   jal VS_tickParticleEmitters
 
-.close
+; VS_loadNextEFEFile
+.org 0x800649ac
+  jal VS_loadNextEFEFile
 
+; VS_unloadEFESlot
+.org 0x80064a04
+  jal VS_unloadEFESlot
+
+; VS_runEFESlotScript
+.org 0x80064ab4
+  jal VS_runEFESlotScript
+
+.close
 
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx

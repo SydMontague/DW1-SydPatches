@@ -8,6 +8,15 @@
   .fill 0x8006d1a0-.
 .endarea
 
+; Shared EFE loading and slot source is emitted in this owning overlay.
+.org 0x8006d594
+.area 0x8006dee8-.
+  .importobj "compiled/STDEFELoading.lib"
+  .importobj "compiled/STDEFESlots.lib"
+  .notice "STD EFE loading and slot space left: " + (0x8006dee8-.) + " bytes"
+  .fill 0x8006dee8-.
+.endarea
+
 ; Shared EFE particle source is emitted in this owning overlay.
 .org 0x8006dff8
 .area 0x8006e558-.
@@ -67,10 +76,6 @@
   .fill 0x800772c4-.
 .endarea
 
-; STD_dispatchEFEOpcode
-.org 0x8006dde4
-  jal STD_dispatchEFEOpcode
-
 ; STD_initializeEFESubOpcodeTable
 .org 0x8006e820
   jal STD_initializeEFESubOpcodeTable
@@ -86,8 +91,6 @@
   jal STD_runEFEScript
 .org 0x8006d498
   jal STD_runEFEScript
-.org 0x8006d7cc
-  j STD_runEFEScript
 
 ; STD_addParticleEmitter
 .org 0x8007ab9c
@@ -104,5 +107,17 @@
 ; STD_tickParticleEmitters
 .org 0x8006d33c
   jal STD_tickParticleEmitters
+
+; STD_loadNextEFEFile
+.org 0x8006e8dc
+  jal STD_loadNextEFEFile
+
+; STD_unloadEFESlot
+.org 0x8006e934
+  jal STD_unloadEFESlot
+
+; STD_runEFESlotScript
+.org 0x8006e9e4
+  jal STD_runEFESlotScript
 
 .close

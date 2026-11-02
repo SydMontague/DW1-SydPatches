@@ -308,7 +308,7 @@ extern "C"
     int32_t libgpu_LoadImage(const RECT* rect, const void* data);
     int32_t libgpu_LoadImage2(const RECT* rect, const void* data);
     uint16_t libgpu_GetClut(int32_t x, int32_t y);
-    void libgpu_DrawSync(int32_t mode);
+    int32_t libgpu_DrawSync(int32_t mode);
     uint16_t libgpu_GetTPage(int32_t textureMode, int32_t transparency, int32_t x, int32_t y);
     void libgpu_SetSemiTrans(void* prim, int32_t abe);
     void libgpu_StoreImage(const RECT* rect, uint32_t* buffer);

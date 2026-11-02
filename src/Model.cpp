@@ -300,36 +300,6 @@ namespace
         return primPtr;
     }
 
-    void uploadModelTexture(uint32_t* timData, ModelComponent* model)
-    {
-        GsIMAGE imageData;
-        libgs_GsGetTimInfo(timData + 1, &imageData);
-
-        imageData.pixelX = (model->pixelPage & 15) * 0x40 + model->pixelOffsetX;
-        imageData.pixelY = (model->pixelPage >> 4) * 0x100 + model->pixelOffsetY;
-        imageData.clutX  = (model->clutPage & 63) << 4;
-        imageData.clutY  = (model->clutPage >> 6);
-
-        RECT pixelRect = {
-            .x      = imageData.pixelX,
-            .y      = imageData.pixelY,
-            .width  = static_cast<int16_t>(imageData.pixelWidth),
-            .height = static_cast<int16_t>(imageData.pixelHeight),
-        };
-        libgpu_LoadImage(&pixelRect, imageData.pixelPtr);
-        // if has CLUT
-        if ((imageData.pixelMode >> 3 & 1) != 0) {
-            RECT clutRect = {
-                .x      = imageData.clutX,
-                .y      = imageData.clutY,
-                .width  = static_cast<int16_t>(imageData.clutWidth),
-                .height = static_cast<int16_t>(imageData.clutHeight),
-            };
-            libgpu_LoadImage(&clutRect, imageData.clutPtr);
-        }
-        libgpu_DrawSync(0);
-    }
-
     void loadDigimonTexture(DigimonType type, ModelComponent* model)
     {
         dtl::array<uint8_t, 0x4800> buffer;
@@ -364,19 +334,6 @@ namespace
                 if (model.modelId != -1) NPC_MODEL_TAKEN[model.modelId] = 0;
                 model.modelId = -1;
             }
-        }
-    }
-
-    // this function blows up in size otherwise
-    [[gnu::optimize("Os")]]
-    void unloadUnknowModel(int32_t id)
-    {
-        for (auto& model : UNKNOWN_MODEL) {
-            if (model.useCount != id) continue;
-
-            model.useCount = 0;
-            if (model.modelId != -1) UNKNOWN_MODEL_TAKEN[model.modelId] = 0;
-            model.modelId = -1;
         }
     }
 
@@ -906,6 +863,8 @@ extern "C"
         }
     }
 
+    // Avoid unrolling the startup initialization of both model pools.
+    [[gnu::optimize("Os")]]
     void initializeModelComponents()
     {
         ModelComponent base = {0};
@@ -917,15 +876,15 @@ extern "C"
         for (auto& taken : NPC_MODEL_TAKEN)
             taken = 0;
 
-        for (auto& model : UNKNOWN_MODEL)
+        for (auto& model : EFE_MODEL)
             model = base;
-        for (auto& taken : UNKNOWN_MODEL_TAKEN)
+        for (auto& taken : EFE_MODEL_TAKEN)
             taken = 0;
     }
 
     void loadMMD(DigimonType digimonType, EntityType entityType)
     {
-        if (entityType == EntityType::UNKNOWN) return;
+        if (entityType == EntityType::EFE) return;
         if (!isValidDigimon(digimonType)) return;
 
         ModelComponent* comp;
@@ -983,7 +942,7 @@ extern "C"
         // load MMD file
         readFile(reinterpret_cast<char*>(pathBuffer), comp->mmdPtr);
         comp->modelPtr     = reinterpret_cast<TMDModel*>(reinterpret_cast<uint8_t*>(comp->mmdPtr) +
-                                                         reinterpret_cast<uint32_t*>(comp->mmdPtr)[0]);
+                                                     reinterpret_cast<uint32_t*>(comp->mmdPtr)[0]);
         comp->animTablePtr = reinterpret_cast<int32_t*>(reinterpret_cast<uint8_t*>(comp->mmdPtr) +
                                                         reinterpret_cast<uint32_t*>(comp->mmdPtr)[1]);
         libgs_GsMapModelingData(&comp->modelPtr->flags);
@@ -997,12 +956,15 @@ extern "C"
                              comp->clutPage - 0x7A00);
     }
 
+    [[gnu::optimize("Os")]]
     void unloadModel(int32_t id, EntityType type)
     {
         if (type == EntityType::NPC)
             unloadNPCModel(static_cast<DigimonType>(id));
-        else if (type == EntityType::UNKNOWN)
-            unloadUnknowModel(id);
+        else if (type == EntityType::EFE) {
+            for (auto& model : EFE_MODEL)
+                if (model.useCount == id) releaseEFEModel(model);
+        }
     }
 
     ModelComponent* getEntityModelComponent(int32_t instance, EntityType type)
@@ -1020,11 +982,11 @@ extern "C"
             return nullptr;
         }
 
-        if (type == EntityType::UNKNOWN) {
-            // TODO this should be a bug? UNKNOWN_MODEL has only 16 entries
+        if (type == EntityType::EFE) {
+            // TODO this should be a bug? EFE_MODEL has only 16 entries
             if (instance < 0 || instance > 149) return nullptr;
 
-            auto* model = &UNKNOWN_MODEL[instance];
+            auto* model = &EFE_MODEL[instance];
             return model->useCount != 0 ? model : nullptr;
         }
 
@@ -1096,7 +1058,7 @@ extern "C"
         memcpy(PARTNER_MODEL.mmdPtr, modelData->modelPtr, modelData->modelSize);
 
         PARTNER_MODEL.modelPtr     = reinterpret_cast<TMDModel*>(reinterpret_cast<uint8_t*>(PARTNER_MODEL.mmdPtr) +
-                                                                 reinterpret_cast<uint32_t*>(PARTNER_MODEL.mmdPtr)[0]);
+                                                             reinterpret_cast<uint32_t*>(PARTNER_MODEL.mmdPtr)[0]);
         PARTNER_MODEL.animTablePtr = reinterpret_cast<int32_t*>(reinterpret_cast<uint8_t*>(PARTNER_MODEL.mmdPtr) +
                                                                 reinterpret_cast<uint32_t*>(PARTNER_MODEL.mmdPtr)[1]);
         libgs_GsMapModelingData(&PARTNER_MODEL.modelPtr->flags);
@@ -1282,4 +1244,50 @@ extern "C"
         object->attribute = 0;
         object->coord2    = coords;
     }
+}
+
+void uploadModelTexture(uint32_t* timData, ModelComponent* model)
+{
+    GsIMAGE imageData;
+    libgs_GsGetTimInfo(timData + 1, &imageData);
+
+    imageData.pixelX = (model->pixelPage & 15) * 0x40 + model->pixelOffsetX;
+    imageData.pixelY = (model->pixelPage >> 4) * 0x100 + model->pixelOffsetY;
+    imageData.clutX  = (model->clutPage & 63) << 4;
+    imageData.clutY  = (model->clutPage >> 6);
+
+    RECT pixelRect = {
+        .x      = imageData.pixelX,
+        .y      = imageData.pixelY,
+        .width  = static_cast<int16_t>(imageData.pixelWidth),
+        .height = static_cast<int16_t>(imageData.pixelHeight),
+    };
+    libgpu_LoadImage(&pixelRect, imageData.pixelPtr);
+    // if has CLUT
+    if ((imageData.pixelMode >> 3 & 1) != 0) {
+        RECT clutRect = {
+            .x      = imageData.clutX,
+            .y      = imageData.clutY,
+            .width  = static_cast<int16_t>(imageData.clutWidth),
+            .height = static_cast<int16_t>(imageData.clutHeight),
+        };
+        libgpu_LoadImage(&clutRect, imageData.clutPtr);
+    }
+    libgpu_DrawSync(0);
+}
+
+// Keep the sixteen-entry pool search as a compact loop.
+[[gnu::optimize("Os")]]
+dtl::optional<ModelComponent*> findFreeEFEModel()
+{
+    for (auto& model : EFE_MODEL)
+        if (model.useCount == 0) return &model;
+    return dtl::nullopt;
+}
+
+void releaseEFEModel(ModelComponent& model)
+{
+    model.useCount = 0;
+    if (model.modelId != -1) EFE_MODEL_TAKEN[model.modelId] = 0;
+    model.modelId = -1;
 }

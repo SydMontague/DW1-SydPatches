@@ -96,4 +96,17 @@ for mode in BTL STD VS; do
         -DEFE_renderParticleEmitters=${mode}_renderParticleEmitters
 done
 
+# Shared loading and slot operations use the active overlay's script bindings.
+for mode in BTL STD VS; do
+    "$MIPS_CXX" EFE/Loading.cpp -o "../compiled/${mode}EFELoading.lib" $FLAGS \
+        -DEFE_loadNextFile=${mode}_loadNextEFEFile \
+        -DEFE_setupLoadedFile=${mode}_setupLoadedEFEFile \
+        -DEFE_handleLoadedFile=${mode}_handleEFEFileLoaded \
+        -DEFE_dispatchOpcode=${mode}_dispatchEFEOpcode
+    "$MIPS_CXX" EFE/Slots.cpp -o "../compiled/${mode}EFESlots.lib" $FLAGS \
+        -DEFE_unloadSlot=${mode}_unloadEFESlot \
+        -DEFE_runSlotScript=${mode}_runEFESlotScript \
+        -DEFE_runScript=${mode}_runEFEScript
+done
+
 cd -
