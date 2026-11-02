@@ -1648,8 +1648,8 @@ extern "C"
         SET_ROTATION,
         WALK_TO_POS,
         WALK_TO_ENTITY,
-        SPRINT_TO_POS,
-        SPRINT_TO_ENTITY,
+        WALK_TO_POS_CAMERA,
+        WALK_TO_ENTITY_CAMERA,
         MOVE_CAMERA_TO_POS,
         MOVE_CAMERA_TO_ENTITY,
         MOVE_TO_POS,
@@ -2022,6 +2022,7 @@ extern "C"
     extern uint8_t* MAPHEAD_SCRIPT_PTR;
     extern int16_t CURRENT_SCREEN_ID;
     extern uint8_t SCRIPT_TEXTBOX_SPEAKER_MODE;
+    extern uint32_t SCRIPT_SECTION_IS_EVENT;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -2041,6 +2042,7 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void scriptLoadModel(DigimonType type);
     void scriptIfInstruction();
     void pushScriptStack(ScriptStackEntry* data);
     void popScriptStack(ScriptStackEntry* data);

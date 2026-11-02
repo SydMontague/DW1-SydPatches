@@ -4,15 +4,9 @@
 .org 0x801069fc
   jal loadNPCModel
 
-.org 0x80103620
-  jal scriptSetDigimon
-
 .org 0x80106c4c
   jal unloadDigimonModel
 
-.org 0x80103644
-  jal scriptUnloadEntity
-  
 .org 0x80104478
   jal setLoopCountToOne
 
@@ -27,9 +21,6 @@
   jal setActiveAnim
 .org 0x80105540
   jal setActiveAnim
-
-.org 0x80103c68
-  jal resetEntityOrigin
 
 .org 0x80104720
   jal setMovementEnabled

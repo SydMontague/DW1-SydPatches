@@ -12,8 +12,8 @@
 ;  jal setMapObjectsFlag
 ;.org 0x800e68fc
 ;  jal setMapObjectsFlag
-.org 0x80103cd8
-  jal setMapObjectsFlag
+;.org 0x80103cd8
+;  jal setMapObjectsFlag
 
 .org 0x801058e4
   jal tickMoveObjectTo

@@ -12,7 +12,6 @@
 namespace
 {
     constexpr auto ROTATION_SPEED = 113;
-    dtl::array<uint8_t, 8> NPC_ACTIVE_ANIM;
 
     void NPCEntity_tickBattle(int32_t instanceId)
     {
@@ -276,9 +275,8 @@ namespace
         if (entity == nullptr) return;
         if (IS_IN_MENU == 1) return;
 
-        if (NPC_ACTIVE_ANIM[instanceId - 2] != 0) {
-        }
-        else if (mapDigimon->stopAnim) {
+        // vanilla checks NPC_ACTIVE_ANIM here as well, but it doesn't seem to be used properly
+        if (mapDigimon->stopAnim) {
             if (mapDigimon->animation != 0) {
                 mapDigimon->animation = 0;
                 startAnimation(entity, mapDigimon->animation);
@@ -398,14 +396,17 @@ extern "C"
 
     void setActiveAnim(uint32_t scriptId, uint8_t animId)
     {
-        // TODO figure out if this function is even useful. All callers are hardcoded to use scriptId 12
-        for (int32_t i = 0; i < 8; i++) {
-            NPCEntity* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i + 2));
-            if (entity != nullptr && entity->scriptId == scriptId) {
-                NPC_ACTIVE_ANIM[i] = animId;
-                return;
-            }
-        }
+        // In vanilla this function is always called with scriptId 12, which only applies to Poyomon during the intro
+        // and one Gekomon after being Otamamon. I couldn't see a difference in behavior when removing this code.
+        // Maybe it would make more sense then the proper script ID were to be passed.
+        return;
+        // for (int32_t i = 0; i < 8; i++) {
+        //     NPCEntity* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i + 2));
+        //     if (entity != nullptr && entity->scriptId == scriptId) {
+        //         NPC_ACTIVE_ANIM[i] = animId;
+        //         return;
+        //     }
+        // }
     }
 
     void startNPCAnimation(uint32_t scriptId, uint8_t animId)
@@ -510,7 +511,6 @@ extern "C"
             MAP_DIGIMON_TABLE[i].targetAngle       = 0;
             MAP_DIGIMON_TABLE[i].hasWaypointTarget = 0;
             MAP_DIGIMON_TABLE[i].lookAtTamerState  = 0;
-            NPC_ACTIVE_ANIM[i]                     = 0;
         }
     }
 

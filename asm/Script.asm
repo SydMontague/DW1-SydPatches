@@ -123,20 +123,20 @@
 ;  jal scriptIdToEntityId
 ;.org 0x80101fa4
 ;  jal scriptIdToEntityId
-.org 0x8010383c
-  jal scriptIdToEntityId
-.org 0x801038e0
-  jal scriptIdToEntityId
-.org 0x80103948
-  jal scriptIdToEntityId
-.org 0x801039d4
-  jal scriptIdToEntityId
-.org 0x80103aec
-  jal scriptIdToEntityId
-.org 0x80103b78
-  jal scriptIdToEntityId
-.org 0x80103c04
-  jal scriptIdToEntityId
+;.org 0x8010383c
+;  jal scriptIdToEntityId
+;.org 0x801038e0
+;  jal scriptIdToEntityId
+;.org 0x80103948
+;  jal scriptIdToEntityId
+;.org 0x801039d4
+;  jal scriptIdToEntityId
+;.org 0x80103aec
+;  jal scriptIdToEntityId
+;.org 0x80103b78
+;  jal scriptIdToEntityId
+;.org 0x80103c04
+;  jal scriptIdToEntityId
 .org 0x80104408
   jal scriptIdToEntityId
 .org 0x801045cc
