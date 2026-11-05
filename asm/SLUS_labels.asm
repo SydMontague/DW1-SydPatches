@@ -399,6 +399,19 @@
 .definelabel EFE_CURRENT_SLOT, 0x80134d0c
 .definelabel EFE_SLOT_BASE,    0x80134d10
 .definelabel EFE_FILE_CURSOR,  0x80134d14
+.definelabel EFE_FILE_BASE, 0x80134d18
+.definelabel EFE_SLOT_INDEX, 0x80134cd4
+.definelabel EFE_SUBEFFECT_INDEX, 0x80134cd0
+.definelabel EFE_SLOT_FLAGS, 0x80139ab0
+.definelabel BTL_tickEFEUVAnimation, 0x80065800
+.definelabel STD_tickEFEUVAnimation, 0x8006dee8
+.definelabel VS_tickEFEUVAnimation, 0x80063fb8
+.definelabel BTL_initializeAuraProjectiles, 0x80071048
+.definelabel STD_initializeAuraProjectiles, 0x800795e8
+.definelabel VS_initializeAuraProjectiles, 0x8006f6b8
+.definelabel BTL_removeAllAuraProjectiles, 0x800712d4
+.definelabel STD_removeAllAuraProjectiles, 0x80079874
+.definelabel VS_removeAllAuraProjectiles, 0x8006f944
 .definelabel EFE_FLASH_DATA, 0x80134cc0
 .definelabel FLASH_INSTANCE, 0x80134cc4
 .definelabel LOCAL_MAP_OBJECTS, 0x8013c060
@@ -434,7 +447,6 @@
 .definelabel BTL_initializeFinisherAuraModel, 0x8007087c
 .definelabel BTL_initializeConfusionEffect, 0x8006f3c0
 .definelabel BTL_initializeStunEffect, 0x8006fdc4
-.definelabel BTL_initializeEFEEngine, 0x8006605c
 .definelabel BTL_loadMoveEFE, 0x80066198
 .definelabel BTL_appendMoveLearnedText, 0x80062d70
 .definelabel BTL_tickBattleEndText, 0x80062f58
@@ -502,7 +514,7 @@
 .definelabel VS__addTimer, 0x8005b2fc
 .definelabel VS__addHPMPBar, 0x8006206c
 .definelabel VS__addCommandBar, 0x8005fb5c
-.definelabel VS__initializeEFEEngine, 0x80064814
+.definelabel VS__initializeEFEEngine, VS_initializeEFEEngine
 .definelabel VS__loadMoveEFE, 0x80064950
 .definelabel VS__addBattleTextIn, 0x80060a6c
 .definelabel VS__addBattleTextOut, 0x8006136c
@@ -533,8 +545,8 @@
 .definelabel VS__deinitializePoison, 0x8006d838
 .definelabel VS__deinitializeFlatBullets, 0x8006f944
 .definelabel VS__cancelActiveEffect, 0x8005d688
-.definelabel VS__unloadMoveData, 0x800649cc
-.definelabel VS__deinitializeEFEEngine, 0x8006491c
+.definelabel VS__unloadMoveData, VS_unloadAllEFESlots
+.definelabel VS__deinitializeEFEEngine, VS_removeEFEEngine
 .definelabel VS__resetDumbCooldownTimers, 0x8005e238
 .definelabel VS__tickDigimonAttackSelf, 0x8005cef8
 .definelabel VS__addFinisherBar, 0x800605d8
@@ -755,6 +767,11 @@
 .definelabel libsnd_SsSetMVol, 0x800cd8b4
 .definelabel libsnd_SsEnd, 0x800cd2cc
 .definelabel libsnd_SsQuit, 0x800cd774
+
+; Existing native SDK helpers; C++ does not copy their instruction sequences.
+.definelabel libsnd_AllocateVoice, 0x800cf1a0
+.definelabel libapi_EnterCriticalSection, 0x80090938
+.definelabel libapi_ExitCriticalSection, 0x80090948
 
 // libspu
 .definelabel libspu_SpuSetReverbModeParam, 0x800c7fe8

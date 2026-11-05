@@ -2,6 +2,8 @@
 #include "extern/dw1.hpp"
 #include "extern/stddef.hpp"
 
+struct EFESubEffect;
+
 extern "C"
 {
     void stopBGM();
@@ -22,3 +24,8 @@ extern "C"
     int32_t loadVLALL(int16_t type, uint8_t* buffer);
     int32_t loadSB();
 }
+
+void clearSoundOwners();
+EFESubEffect* getSoundOwner(uint32_t voice);
+void stopOwnedSound(uint32_t voice, EFESubEffect* owner);
+void playOwnedSound(int32_t vabId, uint32_t value, EFESubEffect* owner);

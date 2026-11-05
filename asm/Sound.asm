@@ -1,6 +1,10 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
+; Native SEQ allocation preserves its return and invalidates any earlier EFE owner.
+.org 0x800d0650
+  jal allocateSoundVoice
+
 ;.org 0x800e6bf4
 ;  jal stopBGM
 ;.org 0x800e72d0
@@ -664,16 +668,10 @@
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
 
-.org 0x80064c9c
-  jal stopSoundMask
-.org 0x80064e78
-  jal stopSoundMask
 .org 0x80058f70
   jal stopBGM
 .org 0x80059180
   jal stopBGM
-.org 0x8006bf48
-  jal playSound2
 .org 0x80058f78
   jal stopSound
 .org 0x80059188
@@ -686,9 +684,6 @@
   jal playSound
 .org 0x800591e8
   jal playSound
-.org 0x8006bf18
-  jal playSound
-
 .org 0x800591a8
   jal loadMapSounds2
 
@@ -700,14 +695,6 @@
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
 
-.org 0x80063454
-  jal stopSoundMask
-.org 0x80063630
-  jal stopSoundMask
-.org 0x8006a5f4
-  jal playSound
-.org 0x8006a624
-  jal playSound2
 .org 0x800581f0
   jal loadDigimonSounds
 .org 0x80058208
@@ -720,12 +707,6 @@
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
 .psx
 
-.org 0x8006d384
-  jal stopSoundMask
-.org 0x8006d560
-  jal stopSoundMask
-.org 0x80074554
-  jal playSound2
 .org 0x8005934c
   jal playSound
 .org 0x8005c3e0
@@ -747,8 +728,6 @@
 .org 0x8006955c
   jal playSound
 .org 0x80069658
-  jal playSound
-.org 0x80074524
   jal playSound
 .org 0x8005763c
   jal stopSound

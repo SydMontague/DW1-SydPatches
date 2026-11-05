@@ -105,8 +105,6 @@
 .org 0x800591a0
   jal getMapSoundId
   
-.org 0x80064ac8
-  jal setMapLayerEnabled
 .org 0x80066454
   j setMapLayerEnabled
 
@@ -116,8 +114,6 @@
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
 .psx
 
-.org 0x8006d1b0
-  jal setMapLayerEnabled
 .org 0x8006eb78
   j setMapLayerEnabled
 
@@ -127,8 +123,6 @@
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
 
-.org 0x80063280
-  jal setMapLayerEnabled
 .org 0x80064c48
   j setMapLayerEnabled
 

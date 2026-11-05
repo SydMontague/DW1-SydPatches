@@ -5,6 +5,7 @@ constexpr auto SS_SEQ_TABSIZ = 176;
 
 extern "C"
 {
+    int32_t libsnd_AllocateVoice();
     void libsnd_SsVabClose(uint16_t vabId);
     int16_t libsnd_SsVabOpenHeadSticky(uint8_t* addr, int16_t vabId, uint32_t sbAddr);
     int16_t libsnd_SsVabTransBody(uint8_t* addr, int16_t vabId);

@@ -1,11 +1,18 @@
 #include "Sound.hpp"
-
 #include "Files.hpp"
+#include "Sound/VoiceOwners.hpp"
 #include "extern/dw1.hpp"
+#include "extern/libapi.hpp"
 #include "extern/libetc.hpp"
 #include "extern/libsnd.hpp"
 #include "extern/libspu.hpp"
 #include "extern/stddef.hpp"
+
+namespace SoundInternal
+{
+    // Main-thread playback assigns owners; the SEQ interrupt can invalidate them.
+    dtl::array<EFESubEffect* volatile, 14> soundOwners{};
+} // namespace SoundInternal
 
 struct SoundBufferData
 {
@@ -23,6 +30,7 @@ static uint32_t freeChannelIndex;
 static dtl::array<SoundBufferData, 10> SOUND_BUFFERS;
 static uint8_t LOAD_SOUND_COMPLETE_STATE;
 
+[[gnu::optimize("Os")]]
 static uint32_t uploadSoundStart(uint8_t* buffer, int32_t param)
 {
     auto size1 = reinterpret_cast<uint32_t*>(buffer)[0];
@@ -38,6 +46,7 @@ static uint32_t uploadSoundStart(uint8_t* buffer, int32_t param)
     return true;
 }
 
+[[gnu::optimize("Os")]]
 static int32_t readVHBFile(int32_t vabId, const char* filename, uint8_t* buffer)
 {
     readFile(filename, buffer);
@@ -64,6 +73,7 @@ static void seqClose()
     SEQ_ACCESS_NUM = -1;
 }
 
+[[gnu::optimize("Os")]]
 static int32_t readVHBFileSectors(int32_t vabId,
                                   const char* filename,
                                   uint8_t* buffer,
@@ -115,6 +125,7 @@ static bool loadMusicFont(int32_t font)
     return true;
 }
 
+[[gnu::optimize("Os")]]
 static inline uint32_t getFreeChannelIndex()
 {
     for (int32_t i = 0; i < 14; i++) {
@@ -125,14 +136,16 @@ static inline uint32_t getFreeChannelIndex()
     return freeChannelIndex + 10;
 }
 
+[[gnu::optimize("Os")]]
 static uint32_t getNextFreeChannel()
 {
     auto val         = getFreeChannelIndex();
-    freeChannelIndex = (val - 9) % 14;
+    freeChannelIndex = val == 23 ? 0 : val - 9;
     return val;
 }
 
-static uint32_t startSound(int32_t vabId, int32_t prog, uint32_t note)
+[[gnu::optimize("Os")]]
+static uint32_t startSound(int32_t vabId, int32_t prog, uint32_t note, EFESubEffect* owner = nullptr)
 {
     auto header = VHB_HEADER_ADDR[vabId];
     auto mask   = 0;
@@ -140,10 +153,14 @@ static uint32_t startSound(int32_t vabId, int32_t prog, uint32_t note)
     for (int32_t i = 0; i < 16; i++) {
         if (note != header[i * 0x20 + prog * 0x200 + 0x827]) continue;
 
-        auto voice = getNextFreeChannel();
-        if (voice == 0xFFFFFFFF) return mask;
+        // Keep one allocation, key-on and owner publication together. SEQ can
+        // reuse voices between tones, while the tone search stays interruptible.
+        auto enabled = owner != nullptr ? libapi_EnterCriticalSection() : 0;
+        auto voice   = getNextFreeChannel();
 
         libsnd_SsUtKeyOnV(voice, vabId, prog, i, note, 0, 0x7F, 0x7F);
+        SoundInternal::soundOwners[voice - 10] = owner;
+        if (enabled) libapi_ExitCriticalSection();
         mask |= (1 << (voice & 0x1F));
     }
 
@@ -157,6 +174,7 @@ static int32_t getSoundBank(DigimonType type)
     return DIGIMON_VLALL_SOUND_ID[static_cast<size_t>(type)];
 }
 
+[[gnu::optimize("Os")]]
 static bool loadSoundCompleteCallback(void* para)
 {
     auto param = reinterpret_cast<uint32_t>(para);
@@ -244,10 +262,11 @@ extern "C"
         libsnd_SsQuit();
     }
 
+    [[gnu::optimize("Os")]]
     void stopSoundMask(uint32_t mask)
     {
-        for (int32_t i = 0; i < 0x18; i++) {
-            if ((mask & (1 << i)) == 0) continue;
+        for (int32_t i = 0; i < 24; ++i, mask >>= 1) {
+            if ((mask & 1) == 0) continue;
 
             libsnd_SsUtAutoVol(i, 0x7f, 0, 6);
             libsnd_SsUtKeyOffV(i);
@@ -264,6 +283,7 @@ extern "C"
         return 0;
     }
 
+    [[gnu::optimize("Os")]]
     void stopSound()
     {
         libsnd_SsUtAllKeyOff(0);
@@ -323,6 +343,7 @@ extern "C"
         return result != -1;
     }
 
+    [[gnu::optimize("Os")]]
     bool playMusic(int32_t font, int32_t track)
     {
         if (font < 1 || font > 0x21) return false;
@@ -414,6 +435,7 @@ extern "C"
         return 3;
     }
 
+    [[gnu::optimize("Os")]]
     void waitForSoundBufferLoading(int32_t param)
     {
         while (SOUND_BUFFERS[param].finishedLoading != 0)
@@ -432,4 +454,17 @@ extern "C"
                                  reinterpret_cast<void*>(8));
         return 8;
     }
+
+    int32_t allocateSoundVoice()
+    {
+        auto voice = libsnd_AllocateVoice();
+        // SEQ reuses physical voices too; an old effect must no longer stop this one.
+        if (voice >= 10 && voice < 24) SoundInternal::soundOwners[voice - 10] = nullptr;
+        return voice;
+    }
+}
+
+void playOwnedSound(int32_t vabId, uint32_t value, EFESubEffect* owner)
+{
+    startSound(vabId, value / 16, static_cast<uint8_t>((value % 16) + 60), owner);
 }
