@@ -96,17 +96,47 @@ for mode in BTL STD VS; do
         -DEFE_renderParticleEmitters=${mode}_renderParticleEmitters
 done
 
-# Shared loading and slot operations use the active overlay's script bindings.
+# Shared engine source, emitted only in its owning overlay.
 for mode in BTL STD VS; do
-    "$MIPS_CXX" EFE/Loading.cpp -o "../compiled/${mode}EFELoading.lib" $FLAGS \
-        -DEFE_loadNextFile=${mode}_loadNextEFEFile \
-        -DEFE_setupLoadedFile=${mode}_setupLoadedEFEFile \
-        -DEFE_handleLoadedFile=${mode}_handleEFEFileLoaded \
+    bindings=(
+        -DEFE_loadNextFile=${mode}_loadNextEFEFile
+        -DEFE_setupLoadedFile=${mode}_setupLoadedEFEFile
+        -DEFE_handleLoadedFile=${mode}_handleEFEFileLoaded
         -DEFE_dispatchOpcode=${mode}_dispatchEFEOpcode
-    "$MIPS_CXX" EFE/Slots.cpp -o "../compiled/${mode}EFESlots.lib" $FLAGS \
-        -DEFE_unloadSlot=${mode}_unloadEFESlot \
-        -DEFE_runSlotScript=${mode}_runEFESlotScript \
+        -DEFE_tickEngine=${mode}_tickEFEEngine
+        -DEFE_renderEngine=${mode}_renderEFEEngine
+        -DEFE_initializeEngine=${mode}_initializeEFEEngine
+        -DEFE_removeEngine=${mode}_removeEFEEngine
+        -DEFE_unloadAllSlots=${mode}_unloadAllEFESlots
+        -DEFE_unloadSlot=${mode}_unloadEFESlot
+        -DEFE_isSetupScriptActive=${mode}_isEFESetupScriptActive
+        -DEFE_quiesceLoading=${mode}_quiesceEFELoading
+        -DEFE_initializeSubOpcodes=${mode}_initializeEFESubOpcodeTable
+        -DEFE_initializeParticleEmitters=${mode}_initializeParticleEmitters
+        -DEFE_tickParticleEmitters=${mode}_tickParticleEmitters
+        -DEFE_renderParticleEmitters=${mode}_renderParticleEmitters
+        -DEFE_initializeAuraProjectiles=${mode}_initializeAuraProjectiles
+        -DEFE_removeAllAuraProjectiles=${mode}_removeAllAuraProjectiles
+        -DEFE_tickUVAnimation=${mode}_tickEFEUVAnimation
+        -DEFE_runSlotScript=${mode}_runEFESlotScript
         -DEFE_runScript=${mode}_runEFEScript
+        -DclearSoundOwners=${mode}_clearSoundOwners
+        -DgetSoundOwner=${mode}_getSoundOwner
+        -DstopOwnedSound=${mode}_stopOwnedSound
+        -DEFE_clearSoundChannels=${mode}_clearEFESoundChannels
+        -DEFE_stopSounds=${mode}_stopEFESounds
+        -DEFE_playSound=${mode}_playEFESound
+        -DEFE_tickSounds=${mode}_tickEFESounds
+        -DEFE_retireSubEffectSounds=${mode}_retireEFESubEffectSounds
+        -DEFE_initializeSubEffectInstructions=${mode}_initializeSubEffectInstructions
+    )
+    "$MIPS_CXX" EFE/Loading.cpp EFE/Frame.cpp EFE/Engine.cpp \
+        -o "../compiled/${mode}EFELifecycle.lib" $FLAGS "${bindings[@]}"
+    "$MIPS_CXX" EFE/Render.cpp -o "../compiled/${mode}EFERender.lib" $FLAGS "${bindings[@]}"
+    "$MIPS_CXX" EFE/Initialize.cpp -o "../compiled/${mode}EFEInitialize.lib" $FLAGS "${bindings[@]}"
+    "$MIPS_CXX" EFE/Sound.cpp Sound/Ownership.cpp -o "../compiled/${mode}EFESound.lib" $FLAGS "${bindings[@]}"
+    "$MIPS_CXX" EFE/Slots.cpp -o "../compiled/${mode}EFESlots.lib" $FLAGS "${bindings[@]}"
+    "$MIPS_CXX" EFE/SlotScript.cpp -o "../compiled/${mode}EFESlotScript.lib" $FLAGS "${bindings[@]}"
 done
 
 cd -

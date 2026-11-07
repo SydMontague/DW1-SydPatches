@@ -93,4 +93,6 @@ extern "C"
     void EFE_loadNextFile(EFELoading::Request* request);
     bool EFE_setupLoadedFile(void* parameter);
     bool EFE_handleLoadedFile(void* parameter);
+    bool EFE_isSetupScriptActive();
+    void EFE_quiesceLoading();
 }

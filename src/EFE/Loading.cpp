@@ -11,6 +11,7 @@ namespace
         IDLE,
         INITIALIZE,
         SCRIPT,
+        READING,
     };
     Phase phase = Phase::IDLE;
     int32_t slotIndex;
@@ -41,6 +42,7 @@ namespace
 
 extern "C"
 {
+
     [[gnu::optimize("Os")]]
     void EFE_loadNextFile(EFELoading::Request* request)
     {
@@ -65,6 +67,7 @@ extern "C"
         request->model     = acquired;
         auto location      = *getEFEDATEntry(id);
         addFileReadRequest("", acquired->mmdPtr, nullptr, EFE_handleLoadedFile, request, &location, 20480);
+        phase = Phase::READING;
     }
 
     bool EFE_handleLoadedFile(void* parameter)
@@ -78,7 +81,26 @@ extern "C"
     bool EFE_setupLoadedFile(void* parameter)
     {
         if (phase == Phase::IDLE) return false;
-        auto& request      = *static_cast<EFELoading::Request*>(parameter);
+        auto& request = *static_cast<EFELoading::Request*>(parameter);
+        if (phase == Phase::SCRIPT) {
+
+            EFE_CURRENT_SLOT = &EFE_SLOT_BASE[slotIndex];
+            int32_t count    = 0;
+            for (; count < 4; ++count) {
+                EFE_CURRENT_OPCODE = *EFE_INSTRUCTION_POINTER;
+                EFE_dispatchOpcode(EFE_CURRENT_OPCODE & 255);
+                if (EFE_INSTRUCTION_POINTER == nullptr) break;
+            }
+            if (count == 4) return true;
+            auto* sub = EFE_CURRENT_SUBEFFECT;
+            if (sub->instance->frame == -1) sub->tickInstruction = nullptr;
+            auto result                     = EFE_SCRIPT_RESULT;
+            EFE_LOADED_MOVE_DATA[slotIndex] = result >= -1 ? EFE_CURRENT_SLOT->fileId : result;
+            *request.effectIds++            = slotIndex;
+            phase                           = Phase::IDLE;
+            EFE_loadNextFile(&request);
+            return false;
+        }
         auto& model        = *request.model;
         auto* data         = model.mmdPtr;
         const auto& header = *reinterpret_cast<const EFELoading::Header*>(data);
@@ -158,26 +180,19 @@ extern "C"
                 phase                   = Phase::SCRIPT;
                 return true;
             }
-            case Phase::SCRIPT:
-            {
-                EFE_CURRENT_SLOT = &EFE_SLOT_BASE[slotIndex];
-                int32_t count    = 0;
-                for (; count < 4; ++count) {
-                    EFE_CURRENT_OPCODE = *EFE_INSTRUCTION_POINTER;
-                    EFE_dispatchOpcode(EFE_CURRENT_OPCODE & 255);
-                    if (EFE_INSTRUCTION_POINTER == nullptr) break;
-                }
-                if (count == 4) return true;
-                auto* sub = EFE_CURRENT_SUBEFFECT;
-                if (sub->instance->frame == -1) sub->tickInstruction = nullptr;
-                auto result                     = EFE_SCRIPT_RESULT;
-                EFE_LOADED_MOVE_DATA[slotIndex] = result >= -1 ? EFE_CURRENT_SLOT->fileId : result;
-                *request.effectIds++            = slotIndex;
-                EFE_loadNextFile(&request);
-                phase = Phase::IDLE;
-                return false;
-            }
             default: return false;
         }
+    }
+
+    bool EFE_isSetupScriptActive()
+    {
+        return phase == Phase::SCRIPT;
+    }
+
+    [[gnu::optimize("Os")]]
+    void EFE_quiesceLoading()
+    {
+        while (phase != Phase::IDLE)
+            tickFileReadQueue();
     }
 }
