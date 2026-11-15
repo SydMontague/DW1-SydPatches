@@ -1067,6 +1067,13 @@ extern "C"
         uint8_t colorScale;
     };
 
+    // Resident ledger shared with the retained vanilla sound commands.
+    struct EFESoundRecord
+    {
+        int32_t mask;
+        EFESubEffect* owner;
+    };
+
     struct EFEFlashData
     {
         SVector worldPos;
@@ -1871,6 +1878,11 @@ extern "C"
     extern uint32_t TRAINING_COMPLETE;
     extern uint32_t VIEWPORT_DISTANCE;
     extern uint32_t VIEWPORT_DISTANCE_COPY;
+    extern dtl::array<EFESoundRecord, 10> EFE_SOUND_RECORDS;
+    extern int32_t EFE_SLOT_INDEX;
+    extern int32_t EFE_SUBEFFECT_INDEX;
+    extern dtl::array<int16_t, 16> EFE_SLOT_FLAGS;
+    extern uint8_t* EFE_FILE_BASE;
     extern EFEFlashData* EFE_FLASH_DATA;
     extern int32_t FLASH_INSTANCE;
     extern uint8_t* EFE_DATA_STACK;
@@ -2119,6 +2131,7 @@ static_assert(sizeof(Chest) == 0x38);
 static_assert(sizeof(DroppedItem) == 0x10);
 static_assert(sizeof(TamerItem) == 0x10);
 static_assert(sizeof(ParticleFlashData) == 0x1C);
+static_assert(sizeof(EFESoundRecord) == 8);
 static_assert(sizeof(EFEFlashData) == 0x28);
 static_assert(sizeof(LocalMapObject) == 0x0E);
 static_assert(sizeof(MapObject) == 0x12);

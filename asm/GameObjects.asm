@@ -292,8 +292,6 @@
   j addObject
 .org 0x80064588
   j addObject
-.org 0x80066130
-  jal addObject
 .org 0x8006ee08
   jal addObject
 .org 0x8006f14c
@@ -334,8 +332,6 @@
   j removeObject
 .org 0x80064a78
   j removeObject
-.org 0x80066180
-  jal removeObject
 .org 0x8006ee78
   jal removeObject
 .org 0x8006f1b0
@@ -576,8 +572,6 @@
   jal addObject
 .org 0x8006ce44
   jal addObject
-.org 0x8006e818
-  jal addObject
 .org 0x800773a8
   jal addObject
 .org 0x800776ec
@@ -650,8 +644,6 @@
   j removeObject
 .org 0x8006d160
   j removeObject
-.org 0x8006e868
-  jal removeObject
 .org 0x80077418
   jal removeObject
 .org 0x80077750
@@ -811,8 +803,6 @@
   j addObject
 .org 0x80062e50
   jal addObject
-.org 0x800648e8
-  jal addObject
 .org 0x8006d478
   jal addObject
 .org 0x8006d7bc
@@ -858,8 +848,6 @@
   j removeObject
 .org 0x80063228
   j removeObject
-.org 0x80064938
-  jal removeObject
 .org 0x8006d4e8
   jal removeObject
 .org 0x8006d820

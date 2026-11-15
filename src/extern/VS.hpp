@@ -21,7 +21,7 @@ extern "C"
     void VS__addTimer(int32_t seconds);
     void VS__addHPMPBar(int32_t player);
     void VS__addCommandBar(int32_t player);
-    void VS__initializeEFEEngine(void*);
+    uint8_t* VS_initializeEFEEngine(uint8_t*);
     void VS__loadMoveEFE(int16_t* moves, int16_t* effectIds, int8_t* isLoaded);
     void VS__addBattleTextIn();
     void VS__addBattleTextOut();
@@ -52,8 +52,7 @@ extern "C"
     void VS__deinitializePoison();
     void VS__deinitializeFlatBullets();
     void VS__cancelActiveEffect(DigimonEntity* entity, FighterData* fighter);
-    void VS__unloadMoveData();
-    void VS__deinitializeEFEEngine();
+    void VS_removeEFEEngine();
     void VS__resetDumbCooldownTimers(FighterData* fighter);
     void VS__tickDigimonAttackSelf(DigimonEntity* self, DigimonEntity* other, FighterData* fighter);
     void VS__addFinisherBar(int32_t fighterId);
