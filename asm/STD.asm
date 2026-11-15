@@ -9,7 +9,14 @@
   .fill 0x8006d4f4-.
 .endarea
 
-; Keep the vanilla sound clear/stop functions between these allocations.
+; Keep the vanilla sound clear function before the replacement stop operation.
+.org 0x8006d530
+.area 0x8006d594-.
+  .importobj "compiled/STDEFESound.lib"
+  .notice "STD EFE stop sounds space left: " + (0x8006d594-.) + " bytes"
+  .fill 0x8006d594-.
+.endarea
+
 .org 0x8006d594
 .area 0x8006dee8-.
   .importobj "compiled/STDEFELifecycle.lib"

@@ -9,7 +9,14 @@
   .fill 0x80064e0c-.
 .endarea
 
-; Keep the vanilla sound clear/stop functions between these allocations.
+; Keep the vanilla sound clear function before the replacement stop operation.
+.org 0x80064e48
+.area 0x80064eac-.
+  .importobj "compiled/BTLEFESound.lib"
+  .notice "BTL EFE stop sounds space left: " + (0x80064eac-.) + " bytes"
+  .fill 0x80064eac-.
+.endarea
+
 .org 0x80064eac
 .area 0x80065800-.
   .importobj "compiled/BTLEFELifecycle.lib"

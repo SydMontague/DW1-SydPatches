@@ -401,11 +401,8 @@
 .definelabel EFE_FILE_CURSOR,  0x80134d14
 .definelabel EFE_SOUND_RECORDS, 0x80139ad0
 .definelabel BTL_clearEFESoundChannels, 0x80064e0c
-.definelabel BTL_stopEFESounds, 0x80064e48
 .definelabel STD_clearEFESoundChannels, 0x8006d4f4
-.definelabel STD_stopEFESounds, 0x8006d530
 .definelabel VS_clearEFESoundChannels, 0x800635c4
-.definelabel VS_stopEFESounds, 0x80063600
 .definelabel EFE_FILE_BASE, 0x80134d18
 .definelabel EFE_SLOT_INDEX, 0x80134cd4
 .definelabel EFE_SUBEFFECT_INDEX, 0x80134cd0
