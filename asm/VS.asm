@@ -9,7 +9,14 @@
   .fill 0x800635c4-.
 .endarea
 
-; Keep the vanilla sound clear/stop functions between these allocations.
+; Keep the vanilla sound clear function before the replacement stop operation.
+.org 0x80063600
+.area 0x80063664-.
+  .importobj "compiled/VSEFESound.lib"
+  .notice "VS EFE stop sounds space left: " + (0x80063664-.) + " bytes"
+  .fill 0x80063664-.
+.endarea
+
 .org 0x80063664
 .area 0x80063fb8-.
   .importobj "compiled/VSEFELifecycle.lib"
