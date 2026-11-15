@@ -664,8 +664,6 @@
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
 
-.org 0x80064c9c
-  jal stopSoundMask
 .org 0x80064e78
   jal stopSoundMask
 .org 0x80058f70
@@ -700,8 +698,6 @@
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
 
-.org 0x80063454
-  jal stopSoundMask
 .org 0x80063630
   jal stopSoundMask
 .org 0x8006a5f4
@@ -720,8 +716,6 @@
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
 .psx
 
-.org 0x8006d384
-  jal stopSoundMask
 .org 0x8006d560
   jal stopSoundMask
 .org 0x80074554

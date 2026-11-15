@@ -11,6 +11,7 @@ namespace
         IDLE,
         INITIALIZE,
         SCRIPT,
+        READING,
     };
     Phase phase = Phase::IDLE;
     int32_t slotIndex;
@@ -41,6 +42,7 @@ namespace
 
 extern "C"
 {
+
     [[gnu::optimize("Os")]]
     void EFE_loadNextFile(EFELoading::Request* request)
     {
@@ -65,6 +67,7 @@ extern "C"
         request->model     = acquired;
         auto location      = *getEFEDATEntry(id);
         addFileReadRequest("", acquired->mmdPtr, nullptr, EFE_handleLoadedFile, request, &location, 20480);
+        phase = Phase::READING;
     }
 
     bool EFE_handleLoadedFile(void* parameter)
@@ -78,15 +81,16 @@ extern "C"
     bool EFE_setupLoadedFile(void* parameter)
     {
         if (phase == Phase::IDLE) return false;
-        auto& request      = *static_cast<EFELoading::Request*>(parameter);
-        auto& model        = *request.model;
-        auto* data         = model.mmdPtr;
-        const auto& header = *reinterpret_cast<const EFELoading::Header*>(data);
-        auto* texture      = getSection(data, header.textureOffset, header.textureEndOffset);
-        auto* modelData    = getSection(data, header.modelOffset, header.retainedEndOffset);
-        model.modelPtr     = reinterpret_cast<TMDModel*>(modelData);
+        auto& request = *static_cast<EFELoading::Request*>(parameter);
         switch (phase) {
             case Phase::TEXTURE:
+            {
+                auto& model        = *request.model;
+                auto* data         = model.mmdPtr;
+                const auto& header = *reinterpret_cast<const EFELoading::Header*>(data);
+                auto* texture      = getSection(data, header.textureOffset, header.textureEndOffset);
+                model.modelPtr =
+                    reinterpret_cast<TMDModel*>(getSection(data, header.modelOffset, header.retainedEndOffset));
                 if (texture != nullptr) {
                     int32_t page = 0;
                     while (page < 16 && EFE_MODEL_TAKEN[page] != 0)
@@ -102,8 +106,11 @@ extern "C"
                 }
                 phase = Phase::MODEL;
                 [[fallthrough]];
+            }
             case Phase::MODEL:
-                if (modelData != nullptr) {
+            {
+                auto& model = *request.model;
+                if (model.modelPtr != nullptr) {
                     libgs_GsMapModelingData(reinterpret_cast<uint32_t*>(model.modelPtr) + 1);
                     updateTMDTextureData(model.modelPtr,
                                          model.pixelPage,
@@ -113,7 +120,10 @@ extern "C"
                 }
                 phase = Phase::FIND_SLOT;
                 [[fallthrough]];
+            }
             case Phase::FIND_SLOT:
+            {
+                const auto& header = *reinterpret_cast<const EFELoading::Header*>(request.model->mmdPtr);
                 if (header.fileId != request.moves[-1]) return rejectSetup(request, -3);
                 EFE_LOAD_STATE = -1;
                 slotIndex      = 0;
@@ -122,15 +132,19 @@ extern "C"
                 if (slotIndex == 16) return rejectSetup(request, -1);
                 phase = Phase::INITIALIZE;
                 return true;
+            }
             case Phase::INITIALIZE:
             {
-                auto& slot       = EFE_SLOT_BASE[slotIndex];
-                EFE_CURRENT_SLOT = &slot;
-                slot.model       = &model;
-                auto* base       = data + sizeof(EFELoading::Header);
+                auto& model        = *request.model;
+                auto* data         = model.mmdPtr;
+                const auto& header = *reinterpret_cast<const EFELoading::Header*>(data);
+                auto& slot         = EFE_SLOT_BASE[slotIndex];
+                EFE_CURRENT_SLOT   = &slot;
+                slot.model         = &model;
+                auto* base         = data + sizeof(EFELoading::Header);
                 EFE_FILE_CURSOR += header.retainedEndOffset + sizeof(EFELoading::Header);
                 slot.activeFile     = base;
-                slot.uvCount        = modelData == nullptr ? 0 : model.modelPtr->objectCount;
+                slot.uvCount        = model.modelPtr == nullptr ? 0 : model.modelPtr->objectCount;
                 slot.subEffectCount = header.subEffectCount;
                 slot.subEffects     = reinterpret_cast<EFESubEffect*>(base + header.subEffectOffset);
                 for (int32_t i = 0; i < header.subEffectCount; ++i)
@@ -160,6 +174,8 @@ extern "C"
             }
             case Phase::SCRIPT:
             {
+                // The interpreter owns its continuation here; no model/header
+                // preparation may overwrite state between callback slices.
                 EFE_CURRENT_SLOT = &EFE_SLOT_BASE[slotIndex];
                 int32_t count    = 0;
                 for (; count < 4; ++count) {
@@ -173,11 +189,23 @@ extern "C"
                 auto result                     = EFE_SCRIPT_RESULT;
                 EFE_LOADED_MOVE_DATA[slotIndex] = result >= -1 ? EFE_CURRENT_SLOT->fileId : result;
                 *request.effectIds++            = slotIndex;
+                phase                           = Phase::IDLE;
                 EFE_loadNextFile(&request);
-                phase = Phase::IDLE;
                 return false;
             }
             default: return false;
         }
+    }
+
+    bool EFE_isSetupScriptActive()
+    {
+        return phase == Phase::SCRIPT;
+    }
+
+    [[gnu::optimize("Os")]]
+    void EFE_finishLoading()
+    {
+        while (phase != Phase::IDLE)
+            tickFileReadQueue();
     }
 }

@@ -87,6 +87,7 @@ extern "C"
         VS_PRESS_START_BOX = 20004,
         VS_SELECT_BOX      = 20005,
         KAR                = 20006,
+        EFE_ENGINE         = 20011,
 
         NONE = 0xFFFF,
     };

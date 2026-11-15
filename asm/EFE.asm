@@ -1,13 +1,5 @@
-.open "work/DIGIMON/SLUS_010.32",0x80090000
-.psx
-
-.close
-
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
-
-.org 0x800660ec
-  jal initializeFlashData
 
 .org 0x80073328
   .word EFE_rotateVector
@@ -98,9 +90,6 @@
 
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
 .psx
-
-.org 0x8006e7d4
-  jal initializeFlashData
 
 .org 0x8007ab44
   .word EFE_rotateVector
@@ -197,9 +186,6 @@
 
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
-
-.org 0x800648a4
-  jal initializeFlashData
 
 .org 0x80070b70
   .word EFE_rotateVector

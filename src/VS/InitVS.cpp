@@ -206,8 +206,7 @@ namespace
                 reinterpret_cast<DigimonEntity*>(ENTITY_TABLE.getEntityById(COMBAT_DATA_PTR->player.entityIds[i]));
             VS__cancelActiveEffect(entity, fighter);
         }
-        VS__unloadMoveData();
-        VS__deinitializeEFEEngine();
+        VS_removeEFEEngine();
     }
 
     void VS__renderTimeoutText(int32_t)
@@ -358,7 +357,7 @@ namespace
         entityLookAtLocation(&PARTNER_ENTITY, &NPC_ENTITIES[0].posData->location);
         startAnimation(&NPC_ENTITIES[0], 33);
         entityLookAtLocation(&NPC_ENTITIES[0], &PARTNER_ENTITY.posData->location);
-        VS__initializeEFEEngine(GENERAL_BUFFER.data());
+        VS_initializeEFEEngine(GENERAL_BUFFER.data());
 
         loadMoves();
 
