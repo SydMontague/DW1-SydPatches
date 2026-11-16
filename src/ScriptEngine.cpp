@@ -1,13 +1,19 @@
 
+#include "BitsBox.hpp"
 #include "Camera.hpp"
+#include "Fade.hpp"
+#include "Files.hpp"
 #include "GameTime.hpp"
 #include "Helper.hpp"
 #include "Inventory.hpp"
 #include "ItemMenu.hpp"
 #include "Map.hpp"
 #include "MapObjects.hpp"
+#include "MeramonShake.hpp"
 #include "Model.hpp"
+#include "MonochromonMoodBubble.hpp"
 #include "NPCEntity.hpp"
+#include "NinjamonEffect.hpp"
 #include "Partner.hpp"
 #include "Script.hpp"
 #include "Sound.hpp"
@@ -17,9 +23,354 @@
 #include "constants.hpp"
 #include "extern/DGET.hpp"
 #include "extern/DOO2.hpp"
+#include "extern/EAB.hpp"
+#include "extern/TRN.hpp"
+#include "extern/TRN2.hpp"
 #include "extern/dtl/runtime_array.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libc.hpp"
+
+namespace
+{
+    int32_t routine0001020608090a0b0e122f()
+    {
+        ACTIVE_INSTRUCTION  = 100;
+        SCRIPT_STATE_2      = 0;
+        SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::NONE;
+        return 2;
+    }
+    int32_t routineUnused()
+    {
+        return 1;
+    }
+    int32_t routineSetupTraining()
+    {
+        auto station = readPStat(0xFE);
+
+        if (CURRENT_SCREEN_ID == 107 || CURRENT_SCREEN_ID == 108 || CURRENT_SCREEN_ID == 165 ||
+            CURRENT_SCREEN_ID == 99) {
+            switch (station) {
+                case 0: TRN2_setupHpTraining(CURRENT_SCREEN_ID); break;
+                case 1: TRN2_setupOffenseTraining(CURRENT_SCREEN_ID); break;
+                case 2: TRN2_setupSpeedTraining(CURRENT_SCREEN_ID); break;
+                case 3: TRN2_setupDefenseTraining(CURRENT_SCREEN_ID); break;
+                case 4: TRN2_setupMpTraining(CURRENT_SCREEN_ID); break;
+            }
+        }
+        else {
+            switch (station) {
+                case 0: TRN_setupHpTraining(CURRENT_SCREEN_ID); break;
+                case 1: TRN_setupOffenseTraining(CURRENT_SCREEN_ID); break;
+                case 2: TRN_setupSpeedTraining(CURRENT_SCREEN_ID); break;
+                case 3: TRN_setupDefenseTraining(CURRENT_SCREEN_ID); break;
+                case 4: TRN_setupMpTraining(CURRENT_SCREEN_ID); break;
+                case 5: TRN_setupBrainsTraining(CURRENT_SCREEN_ID); break;
+            }
+        }
+
+        ACTIVE_INSTRUCTION  = 100;
+        SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::NONE;
+        return 2;
+    }
+    int32_t routineRemoveItem()
+    {
+        auto item = static_cast<ItemType>(readPStat(0xFE));
+        removeItem(item, 1); // vanilla does a NONE check, but the removeItem function does that already
+        return 1;
+    }
+    int32_t routineRemoveStack()
+    {
+        auto item = static_cast<ItemType>(readPStat(0xFE));
+        removeItem(item, 99); // vanilla does a NONE check, but the removeItem function does that already
+        return 1;
+    }
+    int32_t routineCreateBitsBox()
+    {
+        createShopBitsBox(1);
+        return 1;
+    }
+    int32_t routineCloseBitBox()
+    {
+        triggerBoxCloseFlag(2);
+        return 2;
+    }
+    int32_t routineSetDirtCartModel()
+    {
+        setDirtCartModel(readPStat(0xFE));
+        return 2;
+    }
+    int32_t routineDecreaseDirtPileSize()
+    {
+        decreaseDirtPileSize();
+        return 2;
+    }
+    int32_t routineResetMapObjectAnimation()
+    {
+        resetMapObjectAnimation(readPStat(0xF7), readPStat(0xF8));
+        return 2;
+    }
+    int32_t routineTournamentMedalConditions()
+    {
+        // in vanilla this is leftover code that is duplicated elsewhere
+        // removing this fixes the ability to get the 100 tournament won medal by winning just 100 battles
+        return 1;
+    }
+    int32_t routine17182532()
+    {
+        ACTIVE_INSTRUCTION  = 100;
+        SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::NONE;
+        return 2;
+    }
+    int32_t routineSetTimespeed()
+    {
+        TIMESPEED = readPStat(0xFE);
+        return 1;
+    }
+    int32_t routineLoadDirtCartModel()
+    {
+        loadDirtCartModel();
+        return 1;
+    }
+    int32_t routineLoadDirtPileModel()
+    {
+        loadDirtPileModel();
+        return 1;
+    }
+    int32_t routineCreateMonochromonBubble()
+    {
+        createMonochromonMoodBubble();
+        return 1;
+    }
+    int32_t routineOpenEggSelection()
+    {
+        DOO2_openEggBox();
+        ACTIVE_INSTRUCTION  = 100;
+        SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::NONE;
+        return 2;
+    }
+    int32_t routineResetShopVariable()
+    {
+        SHOP_VARIABLE = 0;
+        return 1;
+    }
+    int32_t routineAddToShopVariable()
+    {
+        auto value = static_cast<int16_t>((readPStat(0xF3) << 8) + readPStat(0xF4));
+        SHOP_VARIABLE += value;
+        return 1;
+    }
+    int32_t routineInitializeNamingBuffer()
+    {
+        auto mode = readPStat(0xFE);
+        initializeNamingBuffer(mode);
+        return 2;
+    }
+    int32_t routineRegisterBugTournament()
+    {
+        setTrigger(0x25);
+        setTrigger(0x26);
+        setTrigger(0x27);
+
+        writePStat(2, DAY == 22 ? 22 : 149);
+        writePStat(3, 22);
+        writePStat(4, static_cast<uint8_t>(PARTNER_ENTITY.type));
+        return 1;
+    }
+    int32_t routineCreateMeramonShake()
+    {
+        createMeramonShake();
+        return 1;
+    }
+    int32_t routineLoadShopLibrary()
+    {
+        // SHOP_REL is never actually used
+        return 1;
+    }
+    int32_t routineReadMapTFS()
+    {
+        readMapTFS(CURRENT_SCREEN_ID);
+        return 1;
+    }
+    int32_t routineCreateNinjamonEffect()
+    {
+        createNinjamonEffect();
+        return 1;
+    }
+    int32_t routineLoadTrainingLibrary()
+    {
+        loadTrainingLibrary(CURRENT_SCREEN_ID);
+        return 1;
+    }
+    int32_t routineStartMachinedramonSpawn()
+    {
+        isSoundLoaded(0, 8);
+        EAB_startBuildup(ENTITY_TABLE.getEntityById(scriptIdToEntityId(5)));
+        return 1;
+    }
+    int32_t routineSpawnGearbox()
+    {
+        spawnGearbox();
+        return 1;
+    }
+    int32_t routineSomethingToyTown()
+    {
+        auto val = readPStat(0xFE);
+        somethingToyTown(val);
+        return 1;
+    }
+    int32_t routineSpawnToyTownBoxes()
+    {
+        spawnToyTownBoxes();
+        return 1;
+    }
+    int32_t routineOpenToyTownBox()
+    {
+        auto box = readPStat(0xFE);
+        openToyTownBox(box);
+        return 1;
+    }
+    int32_t routineFadeToWhite()
+    {
+        auto frames = readPStat(0xFE);
+        fadeToWhite(frames);
+        return 1;
+    }
+    int32_t routineFadeFromWhite()
+    {
+        auto frames = readPStat(0xFE);
+        fadeFromWhite(frames);
+        return 1;
+    }
+    int32_t routineOpenSaveMachine()
+    {
+        openSaveMachine();
+        ACTIVE_INSTRUCTION  = 100;
+        SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::NONE;
+        return 2;
+    }
+    int32_t routineSpawnAngemonPedestal()
+    {
+        spawnAngemonPedestal();
+        return 1;
+    }
+
+    int32_t routineLoadMachinedramonSpawn()
+    {
+        addFileReadRequestPath("\\ETCHI\\BOSS_EFE.TMD", &EAB_MODEL_BUFFER, nullptr, nullptr, nullptr);
+        loadDynamicLibrary(Overlay::EAB_REL, nullptr, false, nullptr, nullptr);
+        readVBALLSection(5, 0x73);
+        loadMapSounds2(21);
+        return 1;
+    }
+    int32_t routineLoadEnding()
+    {
+        loadTextureFile("\\ETCHI\\OP.TIM", nullptr, nullptr);
+        loadDynamicLibrary(Overlay::ENDI_REL, nullptr, true, nullptr, nullptr);
+        loadMapSounds2(20);
+        return 1;
+    }
+    int32_t routineStartEnding()
+    {
+        isSoundLoaded(false, 8);
+        Tamer_setState(16);
+        SOME_SCRIPT_SYNC_BIT = 0;
+        ACTIVE_INSTRUCTION   = 100;
+        SCRIPT_TEXTBOX_MODE  = ScriptTextboxMode::NONE;
+        return 2;
+    }
+    int32_t routineGameClearSave()
+    {
+        gameClearSave();
+        ACTIVE_INSTRUCTION  = 100;
+        SCRIPT_TEXTBOX_MODE = ScriptTextboxMode::NONE;
+        return 2;
+    }
+    int32_t routineSetAnimLoopToOne()
+    {
+        auto val = readPStat(0xFE);
+        setLoopCountToOne(val);
+        return 2;
+    }
+    int32_t routineStoreShopVariable()
+    {
+        writePStat(0xF3, SHOP_VARIABLE >> 8);
+        writePStat(0xF4, SHOP_VARIABLE % 256);
+        return 1;
+    }
+
+    using ScriptRoutineFn = int32_t (*)();
+    dtl::array<ScriptRoutineFn, 57> ROUTINE_OPS{{
+        routine0001020608090a0b0e122f,
+        routine0001020608090a0b0e122f,
+        routine0001020608090a0b0e122f,
+        routineUnused,
+        routineUnused,
+        routineUnused,
+        routine0001020608090a0b0e122f,
+        routineSetupTraining,
+        routine0001020608090a0b0e122f,
+        routine0001020608090a0b0e122f,
+        routine0001020608090a0b0e122f,
+        routine0001020608090a0b0e122f,
+        routineRemoveItem,
+        routineRemoveStack,
+        routine0001020608090a0b0e122f,
+        routineCreateBitsBox,
+        routineCloseBitBox,
+        routineUnused,
+        routine0001020608090a0b0e122f,
+        routineSetDirtCartModel,
+        routineDecreaseDirtPileSize,
+        routineResetMapObjectAnimation,
+        routineTournamentMedalConditions,
+        routine17182532,
+        routine17182532,
+        routineSetTimespeed,
+        routineLoadDirtCartModel,
+        routineLoadDirtPileModel,
+        routineCreateMonochromonBubble,
+        routineOpenEggSelection,
+        routineResetShopVariable,
+        routineAddToShopVariable,
+        routineInitializeNamingBuffer,
+        routineRegisterBugTournament,
+        routineCreateMeramonShake,
+        routineLoadShopLibrary,
+        routineReadMapTFS,
+        routine17182532,
+        routineCreateNinjamonEffect,
+        routineLoadTrainingLibrary,
+        routineStartMachinedramonSpawn,
+        routineSpawnGearbox,
+        routineSomethingToyTown,
+        routineSpawnToyTownBoxes,
+        routineOpenToyTownBox,
+        routineFadeToWhite,
+        routineFadeFromWhite,
+        routine0001020608090a0b0e122f,
+        routineOpenSaveMachine,
+        routineSpawnAngemonPedestal,
+        routine17182532,
+        routineLoadMachinedramonSpawn,
+        routineLoadEnding,
+        routineStartEnding,
+        routineGameClearSave,
+        routineSetAnimLoopToOne,
+        routineStoreShopVariable,
+    }};
+
+    int32_t callRoutine(uint32_t)
+    {
+        auto routine   = readScriptUByte();
+        SCRIPT_PARAM_1 = routine;
+
+        if (routine >= ROUTINE_OPS.size()) return 1;
+
+        auto result = ROUTINE_OPS[routine]();
+        return result;
+    }
+
+} // namespace
 
 namespace
 {
@@ -862,7 +1213,10 @@ namespace
                     rollCardPack();
                 break;
             case 18: DGET_initTournamentSchedule(); break;
-            case 22: scriptCheckTournamentMedal(); break;
+            case 22:
+                // in vanilla this is leftover code that is duplicated elsewhere
+                // removing this fixes the ability to get the 100 tournament won medal by winning just 100 battles
+                break;
             case 23:
                 if (tickOpenChestTray(readPStat(0xFE))) ACTIVE_INSTRUCTION = 0;
                 break;
@@ -1017,7 +1371,7 @@ namespace
         invalidOpcode,
         invalidOpcode,
         invalidOpcode,
-        wrapper<scriptInstruction64to7E>,
+        callRoutine,
         wrapper<scriptInstruction64to7E>,
         wrapper<scriptInstruction64to7E>,
         wrapper<scriptInstruction64to7E>,

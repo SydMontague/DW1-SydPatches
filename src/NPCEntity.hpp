@@ -11,4 +11,5 @@ extern "C"
     bool scriptSetDigimon(DigimonType digimonId, int32_t actorId, uint8_t autoTalk);
     void scriptUnloadEntity(int32_t entityId);
     void resetEntityOrigin(uint32_t scriptId);
+    void setLoopCountToOne(uint32_t scriptId);
 }

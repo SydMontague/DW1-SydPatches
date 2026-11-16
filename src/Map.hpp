@@ -44,4 +44,5 @@ extern "C"
     bool tickRemoveMist();
     void loadMap(uint32_t mapId);
     void setupMap();
+    void resetMapObjectAnimation(int32_t start, int32_t count);
 }

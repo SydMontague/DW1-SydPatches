@@ -44,6 +44,8 @@
 .definelabel resetBGM,                  0x801064f0
 .definelabel scriptIfInstruction,       0x801050c0
 .definelabel scriptLoadModel,           0x801069c0
+.definelabel openSaveMachine,           0x8011381c
+.definelabel gameClearSave,             0x801139ac
 
 .definelabel SCRIPT_SECTION_IS_EVENT, 0x80134fe0
 .definelabel SCRIPT_TEXTBOX_SPEAKER_MODE, 0x80135000
@@ -478,11 +480,27 @@
 .definelabel BTL_BUFF_MODEL, 0x80055328
 .definelabel BTL_END_BOX_TEXTBUFFER, 0x80073ea0
 
+// TRN_REL
+.definelabel TRN_setupHpTraining, 0x8008aaf0
+.definelabel TRN_setupOffenseTraining, 0x8008b5e8
+.definelabel TRN_setupSpeedTraining, 0x8008ca04
+.definelabel TRN_setupDefenseTraining, 0x8008c068
+.definelabel TRN_setupMpTraining, 0x8008b0d0
+.definelabel TRN_setupBrainsTraining, 0x8008ce90
+
+// TRN2_REL
+.definelabel TRN2_setupHpTraining, 0x80089134
+.definelabel TRN2_setupOffenseTraining, 0x80089a6c
+.definelabel TRN2_setupSpeedTraining, 0x8008a654
+.definelabel TRN2_setupDefenseTraining, 0x8008a00c
+.definelabel TRN2_setupMpTraining, 0x800896b4
+
 // DGET_REL
 .definelabel DGET_initTournamentSchedule, 0x80081a80
 
 // DOO2_REL
 .definelabel DOO2_tickEggInput, 0x80071934
+.definelabel DOO2_openEggBox, 0x8007189c
 
 // EVL_REL
 .definelabel EVL_initEvoSequence, 0x8006309c
@@ -495,6 +513,9 @@
 
 // EAB_REL
 .definelabel EaB_tick, 0x80061530
+.definelabel EAB_startBuildup, 0x8006148c
+
+.definelabel EAB_MODEL_BUFFER, 0x80058000
 
 // FISH_REL
 .definelabel FISH_loadFishing, 0x80079a38

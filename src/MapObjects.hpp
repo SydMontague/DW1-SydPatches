@@ -10,4 +10,14 @@ extern "C"
     bool tickCloseChestTray(uint32_t chestId);
     void initializeChest();
     bool moveAngemonPedestal();
+    void decreaseDirtPileSize();
+    void moveBoulder(int32_t diffX, int32_t diffZ);
+    void openToyTownBox(int8_t boxId);
+    void somethingToyTown(int8_t boxId);
+    void setDirtCartModel(int32_t model);
+    void loadDirtPileModel();
+    void loadDirtCartModel();
+    void spawnGearbox();
+    void spawnToyTownBoxes();
+    void spawnAngemonPedestal();
 }

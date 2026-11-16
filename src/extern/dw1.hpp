@@ -2054,6 +2054,8 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void openSaveMachine();
+    void gameClearSave();
     void scriptLoadModel(DigimonType type);
     void scriptIfInstruction();
     void pushScriptStack(ScriptStackEntry* data);
