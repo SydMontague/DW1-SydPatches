@@ -156,4 +156,5 @@ extern "C"
     void setFileReadCallback2(FileCallback callback, void* param);
     void initializeFileReadQueue();
     void loadStackedTIMFile(const char* file);
+    void loadTrainingLibrary(int32_t map);
 }
