@@ -63,20 +63,15 @@
 .endarea
 
 .org 0x800760ec
-.area 0x80076634-.
+.area 0x80076c58-.
   .importobj "compiled/STDEFEAddressOperand.lib"
   .importobj "compiled/STDEFEDispatch.lib"
   .importobj "compiled/STDEFEIndexedOperand.lib"
   .importobj "compiled/STDEFEControl.lib"
-  .notice "STD EFE operands and control space left: " + (0x80076634-.) + " bytes"
-  .fill 0x80076634-.
-.endarea
-
-.org 0x80076700
-.area 0x800769ec-.
   .importobj "compiled/STDEFEOperands.lib"
-  .notice "STD EFE basic operands space left: " + (0x800769ec-.) + " bytes"
-  .fill 0x800769ec-.
+  .importobj "compiled/STDEFEArithmetic.lib"
+  .notice "STD EFE operands, control and arithmetic space left: " + (0x80076c58-.) + " bytes"
+  .fill 0x80076c58-.
 .endarea
 
 .org 0x80076c58
@@ -93,6 +88,12 @@
   .fill 0x800772c4-.
 .endarea
 
+.org 0x8007ae68
+.area 0x8007af08-.
+  .notice "STD retired EFE operator table space left: " + (0x8007af08-.) + " bytes"
+  .fill 0x8007af08-.
+.endarea
+
 ; STD_addParticleEmitter
 .org 0x8007ab9c
   .word STD_addParticleEmitter
@@ -100,6 +101,10 @@
 ; STD_initializeEFEEngine
 .org 0x8005f074
   jal STD_initializeEFEEngine
+
+; STD_applyEFEVariableOperator
+.org 0x8007ae30
+  .word STD_applyEFEVariableOperator
 
 ; STD_loadNextEFEFile
 .org 0x8006e8dc

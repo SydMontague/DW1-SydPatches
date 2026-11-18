@@ -63,20 +63,15 @@
 .endarea
 
 .org 0x8006db10
-.area 0x8006e058-.
+.area 0x8006e67c-.
   .importobj "compiled/BTLEFEAddressOperand.lib"
   .importobj "compiled/BTLEFEDispatch.lib"
   .importobj "compiled/BTLEFEIndexedOperand.lib"
   .importobj "compiled/BTLEFEControl.lib"
-  .notice "BTL EFE operands and control space left: " + (0x8006e058-.) + " bytes"
-  .fill 0x8006e058-.
-.endarea
-
-.org 0x8006e124
-.area 0x8006e410-.
   .importobj "compiled/BTLEFEOperands.lib"
-  .notice "BTL EFE basic operands space left: " + (0x8006e410-.) + " bytes"
-  .fill 0x8006e410-.
+  .importobj "compiled/BTLEFEArithmetic.lib"
+  .notice "BTL EFE operands, control and arithmetic space left: " + (0x8006e67c-.) + " bytes"
+  .fill 0x8006e67c-.
 .endarea
 
 .org 0x8006e67c
@@ -93,9 +88,19 @@
   .fill 0x8006ed24-.
 .endarea
 
+.org 0x8007364c
+.area 0x800736ec-.
+  .notice "BTL retired EFE operator table space left: " + (0x800736ec-.) + " bytes"
+  .fill 0x800736ec-.
+.endarea
+
 ; BTL_addParticleEmitter
 .org 0x80073380
   .word BTL_addParticleEmitter
+
+; BTL_applyEFEVariableOperator
+.org 0x80073614
+  .word BTL_applyEFEVariableOperator
 
 ; BTL_loadNextEFEFile
 .org 0x800661d0

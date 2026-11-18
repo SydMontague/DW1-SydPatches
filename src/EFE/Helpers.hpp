@@ -9,9 +9,14 @@ namespace EFEHelpers
         return *reinterpret_cast<const volatile T*>(address);
     }
 
+    template<class T> static inline void writeMemory(auto address, T value)
+    {
+        *reinterpret_cast<volatile T*>(address) = value;
+    }
+
     static inline void writeWord(auto address, uint32_t value)
     {
-        *reinterpret_cast<volatile uint32_t*>(address) = value;
+        writeMemory<uint32_t>(address, value);
     }
 
     static inline int32_t getWord(int32_t index)
@@ -35,5 +40,15 @@ namespace EFEHelpers
         if (width == 0x400) return readMemory<int32_t>(address);
         if (width == 0x200) return readMemory<int16_t>(address);
         return readMemory<int8_t>(address);
+    }
+
+    static inline void writeVariable(uint32_t address, int32_t width, uint32_t value)
+    {
+        if (width == 0x400)
+            writeWord(address, value);
+        else if (width == 0x200)
+            writeMemory<uint16_t>(address, value);
+        else
+            writeMemory<uint8_t>(address, value);
     }
 } // namespace EFEHelpers

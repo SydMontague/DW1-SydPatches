@@ -65,7 +65,7 @@ FLAGS="-O3 -std=c++23 -T linker.ld -mabi=32 -march=r3000 -r -mel -nostdlib -mexp
 
 "$MIPS_CXX" MOV/Movie.cpp -o ../compiled/MOV.lib $FLAGS
 
-# Native entries use the three disjoint operand regions in each owning overlay.
+# Native operand entries are emitted into their owning overlay.
 "$MIPS_CXX" BTL/EFEOperands.cpp -o ../compiled/BTLEFEOperands.lib $FLAGS
 "$MIPS_CXX" BTL/EFEIndexedOperand.cpp -o ../compiled/BTLEFEIndexedOperand.lib $FLAGS
 "$MIPS_CXX" BTL/EFEAddressOperand.cpp -o ../compiled/BTLEFEAddressOperand.lib $FLAGS
@@ -98,6 +98,8 @@ done
 
 # Shared engine source, emitted only in its owning overlay.
 for mode in BTL STD VS; do
+    "$MIPS_CXX" EFE/Arithmetic.cpp -o "../compiled/${mode}EFEArithmetic.lib" $FLAGS \
+        -DEFE_applyVariableOperator=${mode}_applyEFEVariableOperator
     bindings=(
         -DEFE_loadNextFile=${mode}_loadNextEFEFile
         -DEFE_setupLoadedFile=${mode}_setupLoadedEFEFile
