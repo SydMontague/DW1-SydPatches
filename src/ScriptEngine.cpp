@@ -35,6 +35,171 @@
 
 namespace
 {
+    int32_t dateToSeconds(int32_t year, int32_t day, int32_t hour, int32_t minute)
+    {
+        return ((((year * 30) + day) * 24) + hour) * 60 + minute;
+    }
+
+    bool compareValue(uint32_t mode, int32_t val1, int32_t val2)
+    {
+        switch (mode) {
+            case 0: return val1 == val2;
+            case 1: return val1 != val2;
+            case 2: return val1 >= val2;
+            case 3: return val1 <= val2;
+            case 4: return val1 > val2;
+            case 5: return val1 < val2;
+        }
+        return false;
+    }
+
+    void scriptCompareDate()
+    {
+        auto stat        = readScriptUByte();
+        auto trigger     = readScriptUShort();
+        auto compareMode = readScriptUByte();
+        auto inputYear   = readScriptUByte();
+        auto inputDay    = readScriptUByte();
+        auto inputHour   = readScriptUByte();
+        auto inputMinute = readScriptUByte();
+        readScriptUByte(); // unused;
+
+        auto storedYear   = readPStat((stat + 0) % 256);
+        auto storedDay    = readPStat((stat + 1) % 256);
+        auto storedHour   = readPStat((stat + 2) % 256);
+        auto storedMinute = readPStat((stat + 3) % 256);
+
+        auto storedDate = dateToSeconds(storedYear, storedDay, storedHour, storedMinute);
+        auto inputDate  = dateToSeconds(inputYear, inputDay, inputHour, inputMinute);
+
+        if (compareValue(compareMode, storedDate, inputDate))
+            setTrigger(trigger);
+        else
+            unsetTrigger(trigger);
+    }
+
+    uint32_t scriptCompareStat()
+    {
+        auto stat         = static_cast<ScriptStats>(readScriptUByte());
+        auto mode         = readScriptUByte();
+        int32_t statValue = *getStatsPointer(stat);
+        auto scriptValue  = readScriptShort();
+        return compareValue(mode, statValue, scriptValue);
+    }
+
+    int32_t scriptCompareCard()
+    {
+        auto cardId      = readScriptUByte();
+        auto mode        = readScriptUByte();
+        auto scriptValue = readScriptShort();
+        auto amount      = getCardAmount(cardId);
+        return compareValue(mode, amount, scriptValue);
+    }
+
+    int32_t scriptCompareMove()
+    {
+        auto moveId = readScriptUByte();
+        auto mode   = readScriptUByte();
+        auto val    = hasMove(moveId);
+        return mode == 0 ? val : !val;
+    }
+
+    int32_t scriptCompareCondition()
+    {
+        auto value = readScriptUByte();
+        auto mode  = readScriptUByte();
+
+        if (mode == 0)
+            return (PARTNER_PARA.condition.raw & value) != 0;
+        else
+            return (PARTNER_PARA.condition.raw & value) == 0;
+    }
+
+    int32_t scriptCompareItemCount()
+    {
+        auto itemId      = static_cast<ItemType>(readScriptUByte());
+        auto mode        = readScriptUByte();
+        auto scriptValue = readScriptShort();
+        auto amount      = getItemCount(itemId);
+        return compareValue(mode, amount, scriptValue);
+    }
+
+    int32_t scriptCompareMoney()
+    {
+        readScriptUByte(); // unused
+        auto mode   = readScriptUByte();
+        auto amount = readScriptInt();
+
+        return compareValue(mode, MONEY, amount);
+    }
+
+    void scriptIfInstruction()
+    {
+        auto final = false;
+        while (true) {
+            auto op = readScriptUByte();
+            readScriptUByte();
+
+            if (op == 0x19) return;
+
+            bool result = false;
+            auto opCode = (op & 0x38) >> 3;
+            auto comp   = op & 7;
+
+            switch (opCode) {
+                case 0: // 0x00 if trigger
+                {
+                    auto trigger = readScriptUShort();
+                    result       = isTriggerSet(trigger) != static_cast<bool>(comp);
+                    break;
+                }
+                case 1: // 0x08 if pstat
+                {
+                    auto stat  = readScriptUByte();
+                    auto value = readScriptUByte();
+                    result     = compareValue(comp, readPStat(stat), value);
+                    break;
+                }
+                case 2: // 0x10 jump if
+                {
+                    auto val = readScriptUShort();
+                    if (!final) continue;
+                    SCRIPT_POINTER = ACTIVE_SCRIPT + val;
+                    return;
+                }
+                case 3: // 0x18 jump if not
+                {
+                    auto val = readScriptUShort();
+                    if (final) continue;
+                    SCRIPT_POINTER = ACTIVE_SCRIPT + val;
+                    return;
+                }
+                case 4: // 0x20 special compare
+                {
+                    switch (comp) {
+                        case 0: result = scriptCompareStat(); break;
+                        case 1: result = scriptCompareCard(); break;
+                        case 2: result = scriptCompareMove(); break;
+                        case 3: result = scriptCompareCondition(); break;
+                        case 4: result = scriptCompareItemCount(); break;
+                        case 5: result = scriptCompareMoney(); break;
+                    }
+                    break;
+                }
+            }
+
+            if ((op & 0x80) != 0)
+                final = (final && result);
+            else if ((op & 0x40) != 0)
+                final = (final || result);
+            else
+                final = result;
+        }
+    }
+} // namespace
+
+namespace
+{
     int32_t routine0001020608090a0b0e122f()
     {
         ACTIVE_INSTRUCTION  = 100;
@@ -377,10 +542,6 @@ namespace
 
 namespace
 {
-    int32_t dateToSeconds(int32_t year, int32_t day, int32_t hour, int32_t minute)
-    {
-        return ((((year * 30) + day) * 24) + hour) * 60 + minute;
-    }
     void secondsToDate(int32_t seconds, uint8_t* year, uint8_t* day, uint8_t* hour, uint8_t* minute)
     {
         seconds = dtl::min(seconds, 11015999); // 255 years
@@ -1308,11 +1469,11 @@ namespace
         return 1;
     }
 
-    void scriptIf(uint32_t)
+    int32_t scriptIf(uint32_t)
     {
         readScriptUByte();
         scriptIfInstruction();
-        libc_longjmp(&SCRIPT_SAVE_STATE, 1); // return 1;
+        return 1;
     }
 
     int32_t scriptShowTextbox(uint32_t)
@@ -1621,7 +1782,7 @@ namespace
         jumpTo,
         jumpToFile,
         scriptSwitch,
-        wrapper<scriptIf>,
+        scriptIf,
         scriptShowTextbox,
         sciprtSetDialogOwner,
         scriptSetTrigger,

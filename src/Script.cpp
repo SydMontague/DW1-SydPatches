@@ -97,73 +97,10 @@ namespace
         return strlen(name);
     }
 
-    int32_t dateToSeconds(int32_t year, int32_t day, int32_t hour, int32_t minute)
-    {
-        return ((((year * 30) + day) * 24) + hour) * 60 + minute;
-    }
-
-    bool compareValue(uint32_t mode, int32_t val1, int32_t val2)
-    {
-        switch (mode) {
-            case 0: return val1 == val2;
-            case 1: return val1 != val2;
-            case 2: return val1 >= val2;
-            case 3: return val1 <= val2;
-            case 4: return val1 > val2;
-            case 5: return val1 < val2;
-        }
-        return false;
-    }
 } // namespace
 
 extern "C"
 {
-    int32_t scriptCompareCard()
-    {
-        auto cardId      = readScriptUByte();
-        auto mode        = readScriptUByte();
-        auto scriptValue = readScriptShort();
-        auto amount      = getCardAmount(cardId);
-        return compareValue(mode, amount, scriptValue);
-    }
-
-    int32_t scriptCompareMove()
-    {
-        auto moveId = readScriptUByte();
-        auto mode   = readScriptUByte();
-        auto val    = hasMove(moveId);
-        return mode == 0 ? val : !val;
-    }
-
-    int32_t scriptCompareCondition()
-    {
-        auto value = readScriptUByte();
-        auto mode  = readScriptUByte();
-
-        if (mode == 0)
-            return (PARTNER_PARA.condition.raw & value) != 0;
-        else
-            return (PARTNER_PARA.condition.raw & value) == 0;
-    }
-
-    int32_t scriptCompareItemCount()
-    {
-        auto itemId      = static_cast<ItemType>(readScriptUByte());
-        auto mode        = readScriptUByte();
-        auto scriptValue = readScriptShort();
-        auto amount      = getItemCount(itemId);
-        return compareValue(mode, amount, scriptValue);
-    }
-
-    int32_t scriptCompareMoney()
-    {
-        readScriptUByte(); // unused
-        auto mode   = readScriptUByte();
-        auto amount = readScriptInt();
-
-        return compareValue(mode, MONEY, amount);
-    }
-
     int16_t enforceStatsLimits(ScriptStats type, int16_t value)
     {
         dtl::array<int16_t, 22> LIMITS{999, 999, 999, 999,  9999, 9999, 9999, 9999, 100, 100, 999,
@@ -205,40 +142,6 @@ extern "C"
         }
 
         return nullptr;
-    }
-
-    uint32_t scriptCompareStat()
-    {
-        auto stat         = static_cast<ScriptStats>(readScriptUByte());
-        auto mode         = readScriptUByte();
-        int32_t statValue = *getStatsPointer(stat);
-        auto scriptValue  = readScriptShort();
-        return compareValue(mode, statValue, scriptValue);
-    }
-
-    void scriptCompareDate()
-    {
-        auto stat        = readScriptUByte();
-        auto trigger     = readScriptUShort();
-        auto compareMode = readScriptUByte();
-        auto inputYear   = readScriptUByte();
-        auto inputDay    = readScriptUByte();
-        auto inputHour   = readScriptUByte();
-        auto inputMinute = readScriptUByte();
-        readScriptUByte(); // unused;
-
-        auto storedYear   = readPStat(stat);
-        auto storedDay    = readPStat(stat);
-        auto storedHour   = readPStat(stat);
-        auto storedMinute = readPStat(stat);
-
-        auto storedDate = dateToSeconds(storedYear, storedDay, storedHour, storedMinute);
-        auto inputDate  = dateToSeconds(inputYear, inputDay, inputHour, inputMinute);
-
-        if (compareValue(compareMode, storedDate, inputDate))
-            setTrigger(trigger);
-        else
-            unsetTrigger(trigger);
     }
 
     uint8_t scriptIdToEntityId(uint8_t scriptId)

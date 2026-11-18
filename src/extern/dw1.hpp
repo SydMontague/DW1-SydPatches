@@ -2059,7 +2059,6 @@ extern "C"
     void openSaveMachine();
     void gameClearSave();
     void scriptLoadModel(DigimonType type);
-    void scriptIfInstruction();
     void pushScriptStack(ScriptStackEntry* data);
     void popScriptStack(ScriptStackEntry* data);
     void resetBGM();

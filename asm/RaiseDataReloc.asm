@@ -1,15 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-;.org 0x800bf040
-;  li v0,RAISE_DATA
-;.org 0x800d61e4
-;  li v0,RAISE_DATA+0x13
-.org 0x80105354
-  li v0,RAISE_DATA+0x08
-.org 0x80105394
-  li v0,RAISE_DATA+0x09
-
 .close
 
 .open "work/DIGIMON/TRN_REL.BIN",0x80088800

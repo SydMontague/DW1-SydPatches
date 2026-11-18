@@ -25,8 +25,8 @@
 ;  jal readMapTFS
 ;.org 0x801042f0
 ;  jal readMapTFS
-.org 0x80104fd8
-  jal readMapTFS
+;.org 0x80104fd8
+;  jal readMapTFS
 .org 0x8010c1fc
   jal readMapTFS
 
