@@ -1,4 +1,5 @@
 #pragma once
+#include "extern/dw1.hpp"
 #include "extern/stddef.hpp"
 
 extern "C"
@@ -20,4 +21,6 @@ extern "C"
     void spawnGearbox();
     void spawnToyTownBoxes();
     void spawnAngemonPedestal();
+    void spawnChest(int32_t posX, int32_t posY, int32_t posZ, int16_t rotation, ItemType item, uint16_t trigger);
+    void spawnBoulder();
 }

@@ -1,9 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x80104618
-  jal startBattle
-
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

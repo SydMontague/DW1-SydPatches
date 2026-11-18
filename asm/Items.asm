@@ -11,10 +11,10 @@
 ;  jal removeItem
 ;.org 0x80102eb0
 ;  jal removeItem
-.org 0x8010407c
-  jal removeItem
-.org 0x801040a8
-  jal removeItem
+;.org 0x8010407c
+;  jal removeItem
+;.org 0x801040a8
+;  jal removeItem
 .org 0x80108840
   jal removeItem
 .org 0x80108a44

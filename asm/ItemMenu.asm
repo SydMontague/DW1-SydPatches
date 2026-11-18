@@ -100,8 +100,8 @@
 
 ;.org 0x800fc668
 ;  jal createShopBitsBox
-.org 0x801040b8
-  jal createShopBitsBox
+;.org 0x801040b8
+;  jal createShopBitsBox
 .org 0x8010b730
   jal createShopBitsBox
 .org 0x8010bcfc

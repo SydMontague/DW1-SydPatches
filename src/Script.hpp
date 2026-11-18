@@ -25,6 +25,7 @@ extern "C"
     void scriptShowSelection();
     void scriptCompareDate();
     int16_t* getStatsPointer(ScriptStats stat);
+    void handleItemLoss();
 }
 
 void triggerSeadramonCutscene();

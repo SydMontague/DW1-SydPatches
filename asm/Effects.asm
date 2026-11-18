@@ -1,9 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x801042cc
-  jal createMeramonShake
-
 ;.org 0x800e9e30
 ;  jal translateConditionFXToEntity
 ;.org 0x800ec684

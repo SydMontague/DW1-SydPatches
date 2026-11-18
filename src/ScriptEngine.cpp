@@ -1,8 +1,11 @@
 
+#include "Battle.h"
 #include "BitsBox.hpp"
 #include "Camera.hpp"
+#include "Entity.hpp"
 #include "Fade.hpp"
 #include "Files.hpp"
+#include "GameObjects.hpp"
 #include "GameTime.hpp"
 #include "Helper.hpp"
 #include "Inventory.hpp"
@@ -464,6 +467,328 @@ namespace
             case 214: return 26;
             default: return scriptIdToEntityId(id);
         }
+    }
+
+    int32_t removeCondition(uint32_t)
+    {
+        PARTNER_PARA.condition.raw &= ~readScriptUByte();
+        return 1;
+    }
+    int32_t scriptStartBattle(uint32_t)
+    {
+        readScriptUByte();
+        BATTLES_STARTED           = dtl::min(BATTLES_STARTED + 1, 9999);
+        auto hasFixedParticipants = readPStat(0xFA);
+        if (hasFixedParticipants != 0)
+            for (auto i = 0xFB; i < 0xFE; i++) {
+                auto id = readPStat(i);
+                if (id != 0xFF) writePStat(i, scriptIdToEntityId(id));
+            }
+
+        stopBGM();
+        auto result = startBattle(ACTIVE_TALKED_TO_ENTITY);
+        writePStat(0xFF, static_cast<uint8_t>(result));
+        if (result == BattleResult::LOST) {
+            handleItemLoss();
+            PARTNER_ENTITY.lives--;
+            if (PARTNER_ENTITY.lives == 0) PARTNER_PARA.remainingLifetime = 0;
+            ACTIVE_SCRIPT  = getScript(0);
+            SCRIPT_POINTER = getScriptSection(ACTIVE_SCRIPT, 1246);
+            return 1;
+        }
+        if (result == BattleResult::FLED) {
+            BATTLES_FLED                = dtl::min(BATTLES_FLED + 1, 9999);
+            SCRIPT_MAP_CHANGE_SHOW_NAME = 0;
+            SCRIPT_PARAM_1              = PREVIOUS_SCREEN;
+            SCRIPT_STATE_2              = PREVIOUS_EXIT;
+            PREVIOUS_EXIT               = CURRENT_EXIT;
+            ScriptStackEntry entry{
+                .type    = 4,
+                .trigger = 0xFF,
+            };
+            pushScriptStack(&entry);
+            return 3;
+        }
+
+        if (isTriggerSet(1)) {
+            setMovementEnabled(-1, 1);
+            initializeTextbox();
+            return 1;
+        }
+
+        SCRIPT_MOVEMENT[10].type       = ScriptMovement::MOVE_CAMERA_TO_ENTITY;
+        SCRIPT_MOVEMENT[10].selfEntity = 0xFD;
+        SCRIPT_MOVEMENT[10].speed      = 10;
+        ACTIVE_INSTRUCTION             = 0x4A;
+        WAIT_FOR_ENTITY_ID             = 10;
+        initializeTextbox();
+        return 2;
+    }
+    int32_t scriptDelay(uint32_t)
+    {
+        readScriptUByte();
+        DELAY_FRAMES       = readScriptUShort();
+        ACTIVE_INSTRUCTION = 0x67;
+        return 2;
+    }
+    int32_t scriptSetTextboxMode(uint32_t)
+    {
+        readScriptUByte();
+        TEXTBOX_CLOSE_MODE = readScriptUByte();
+        auto frames        = readScriptUByte();
+        if (TEXTBOX_CLOSE_MODE == 2) AUTOCLOSE_FRAMES = frames;
+        return 1;
+    }
+    int32_t scriptDealDamage(uint32_t)
+    {
+        scriptPauseGame(0xFF);
+        auto stat   = readScriptUByte();
+        auto val    = readPStat(stat);
+        auto damage = dtl::min((PARTNER_ENTITY.stats.hp * val) / 100, PARTNER_ENTITY.stats.currentHP - 1);
+        PARTNER_ENTITY.stats.currentHP -= damage;
+        addEntityText(&PARTNER_ENTITY, 0, 0, damage, 0);
+        return 1;
+    }
+    int32_t scriptSetAutotalk(uint32_t)
+    {
+        readScriptUByte();
+        auto id         = scriptIdToEntityId(readScriptUByte());
+        auto isAutotalk = readScriptUByte();
+
+        if (id != 0xFF && id > 1) NPC_ENTITIES[id - 2].autotalk = isAutotalk;
+        return 1;
+    }
+    int32_t entityMoveTo(uint32_t)
+    {
+        scriptPauseGame(0xFF);
+        auto entity = readScriptUByte();
+        auto posX   = readScriptShort();
+        auto posY   = readScriptShort();
+        auto speed  = readScriptUByte();
+        readScriptUByte();
+
+        auto entityId = scriptIdToEntityId(entity);
+        if (entityId != 0xFF) {
+            SCRIPT_MOVEMENT[entityId].type       = ScriptMovement::MOVE_TO_POS;
+            SCRIPT_MOVEMENT[entityId].selfEntity = entity;
+            SCRIPT_MOVEMENT[entityId].speed      = speed;
+            SCRIPT_MOVEMENT[entityId].posX       = posX;
+            SCRIPT_MOVEMENT[entityId].posY       = posY;
+        }
+        return 1;
+    }
+    int32_t entityMoveToEntity(uint32_t)
+    {
+        scriptPauseGame(0xFF);
+        auto entity   = readScriptUByte();
+        auto target   = readScriptUByte();
+        auto speed    = readScriptUByte();
+        auto entityId = scriptIdToEntityId(entity);
+
+        if (entityId != 0xFF) {
+            SCRIPT_MOVEMENT[entityId].type       = ScriptMovement::MOVE_TO_ENTITY;
+            SCRIPT_MOVEMENT[entityId].selfEntity = entity;
+            SCRIPT_MOVEMENT[entityId].speed      = speed;
+            SCRIPT_MOVEMENT[entityId].targetId   = target;
+        }
+        return 1;
+    }
+    int32_t entityMoveToWithCamera(uint32_t)
+    {
+        scriptPauseGame(0xFF);
+        auto entity = readScriptUByte();
+        auto posX   = readScriptShort();
+        auto posY   = readScriptShort();
+        auto speed  = readScriptUByte();
+        readScriptUByte();
+
+        auto entityId = scriptIdToEntityId(entity);
+        if (entityId != 0xFF) {
+            // Vanilla does MOVE_TO_ENTITY_CAMERA here, causing this instruction to bug out
+            SCRIPT_MOVEMENT[entityId].type       = ScriptMovement::MOVE_TO_POS_CAMERA;
+            SCRIPT_MOVEMENT[entityId].selfEntity = entity;
+            SCRIPT_MOVEMENT[entityId].speed      = speed;
+            SCRIPT_MOVEMENT[entityId].posX       = posX;
+            SCRIPT_MOVEMENT[entityId].posY       = posY;
+        }
+        return 1;
+    }
+    int32_t entityMoveToEntityWithCamera(uint32_t)
+    {
+        scriptPauseGame(0xFF);
+        auto entity   = readScriptUByte();
+        auto target   = readScriptUByte();
+        auto speed    = readScriptUByte();
+        auto entityId = scriptIdToEntityId(entity);
+
+        if (entityId != 0xFF) {
+            SCRIPT_MOVEMENT[entityId].type       = ScriptMovement::MOVE_TO_ENTITY_CAMERA;
+            SCRIPT_MOVEMENT[entityId].selfEntity = entity;
+            SCRIPT_MOVEMENT[entityId].speed      = speed;
+            SCRIPT_MOVEMENT[entityId].targetId   = target;
+        }
+        return 1;
+    }
+    int32_t rotate3DObject(uint32_t)
+    {
+        scriptPauseGame(0xFF);
+        auto entity = readScriptUByte();
+        readScriptUByte();
+        auto angle = readScriptUByte();
+
+        SCRIPT_MOVEMENT[11].type       = ScriptMovement::ROTATE_OBJECT;
+        SCRIPT_MOVEMENT[11].selfEntity = entity;
+        SCRIPT_MOVEMENT[11].targetId   = angle;
+        return 1;
+    }
+    int32_t moveObjectTo(uint32_t)
+    {
+        scriptPauseGame(0xFF);
+        auto id     = readScriptUByte();
+        auto entity = readScriptUByte();
+        auto speed  = readScriptUByte();
+        auto target = readScriptUByte();
+        readScriptUByte();
+        auto param3 = readScriptShort();
+        auto param4 = readScriptShort();
+
+        SCRIPT_MOVEMENT[id + 12].type       = ScriptMovement::MOVE_OBJECT_TO_POS;
+        SCRIPT_MOVEMENT[id + 12].selfEntity = entity;
+        SCRIPT_MOVEMENT[id + 12].speed      = speed;
+        SCRIPT_MOVEMENT[id + 12].targetId   = target;
+        SCRIPT_MOVEMENT[id + 12].unk1       = param3;
+        SCRIPT_MOVEMENT[id + 12].unk2       = param4;
+        return 1;
+    }
+    int32_t entityMoveToAxis(uint32_t)
+    {
+        scriptPauseGame(0xFF);
+        auto entity   = readScriptUByte();
+        auto posX     = readScriptShort();
+        auto targetId = readScriptUByte();
+        auto speed    = readScriptUByte();
+        auto entityId = scriptIdToEntityId(entity);
+
+        if (entityId != 0xFF) {
+            SCRIPT_MOVEMENT[entityId].type       = ScriptMovement::MOVE_TO_AXIS;
+            SCRIPT_MOVEMENT[entityId].selfEntity = entity;
+            SCRIPT_MOVEMENT[entityId].targetId   = targetId;
+            SCRIPT_MOVEMENT[entityId].posX       = posX;
+            SCRIPT_MOVEMENT[entityId].speed      = speed;
+        }
+        return 1;
+    }
+    int32_t entityMoveToAxisWithCamera(uint32_t)
+    {
+        scriptPauseGame(0xFF);
+        auto entity   = readScriptUByte();
+        auto posX     = readScriptShort();
+        auto targetId = readScriptUByte();
+        auto speed    = readScriptUByte();
+        auto entityId = scriptIdToEntityId(entity);
+
+        if (entityId != 0xFF) {
+            SCRIPT_MOVEMENT[entityId].type       = ScriptMovement::MOVE_TO_AXIS_CAMERA;
+            SCRIPT_MOVEMENT[entityId].selfEntity = entity;
+            SCRIPT_MOVEMENT[entityId].targetId   = targetId;
+            SCRIPT_MOVEMENT[entityId].posX       = posX;
+            SCRIPT_MOVEMENT[entityId].speed      = speed;
+        }
+        return 1;
+    }
+    int32_t scriptSpawnItem(uint32_t)
+    {
+        auto id   = static_cast<ItemType>(readScriptUByte());
+        auto posX = readScriptShort();
+        auto posY = readScriptShort();
+        spawnItem(id, posX, posY);
+        return 1;
+    }
+    int32_t scriptSpawnChest(uint32_t)
+    {
+        auto item     = static_cast<ItemType>(readScriptUByte());
+        auto posX     = readScriptShort();
+        auto posY     = readScriptShort();
+        auto posZ     = readScriptShort();
+        auto rotation = readScriptShort();
+        auto trigger  = readScriptUShort();
+
+        spawnChest(posX, posY, posZ, rotation, item, trigger);
+        return 1;
+    }
+    int32_t scriptSpawnBoulder(uint32_t)
+    {
+        readScriptUByte();
+        spawnBoulder();
+        return 1;
+    }
+    int32_t scriptMoveBoulder(uint32_t)
+    {
+        readScriptUByte();
+        auto diffX = readScriptShort();
+        auto diffZ = readScriptShort();
+        moveBoulder(diffX, diffZ);
+        return 2;
+    }
+    int32_t scriptRemoveBoulder(uint32_t)
+    {
+        readScriptUByte();
+        removeObject(ObjectID::BOULDER, 0);
+        return 1;
+    }
+    int32_t scriptUnloadDigimon(uint32_t)
+    {
+        auto model = static_cast<DigimonType>(readScriptUByte());
+        scriptUnloadModel(model);
+        return 1;
+    }
+    int32_t copyPStat(uint32_t)
+    {
+        readScriptUByte();
+        auto src = readScriptUByte();
+        auto dst = readScriptUByte();
+        writePStat(dst, readPStat(src));
+        return 1;
+    }
+    int32_t scriptSectionOnExit(uint32_t)
+    {
+        auto section = readScriptUByte();
+        ScriptStackEntry entry{
+            .type    = 4,
+            .trigger = section,
+        };
+        pushScriptStack(&entry);
+        writePStat(0, TIMESPEED);
+        return 1;
+    }
+    int32_t scriptSetRectImpassible(uint32_t)
+    {
+        readScriptUByte();
+        auto tileX  = readScriptShort();
+        auto tileY  = readScriptShort();
+        auto width  = readScriptUByte();
+        auto height = readScriptUByte();
+        setImpassableRect(tileX, tileY, width, height);
+        return 1;
+    }
+    int32_t scriptSpawnSpriteAtLocation(uint32_t)
+    {
+        auto count  = readScriptUByte();
+        auto x      = readScriptShort();
+        auto y      = readScriptShort();
+        auto z      = readScriptShort();
+        auto sprite = readScriptShort();
+
+        spawnSpriteAtLocation(x, y, z, sprite, count);
+        return 1;
+    }
+    int32_t scriptSpawnSpriteAtEntity(uint32_t)
+    {
+        auto entity = readScriptUByte();
+        auto node   = readScriptUByte();
+        auto sprite = readScriptUByte();
+        spawnSpriteAtEntity(entity, node, sprite);
+        return 1;
     }
 
     int32_t loadDigimon(uint32_t)
@@ -1372,32 +1697,32 @@ namespace
         invalidOpcode,
         invalidOpcode,
         callRoutine,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
-        wrapper<scriptInstruction64to7E>,
+        removeCondition,
+        scriptStartBattle,
+        scriptDelay,
+        scriptSetTextboxMode,
+        scriptDealDamage,
+        scriptSetAutotalk,
+        invalidOpcode,
+        entityMoveTo,
+        entityMoveToEntity,
+        entityMoveToWithCamera,
+        entityMoveToEntityWithCamera,
+        rotate3DObject,
+        moveObjectTo,
+        entityMoveToAxis,
+        entityMoveToAxisWithCamera,
+        scriptSpawnItem,
+        scriptSpawnChest,
+        scriptSpawnBoulder,
+        scriptMoveBoulder,
+        scriptRemoveBoulder,
+        scriptUnloadDigimon,
+        copyPStat,
+        scriptSectionOnExit,
+        scriptSetRectImpassible,
+        scriptSpawnSpriteAtLocation,
+        scriptSpawnSpriteAtEntity,
         invalidOpcode,
         invalidOpcode,
         invalidOpcode,

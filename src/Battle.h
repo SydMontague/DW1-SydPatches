@@ -8,4 +8,5 @@ extern "C"
     void battleStatsGainsAndDrops(ItemType* droppedItems);
     void handleBattleInjury();
     void battleMoveLearning();
+    BattleResult startBattle(uint32_t talkedToEntity);
 }

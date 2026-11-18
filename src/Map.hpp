@@ -45,4 +45,8 @@ extern "C"
     void loadMap(uint32_t mapId);
     void setupMap();
     void resetMapObjectAnimation(int32_t start, int32_t count);
+    void spawnItem(ItemType itemId, int16_t tileX, int16_t tileY);
+    void setImpassableRect(int32_t tileX, int32_t tileY, int32_t width, int32_t height);
+    void spawnSpriteAtLocation(int16_t x, int16_t y, int16_t z, int32_t sprite, int16_t count);
+    void spawnSpriteAtEntity(int32_t scriptId, int32_t nodeId, int32_t sprite);
 }
