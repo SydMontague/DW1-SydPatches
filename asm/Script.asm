@@ -1,12 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x80103eb8
-  jal checkTournamentMedalConditions
-
-.org 0x80104640
-  jal handleItemLoss
-
 ;.org 0x800dd1d8
 ;  jal dailyPStatTrigger
 ;.org 0x800dd6e0
@@ -110,9 +104,6 @@
 .org 0x8010c5ec
   jal showMapheadSelection
 
-.org 0x801042dc
-  jal loadShopLibrary
-
 ;.org 0x800fbd94
 ;  jal scriptIdToEntityId
 ;.org 0x800fbeb0
@@ -137,24 +128,24 @@
 ;  jal scriptIdToEntityId
 ;.org 0x80103c04
 ;  jal scriptIdToEntityId
-.org 0x80104408
-  jal scriptIdToEntityId
-.org 0x801045cc
-  jal scriptIdToEntityId
-.org 0x80104880
-  jal scriptIdToEntityId
-.org 0x80104908
-  jal scriptIdToEntityId
-.org 0x80104994
-  jal scriptIdToEntityId
-.org 0x80104a20
-  jal scriptIdToEntityId
-.org 0x80104aac
-  jal scriptIdToEntityId
-.org 0x80104c20
-  jal scriptIdToEntityId
-.org 0x80104cb4
-  jal scriptIdToEntityId
+;.org 0x80104408
+;  jal scriptIdToEntityId
+;.org 0x801045cc
+;  jal scriptIdToEntityId
+;.org 0x80104880
+;  jal scriptIdToEntityId
+;.org 0x80104908
+;  jal scriptIdToEntityId
+;.org 0x80104994
+;  jal scriptIdToEntityId
+;.org 0x80104a20
+;  jal scriptIdToEntityId
+;.org 0x80104aac
+;  jal scriptIdToEntityId
+;.org 0x80104c20
+;  jal scriptIdToEntityId
+;.org 0x80104cb4
+;  jal scriptIdToEntityId
 .org 0x80106378
   jal scriptIdToEntityId
 .org 0x80106408

@@ -7,9 +7,6 @@
 .org 0x80106c4c
   jal unloadDigimonModel
 
-.org 0x80104478
-  jal setLoopCountToOne
-
 .org 0x801054c4
   jal startNPCAnimation
 .org 0x80105538
@@ -22,8 +19,8 @@
 .org 0x80105540
   jal setActiveAnim
 
-.org 0x80104720
-  jal setMovementEnabled
+;.org 0x80104720
+;  jal setMovementEnabled
 ;.org 0x801061e8
 ;  jal setMovementEnabled
 .org 0x8010631c

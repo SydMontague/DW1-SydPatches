@@ -1,9 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x8010435c
-  jal createNinjamonEffect
-
 ;.org 0x800e68a4
 ;  jal setMapObjectsFlag
 ;.org 0x800e68bc
@@ -18,21 +15,6 @@
 .org 0x801058e4
   jal tickMoveObjectTo
 
-.org 0x80104f28
-  jal spawnSpriteAtLocation
-
-.org 0x80104f58
-  jal spawnSpriteAtEntity
-
-.org 0x80104140
-  jal resetMapObjectAnimation
-
-.org 0x80104edc
-  jal setImpassableRect
-
-.org 0x80104d40
-  jal spawnItem
-
 ;.org 0x800abba4
 ;  jal readMapTFS
 ;.org 0x800debbc
@@ -41,15 +23,12 @@
 ;  jal readMapTFS
 ;.org 0x800e2424
 ;  jal readMapTFS
-.org 0x801042f0
-  jal readMapTFS
+;.org 0x801042f0
+;  jal readMapTFS
 .org 0x80104fd8
   jal readMapTFS
 .org 0x8010c1fc
   jal readMapTFS
-
-.org 0x80104fe4
-  jal setupMap
 
 .org 0x801139d4
   jal getFileCityTopMap

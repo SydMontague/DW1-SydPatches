@@ -1,9 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x80104304
-  jal loadTrainingLibrary
-
 ;.org 0x800a21c8
 ;  jal readFile
 ;.org 0x800a236c
@@ -43,13 +40,13 @@
 
 ;.org 0x800e0fe8
 ;  jal loadTextureFile
-.org 0x801043cc
-  jal loadTextureFile
+;.org 0x801043cc
+;  jal loadTextureFile
 
 ;.org 0x800e625c
 ;  jal addFileReadRequestPath
-.org 0x80104384
-  jal addFileReadRequestPath
+;.org 0x80104384
+;  jal addFileReadRequestPath
 
 ;.org 0x800e62a8
 ;  jal loadDynamicLibrary
@@ -67,10 +64,10 @@
 ;  jal loadDynamicLibrary
 ;.org 0x800ffa18
 ;  jal loadDynamicLibrary
-.org 0x8010439c
-  jal loadDynamicLibrary
-.org 0x801043e4
-  jal loadDynamicLibrary
+;.org 0x8010439c
+;  jal loadDynamicLibrary
+;.org 0x801043e4
+;  jal loadDynamicLibrary
 .org 0x80111b88
   jal loadDynamicLibrary
 

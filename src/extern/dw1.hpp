@@ -1661,12 +1661,12 @@ extern "C"
         MOVE_CAMERA_TO_ENTITY,
         MOVE_TO_POS,
         MOVE_TO_ENTITY,
-        MOVE_TO_POS2,
-        MOVE_TO_ENTITY2,
+        MOVE_TO_POS_CAMERA,
+        MOVE_TO_ENTITY_CAMERA,
         ROTATE_OBJECT,
         MOVE_OBJECT_TO_POS,
         MOVE_TO_AXIS,
-        MOVE_TO_AXIS2,
+        MOVE_TO_AXIS_CAMERA,
         NONE = 0xFF,
     };
 
@@ -2035,6 +2035,7 @@ extern "C"
     extern int16_t CURRENT_SCREEN_ID;
     extern uint8_t SCRIPT_TEXTBOX_SPEAKER_MODE;
     extern uint32_t SCRIPT_SECTION_IS_EVENT;
+    extern uint16_t ACTIVE_TALKED_TO_ENTITY;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -2054,6 +2055,7 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
+    void scriptUnloadModel(DigimonType type);
     void openSaveMachine();
     void gameClearSave();
     void scriptLoadModel(DigimonType type);

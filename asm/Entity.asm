@@ -38,9 +38,6 @@
 .org 0x80105930
   jal tickEntityMoveToAxis
 
-.org 0x80104860
-  jal addEntityText
-
 .close 
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

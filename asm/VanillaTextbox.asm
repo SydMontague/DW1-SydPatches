@@ -3,10 +3,10 @@
 
 ;.org 0x800ef200
 ;  jal initializeTextbox
-.org 0x80104728
-  jal initializeTextbox
-.org 0x80104764
-  jal initializeTextbox
+;.org 0x80104728
+;  jal initializeTextbox
+;.org 0x80104764
+;  jal initializeTextbox
 .org 0x80105bbc
   jal initializeTextbox
 
@@ -82,8 +82,8 @@
 ;  jal triggerBoxCloseFlag
 ;.org 0x801006dc
 ;  jal triggerBoxCloseFlag
-.org 0x801040c8
-  jal triggerBoxCloseFlag
+;.org 0x801040c8
+;  jal triggerBoxCloseFlag
 .org 0x8010b7a4
   jal triggerBoxCloseFlag
 .org 0x8010b800

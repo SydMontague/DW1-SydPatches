@@ -23,8 +23,8 @@
 ;  jal stopBGM
 ;.org 0x800f7260
 ;  jal stopBGM
-.org 0x8010460c
-  jal stopBGM
+;.org 0x8010460c
+;  jal stopBGM
 .org 0x801064f8
   j stopBGM
 .org 0x80106ac8
@@ -311,19 +311,6 @@
   jal playSound
 .org 0x80112b0c
   jal playSound
-
-.org 0x801043a8
-  jal readVBALLSection
-
-.org 0x801043b0
-  jal loadMapSounds2
-.org 0x801043ec
-  jal loadMapSounds2
-
-.org 0x80104400
-  jal isSoundLoaded
-.org 0x80104438
-  jal isSoundLoaded
 
 .close
 
