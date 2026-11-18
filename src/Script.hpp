@@ -23,7 +23,6 @@ extern "C"
     void scriptSetTextboxSize();
     void setDialogueOwner(int32_t speaker);
     void scriptShowSelection();
-    void scriptCompareDate();
     int16_t* getStatsPointer(ScriptStats stat);
     void handleItemLoss();
 }

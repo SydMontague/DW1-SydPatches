@@ -41,7 +41,6 @@
 .definelabel pushScriptStack,           0x801064bc
 .definelabel popScriptStack,            0x80106500
 .definelabel resetBGM,                  0x801064f0
-.definelabel scriptIfInstruction,       0x801050c0
 .definelabel scriptLoadModel,           0x801069c0
 .definelabel openSaveMachine,           0x8011381c
 .definelabel gameClearSave,             0x801139ac

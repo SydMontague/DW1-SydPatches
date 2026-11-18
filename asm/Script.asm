@@ -151,24 +151,6 @@
 .org 0x80106408
   jal scriptIdToEntityId
 
-.org 0x8010525c
-  jal scriptCompareStat
-
-.org 0x8010526c
-  jal scriptCompareCard
-
-.org 0x8010527c
-  jal scriptCompareMove
-
-.org 0x8010528c
-  jal scriptCompareCondition
-
-.org 0x8010529c
-  jal scriptCompareItemCount
-
-.org 0x801052ac
-  jal scriptCompareMoney
-
 ;.org 0x800efc14
 ;  jal tickScript
 .org 0x80105afc

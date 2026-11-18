@@ -1,9 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x801053cc
-  jal setFoodTimer
-
 ;.org 0x800df624
 ;  jal Partner_setState
 ;.org 0x800df644
@@ -26,15 +23,15 @@
 ;  jal Partner_setState
 ;.org 0x800df7dc
 ;  jal Partner_setState
-.org 0x801054b0
-  jal Partner_setState
-.org 0x80105528
-  jal Partner_setState
+;.org 0x801054b0
+;  jal Partner_setState
+;.org 0x80105528
+;  jal Partner_setState
 
-.org 0x801054a8
-  jal Partner_startAnimation
-.org 0x80105520
-  jal Partner_startAnimation
+;.org 0x801054a8
+;  jal Partner_startAnimation
+;.org 0x80105520
+;  jal Partner_startAnimation
 .org 0x80105984
   jal Partner_startAnimation
 
