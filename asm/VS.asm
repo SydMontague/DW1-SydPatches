@@ -63,20 +63,15 @@
 .endarea
 
 .org 0x8006c1bc
-.area 0x8006c704-.
+.area 0x8006cd28-.
   .importobj "compiled/VSEFEAddressOperand.lib"
   .importobj "compiled/VSEFEDispatch.lib"
   .importobj "compiled/VSEFEIndexedOperand.lib"
   .importobj "compiled/VSEFEControl.lib"
-  .notice "VS EFE operands and control space left: " + (0x8006c704-.) + " bytes"
-  .fill 0x8006c704-.
-.endarea
-
-.org 0x8006c7d0
-.area 0x8006cabc-.
   .importobj "compiled/VSEFEOperands.lib"
-  .notice "VS EFE basic operands space left: " + (0x8006cabc-.) + " bytes"
-  .fill 0x8006cabc-.
+  .importobj "compiled/VSEFEArithmetic.lib"
+  .notice "VS EFE operands, control and arithmetic space left: " + (0x8006cd28-.) + " bytes"
+  .fill 0x8006cd28-.
 .endarea
 
 .org 0x8006cd28
@@ -91,6 +86,12 @@
   .importobj "compiled/VSEFERun.lib"
   .notice "VS EFERun space left: " + (0x8006d394-.) + " bytes"
   .fill 0x8006d394-.
+.endarea
+
+.org 0x80070e94
+.area 0x80070f34-.
+  .notice "VS retired EFE operator table space left: " + (0x80070f34-.) + " bytes"
+  .fill 0x80070f34-.
 .endarea
 
 ; VS__combatMain
@@ -124,6 +125,10 @@
 ; VS_addParticleEmitter
 .org 0x80070bc8
   .word VS_addParticleEmitter
+
+; VS_applyEFEVariableOperator
+.org 0x80070e5c
+  .word VS_applyEFEVariableOperator
 
 ; VS_loadNextEFEFile
 .org 0x800649ac
