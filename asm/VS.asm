@@ -44,15 +44,16 @@
   .fill 0x80064a54-.
 .endarea
 
-.org 0x80068dd0
-.area 0x80068e3c-.
-  .notice "VS EFE mask space left: " + (0x80068e3c-.) + " bytes"
-  .fill 0x80068e3c-.
+.org 0x800673c8
+.area 0x80067500-.
+  .notice "VS retired EFE scalar vector space left: " + (0x80067500-.) + " bytes"
+  .fill 0x80067500-.
 .endarea
 
-.org 0x80068ffc
+.org 0x80068d64
 .area 0x80069048-.
-  .notice "VS EFE vector space left: " + (0x80069048-.) + " bytes"
+  .importobj "compiled/VSEFEVectorArithmetic.lib"
+  .notice "VS EFE vector arithmetic space left: " + (0x80069048-.) + " bytes"
   .fill 0x80069048-.
 .endarea
 
@@ -129,6 +130,24 @@
 ; VS_applyEFEVariableOperator
 .org 0x80070e5c
   .word VS_applyEFEVariableOperator
+
+; EFE vector arithmetic subopcodes
+.org 0x80070cd0
+  .word VS_addVectors
+.org 0x80070cd8
+  .word VS_subtractVectors
+.org 0x80070ce0
+  .word VS_multiplyVectors
+.org 0x80070ce8
+  .word VS_divideVectors
+.org 0x80070cf8
+  .word VS_shiftVectorsRight
+.org 0x80070d80
+  .word VS_multiplyVectorByScalar
+.org 0x80070d88
+  .word VS_divideVectorByScalar
+.org 0x80070d90
+  .word VS_maskVectorByScalar
 
 ; VS_loadNextEFEFile
 .org 0x800649ac
