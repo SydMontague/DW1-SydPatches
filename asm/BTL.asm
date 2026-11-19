@@ -44,15 +44,16 @@
   .fill 0x80066260-.
 .endarea
 
-.org 0x8006a6f4
-.area 0x8006a760-.
-  .notice "BTL EFE mask space left: " + (0x8006a760-.) + " bytes"
-  .fill 0x8006a760-.
+.org 0x80068d60
+.area 0x80068e98-.
+  .notice "BTL retired EFE scalar vector space left: " + (0x80068e98-.) + " bytes"
+  .fill 0x80068e98-.
 .endarea
 
-.org 0x8006a920
+.org 0x8006a688
 .area 0x8006a96c-.
-  .notice "BTL EFE vector space left: " + (0x8006a96c-.) + " bytes"
+  .importobj "compiled/BTLEFEVectorArithmetic.lib"
+  .notice "BTL EFE vector arithmetic space left: " + (0x8006a96c-.) + " bytes"
   .fill 0x8006a96c-.
 .endarea
 
@@ -101,6 +102,24 @@
 ; BTL_applyEFEVariableOperator
 .org 0x80073614
   .word BTL_applyEFEVariableOperator
+
+; EFE vector arithmetic subopcodes
+.org 0x80073488
+  .word BTL_addVectors
+.org 0x80073490
+  .word BTL_subtractVectors
+.org 0x80073498
+  .word BTL_multiplyVectors
+.org 0x800734a0
+  .word BTL_divideVectors
+.org 0x800734b0
+  .word BTL_shiftVectorsRight
+.org 0x80073538
+  .word BTL_multiplyVectorByScalar
+.org 0x80073540
+  .word BTL_divideVectorByScalar
+.org 0x80073548
+  .word BTL_maskVectorByScalar
 
 ; BTL_loadNextEFEFile
 .org 0x800661d0

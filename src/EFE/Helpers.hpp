@@ -2,6 +2,11 @@
 
 #include "../extern/dw1.hpp"
 
+// The overlay build supplies the mode-specific entry name.
+#ifndef EFE_ENTRY
+#define EFE_ENTRY(name) name
+#endif
+
 namespace EFEHelpers
 {
     template<class T> static inline T readMemory(auto address)
