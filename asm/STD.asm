@@ -44,15 +44,16 @@
   .fill 0x8006e984-.
 .endarea
 
-.org 0x80072d00
-.area 0x80072d6c-.
-  .notice "STD EFE mask space left: " + (0x80072d6c-.) + " bytes"
-  .fill 0x80072d6c-.
+.org 0x800712f8
+.area 0x80071430-.
+  .notice "STD retired EFE scalar vector space left: " + (0x80071430-.) + " bytes"
+  .fill 0x80071430-.
 .endarea
 
-.org 0x80072f2c
+.org 0x80072c94
 .area 0x80072f78-.
-  .notice "STD EFE vector space left: " + (0x80072f78-.) + " bytes"
+  .importobj "compiled/STDEFEVectorArithmetic.lib"
+  .notice "STD EFE vector arithmetic space left: " + (0x80072f78-.) + " bytes"
   .fill 0x80072f78-.
 .endarea
 
@@ -105,6 +106,24 @@
 ; STD_applyEFEVariableOperator
 .org 0x8007ae30
   .word STD_applyEFEVariableOperator
+
+; EFE vector arithmetic subopcodes
+.org 0x8007aca4
+  .word STD_addVectors
+.org 0x8007acac
+  .word STD_subtractVectors
+.org 0x8007acb4
+  .word STD_multiplyVectors
+.org 0x8007acbc
+  .word STD_divideVectors
+.org 0x8007accc
+  .word STD_shiftVectorsRight
+.org 0x8007ad54
+  .word STD_multiplyVectorByScalar
+.org 0x8007ad5c
+  .word STD_divideVectorByScalar
+.org 0x8007ad64
+  .word STD_maskVectorByScalar
 
 ; STD_loadNextEFEFile
 .org 0x8006e8dc
