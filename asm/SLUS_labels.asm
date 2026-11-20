@@ -26,7 +26,6 @@
 .definelabel setCardAmount,             0x80106848
 .definelabel scriptPauseGame,           0x801062f8
 .definelabel drawGlyph,                 0x8010cc28
-.definelabel tickScriptedMovement,      0x8010569c
 .definelabel openMeritShop,             0x8010bc10
 .definelabel openMojyamonShop,          0x8010c4b0
 .definelabel openRecycleShop,           0x8010b648

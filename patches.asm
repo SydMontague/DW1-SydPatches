@@ -37,7 +37,6 @@
 .include "asm/InventoryUI.asm"
 .include "asm/GameTime.asm"
 .include "asm/Script.asm"
-.include "asm/MapObjects.asm"
 .include "asm/Matrix.asm"
 .include "asm/Fishing.asm"
 .include "asm/VanillaText.asm"

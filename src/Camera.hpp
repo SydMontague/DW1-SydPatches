@@ -14,4 +14,5 @@ extern "C"
     void unsetCameraFollowPlayer();
     void setCameraFollowPlayer();
     void createCameraMovement(Vector* target, int32_t instanceId);
+    bool tickCameraMoveToEntity(uint32_t entityId, int32_t speed);
 }

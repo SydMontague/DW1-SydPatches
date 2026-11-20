@@ -106,21 +106,6 @@
 ;.org 0x80105504	
 ;  jal Tamer_setState
 
-;.org 0x800aa1c4
-;  jal Tamer_startAnimation
-;.org 0x800de058
-;  jal Tamer_startAnimation
-;.org 0x800de25c
-;  jal Tamer_startAnimation
-;.org 0x800de934
-;  jal Tamer_startAnimation
-;.org 0x80105480
-;  jal Tamer_startAnimation
-;.org 0x801054fc
-;  jal Tamer_startAnimation
-.org 0x80105968
-  jal Tamer_startAnimation
-
 .close
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

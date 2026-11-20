@@ -28,13 +28,6 @@
 ;.org 0x80105528
 ;  jal Partner_setState
 
-;.org 0x801054a8
-;  jal Partner_startAnimation
-;.org 0x80105520
-;  jal Partner_startAnimation
-.org 0x80105984
-  jal Partner_startAnimation
-
 ;.org 0x800ed400
 ;  jal hasMove
 ;.org 0x800fe444

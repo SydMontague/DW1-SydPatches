@@ -156,6 +156,13 @@
 .org 0x80105afc
   jal tickScript
 
+.org 0x80106b20
+  jal handleMusicOverride
+.org 0x80106aa8
+  jal handleMusicOverride
+.org 0x80106bc0
+  jal handleMusicOverride
+
 .close
 
 

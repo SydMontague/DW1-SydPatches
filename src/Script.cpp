@@ -101,6 +101,51 @@ namespace
 
 extern "C"
 {
+    void handleMusicOverride(uint8_t* font, uint8_t* track)
+    {
+        auto override = readPStat(0xF5);
+        switch (override) {
+            case 0: *track = (HOUR < 6 || HOUR > 20) ? 1 : 0; break;
+            case 1: *track = 0; break;
+            case 2:
+                *font  = 6;
+                *track = 2;
+                break;
+            case 3:
+                *font  = 11;
+                *track = 2;
+                break;
+            case 4:
+                *font  = 15;
+                *track = 2;
+                break;
+            case 5:
+                *font  = 21;
+                *track = 0;
+                break;
+            case 6:
+                *font  = 21;
+                *track = 1;
+                break;
+            case 7:
+                *font  = 26;
+                *track = 0;
+                break;
+            case 8:
+                *font  = 26;
+                *track = 1;
+                break;
+            case 9:
+                *font  = 27;
+                *track = 0;
+                break;
+            case 10:
+                *font  = 27;
+                *track = 1;
+                break;
+        }
+    }
+
     int16_t enforceStatsLimits(ScriptStats type, int16_t value)
     {
         dtl::array<int16_t, 22> LIMITS{999, 999, 999, 999,  9999, 9999, 9999, 9999, 100, 100, 999,

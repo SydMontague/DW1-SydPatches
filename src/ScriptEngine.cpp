@@ -576,7 +576,7 @@ namespace
         }
         else {
             auto id = scriptIdToEntityId(actor);
-            if (id != 0xFF) startAnimation(ENTITY_TABLE.getEntityById(id), (speed + 1) * 2);
+            startAnimation(ENTITY_TABLE.getEntityById(id), (speed + 1) * 2);
             // vanilla calls setActiveAnim, but seems unused
         }
     }
@@ -592,7 +592,7 @@ namespace
         }
         else {
             auto id = scriptIdToEntityId(actor);
-            if (id != 0xFF) startAnimation(ENTITY_TABLE.getEntityById(id), animId);
+            startAnimation(ENTITY_TABLE.getEntityById(id), animId);
             // vanilla calls setActiveAnim, but seems unused
         }
     }
@@ -819,6 +819,7 @@ namespace
         SCRIPT_MOVEMENT[id + 12].targetId   = target;
         SCRIPT_MOVEMENT[id + 12].unk1       = param3;
         SCRIPT_MOVEMENT[id + 12].unk2       = param4;
+        SCRIPT_MOVEMENT[id + 12].posX       = id; // not vanilla, give the tick the ID information
         return 1;
     }
     int32_t entityMoveToAxis(uint32_t)
@@ -1642,10 +1643,66 @@ namespace
         }
     }
 
+    bool tickScriptedMovement(const ScriptEntityMovement& movement)
+    {
+        switch (movement.type) {
+            case ScriptMovement::LOOK_AT_ENTITY: return tickLookAtEntity(movement.selfEntity, movement.targetId);
+            case ScriptMovement::SET_ROTATION: return tickEntitySetRotation(movement.selfEntity, movement.posX);
+            case ScriptMovement::WALK_TO_POS:
+                return tickEntityWalkTo(movement.selfEntity, 0xFF, movement.posX, movement.posY, false);
+            case ScriptMovement::WALK_TO_ENTITY:
+                return tickEntityWalkTo(movement.selfEntity, movement.targetId, 0, 0, false);
+            case ScriptMovement::WALK_TO_POS_CAMERA:
+                return tickEntityWalkTo(movement.selfEntity, 0xFF, movement.posX, movement.posY, true);
+            case ScriptMovement::WALK_TO_ENTITY_CAMERA:
+                return tickEntityWalkTo(movement.selfEntity, movement.targetId, 0, 0, true);
+            case ScriptMovement::MOVE_CAMERA_TO_POS:
+                return tickCameraMoveTo(movement.posX, movement.posY, movement.speed);
+            case ScriptMovement::MOVE_CAMERA_TO_ENTITY:
+                return tickCameraMoveToEntity(movement.selfEntity, movement.speed);
+            case ScriptMovement::MOVE_TO_POS:
+                return tickEntityMoveTo(movement.selfEntity, 0xFF, movement.posX, movement.posY, movement.speed, false);
+            case ScriptMovement::MOVE_TO_ENTITY:
+                return tickEntityMoveTo(movement.selfEntity, movement.targetId, 0, 0, movement.speed, false);
+            case ScriptMovement::MOVE_TO_POS_CAMERA:
+                return tickEntityMoveTo(movement.selfEntity, 0xFF, movement.posX, movement.posY, movement.speed, true);
+            case ScriptMovement::MOVE_TO_ENTITY_CAMERA:
+                return tickEntityMoveTo(movement.selfEntity, movement.targetId, 0, 0, movement.speed, true);
+            case ScriptMovement::ROTATE_OBJECT:
+                return tickRotateDoor(movement.selfEntity, static_cast<int8_t>(movement.targetId));
+            case ScriptMovement::MOVE_OBJECT_TO_POS:
+                return tickMoveObjectTo(movement.selfEntity,
+                                        movement.posX, // not vanilla, avoids having to know the actor ID
+                                        movement.targetId,
+                                        movement.unk1,
+                                        movement.unk2);
+            case ScriptMovement::MOVE_TO_AXIS:
+                return tickEntityMoveToAxis(movement.selfEntity,
+                                            movement.posX,
+                                            movement.targetId,
+                                            movement.speed,
+                                            false);
+            case ScriptMovement::MOVE_TO_AXIS_CAMERA:
+                return tickEntityMoveToAxis(movement.selfEntity,
+                                            movement.posX,
+                                            movement.targetId,
+                                            movement.speed,
+                                            true);
+            default:
+            case ScriptMovement::NONE: return false;
+        }
+    }
+
     void tickScriptedMovements()
     {
         for (auto i = 0; i < SCRIPT_MOVEMENT.size(); i++) {
-            if (SCRIPT_MOVEMENT[i].type != ScriptMovement::NONE) tickScriptedMovement(i);
+            auto& movement = SCRIPT_MOVEMENT[i];
+            if (tickScriptedMovement(movement)) {
+                if (i < 10 && movement.type < ScriptMovement::MOVE_TO_POS)
+                    startAnimation(ENTITY_TABLE.getEntityById(i), 0);
+
+                movement.type = ScriptMovement::NONE;
+            }
         }
     }
 

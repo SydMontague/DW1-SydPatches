@@ -1,43 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-;.org 0x800de41c
-;  jal tickEntityWalkTo
-;.org 0x800de464
-;  jal tickEntityWalkTo
-;.org 0x800de514
-;  jal tickEntityWalkTo
-;.org 0x800de998
-;  jal tickEntityWalkTo
-.org 0x8010573c
-  jal tickEntityWalkTo
-.org 0x8010575c
-  jal tickEntityWalkTo
-.org 0x80105780
-  jal tickEntityWalkTo
-.org 0x801057a4
-  jal tickEntityWalkTo
-
-.org 0x80105704
-  jal tickLookAtEntity
-
-.org 0x8010571c
-  jal tickEntitySetRotation
-
-.org 0x80105804
-  jal tickEntityMoveTo
-.org 0x8010582c
-  jal tickEntityMoveTo
-.org 0x8010585c
-  jal tickEntityMoveTo
-.org 0x80105888
-  jal tickEntityMoveTo
-
-.org 0x80105908
-  jal tickEntityMoveToAxis
-.org 0x80105930
-  jal tickEntityMoveToAxis
-
 .close 
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
