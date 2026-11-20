@@ -47,37 +47,37 @@ namespace
 
     dtl::array<ConditionBubble, 3> data{};
 
-    ConditionIcon icon1{
+    ConditionIcon iconHungry{
         .duration = 100,
         .nextIcon = 0,
         .icon     = 1,
     };
-    ConditionIcon icon2{
+    ConditionIcon iconPoopy{
         .duration = 100,
         .nextIcon = 0,
         .icon     = 2,
     };
-    ConditionIcon icon3{
+    ConditionIcon iconDying{
         .duration = 100,
         .nextIcon = 0,
         .icon     = 3,
     };
-    ConditionIcon icon9{
+    ConditionIcon iconTired{
         .duration = 1000,
         .nextIcon = 0,
         .icon     = 9,
     };
-    ConditionIcon icon10{
+    ConditionIcon iconSick{
         .duration = 100,
         .nextIcon = 0,
         .icon     = 10,
     };
-    ConditionIcon icon11{
+    ConditionIcon iconInjured{
         .duration = 100,
         .nextIcon = 0,
         .icon     = 11,
     };
-    ConditionIcon icon12{
+    ConditionIcon iconEvolving{
         .duration = 100,
         .nextIcon = 0,
         .icon     = 12,
@@ -122,14 +122,14 @@ namespace
     }};
 
     dtl::array<ConditionIcon*, 8> CONDITION_BUBBLE_TYPES{
-        &icon1,
-        &icon2,
-        &icon3,
+        &iconHungry,
+        &iconPoopy,
+        &iconSick,
         iconSleep.data(),
-        &icon9,
-        &icon10,
-        &icon11,
-        &icon12,
+        &iconTired,
+        &iconDying,
+        &iconInjured,
+        &iconEvolving,
     };
 
     GsSPRITE spriteCloud{
