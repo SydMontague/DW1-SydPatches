@@ -49,4 +49,5 @@ extern "C"
     void setImpassableRect(int32_t tileX, int32_t tileY, int32_t width, int32_t height);
     void spawnSpriteAtLocation(int16_t x, int16_t y, int16_t z, int32_t sprite, int16_t count);
     void spawnSpriteAtEntity(int32_t scriptId, int32_t nodeId, int32_t sprite);
+    bool tickMoveObjectTo(int32_t objectId, int32_t actorId, int32_t speed, int32_t posX, int32_t posY);
 }

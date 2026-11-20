@@ -1,12 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x801057c0
-  jal tickCameraMoveTo
-
-.org 0x801057d8
-  jal tickCameraMoveToEntity
-
 ;.org 0x800a9e80
 ;  jal unsetCameraFollowPlayer
 ;.org 0x800aa364

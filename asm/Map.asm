@@ -12,9 +12,6 @@
 ;.org 0x80103cd8
 ;  jal setMapObjectsFlag
 
-.org 0x801058e4
-  jal tickMoveObjectTo
-
 ;.org 0x800abba4
 ;  jal readMapTFS
 ;.org 0x800debbc
