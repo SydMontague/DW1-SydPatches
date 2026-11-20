@@ -100,6 +100,9 @@ done
 for mode in BTL STD VS; do
     "$MIPS_CXX" EFE/Arithmetic.cpp -o "../compiled/${mode}EFEArithmetic.lib" $FLAGS \
         -DEFE_applyVariableOperator=${mode}_applyEFEVariableOperator
+    # Keep the eight vector handlers inside their overlay region without unrolling their loops.
+    "$MIPS_CXX" EFE/VectorArithmetic.cpp -o "../compiled/${mode}EFEVectorArithmetic.lib" $FLAGS -O2 \
+        "-DEFE_ENTRY(name)=${mode}_##name"
     bindings=(
         -DEFE_loadNextFile=${mode}_loadNextEFEFile
         -DEFE_setupLoadedFile=${mode}_setupLoadedEFEFile

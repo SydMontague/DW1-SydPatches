@@ -26,6 +26,11 @@ namespace EFEOperands
         return readMemory<int32_t>(source);
     }
 
+    template<class T> static inline T* popPointer()
+    {
+        return reinterpret_cast<T*>(pop());
+    }
+
     // setupLoadedEFEFile runs up to four instructions per callback, then returns.
     // Its instruction pointer and stack must persist between callback invocations.
     inline void loadImmediate()
