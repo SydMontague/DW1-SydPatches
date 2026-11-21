@@ -1085,11 +1085,6 @@ extern "C"
         }
     }
 
-    void Tamer_startAnimation(int32_t animId)
-    {
-        startAnimation(&TAMER_ENTITY, animId);
-    }
-
     void initializeTamer(DigimonType type,
                          int32_t posX,
                          int32_t posY,

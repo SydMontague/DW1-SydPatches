@@ -409,17 +409,6 @@ extern "C"
         // }
     }
 
-    void startNPCAnimation(uint32_t scriptId, uint8_t animId)
-    {
-        for (int32_t i = 0; i < 8; i++) {
-            NPCEntity* entity = reinterpret_cast<NPCEntity*>(ENTITY_TABLE.getEntityById(i + 2));
-            if (entity != nullptr && entity->scriptId == scriptId) {
-                startAnimation(entity, animId);
-                return;
-            }
-        }
-    }
-
     void setLoopCountToOne(uint32_t scriptId)
     {
         auto* entity = getEntityFromScriptId(scriptId).first;

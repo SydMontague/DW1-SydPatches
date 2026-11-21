@@ -2278,11 +2278,6 @@ extern "C"
         return PARTNER_SUB_STATE;
     }
 
-    void Partner_startAnimation(int32_t animId)
-    {
-        startAnimation(&PARTNER_ENTITY, animId);
-    }
-
     void callDigimonRoutine(int32_t routine)
     {
         switch (routine) {

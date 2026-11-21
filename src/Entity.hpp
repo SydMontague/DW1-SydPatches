@@ -23,4 +23,13 @@ extern "C"
     bool entityIsOffScreen(Entity* entity, int16_t width, int16_t height);
     void initializeEntityText();
     void removeEntityText(int32_t entityId);
+    bool tickLookAtEntity(uint32_t scriptId1, uint32_t scriptId2);
+    bool tickEntitySetRotation(uint32_t scriptId, int16_t angle);
+    bool tickEntityMoveTo(uint32_t scriptId1,
+                          uint32_t scriptId2,
+                          int32_t targetX,
+                          int32_t targetZ,
+                          int8_t speed,
+                          bool withCamera);
+    bool tickEntityMoveToAxis(uint32_t scriptId, int32_t target, int32_t axis, int32_t speed, bool withCamera);
 }
