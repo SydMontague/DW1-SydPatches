@@ -44,6 +44,19 @@
   .fill 0x80064a54-.
 .endarea
 
+.org 0x80064bbc
+.area 0x80064c08-.
+  .notice "VS EFE retired isTargetUnhit space left: " + (0x80064c08-.) + " bytes"
+  .fill 0x80064c08-.
+.endarea
+
+.org 0x80067170
+.area 0x80067294-.
+  .importobj "compiled/VSEFEEntityQueries.lib"
+  .notice "VS EFE entity queries space left: " + (0x80067294-.) + " bytes"
+  .fill 0x80067294-.
+.endarea
+
 .org 0x800673c8
 .area 0x80067500-.
   .notice "VS retired EFE scalar vector space left: " + (0x80067500-.) + " bytes"
@@ -57,9 +70,35 @@
   .fill 0x80069048-.
 .endarea
 
-.org 0x8006b1b4
+.org 0x800690a0
+.area 0x800690c8-.
+  .notice "VS EFE retired setTargetToHitEntity space left: " + (0x800690c8-.) + " bytes"
+  .fill 0x800690c8-.
+.endarea
+
+.org 0x80069168
+.area 0x800692bc-.
+  .importobj "compiled/VSEFEHitEntity.lib"
+  .notice "VS EFE hit entity queries space left: " + (0x800692bc-.) + " bytes"
+  .fill 0x800692bc-.
+.endarea
+
+.org 0x80069584
+.area 0x800695fc-.
+  .notice "VS EFE retired getSourceDigimonSize space left: " + (0x800695fc-.) + " bytes"
+  .fill 0x800695fc-.
+.endarea
+
+.org 0x8006ab40
+.area 0x8006abb8-.
+  .notice "VS EFE retired getTargetDigimonSize space left: " + (0x8006abb8-.) + " bytes"
+  .fill 0x8006abb8-.
+.endarea
+
+.org 0x8006b0a4
 .area 0x8006b2fc-.
-  .notice "VS EFE slot release space left: " + (0x8006b2fc-.) + " bytes"
+  .importobj "compiled/VSEFETargetSelection.lib"
+  .notice "VS EFE target selection and slot release space left: " + (0x8006b2fc-.) + " bytes"
   .fill 0x8006b2fc-.
 .endarea
 
@@ -130,6 +169,22 @@
 ; VS_applyEFEVariableOperator
 .org 0x80070e5c
   .word VS_applyEFEVariableOperator
+
+; EFE source/target selection and entity queries
+.org 0x80070bd0
+  .word VS_selectNextTargetEntity
+.org 0x80070c00
+  .word VS_getTargetDigimonSize
+.org 0x80070c70
+  .word VS_getSourceDigimonSize
+.org 0x80070ca8
+  .word VS_findHitEntity
+.org 0x80070cb8
+  .word VS_setTargetToHitEntity
+.org 0x80070da0
+  .word VS_selectRandomTargetEntity
+.org 0x80070e48
+  .word VS_isTargetUnhit
 
 ; EFE vector arithmetic subopcodes
 .org 0x80070cd0

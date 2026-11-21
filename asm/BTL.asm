@@ -44,6 +44,19 @@
   .fill 0x80066260-.
 .endarea
 
+.org 0x800663c8
+.area 0x80066414-.
+  .notice "BTL EFE retired isTargetUnhit space left: " + (0x80066414-.) + " bytes"
+  .fill 0x80066414-.
+.endarea
+
+.org 0x80068b08
+.area 0x80068c2c-.
+  .importobj "compiled/BTLEFEEntityQueries.lib"
+  .notice "BTL EFE entity queries space left: " + (0x80068c2c-.) + " bytes"
+  .fill 0x80068c2c-.
+.endarea
+
 .org 0x80068d60
 .area 0x80068e98-.
   .notice "BTL retired EFE scalar vector space left: " + (0x80068e98-.) + " bytes"
@@ -57,9 +70,35 @@
   .fill 0x8006a96c-.
 .endarea
 
-.org 0x8006cb08
+.org 0x8006a9c4
+.area 0x8006a9ec-.
+  .notice "BTL EFE retired setTargetToHitEntity space left: " + (0x8006a9ec-.) + " bytes"
+  .fill 0x8006a9ec-.
+.endarea
+
+.org 0x8006aa8c
+.area 0x8006abe0-.
+  .importobj "compiled/BTLEFEHitEntity.lib"
+  .notice "BTL EFE hit entity queries space left: " + (0x8006abe0-.) + " bytes"
+  .fill 0x8006abe0-.
+.endarea
+
+.org 0x8006aea8
+.area 0x8006af20-.
+  .notice "BTL EFE retired getSourceDigimonSize space left: " + (0x8006af20-.) + " bytes"
+  .fill 0x8006af20-.
+.endarea
+
+.org 0x8006c464
+.area 0x8006c4dc-.
+  .notice "BTL EFE retired getTargetDigimonSize space left: " + (0x8006c4dc-.) + " bytes"
+  .fill 0x8006c4dc-.
+.endarea
+
+.org 0x8006c9f8
 .area 0x8006cc50-.
-  .notice "BTL EFE slot release space left: " + (0x8006cc50-.) + " bytes"
+  .importobj "compiled/BTLEFETargetSelection.lib"
+  .notice "BTL EFE target selection and slot release space left: " + (0x8006cc50-.) + " bytes"
   .fill 0x8006cc50-.
 .endarea
 
@@ -102,6 +141,22 @@
 ; BTL_applyEFEVariableOperator
 .org 0x80073614
   .word BTL_applyEFEVariableOperator
+
+; EFE source/target selection and entity queries
+.org 0x80073388
+  .word BTL_selectNextTargetEntity
+.org 0x800733b8
+  .word BTL_getTargetDigimonSize
+.org 0x80073428
+  .word BTL_getSourceDigimonSize
+.org 0x80073460
+  .word BTL_findHitEntity
+.org 0x80073470
+  .word BTL_setTargetToHitEntity
+.org 0x80073558
+  .word BTL_selectRandomTargetEntity
+.org 0x80073600
+  .word BTL_isTargetUnhit
 
 ; EFE vector arithmetic subopcodes
 .org 0x80073488

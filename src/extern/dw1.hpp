@@ -597,7 +597,7 @@ extern "C"
         int16_t currentMP;
         int16_t unk1;
         uint8_t unk2_1;
-        uint8_t unk2_2;
+        uint8_t isHit;
         int16_t vabId;
         uint8_t chargeMode;
         uint8_t field7_0x57;
@@ -1886,6 +1886,7 @@ extern "C"
     extern EFEFlashData* EFE_FLASH_DATA;
     extern int32_t FLASH_INSTANCE;
     extern uint8_t* EFE_DATA_STACK;
+    extern int32_t EFE_HIT_ENTITY_INDEX;
     extern int32_t EFE_TARGET_INDEX;
     extern int32_t EFE_SCRIPT_RESULT;
     extern EFESubEffect* EFE_CURRENT_SUBEFFECT;

@@ -106,7 +106,7 @@ namespace
         auto& fighter = COMBAT_DATA_PTR->fighter[playerId];
         auto brains   = entity->stats.brain;
 
-        entity->stats.unk2_2                = 0;
+        entity->stats.isHit                 = 0;
         fighter.targetId                    = playerId ^ 1;
         fighter.hpDamageBuffer              = 0;
         fighter.mpDamageBuffer              = 0;
