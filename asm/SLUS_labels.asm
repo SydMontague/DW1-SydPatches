@@ -379,6 +379,7 @@
 .definelabel EFE_INSTRUCTION_POINTER,  0x80134d00
 .definelabel EFE_CURRENT_OPCODE,       0x80134d04
 .definelabel EFE_SCRIPT_BASE,          0x80134d08
+.definelabel EFE_HIT_ENTITY_INDEX,     0x80134cd8
 .definelabel EFE_TARGET_INDEX,         0x80134ce0
 .definelabel EFE_SCRIPT_RESULT,        0x80134ce4
 .definelabel EFE_CURRENT_SUBEFFECT,    0x80134ce8

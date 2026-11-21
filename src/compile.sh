@@ -100,8 +100,9 @@ done
 for mode in BTL STD VS; do
     "$MIPS_CXX" EFE/Arithmetic.cpp -o "../compiled/${mode}EFEArithmetic.lib" $FLAGS \
         -DEFE_applyVariableOperator=${mode}_applyEFEVariableOperator
-    "$MIPS_CXX" EFE/VectorArithmetic.cpp -o "../compiled/${mode}EFEVectorArithmetic.lib" $FLAGS \
-        "-DEFE_ENTRY(name)=${mode}_##name"
+    for unit in VectorArithmetic EntityQueries HitEntity TargetSelection; do
+        "$MIPS_CXX" "EFE/${unit}.cpp" -o "../compiled/${mode}EFE${unit}.lib" $FLAGS "-DEFE_ENTRY(name)=${mode}_##name"
+    done
     bindings=(
         -DEFE_loadNextFile=${mode}_loadNextEFEFile
         -DEFE_setupLoadedFile=${mode}_setupLoadedEFEFile

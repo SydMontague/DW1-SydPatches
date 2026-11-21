@@ -144,8 +144,6 @@
 
 .org 0x80066678
   jal findAABBHitEntity
-.org 0x8006ab58
-  jal findAABBHitEntity
 .org 0x80070d4c
   jal findAABBHitEntity
 
@@ -362,8 +360,6 @@
   jal addWithLimit
 
 .org 0x8006ec70
-  jal findAABBHitEntity
-.org 0x80073164
   jal findAABBHitEntity
 .org 0x800792ec
   jal findAABBHitEntity
@@ -615,8 +611,6 @@
   jal addWithLimit
 
 .org 0x80064d40
-  jal findAABBHitEntity
-.org 0x80069234
   jal findAABBHitEntity
 .org 0x8006f3bc
   jal findAABBHitEntity

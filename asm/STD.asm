@@ -44,6 +44,19 @@
   .fill 0x8006e984-.
 .endarea
 
+.org 0x8006eaec
+.area 0x8006eb38-.
+  .notice "STD EFE retired isTargetUnhit space left: " + (0x8006eb38-.) + " bytes"
+  .fill 0x8006eb38-.
+.endarea
+
+.org 0x800710a0
+.area 0x800711c4-.
+  .importobj "compiled/STDEFEEntityQueries.lib"
+  .notice "STD EFE entity queries space left: " + (0x800711c4-.) + " bytes"
+  .fill 0x800711c4-.
+.endarea
+
 .org 0x800712f8
 .area 0x80071430-.
   .notice "STD retired EFE scalar vector space left: " + (0x80071430-.) + " bytes"
@@ -57,9 +70,35 @@
   .fill 0x80072f78-.
 .endarea
 
-.org 0x800750e4
+.org 0x80072fd0
+.area 0x80072ff8-.
+  .notice "STD EFE retired setTargetToHitEntity space left: " + (0x80072ff8-.) + " bytes"
+  .fill 0x80072ff8-.
+.endarea
+
+.org 0x80073098
+.area 0x800731ec-.
+  .importobj "compiled/STDEFEHitEntity.lib"
+  .notice "STD EFE hit entity queries space left: " + (0x800731ec-.) + " bytes"
+  .fill 0x800731ec-.
+.endarea
+
+.org 0x800734b4
+.area 0x8007352c-.
+  .notice "STD EFE retired getSourceDigimonSize space left: " + (0x8007352c-.) + " bytes"
+  .fill 0x8007352c-.
+.endarea
+
+.org 0x80074a70
+.area 0x80074ae8-.
+  .notice "STD EFE retired getTargetDigimonSize space left: " + (0x80074ae8-.) + " bytes"
+  .fill 0x80074ae8-.
+.endarea
+
+.org 0x80074fd4
 .area 0x8007522c-.
-  .notice "STD EFE slot release space left: " + (0x8007522c-.) + " bytes"
+  .importobj "compiled/STDEFETargetSelection.lib"
+  .notice "STD EFE target selection and slot release space left: " + (0x8007522c-.) + " bytes"
   .fill 0x8007522c-.
 .endarea
 
@@ -106,6 +145,22 @@
 ; STD_applyEFEVariableOperator
 .org 0x8007ae30
   .word STD_applyEFEVariableOperator
+
+; EFE source/target selection and entity queries
+.org 0x8007aba4
+  .word STD_selectNextTargetEntity
+.org 0x8007abd4
+  .word STD_getTargetDigimonSize
+.org 0x8007ac44
+  .word STD_getSourceDigimonSize
+.org 0x8007ac7c
+  .word STD_findHitEntity
+.org 0x8007ac8c
+  .word STD_setTargetToHitEntity
+.org 0x8007ad74
+  .word STD_selectRandomTargetEntity
+.org 0x8007ae1c
+  .word STD_isTargetUnhit
 
 ; EFE vector arithmetic subopcodes
 .org 0x8007aca4

@@ -205,7 +205,7 @@ namespace
 
         if (fighter->invulnerableTimer < 1) {
             if (fighter->flags.isFlattened) entity->flatSprite = 0;
-            if (!fighter->flags.isAttacking) entity->stats.unk2_2 = 0;
+            if (!fighter->flags.isAttacking) entity->stats.isHit = 0;
             if (fighter->flags.isBlocking) {
                 fighter->flags.isBlocking = false;
                 VS__clearFighterDataTables(fighter);
@@ -713,7 +713,7 @@ namespace
 
 void VS__faintDigimon(DigimonEntity* entity, FighterData* fighter, int32_t playerId)
 {
-    entity->stats.unk2_2 = 1;
+    entity->stats.isHit = 1;
     startAnimation(entity, 0x2B);
     VS__resetFlatten(playerId);
     VS__removeAllStatusFX(entity, fighter);
