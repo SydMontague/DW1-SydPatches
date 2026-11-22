@@ -1620,13 +1620,13 @@ extern "C"
 
     struct GameState
     {
-        dtl::array<uint8_t, 6> dailySingleCards;
-        dtl::array<uint8_t, 78> recycleItems;
-        dtl::array<ItemType, 128> bank;
-        dtl::array<uint8_t, 33> cards;
-        dtl::array<uint8_t, 100> triggers; // bitset
-        dtl::array<uint8_t, 256> pstats;
-        dtl::array<ScriptStackEntry, 8> scriptStack;
+        dtl::array<uint8_t, 6> dailySingleCards{};
+        dtl::array<uint8_t, 78> recycleItems{};
+        dtl::array<ItemType, 128> bank{};
+        dtl::array<uint8_t, 33> cards{};
+        dtl::array<uint8_t, 100> triggers{}; // bitset
+        dtl::array<uint8_t, 256> pstats{};
+        dtl::array<ScriptStackEntry, 8> scriptStack{};
     };
 
     enum class ItemMenuType : uint8_t
@@ -1912,7 +1912,7 @@ extern "C"
     extern int16_t CAMERA_X_PREVIOUS;
     extern int16_t CAMERA_Y_PREVIOUS;
     extern LocalMapObjectInstance LOCAL_MAP_OBJECT_INSTANCE[188];
-    extern int32_t LOADED_DIGIMON_MODELS[8];
+    extern dtl::array<int32_t, 8> LOADED_DIGIMON_MODELS;
     extern CollisionCode NPC_COLLISION_STATE[8];
     extern uint8_t SELECTED_MEDAL;
     extern uint8_t MEDAL_SELECTOR_INDEX;
@@ -2037,6 +2037,14 @@ extern "C"
     extern uint8_t SCRIPT_TEXTBOX_SPEAKER_MODE;
     extern uint32_t SCRIPT_SECTION_IS_EVENT;
     extern uint16_t ACTIVE_TALKED_TO_ENTITY;
+    extern dtl::array<uint8_t, 25000> MAPHEAD_SCRIPT_BUFFER;
+    extern dtl::array<uint32_t, 2048> SCRIPT_OFFSET_TABLE;
+    extern dtl::array<uint8_t, 16384> MAP_SCRIPT_BUFFER;
+    extern GameState GAME_STATE_DATA;
+    extern uint16_t SCRIPT_STACK_OFFSET;
+    extern uint8_t SCRIPT_SECTION;
+    // TODO: should be array to array<uint8_t, 64>, but we might want to get rid of it entirely
+    extern dtl::array<uint8_t, 64 * 21> TEXTBOX_LINES_BUFFER;
 
     // TODO can be relocated
     extern dtl::array<uint8_t, 2048> MEDAL_MESH;
@@ -2063,12 +2071,6 @@ extern "C"
     void pushScriptStack(ScriptStackEntry* data);
     void popScriptStack(ScriptStackEntry* data);
     void resetBGM();
-    void scriptInstructionFBtoFF(uint32_t instruction);
-    void scriptInstruction10to27(uint32_t instruction);
-    void scriptInstruction28to3F(uint32_t instruction);
-    void scriptInstruction46to58(uint32_t instruction);
-    void scriptInstruction5Ato5F(uint32_t instruction);
-    void scriptInstruction64to7E(uint32_t instruction);
     void openMeritShop();
     void openMojyamonShop();
     void openRecycleShop();
@@ -2085,14 +2087,10 @@ extern "C"
     void scriptPauseGame(int32_t speaker);
     int32_t drawString2(const uint8_t* str, int32_t x, int32_t y, int32_t unused);
     void setCardAmount(int32_t cardType, int32_t amount);
-    uint8_t* getScript(uint32_t scriptId);
-    uint8_t* getScriptSection(uint8_t* ptr, int32_t section);
     void unsetTrigger(int32_t id);
     void tickMainMenu(int32_t instanceId);
     void renderMainMenu(int32_t instanceId);
     void updateBGM();
-    void runMapHeadScript(uint8_t mapId);
-    void initializeLoadedNPCModels();
     bool isTriggerSet(int32_t trigger);
     void playBGM(uint8_t soundFont);
     uint8_t getCardAmount(uint8_t cardId);
@@ -2102,9 +2100,7 @@ extern "C"
     void setTrigger(uint32_t triggerId);
     void clearTextArea();
     void setTextColor(int32_t color);
-    void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
     void initializeFontCLUT();
-    void initializeScripts();
     void initializeNamingBuffer(int32_t mode);
     int32_t newGameStateMachine();
 }

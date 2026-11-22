@@ -35,8 +35,8 @@
 ;  jal readFile
 ;.org 0x800e65d8
 ;  jal readFile
-.org 0x80105a14
-  jal readFile
+;.org 0x80105a14
+;  jal readFile
 
 ;.org 0x800e0fe8
 ;  jal loadTextureFile
@@ -70,11 +70,6 @@
 ;  jal loadDynamicLibrary
 .org 0x80111b88
   jal loadDynamicLibrary
-
-.org 0x80105a2c
-  jal readFileSection
-.org 0x8010627c
-  jal readFileSection
 
 .close
 

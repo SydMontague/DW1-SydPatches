@@ -1,15 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-;.org 0x800dd1d8
-;  jal dailyPStatTrigger
-;.org 0x800dd6e0
-;  jal dailyPStatTrigger
-;.org 0x801033c0
-;  jal dailyPStatTrigger
-.org 0x80105a88
-  jal dailyPStatTrigger
-
 ;.org 0x800fb394
 ;  jal isPartnerBaby
 ;.org 0x800fc798
@@ -151,11 +142,6 @@
 .org 0x80106408
   jal scriptIdToEntityId
 
-;.org 0x800efc14
-;  jal tickScript
-.org 0x80105afc
-  jal tickScript
-
 .org 0x80106b20
   jal handleMusicOverride
 .org 0x80106aa8
@@ -163,6 +149,12 @@
 .org 0x80106bc0
   jal handleMusicOverride
 
+.org 0x8010c424
+  jal getScript
+
+.org 0x8010c434
+  jal getScriptSection
+  
 .close
 
 
@@ -198,5 +190,11 @@
 
 .org 0x80080f54
   jal showTextboxReady
+
+.org 0x8008112c
+  jal getScript
+
+.org 0x8008113c
+  jal getScriptSection
 
 .close

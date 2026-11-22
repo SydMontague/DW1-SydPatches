@@ -8,6 +8,7 @@
 #include "Math.hpp"
 #include "Model.hpp"
 #include "Partner.hpp"
+#include "Script.hpp"
 #include "Tamer.hpp"
 #include "extern/BTL.hpp"
 #include "extern/dw1.hpp"

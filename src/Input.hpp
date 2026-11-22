@@ -12,6 +12,7 @@ extern "C"
     uint32_t processInput();
     bool isXPressedAfterDialogue();
     void setInputRepeatMask(uint32_t mask);
+    void inputInit();
 }
 
 bool isKeyDownPolled(InputButtons button);
