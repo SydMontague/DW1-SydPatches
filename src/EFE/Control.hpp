@@ -2,6 +2,8 @@
 
 #include "Helpers.hpp"
 
+extern "C" void EFE_ENTRY(returnFromEFESubroutine)();
+
 namespace EFEControl
 {
     using EFEHelpers::advanceInstruction;

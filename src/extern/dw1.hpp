@@ -762,6 +762,17 @@ extern "C"
         }
 
         /*
+         * Gets the index of an entity, or an empty optional if it is absent from the table.
+         */
+        constexpr dtl::optional<int32_t> getEntityIndex(const Entity* entity) const
+        {
+#pragma GCC unroll 1
+            for (int32_t i = 0; i < static_cast<int32_t>(table.size()); ++i)
+                if (table[i] == entity) return i;
+            return dtl::nullopt;
+        }
+
+        /*
          * Sets the entity pointer for a given instance. If the ID is out of bounds, nothing happens.
          */
         constexpr void setEntity(int32_t instanceId, Entity* ptr)

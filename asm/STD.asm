@@ -50,6 +50,13 @@
   .fill 0x8006eb38-.
 .endarea
 
+.org 0x8006eb9c
+.area 0x8006f2d8-.
+  .importobj "compiled/STDEFEAttackCollision.lib"
+  .notice "STD EFE attack and collision space left: " + (0x8006f2d8-.) + " bytes"
+  .fill 0x8006f2d8-.
+.endarea
+
 .org 0x800710a0
 .area 0x800711c4-.
   .importobj "compiled/STDEFEEntityQueries.lib"
@@ -89,6 +96,13 @@
   .fill 0x8007352c-.
 .endarea
 
+.org 0x800739c0
+.area 0x80073b48-.
+  .importobj "compiled/STDEFETargetCollision.lib"
+  .notice "STD EFE target collision space left: " + (0x80073b48-.) + " bytes"
+  .fill 0x80073b48-.
+.endarea
+
 .org 0x80074a70
 .area 0x80074ae8-.
   .notice "STD EFE retired getTargetDigimonSize space left: " + (0x80074ae8-.) + " bytes"
@@ -100,6 +114,25 @@
   .importobj "compiled/STDEFETargetSelection.lib"
   .notice "STD EFE target selection and slot release space left: " + (0x8007522c-.) + " bytes"
   .fill 0x8007522c-.
+.endarea
+
+.org 0x800757e8
+.area 0x80075914-.
+  .notice "STD retired EFE default and target attacks space left: " + (0x80075914-.) + " bytes"
+  .fill 0x80075914-.
+.endarea
+
+.org 0x80075d8c
+.area 0x80075dd8-.
+  .notice "STD retired EFE subeffect setup space left: " + (0x80075dd8-.) + " bytes"
+  .fill 0x80075dd8-.
+.endarea
+
+.org 0x80075f70
+.area 0x800760ec-.
+  .importobj "compiled/STDEFESubEffect.lib"
+  .notice "STD EFE subeffects space left: " + (0x800760ec-.) + " bytes"
+  .fill 0x800760ec-.
 .endarea
 
 .org 0x800760ec
@@ -146,6 +179,24 @@
 .org 0x8007ae30
   .word STD_applyEFEVariableOperator
 
+; EFE subeffects and attack collision
+.org 0x8007ab2c
+  .word STD_initializeSubEffectInstructions
+.org 0x8007ab5c
+  .word STD_addAttackObjectToTarget
+.org 0x8007ab64
+  .word STD_applyDefaultBoxAttackHit
+.org 0x8007ac2c
+  .word STD_checkTargetCollision
+.org 0x8007ade4
+  .word STD_applyLineAttackHit
+.org 0x8007adec
+  .word STD_applyRadiusAttackHit
+.org 0x8007adf4
+  .word STD_applyBoxAttackHit
+.org 0x8007ae64
+  .word STD_spawnSubEffect
+
 ; EFE source/target selection and entity queries
 .org 0x8007aba4
   .word STD_selectNextTargetEntity
@@ -187,12 +238,6 @@
 ; STD_removeEFEEngine
 .org 0x80060a84
   jal STD_removeEFEEngine
-
-; STD_returnFromEFESubroutine
-.org 0x80075fd4
-  jal STD_returnFromEFESubroutine
-.org 0x80076048
-  jal STD_returnFromEFESubroutine
 
 ; STD_runEFESlotScript
 .org 0x8006e9e4
