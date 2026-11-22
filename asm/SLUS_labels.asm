@@ -4,23 +4,17 @@
 .definelabel drawString,                0x8010cf24
 .definelabel clearTextArea,             0x8010cb90
 .definelabel setTextColor,              0x8010cc0c
-.definelabel callScriptSection,         0x80105b14
 .definelabel setTrigger,                0x801065c0
 .definelabel readPStat,                 0x801062e0
 .definelabel writePStat,                0x80106474
 .definelabel getCardAmount,             0x801067ec
 .definelabel playBGM,                   0x80106a80
 .definelabel isTriggerSet,              0x8010643c
-.definelabel initializeLoadedNPCModels, 0x80105aa8
-.definelabel runMapHeadScript,          0x80105ae4
 .definelabel updateBGM,                 0x80106af0
 .definelabel tickMainMenu,              0x8010ff1c
 .definelabel renderMainMenu,            0x80113458
 .definelabel unsetTrigger,              0x801065fc
-.definelabel getScriptSection,          0x8010629c
-.definelabel getScript,                 0x80106218
 .definelabel initializeFontCLUT,        0x8010cb3c
-.definelabel initializeScripts,         0x801059c8
 .definelabel initializeNamingBuffer,    0x8010c70c
 .definelabel newGameStateMachine,       0x8010c7ac
 .definelabel setCardAmount,             0x80106848
@@ -45,10 +39,18 @@
 .definelabel gameClearSave,             0x801139ac
 .definelabel scriptUnloadModel,         0x80106c08
 
+
+.definelabel MAPHEAD_SCRIPT_PTR, 0x80134fac
+.definelabel TEXTBOX_LINES_BUFFER, 0x801be174
+.definelabel MAPHEAD_SCRIPT_BUFFER, 0x801b1d30
+.definelabel SCRIPT_OFFSET_TABLE, 0x801b7ed8
+.definelabel MAP_SCRIPT_BUFFER, 0x801b9ed8
+.definelabel GAME_STATE_DATA, 0x801bded8
+.definelabel SCRIPT_STACK_OFFSET, 0x80134fc6
+.definelabel SCRIPT_SECTION, 0x80134fe4
 .definelabel ACTIVE_TALKED_TO_ENTITY, 0x80134f9c
 .definelabel SCRIPT_SECTION_IS_EVENT, 0x80134fe0
 .definelabel SCRIPT_TEXTBOX_SPEAKER_MODE, 0x80135000
-.definelabel MAPHEAD_SCRIPT_PTR, 0x80134fac
 .definelabel CURRENT_SCREEN_ID, 0x80134ffe
 .definelabel SCRIPT_SAVE_STATE, 0x801be7bc
 .definelabel TIMESPEED, 0x80134fe7

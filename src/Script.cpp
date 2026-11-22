@@ -3,10 +3,12 @@
 #include "Evolution.hpp"
 #include "Files.hpp"
 #include "Helper.hpp"
+#include "Input.hpp"
 #include "Inventory.hpp"
 #include "Math.hpp"
 #include "Partner.hpp"
 #include "RecycleShop.hpp"
+#include "ScriptEngine.hpp"
 #include "Tournament.hpp"
 #include "VanillaText.hpp"
 #include "VanillaTextbox.hpp"
@@ -17,6 +19,12 @@
 
 namespace
 {
+    struct ScriptSectionEntry
+    {
+        uint16_t id;
+        uint16_t offset;
+    };
+
     int32_t getShopkeeperScriptID()
     {
         constexpr dtl::array<DigimonType, 12> SHOPKEEPER_TYPES{
@@ -101,6 +109,93 @@ namespace
 
 extern "C"
 {
+
+    void initializeLoadedNPCModels()
+    {
+        LOADED_DIGIMON_MODELS = {-1, -1, -1, -1, -1, -1, -1, -1};
+    }
+
+    void initializeScripts()
+    {
+        MAPHEAD_SCRIPT_PTR = MAPHEAD_SCRIPT_BUFFER.data();
+        GAME_STATE_PTR     = &GAME_STATE_DATA;
+
+        TEXTBOX_LINES_PTR = TEXTBOX_LINES_BUFFER.data();
+        readFile("\\SCN\\MAPHEAD.SCN", MAPHEAD_SCRIPT_PTR);
+        readFileSection("\\SCN\\DG.SCN", SCRIPT_OFFSET_TABLE.data(), 0, 0x2000);
+
+        GAME_STATE_DATA     = {};
+        CURRENT_SCRIPT_ID   = 0xFFFF;
+        ACTIVE_MAP_SCRIPT   = 0xFFFF;
+        MERIT               = 0;
+        SCRIPT_STACK_OFFSET = 0;
+        BATTLES_STARTED     = 0;
+        BATTLES_FLED        = 0;
+        TOURNAMENTS_WON     = 0;
+        TOURNAMENT_WINS     = 0;
+        TOURNAMENTS_LOST    = 0;
+        TEXTBOX_ORIGIN_X    = -9999;
+        TEXTBOX_ORIGIN_Y    = -9999;
+        TEXTBOX_ORIGIN_Z    = -9999;
+        inputInit();
+        dailyPStatTrigger();
+        initializeLoadedNPCModels();
+    }
+
+    void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t isEvent)
+    {
+        ACTIVE_SCRIPT             = getScript(scriptId);
+        SCRIPT_POINTER            = getScriptSection(ACTIVE_SCRIPT, scriptSection);
+        SCRIPT_SECTION            = scriptSection;
+        TEXTBOX_CLOSE_MODE        = 0;
+        CURRENT_DIALOGUE_OWNER    = 0xFD;
+        SCRIPT_SECTION_IS_EVENT   = isEvent;
+        TIMESPEED                 = readPStat(0);
+        SOME_SCRIPT_SYNC_BIT      = 1;
+        ACTIVE_INSTRUCTION        = 0;
+        SCRIPT_MAP_CHANGE_ENABLED = 0;
+        SCRIPT_PAUSED_GAME        = 0;
+        IS_SCRIPT_PAUSED          = 0;
+        ACTIVE_TALKED_TO_ENTITY   = TALKED_TO_ENTITY;
+
+        for (auto& entry : SCRIPT_MOVEMENT)
+            entry.type = ScriptMovement::NONE;
+
+        initializeTextbox();
+    }
+
+    void runMapHeadScript(uint8_t mapId)
+    {
+        callScriptSection(0, mapId, true);
+        tickScript();
+    }
+
+    uint8_t* getScript(uint32_t scriptId)
+    {
+        if (scriptId == 0) return MAPHEAD_SCRIPT_PTR;
+
+        if (ACTIVE_MAP_SCRIPT != scriptId) {
+            ACTIVE_MAP_SCRIPT = scriptId;
+            readFileSection("\\SCN\\DG.SCN",
+                            MAP_SCRIPT_BUFFER.data(),
+                            SCRIPT_OFFSET_TABLE[scriptId],
+                            SCRIPT_OFFSET_TABLE[scriptId + 1] - SCRIPT_OFFSET_TABLE[scriptId]);
+        }
+
+        return MAP_SCRIPT_BUFFER.data();
+    }
+
+    uint8_t* getScriptSection(uint8_t* ptr, int32_t section)
+    {
+        ScriptSectionEntry* entry = reinterpret_cast<ScriptSectionEntry*>(ptr + 2);
+
+        while (true) {
+            if (entry->id == section) return ptr + entry->offset;
+            if (entry->id == 0xFFFF) return nullptr;
+            entry++;
+        }
+    }
+
     void handleMusicOverride(uint8_t* font, uint8_t* track)
     {
         auto override = readPStat(0xF5);

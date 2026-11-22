@@ -25,6 +25,12 @@ extern "C"
     void scriptShowSelection();
     int16_t* getStatsPointer(ScriptStats stat);
     void handleItemLoss();
+    uint8_t* getScriptSection(uint8_t* ptr, int32_t section);
+    uint8_t* getScript(uint32_t scriptId);
+    void runMapHeadScript(uint8_t mapId);
+    void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
+    void initializeScripts();
+    void initializeLoadedNPCModels();
 }
 
 void triggerSeadramonCutscene();

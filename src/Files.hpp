@@ -157,4 +157,5 @@ extern "C"
     void initializeFileReadQueue();
     void loadStackedTIMFile(const char* file);
     void loadTrainingLibrary(int32_t map);
+    void readFileSection(const char* path, void* buffer, uint32_t offset, uint32_t size);
 }
