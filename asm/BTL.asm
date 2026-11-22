@@ -50,6 +50,13 @@
   .fill 0x80066414-.
 .endarea
 
+.org 0x800665a4
+.area 0x80066ce0-.
+  .importobj "compiled/BTLEFEAttackCollision.lib"
+  .notice "BTL EFE attack and collision space left: " + (0x80066ce0-.) + " bytes"
+  .fill 0x80066ce0-.
+.endarea
+
 .org 0x80068b08
 .area 0x80068c2c-.
   .importobj "compiled/BTLEFEEntityQueries.lib"
@@ -89,6 +96,13 @@
   .fill 0x8006af20-.
 .endarea
 
+.org 0x8006b3b4
+.area 0x8006b53c-.
+  .importobj "compiled/BTLEFETargetCollision.lib"
+  .notice "BTL EFE target collision space left: " + (0x8006b53c-.) + " bytes"
+  .fill 0x8006b53c-.
+.endarea
+
 .org 0x8006c464
 .area 0x8006c4dc-.
   .notice "BTL EFE retired getTargetDigimonSize space left: " + (0x8006c4dc-.) + " bytes"
@@ -100,6 +114,25 @@
   .importobj "compiled/BTLEFETargetSelection.lib"
   .notice "BTL EFE target selection and slot release space left: " + (0x8006cc50-.) + " bytes"
   .fill 0x8006cc50-.
+.endarea
+
+.org 0x8006d20c
+.area 0x8006d338-.
+  .notice "BTL retired EFE default and target attacks space left: " + (0x8006d338-.) + " bytes"
+  .fill 0x8006d338-.
+.endarea
+
+.org 0x8006d7b0
+.area 0x8006d7fc-.
+  .notice "BTL retired EFE subeffect setup space left: " + (0x8006d7fc-.) + " bytes"
+  .fill 0x8006d7fc-.
+.endarea
+
+.org 0x8006d994
+.area 0x8006db10-.
+  .importobj "compiled/BTLEFESubEffect.lib"
+  .notice "BTL EFE subeffects space left: " + (0x8006db10-.) + " bytes"
+  .fill 0x8006db10-.
 .endarea
 
 .org 0x8006db10
@@ -142,6 +175,24 @@
 .org 0x80073614
   .word BTL_applyEFEVariableOperator
 
+; EFE subeffects and attack collision
+.org 0x80073310
+  .word BTL_initializeSubEffectInstructions
+.org 0x80073340
+  .word BTL_addAttackObjectToTarget
+.org 0x80073348
+  .word BTL_applyDefaultBoxAttackHit
+.org 0x80073410
+  .word BTL_checkTargetCollision
+.org 0x800735c8
+  .word BTL_applyLineAttackHit
+.org 0x800735d0
+  .word BTL_applyRadiusAttackHit
+.org 0x800735d8
+  .word BTL_applyBoxAttackHit
+.org 0x80073648
+  .word BTL_spawnSubEffect
+
 ; EFE source/target selection and entity queries
 .org 0x80073388
   .word BTL_selectNextTargetEntity
@@ -183,12 +234,6 @@
 ; BTL_removeEFEEngine
 .org 0x80059050
   jal BTL_removeEFEEngine
-
-; BTL_returnFromEFESubroutine
-.org 0x8006d9f8
-  jal BTL_returnFromEFESubroutine
-.org 0x8006da6c
-  jal BTL_returnFromEFESubroutine
 
 ; BTL_runEFESlotScript
 .org 0x800662c0

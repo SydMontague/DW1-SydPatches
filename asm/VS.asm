@@ -50,6 +50,13 @@
   .fill 0x80064c08-.
 .endarea
 
+.org 0x80064c6c
+.area 0x800653a8-.
+  .importobj "compiled/VSEFEAttackCollision.lib"
+  .notice "VS EFE attack and collision space left: " + (0x800653a8-.) + " bytes"
+  .fill 0x800653a8-.
+.endarea
+
 .org 0x80067170
 .area 0x80067294-.
   .importobj "compiled/VSEFEEntityQueries.lib"
@@ -89,6 +96,13 @@
   .fill 0x800695fc-.
 .endarea
 
+.org 0x80069a90
+.area 0x80069c18-.
+  .importobj "compiled/VSEFETargetCollision.lib"
+  .notice "VS EFE target collision space left: " + (0x80069c18-.) + " bytes"
+  .fill 0x80069c18-.
+.endarea
+
 .org 0x8006ab40
 .area 0x8006abb8-.
   .notice "VS EFE retired getTargetDigimonSize space left: " + (0x8006abb8-.) + " bytes"
@@ -100,6 +114,25 @@
   .importobj "compiled/VSEFETargetSelection.lib"
   .notice "VS EFE target selection and slot release space left: " + (0x8006b2fc-.) + " bytes"
   .fill 0x8006b2fc-.
+.endarea
+
+.org 0x8006b8b8
+.area 0x8006b9e4-.
+  .notice "VS retired EFE default and target attacks space left: " + (0x8006b9e4-.) + " bytes"
+  .fill 0x8006b9e4-.
+.endarea
+
+.org 0x8006be5c
+.area 0x8006bea8-.
+  .notice "VS retired EFE subeffect setup space left: " + (0x8006bea8-.) + " bytes"
+  .fill 0x8006bea8-.
+.endarea
+
+.org 0x8006c040
+.area 0x8006c1bc-.
+  .importobj "compiled/VSEFESubEffect.lib"
+  .notice "VS EFE subeffects space left: " + (0x8006c1bc-.) + " bytes"
+  .fill 0x8006c1bc-.
 .endarea
 
 .org 0x8006c1bc
@@ -170,6 +203,24 @@
 .org 0x80070e5c
   .word VS_applyEFEVariableOperator
 
+; EFE subeffects and attack collision
+.org 0x80070b58
+  .word VS_initializeSubEffectInstructions
+.org 0x80070b88
+  .word VS_addAttackObjectToTarget
+.org 0x80070b90
+  .word VS_applyDefaultBoxAttackHit
+.org 0x80070c58
+  .word VS_checkTargetCollision
+.org 0x80070e10
+  .word VS_applyLineAttackHit
+.org 0x80070e18
+  .word VS_applyRadiusAttackHit
+.org 0x80070e20
+  .word VS_applyBoxAttackHit
+.org 0x80070e90
+  .word VS_spawnSubEffect
+
 ; EFE source/target selection and entity queries
 .org 0x80070bd0
   .word VS_selectNextTargetEntity
@@ -207,12 +258,6 @@
 ; VS_loadNextEFEFile
 .org 0x800649ac
   jal VS_loadNextEFEFile
-
-; VS_returnFromEFESubroutine
-.org 0x8006c0a4
-  jal VS_returnFromEFESubroutine
-.org 0x8006c118
-  jal VS_returnFromEFESubroutine
 
 ; VS_runEFESlotScript
 .org 0x80064ab4

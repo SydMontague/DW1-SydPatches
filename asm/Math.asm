@@ -142,8 +142,6 @@
 .org 0x8005cf74
   jal addWithLimit
 
-.org 0x80066678
-  jal findAABBHitEntity
 .org 0x80070d4c
   jal findAABBHitEntity
 
@@ -233,8 +231,6 @@
   jal sin
 .org 0x80067138
   jal sin
-.org 0x8006b4ec
-  jal sin
 .org 0x8006b664
   jal sin
 .org 0x8006b680
@@ -254,8 +250,6 @@
 
 .org 0x800670f8
   jal cos
-.org 0x8006b504
-  jal cos
 .org 0x8006c0e4
   jal cos
 .org 0x8006f2f8
@@ -274,8 +268,6 @@
 .org 0x8006b038
   jal atan
 .org 0x8006b0bc
-  jal atan
-.org 0x8006b494
   jal atan
 .org 0x8006b570
   jal atan
@@ -359,8 +351,6 @@
 .org 0x8006472c
   jal addWithLimit
 
-.org 0x8006ec70
-  jal findAABBHitEntity
 .org 0x800792ec
   jal findAABBHitEntity
 
@@ -490,8 +480,6 @@
   jal sin
 .org 0x8006f730
   jal sin
-.org 0x80073af8
-  jal sin
 .org 0x80073c70
   jal sin
 .org 0x80073c8c
@@ -510,8 +498,6 @@
   jal sin
 
 .org 0x8006f6f0
-  jal cos
-.org 0x80073b10
   jal cos
 .org 0x800746f0
   jal cos
@@ -539,8 +525,6 @@
 .org 0x80073644
   jal atan
 .org 0x800736c8
-  jal atan
-.org 0x80073aa0
   jal atan
 .org 0x80073b7c
   jal atan
@@ -610,8 +594,6 @@
 .org 0x8005c334
   jal addWithLimit
 
-.org 0x80064d40
-  jal findAABBHitEntity
 .org 0x8006f3bc
   jal findAABBHitEntity
 
@@ -683,8 +665,6 @@
   jal sin
 .org 0x80065800
   jal sin
-.org 0x80069bc8
-  jal sin
 .org 0x80069d40
   jal sin
 .org 0x80069d5c
@@ -703,8 +683,6 @@
   jal sin
 
 .org 0x800657c0
-  jal cos
-.org 0x80069be0
   jal cos
 .org 0x8006a7c0
   jal cos
@@ -732,8 +710,6 @@
 .org 0x80069714
   jal atan
 .org 0x80069798
-  jal atan
-.org 0x80069b70
   jal atan
 .org 0x80069c4c
   jal atan

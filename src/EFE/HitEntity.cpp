@@ -1,16 +1,6 @@
 #include "../Math.hpp"
 #include "Operands.hpp"
 
-namespace
-{
-    inline SVector readBoxVector(const int32_t* components)
-    {
-        return {static_cast<int16_t>(components[0]),
-                static_cast<int16_t>(components[1]),
-                static_cast<int16_t>(components[2])};
-    }
-} // namespace
-
 extern "C"
 {
     [[gnu::optimize("Os")]]
@@ -22,8 +12,8 @@ extern "C"
         *out               = 0;
 
         const auto* instance = reinterpret_cast<const EFEInstance*>(EFE_INSTANCE_BASE);
-        auto center          = readBoxVector(instance->position.data());
-        AABB box{.center = &center, .extent = readBoxVector(extents)};
+        auto center          = EFEHelpers::toShortVector(instance->position.data());
+        AABB box{.center = &center, .extent = EFEHelpers::toShortVector(extents)};
         for (EFE_HIT_ENTITY_INDEX = 1;; ++EFE_HIT_ENTITY_INDEX) {
             EFE_HIT_ENTITY_INDEX = findAABBHitEntity(&box, EFE_CURRENT_SUBEFFECT->sourceEntity, EFE_HIT_ENTITY_INDEX);
             if (EFE_HIT_ENTITY_INDEX == -1) return;

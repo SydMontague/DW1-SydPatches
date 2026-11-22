@@ -78,13 +78,10 @@ FLAGS="-O3 -std=c++23 -T linker.ld -mabi=32 -march=r3000 -r -mel -nostdlib -mexp
 
 # Shared control source is emitted into each overlay's disjoint owned regions.
 "$MIPS_CXX" BTL/EFEDispatch.cpp -o ../compiled/BTLEFEDispatch.lib $FLAGS
-"$MIPS_CXX" BTL/EFEControl.cpp -o ../compiled/BTLEFEControl.lib $FLAGS
 "$MIPS_CXX" BTL/EFERun.cpp -o ../compiled/BTLEFERun.lib $FLAGS
 "$MIPS_CXX" STD/EFEDispatch.cpp -o ../compiled/STDEFEDispatch.lib $FLAGS
-"$MIPS_CXX" STD/EFEControl.cpp -o ../compiled/STDEFEControl.lib $FLAGS
 "$MIPS_CXX" STD/EFERun.cpp -o ../compiled/STDEFERun.lib $FLAGS
 "$MIPS_CXX" VS/EFEDispatch.cpp -o ../compiled/VSEFEDispatch.lib $FLAGS
-"$MIPS_CXX" VS/EFEControl.cpp -o ../compiled/VSEFEControl.lib $FLAGS
 "$MIPS_CXX" VS/EFERun.cpp -o ../compiled/VSEFERun.lib $FLAGS
 
 # Shared EFE source; each overlay owns one emitted copy and its borrowed pointer.
@@ -98,9 +95,10 @@ done
 
 # Shared engine source, emitted only in its owning overlay.
 for mode in BTL STD VS; do
+    "$MIPS_CXX" "${mode}/EFEControl.cpp" -o "../compiled/${mode}EFEControl.lib" $FLAGS "-DEFE_ENTRY(name)=${mode}_##name"
     "$MIPS_CXX" EFE/Arithmetic.cpp -o "../compiled/${mode}EFEArithmetic.lib" $FLAGS \
         -DEFE_applyVariableOperator=${mode}_applyEFEVariableOperator
-    for unit in VectorArithmetic EntityQueries HitEntity TargetSelection; do
+    for unit in VectorArithmetic EntityQueries HitEntity TargetSelection AttackCollision TargetCollision SubEffect; do
         "$MIPS_CXX" "EFE/${unit}.cpp" -o "../compiled/${mode}EFE${unit}.lib" $FLAGS "-DEFE_ENTRY(name)=${mode}_##name"
     done
     bindings=(

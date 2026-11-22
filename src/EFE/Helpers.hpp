@@ -9,6 +9,19 @@
 
 namespace EFEHelpers
 {
+    // The distance tests compare signed low words after squaring and adding.
+    constexpr int32_t sumOfSquares(uint32_t x, uint32_t z)
+    {
+        return x * x + z * z;
+    }
+
+    constexpr SVector toShortVector(const int32_t* components)
+    {
+        return {static_cast<int16_t>(components[0]),
+                static_cast<int16_t>(components[1]),
+                static_cast<int16_t>(components[2])};
+    }
+
     template<class T> static inline T readMemory(auto address)
     {
         return *reinterpret_cast<const volatile T*>(address);

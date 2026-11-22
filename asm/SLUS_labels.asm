@@ -382,6 +382,9 @@
 .definelabel EFE_CURRENT_OPCODE,       0x80134d04
 .definelabel EFE_SCRIPT_BASE,          0x80134d08
 .definelabel EFE_HIT_ENTITY_INDEX,     0x80134cd8
+.definelabel EFE_SUBEFFECT_SPAWNED,    0x80134cdc
+.definelabel EFE_ROOT_TARGET,          0x80134ef4
+.definelabel EFE_ROOT_SOURCE,          0x80134ef8
 .definelabel EFE_TARGET_INDEX,         0x80134ce0
 .definelabel EFE_SCRIPT_RESULT,        0x80134ce4
 .definelabel EFE_CURRENT_SUBEFFECT,    0x80134ce8
@@ -404,6 +407,9 @@
 .definelabel EFE_SLOT_BASE,    0x80134d10
 .definelabel EFE_FILE_CURSOR,  0x80134d14
 .definelabel EFE_SOUND_RECORDS, 0x80139ad0
+.definelabel BTL_calculateAttackHitPosition, 0x8006e74c
+.definelabel STD_calculateAttackHitPosition, 0x80076d28
+.definelabel VS_calculateAttackHitPosition, 0x8006cdf8
 .definelabel BTL_clearEFESoundChannels, 0x80064e0c
 .definelabel STD_clearEFESoundChannels, 0x8006d4f4
 .definelabel VS_clearEFESoundChannels, 0x800635c4
