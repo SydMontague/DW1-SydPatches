@@ -15,8 +15,11 @@ extern "C"
         int16_t m21;
         int16_t m22;
         int16_t pad;
-        int32_t t[3];
+        dtl::array<int32_t, 3> t;
     };
+
+    static_assert(sizeof(Matrix) == 32 && alignof(Matrix) == 4);
+    static_assert(__builtin_offsetof(Matrix, t) == 20);
 
     struct SVector
     {

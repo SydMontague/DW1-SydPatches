@@ -12,7 +12,15 @@ struct EFEInstance
     dtl::array<int32_t, 3> rotation;
 };
 
-struct EFEBoneOffset;
+struct EFEBoneOffset
+{
+    int16_t boneId;
+    int16_t x;
+    int16_t y;
+    int16_t z;
+};
+
+static_assert(sizeof(EFEBoneOffset) == 8);
 
 struct EFESubEffect
 {

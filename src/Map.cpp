@@ -933,8 +933,8 @@ extern "C"
 
     void spawnSpriteAtEntity(int32_t scriptId, int32_t nodeId, int32_t sprite)
     {
-        auto* entity = getEntityFromScriptId(scriptId).first;
-        auto* pos    = entity->posData[nodeId].posMatrix.work.t;
+        auto* entity    = getEntityFromScriptId(scriptId).first;
+        const auto& pos = entity->posData[nodeId].posMatrix.work.t;
 
         spawnSpriteAtLocation(pos[0], pos[1], pos[2], sprite, 1);
     }

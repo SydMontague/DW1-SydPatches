@@ -669,6 +669,7 @@
 .definelabel libgs_GsSetFlatLight, 0x800982a0
 .definelabel libgs_GsSortOt, 0x80098898
 .definelabel libgs_GsSetAmbient, 0x800987d8
+.definelabel libgs_GsMulCoord0, 0x80097e98
 .definelabel libgs_GsMulCoord3, 0x80097fa8
 .definelabel libgs_GsSetOrign, 0x80097d48
 .definelabel libgs_GsSwapDispBuff, 0x80097c98

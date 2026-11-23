@@ -64,22 +64,10 @@
   .fill 0x80068c2c-.
 .endarea
 
-.org 0x80068d60
-.area 0x80068e98-.
-  .notice "BTL retired EFE scalar vector space left: " + (0x80068e98-.) + " bytes"
-  .fill 0x80068e98-.
-.endarea
-
 .org 0x8006a688
-.area 0x8006a96c-.
-  .importobj "compiled/BTLEFEVectorArithmetic.lib"
-  .notice "BTL EFE vector arithmetic space left: " + (0x8006a96c-.) + " bytes"
-  .fill 0x8006a96c-.
-.endarea
-
-.org 0x8006a9c4
 .area 0x8006a9ec-.
-  .notice "BTL EFE retired setTargetToHitEntity space left: " + (0x8006a9ec-.) + " bytes"
+  .importobj "compiled/BTLEFEVectorArithmetic.lib"
+  .notice "BTL EFE vector arithmetic space left: " + (0x8006a9ec-.) + " bytes"
   .fill 0x8006a9ec-.
 .endarea
 
@@ -91,9 +79,10 @@
 .endarea
 
 .org 0x8006aea8
-.area 0x8006af20-.
-  .notice "BTL EFE retired getSourceDigimonSize space left: " + (0x8006af20-.) + " bytes"
-  .fill 0x8006af20-.
+.area 0x8006b36c-.
+  .importobj "compiled/BTLEFERotation.lib"
+  .notice "BTL EFE Rotation space left: " + (0x8006b36c-.) + " bytes"
+  .fill 0x8006b36c-.
 .endarea
 
 .org 0x8006b3b4
@@ -165,6 +154,119 @@
 .area 0x800736ec-.
   .notice "BTL retired EFE operator table space left: " + (0x800736ec-.) + " bytes"
   .fill 0x800736ec-.
+.endarea
+
+; Angle and transform commands share these reclaimed regions.
+.org 0x80066ce0
+.area 0x80066d6c-.
+  .notice "BTL EFE retired faceTargetEntity space left: " + (0x80066d6c-.) + " bytes"
+  .fill 0x80066d6c-.
+.endarea
+
+.org 0x80068a9c
+.area 0x80068b08-.
+  .notice "BTL EFE retired getCameraRotation space left: " + (0x80068b08-.) + " bytes"
+  .fill 0x80068b08-.
+.endarea
+
+.org 0x80068c2c
+.area 0x80068e98-.
+  .importobj "compiled/BTLEFEBonePosition.lib"
+  .notice "BTL EFE BonePosition space left: " + (0x80068e98-.) + " bytes"
+  .fill 0x80068e98-.
+.endarea
+
+.org 0x80069184
+.area 0x800692a8-.
+  .notice "BTL EFE retired setTransformToBoneMatrix space left: " + (0x800692a8-.) + " bytes"
+  .fill 0x800692a8-.
+.endarea
+
+.org 0x80069e10
+.area 0x80069fcc-.
+  .importobj "compiled/BTLEFEInterpolation.lib"
+  .notice "BTL EFE Interpolation space left: " + (0x80069fcc-.) + " bytes"
+  .fill 0x80069fcc-.
+.endarea
+
+.org 0x8006a20c
+.area 0x8006a688-.
+  .importobj "compiled/BTLEFEMovement.lib"
+  .notice "BTL EFE Movement space left: " + (0x8006a688-.) + " bytes"
+  .fill 0x8006a688-.
+.endarea
+
+.org 0x8006a9ec
+.area 0x8006aa8c-.
+  .notice "BTL EFE retired normalizeRotationAngles space left: " + (0x8006aa8c-.) + " bytes"
+  .fill 0x8006aa8c-.
+.endarea
+
+.org 0x8006abe0
+.area 0x8006ac58-.
+  .notice "BTL EFE retired getVectorEulerAngles space left: " + (0x8006ac58-.) + " bytes"
+  .fill 0x8006ac58-.
+.endarea
+
+.org 0x8006acd4
+.area 0x8006aea8-.
+  .importobj "compiled/BTLEFEBoneTransform.lib"
+  .notice "BTL EFE BoneTransform space left: " + (0x8006aea8-.) + " bytes"
+  .fill 0x8006aea8-.
+.endarea
+
+.org 0x8006b53c
+.area 0x8006b6dc-.
+  .importobj "compiled/BTLEFEBoneQuery.lib"
+  .notice "BTL EFE BoneQuery space left: " + (0x8006b6dc-.) + " bytes"
+  .fill 0x8006b6dc-.
+.endarea
+
+.org 0x8006bd98
+.area 0x8006bec0-.
+  .notice "BTL EFE retired setTransformToBoneOffset space left: " + (0x8006bec0-.) + " bytes"
+  .fill 0x8006bec0-.
+.endarea
+
+.org 0x8006bfac
+.area 0x8006c114-.
+  .importobj "compiled/BTLEFETrigonometry.lib"
+  .notice "BTL EFE Trigonometry space left: " + (0x8006c114-.) + " bytes"
+  .fill 0x8006c114-.
+.endarea
+
+.org 0x8006c654
+.area 0x8006c72c-.
+  .notice "BTL EFE retired projectPositionToScreen space left: " + (0x8006c72c-.) + " bytes"
+  .fill 0x8006c72c-.
+.endarea
+
+.org 0x8006cd38
+.area 0x8006d08c-.
+  .importobj "compiled/BTLEFEEntityTransform.lib"
+  .importobj "compiled/BTLEFEProjection.lib"
+  .notice "BTL EFE EntityTransform and Projection space left: " + (0x8006d08c-.) + " bytes"
+  .fill 0x8006d08c-.
+.endarea
+
+.org 0x8006d0b0
+.area 0x8006d20c-.
+  .importobj "compiled/BTLEFEParentTransfer.lib"
+  .notice "BTL EFE ParentTransfer space left: " + (0x8006d20c-.) + " bytes"
+  .fill 0x8006d20c-.
+.endarea
+
+.org 0x8006d338
+.area 0x8006d480-.
+  .notice "BTL EFE retired setTransformToTargetBone space left: " + (0x8006d480-.) + " bytes"
+  .fill 0x8006d480-.
+.endarea
+
+.org 0x8006d55c
+.area 0x8006d61c-.
+  .importobj "compiled/BTLEFEVectorGeometry.lib"
+  .notice "BTL EFE VectorGeometry space left: " + (0x8006d61c-.) + " bytes"
+  .fill 0x8006d61c-.
 .endarea
 
 ; BTL_addParticleEmitter
@@ -242,5 +344,135 @@
 ; Engine removal now owns slot unloading; the existing delay slot is nop.
 .org 0x80059048
   nop
+
+; BTL_applyHomingMovement
+.org 0x80073420
+  .word BTL_applyHomingMovement
+
+; BTL_calculateCosine
+.org 0x80073438
+  .word BTL_calculateCosine
+
+; BTL_calculatePolarOffset
+.org 0x800733c8
+  .word BTL_calculatePolarOffset
+
+; BTL_calculateSine
+.org 0x80073430
+  .word BTL_calculateSine
+
+; BTL_centerTransformOnEntities
+.org 0x800734b8
+  .word BTL_centerTransformOnEntities
+
+; BTL_combineRotations
+.org 0x800734d8
+  .word BTL_combineRotations
+
+; BTL_convertToViewSpace
+.org 0x80073550
+  .word BTL_convertToViewSpace
+
+; BTL_copyFromParentTransform
+.org 0x800733d0
+  .word BTL_copyFromParentTransform
+
+; BTL_copyTargetEntityPosition
+.org 0x80073370
+  .word BTL_copyTargetEntityPosition
+
+; BTL_copyToParentTransform
+.org 0x800734e8
+  .word BTL_copyToParentTransform
+
+; BTL_copyVector
+.org 0x80073480
+  .word BTL_copyVector
+
+; BTL_faceTargetEntity
+.org 0x800735c0
+  .word BTL_faceTargetEntity
+
+; BTL_getCameraRotation
+.org 0x80073560
+  .word BTL_getCameraRotation
+
+; BTL_getScatteredSpawnPosition
+.org 0x80073350
+  .word BTL_getScatteredSpawnPosition
+
+; BTL_getSourceBoneTransform
+.org 0x800734f0
+  .word BTL_getSourceBoneTransform
+
+; BTL_getTargetBoneTransform
+.org 0x800734c0
+  .word BTL_getTargetBoneTransform
+
+; BTL_getVectorEulerAngles
+.org 0x80073458
+  .word BTL_getVectorEulerAngles
+
+; BTL_getVectorLength
+.org 0x80073478
+  .word BTL_getVectorLength
+
+; BTL_initializeEFETransform
+.org 0x80073320
+  .word BTL_initializeEFETransform
+
+; BTL_interpolateValue
+.org 0x80073440
+  .word BTL_interpolateValue
+
+; BTL_interpolateVector
+.org 0x80073360
+  .word BTL_interpolateVector
+
+; BTL_maskVectors
+.org 0x800734a8
+  .word BTL_maskVectors
+
+; BTL_normalizeRotationAngles
+.org 0x80073468
+  .word BTL_normalizeRotationAngles
+.org 0x800734d0
+  .word BTL_normalizeRotationAngles
+
+; BTL_projectPositionToScreen
+.org 0x800733a8
+  .word BTL_projectPositionToScreen
+
+; BTL_rotateShortVector
+.org 0x80073328
+  .word BTL_rotateShortVector
+
+; BTL_rotateTransformTowardPoint
+.org 0x80073408
+  .word BTL_rotateTransformTowardPoint
+
+; BTL_rotateVectorByAngles
+.org 0x800734c8
+  .word BTL_rotateVectorByAngles
+
+; BTL_setTransformToBoneMatrix
+.org 0x80073528
+  .word BTL_setTransformToBoneMatrix
+
+; BTL_setTransformToBoneOffset
+.org 0x800733e8
+  .word BTL_setTransformToBoneOffset
+
+; BTL_setTransformToSourceBone
+.org 0x80073400
+  .word BTL_setTransformToSourceBone
+
+; BTL_setTransformToTargetBone
+.org 0x80073338
+  .word BTL_setTransformToTargetBone
+
+; BTL_steerTransformTowardPoint
+.org 0x80073368
+  .word BTL_steerTransformTowardPoint
 
 .close

@@ -64,22 +64,10 @@
   .fill 0x80067294-.
 .endarea
 
-.org 0x800673c8
-.area 0x80067500-.
-  .notice "VS retired EFE scalar vector space left: " + (0x80067500-.) + " bytes"
-  .fill 0x80067500-.
-.endarea
-
 .org 0x80068d64
-.area 0x80069048-.
-  .importobj "compiled/VSEFEVectorArithmetic.lib"
-  .notice "VS EFE vector arithmetic space left: " + (0x80069048-.) + " bytes"
-  .fill 0x80069048-.
-.endarea
-
-.org 0x800690a0
 .area 0x800690c8-.
-  .notice "VS EFE retired setTargetToHitEntity space left: " + (0x800690c8-.) + " bytes"
+  .importobj "compiled/VSEFEVectorArithmetic.lib"
+  .notice "VS EFE vector arithmetic space left: " + (0x800690c8-.) + " bytes"
   .fill 0x800690c8-.
 .endarea
 
@@ -91,9 +79,10 @@
 .endarea
 
 .org 0x80069584
-.area 0x800695fc-.
-  .notice "VS EFE retired getSourceDigimonSize space left: " + (0x800695fc-.) + " bytes"
-  .fill 0x800695fc-.
+.area 0x80069a48-.
+  .importobj "compiled/VSEFERotation.lib"
+  .notice "VS EFE Rotation space left: " + (0x80069a48-.) + " bytes"
+  .fill 0x80069a48-.
 .endarea
 
 .org 0x80069a90
@@ -165,6 +154,119 @@
 .area 0x80070f34-.
   .notice "VS retired EFE operator table space left: " + (0x80070f34-.) + " bytes"
   .fill 0x80070f34-.
+.endarea
+
+; Angle and transform commands share these reclaimed regions.
+.org 0x800653a8
+.area 0x80065434-.
+  .notice "VS EFE retired faceTargetEntity space left: " + (0x80065434-.) + " bytes"
+  .fill 0x80065434-.
+.endarea
+
+.org 0x80067104
+.area 0x80067170-.
+  .notice "VS EFE retired getCameraRotation space left: " + (0x80067170-.) + " bytes"
+  .fill 0x80067170-.
+.endarea
+
+.org 0x80067294
+.area 0x80067500-.
+  .importobj "compiled/VSEFEBonePosition.lib"
+  .notice "VS EFE BonePosition space left: " + (0x80067500-.) + " bytes"
+  .fill 0x80067500-.
+.endarea
+
+.org 0x800677ec
+.area 0x80067910-.
+  .notice "VS EFE retired setTransformToBoneMatrix space left: " + (0x80067910-.) + " bytes"
+  .fill 0x80067910-.
+.endarea
+
+.org 0x800684ec
+.area 0x800686a8-.
+  .importobj "compiled/VSEFEInterpolation.lib"
+  .notice "VS EFE Interpolation space left: " + (0x800686a8-.) + " bytes"
+  .fill 0x800686a8-.
+.endarea
+
+.org 0x800688e8
+.area 0x80068d64-.
+  .importobj "compiled/VSEFEMovement.lib"
+  .notice "VS EFE Movement space left: " + (0x80068d64-.) + " bytes"
+  .fill 0x80068d64-.
+.endarea
+
+.org 0x800690c8
+.area 0x80069168-.
+  .notice "VS EFE retired normalizeRotationAngles space left: " + (0x80069168-.) + " bytes"
+  .fill 0x80069168-.
+.endarea
+
+.org 0x800692bc
+.area 0x80069334-.
+  .notice "VS EFE retired getVectorEulerAngles space left: " + (0x80069334-.) + " bytes"
+  .fill 0x80069334-.
+.endarea
+
+.org 0x800693b0
+.area 0x80069584-.
+  .importobj "compiled/VSEFEBoneTransform.lib"
+  .notice "VS EFE BoneTransform space left: " + (0x80069584-.) + " bytes"
+  .fill 0x80069584-.
+.endarea
+
+.org 0x80069c18
+.area 0x80069db8-.
+  .importobj "compiled/VSEFEBoneQuery.lib"
+  .notice "VS EFE BoneQuery space left: " + (0x80069db8-.) + " bytes"
+  .fill 0x80069db8-.
+.endarea
+
+.org 0x8006a474
+.area 0x8006a59c-.
+  .notice "VS EFE retired setTransformToBoneOffset space left: " + (0x8006a59c-.) + " bytes"
+  .fill 0x8006a59c-.
+.endarea
+
+.org 0x8006a688
+.area 0x8006a7f0-.
+  .importobj "compiled/VSEFETrigonometry.lib"
+  .notice "VS EFE Trigonometry space left: " + (0x8006a7f0-.) + " bytes"
+  .fill 0x8006a7f0-.
+.endarea
+
+.org 0x8006ad30
+.area 0x8006ae08-.
+  .notice "VS EFE retired projectPositionToScreen space left: " + (0x8006ae08-.) + " bytes"
+  .fill 0x8006ae08-.
+.endarea
+
+.org 0x8006b3e4
+.area 0x8006b738-.
+  .importobj "compiled/VSEFEEntityTransform.lib"
+  .importobj "compiled/VSEFEProjection.lib"
+  .notice "VS EFE EntityTransform and Projection space left: " + (0x8006b738-.) + " bytes"
+  .fill 0x8006b738-.
+.endarea
+
+.org 0x8006b75c
+.area 0x8006b8b8-.
+  .importobj "compiled/VSEFEParentTransfer.lib"
+  .notice "VS EFE ParentTransfer space left: " + (0x8006b8b8-.) + " bytes"
+  .fill 0x8006b8b8-.
+.endarea
+
+.org 0x8006b9e4
+.area 0x8006bb2c-.
+  .notice "VS EFE retired setTransformToTargetBone space left: " + (0x8006bb2c-.) + " bytes"
+  .fill 0x8006bb2c-.
+.endarea
+
+.org 0x8006bc08
+.area 0x8006bcc8-.
+  .importobj "compiled/VSEFEVectorGeometry.lib"
+  .notice "VS EFE VectorGeometry space left: " + (0x8006bcc8-.) + " bytes"
+  .fill 0x8006bcc8-.
 .endarea
 
 ; VS__combatMain
@@ -262,6 +364,136 @@
 ; VS_runEFESlotScript
 .org 0x80064ab4
   jal VS_runEFESlotScript
+
+; VS_applyHomingMovement
+.org 0x80070c68
+  .word VS_applyHomingMovement
+
+; VS_calculateCosine
+.org 0x80070c80
+  .word VS_calculateCosine
+
+; VS_calculatePolarOffset
+.org 0x80070c10
+  .word VS_calculatePolarOffset
+
+; VS_calculateSine
+.org 0x80070c78
+  .word VS_calculateSine
+
+; VS_centerTransformOnEntities
+.org 0x80070d00
+  .word VS_centerTransformOnEntities
+
+; VS_combineRotations
+.org 0x80070d20
+  .word VS_combineRotations
+
+; VS_convertToViewSpace
+.org 0x80070d98
+  .word VS_convertToViewSpace
+
+; VS_copyFromParentTransform
+.org 0x80070c18
+  .word VS_copyFromParentTransform
+
+; VS_copyTargetEntityPosition
+.org 0x80070bb8
+  .word VS_copyTargetEntityPosition
+
+; VS_copyToParentTransform
+.org 0x80070d30
+  .word VS_copyToParentTransform
+
+; VS_copyVector
+.org 0x80070cc8
+  .word VS_copyVector
+
+; VS_faceTargetEntity
+.org 0x80070e08
+  .word VS_faceTargetEntity
+
+; VS_getCameraRotation
+.org 0x80070da8
+  .word VS_getCameraRotation
+
+; VS_getScatteredSpawnPosition
+.org 0x80070b98
+  .word VS_getScatteredSpawnPosition
+
+; VS_getSourceBoneTransform
+.org 0x80070d38
+  .word VS_getSourceBoneTransform
+
+; VS_getTargetBoneTransform
+.org 0x80070d08
+  .word VS_getTargetBoneTransform
+
+; VS_getVectorEulerAngles
+.org 0x80070ca0
+  .word VS_getVectorEulerAngles
+
+; VS_getVectorLength
+.org 0x80070cc0
+  .word VS_getVectorLength
+
+; VS_initializeEFETransform
+.org 0x80070b68
+  .word VS_initializeEFETransform
+
+; VS_interpolateValue
+.org 0x80070c88
+  .word VS_interpolateValue
+
+; VS_interpolateVector
+.org 0x80070ba8
+  .word VS_interpolateVector
+
+; VS_maskVectors
+.org 0x80070cf0
+  .word VS_maskVectors
+
+; VS_normalizeRotationAngles
+.org 0x80070cb0
+  .word VS_normalizeRotationAngles
+.org 0x80070d18
+  .word VS_normalizeRotationAngles
+
+; VS_projectPositionToScreen
+.org 0x80070bf0
+  .word VS_projectPositionToScreen
+
+; VS_rotateShortVector
+.org 0x80070b70
+  .word VS_rotateShortVector
+
+; VS_rotateTransformTowardPoint
+.org 0x80070c50
+  .word VS_rotateTransformTowardPoint
+
+; VS_rotateVectorByAngles
+.org 0x80070d10
+  .word VS_rotateVectorByAngles
+
+; VS_setTransformToBoneMatrix
+.org 0x80070d70
+  .word VS_setTransformToBoneMatrix
+
+; VS_setTransformToBoneOffset
+.org 0x80070c30
+  .word VS_setTransformToBoneOffset
+
+; VS_setTransformToSourceBone
+.org 0x80070c48
+  .word VS_setTransformToSourceBone
+
+; VS_setTransformToTargetBone
+.org 0x80070b80
+  .word VS_setTransformToTargetBone
+
+; VS_steerTransformTowardPoint
+.org 0x80070bb0
+  .word VS_steerTransformTowardPoint
 
 .close
 

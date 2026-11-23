@@ -88,45 +88,6 @@ extern "C"
         if (output->y >= 0x800) output->y -= 0x1000;
     }
 
-    void matrixToEuler1(Matrix* input, SVector* output)
-    {
-        if (input->m00 == 0 && input->m22 == 0) {
-            output->x = libgte_ratan2(input->m21, input->m11);
-            output->y = input->m02 > 0 ? 1024 : -1024;
-            output->z = 0;
-            return;
-        }
-
-        output->x = libgte_ratan2(-input->m12, input->m22);
-        output->z = libgte_ratan2(-input->m01, input->m00);
-
-        auto rsinX = libgte_rsin(output->x);
-        auto rcosX = libgte_rcos(output->x);
-        auto rsinZ = libgte_rsin(output->z);
-        auto rcosZ = libgte_rcos(output->z);
-
-        auto absRsinX = abs(rsinX);
-        auto absRcosX = abs(rcosX);
-        auto absRsinZ = abs(rsinZ);
-        auto absRcosZ = abs(rcosZ);
-
-        auto maxZ       = max(absRsinZ, absRcosZ);
-        auto maxX       = max(absRsinX, absRcosX);
-        auto maxOverall = max(maxX, maxZ);
-
-        auto val = 0;
-        if (maxOverall == absRsinX)
-            val = (-4096 * input->m12) / rsinX;
-        else if (maxOverall == absRcosX)
-            val = (4096 * input->m22) / rcosX;
-        else if (maxOverall == absRsinZ)
-            val = (-4096 * input->m01) / rsinZ;
-        else if (maxOverall == absRcosZ)
-            val = (4096 * input->m00) / rcosZ;
-
-        output->y = libgte_ratan2(input->m02, val);
-    }
-
     void matrixToEuler2(Matrix* input, SVector* output)
     {
         if (input->m02 == 0 && input->m22 == 0) {
@@ -179,19 +140,5 @@ extern "C"
         *matrix = arr[i - 1]->coord;
         for (int j = i - 2; j >= 0; j--)
             libgs_GsMulCoord3(matrix, &arr[j]->coord);
-    }
-
-    void multiplyRotations(SVector* rotation1, SVector* rotation2)
-    {
-        if (rotation2->x == 0 && rotation2->y == 0 && rotation2->z == 0) return;
-
-        Matrix matrix1;
-        Matrix matrix2;
-        Matrix matrix3;
-
-        libgte_RotMatrixYXZ(rotation1, &matrix1);
-        libgte_RotMatrixYXZ(rotation2, &matrix2);
-        libgte_MulMatrix0(&matrix1, &matrix2, &matrix3);
-        matrixToEuler2(&matrix3, rotation1);
     }
 }

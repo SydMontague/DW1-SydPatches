@@ -151,6 +151,7 @@ extern "C"
     void libgs_GsSetFlatLight(uint32_t id, const GsF_LIGHT* light);
     GsOT* libgs_GsSortOt(GsOT* src, GsOT* dest);
     void libgs_GsSetAmbient(uint32_t red, uint32_t green, uint32_t blue);
+    void libgs_GsMulCoord0(Matrix* parent, Matrix* local, Matrix* out);
     void libgs_GsMulCoord3(Matrix* m1, Matrix* m2);
     void libgs_GsSortClear(uint8_t r, uint8_t g, uint8_t b, GsOT* ot);
     void libgs_GsSwapDispBuff();

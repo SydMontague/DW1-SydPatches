@@ -231,16 +231,6 @@
   jal sin
 .org 0x80067138
   jal sin
-.org 0x8006b664
-  jal sin
-.org 0x8006b680
-  jal sin
-.org 0x8006c0cc
-  jal sin
-.org 0x8006d414
-  jal sin
-.org 0x8006d430
-  jal sin
 .org 0x8006ef48
   jal sin
 .org 0x8006f2b4
@@ -249,8 +239,6 @@
   jal sin
 
 .org 0x800670f8
-  jal cos
-.org 0x8006c0e4
   jal cos
 .org 0x8006f2f8
   jal cos
@@ -265,23 +253,9 @@
   jal atan
 .org 0x8005c42c
   jal atan
-.org 0x8006b038
-  jal atan
-.org 0x8006b0bc
-  jal atan
-.org 0x8006b570
-  jal atan
-.org 0x8006ce50
-  jal atan
 .org 0x8006e79c
   jal atan
 
-.org 0x8006d024
-  jal lerp
-.org 0x8006d040
-  jal lerp
-.org 0x8006d05c
-  jal lerp
 .org 0x8006eef0
   jal lerp
 .org 0x8006ef3c
@@ -314,8 +288,6 @@
   jal lerp
 
 .org 0x8006715c
-  jal worldPosToScreenPos
-.org 0x8006c6e0
   jal worldPosToScreenPos
 .org 0x8006e96c
   jal worldPosToScreenPos
@@ -480,16 +452,6 @@
   jal sin
 .org 0x8006f730
   jal sin
-.org 0x80073c70
-  jal sin
-.org 0x80073c8c
-  jal sin
-.org 0x800746d8
-  jal sin
-.org 0x800759f0
-  jal sin
-.org 0x80075a0c
-  jal sin
 .org 0x800774e8
   jal sin
 .org 0x80077854
@@ -498,8 +460,6 @@
   jal sin
 
 .org 0x8006f6f0
-  jal cos
-.org 0x800746f0
   jal cos
 .org 0x80077898
   jal cos
@@ -522,14 +482,6 @@
   jal atan
 .org 0x80064414
   jal atan
-.org 0x80073644
-  jal atan
-.org 0x800736c8
-  jal atan
-.org 0x80073b7c
-  jal atan
-.org 0x8007542c
-  jal atan
 .org 0x80076d78
   jal atan
 
@@ -547,12 +499,6 @@
   jal lerp
 .org 0x8005b4ec
   jal lerp
-.org 0x80075600
-  jal lerp
-.org 0x8007561c
-  jal lerp
-.org 0x80075638
-  jal lerp
 .org 0x80077490
   jal lerp
 .org 0x800774dc
@@ -569,8 +515,6 @@
   jal lerp
 
 .org 0x8006f754
-  jal worldPosToScreenPos
-.org 0x80074cec
   jal worldPosToScreenPos
 .org 0x80076f38
   jal worldPosToScreenPos
@@ -665,16 +609,6 @@
   jal sin
 .org 0x80065800
   jal sin
-.org 0x80069d40
-  jal sin
-.org 0x80069d5c
-  jal sin
-.org 0x8006a7a8
-  jal sin
-.org 0x8006bac0
-  jal sin
-.org 0x8006badc
-  jal sin
 .org 0x8006d5b8
   jal sin
 .org 0x8006d924
@@ -683,8 +617,6 @@
   jal sin
 
 .org 0x800657c0
-  jal cos
-.org 0x8006a7c0
   jal cos
 .org 0x8006d968
   jal cos
@@ -707,14 +639,6 @@
   jal atan
 .org 0x8005c01c
   jal atan
-.org 0x80069714
-  jal atan
-.org 0x80069798
-  jal atan
-.org 0x80069c4c
-  jal atan
-.org 0x8006b4fc
-  jal atan
 .org 0x8006ce48
   jal atan
 
@@ -732,12 +656,6 @@
   jal lerp
 .org 0x8005a768
   jal lerp
-.org 0x8006b6d0
-  jal lerp
-.org 0x8006b6ec
-  jal lerp
-.org 0x8006b708
-  jal lerp
 .org 0x8006d560
   jal lerp
 .org 0x8006d5ac
@@ -754,8 +672,6 @@
   jal lerp
 
 .org 0x80065824
-  jal worldPosToScreenPos
-.org 0x8006adbc
   jal worldPosToScreenPos
 .org 0x8006d008
   jal worldPosToScreenPos

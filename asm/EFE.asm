@@ -1,17 +1,8 @@
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
 
-.org 0x80073328
-  .word EFE_rotateVector
-
 .org 0x80073390
   .word EFE_createFlash
-
-.org 0x80073480
-  .word EFE_copyVector
-
-.org 0x800734a8
-  .word EFE_maskVectors
 
 ; BTL_loadEFEImmediate
 .org 0x80073604
@@ -91,9 +82,6 @@
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
 .psx
 
-.org 0x8007ab44
-  .word EFE_rotateVector
-
 .org 0x8007abac
   .word EFE_createFlash
 
@@ -102,12 +90,6 @@
 
 .org 0x8006eb94
   j EFE_modifySomeImage
-
-.org 0x8007ac9c
-  .word EFE_copyVector
-
-.org 0x8007acc4
-  .word EFE_maskVectors
 
 ; STD_loadEFEImmediate
 .org 0x8007ae20
@@ -187,9 +169,6 @@
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
 
-.org 0x80070b70
-  .word EFE_rotateVector
-
 .org 0x80070bd8
   .word EFE_createFlash
 
@@ -198,12 +177,6 @@
 
 .org 0x80064c64
   j EFE_modifySomeImage
-
-.org 0x80070cc8
-  .word EFE_copyVector
-
-.org 0x80070cf0
-  .word EFE_maskVectors
 
 ; VS_loadEFEImmediate
 .org 0x80070e4c
