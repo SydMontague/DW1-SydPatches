@@ -3,11 +3,9 @@
 #include "GameObjects.hpp"
 #include "Math.hpp"
 #include "Tamer.hpp"
-#include "extern/dtl/algorithm.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libcd.hpp"
 #include "extern/libgpu.hpp"
-#include "extern/libgte.hpp"
 #include "extern/stddef.hpp"
 
 namespace
@@ -104,23 +102,6 @@ namespace
 
 extern "C"
 {
-    void EFE_copyVector()
-    {
-        const auto* source = pop<uint32_t*>();
-        auto* destination  = pop<uint32_t*>();
-
-        dtl::copy(source, source + 3, destination);
-    }
-
-    void EFE_maskVectors()
-    {
-        const auto* source = pop<uint32_t*>();
-        auto* destination  = pop<uint32_t*>();
-
-        for (int32_t i = 0; i < 3; i++)
-            destination[i] &= source[i];
-    }
-
     // TODO: Consider swapping the compareEqual/compareNotEqual names in a future refactor
     // to make the 0/-1 results more intuitive.
     int32_t EFE_compareEqual(int32_t value)
@@ -151,26 +132,6 @@ extern "C"
     int32_t EFE_compareGreaterOrEqual(int32_t value)
     {
         return value >= EFE_SCRIPT_REGISTER ? 0 : -1;
-    }
-
-    void EFE_rotateVector()
-    {
-        Vector* vector    = pop<Vector*>();
-        Vector* rotVector = pop<Vector*>();
-
-        Matrix matrix;
-        SVector work;
-        work.x = rotVector->x;
-        work.y = rotVector->y;
-        work.z = rotVector->z;
-        libgte_RotMatrixZYX(&work, &matrix);
-        work.x = vector->x;
-        work.y = vector->y;
-        work.z = vector->z;
-        libgte_ApplyMatrixSV(&matrix, &work, &work);
-        vector->x = work.x;
-        vector->y = work.y;
-        vector->z = work.z;
     }
 
     uint8_t* initializeFlashData(uint8_t* data)

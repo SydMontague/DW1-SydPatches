@@ -273,34 +273,6 @@
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
 .psx
 
-.org 0x8006a28c
-  jal multiplyRotations
-
-.org 0x8006a4e0
-  jal calculatePosition
-
-.org 0x8006ac1c
-  jal toEulerAngles
-
-.org 0x8006a9a8
-  jal getDistance
-
-.org 0x8006a32c
-  jal matrixToEuler1
-.org 0x8006aa50
-  jal matrixToEuler1
-
-.org 0x80068acc
-  jal matrixToEuler2
-.org 0x80068cf8
-  jal matrixToEuler2
-.org 0x80069264
-  jal matrixToEuler2
-.org 0x80069e70
-  jal matrixToEuler2
-.org 0x8006a4ec
-  jal matrixToEuler2
-
 .org 0x80067cb8
   jal customRandom
 .org 0x80067de8
@@ -316,15 +288,6 @@
 .open "work/DIGIMON/STD_REL.BIN",0x80052ae0
 .psx
 
-.org 0x80072898
-  jal multiplyRotations
-
-.org 0x80072aec
-  jal calculatePosition
-
-.org 0x80073228
-  jal toEulerAngles
-
 .org 0x8005a96c
   jal getDistance
 .org 0x8005a998
@@ -333,24 +296,6 @@
   jal getDistance
 .org 0x8005bb54
   jal getDistance
-.org 0x80072fb4
-  jal getDistance
-
-.org 0x80072938
-  jal matrixToEuler1
-.org 0x8007305c
-  jal matrixToEuler1
-
-.org 0x80071064
-  jal matrixToEuler2
-.org 0x80071290
-  jal matrixToEuler2
-.org 0x800717fc
-  jal matrixToEuler2
-.org 0x8007247c
-  jal matrixToEuler2
-.org 0x80072af8
-  jal matrixToEuler2
 
 .org 0x8005bb00
   jal customRandom
@@ -371,15 +316,6 @@
 .open "work/DIGIMON/VS_REL.BIN",0x80052ae0
 .psx
 
-.org 0x80068968
-  jal multiplyRotations
-
-.org 0x80068bbc
-  jal calculatePosition
-
-.org 0x800692f8
-  jal toEulerAngles
-
 .org 0x80059be8
   jal getDistance
 .org 0x80059c14
@@ -388,24 +324,6 @@
   jal getDistance
 .org 0x8005add4
   jal getDistance
-.org 0x80069084
-  jal getDistance
-
-.org 0x80068a08
-  jal matrixToEuler1
-.org 0x8006912c
-  jal matrixToEuler1
-
-.org 0x80067134
-  jal matrixToEuler2
-.org 0x80067360
-  jal matrixToEuler2
-.org 0x800678cc
-  jal matrixToEuler2
-.org 0x8006854c
-  jal matrixToEuler2
-.org 0x80068bc8
-  jal matrixToEuler2
 
 .org 0x8005ad80
   jal customRandom

@@ -68,12 +68,6 @@
   jal calculateBoneMatrix
 .org 0x80059cfc
   jal calculateBoneMatrix
-.org 0x80067810
-  jal calculateBoneMatrix
-.org 0x80068540
-  jal calculateBoneMatrix
-.org 0x8006a498
-  jal calculateBoneMatrix
 
 .close
 
@@ -139,13 +133,6 @@
   jal startAnimation
 .org 0x8005ea60
   jal startAnimation
-
-.org 0x800691a8
-  jal calculateBoneMatrix
-.org 0x80069e64
-  jal calculateBoneMatrix
-.org 0x8006bdbc
-  jal calculateBoneMatrix
 
 .close
 
@@ -256,12 +243,6 @@
 .org 0x8005aa00
   jal calculateBoneMatrix
 .org 0x8005aa80
-  jal calculateBoneMatrix
-.org 0x80071740
-  jal calculateBoneMatrix
-.org 0x80072470
-  jal calculateBoneMatrix
-.org 0x800743c8
   jal calculateBoneMatrix
 
 .close

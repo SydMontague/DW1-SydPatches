@@ -64,22 +64,10 @@
   .fill 0x800711c4-.
 .endarea
 
-.org 0x800712f8
-.area 0x80071430-.
-  .notice "STD retired EFE scalar vector space left: " + (0x80071430-.) + " bytes"
-  .fill 0x80071430-.
-.endarea
-
 .org 0x80072c94
-.area 0x80072f78-.
-  .importobj "compiled/STDEFEVectorArithmetic.lib"
-  .notice "STD EFE vector arithmetic space left: " + (0x80072f78-.) + " bytes"
-  .fill 0x80072f78-.
-.endarea
-
-.org 0x80072fd0
 .area 0x80072ff8-.
-  .notice "STD EFE retired setTargetToHitEntity space left: " + (0x80072ff8-.) + " bytes"
+  .importobj "compiled/STDEFEVectorArithmetic.lib"
+  .notice "STD EFE vector arithmetic space left: " + (0x80072ff8-.) + " bytes"
   .fill 0x80072ff8-.
 .endarea
 
@@ -91,9 +79,10 @@
 .endarea
 
 .org 0x800734b4
-.area 0x8007352c-.
-  .notice "STD EFE retired getSourceDigimonSize space left: " + (0x8007352c-.) + " bytes"
-  .fill 0x8007352c-.
+.area 0x80073978-.
+  .importobj "compiled/STDEFERotation.lib"
+  .notice "STD EFE Rotation space left: " + (0x80073978-.) + " bytes"
+  .fill 0x80073978-.
 .endarea
 
 .org 0x800739c0
@@ -165,6 +154,119 @@
 .area 0x8007af08-.
   .notice "STD retired EFE operator table space left: " + (0x8007af08-.) + " bytes"
   .fill 0x8007af08-.
+.endarea
+
+; Angle and transform commands share these reclaimed regions.
+.org 0x8006f2d8
+.area 0x8006f364-.
+  .notice "STD EFE retired faceTargetEntity space left: " + (0x8006f364-.) + " bytes"
+  .fill 0x8006f364-.
+.endarea
+
+.org 0x80071034
+.area 0x800710a0-.
+  .notice "STD EFE retired getCameraRotation space left: " + (0x800710a0-.) + " bytes"
+  .fill 0x800710a0-.
+.endarea
+
+.org 0x800711c4
+.area 0x80071430-.
+  .importobj "compiled/STDEFEBonePosition.lib"
+  .notice "STD EFE BonePosition space left: " + (0x80071430-.) + " bytes"
+  .fill 0x80071430-.
+.endarea
+
+.org 0x8007171c
+.area 0x80071840-.
+  .notice "STD EFE retired setTransformToBoneMatrix space left: " + (0x80071840-.) + " bytes"
+  .fill 0x80071840-.
+.endarea
+
+.org 0x8007241c
+.area 0x800725d8-.
+  .importobj "compiled/STDEFEInterpolation.lib"
+  .notice "STD EFE Interpolation space left: " + (0x800725d8-.) + " bytes"
+  .fill 0x800725d8-.
+.endarea
+
+.org 0x80072818
+.area 0x80072c94-.
+  .importobj "compiled/STDEFEMovement.lib"
+  .notice "STD EFE Movement space left: " + (0x80072c94-.) + " bytes"
+  .fill 0x80072c94-.
+.endarea
+
+.org 0x80072ff8
+.area 0x80073098-.
+  .notice "STD EFE retired normalizeRotationAngles space left: " + (0x80073098-.) + " bytes"
+  .fill 0x80073098-.
+.endarea
+
+.org 0x800731ec
+.area 0x80073264-.
+  .notice "STD EFE retired getVectorEulerAngles space left: " + (0x80073264-.) + " bytes"
+  .fill 0x80073264-.
+.endarea
+
+.org 0x800732e0
+.area 0x800734b4-.
+  .importobj "compiled/STDEFEBoneTransform.lib"
+  .notice "STD EFE BoneTransform space left: " + (0x800734b4-.) + " bytes"
+  .fill 0x800734b4-.
+.endarea
+
+.org 0x80073b48
+.area 0x80073ce8-.
+  .importobj "compiled/STDEFEBoneQuery.lib"
+  .notice "STD EFE BoneQuery space left: " + (0x80073ce8-.) + " bytes"
+  .fill 0x80073ce8-.
+.endarea
+
+.org 0x800743a4
+.area 0x800744cc-.
+  .notice "STD EFE retired setTransformToBoneOffset space left: " + (0x800744cc-.) + " bytes"
+  .fill 0x800744cc-.
+.endarea
+
+.org 0x800745b8
+.area 0x80074720-.
+  .importobj "compiled/STDEFETrigonometry.lib"
+  .notice "STD EFE Trigonometry space left: " + (0x80074720-.) + " bytes"
+  .fill 0x80074720-.
+.endarea
+
+.org 0x80074c60
+.area 0x80074d38-.
+  .notice "STD EFE retired projectPositionToScreen space left: " + (0x80074d38-.) + " bytes"
+  .fill 0x80074d38-.
+.endarea
+
+.org 0x80075314
+.area 0x80075668-.
+  .importobj "compiled/STDEFEEntityTransform.lib"
+  .importobj "compiled/STDEFEProjection.lib"
+  .notice "STD EFE EntityTransform and Projection space left: " + (0x80075668-.) + " bytes"
+  .fill 0x80075668-.
+.endarea
+
+.org 0x8007568c
+.area 0x800757e8-.
+  .importobj "compiled/STDEFEParentTransfer.lib"
+  .notice "STD EFE ParentTransfer space left: " + (0x800757e8-.) + " bytes"
+  .fill 0x800757e8-.
+.endarea
+
+.org 0x80075914
+.area 0x80075a5c-.
+  .notice "STD EFE retired setTransformToTargetBone space left: " + (0x80075a5c-.) + " bytes"
+  .fill 0x80075a5c-.
+.endarea
+
+.org 0x80075b38
+.area 0x80075bf8-.
+  .importobj "compiled/STDEFEVectorGeometry.lib"
+  .notice "STD EFE VectorGeometry space left: " + (0x80075bf8-.) + " bytes"
+  .fill 0x80075bf8-.
 .endarea
 
 ; STD_addParticleEmitter
@@ -246,5 +348,135 @@
 ; Engine removal now owns slot unloading; the existing delay slot is nop.
 .org 0x80060a7c
   nop
+
+; STD_applyHomingMovement
+.org 0x8007ac3c
+  .word STD_applyHomingMovement
+
+; STD_calculateCosine
+.org 0x8007ac54
+  .word STD_calculateCosine
+
+; STD_calculatePolarOffset
+.org 0x8007abe4
+  .word STD_calculatePolarOffset
+
+; STD_calculateSine
+.org 0x8007ac4c
+  .word STD_calculateSine
+
+; STD_centerTransformOnEntities
+.org 0x8007acd4
+  .word STD_centerTransformOnEntities
+
+; STD_combineRotations
+.org 0x8007acf4
+  .word STD_combineRotations
+
+; STD_convertToViewSpace
+.org 0x8007ad6c
+  .word STD_convertToViewSpace
+
+; STD_copyFromParentTransform
+.org 0x8007abec
+  .word STD_copyFromParentTransform
+
+; STD_copyTargetEntityPosition
+.org 0x8007ab8c
+  .word STD_copyTargetEntityPosition
+
+; STD_copyToParentTransform
+.org 0x8007ad04
+  .word STD_copyToParentTransform
+
+; STD_copyVector
+.org 0x8007ac9c
+  .word STD_copyVector
+
+; STD_faceTargetEntity
+.org 0x8007addc
+  .word STD_faceTargetEntity
+
+; STD_getCameraRotation
+.org 0x8007ad7c
+  .word STD_getCameraRotation
+
+; STD_getScatteredSpawnPosition
+.org 0x8007ab6c
+  .word STD_getScatteredSpawnPosition
+
+; STD_getSourceBoneTransform
+.org 0x8007ad0c
+  .word STD_getSourceBoneTransform
+
+; STD_getTargetBoneTransform
+.org 0x8007acdc
+  .word STD_getTargetBoneTransform
+
+; STD_getVectorEulerAngles
+.org 0x8007ac74
+  .word STD_getVectorEulerAngles
+
+; STD_getVectorLength
+.org 0x8007ac94
+  .word STD_getVectorLength
+
+; STD_initializeEFETransform
+.org 0x8007ab3c
+  .word STD_initializeEFETransform
+
+; STD_interpolateValue
+.org 0x8007ac5c
+  .word STD_interpolateValue
+
+; STD_interpolateVector
+.org 0x8007ab7c
+  .word STD_interpolateVector
+
+; STD_maskVectors
+.org 0x8007acc4
+  .word STD_maskVectors
+
+; STD_normalizeRotationAngles
+.org 0x8007ac84
+  .word STD_normalizeRotationAngles
+.org 0x8007acec
+  .word STD_normalizeRotationAngles
+
+; STD_projectPositionToScreen
+.org 0x8007abc4
+  .word STD_projectPositionToScreen
+
+; STD_rotateShortVector
+.org 0x8007ab44
+  .word STD_rotateShortVector
+
+; STD_rotateTransformTowardPoint
+.org 0x8007ac24
+  .word STD_rotateTransformTowardPoint
+
+; STD_rotateVectorByAngles
+.org 0x8007ace4
+  .word STD_rotateVectorByAngles
+
+; STD_setTransformToBoneMatrix
+.org 0x8007ad44
+  .word STD_setTransformToBoneMatrix
+
+; STD_setTransformToBoneOffset
+.org 0x8007ac04
+  .word STD_setTransformToBoneOffset
+
+; STD_setTransformToSourceBone
+.org 0x8007ac1c
+  .word STD_setTransformToSourceBone
+
+; STD_setTransformToTargetBone
+.org 0x8007ab54
+  .word STD_setTransformToTargetBone
+
+; STD_steerTransformTowardPoint
+.org 0x8007ab84
+  .word STD_steerTransformTowardPoint
 
 .close

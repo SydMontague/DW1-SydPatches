@@ -1,3 +1,4 @@
+#include "../extern/dtl/algorithm.hpp"
 #include "Operands.hpp"
 
 using EFEOperands::popPointer;
@@ -14,6 +15,21 @@ namespace
 
 extern "C"
 {
+    void EFE_ENTRY(copyVector)()
+    {
+        const auto* source = popPointer<const uint32_t>();
+        auto* destination  = popPointer<uint32_t>();
+        dtl::copy(source, source + 3, destination);
+    }
+
+    void EFE_ENTRY(maskVectors)()
+    {
+        const auto* source = popPointer<const uint32_t>();
+        auto* destination  = popPointer<uint32_t>();
+        for (auto i = 0; i < 3; i++)
+            destination[i] &= source[i];
+    }
+
     void EFE_ENTRY(addVectors)()
     {
         auto* right = popPointer<const uint32_t>();

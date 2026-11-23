@@ -98,7 +98,9 @@ for mode in BTL STD VS; do
     "$MIPS_CXX" "${mode}/EFEControl.cpp" -o "../compiled/${mode}EFEControl.lib" $FLAGS "-DEFE_ENTRY(name)=${mode}_##name"
     "$MIPS_CXX" EFE/Arithmetic.cpp -o "../compiled/${mode}EFEArithmetic.lib" $FLAGS \
         -DEFE_applyVariableOperator=${mode}_applyEFEVariableOperator
-    for unit in VectorArithmetic EntityQueries HitEntity TargetSelection AttackCollision TargetCollision SubEffect; do
+    for unit in VectorArithmetic EntityQueries HitEntity TargetSelection AttackCollision TargetCollision SubEffect \
+                BonePosition BoneQuery BoneTransform EntityTransform Interpolation Movement \
+                ParentTransfer Projection Rotation Trigonometry VectorGeometry; do
         "$MIPS_CXX" "EFE/${unit}.cpp" -o "../compiled/${mode}EFE${unit}.lib" $FLAGS "-DEFE_ENTRY(name)=${mode}_##name"
     done
     bindings=(
