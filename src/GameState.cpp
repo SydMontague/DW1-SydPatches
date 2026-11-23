@@ -1,4 +1,5 @@
 
+#include "Script.hpp"
 #include "extern/dw1.hpp"
 
 extern "C"

@@ -2,6 +2,7 @@
 #include "AtlasFont.hpp"
 #include "Font.hpp"
 #include "GameObjects.hpp"
+#include "Script.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
 #include "extern/dw1.hpp"

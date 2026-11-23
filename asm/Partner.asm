@@ -1,47 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-;.org 0x800df624
-;  jal Partner_setState
-;.org 0x800df644
-;  jal Partner_setState
-;.org 0x800df660
-;  jal Partner_setState
-;.org 0x800df670
-;  jal Partner_setState
-;.org 0x800df680
-;  jal Partner_setState
-;.org 0x800df698
-;  jal Partner_setState
-;.org 0x800df6b0
-;  jal Partner_setState
-;.org 0x800df6c8
-;  jal Partner_setState
-;.org 0x800df744
-;  jal Partner_setState
-;.org 0x800df75c
-;  jal Partner_setState
-;.org 0x800df7dc
-;  jal Partner_setState
-;.org 0x801054b0
-;  jal Partner_setState
-;.org 0x80105528
-;  jal Partner_setState
-
-;.org 0x800ed400
-;  jal hasMove
-;.org 0x800fe444
-;  jal hasMove
-;.org 0x800fe554
-;  jal hasMove
-.org 0x80106d20
-  j hasMove
-
-;.org 0x800ed580
-;  jal learnMove
-.org 0x801067e4
-  j learnMove
-
 .close 
 
 .open "work/DIGIMON/BTL_REL.BIN",0x80052ae0

@@ -1,5 +1,6 @@
 #include "../Files.hpp"
 #include "../GameObjects.hpp"
+#include "../Script.hpp"
 #include "../extern/KAR.hpp"
 #include "../extern/dw1.hpp"
 #include "../extern/libc.hpp"

@@ -35,6 +35,20 @@
 
 namespace
 {
+    void pushScriptStack(const ScriptStackEntry& data)
+    {
+        GAME_STATE_DATA.scriptStack[SCRIPT_STACK_OFFSET++] = data;
+    }
+
+    ScriptStackEntry popScriptStack()
+    {
+        if (SCRIPT_STACK_OFFSET == 0) {
+            return {.type = 0};
+        }
+
+        return GAME_STATE_DATA.scriptStack[--SCRIPT_STACK_OFFSET];
+    }
+
     int32_t dateToSeconds(int32_t year, int32_t day, int32_t hour, int32_t minute)
     {
         return ((((year * 30) + day) * 24) + hour) * 60 + minute;
@@ -663,11 +677,7 @@ namespace
             SCRIPT_PARAM_1              = PREVIOUS_SCREEN;
             SCRIPT_STATE_2              = PREVIOUS_EXIT;
             PREVIOUS_EXIT               = CURRENT_EXIT;
-            ScriptStackEntry entry{
-                .type    = 4,
-                .trigger = 0xFF,
-            };
-            pushScriptStack(&entry);
+            pushScriptStack({.type = 4, .trigger = 0xFF});
             return 3;
         }
 
@@ -915,11 +925,7 @@ namespace
     int32_t scriptSectionOnExit(uint32_t)
     {
         auto section = readScriptUByte();
-        ScriptStackEntry entry{
-            .type    = 4,
-            .trigger = section,
-        };
-        pushScriptStack(&entry);
+        pushScriptStack({.type = 4, .trigger = section});
         writePStat(0, TIMESPEED);
         return 1;
     }
@@ -1001,11 +1007,7 @@ namespace
         SCRIPT_PARAM_1 = mapId;
         SCRIPT_STATE_2 = spawnPoint;
         consumeMapChangeShowName();
-        ScriptStackEntry entry{
-            .type    = 4,
-            .trigger = trigger,
-        };
-        pushScriptStack(&entry);
+        pushScriptStack({.type = 4, .trigger = trigger});
         return 3;
     }
     int32_t entityLookAtEntity(uint32_t)
@@ -1162,11 +1164,7 @@ namespace
         SCRIPT_PARAM_1 = readPStat(stat);
         SCRIPT_STATE_2 = readPStat((stat + 1) % 256);
         consumeMapChangeShowName();
-        ScriptStackEntry entry{
-            .type    = 4,
-            .trigger = 0xFF,
-        };
-        pushScriptStack(&entry);
+        pushScriptStack({.type = 4, .trigger = 0xFF});
         return 3;
     }
     int32_t scriptPlaySound(uint32_t)
@@ -1403,13 +1401,12 @@ namespace
         readScriptUByte();
         auto offset = readScriptUShort();
 
-        ScriptStackEntry entry{
+        pushScriptStack({
             .scriptPointer   = SCRIPT_POINTER,
             .activeMapScript = ACTIVE_MAP_SCRIPT,
             .type            = 1,
             .trigger         = 0,
-        };
-        pushScriptStack(&entry);
+        });
         SCRIPT_POINTER = ACTIVE_SCRIPT + offset;
         return 1;
     }
@@ -1420,13 +1417,12 @@ namespace
         auto script  = readScriptUShort();
         auto section = readScriptUShort();
 
-        ScriptStackEntry entry{
+        pushScriptStack({
             .scriptPointer   = SCRIPT_POINTER,
             .activeMapScript = ACTIVE_MAP_SCRIPT,
             .type            = 1,
             .trigger         = 0,
-        };
-        pushScriptStack(&entry);
+        });
         ACTIVE_SCRIPT  = getScript(script);
         SCRIPT_POINTER = getScriptSection(ACTIVE_SCRIPT, section);
         return 1;
@@ -1435,8 +1431,7 @@ namespace
     int32_t jumpReturn(uint32_t)
     {
         readScriptUByte();
-        ScriptStackEntry entry;
-        popScriptStack(&entry);
+        auto entry     = popScriptStack();
         ACTIVE_SCRIPT  = getScript(entry.activeMapScript);
         SCRIPT_POINTER = entry.scriptPointer;
         return 1;
@@ -1598,9 +1593,7 @@ namespace
         CURRENT_SCRIPT_ID = readScriptUShort();
         CURRENT_SCREEN_ID = readScriptUShort();
 
-        ScriptStackEntry entry;
-        entry.type = 3;
-        pushScriptStack(&entry);
+        pushScriptStack({.type = 3});
         // vanilla sets 0x80134FEC to 1 here, but the value is never used
         resetBGM();
         loadMap(CURRENT_SCREEN_ID);
@@ -1610,8 +1603,7 @@ namespace
     int32_t returnFromScriptFile(uint32_t)
     {
         while (true) {
-            ScriptStackEntry entry;
-            popScriptStack(&entry);
+            auto entry = popScriptStack();
 
             if (entry.type == 0) {
                 IS_SCRIPT_PAUSED = 1;

@@ -5,6 +5,7 @@
 #include "Input.hpp"
 #include "Math.hpp"
 #include "MenuTab.hpp"
+#include "Script.hpp"
 #include "Sound.hpp"
 #include "UIElements.hpp"
 #include "Utils.hpp"

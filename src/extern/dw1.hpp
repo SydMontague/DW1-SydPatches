@@ -1877,6 +1877,7 @@ extern "C"
     extern uint8_t TEXTBOX_OPEN_TIMER;
     extern uint8_t SKIP_DAYTIME_TRANSITION;
     extern uint8_t ACTIVE_BGM_FONT;
+    extern uint8_t ACTIVE_BGM_TRACK;
     extern int32_t ACTIVE_FRAMEBUFFER;
     extern uint8_t GS_WORK_BASES[2][81920];
     extern GsOT GS_ORDERING_TABLE[2];
@@ -1923,7 +1924,7 @@ extern "C"
     extern int16_t CAMERA_X_PREVIOUS;
     extern int16_t CAMERA_Y_PREVIOUS;
     extern LocalMapObjectInstance LOCAL_MAP_OBJECT_INSTANCE[188];
-    extern dtl::array<int32_t, 8> LOADED_DIGIMON_MODELS;
+    extern dtl::array<DigimonType, 8> LOADED_DIGIMON_MODELS;
     extern CollisionCode NPC_COLLISION_STATE[8];
     extern uint8_t SELECTED_MEDAL;
     extern uint8_t MEDAL_SELECTOR_INDEX;
@@ -2075,13 +2076,8 @@ extern "C"
     extern dtl::array<SVector, 177> CONDITION_FX_OFFSETS;
     extern uint16_t ACTIVE_MAP_SCRIPT;
 
-    void scriptUnloadModel(DigimonType type);
     void openSaveMachine();
     void gameClearSave();
-    void scriptLoadModel(DigimonType type);
-    void pushScriptStack(ScriptStackEntry* data);
-    void popScriptStack(ScriptStackEntry* data);
-    void resetBGM();
     void openMeritShop();
     void openMojyamonShop();
     void openRecycleShop();
@@ -2095,20 +2091,10 @@ extern "C"
     bool scriptTickMainMenu();
     void tickScriptedMovement(int32_t actorId);
     int16_t drawGlyph(uint16_t codepoint, uint32_t posX, uint32_t posY);
-    void scriptPauseGame(int32_t speaker);
     int32_t drawString2(const uint8_t* str, int32_t x, int32_t y, int32_t unused);
-    void setCardAmount(int32_t cardType, int32_t amount);
-    void unsetTrigger(int32_t id);
     void tickMainMenu(int32_t instanceId);
     void renderMainMenu(int32_t instanceId);
-    void updateBGM();
-    bool isTriggerSet(int32_t trigger);
-    void playBGM(uint8_t soundFont);
-    uint8_t getCardAmount(uint8_t cardId);
-    uint8_t readPStat(int32_t address);
-    void writePStat(int32_t address, uint8_t value);
     void clearTextSubArea(RECT* rect);
-    void setTrigger(uint32_t triggerId);
     void clearTextArea();
     void setTextColor(int32_t color);
     void initializeFontCLUT();

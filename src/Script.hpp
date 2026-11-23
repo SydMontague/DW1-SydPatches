@@ -31,8 +31,22 @@ extern "C"
     void callScriptSection(int32_t scriptId, uint32_t scriptSection, uint32_t param);
     void initializeScripts();
     void initializeLoadedNPCModels();
+    void writePStat(uint32_t address, uint8_t value);
+    uint8_t readPStat(uint32_t address);
+    void setTrigger(uint32_t trigger);
+    void unsetTrigger(uint32_t trigger);
+    bool isTriggerSet(uint32_t trigger);
+    void playBGM(uint8_t soundFont);
+    void updateBGM();
+    void forceUpdateBGM();
+    void resetBGM();
+    void setCardAmount(uint8_t cardId, int32_t amount);
+    int32_t getCardAmount(uint8_t cardId);
+    void scriptLoadModel(DigimonType type);
+    void scriptUnloadModel(DigimonType type);
 }
 
+void scriptPauseGame(int32_t speaker);
 void triggerSeadramonCutscene();
 void checkArenaMap(int32_t mapId);
 uint8_t readScriptUByte();

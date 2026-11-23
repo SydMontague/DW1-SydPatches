@@ -4,21 +4,11 @@
 .definelabel drawString,                0x8010cf24
 .definelabel clearTextArea,             0x8010cb90
 .definelabel setTextColor,              0x8010cc0c
-.definelabel setTrigger,                0x801065c0
-.definelabel readPStat,                 0x801062e0
-.definelabel writePStat,                0x80106474
-.definelabel getCardAmount,             0x801067ec
-.definelabel playBGM,                   0x80106a80
-.definelabel isTriggerSet,              0x8010643c
-.definelabel updateBGM,                 0x80106af0
 .definelabel tickMainMenu,              0x8010ff1c
 .definelabel renderMainMenu,            0x80113458
-.definelabel unsetTrigger,              0x801065fc
 .definelabel initializeFontCLUT,        0x8010cb3c
 .definelabel initializeNamingBuffer,    0x8010c70c
 .definelabel newGameStateMachine,       0x8010c7ac
-.definelabel setCardAmount,             0x80106848
-.definelabel scriptPauseGame,           0x801062f8
 .definelabel drawGlyph,                 0x8010cc28
 .definelabel openMeritShop,             0x8010bc10
 .definelabel openMojyamonShop,          0x8010c4b0
@@ -31,13 +21,8 @@
 .definelabel rollCardPack,              0x8010b8f4
 .definelabel tickOpenSaveMachine,       0x801138b0
 .definelabel scriptTickMainMenu,        0x80113a20
-.definelabel pushScriptStack,           0x801064bc
-.definelabel popScriptStack,            0x80106500
-.definelabel resetBGM,                  0x801064f0
-.definelabel scriptLoadModel,           0x801069c0
 .definelabel openSaveMachine,           0x8011381c
 .definelabel gameClearSave,             0x801139ac
-.definelabel scriptUnloadModel,         0x80106c08
 
 
 .definelabel MAPHEAD_SCRIPT_PTR, 0x80134fac
@@ -370,6 +355,7 @@
 .definelabel GS_WORK_BASES, 0x8015dba8
 .definelabel ACTIVE_FRAMEBUFFER, 0x80134ecc
 .definelabel ACTIVE_BGM_FONT, 0x80135006
+.definelabel ACTIVE_BGM_TRACK, 0x80135007
 .definelabel MAP_ENTRIES, 0x801292d4
 .definelabel DRAWING_OFFSET_X, 0x80134ec0
 .definelabel DRAWING_OFFSET_Y, 0x80134ec4
