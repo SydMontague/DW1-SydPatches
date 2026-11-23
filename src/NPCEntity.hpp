@@ -12,4 +12,6 @@ extern "C"
     void scriptUnloadEntity(int32_t entityId);
     void resetEntityOrigin(uint32_t scriptId);
     void setLoopCountToOne(uint32_t scriptId);
+    void loadNPCModel(DigimonType digimonId);
+    void unloadDigimonModel(DigimonType digimonType);
 }

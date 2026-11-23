@@ -95,66 +95,144 @@
 .org 0x8010c5ec
   jal showMapheadSelection
 
-;.org 0x800fbd94
-;  jal scriptIdToEntityId
-;.org 0x800fbeb0
-;  jal scriptIdToEntityId
-;.org 0x800ff89c
-;  jal scriptIdToEntityId
-;.org 0x801010e8
-;  jal scriptIdToEntityId
-;.org 0x80101fa4
-;  jal scriptIdToEntityId
-;.org 0x8010383c
-;  jal scriptIdToEntityId
-;.org 0x801038e0
-;  jal scriptIdToEntityId
-;.org 0x80103948
-;  jal scriptIdToEntityId
-;.org 0x801039d4
-;  jal scriptIdToEntityId
-;.org 0x80103aec
-;  jal scriptIdToEntityId
-;.org 0x80103b78
-;  jal scriptIdToEntityId
-;.org 0x80103c04
-;  jal scriptIdToEntityId
-;.org 0x80104408
-;  jal scriptIdToEntityId
-;.org 0x801045cc
-;  jal scriptIdToEntityId
-;.org 0x80104880
-;  jal scriptIdToEntityId
-;.org 0x80104908
-;  jal scriptIdToEntityId
-;.org 0x80104994
-;  jal scriptIdToEntityId
-;.org 0x80104a20
-;  jal scriptIdToEntityId
-;.org 0x80104aac
-;  jal scriptIdToEntityId
-;.org 0x80104c20
-;  jal scriptIdToEntityId
-;.org 0x80104cb4
-;  jal scriptIdToEntityId
-.org 0x80106378
-  jal scriptIdToEntityId
-.org 0x80106408
-  jal scriptIdToEntityId
-
-.org 0x80106b20
-  jal handleMusicOverride
-.org 0x80106aa8
-  jal handleMusicOverride
-.org 0x80106bc0
-  jal handleMusicOverride
-
 .org 0x8010c424
   jal getScript
 
 .org 0x8010c434
   jal getScriptSection
+
+.org 0x80106f28
+  jal readPStat
+.org 0x80107130
+  jal readPStat
+.org 0x80107668
+  jal readPStat
+.org 0x801078fc
+  jal readPStat
+.org 0x801079a0
+  jal readPStat
+.org 0x80107ba0
+  jal readPStat
+.org 0x80107c6c
+  jal readPStat
+.org 0x80107d5c
+  jal readPStat
+.org 0x801082d0
+  jal readPStat
+.org 0x80109234
+  jal readPStat
+.org 0x801092c4
+  jal readPStat
+.org 0x801095a4
+  jal readPStat
+.org 0x80109848
+  jal readPStat
+.org 0x801098b8
+  jal readPStat
+.org 0x8010b654
+  jal readPStat
+.org 0x8010b9e4
+  jal readPStat
+.org 0x8010bb18
+  jal readPStat
+.org 0x8010bc20
+  jal readPStat
+.org 0x8010bf78
+  jal readPStat
+.org 0x8010c148
+  jal readPStat
+.org 0x8010c29c
+  jal readPStat
+.org 0x8010c4c0
+  jal readPStat
+.org 0x8010c658
+  jal readPStat
+.org 0x801130e4
+  jal readPStat
+
+.org 0x80106fd0
+  jal writePStat
+.org 0x801078a0
+  jal writePStat
+.org 0x801078cc
+  jal writePStat
+.org 0x801092bc
+  jal writePStat
+.org 0x801098b0
+  jal writePStat
+.org 0x8010b934
+  jal writePStat
+.org 0x8010b968
+  jal writePStat
+.org 0x8010b99c
+  jal writePStat
+.org 0x8010c404
+  jal writePStat
+.org 0x8010c41c
+  jal writePStat
+.org 0x8010c54c
+  jal writePStat
+.org 0x8010c890
+  jal writePStat
+.org 0x8010c8a8
+  jal writePStat
+.org 0x801130fc
+  jal writePStat
+.org 0x80113400
+  jal writePStat
+
+.org 0x80107790
+  jal isTriggerSet
+.org 0x80107af4
+  jal isTriggerSet
+.org 0x80107e34
+  jal isTriggerSet
+
+.org 0x80107e24
+  jal setTrigger
+.org 0x80107e54
+  jal setTrigger
+.org 0x8010c7e0
+  jal setTrigger
+
+.org 0x8010cb18
+  jal unsetTrigger
+
+.org 0x80106f34
+  jal getCardAmount
+.org 0x801070a0
+  jal getCardAmount
+.org 0x80107244
+  jal getCardAmount
+.org 0x8010be74
+  jal getCardAmount
   
+.org 0x80106fb4
+  jal setCardAmount
+.org 0x8010be8c
+  jal setCardAmount
+
+.org 0x8010c1f0
+  jal playBGM
+
+.close
+
+
+.open "work/DIGIMON/BTL_REL.BIN",0x80052ae0
+.psx
+
+.org 0x80056d2c
+  jal isTriggerSet
+
+.close
+
+
+.open "work/DIGIMON/STD_REL.BIN",0x80052ae0
+.psx
+
+.org 0x80056e6c
+  jal scriptLoadModel
+
 .close
 
 
@@ -164,6 +242,52 @@
 .org 0x8008a370
   jal dailyPStatTrigger
 
+.org 0x8008ab48
+  jal readPStat
+.org 0x8008b1c4
+  jal readPStat
+.org 0x8008b7f8
+  jal readPStat
+.org 0x8008c1a0
+  jal readPStat
+.org 0x8008caf0
+  jal readPStat
+.org 0x8008cfc0
+  jal readPStat
+
+.org 0x8008a0f4
+  jal isTriggerSet
+.org 0x8008a140
+  jal isTriggerSet
+
+.close
+
+  
+.open "work/DIGIMON/DOOA_REL.BIN",0x80080000
+.psx
+
+.org 0x800847cc
+  jal readPStat
+
+.org 0x800847a4
+  jal isTriggerSet
+.org 0x800847b8
+  jal isTriggerSet
+
+.close
+
+
+.open "work/DIGIMON/MURD_REL.BIN",0x8007C000
+.psx
+
+.org 0x8007d6d0
+  jal readPStat
+
+.org 0x8007d6a8
+  jal isTriggerSet
+.org 0x8007d6bc
+  jal isTriggerSet
+
 .close
 
 
@@ -172,6 +296,17 @@
 
 .org 0x8008bb6c
   jal dailyPStatTrigger
+
+.org 0x800891f4
+  jal readPStat
+.org 0x80089720
+  jal readPStat
+.org 0x80089b3c
+  jal readPStat
+.org 0x8008a214
+  jal readPStat
+.org 0x8008a6cc
+  jal readPStat
 
 .close
 
@@ -196,5 +331,61 @@
 
 .org 0x8008113c
   jal getScriptSection
+
+.org 0x800809f0
+  jal readPStat
+.org 0x80080b74
+  jal readPStat
+.org 0x80080dec
+  jal readPStat
+.org 0x80081b5c
+  jal readPStat
+.org 0x80081b98
+  jal readPStat
+.org 0x80081bc4
+  jal readPStat
+
+.org 0x80081408
+  jal writePStat
+.org 0x80081af4
+  jal writePStat
+.org 0x80081c84
+  jal writePStat
+.org 0x80081c98
+  jal writePStat
+
+.org 0x80081074
+  jal isTriggerSet
+.org 0x800810b4
+  jal isTriggerSet
+.org 0x80081118
+  jal isTriggerSet
+.org 0x80081154
+  jal isTriggerSet
+.org 0x800811b0
+  jal isTriggerSet
+.org 0x80081abc
+  jal isTriggerSet
+
+.org 0x80081bb4
+  jal setTrigger
+.org 0x80081c40
+  jal setTrigger
+.org 0x80081c48
+  jal setTrigger
+.org 0x80081c50
+  jal setTrigger
+
+.org 0x80081be0
+  jal unsetTrigger
+
+.close
+
+
+.open "work/DIGIMON/EVL_REL.BIN",0x80060000
+.psx
+
+.org 0x80060ff0
+  jal forceUpdateBGM
 
 .close

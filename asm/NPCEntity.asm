@@ -1,28 +1,6 @@
 .open "work/DIGIMON/SLUS_010.32",0x80090000
 .psx
 
-.org 0x801069fc
-  jal loadNPCModel
-
-.org 0x80106c4c
-  jal unloadDigimonModel
-
-;.org 0x801054cc
-;  jal setActiveAnim
-;.org 0x80105540
-;  jal setActiveAnim
-
-;.org 0x80104720
-;  jal setMovementEnabled
-;.org 0x801061e8
-;  jal setMovementEnabled
-.org 0x8010631c
-  jal setMovementEnabled
-.org 0x80106328
-  jal setMovementEnabled
-.org 0x80106424
-  jal setMovementEnabled
-
 .close
 
 

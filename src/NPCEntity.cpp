@@ -472,8 +472,8 @@ extern "C"
         }
 
         for (int32_t i = 0; i < 8; i++) {
-            if (LOADED_DIGIMON_MODELS[i] == -1) continue;
-            unloadModel(LOADED_DIGIMON_MODELS[i], EntityType::NPC);
+            if (LOADED_DIGIMON_MODELS[i] == DigimonType::INVALID) continue;
+            unloadModel(static_cast<int32_t>(LOADED_DIGIMON_MODELS[i]), EntityType::NPC);
         }
 
         initializeLoadedNPCModels();

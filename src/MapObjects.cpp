@@ -6,6 +6,7 @@
 #include "Map.hpp"
 #include "Math.hpp"
 #include "Model.hpp"
+#include "Script.hpp"
 #include "extern/dw1.hpp"
 #include "extern/libgs.hpp"
 #include "extern/libgte.hpp"

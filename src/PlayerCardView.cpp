@@ -6,6 +6,7 @@
 #include "Helper.hpp"
 #include "Input.hpp"
 #include "Math.hpp"
+#include "Script.hpp"
 #include "Sound.hpp"
 #include "UIBox.hpp"
 #include "UIElements.hpp"

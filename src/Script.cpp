@@ -1,19 +1,24 @@
 
 #include "Script.hpp"
+#include "Camera.hpp"
 #include "Evolution.hpp"
 #include "Files.hpp"
+#include "GameTime.hpp"
 #include "Helper.hpp"
 #include "Input.hpp"
 #include "Inventory.hpp"
 #include "Math.hpp"
+#include "NPCEntity.hpp"
 #include "Partner.hpp"
 #include "RecycleShop.hpp"
 #include "ScriptEngine.hpp"
+#include "Sound.hpp"
 #include "Tournament.hpp"
 #include "VanillaText.hpp"
 #include "VanillaTextbox.hpp"
 #include "extern/dtl/algorithm.hpp"
 #include "extern/dtl/array.hpp"
+#include "extern/dtl/optional.hpp"
 #include "extern/dtl/vector.hpp"
 #include "extern/dw1.hpp"
 
@@ -23,6 +28,12 @@ namespace
     {
         uint16_t id;
         uint16_t offset;
+    };
+
+    struct MusicOverride
+    {
+        uint8_t font;
+        uint8_t track;
     };
 
     int32_t getShopkeeperScriptID()
@@ -105,6 +116,37 @@ namespace
         return strlen(name);
     }
 
+    dtl::optional<int32_t> getModelSlot(DigimonType type)
+    {
+        for (auto i = 0; i < LOADED_DIGIMON_MODELS.size(); i++) {
+            if (LOADED_DIGIMON_MODELS[i] == type) return i;
+        }
+        return dtl::nullopt;
+    }
+
+    MusicOverride handleMusicOverride(uint8_t font)
+    {
+        auto override = readPStat(0xF5);
+        switch (override) {
+            case 0:
+            {
+                auto track = ((HOUR < 6 || HOUR > 20) ? 1 : 0);
+                return {.font = font, .track = static_cast<uint8_t>(track)};
+            }
+            case 1: return {.font = font, .track = 0};
+            case 2: return {.font = 6, .track = 2};
+            case 3: return {.font = 11, .track = 2};
+            case 4: return {.font = 15, .track = 2};
+            case 5: return {.font = 21, .track = 0};
+            case 6: return {.font = 21, .track = 1};
+            case 7: return {.font = 26, .track = 0};
+            case 8: return {.font = 26, .track = 1};
+            case 9: return {.font = 27, .track = 0};
+            case 10: return {.font = 27, .track = 1};
+        }
+
+        return {.font = font, .track = 0};
+    }
 } // namespace
 
 extern "C"
@@ -112,7 +154,16 @@ extern "C"
 
     void initializeLoadedNPCModels()
     {
-        LOADED_DIGIMON_MODELS = {-1, -1, -1, -1, -1, -1, -1, -1};
+        LOADED_DIGIMON_MODELS = {
+            DigimonType::INVALID,
+            DigimonType::INVALID,
+            DigimonType::INVALID,
+            DigimonType::INVALID,
+            DigimonType::INVALID,
+            DigimonType::INVALID,
+            DigimonType::INVALID,
+            DigimonType::INVALID,
+        };
     }
 
     void initializeScripts()
@@ -193,51 +244,6 @@ extern "C"
             if (entry->id == section) return ptr + entry->offset;
             if (entry->id == 0xFFFF) return nullptr;
             entry++;
-        }
-    }
-
-    void handleMusicOverride(uint8_t* font, uint8_t* track)
-    {
-        auto override = readPStat(0xF5);
-        switch (override) {
-            case 0: *track = (HOUR < 6 || HOUR > 20) ? 1 : 0; break;
-            case 1: *track = 0; break;
-            case 2:
-                *font  = 6;
-                *track = 2;
-                break;
-            case 3:
-                *font  = 11;
-                *track = 2;
-                break;
-            case 4:
-                *font  = 15;
-                *track = 2;
-                break;
-            case 5:
-                *font  = 21;
-                *track = 0;
-                break;
-            case 6:
-                *font  = 21;
-                *track = 1;
-                break;
-            case 7:
-                *font  = 26;
-                *track = 0;
-                break;
-            case 8:
-                *font  = 26;
-                *track = 1;
-                break;
-            case 9:
-                *font  = 27;
-                *track = 0;
-                break;
-            case 10:
-                *font  = 27;
-                *track = 1;
-                break;
         }
     }
 
@@ -710,6 +716,114 @@ extern "C"
     {
         // SHOP_REL is never actually used
     }
+
+    uint8_t readPStat(uint32_t address)
+    {
+        return GAME_STATE_DATA.pstats[address];
+    }
+
+    void writePStat(uint32_t address, uint8_t value)
+    {
+        GAME_STATE_DATA.pstats[address] = value;
+    }
+
+    bool isTriggerSet(uint32_t trigger)
+    {
+        auto byte = trigger / 8;
+        auto bit  = trigger % 8;
+        return GAME_STATE_DATA.triggers[byte] & (1 << bit);
+    }
+
+    void setTrigger(uint32_t trigger)
+    {
+        auto byte = trigger / 8;
+        auto bit  = trigger % 8;
+        GAME_STATE_DATA.triggers[byte] |= (1 << bit);
+    }
+
+    void unsetTrigger(uint32_t trigger)
+    {
+        auto byte = trigger / 8;
+        auto bit  = trigger % 8;
+        GAME_STATE_DATA.triggers[byte] &= ~(1 << bit);
+    }
+
+    void resetBGM()
+    {
+        ACTIVE_BGM_FONT = 0xFF;
+        stopBGM();
+    }
+
+    void playBGM(uint8_t soundFont)
+    {
+        if (soundFont == 0xFF) {
+            resetBGM();
+            return;
+        }
+
+        auto music       = handleMusicOverride(soundFont);
+        ACTIVE_BGM_FONT  = music.font;
+        ACTIVE_BGM_TRACK = music.track;
+        stopBGM();
+        playMusic(ACTIVE_BGM_FONT, ACTIVE_BGM_TRACK);
+    }
+
+    void updateBGM()
+    {
+        if (ACTIVE_BGM_FONT == 0xFF) {
+            resetBGM();
+            return;
+        }
+
+        auto music = handleMusicOverride(ACTIVE_BGM_FONT);
+        if (ACTIVE_BGM_FONT == music.font && ACTIVE_BGM_TRACK == music.track) return;
+
+        ACTIVE_BGM_FONT  = music.font;
+        ACTIVE_BGM_TRACK = music.track;
+        stopBGM();
+        playMusic(ACTIVE_BGM_FONT, ACTIVE_BGM_TRACK);
+    }
+
+    void forceUpdateBGM()
+    {
+        playBGM(ACTIVE_BGM_FONT);
+    }
+
+    int32_t getCardAmount(uint8_t cardId)
+    {
+        const auto& entry = GAME_STATE_DATA.cards[cardId / 2];
+        if ((cardId % 2) == 0)
+            return (entry & 0x0F);
+        else
+            return (entry & 0xF0) >> 4;
+    }
+
+    void setCardAmount(uint8_t cardId, int32_t amount)
+    {
+        auto& entry = GAME_STATE_DATA.cards[cardId / 2];
+        if ((cardId % 2) == 0)
+            entry = (entry & 0xF0) | amount;
+        else
+            entry = (entry & 0x0F) | (amount << 4);
+    }
+
+    void scriptLoadModel(DigimonType type)
+    {
+        auto slot = getModelSlot(DigimonType::INVALID);
+        if (!slot.has_value()) return;
+
+        LOADED_DIGIMON_MODELS[slot.value()] = type;
+        loadNPCModel(type);
+    }
+
+    void scriptUnloadModel(DigimonType type)
+    {
+        auto slot = getModelSlot(type);
+        if (!slot.has_value()) return;
+
+        LOADED_DIGIMON_MODELS[slot.value()] = DigimonType::INVALID;
+        unloadDigimonModel(type);
+    }
 }
 
 void triggerSeadramonCutscene()
@@ -748,4 +862,34 @@ int16_t readScriptShort()
 int32_t readScriptInt()
 {
     return readScriptUShort() + (readScriptShort() << 16);
+}
+
+void scriptPauseGame(int32_t speaker)
+{
+    if (SCRIPT_PAUSED_GAME == 0) {
+        SCRIPT_PAUSED_GAME = 1;
+        setMovementEnabled(0, 1);
+        setMovementEnabled(1, 1);
+        unsetCameraFollowPlayer();
+        writePStat(0, 3);
+        clearTextArea();
+        stopGameTime();
+        if (SCRIPT_SECTION_IS_EVENT != 0 && !isTriggerSet(44)) {
+            auto id = scriptIdToEntityId(SCRIPT_SECTION);
+            if (id != 0xFF) {
+                SCRIPT_MOVEMENT[0].type        = ScriptMovement::LOOK_AT_ENTITY;
+                SCRIPT_MOVEMENT[0].targetId    = SCRIPT_SECTION;
+                SCRIPT_MOVEMENT[0].selfEntity  = 0xFD;
+                SCRIPT_MOVEMENT[id].type       = ScriptMovement::LOOK_AT_ENTITY;
+                SCRIPT_MOVEMENT[id].selfEntity = SCRIPT_SECTION;
+                SCRIPT_MOVEMENT[id].targetId   = 0xFD;
+            }
+        }
+    }
+
+    unsetTrigger(44);
+    if (speaker < 200) {
+        auto id = scriptIdToEntityId(speaker);
+        if (id != 0xFF) setMovementEnabled(id, 1);
+    }
 }

@@ -6,6 +6,7 @@
 #include "../Input.hpp"
 #include "../Map.hpp"
 #include "../Model.hpp"
+#include "../Script.hpp"
 #include "../Sound.hpp"
 #include "../extern/KAR.hpp"
 #include "../extern/dw1.hpp"

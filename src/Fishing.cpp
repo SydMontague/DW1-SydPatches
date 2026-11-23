@@ -2,6 +2,7 @@
 #include "Files.hpp"
 #include "GameTime.hpp"
 #include "Helper.hpp"
+#include "Script.hpp"
 #include "extern/FISH.hpp"
 #include "extern/dw1.hpp"
 #include "extern/stddef.hpp"

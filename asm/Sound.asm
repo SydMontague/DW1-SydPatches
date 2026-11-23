@@ -25,14 +25,14 @@
 ;  jal stopBGM
 ;.org 0x8010460c
 ;  jal stopBGM
-.org 0x801064f8
-  j stopBGM
-.org 0x80106ac8
-  jal stopBGM
-.org 0x80106b68
-  jal stopBGM
-.org 0x80106be0
-  jal stopBGM
+;.org 0x801064f8
+;  j stopBGM
+;.org 0x80106ac8
+;  jal stopBGM
+;.org 0x80106b68
+;  jal stopBGM
+;.org 0x80106be0
+;  jal stopBGM
 .org 0x801078dc
   jal stopBGM
 .org 0x80109254
@@ -58,12 +58,12 @@
 ;  jal playMusic
 ;.org 0x800f71a4
 ;  jal playMusic
-.org 0x80106ad8
-  jal playMusic
-.org 0x80106b78
-  jal playMusic
-.org 0x80106bf0
-  jal playMusic
+;.org 0x80106ad8
+;  jal playMusic
+;.org 0x80106b78
+;  jal playMusic
+;.org 0x80106bf0
+;  jal playMusic
 .org 0x8010927c
   jal playMusic
 
