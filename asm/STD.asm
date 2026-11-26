@@ -24,6 +24,12 @@
   .fill 0x8006dee8-.
 .endarea
 
+.org 0x8006dee8
+.area 0x8006dff8-.
+  .notice "STD retired EFE UV tick space left: " + (0x8006dff8-.) + " bytes"
+  .fill 0x8006dff8-.
+.endarea
+
 .org 0x8006dff8
 .area 0x8006e558-.
   .importobj "compiled/STDEFEParticles.lib"
@@ -31,9 +37,10 @@
   .fill 0x8006e558-.
 .endarea
 
-.org 0x8006e744
+.org 0x8006e558
 .area 0x8006e880-.
-  .notice "STD EFE render space left: " + (0x8006e880-.) + " bytes"
+  .importobj "compiled/STDEFEUVAnimation.lib"
+  .notice "STD EFE UV animation space left: " + (0x8006e880-.) + " bytes"
   .fill 0x8006e880-.
 .endarea
 
@@ -85,6 +92,12 @@
   .fill 0x80073978-.
 .endarea
 
+.org 0x80073978
+.area 0x800739c0-.
+  .notice "STD retired EFE UV timer space left: " + (0x800739c0-.) + " bytes"
+  .fill 0x800739c0-.
+.endarea
+
 .org 0x800739c0
 .area 0x80073b48-.
   .importobj "compiled/STDEFETargetCollision.lib"
@@ -115,6 +128,12 @@
 .area 0x80075dd8-.
   .notice "STD retired EFE subeffect setup space left: " + (0x80075dd8-.) + " bytes"
   .fill 0x80075dd8-.
+.endarea
+
+.org 0x80075dd8
+.area 0x80075ed8-.
+  .notice "STD retired EFE UV setup space left: " + (0x80075ed8-.) + " bytes"
+  .fill 0x80075ed8-.
 .endarea
 
 .org 0x80075f70
@@ -268,6 +287,12 @@
   .notice "STD EFE VectorGeometry space left: " + (0x80075bf8-.) + " bytes"
   .fill 0x80075bf8-.
 .endarea
+
+; EFE UV animation subopcodes
+.org 0x8007ab24
+  .word STD_initializeUVAnim
+.org 0x8007ac34
+  .word STD_getUVAnimTimer
 
 ; STD_addParticleEmitter
 .org 0x8007ab9c
