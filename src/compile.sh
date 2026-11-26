@@ -131,6 +131,7 @@ for mode in BTL STD VS; do
     "$MIPS_CXX" EFE/Frame.cpp -o "../compiled/${mode}EFEFrame.lib" $FLAGS "${bindings[@]}"
     "$MIPS_CXX" EFE/Initialize.cpp -o "../compiled/${mode}EFEInitialize.lib" $FLAGS "${bindings[@]}"
     "$MIPS_CXX" EFE/Sound.cpp -o "../compiled/${mode}EFESound.lib" $FLAGS "${bindings[@]}"
+    "$MIPS_CXX" EFE/UVAnimation.cpp -o "../compiled/${mode}EFEUVAnimation.lib" $FLAGS "-DEFE_ENTRY(name)=${mode}_##name"
     "$MIPS_CXX" EFE/SlotScript.cpp -o "../compiled/${mode}EFESlotScript.lib" $FLAGS "${bindings[@]}"
 done
 

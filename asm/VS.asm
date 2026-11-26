@@ -24,6 +24,12 @@
   .fill 0x80063fb8-.
 .endarea
 
+.org 0x80063fb8
+.area 0x800640c8-.
+  .notice "VS retired EFE UV tick space left: " + (0x800640c8-.) + " bytes"
+  .fill 0x800640c8-.
+.endarea
+
 .org 0x800640c8
 .area 0x80064628-.
   .importobj "compiled/VSEFEParticles.lib"
@@ -31,9 +37,10 @@
   .fill 0x80064628-.
 .endarea
 
-.org 0x80064814
+.org 0x80064628
 .area 0x80064950-.
-  .notice "VS EFE render space left: " + (0x80064950-.) + " bytes"
+  .importobj "compiled/VSEFEUVAnimation.lib"
+  .notice "VS EFE UV animation space left: " + (0x80064950-.) + " bytes"
   .fill 0x80064950-.
 .endarea
 
@@ -85,6 +92,12 @@
   .fill 0x80069a48-.
 .endarea
 
+.org 0x80069a48
+.area 0x80069a90-.
+  .notice "VS retired EFE UV timer space left: " + (0x80069a90-.) + " bytes"
+  .fill 0x80069a90-.
+.endarea
+
 .org 0x80069a90
 .area 0x80069c18-.
   .importobj "compiled/VSEFETargetCollision.lib"
@@ -115,6 +128,12 @@
 .area 0x8006bea8-.
   .notice "VS retired EFE subeffect setup space left: " + (0x8006bea8-.) + " bytes"
   .fill 0x8006bea8-.
+.endarea
+
+.org 0x8006bea8
+.area 0x8006bfa8-.
+  .notice "VS retired EFE UV setup space left: " + (0x8006bfa8-.) + " bytes"
+  .fill 0x8006bfa8-.
 .endarea
 
 .org 0x8006c040
@@ -296,6 +315,12 @@
   li.u a2, VS__tickVSInput
 .org 0x80056eb0
   li.l a2, VS__tickVSInput
+
+; EFE UV animation subopcodes
+.org 0x80070b50
+  .word VS_initializeUVAnim
+.org 0x80070c60
+  .word VS_getUVAnimTimer
 
 ; VS_addParticleEmitter
 .org 0x80070bc8

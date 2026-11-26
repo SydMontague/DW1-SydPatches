@@ -24,6 +24,12 @@
   .fill 0x80065800-.
 .endarea
 
+.org 0x80065800
+.area 0x80065910-.
+  .notice "BTL retired EFE UV tick space left: " + (0x80065910-.) + " bytes"
+  .fill 0x80065910-.
+.endarea
+
 .org 0x80065910
 .area 0x80065e70-.
   .importobj "compiled/BTLEFEParticles.lib"
@@ -31,9 +37,10 @@
   .fill 0x80065e70-.
 .endarea
 
-.org 0x8006605c
+.org 0x80065e70
 .area 0x80066198-.
-  .notice "BTL EFE render space left: " + (0x80066198-.) + " bytes"
+  .importobj "compiled/BTLEFEUVAnimation.lib"
+  .notice "BTL EFE UV animation space left: " + (0x80066198-.) + " bytes"
   .fill 0x80066198-.
 .endarea
 
@@ -85,6 +92,12 @@
   .fill 0x8006b36c-.
 .endarea
 
+.org 0x8006b36c
+.area 0x8006b3b4-.
+  .notice "BTL retired EFE UV timer space left: " + (0x8006b3b4-.) + " bytes"
+  .fill 0x8006b3b4-.
+.endarea
+
 .org 0x8006b3b4
 .area 0x8006b53c-.
   .importobj "compiled/BTLEFETargetCollision.lib"
@@ -115,6 +128,12 @@
 .area 0x8006d7fc-.
   .notice "BTL retired EFE subeffect setup space left: " + (0x8006d7fc-.) + " bytes"
   .fill 0x8006d7fc-.
+.endarea
+
+.org 0x8006d7fc
+.area 0x8006d8fc-.
+  .notice "BTL retired EFE UV setup space left: " + (0x8006d8fc-.) + " bytes"
+  .fill 0x8006d8fc-.
 .endarea
 
 .org 0x8006d994
@@ -268,6 +287,12 @@
   .notice "BTL EFE VectorGeometry space left: " + (0x8006d61c-.) + " bytes"
   .fill 0x8006d61c-.
 .endarea
+
+; EFE UV animation subopcodes
+.org 0x80073308
+  .word BTL_initializeUVAnim
+.org 0x80073418
+  .word BTL_getUVAnimTimer
 
 ; BTL_addParticleEmitter
 .org 0x80073380

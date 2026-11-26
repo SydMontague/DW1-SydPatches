@@ -403,9 +403,6 @@
 .definelabel EFE_SLOT_INDEX, 0x80134cd4
 .definelabel EFE_SUBEFFECT_INDEX, 0x80134cd0
 .definelabel EFE_SLOT_FLAGS, 0x80139ab0
-.definelabel BTL_tickEFEUVAnimation, 0x80065800
-.definelabel STD_tickEFEUVAnimation, 0x8006dee8
-.definelabel VS_tickEFEUVAnimation, 0x80063fb8
 .definelabel BTL_initializeAuraProjectiles, 0x80071048
 .definelabel STD_initializeAuraProjectiles, 0x800795e8
 .definelabel VS_initializeAuraProjectiles, 0x8006f6b8
