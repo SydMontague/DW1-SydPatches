@@ -64,6 +64,20 @@
   .fill 0x80066ce0-.
 .endarea
 
+.org 0x800685e8
+.area 0x800687a0-.
+  .notice "BTL retired EFE screen-space model draw space left: " + (0x800687a0-.) + " bytes"
+  .fill 0x800687a0-.
+.endarea
+
+; Reuse the vanilla YXZ draw and the adjoining retired camera rotation command.
+.org 0x80068908
+.area 0x80068b08-.
+  .importobj "compiled/BTLEFEModelDraw.lib"
+  .notice "BTL EFE model drawing space left: " + (0x80068b08-.) + " bytes"
+  .fill 0x80068b08-.
+.endarea
+
 .org 0x80068b08
 .area 0x80068c2c-.
   .importobj "compiled/BTLEFEEntityQueries.lib"
@@ -124,6 +138,12 @@
   .fill 0x8006d338-.
 .endarea
 
+.org 0x8006d61c
+.area 0x8006d7b0-.
+  .notice "BTL retired EFE world model draw space left: " + (0x8006d7b0-.) + " bytes"
+  .fill 0x8006d7b0-.
+.endarea
+
 .org 0x8006d7b0
 .area 0x8006d7fc-.
   .notice "BTL retired EFE subeffect setup space left: " + (0x8006d7fc-.) + " bytes"
@@ -180,12 +200,6 @@
 .area 0x80066d6c-.
   .notice "BTL EFE retired faceTargetEntity space left: " + (0x80066d6c-.) + " bytes"
   .fill 0x80066d6c-.
-.endarea
-
-.org 0x80068a9c
-.area 0x80068b08-.
-  .notice "BTL EFE retired getCameraRotation space left: " + (0x80068b08-.) + " bytes"
-  .fill 0x80068b08-.
 .endarea
 
 .org 0x80068c2c
@@ -301,6 +315,14 @@
 ; BTL_applyEFEVariableOperator
 .org 0x80073614
   .word BTL_applyEFEVariableOperator
+
+; EFE model drawing subopcodes
+.org 0x80073318
+  .word BTL_drawTMD
+.org 0x80073568
+  .word BTL_drawTMDYXZ
+.org 0x80073578
+  .word BTL_drawTMDScreenSpace
 
 ; EFE subeffects and attack collision
 .org 0x80073310

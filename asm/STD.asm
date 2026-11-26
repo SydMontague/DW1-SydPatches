@@ -64,6 +64,20 @@
   .fill 0x8006f2d8-.
 .endarea
 
+.org 0x80070b80
+.area 0x80070d38-.
+  .notice "STD retired EFE screen-space model draw space left: " + (0x80070d38-.) + " bytes"
+  .fill 0x80070d38-.
+.endarea
+
+; Reuse the vanilla YXZ draw and the adjoining retired camera rotation command.
+.org 0x80070ea0
+.area 0x800710a0-.
+  .importobj "compiled/STDEFEModelDraw.lib"
+  .notice "STD EFE model drawing space left: " + (0x800710a0-.) + " bytes"
+  .fill 0x800710a0-.
+.endarea
+
 .org 0x800710a0
 .area 0x800711c4-.
   .importobj "compiled/STDEFEEntityQueries.lib"
@@ -124,6 +138,12 @@
   .fill 0x80075914-.
 .endarea
 
+.org 0x80075bf8
+.area 0x80075d8c-.
+  .notice "STD retired EFE world model draw space left: " + (0x80075d8c-.) + " bytes"
+  .fill 0x80075d8c-.
+.endarea
+
 .org 0x80075d8c
 .area 0x80075dd8-.
   .notice "STD retired EFE subeffect setup space left: " + (0x80075dd8-.) + " bytes"
@@ -180,12 +200,6 @@
 .area 0x8006f364-.
   .notice "STD EFE retired faceTargetEntity space left: " + (0x8006f364-.) + " bytes"
   .fill 0x8006f364-.
-.endarea
-
-.org 0x80071034
-.area 0x800710a0-.
-  .notice "STD EFE retired getCameraRotation space left: " + (0x800710a0-.) + " bytes"
-  .fill 0x800710a0-.
 .endarea
 
 .org 0x800711c4
@@ -305,6 +319,14 @@
 ; STD_applyEFEVariableOperator
 .org 0x8007ae30
   .word STD_applyEFEVariableOperator
+
+; EFE model drawing subopcodes
+.org 0x8007ab34
+  .word STD_drawTMD
+.org 0x8007ad84
+  .word STD_drawTMDYXZ
+.org 0x8007ad94
+  .word STD_drawTMDScreenSpace
 
 ; EFE subeffects and attack collision
 .org 0x8007ab2c
