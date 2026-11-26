@@ -46,7 +46,7 @@ extern "C"
     extern Timer TIMER1;
     extern Timer TIMER2;
 
-    extern uint32_t SCRATCHPAD;
+    extern dtl::array<uint32_t, 256> SCRATCHPAD;
 
     register uint32_t* gp asm("gp");
     register uint32_t* sp asm("sp");

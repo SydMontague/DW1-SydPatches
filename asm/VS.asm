@@ -64,6 +64,20 @@
   .fill 0x800653a8-.
 .endarea
 
+.org 0x80066c50
+.area 0x80066e08-.
+  .notice "VS retired EFE screen-space model draw space left: " + (0x80066e08-.) + " bytes"
+  .fill 0x80066e08-.
+.endarea
+
+; Reuse the vanilla YXZ draw and the adjoining retired camera rotation command.
+.org 0x80066f70
+.area 0x80067170-.
+  .importobj "compiled/VSEFEModelDraw.lib"
+  .notice "VS EFE model drawing space left: " + (0x80067170-.) + " bytes"
+  .fill 0x80067170-.
+.endarea
+
 .org 0x80067170
 .area 0x80067294-.
   .importobj "compiled/VSEFEEntityQueries.lib"
@@ -124,6 +138,12 @@
   .fill 0x8006b9e4-.
 .endarea
 
+.org 0x8006bcc8
+.area 0x8006be5c-.
+  .notice "VS retired EFE world model draw space left: " + (0x8006be5c-.) + " bytes"
+  .fill 0x8006be5c-.
+.endarea
+
 .org 0x8006be5c
 .area 0x8006bea8-.
   .notice "VS retired EFE subeffect setup space left: " + (0x8006bea8-.) + " bytes"
@@ -180,12 +200,6 @@
 .area 0x80065434-.
   .notice "VS EFE retired faceTargetEntity space left: " + (0x80065434-.) + " bytes"
   .fill 0x80065434-.
-.endarea
-
-.org 0x80067104
-.area 0x80067170-.
-  .notice "VS EFE retired getCameraRotation space left: " + (0x80067170-.) + " bytes"
-  .fill 0x80067170-.
 .endarea
 
 .org 0x80067294
@@ -329,6 +343,14 @@
 ; VS_applyEFEVariableOperator
 .org 0x80070e5c
   .word VS_applyEFEVariableOperator
+
+; EFE model drawing subopcodes
+.org 0x80070b60
+  .word VS_drawTMD
+.org 0x80070db0
+  .word VS_drawTMDYXZ
+.org 0x80070dc0
+  .word VS_drawTMDScreenSpace
 
 ; EFE subeffects and attack collision
 .org 0x80070b58

@@ -544,7 +544,7 @@ extern "C"
         libgs_GsGetLws(obj->coord2, &lw, &ls);
         libgs_GsSetLightMatrix(&lw);
         libgs_GsSetLsMatrix(&ls);
-        libgs_GsSortObject4(obj, ot, shift, &SCRATCHPAD);
+        libgs_GsSortObject4(obj, ot, shift, SCRATCHPAD.data());
     }
 
     void renderDropShadow(Entity* entity)
@@ -686,7 +686,7 @@ extern "C"
                 wireFrameVal = ENTITY1_WIREFRAME_TOTAL;
 
             if (wireFrameVal == 0x10)
-                libgs_GsSortObject4(&posData->obj, ACTIVE_ORDERING_TABLE, 2, &SCRATCHPAD);
+                libgs_GsSortObject4(&posData->obj, ACTIVE_ORDERING_TABLE, 2, SCRATCHPAD.data());
             else
                 renderWireframed(&posData->obj, wireFrameVal);
         }
