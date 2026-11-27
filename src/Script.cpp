@@ -8,6 +8,7 @@
 #include "Input.hpp"
 #include "Inventory.hpp"
 #include "Math.hpp"
+#include "MusicNameList.hpp"
 #include "NPCEntity.hpp"
 #include "Partner.hpp"
 #include "RecycleShop.hpp"
@@ -34,6 +35,13 @@ namespace
     {
         uint8_t font;
         uint8_t track;
+    };
+
+    dtl::array<const char*, 23> TOURNAMENT_NAME_LIST{
+        "Grade D",       "Grade C",          "Grade B",       "Grade A",       "Grade S",       "Grade R",
+        "Version 1 Cup", "Version 2 Cup",    "Version 3 Cup", "Version 4 Cup", "Version 0 Cup", "Fire Cup",
+        "Grapple Cup",   "Thunder Wind Cup", "Cool Cup",      "Nature Cup",    "Metalic Cup",   "Filth Cup",
+        "Dino Cup",      "Wing Cup",         "Animal Cup",    "Human Cup",     "Beetle Cup",
     };
 
     int32_t getShopkeeperScriptID()
@@ -450,7 +458,7 @@ extern "C"
                 }
                 case 0x11:
                 {
-                    auto name = MUSIC_NAME_LIST[readPStat(SCRIPT_POINTER[1])];
+                    auto name = reinterpret_cast<const uint8_t*>(MUSIC_NAME_LIST[readPStat(SCRIPT_POINTER[1])]);
                     strcpy(str, name);
                     auto length = strlen(name);
                     str += length;
@@ -460,7 +468,7 @@ extern "C"
                 }
                 case 0x12:
                 {
-                    auto name = TOURNAMENT_NAME_LIST[readPStat(SCRIPT_POINTER[1])];
+                    auto name = reinterpret_cast<const uint8_t*>(TOURNAMENT_NAME_LIST[readPStat(SCRIPT_POINTER[1])]);
                     strcpy(str, name);
                     auto length = strlen(name);
                     str += length;

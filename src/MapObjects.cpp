@@ -546,9 +546,7 @@ extern "C"
             auto model = doorObjects[i].modelId;
             if (model == 0xFF) continue;
 
-            dtl::array<uint8_t, 32> buffer;
-            sprintf(buffer.data(), "\\DOOR\\DOOR%02d.TMD", model);
-            loadStaticTMD(reinterpret_cast<char*>(buffer.data()),
+            loadStaticTMD(reinterpret_cast<char*>(format<32>("\\DOOR\\DOOR%02d.TMD", model).data()),
                           GENERAL_MESH_BUFFER[i].data(),
                           &doorObjects[i].obj,
                           &doorObjects[i].coords);

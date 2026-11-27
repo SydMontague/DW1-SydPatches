@@ -8,6 +8,7 @@
 #include "ItemDescriptionBox.hpp"
 #include "ItemMenuAmountBox.hpp"
 #include "MapData.hpp"
+#include "MusicNameList.hpp"
 #include "RecycleShop.hpp"
 #include "Script.hpp"
 #include "SingleCardConfirmMenu.hpp"
@@ -417,7 +418,7 @@ namespace
         auto line   = getTextboxLine(menu, id);
         auto offset = (menu->scrollOffset + id) * 2;
         auto type   = menu->itemList[offset];
-        auto name   = MUSIC_NAME_LIST[type];
+        auto name   = reinterpret_cast<const uint8_t*>(MUSIC_NAME_LIST[type]);
         auto length = strlen(name);
 
         line[0] = 1;

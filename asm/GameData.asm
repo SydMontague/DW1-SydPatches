@@ -101,12 +101,12 @@ NAMING_DATA:
   .fill 0x801292d4-.
 .endarea
 
-; override vanilla raise data, dynamic library data
-.org 0x8012abec
-.area 0x8012bacc-.
+; override vanilla evo reqs, statsgains, dynamic library data and other data implemented elsewhere
+.org 0x8012a84c
+.area 0x8012bbd0-.
 
-  .notice "Empty space left: " + (0x8012bacc-.) + " bytes"
-  .fill 0x8012bacc-.
+  .notice "Empty space left: " + (0x8012bbd0-.) + " bytes"
+  .fill 0x8012bbd0-.
 .endarea
 
 ; override condition bubble data, some file paths
@@ -118,10 +118,11 @@ NAMING_DATA:
 .endarea
 
 .org 0x8012f36c
-.area 0x8012f6d0
+.area 0x8012ffc4-.
+  .importobj "compiled/MusicNameList.lib"
 
-  .notice "Empty space left: " + (0x8012f6d0-.) + " bytes"
-  .fill 0x8012f6d0-.
+  .notice "Empty space left: " + (0x8012ffc4-.) + " bytes"
+  .fill 0x8012ffc4-.
 .endarea
 
 ;;; Not caves, uninitialized memory

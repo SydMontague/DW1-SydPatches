@@ -1707,7 +1707,6 @@ extern "C"
     extern EvolutionPath EVO_PATHS_DATA[];
     extern EvoRequirements EVO_REQ_DATA[];
 
-    extern dtl::array<uint8_t*, 63> MUSIC_NAME_LIST;
     extern dtl::array<BirdraTarget, 6> BIRDRA_TRANSPORT_TARGETS;
     extern uint8_t* ARRAY_SECTION_START;
     extern size_t ARRAY_SECTION_OFFSET;
@@ -2031,7 +2030,6 @@ extern "C"
     extern int16_t TEXTBOX_ORIGIN_Z;
     extern uint8_t* ACTIVE_SCRIPT;
     extern uint16_t* SELECTION_POINTER;
-    extern dtl::array<const uint8_t*, 23> TOURNAMENT_NAME_LIST;
     extern int16_t TMP_TAMER_LEVEL;
     extern int16_t TMP_LIVES;
     extern int16_t BATTLES_STARTED;
