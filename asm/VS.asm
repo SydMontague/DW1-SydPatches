@@ -126,10 +126,11 @@
 .endarea
 
 .org 0x8006b0a4
-.area 0x8006b2fc-.
+.area 0x8006b3e4-.
   .importobj "compiled/VSEFETargetSelection.lib"
-  .notice "VS EFE target selection and slot release space left: " + (0x8006b2fc-.) + " bytes"
-  .fill 0x8006b2fc-.
+  .importobj "compiled/VSEFEModelColor.lib"
+  .notice "VS EFE target selection, slot release and model coloring space left: " + (0x8006b3e4-.) + " bytes"
+  .fill 0x8006b3e4-.
 .endarea
 
 .org 0x8006b8b8
@@ -193,6 +194,12 @@
 .area 0x80070f34-.
   .notice "VS retired EFE operator table space left: " + (0x80070f34-.) + " bytes"
   .fill 0x80070f34-.
+.endarea
+
+.org 0x8006e624
+.area 0x8006e6d4-.
+  .notice "VS retired aura model coloring space left: " + (0x8006e6d4-.) + " bytes"
+  .fill 0x8006e6d4-.
 .endarea
 
 ; Angle and transform commands share these reclaimed regions.
@@ -329,6 +336,22 @@
   li.u a2, VS__tickVSInput
 .org 0x80056eb0
   li.l a2, VS__tickVSInput
+
+; EFE model color subopcode
+.org 0x80070bc0
+  .word VS_setEFEModelObjectColor
+
+; VS_initializeFinisherAuraModel
+.org 0x8006f034
+  jal VS_setTMDObjectColor
+.org 0x8006f044
+  jal VS_setTMDObjectColor
+.org 0x8006f054
+  jal VS_setTMDObjectColor
+.org 0x8006f064
+  jal VS_setTMDObjectColor
+.org 0x8006f074
+  jal VS_setTMDObjectColor
 
 ; EFE UV animation subopcodes
 .org 0x80070b50

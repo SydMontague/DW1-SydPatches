@@ -126,10 +126,11 @@
 .endarea
 
 .org 0x8006c9f8
-.area 0x8006cc50-.
+.area 0x8006cd38-.
   .importobj "compiled/BTLEFETargetSelection.lib"
-  .notice "BTL EFE target selection and slot release space left: " + (0x8006cc50-.) + " bytes"
-  .fill 0x8006cc50-.
+  .importobj "compiled/BTLEFEModelColor.lib"
+  .notice "BTL EFE target selection, slot release and model coloring space left: " + (0x8006cd38-.) + " bytes"
+  .fill 0x8006cd38-.
 .endarea
 
 .org 0x8006d20c
@@ -193,6 +194,12 @@
 .area 0x800736ec-.
   .notice "BTL retired EFE operator table space left: " + (0x800736ec-.) + " bytes"
   .fill 0x800736ec-.
+.endarea
+
+.org 0x8006ffb4
+.area 0x80070064-.
+  .notice "BTL retired aura model coloring space left: " + (0x80070064-.) + " bytes"
+  .fill 0x80070064-.
 .endarea
 
 ; Angle and transform commands share these reclaimed regions.
@@ -301,6 +308,22 @@
   .notice "BTL EFE VectorGeometry space left: " + (0x8006d61c-.) + " bytes"
   .fill 0x8006d61c-.
 .endarea
+
+; EFE model color subopcode
+.org 0x80073378
+  .word BTL_setEFEModelObjectColor
+
+; BTL_initializeFinisherAuraModel
+.org 0x800709c4
+  jal BTL_setTMDObjectColor
+.org 0x800709d4
+  jal BTL_setTMDObjectColor
+.org 0x800709e4
+  jal BTL_setTMDObjectColor
+.org 0x800709f4
+  jal BTL_setTMDObjectColor
+.org 0x80070a04
+  jal BTL_setTMDObjectColor
 
 ; EFE UV animation subopcodes
 .org 0x80073308

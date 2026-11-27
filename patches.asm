@@ -25,6 +25,7 @@
 .include "asm/Fade.asm"
 .include "asm/Effects.asm"
 .include "asm/EFE.asm"
+.include "asm/EFEDAT.asm"
 .include "asm/NPCEntity.asm"
 .include "asm/UIElements.asm"
 .include "asm/Sound.asm"

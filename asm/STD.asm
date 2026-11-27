@@ -126,10 +126,11 @@
 .endarea
 
 .org 0x80074fd4
-.area 0x8007522c-.
+.area 0x80075314-.
   .importobj "compiled/STDEFETargetSelection.lib"
-  .notice "STD EFE target selection and slot release space left: " + (0x8007522c-.) + " bytes"
-  .fill 0x8007522c-.
+  .importobj "compiled/STDEFEModelColor.lib"
+  .notice "STD EFE target selection, slot release and model coloring space left: " + (0x80075314-.) + " bytes"
+  .fill 0x80075314-.
 .endarea
 
 .org 0x800757e8
@@ -193,6 +194,12 @@
 .area 0x8007af08-.
   .notice "STD retired EFE operator table space left: " + (0x8007af08-.) + " bytes"
   .fill 0x8007af08-.
+.endarea
+
+.org 0x80078554
+.area 0x80078604-.
+  .notice "STD retired aura model coloring space left: " + (0x80078604-.) + " bytes"
+  .fill 0x80078604-.
 .endarea
 
 ; Angle and transform commands share these reclaimed regions.
@@ -301,6 +308,22 @@
   .notice "STD EFE VectorGeometry space left: " + (0x80075bf8-.) + " bytes"
   .fill 0x80075bf8-.
 .endarea
+
+; EFE model color subopcode
+.org 0x8007ab94
+  .word STD_setEFEModelObjectColor
+
+; STD_initializeFinisherAuraModel
+.org 0x80078f64
+  jal STD_setTMDObjectColor
+.org 0x80078f74
+  jal STD_setTMDObjectColor
+.org 0x80078f84
+  jal STD_setTMDObjectColor
+.org 0x80078f94
+  jal STD_setTMDObjectColor
+.org 0x80078fa4
+  jal STD_setTMDObjectColor
 
 ; EFE UV animation subopcodes
 .org 0x8007ab24
