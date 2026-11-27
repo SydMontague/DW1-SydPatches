@@ -108,7 +108,7 @@ extern "C"
             if (amount == 0) continue;
 
             auto type = recycleable[i];
-            auto ptr  = ITEM_MENU_LEFT->itemList + (i * 2);
+            auto ptr  = ITEM_MENU_LEFT->itemList + (ITEM_MENU_LEFT->itemCount * 2);
             ITEM_MENU_LEFT->itemCount++;
             ptr[0] = static_cast<uint8_t>(type);
             ptr[1] = amount | (getItem(type)->value <= MONEY ? 0x80 : 0x00);
