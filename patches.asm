@@ -2,7 +2,6 @@
 .include "asm/SLUS_labels.asm"
 
 .include "asm/GameData.asm"
-.include "asm/Jukebox.asm"
 .include "asm/RaiseDataReloc.asm"
 .include "asm/EvoDataReloc.asm"
 .include "asm/Softlocks.asm"

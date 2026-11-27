@@ -35,6 +35,7 @@ FLAGS="-O3 -std=c++23 -T linker.ld -mabi=32 -march=r3000 -r -mel -nostdlib -mexp
 "$MIPS_CXX" CustomUI.cpp -o ../compiled/CustomUI.lib $FLAGS
 "$MIPS_CXX" GameData.cpp -o ../compiled/GameData.lib $FLAGS
 "$MIPS_CXX" MapData.cpp -o ../compiled/MapData.lib $FLAGS
+"$MIPS_CXX" MusicNameList.cpp -o ../compiled/MusicNameList.lib $FLAGS
 
 "$MIPS_CXX" UIBox.cpp BuffModel.cpp ThrownItem.cpp Pause.cpp Input.cpp dw1.cpp GameTime.cpp InventoryUI.cpp Timestamp.cpp FixedNumbers.cpp Fade.cpp GameObjects.cpp Helper.cpp NPCEntity.cpp Entity.cpp Tamer.cpp Effects.cpp HealingParticles.cpp CloudFX.cpp ParticleFX.cpp EntityParticleFX.cpp MeramonShake.cpp -o ../compiled/Cave1.lib $FLAGS
 "$MIPS_CXX" NinjamonEffect.cpp MapName.cpp Map.cpp Model.cpp ItemEffects.cpp ItemFunctions.cpp GameMenu.cpp PlayerMenu.cpp StatsView.cpp TechView.cpp PlayerInfoView.cpp PlayerChartView.cpp PlayerMedalView.cpp PlayerCardView.cpp -o ../compiled/Cave2.lib $FLAGS

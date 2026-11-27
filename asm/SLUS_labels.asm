@@ -1,4 +1,3 @@
-.definelabel global_pointer,            0x8013bb2c
 .definelabel updateNamingPreview,       0x8010aa60
 .definelabel clearTextSubArea,          0x8010cbc4
 .definelabel drawString,                0x8010cf24
@@ -49,7 +48,6 @@
 .definelabel TMP_LIVES, 0x80135004
 .definelabel BATTLES_STARTED, 0x80134fc8
 .definelabel BATTLES_FLED, 0x80134fca
-.definelabel TOURNAMENT_NAME_LIST, 0x801300e0
 .definelabel ACTIVE_SCRIPT, 0x80134fd8
 .definelabel SELECTION_POINTER, 0x801be948
 .definelabel TEXTBOX_ORIGIN_X, 0x80134fd2
@@ -68,7 +66,6 @@
 .definelabel SELECTION_CURSOR_OFFSET_Y, 0x801be954
 .definelabel SELECTION_CURSOR_WIDTH, 0x801be956
 .definelabel BIRDRA_TRANSPORT_TARGETS, 0x8013024c
-.definelabel MUSIC_NAME_LIST, 0x8012fec8
 .definelabel ITEM_MENU_POS, 0x8013027c
 .definelabel SHOP_ACTION_SELECTED, 0x80134f70
 .definelabel HAS_BOUGHT_ANYTHING, 0x80134f74
