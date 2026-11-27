@@ -1,4 +1,4 @@
-
+#include "Helper.hpp"
 #include "extern/dw1.hpp"
 
 namespace
@@ -95,4 +95,24 @@ int32_t getRecycleId(ItemType type)
         if (recycleable[i] == type) return i;
 
     return 0xFF;
+}
+
+extern "C"
+{
+    bool fillRecycleShopItemList()
+    {
+        ITEM_MENU_LEFT->itemCount = 0;
+
+        for (auto i = 0; i < recycleable.size(); i++) {
+            auto amount = GAME_STATE_DATA.recycleItems[i];
+            if (amount == 0) continue;
+
+            auto type = recycleable[i];
+            auto ptr  = ITEM_MENU_LEFT->itemList + (i * 2);
+            ITEM_MENU_LEFT->itemCount++;
+            ptr[0] = static_cast<uint8_t>(type);
+            ptr[1] = amount | (getItem(type)->value <= MONEY ? 0x80 : 0x00);
+        }
+        return ITEM_MENU_LEFT->itemCount != 0;
+    }
 }

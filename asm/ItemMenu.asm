@@ -363,6 +363,11 @@
 .org 0x8010ab08
   jal terminateString
 
+.org 0x8010b6bc
+  jal fillRecycleShopItemList
+.org 0x8010b844
+  jal fillRecycleShopItemList
+
 .close
 
 
