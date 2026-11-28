@@ -64,10 +64,12 @@
   .fill 0x800653a8-.
 .endarea
 
-.org 0x80066c50
-.area 0x80066e08-.
-  .notice "VS retired EFE screen-space model draw space left: " + (0x80066e08-.) + " bytes"
-  .fill 0x80066e08-.
+; Both palette uploads and the retired screen-space draw between them.
+.org 0x80066b30
+.area 0x80066f70-.
+  .importobj "compiled/VSEFEPalette.lib"
+  .notice "VS EFE palette uploads space left: " + (0x80066f70-.) + " bytes"
+  .fill 0x80066f70-.
 .endarea
 
 ; Reuse the vanilla YXZ draw and the adjoining retired camera rotation command.
@@ -366,6 +368,12 @@
 ; VS_applyEFEVariableOperator
 .org 0x80070e5c
   .word VS_applyEFEVariableOperator
+
+; EFE palette upload subopcodes
+.org 0x80070db8
+  .word VS_loadClutColors
+.org 0x80070dc8
+  .word VS_addClutLoadPrim
 
 ; EFE model drawing subopcodes
 .org 0x80070b60

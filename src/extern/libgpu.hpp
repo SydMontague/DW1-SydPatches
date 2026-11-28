@@ -280,6 +280,22 @@ extern "C"
         uint32_t code[2];
     };
 
+    struct RGB5551
+    {
+        uint16_t red   : 5;
+        uint16_t green : 5;
+        uint16_t blue  : 5;
+        uint16_t alpha : 1;
+    };
+
+    struct DR_LOAD
+    {
+        GsOT_TAG tag;
+        uint32_t command;
+        RECT destination;
+        RGB5551 data[26]; // The SDK writes a cache-clear command immediately after the uploaded pixels.
+    };
+
     struct DR_TPAGE
     {
         uint8_t tag[4];
@@ -303,6 +319,7 @@ extern "C"
     void libgpu_SetLineF2(LINE_F2* prim);
     void libgpu_SetLineF3(LINE_F3* prim);
     void libgpu_SetLineF4(LINE_F4* prim);
+    void libgpu_SetDrawLoad(DR_LOAD* packet, const RECT* rect);
     void libgpu_AddPrim(void* ot, void* prim);
     void libgpu_ClearImage(const RECT* rect, uint32_t red, uint32_t green, uint32_t blue);
     int32_t libgpu_LoadImage(const RECT* rect, const void* data);
@@ -330,3 +347,5 @@ static_assert(sizeof(POLY_GT3) == 10 * 4);
 static_assert(sizeof(POLY_GT4) == 13 * 4);
 static_assert(sizeof(POLY_F4) == 24);
 static_assert(sizeof(DR_OFFSET) == 12);
+static_assert(sizeof(RGB5551) == 2);
+static_assert(sizeof(DR_LOAD) == 0x44 && __builtin_offsetof(DR_LOAD, data) == 0x10);

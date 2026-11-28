@@ -668,6 +668,7 @@
 .definelabel libgpu_ClearImage, 0x80094818
 .definelabel libgpu_LoadImage, 0x800948a8
 .definelabel libgpu_LoadImage2, 0x80095290
+.definelabel libgpu_SetDrawLoad, 0x80092c18
 .definelabel libgpu_AddPrim, 0x80092ad4
 .definelabel libgpu_GetClut, 0x80092abc
 .definelabel libgpu_SetPolyFT4, 0x80092b88

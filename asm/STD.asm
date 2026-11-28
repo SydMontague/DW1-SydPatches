@@ -64,10 +64,12 @@
   .fill 0x8006f2d8-.
 .endarea
 
-.org 0x80070b80
-.area 0x80070d38-.
-  .notice "STD retired EFE screen-space model draw space left: " + (0x80070d38-.) + " bytes"
-  .fill 0x80070d38-.
+; Both palette uploads and the retired screen-space draw between them.
+.org 0x80070a60
+.area 0x80070ea0-.
+  .importobj "compiled/STDEFEPalette.lib"
+  .notice "STD EFE palette uploads space left: " + (0x80070ea0-.) + " bytes"
+  .fill 0x80070ea0-.
 .endarea
 
 ; Reuse the vanilla YXZ draw and the adjoining retired camera rotation command.
@@ -342,6 +344,12 @@
 ; STD_applyEFEVariableOperator
 .org 0x8007ae30
   .word STD_applyEFEVariableOperator
+
+; EFE palette upload subopcodes
+.org 0x8007ad8c
+  .word STD_loadClutColors
+.org 0x8007ad9c
+  .word STD_addClutLoadPrim
 
 ; EFE model drawing subopcodes
 .org 0x8007ab34
