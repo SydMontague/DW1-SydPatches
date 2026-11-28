@@ -64,10 +64,12 @@
   .fill 0x80066ce0-.
 .endarea
 
-.org 0x800685e8
-.area 0x800687a0-.
-  .notice "BTL retired EFE screen-space model draw space left: " + (0x800687a0-.) + " bytes"
-  .fill 0x800687a0-.
+; Both palette uploads and the retired screen-space draw between them.
+.org 0x800684c8
+.area 0x80068908-.
+  .importobj "compiled/BTLEFEPalette.lib"
+  .notice "BTL EFE palette uploads space left: " + (0x80068908-.) + " bytes"
+  .fill 0x80068908-.
 .endarea
 
 ; Reuse the vanilla YXZ draw and the adjoining retired camera rotation command.
@@ -338,6 +340,12 @@
 ; BTL_applyEFEVariableOperator
 .org 0x80073614
   .word BTL_applyEFEVariableOperator
+
+; EFE palette upload subopcodes
+.org 0x80073570
+  .word BTL_loadClutColors
+.org 0x80073580
+  .word BTL_addClutLoadPrim
 
 ; EFE model drawing subopcodes
 .org 0x80073318

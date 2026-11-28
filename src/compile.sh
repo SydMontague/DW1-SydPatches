@@ -100,7 +100,7 @@ for mode in BTL STD VS; do
         -DEFE_applyVariableOperator=${mode}_applyEFEVariableOperator
     for unit in VectorArithmetic EntityQueries HitEntity TargetSelection AttackCollision TargetCollision SubEffect \
                 BonePosition BoneQuery BoneTransform EntityTransform Interpolation ModelColor ModelDraw Movement \
-                ParentTransfer Projection Rotation Trigonometry VectorGeometry; do
+                Palette ParentTransfer Projection Rotation Trigonometry VectorGeometry; do
         "$MIPS_CXX" "EFE/${unit}.cpp" -o "../compiled/${mode}EFE${unit}.lib" $FLAGS "-DEFE_ENTRY(name)=${mode}_##name"
     done
     bindings=(

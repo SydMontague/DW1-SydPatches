@@ -344,14 +344,6 @@ extern "C"
         }
     };
 
-    struct RGB5551
-    {
-        uint16_t red   : 5;
-        uint16_t green : 5;
-        uint16_t blue  : 5;
-        uint16_t alpha : 1;
-    };
-
     enum class DigimonType : int32_t
     {
         TAMER               = 0,
@@ -2115,7 +2107,6 @@ static_assert(sizeof(PartnerPara) == 0x84);
 static_assert(sizeof(Position) == 4);
 static_assert(sizeof(GlyphData) == 24);
 static_assert(sizeof(RGB8) == 3);
-static_assert(sizeof(RGB5551) == 2);
 static_assert(sizeof(EvolutionPath) == 11);
 static_assert(sizeof(NPCEntity) == 0x68);
 static_assert(sizeof(EvoSequenceData) == 0x34);
